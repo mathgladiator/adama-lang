@@ -403,25 +403,25 @@ public class BinaryOperatorTable {
     // LOGIC
     {
       insert(tyBoolean, "&&", tyBoolean, tyBoolean, "%s && %s", false);
-      insert(tyBoolean, "&&", tyMaybeBoolean, tyBoolean, "LibArithmetic.And.o(%s, %s)", false);
-      insert(tyMaybeBoolean, "&&", tyBoolean, tyBoolean, "LibArithmetic.And.o(%s, %s)", false);
-      insert(tyMaybeBoolean, "&&", tyMaybeBoolean, tyBoolean, "LibArithmetic.And.o(%s, %s)", false);
+      insert(tyBoolean, "&&", tyMaybeBoolean, tyBoolean, "LibArithmetic.And.BmB(%s, %s)", false);
+      insert(tyMaybeBoolean, "&&", tyBoolean, tyBoolean, "LibArithmetic.And.mBB(%s, %s)", false);
+      insert(tyMaybeBoolean, "&&", tyMaybeBoolean, tyBoolean, "LibArithmetic.And.mBmB(%s, %s)", false);
 
       insert(tyBoolean, "||", tyBoolean, tyBoolean, "%s || %s", false);
-      insert(tyBoolean, "||", tyMaybeBoolean, tyBoolean, "LibArithmetic.Or.o(%s, %s)", false);
-      insert(tyMaybeBoolean, "||", tyBoolean, tyBoolean, "LibArithmetic.Or.o(%s, %s)", false);
-      insert(tyMaybeBoolean, "||", tyMaybeBoolean, tyBoolean, "LibArithmetic.Or.o(%s, %s)", false);
+      insert(tyBoolean, "||", tyMaybeBoolean, tyBoolean, "LibArithmetic.Or.BmB(%s, %s)", false);
+      insert(tyMaybeBoolean, "||", tyBoolean, tyBoolean, "LibArithmetic.Or.mBB(%s, %s)", false);
+      insert(tyMaybeBoolean, "||", tyMaybeBoolean, tyBoolean, "LibArithmetic.Or.mBmB(%s, %s)", false);
 
       insert(tyBoolean, "^^", tyBoolean, tyBoolean, "LibMath.xor(%s, %s)", false);
-      insert(tyBoolean, "^^", tyMaybeBoolean, tyBoolean, "LibArithmetic.Xor.o(%s, %s)", false);
-      insert(tyMaybeBoolean, "^^", tyBoolean, tyBoolean, "LibArithmetic.Xor.o(%s, %s)", false);
-      insert(tyMaybeBoolean, "^^", tyMaybeBoolean, tyBoolean, "LibArithmetic.Xor.o(%s, %s)", false);
+      insert(tyBoolean, "^^", tyMaybeBoolean, tyBoolean, "LibArithmetic.Xor.BmB(%s, %s)", false);
+      insert(tyMaybeBoolean, "^^", tyBoolean, tyBoolean, "LibArithmetic.Xor.mBB(%s, %s)", false);
+      insert(tyMaybeBoolean, "^^", tyMaybeBoolean, tyBoolean, "LibArithmetic.Xor.mBmB(%s, %s)", false);
     }
     // MOD
     {
-      insert(tyInt, "%", tyInt, tyMaybeInt, "LibArithmetic.Mod.O(%s, %s)", false);
-      insert(tyLong, "%", tyInt, tyMaybeLong, "LibArithmetic.Mod.O(%s, %s)", false);
-      insert(tyLong, "%", tyLong, tyMaybeLong, "LibArithmetic.Mod.O(%s, %s)", false);
+      insert(tyInt, "%", tyInt, tyMaybeInt, "LibArithmetic.Mod.II(%s, %s)", false);
+      insert(tyLong, "%", tyInt, tyMaybeLong, "LibArithmetic.Mod.LI(%s, %s)", false);
+      insert(tyLong, "%", tyLong, tyMaybeLong, "LibArithmetic.Mod.LL(%s, %s)", false);
     }
     // ADDITION-ASSIGNMENT (+=)
     {

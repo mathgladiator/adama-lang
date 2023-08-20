@@ -82,6 +82,6 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
 
   @Override
   public Collection<String> spacesAvailable() {
-    return null;
+    return base.spacesAvailable();
   }
 }

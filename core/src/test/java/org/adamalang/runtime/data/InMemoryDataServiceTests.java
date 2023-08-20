@@ -109,6 +109,7 @@ public class InMemoryDataServiceTests {
     ds.patch(key, new RemoteDocumentUpdate[] { updateActive(4, "{\"x\":4}", "{\"x\":3}", 42) }, bumpSuccess(success));
     ds.delete(key, DeleteTask.TRIVIAL, bumpSuccess(success));
     Assert.assertEquals(9, success.get());
+    ds.shed(key);
   }
 
   public RemoteDocumentUpdate update(int seq, String redo, String undo) {

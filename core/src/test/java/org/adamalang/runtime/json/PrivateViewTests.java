@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PrivateViewTests {
   @Test
@@ -56,6 +57,7 @@ public class PrivateViewTests {
   @Test
   public void usurp() {
     ArrayList<String> list = new ArrayList<>();
+    AtomicBoolean gotViewUpdate = new AtomicBoolean(false);
     PrivateView pv1 =
         new PrivateView(2,
             NtPrincipal.NO_ONE,
@@ -75,7 +77,7 @@ public class PrivateViewTests {
           }
 
           @Override
-          public void ingest(JsonStreamReader reader) {}
+          public void ingest(JsonStreamReader reader) { gotViewUpdate.set(true);}
 
           @Override
           public void dumpViewer(JsonStreamWriter writer) {}
@@ -104,6 +106,9 @@ public class PrivateViewTests {
 
     pv2.usurp(pv1);
     Assert.assertTrue(pv1.isAlive());
+    Assert.assertFalse(gotViewUpdate.get());
+    pv2.ingestViewUpdate(new JsonStreamReader("{}"));;
+    Assert.assertTrue(gotViewUpdate.get());
     pv2.kill();
     Assert.assertFalse(pv1.isAlive());
   }

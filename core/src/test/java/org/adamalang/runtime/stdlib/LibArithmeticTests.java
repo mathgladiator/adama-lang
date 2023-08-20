@@ -23,6 +23,7 @@ public class LibArithmeticTests {
     new LibArithmetic.Add();
     new LibArithmetic.Mod();
   }
+
   @Test
   public void doubleDivision() {
     Assert.assertEquals(0.5, LibArithmetic.Divide.DD(1, 2.0).get(), 0.01);

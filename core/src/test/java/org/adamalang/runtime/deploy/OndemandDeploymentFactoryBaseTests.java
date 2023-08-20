@@ -37,7 +37,18 @@ public class OndemandDeploymentFactoryBaseTests {
         callback.success(new DeploymentBundle(plan, new TreeMap<>()));
       }
     }, sync);
-    CountDownLatch latch = new CountDownLatch(1);
+    CountDownLatch latch = new CountDownLatch(2);
+    ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
+      @Override
+      public void success(LivingDocumentFactory value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    });
     ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
       @Override
       public void success(LivingDocumentFactory value) {
@@ -52,6 +63,110 @@ public class OndemandDeploymentFactoryBaseTests {
     Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(base.contains("space"));
     sync.assertContains("space");
+    CountDownLatch happyDeploy = new CountDownLatch(1);
+    ondemand.deploy("space", new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        happyDeploy.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    Assert.assertTrue(happyDeploy.await(10000, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(ondemand.spacesAvailable().contains("space"));
+    ondemand.undeploy("space");
+    Assert.assertFalse(ondemand.spacesAvailable().contains("space"));
+  }
+
+  @Test
+  public void deploy_prior_fetch() throws Exception{
+    DeploymentPlan plan = new DeploymentPlan(
+        "{\"versions\":{\"x\":\"\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    Assert.assertFalse(base.contains("space"));
+    MockDeploySync sync = new MockDeploySync();
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+      @Override
+      public void find(String space, Callback<DeploymentBundle> callback) {
+        Assert.assertEquals("space", space);
+        callback.success(new DeploymentBundle(plan, new TreeMap<>()));
+      }
+    }, sync);
+    CountDownLatch happyDeploy = new CountDownLatch(1);
+    ondemand.deploy("space", new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        happyDeploy.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    Assert.assertTrue(happyDeploy.await(10000, TimeUnit.MILLISECONDS));
+    CountDownLatch latch = new CountDownLatch(2);
+    ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
+      @Override
+      public void success(LivingDocumentFactory value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    });
+    ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
+      @Override
+      public void success(LivingDocumentFactory value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+      }
+    });
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(base.contains("space"));
+    sync.assertContains("space");
+  }
+
+  @Test
+  public void bad_deploy() throws Exception {
+    DeploymentPlan plan = new DeploymentPlan(
+        "{\"versions\":{\"x\":\"int x\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    Assert.assertFalse(base.contains("space"));
+    MockDeploySync sync = new MockDeploySync();
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+      @Override
+      public void find(String space, Callback<DeploymentBundle> callback) {
+        Assert.assertEquals("space", space);
+        callback.success(new DeploymentBundle(plan, new TreeMap<>()));
+      }
+    }, sync);
+    CountDownLatch sadDeploy = new CountDownLatch(1);
+    ondemand.deploy("space", new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        sadDeploy.countDown();
+      }
+    });
+    Assert.assertTrue(sadDeploy.await(10000, TimeUnit.MILLISECONDS));
   }
 
   @Test
@@ -86,5 +201,46 @@ public class OndemandDeploymentFactoryBaseTests {
     Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     Assert.assertFalse(base.contains("space"));
     sync.assertDoesNotContains("space");
+  }
+
+  @Test
+  public void cant_find() throws Exception {
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    Assert.assertFalse(base.contains("space"));
+    MockDeploySync sync = new MockDeploySync();
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+      @Override
+      public void find(String space, Callback<DeploymentBundle> callback) {
+        callback.failure(new ErrorCodeException(123));
+      }
+    }, sync);
+
+    CountDownLatch latch = new CountDownLatch(1);
+    ondemand.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
+      @Override
+      public void success(LivingDocumentFactory value) {
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        ex.printStackTrace();
+        latch.countDown();
+      }
+    });
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    CountDownLatch sadDeploy = new CountDownLatch(1);
+    ondemand.deploy("space", new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        sadDeploy.countDown();
+      }
+    });
+    Assert.assertTrue(sadDeploy.await(10000, TimeUnit.MILLISECONDS));
   }
 }

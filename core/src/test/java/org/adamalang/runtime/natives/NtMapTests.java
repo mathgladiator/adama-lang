@@ -39,6 +39,7 @@ public class NtMapTests {
     Assert.assertEquals(1, map.size());
     Assert.assertEquals(40, (int) map.lookup(1000).get());
     map.entries();
+    Assert.assertEquals(40, (int) map.remove(1000).getOrDefaultTo(-100));
   }
 
   @Test

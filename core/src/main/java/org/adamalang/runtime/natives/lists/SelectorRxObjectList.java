@@ -65,25 +65,6 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
     }
   }
 
-  private static int[] makeEffectiveness(final int[] clause) {
-    final var x = new int[clause.length / 2];
-    for (var k = 0; k < x.length; k++) {
-      x[k] = 0;
-    }
-    return x;
-  }
-
-  private static boolean crazyCandidate(final int[] clause, final int[] value, final int[] effectiveness) {
-    var result = true;
-    for (var k = 0; k + 1 < clause.length; k += 2) {
-      if (value[clause[k]] != clause[k + 1]) {
-        effectiveness[k / 2]++;
-        result = false;
-      }
-    }
-    return result;
-  }
-
   @Override
   public NtList<Ty> get() {
     return this;

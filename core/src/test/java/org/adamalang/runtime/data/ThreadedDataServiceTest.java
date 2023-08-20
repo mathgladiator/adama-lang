@@ -102,6 +102,7 @@ public class ThreadedDataServiceTest {
       }
     });
     CountDownLatch latchClosed = new CountDownLatch(1);
+    ds.shed(new Key("space", "nope"));
     ds.close(key, new Callback<Void>() {
       @Override
       public void success(Void value) {

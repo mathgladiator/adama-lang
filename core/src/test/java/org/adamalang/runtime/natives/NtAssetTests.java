@@ -29,5 +29,7 @@ public class NtAssetTests {
     Assert.assertEquals(42, a.size());
     Assert.assertTrue(a.valid());
     Assert.assertEquals(88, a.memory());
+    Assert.assertEquals("hash", a.md5());
+    Assert.assertEquals("sheesh", a.sha384());
   }
 }

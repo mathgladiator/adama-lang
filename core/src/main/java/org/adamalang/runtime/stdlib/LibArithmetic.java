@@ -666,21 +666,21 @@ public class LibArithmetic {
   }
 
   public static class Mod {
-    public static NtMaybe<Integer> O(int x, int y) {
+    public static NtMaybe<Integer> II(int x, int y) {
       if (y == 0) {
         return new NtMaybe<>();
       }
       return new NtMaybe<>(x % y);
     }
 
-    public static NtMaybe<Long> O(long x, int y) {
+    public static NtMaybe<Long> LI(long x, int y) {
       if (y == 0) {
         return new NtMaybe<>();
       }
       return new NtMaybe<>(x % y);
     }
 
-    public static NtMaybe<Long> O(long x, long y) {
+    public static NtMaybe<Long> LL(long x, long y) {
       if (y == 0) {
         return new NtMaybe<>();
       }
@@ -850,21 +850,21 @@ public class LibArithmetic {
   }
 
   public static class And {
-    public static boolean o(NtMaybe<Boolean> x, boolean y) {
+    public static boolean mBB(NtMaybe<Boolean> x, boolean y) {
       if (x.has()) {
         return x.get() && y;
       }
       return false;
     }
 
-    public static boolean o(boolean x, NtMaybe<Boolean> y) {
+    public static boolean BmB(boolean x, NtMaybe<Boolean> y) {
       if (y.has()) {
         return x && y.get();
       }
       return false;
     }
 
-    public static boolean o(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
+    public static boolean mBmB(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
       if (x.has() && y.has()) {
         return x.get() && y.get();
       }
@@ -873,21 +873,21 @@ public class LibArithmetic {
   }
 
   public static class Or {
-    public static boolean o(NtMaybe<Boolean> x, boolean y) {
+    public static boolean mBB(NtMaybe<Boolean> x, boolean y) {
       if (x.has()) {
         return x.get() || y;
       }
       return y;
     }
 
-    public static boolean o(boolean x, NtMaybe<Boolean> y) {
+    public static boolean BmB(boolean x, NtMaybe<Boolean> y) {
       if (y.has()) {
         return x || y.get();
       }
       return x;
     }
 
-    public static boolean o(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
+    public static boolean mBmB(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
       if (x.has() && y.has()) {
         return x.get() || y.get();
       } else if (x.has()) { // y is false
@@ -899,23 +899,22 @@ public class LibArithmetic {
     }
   }
 
-
   public static class Xor {
-    public static boolean o(NtMaybe<Boolean> x, boolean y) {
+    public static boolean mBB(NtMaybe<Boolean> x, boolean y) {
       if (x.has()) {
         return LibMath.xor(x.get(), y);
       }
       return LibMath.xor(false, y);
     }
 
-    public static boolean o(boolean x, NtMaybe<Boolean> y) {
+    public static boolean BmB(boolean x, NtMaybe<Boolean> y) {
       if (y.has()) {
         return LibMath.xor(x, y.get());
       }
       return LibMath.xor(x, false);
     }
 
-    public static boolean o(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
+    public static boolean mBmB(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
       if (x.has() && y.has()) {
         LibMath.xor(x.get(), y.get());
       } else if (x.has()) { // y is false
