@@ -68,9 +68,6 @@ public class CommonServiceInit {
   public final WebClientBase webBase;
   public final String masterKey;
   public final SQS sqs;
-  public final int minDomainsToHoldTo;
-  public final int maxDomainsToHoldTo;
-  public final int maxDomainAge;
   public final SimpleExecutor services;
   public final AtomicBoolean alive;
   public final String region;
@@ -93,9 +90,6 @@ public class CommonServiceInit {
 
     // only available
     this.masterKey = config.get_string("master-key", null);
-    this.minDomainsToHoldTo = config.get_int("domains-minimum-hold", 64);
-    this.maxDomainsToHoldTo = config.get_int("domains-maximum-hold", 2048);
-    this.maxDomainAge = config.get_int("domains-max-age-ms", 60 * 60 * 1000);
 
     this.database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(metricsFactory));
     this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
