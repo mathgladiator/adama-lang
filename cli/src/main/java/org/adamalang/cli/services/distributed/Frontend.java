@@ -29,7 +29,9 @@ import org.adamalang.runtime.sys.domains.CachedDomainFinder;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
+import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.service.CertificateBoot;
 import org.adamalang.web.service.RedirectAndWellknownServiceRunnable;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebMetrics;
@@ -48,7 +50,7 @@ public class Frontend {
 
   public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
     this.adama = init.makeGlobalClient(client);
-    DomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database));
+    DomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database, init.masterKey));
     RxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, init.system, new GlobalRxHtmlFetcher(init.database));
     FrontendHttpHandler http = new FrontendHttpHandler(init.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     Email email = new SES(init.webBase, init.awsConfig, init.awsMetrics);
@@ -76,7 +78,8 @@ public class Frontend {
     final var redirect = new RedirectAndWellknownServiceRunnable(init.webConfig, webMetrics, init.s3, () -> {});
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
-    final var runnable = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, init.makeCertificateFinder(), heartbeat.get());
+    CertificateFinder certificateFinder = CertificateBoot.make(init.webConfig, domainFinder, init.system);
+    final var runnable = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, certificateFinder, heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       System.err.println("shutting down frontend");
       try {
@@ -102,7 +105,7 @@ public class Frontend {
 
   public static void run(Config config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Web);
-    LocalRegionClient client = init.makeClient(null);
+    LocalRegionClient client = init.makeLocalClient(null);
     new Frontend(config, init, client);
   }
 }

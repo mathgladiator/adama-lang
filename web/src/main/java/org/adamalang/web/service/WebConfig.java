@@ -37,6 +37,9 @@ public class WebConfig {
   public final int sharedConnectionPoolMaxPoolSize;
   public final File cacheRoot;
   public final String adamaJarDomain;
+  public final int minDomainsToHoldTo;
+  public final int maxDomainsToHoldTo;
+  public final int maxDomainAge;
 
   public WebConfig(ConfigObject config) throws Exception {
     // HTTP properties
@@ -70,6 +73,12 @@ public class WebConfig {
     if (!cacheRoot.exists()) {
       cacheRoot.mkdir();
     }
+
+    // Domain Cache
+    this.minDomainsToHoldTo = config.intOf("cert-cache-min-domains", 64);
+    this.maxDomainsToHoldTo = config.intOf("cert-cache-max-domains", 2048);
+    this.maxDomainAge = config.intOf("cert-cache-`min-domains", 5 * 60 * 1000);
+
     if (cacheRoot.exists() && !cacheRoot.isDirectory()) {
       throw new Exception("Cache root not directory");
     }
