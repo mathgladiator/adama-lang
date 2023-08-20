@@ -34,7 +34,7 @@ public class Hosts {
 
   public static List<String> listHosts(DataBase dataBase, String region, String role) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=? ORDER BY `machine`";
+      String sql = "SELECT DISTINCT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=? ORDER BY `machine`";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, region);
         statement.setString(2, role);
@@ -67,10 +67,29 @@ public class Hosts {
 
   public static String pickStableHostFromRegion(DataBase dataBase, String region, String role, String keyToHashWithMachine) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `machine`, md5(concat(`machine`,?)) as rdz FROM `" + dataBase.databaseName + "`.`hosts` where `region`=? AND `role`='" + role + "' ORDER BY rdz ASC LIMIT 1;";
+      String sql = "SELECT `machine`, md5(concat(`machine`,?)) as rdz FROM (SELECT DISTINCT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=?) AS `D` ORDER BY rdz ASC LIMIT 1;";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, keyToHashWithMachine);
         statement.setString(2, region);
+        statement.setString(3, role);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return rs.getString(1);
+          }
+          return null;
+        }
+      }
+    });
+  }
+
+  public static String pickNewHostForSpace(DataBase dataBase, String region, String role, String space) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `machine`, md5(concat(`machine`,?)) as rdz FROM (SELECT DISTINCT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=? AND (NOT EXISTS (SELECT true FROM `" + dataBase.databaseName + "`.`capacity` WHERE `region`=`hosts`.`region` AND `machine`=`hosts`.`machine` AND `space`=?)) ) AS `D` ORDER BY rdz ASC LIMIT 1;";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        statement.setString(2, region);
+        statement.setString(3, role);
+        statement.setString(4, space);
         try (ResultSet rs = statement.executeQuery()) {
           if (rs.next()) {
             return rs.getString(1);

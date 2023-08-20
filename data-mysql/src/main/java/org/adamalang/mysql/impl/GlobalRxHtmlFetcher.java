@@ -35,13 +35,9 @@ public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
     try {
       SpaceInfo spaceInfo = Spaces.getSpaceInfo(database, space);
       String rxhtml = Spaces.getRxHtml(database, spaceInfo.id);
-      if (rxhtml != null) {
-        RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
-        String html = rxhtmlResult.shell.makeShell(rxhtmlResult);
-        callback.success(new LiveSiteRxHtmlResult(html, rxhtmlResult.paths));
-      } else {
-        callback.success(null);
-      }
+      RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
+      String html = rxhtmlResult.shell.makeShell(rxhtmlResult);
+      callback.success(new LiveSiteRxHtmlResult(html, rxhtmlResult.paths));
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_FAILED_RXHTML_LOOKUP, ex, EXLOGGER));
     }

@@ -309,6 +309,8 @@ public class ErrorTable {
     descriptions.put(120048, "no description of error (yet)");
     names.put(114384, "TASK_CANCELLED");
     descriptions.put(114384, "no description of error (yet)");
+    names.put(133371, "PLAN_FETCH_LOOKUP_FAILURE");
+    descriptions.put(133371, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");
@@ -654,6 +656,12 @@ public class ErrorTable {
     descriptions.put(997631, "no description of error (yet)");
     names.put(993504, "GLOBAL_CAPACITY_EXCEPTION_PICKHOST");
     descriptions.put(993504, "no description of error (yet)");
+    names.put(998625, "GLOBAL_CAPACITY_EMPTY_PICKHOST");
+    descriptions.put(998625, "no description of error (yet)");
+    names.put(998624, "GLOBAL_CAPACITY_EXCEPTION_NEWHOST");
+    descriptions.put(998624, "no description of error (yet)");
+    names.put(901348, "GLOBAL_CAPACITY_EMPTY_NEWHOST");
+    descriptions.put(901348, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");
