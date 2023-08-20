@@ -269,9 +269,6 @@ public class ErrorTable {
     names.put(176703, "DEPLOYMENT_PLAN_PLAN_ARRAY_ELEMENT_MUST_OBJECT");
     descriptions.put(176703, "The deployment plan is not correct; elements with the plan array must be objects");
     userspace.add(176703);
-    names.put(151615, "DEPLOYMENT_PLAN_PERCENT_MUST_BE_DOUBLE");
-    descriptions.put(151615, "The deployment plan is not correct; plan objects must have percent be numeric");
-    userspace.add(151615);
     names.put(120895, "DEPLOYMENT_PLAN_VERSION_MUST_EXIST");
     descriptions.put(120895, "The deployment plan is not correct; plan object must point to a version which exists");
     userspace.add(120895);

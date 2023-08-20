@@ -917,7 +917,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    int k = 4;");
     gold.append("\n    __track(2);");
     gold.append("\n    NtMaybe<RTxM> _AutoConditionmm_1;");
-    gold.append("\n    if ((_AutoConditionmm_1 = Utility.lookup(m, LibArithmetic.Mod.O(k, 2))).has()) {");
+    gold.append("\n    if ((_AutoConditionmm_1 = Utility.lookup(m, LibArithmetic.Mod.II(k, 2))).has()) {");
     gold.append("\n      RTxM mm = _AutoConditionmm_1.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(3);");
@@ -925,7 +925,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    __track(4);");
     gold.append("\n    NtMaybe<RTxR> _AutoConditionr_2;");
-    gold.append("\n    if ((_AutoConditionr_2 = (t.iterate(true)).lookup(LibArithmetic.Mod.O(k, 2))).has()) {");
+    gold.append("\n    if ((_AutoConditionr_2 = (t.iterate(true)).lookup(LibArithmetic.Mod.II(k, 2))).has()) {");
     gold.append("\n      RTxR r = _AutoConditionr_2.get();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(5);");

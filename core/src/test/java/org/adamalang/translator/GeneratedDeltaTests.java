@@ -6821,7 +6821,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  private boolean[] __FUNC_3_arr4(int x) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return new boolean[] {((int) (LibArithmetic.Mod.O(x, 2)).getOrDefaultTo(-100)) == ((int) 0), ((int) (LibArithmetic.Mod.O(x, 2)).getOrDefaultTo(-100)) != ((int) 0)};");
+    gold.append("\n    return new boolean[] {((int) (LibArithmetic.Mod.II(x, 2)).getOrDefaultTo(-100)) == ((int) 0), ((int) (LibArithmetic.Mod.II(x, 2)).getOrDefaultTo(-100)) != ((int) 0)};");
     gold.append("\n  }");
     gold.append("\n  private String[] __FUNC_4_arr5(int x) {");
     gold.append("\n    __code_cost += 2;");

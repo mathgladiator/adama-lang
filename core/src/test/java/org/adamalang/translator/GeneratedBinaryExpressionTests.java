@@ -3000,7 +3000,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(24);");
-    gold.append("\n      __assert_truth(((int) 2) == ((int) (LibArithmetic.Mod.O(7, 5)).getOrDefaultTo(-100)), 37, 2, 37, 43);");
+    gold.append("\n      __assert_truth(((int) 2) == ((int) (LibArithmetic.Mod.II(7, 5)).getOrDefaultTo(-100)), 37, 2, 37, 43);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
