@@ -40,7 +40,7 @@ public class Overlord {
     });
     ConcurrentCachedHttpHandler overlordHandler = new ConcurrentCachedHttpHandler();
     HeatTable heatTable = new HeatTable(overlordHandler);
-    LocalRegionClient client = init.makeClient(heatTable::onSample);
+    LocalRegionClient client = init.makeLocalClient(heatTable::onSample);
     boolean isGlobalOverlord = config.get_string("overlord-region-global", null).equals(init.region);
     if (isGlobalOverlord) {
       System.err.println("[Global Overlord Established]");
@@ -48,7 +48,7 @@ public class Overlord {
     MultiRegionClient adama = init.makeGlobalClient(client);
     HttpHandler handler = org.adamalang.overlord.Overlord.execute(overlordHandler, isGlobalOverlord, client, adama, init.engine, init.metricsFactory, targetsPath, init.database, init.s3, init.s3, init.alive);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
-    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, init.makeCertificateFinder(), () -> {});
+    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, (domain, callback) -> callback.success(null), () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {

@@ -759,8 +759,16 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      Domain domain = request.resolvedDomain.domain;
-      responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.routeKey, domain.certificate, domain.timestamp);
+      try {
+        Domain domain = request.resolvedDomain.domain;
+        String cert = domain.certificate;
+        if (domain.certificate != null) {
+          cert = MasterKey.decrypt(nexus.masterKey, cert);
+        }
+        responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.routeKey, cert, domain.timestamp);
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_DOMAIN_FIND_EXCEPTION, ex, LOGGER));
+      }
     }
   }
 

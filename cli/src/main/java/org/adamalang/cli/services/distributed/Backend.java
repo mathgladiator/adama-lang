@@ -69,7 +69,7 @@ public class Backend {
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);
-    LocalRegionClient client = init.makeClient(capacityAgent);
+    LocalRegionClient client = init.makeLocalClient(capacityAgent);
 
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {

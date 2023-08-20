@@ -10,6 +10,7 @@ package org.adamalang.mysql.impl;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.model.Domains;
@@ -28,7 +29,8 @@ public class GlobalDomainFinderTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        GlobalDomainFinder finder = new GlobalDomainFinder(dataBase);
+        String masterKey = MasterKey.generateMasterKey();
+        GlobalDomainFinder finder = new GlobalDomainFinder(dataBase, masterKey);
         CountDownLatch latch = new CountDownLatch(2);
         finder.find("domain", new Callback<Domain>() {
           @Override
@@ -42,11 +44,12 @@ public class GlobalDomainFinderTests {
 
           }
         });
-        Assert.assertTrue(Domains.map(dataBase, 1, "new-domain", "space", "key", true, "cert"));
+        Assert.assertTrue(Domains.map(dataBase, 1, "new-domain", "space", "key", true, MasterKey.encrypt(masterKey, "cert")));
         finder.find("new-domain", new Callback<Domain>() {
           @Override
           public void success(Domain value) {
             Assert.assertEquals("space", value.space);
+            Assert.assertEquals("cert", value.certificate);
             latch.countDown();
           }
 
