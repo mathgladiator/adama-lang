@@ -8,7 +8,6 @@
  */
 package org.adamalang.cli.services.global;
 
-import org.adamalang.caravan.CaravanBoot;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
 import org.adamalang.cli.services.common.EveryMachine;
@@ -16,7 +15,6 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 

@@ -66,12 +66,10 @@ public class EveryMachine {
     this.region = config.get_string("region", null);
     this.role = role.name;
     this.webConfig = new WebConfig(configObjectForWeb);
-    switch (role) {
-      case Adama:
-        this.servicePort = config.get_int("adama-port", 8001);
-        break;
-      default:
-        this.servicePort = this.webConfig.port;
+    if (role == Role.Adama) {
+      this.servicePort = config.get_int("adama-port", 8001);
+    } else {
+      this.servicePort = this.webConfig.port;
     }
     this.machine = this.identity.ip + ":" + servicePort;
     this.webBase = new WebClientBase(this.webConfig);
@@ -84,7 +82,7 @@ public class EveryMachine {
       }
     })));
     this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
-    this.system = SimpleExecutor.create("system");;
+    this.system = SimpleExecutor.create("system");
     this.engine = netBase.startGossiping();
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[EveryMachine-Shutdown]");

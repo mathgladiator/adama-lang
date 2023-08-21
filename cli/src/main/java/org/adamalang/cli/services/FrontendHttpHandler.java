@@ -10,12 +10,15 @@ package org.adamalang.cli.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.*;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Json;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.multiregion.MultiRegionClient;
-import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
@@ -37,8 +40,8 @@ public class FrontendHttpHandler implements HttpHandler {
   private final MultiRegionClient client;
   private final DomainFinder domainFinder;
   private final RxHtmlFetcher rxHtmlFetcher;
-  private PrivateKeyWithId signingKey;
   private final WebConfig webConfig;
+  private final PrivateKeyWithId signingKey;
 
   public FrontendHttpHandler(WebConfig webConfig, DomainFinder domainFinder, RxHtmlFetcher rxHtmlFetcher, MultiRegionClient client, PrivateKeyWithId signingKey) {
     this.webConfig = webConfig;
@@ -67,84 +70,6 @@ public class FrontendHttpHandler implements HttpHandler {
     } else {
       callback.success(new HttpResult("", null, false));
     }
-  }
-
-  private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback) {
-    return new Callback<>() {
-      @Override
-      public void success(WebResponse response) {
-        if (response != null) {
-          if ("text/agent".equals(response.contentType)) {
-            try {
-              String identity = signingKey.signDocumentIdentity(response.body, skr.space, skr.key, response.cache_ttl_seconds);
-              ObjectNode json = Json.newJsonObject();
-              json.put("identity", identity);
-              callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
-            } catch (Exception ex) {
-              callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
-            }
-          } else if ("text/identity".equals(response.contentType)) {
-            ObjectNode json = Json.newJsonObject();
-            json.put("identity", response.body);
-            callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
-          } else {
-            if (response.asset != null) {
-              callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
-            } else {
-              callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
-            }
-          }
-        } else {
-          callback.success(null);
-        }
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    };
-  }
-
-  @Override
-  public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
-    if (skr != null) {
-      WebDelete delete = new WebDelete(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
-      client.webDelete(skr.space, skr.key, delete, route(skr, callback));
-    }
-    callback.failure(new ErrorCodeException(-1));
-  }
-
-  private WebContext contextOf(TreeMap<String, String> headers) {
-    return new WebContext(NtPrincipal.NO_ONE, headers.get("origin"), headers.get("remote-ip"));
-  }
-
-  private void get(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    if (skr != null) {
-      WebGet get = new WebGet(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
-      client.webGet(skr.space, skr.key, get, route(skr, callback));
-    } else {
-      callback.success(null);
-    }
-  }
-
-  private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    rxHtmlFetcher.fetch(space, new Callback<>() {
-      @Override
-      public void success(LiveSiteRxHtmlResult result) {
-        if (result.test(uri)) {
-          callback.success(new HttpResult("text/html", result.html, false));
-          return;
-        }
-        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
-      }
-    });
   }
 
   @Override
@@ -190,13 +115,55 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
-  private void post(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+  @Override
+  public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
-      WebPut put = new WebPut(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson), body);
-      client.webPut(skr.space, skr.key, put, route(skr, callback));
-    } else {
-      callback.success(null);
+      WebDelete delete = new WebDelete(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
+      client.webDelete(skr.space, skr.key, delete, route(skr, callback));
     }
+    callback.failure(new ErrorCodeException(-1));
+  }
+
+  private WebContext contextOf(TreeMap<String, String> headers) {
+    return new WebContext(NtPrincipal.NO_ONE, headers.get("origin"), headers.get("remote-ip"));
+  }
+
+  private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback) {
+    return new Callback<>() {
+      @Override
+      public void success(WebResponse response) {
+        if (response != null) {
+          if ("text/agent".equals(response.contentType)) {
+            try {
+              String identity = signingKey.signDocumentIdentity(response.body, skr.space, skr.key, response.cache_ttl_seconds);
+              ObjectNode json = Json.newJsonObject();
+              json.put("identity", identity);
+              callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+            } catch (Exception ex) {
+              callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
+            }
+          } else if ("text/identity".equals(response.contentType)) {
+            ObjectNode json = Json.newJsonObject();
+            json.put("identity", response.body);
+            callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+          } else {
+            if (response.asset != null) {
+              callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
+            } else {
+              callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
+            }
+          }
+        } else {
+          callback.success(null);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
   }
 
   @Override
@@ -228,19 +195,52 @@ public class FrontendHttpHandler implements HttpHandler {
     });
   }
 
+  private void post(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+    if (skr != null) {
+      WebPut put = new WebPut(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson), body);
+      client.webPut(skr.space, skr.key, put, route(skr, callback));
+    } else {
+      callback.success(null);
+    }
+  }
+
   @Override
   public void handleDeepHealth(Callback<String> callback) {
     try {
-      final StringBuilder health = new StringBuilder();
-      health.append("<!DOCTYPE html>\n<html><head><title>Adama Deep Health</title></head><body>\n");
-      health.append("<h1>Adama Deep Health Check (for Humans!)</h1>\n");
-      health.append("<table border=1>\n");
+      String health = "<!DOCTYPE html>\n<html><head><title>Adama Deep Health</title></head><body>\n" + "<h1>Adama Deep Health Check (for Humans!)</h1>\n" + "<table border=1>\n";
       // TODO: if global, then ping database
       // TODO: if region, then ping global region
       // TODO: abstract the health checks to be a set
-      callback.success(health.toString());
+      callback.success(health);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(0, ex, EXLOGGER));
     }
+  }
+
+  private void get(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    if (skr != null) {
+      WebGet get = new WebGet(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
+      client.webGet(skr.space, skr.key, get, route(skr, callback));
+    } else {
+      callback.success(null);
+    }
+  }
+
+  private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+    rxHtmlFetcher.fetch(space, new Callback<>() {
+      @Override
+      public void success(LiveSiteRxHtmlResult result) {
+        if (result.test(uri)) {
+          callback.success(new HttpResult("text/html", result.html, false));
+          return;
+        }
+        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
+      }
+    });
   }
 }

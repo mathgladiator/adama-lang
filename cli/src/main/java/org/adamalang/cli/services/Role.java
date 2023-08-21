@@ -17,7 +17,7 @@ public enum Role {
   public final String name;
   public final int monitoringPort;
 
-  private Role(String name, int monitoringPort) {
+  Role(String name, int monitoringPort) {
     this.name = name;
     this.monitoringPort = monitoringPort;
   }

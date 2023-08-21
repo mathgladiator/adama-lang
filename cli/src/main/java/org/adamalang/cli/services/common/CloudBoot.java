@@ -14,7 +14,6 @@ import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.extern.Email;
 import org.adamalang.extern.aws.*;
 import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
