@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CloudBoot {
   private static final Logger LOGGER = LoggerFactory.getLogger(CloudBoot.class);
@@ -37,23 +38,25 @@ public class CloudBoot {
     this.awsMetrics = new AWSMetrics(metricsFactory);
     this.s3 = new S3(webBase, awsConfig, awsMetrics);
     this.sqs = new SQS(webBase, awsConfig, awsMetrics);
-    final Runnable cancel = system.schedule(new NamedRunnable("archive-s3") {
+    AtomicReference<Runnable> cancel = new AtomicReference<>();
+    cancel.set(system.schedule(new NamedRunnable("archive-s3") {
       @Override
       public void execute() throws Exception {
+        System.out.println("[CloudBoot-Shutdown]");
         try {
           s3.uploadLogs(new File("logs"), logsPrefix);
         } catch (Exception ex) {
           LOGGER.error("error-uploading-logs", ex);
         } finally {
           if (alive.get()) {
-            system.schedule(this, 60000);
+            cancel.set(system.schedule(this, 60000));
           }
         }
       }
-    }, 5000);
+    }, 5000));
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       alive.set(false);
-      cancel.run();
+      cancel.get().run();
     })));
   }
 }
