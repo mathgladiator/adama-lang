@@ -15,12 +15,10 @@ import org.adamalang.cli.services.Role;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.keys.PrivateKeyWithId;
-import org.adamalang.frontend.global.GlobalAssetSystem;
-import org.adamalang.extern.Email;
-import org.adamalang.frontend.global.GlobalExternNexus;
-import org.adamalang.extern.aws.SES;
-import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.frontend.FrontendConfig;
+import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
+import org.adamalang.frontend.global.GlobalAssetSystem;
+import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.impl.GlobalDomainFinder;
 import org.adamalang.mysql.impl.GlobalRxHtmlFetcher;
@@ -75,7 +73,8 @@ public class Frontend {
       throw new Exception("Failed to Register as Application");
     }
     WebMetrics webMetrics = new WebMetrics(init.metricsFactory);
-    final var redirect = new RedirectAndWellknownServiceRunnable(init.webConfig, webMetrics, init.s3, () -> {});
+    final var redirect = new RedirectAndWellknownServiceRunnable(init.webConfig, webMetrics, init.s3, () -> {
+    });
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
     CertificateFinder certificateFinder = CertificateBoot.make(init.webConfig, domainFinder, init.system);

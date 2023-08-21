@@ -12,7 +12,6 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
 import org.adamalang.cli.services.common.CloudBoot;
 import org.adamalang.cli.services.common.EveryMachine;
-import org.adamalang.region.RegionInit;
 
 public class RegionFrontend {
   public static void run(Config config) throws Exception {
