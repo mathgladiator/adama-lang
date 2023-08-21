@@ -3,6 +3,7 @@ package org.adamalang.runtime.data;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** a local cache of items bound to the current host */
