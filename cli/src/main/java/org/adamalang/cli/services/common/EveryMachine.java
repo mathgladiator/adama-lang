@@ -10,11 +10,10 @@ package org.adamalang.cli.services.common;
 
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
-import org.adamalang.common.ConfigObject;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.ExceptionRunnable;
-import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.web.client.WebClientBase;
@@ -43,6 +42,8 @@ public class EveryMachine {
   public final WebClientBase webBase;
   public final String machine;
   public final String logsPrefix;
+  public final NetBase netBase;
+  public final SimpleExecutor system;
 
   public EveryMachine(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -78,6 +79,22 @@ public class EveryMachine {
       } catch (Exception ex) {
       }
     })));
+    this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
+    this.system = SimpleExecutor.create("system");;
+
+    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
+      System.out.println("[EveryMachine-Shutdown]");
+      alive.set(false);
+      try {
+        system.shutdown();
+      } catch (Exception ex) {
+      }
+      try {
+        netBase.shutdown();
+      } catch (Exception ex) {
+      }
+    })));
+
     System.out.println("[EveryMachine-Setup]");
     System.out.println("         role:" + role.name);
     System.out.println("           ip: " + identity.ip);

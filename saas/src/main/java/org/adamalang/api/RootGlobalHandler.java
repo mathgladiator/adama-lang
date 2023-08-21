@@ -85,6 +85,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder);
 
+  public void handle(Session session, RegionalInitHostRequest request, HostInitResponder responder);
+
   public void handle(Session session, RegionalFinderFindRequest request, FinderResultResponder responder);
 
   public void handle(Session session, RegionalFinderFreeRequest request, SimpleResponder responder);
@@ -162,6 +164,7 @@ public interface RootGlobalHandler {
       case "super/list-automatic-domains":
       case "super/set-domain-certificate":
       case "regional/domain-lookup":
+      case "regional/init-host":
       case "regional/finder/find":
       case "regional/finder/free":
       case "regional/finder/findbind":

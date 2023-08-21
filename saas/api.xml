@@ -1286,6 +1286,27 @@
         </documentation>
     </method>
 
+    <responder name="host-init">
+        <field name="key-id"/>
+    </responder>
+
+    <parameter-definition name="public-key" type="string" missing-error="90000">
+        <documentation>
+            The public key for a host.
+        </documentation>
+    </parameter-definition>
+
+    <method name="regional/init-host" responder="host-init" scope="global" internal="true">
+        <parameter name="identity"/>
+        <parameter name="region"/>
+        <parameter name="machine"/>
+        <parameter name="role"/>
+        <parameter name="public-key"/>
+        <documentation>
+            For regional proxies to lookup domains.
+        </documentation>
+    </method>
+
 
     <parameter-definition name="machine" type="string" missing-error="9005" logged="true">
         <documentation>

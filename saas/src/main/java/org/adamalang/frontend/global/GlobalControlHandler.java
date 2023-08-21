@@ -754,6 +754,22 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   /*********
+   * Initializing a regional host
+   *********/
+
+  @Override
+  public void handle(Session session, RegionalInitHostRequest request, HostInitResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      try {
+        int publicKeyId = Hosts.initializeHost(nexus.database, request.region, request.machine, request.role, request.publicKey);
+        responder.complete(publicKeyId);
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_FAILED_HOST_INIT, ex, LOGGER));
+      }
+    }
+  }
+
+  /*********
    * Looking up domains from data regions
    *********/
   @Override
@@ -861,7 +877,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
       }
     }
   }
-
 
   /*********
    * Capacity Management for regions

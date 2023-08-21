@@ -474,6 +474,18 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientDomainRawResponse(obj), callback);
   }
 
+  /** regional/init-host */
+  public void regionalInitHost(ClientRegionalInitHostRequest request, Callback<ClientHostInitResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/init-host");
+    node.put("identity", request.identity);
+    node.put("region", request.region);
+    node.put("machine", request.machine);
+    node.put("role", request.role);
+    node.put("public-key", request.publicKey);
+    pool.requestResponse(node, (obj) -> new ClientHostInitResponse(obj), callback);
+  }
+
   /** regional/finder/find */
   public void regionalFinderFind(ClientRegionalFinderFindRequest request, Callback<ClientFinderResultResponse> callback) {
     ObjectNode node = Json.newJsonObject();

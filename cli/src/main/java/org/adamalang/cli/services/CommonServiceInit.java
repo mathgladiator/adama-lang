@@ -8,10 +8,13 @@
  */
 package org.adamalang.cli.services;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
+import org.adamalang.cli.services.common.CloudBoot;
 import org.adamalang.cli.services.common.EveryMachine;
 import org.adamalang.common.*;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.aws.AWSConfig;
@@ -61,13 +64,14 @@ public class CommonServiceInit {
   public final S3 s3;
   public final AWSConfig awsConfig;
   public final AWSMetrics awsMetrics;
+  public final SQS sqs;
   public final String machine;
   public final org.adamalang.common.gossip.Engine engine;
   public final int publicKeyId;
   public final WebConfig webConfig;
   public final WebClientBase webBase;
   public final String masterKey;
-  public final SQS sqs;
+
   public final SimpleExecutor services;
   public final AtomicBoolean alive;
   public final String region;
@@ -87,14 +91,14 @@ public class CommonServiceInit {
     this.webConfig = em.webConfig;
     this.webBase = em.webBase;
     this.servicePort = em.servicePort;
+    this.netBase = em.netBase;
+    this.system = em.system;
 
     // only available
     this.masterKey = config.get_string("master-key", null);
 
     this.database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(metricsFactory));
-    this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
     this.globalFinder = new GlobalFinder(database, region);
-    this.system = SimpleExecutor.create("system");
     this.picker = SimpleExecutor.create("picker");
 
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, em.publicKey);
@@ -113,43 +117,21 @@ public class CommonServiceInit {
       }
     }, 5000);
 
-    this.awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    this.awsMetrics = new AWSMetrics(metricsFactory);
-    this.s3 = new S3(webBase, awsConfig, awsMetrics);
-    this.sqs = new SQS(webBase, awsConfig, awsMetrics);
+    CloudBoot cb = new CloudBoot(em.alive, em.metricsFactory, em.webBase, config.get_or_create_child("aws"), em.logsPrefix, system);
+    this.awsConfig = cb.awsConfig;
+    this.awsMetrics = cb.awsMetrics;
+    this.s3 = cb.s3;
+    this.sqs = cb.sqs;
 
-    system.schedule(new NamedRunnable("archive-s3") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          s3.uploadLogs(new File("logs"), em.logsPrefix);
-        } catch (Exception ex) {
-          LOGGER.error("error-uploading-logs", ex);
-        } finally {
-          if (alive.get()) {
-            system.schedule(this, 60000);
-          }
-        }
-      }
-    }, 5000);
     engine = netBase.startGossiping();
     // TODO: promote the concept of the multi-region client as "everyone needs a client"
     services = SimpleExecutor.create("executor");
     FirstPartyServices.install(services, metricsFactory, webBase, new InternalSigner(publicKeyId, hostKey));
 
-
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       alive.set(false);
       try {
-        system.shutdown();
-      } catch (Exception ex) {
-      }
-      try {
         picker.shutdown();
-      } catch (Exception ex) {
-      }
-      try {
-        netBase.shutdown();
       } catch (Exception ex) {
       }
       try {
