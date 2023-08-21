@@ -662,6 +662,8 @@ public class ErrorTable {
     descriptions.put(998624, "no description of error (yet)");
     names.put(901348, "GLOBAL_CAPACITY_EMPTY_NEWHOST");
     descriptions.put(901348, "no description of error (yet)");
+    names.put(904461, "GLOBAL_FAILED_HOST_INIT");
+    descriptions.put(904461, "no description of error (yet)");
     names.put(966888, "GLOBAL_DOMAIN_FIND_EXCEPTION");
     descriptions.put(966888, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");

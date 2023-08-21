@@ -49,6 +49,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
   public final RequestResponseMonitor monitor_SuperSetDomainCertificate;
   public final RequestResponseMonitor monitor_RegionalDomainLookup;
+  public final RequestResponseMonitor monitor_RegionalInitHost;
   public final RequestResponseMonitor monitor_RegionalFinderFind;
   public final RequestResponseMonitor monitor_RegionalFinderFree;
   public final RequestResponseMonitor monitor_RegionalFinderFindbind;
@@ -106,6 +107,7 @@ public class GlobalApiMetrics {
     this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");
     this.monitor_SuperSetDomainCertificate = factory.makeRequestResponseMonitor("super/set-domain-certificate");
     this.monitor_RegionalDomainLookup = factory.makeRequestResponseMonitor("regional/domain-lookup");
+    this.monitor_RegionalInitHost = factory.makeRequestResponseMonitor("regional/init-host");
     this.monitor_RegionalFinderFind = factory.makeRequestResponseMonitor("regional/finder/find");
     this.monitor_RegionalFinderFree = factory.makeRequestResponseMonitor("regional/finder/free");
     this.monitor_RegionalFinderFindbind = factory.makeRequestResponseMonitor("regional/finder/findbind");

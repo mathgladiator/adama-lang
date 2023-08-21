@@ -6,8 +6,13 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230820193816";
+/** generated request type for regional/init-host */
+public class ClientRegionalInitHostRequest {
+  public String identity;
+  public String region;
+  public String machine;
+  public String role;
+  public String publicKey;
 }
