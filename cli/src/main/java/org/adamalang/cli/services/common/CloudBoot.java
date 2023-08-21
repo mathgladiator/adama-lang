@@ -14,10 +14,8 @@ import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.extern.aws.AWSConfig;
-import org.adamalang.extern.aws.AWSMetrics;
-import org.adamalang.extern.aws.S3;
-import org.adamalang.extern.aws.SQS;
+import org.adamalang.extern.Email;
+import org.adamalang.extern.aws.*;
 import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +30,7 @@ public class CloudBoot {
   public final AWSConfig awsConfig;
   public final AWSMetrics awsMetrics;
   public final SQS sqs;
+  public final SES ses;
 
   public CloudBoot(AtomicBoolean alive, MetricsFactory metricsFactory, WebClientBase webBase, ObjectNode config, String logsPrefix, SimpleExecutor system) throws Exception {
     this.awsConfig = new AWSConfig(new ConfigObject(config));
@@ -39,6 +38,7 @@ public class CloudBoot {
     this.s3 = new S3(webBase, awsConfig, awsMetrics);
     this.sqs = new SQS(webBase, awsConfig, awsMetrics);
     AtomicReference<Runnable> cancel = new AtomicReference<>();
+    this.ses = new SES(webBase, awsConfig, awsMetrics);
     cancel.set(system.schedule(new NamedRunnable("archive-s3") {
       @Override
       public void execute() throws Exception {

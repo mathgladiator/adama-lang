@@ -19,10 +19,7 @@ import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
-import org.adamalang.extern.aws.AWSConfig;
-import org.adamalang.extern.aws.AWSMetrics;
-import org.adamalang.extern.aws.S3;
-import org.adamalang.extern.aws.SQS;
+import org.adamalang.extern.aws.*;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.internal.InternalSigner;
 import org.adamalang.multiregion.MultiRegionClient;
@@ -76,6 +73,7 @@ public class CommonServiceInit {
   public final String region;
   public final String role;
   public final int servicePort;
+  public final SES ses;
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     EveryMachine em = new EveryMachine(config, role);
@@ -107,6 +105,7 @@ public class CommonServiceInit {
     this.awsMetrics = cb.awsMetrics;
     this.s3 = cb.s3;
     this.sqs = cb.sqs;
+    this.ses = cb.ses;
 
     em.installServices(publicKeyId);
   }
