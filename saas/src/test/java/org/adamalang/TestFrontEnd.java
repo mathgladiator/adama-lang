@@ -152,7 +152,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     File cloudPath = new File(caravanPath, "archive");
     File storePath = new File(dataRoot, "store");
     this.store = new DurableListStore(new DiskMetrics(new NoOpMetricsFactory()), storePath, walRoot, 64 * 1024 * 1024, 64 * 1024, 1024 * 1024);
-    GlobalFinder globalFinder = new GlobalFinder(dataBase, "test-region", "test-machine");
+    GlobalFinder globalFinder = new GlobalFinder(dataBase, "test-region", "127.0.0.1:" + port);
     Cloud cloud = new Cloud() {
       @Override
       public File path() {
@@ -180,7 +180,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     };
     CaravanDataService caravanDataService = new CaravanDataService(new CaravanMetrics(new NoOpMetricsFactory()), cloud, store, caravanExecutor);
     delete = new MockPostDocumentDelete();
-    Base managedBase = new Base(globalFinder, caravanDataService, delete, "test-region", "test-machine", managedExecutor, 5 * 60 * 1000);
+    Base managedBase = new Base(globalFinder, caravanDataService, delete, "test-region", "127.0.0.1:" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
     threadDeath = new CountDownLatch(1);
     Thread flusher = new Thread(new Runnable() {
