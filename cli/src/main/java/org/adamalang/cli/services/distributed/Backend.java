@@ -59,7 +59,7 @@ public class Backend {
     CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, init.globalFinder, init.s3, init.s3);
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
-    DeploymentAgent deployAgent = new DeploymentAgent(init.picker, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service, init.masterKey);
+    DeploymentAgent deployAgent = new DeploymentAgent(init.system, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service, init.masterKey);
 
     ServiceHeatEstimator.HeatVector low = config.get_heat("heat-low", 1, 100, 1, 100);
     ServiceHeatEstimator.HeatVector hot = config.get_heat("heat-hot", 1000, 100000, 250, 2000);

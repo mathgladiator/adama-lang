@@ -13,7 +13,9 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.common.CloudBoot;
 import org.adamalang.cli.services.common.EveryMachine;
+import org.adamalang.cli.services.global.DataBaseBoot;
 import org.adamalang.common.*;
+import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
@@ -60,19 +62,16 @@ public class CommonServiceInit {
   public final NetBase netBase;
   public final GlobalFinder globalFinder;
   public final SimpleExecutor system;
-  public final SimpleExecutor picker;
   public final S3 s3;
   public final AWSConfig awsConfig;
   public final AWSMetrics awsMetrics;
   public final SQS sqs;
   public final String machine;
-  public final org.adamalang.common.gossip.Engine engine;
+  public final Engine engine;
   public final int publicKeyId;
   public final WebConfig webConfig;
   public final WebClientBase webBase;
   public final String masterKey;
-
-  public final SimpleExecutor services;
   public final AtomicBoolean alive;
   public final String region;
   public final String role;
@@ -93,29 +92,15 @@ public class CommonServiceInit {
     this.servicePort = em.servicePort;
     this.netBase = em.netBase;
     this.system = em.system;
+    this.engine = em.engine;
 
     // only available
     this.masterKey = config.get_string("master-key", null);
+    DataBaseBoot db = new DataBaseBoot(em.alive, config, em.metricsFactory, em.system);
+    this.database = db.database;
 
-    this.database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(metricsFactory));
     this.globalFinder = new GlobalFinder(database, region);
-    this.picker = SimpleExecutor.create("picker");
-
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, em.publicKey);
-
-    system.schedule(new NamedRunnable("database-ping") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          Health.pingDataBase(database);
-        } catch (Exception ex) {
-          LOGGER.error("health-check-failure-database", ex);
-        }
-        if (alive.get()) {
-          system.schedule(this, (int) (30000 + 30000 * Math.random()));
-        }
-      }
-    }, 5000);
 
     CloudBoot cb = new CloudBoot(em.alive, em.metricsFactory, em.webBase, config.get_or_create_child("aws"), em.logsPrefix, system);
     this.awsConfig = cb.awsConfig;
@@ -123,23 +108,7 @@ public class CommonServiceInit {
     this.s3 = cb.s3;
     this.sqs = cb.sqs;
 
-    engine = netBase.startGossiping();
-    // TODO: promote the concept of the multi-region client as "everyone needs a client"
-    services = SimpleExecutor.create("executor");
-    FirstPartyServices.install(services, metricsFactory, webBase, new InternalSigner(publicKeyId, hostKey));
-
-    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
-      alive.set(false);
-      try {
-        picker.shutdown();
-      } catch (Exception ex) {
-      }
-      try {
-        services.shutdown();
-      } catch (Exception ex) {
-
-      }
-    })));
+    em.installServices(publicKeyId);
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {

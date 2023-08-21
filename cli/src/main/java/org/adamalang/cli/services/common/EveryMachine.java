@@ -11,11 +11,14 @@ package org.adamalang.cli.services.common;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
+import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.impl.common.PublicKeyCodec;
+import org.adamalang.internal.InternalSigner;
+import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ public class EveryMachine {
   public final String logsPrefix;
   public final NetBase netBase;
   public final SimpleExecutor system;
+  public final Engine engine;
 
   public EveryMachine(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -81,7 +85,7 @@ public class EveryMachine {
     })));
     this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
     this.system = SimpleExecutor.create("system");;
-
+    this.engine = netBase.startGossiping();
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[EveryMachine-Shutdown]");
       alive.set(false);
@@ -103,5 +107,20 @@ public class EveryMachine {
     System.out.println("     identity: " + identity.ip);
     System.out.println("  logs-prefix: " + logsPrefix);
     System.out.println("[/EveryMachine-Setup]");
+  }
+
+  public void installServices(int publicKeyId) {
+    SimpleExecutor services = SimpleExecutor.create("executor");
+    FirstPartyServices.install(services, metricsFactory, webBase, new InternalSigner(publicKeyId, hostKey));
+
+    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
+      System.out.println("[Services-Shutdown]");
+      alive.set(false);
+      try {
+        services.shutdown();
+      } catch (Exception ex) {
+
+      }
+    })));
   }
 }
