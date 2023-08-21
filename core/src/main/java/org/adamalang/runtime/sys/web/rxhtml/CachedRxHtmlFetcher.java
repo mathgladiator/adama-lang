@@ -14,6 +14,8 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.common.cache.AsyncSharedLRUCache;
 import org.adamalang.common.cache.SyncCacheLRU;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class CachedRxHtmlFetcher implements RxHtmlFetcher {
   private final SyncCacheLRU<String, LiveSiteRxHtmlResult> storage;
   private final AsyncSharedLRUCache<String, LiveSiteRxHtmlResult> cache;
@@ -22,6 +24,10 @@ public class CachedRxHtmlFetcher implements RxHtmlFetcher {
     this.storage = new SyncCacheLRU<>(timeSource, 0, maxSites, 16 * 1024 * 1024, maxAge, (name, record) -> {
     });
     this.cache = new AsyncSharedLRUCache<>(executor, storage, fetcher::fetch);
+  }
+
+  public void startSweeping(AtomicBoolean alive, int periodMinimumMs, int periodMaximumMs) {
+    this.cache.startSweeping(alive, periodMinimumMs, periodMaximumMs);
   }
 
   @Override

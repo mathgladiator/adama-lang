@@ -14,6 +14,8 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.common.cache.AsyncSharedLRUCache;
 import org.adamalang.common.cache.SyncCacheLRU;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /** cache domains for faster access */
 public class CachedDomainFinder implements DomainFinder {
   private final SyncCacheLRU<String, Domain> storage;
@@ -23,6 +25,10 @@ public class CachedDomainFinder implements DomainFinder {
     this.storage = new SyncCacheLRU<>(timeSource, 0, maxDomains, 1024 * maxDomains, maxAge, (name, record) -> {
     });
     this.cache = new AsyncSharedLRUCache<>(executor, storage, finder::find);
+  }
+
+  public void startSweeping(AtomicBoolean alive, int periodMinimumMs, int periodMaximumMs) {
+    this.cache.startSweeping(alive, periodMinimumMs, periodMaximumMs);
   }
 
   @Override

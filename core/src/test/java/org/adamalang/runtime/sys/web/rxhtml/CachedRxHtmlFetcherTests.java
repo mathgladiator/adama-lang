@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CachedRxHtmlFetcherTests {
   @Test
@@ -38,6 +39,41 @@ public class CachedRxHtmlFetcherTests {
 
         }
       });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    } finally {
+      executor.shutdown();
+    }
+  }
+
+  @Test
+  public void expiry() throws Exception {
+    SimpleExecutor executor = SimpleExecutor.create("exe");
+    try {
+      MockRxHtmlFetcher mock = new MockRxHtmlFetcher();
+      CountDownLatch latch = new CountDownLatch(5);
+      CachedRxHtmlFetcher fetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 5, executor, new RxHtmlFetcher() {
+        @Override
+        public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback) {
+          latch.countDown();
+          mock.fetch(space, callback);
+        }
+      });
+      AtomicBoolean alive = new AtomicBoolean(true);
+      fetcher.startSweeping(alive, 1, 2);
+      long start = System.currentTimeMillis();
+      while (latch.getCount() > 0 && (System.currentTimeMillis() - start) < 2000) {
+        fetcher.fetch("trivial", new Callback<LiveSiteRxHtmlResult>() {
+          @Override
+          public void success(LiveSiteRxHtmlResult value) {
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Thread.sleep(10);
+      }
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     } finally {
       executor.shutdown();

@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CachedDomainFinderTests {
   @Test
@@ -73,6 +74,47 @@ public class CachedDomainFinderTests {
         });
       }
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    } finally {
+      executor.shutdown();
+    }
+  }
+
+
+  @Test
+  public void expiry() throws Exception {
+    SimpleExecutor executor = SimpleExecutor.create("x");
+    try {
+      MockDomainFinder mock = new MockDomainFinder();
+      mock.with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
+      CountDownLatch latch = new CountDownLatch(5);
+      CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 5, executor, new DomainFinder() {
+        @Override
+        public void find(String domain, Callback<Domain> callback) {
+          System.out.println("hit");
+          latch.countDown();
+          mock.find(domain, callback);
+        }
+      });
+      AtomicBoolean alive = new AtomicBoolean(true);
+      finder.startSweeping(alive, 1, 2);
+      long start = System.currentTimeMillis();
+      while (latch.getCount() > 0 && (System.currentTimeMillis() - start) < 2000) {
+        finder.find("host", new Callback<Domain>() {
+          @Override
+          public void success(Domain value) {
+            Assert.assertEquals("domain", value.domain);
+            Assert.assertEquals("space", value.space);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Thread.sleep(10);
+      }
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+      alive.set(false);
     } finally {
       executor.shutdown();
     }

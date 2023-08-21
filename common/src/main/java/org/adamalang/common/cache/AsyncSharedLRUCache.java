@@ -15,6 +15,8 @@ import org.adamalang.common.SimpleExecutor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 
 /** wrap a SyncCacheLRU */
@@ -23,12 +25,27 @@ public class AsyncSharedLRUCache<D, R extends Measurable> {
   public final SyncCacheLRU<D, R> cache;
   public final BiConsumer<D, Callback<R>> resolver;
   public final HashMap<D, ArrayList<Callback<R>>> inflight;
+  private final Random rng;
 
   public AsyncSharedLRUCache(SimpleExecutor executor, SyncCacheLRU<D, R> cache, BiConsumer<D, Callback<R>> resolver) {
     this.executor = executor;
     this.cache = cache;
     this.resolver = resolver;
     this.inflight = new HashMap<>();
+    this.rng = new Random();
+  }
+
+  public void startSweeping(AtomicBoolean alive, int periodMinimumMs, int periodMaximumMs) {
+    final int periodRange = Math.max(periodMaximumMs - periodMinimumMs, 10);
+    executor.schedule(new NamedRunnable("async") {
+      @Override
+      public void execute() throws Exception {
+        cache.sweep();
+        if (alive.get()) {
+          executor.schedule(this, periodMinimumMs + rng.nextInt(periodRange));
+        }
+      }
+    }, periodMinimumMs);
   }
 
   public void get(D key, Callback<R> callback) {
