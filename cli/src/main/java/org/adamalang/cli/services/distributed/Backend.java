@@ -97,7 +97,7 @@ public class Backend {
     deployAgent.optimisticScanAll();
 
     // list all the documents on this machine, and spin them up
-    init.globalFinder.list(init.machine, new Callback<List<Key>>() {
+    init.globalFinder.list(new Callback<List<Key>>() {
       @Override
       public void success(List<Key> keys) {
         for (Key key : keys) {

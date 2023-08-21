@@ -24,10 +24,12 @@ import java.util.concurrent.TimeUnit;
 public class MockFinderService implements FinderService {
   private final HashMap<Key, DocumentLocation> map;
   private final HashSet<Key> deleted;
+  private final String machine;
 
-  public MockFinderService() {
+  public MockFinderService(String machine) {
     this.map = new HashMap<>();
     this.deleted = new HashSet<>();
+    this.machine = machine;
   }
 
   private Runnable slowFind;
@@ -73,8 +75,8 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
-    bind(key, machine, new Callback<Void>() {
+  public void findbind(Key key, Callback<DocumentLocation> callback) {
+    bind(key, new Callback<Void>() {
       @Override
       public void success(Void value) {
         find(key, callback);
@@ -88,7 +90,7 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void bind(Key key, String machine, Callback<Void> callback) {
+  public void bind(Key key, Callback<Void> callback) {
     if (key.key.contains("cant-bind")) {
       callback.failure(new ErrorCodeException(-1234));
       return;
@@ -111,7 +113,7 @@ public class MockFinderService implements FinderService {
   }
 
   public void bindLocal(Key key) {
-    bind(key,  "test-machine", Callback.DONT_CARE_VOID);
+    bind(key,  Callback.DONT_CARE_VOID);
   }
 
   public void bindArchive(Key key, String archiveKey) {
@@ -123,7 +125,7 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void free(Key key, String machineOn, Callback<Void> callback) {
+  public void free(Key key, Callback<Void> callback) {
     if (key.key.equals("retry-key")) {
       if (!failedRetryKeyInFree) {
         failedRetryKeyInFree = true;
@@ -134,7 +136,7 @@ public class MockFinderService implements FinderService {
 
     DocumentLocation documentLocation = map.get(key);
     if (documentLocation != null) {
-      if (machineOn.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
+      if (machine.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
         map.put(key, new DocumentLocation(1, LocationType.Archive, "", "", documentLocation.archiveKey, false));
         callback.success(null);
       } else {
@@ -149,7 +151,7 @@ public class MockFinderService implements FinderService {
   private boolean failedRetryKeyInFree = false;
 
   @Override
-  public void backup(Key key, BackupResult backupResult, String machineOn, Callback<Void> callback) {
+  public void backup(Key key, BackupResult backupResult, Callback<Void> callback) {
     if ("delete-while-archive".equals(key.key)) {
       callback.success(null);
       return;
@@ -163,7 +165,7 @@ public class MockFinderService implements FinderService {
     }
     DocumentLocation documentLocation = map.get(key);
     if (documentLocation != null) {
-      if (machineOn.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
+      if (machine.equals(documentLocation.machine) && documentLocation.location == LocationType.Machine) {
         map.put(key, new DocumentLocation(1, documentLocation.location, documentLocation.region, documentLocation.machine, backupResult.archiveKey, false));
         callback.success(null);
       } else {
@@ -176,7 +178,7 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void markDelete(Key key, String machineOn, Callback<Void> callback) {
+  public void markDelete(Key key, Callback<Void> callback) {
     if ("fail-mark".equals(key.key)) {
       callback.failure(new ErrorCodeException(-12389));
       return;
@@ -186,7 +188,7 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void commitDelete(Key key, String machineOn, Callback<Void> callback) {
+  public void commitDelete(Key key, Callback<Void> callback) {
     if ("keep-finder".equals(key.key)) {
       callback.success(null);
       return;
@@ -204,12 +206,12 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void list(String machine, Callback<List<Key>> callback) {
+  public void list(Callback<List<Key>> callback) {
     callback.failure(new ErrorCodeException(-123));
   }
 
   @Override
-  public void listDeleted(String machine, Callback<List<Key>> callback) {
+  public void listDeleted(Callback<List<Key>> callback) {
     callback.success(new ArrayList<>(deleted));
   }
 }

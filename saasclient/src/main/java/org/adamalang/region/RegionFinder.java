@@ -12,21 +12,21 @@ import org.adamalang.Wraps;
 import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Stream;
 import org.adamalang.runtime.data.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RegionFinder implements FinderService {
   private final SelfClient client;
   private final String identity;
   private final String region;
+  private final String machine;
 
-  public RegionFinder(SelfClient client, String identity, String region) {
+  public RegionFinder(SelfClient client, String identity, String region, String machine) {
     this.client = client;
     this.identity = identity;
     this.region = region;
+    this.machine = machine;
   }
 
   @Override
@@ -39,7 +39,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
+  public void findbind(Key key, Callback<DocumentLocation> callback) {
     ClientRegionalFinderFindbindRequest request = new ClientRegionalFinderFindbindRequest();
     request.identity = identity;
     request.space = key.space;
@@ -50,7 +50,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void bind(Key key, String machine, Callback<Void> callback) {
+  public void bind(Key key, Callback<Void> callback) {
     ClientRegionalFinderFindbindRequest request = new ClientRegionalFinderFindbindRequest();
     request.identity = identity;
     request.space = key.space;
@@ -76,7 +76,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void free(Key key, String machine, Callback<Void> callback) {
+  public void free(Key key, Callback<Void> callback) {
     ClientRegionalFinderFreeRequest request = new ClientRegionalFinderFreeRequest();
     request.identity = identity;
     request.space = key.space;
@@ -87,7 +87,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void backup(Key key, BackupResult result, String machine, Callback<Void> callback) {
+  public void backup(Key key, BackupResult result, Callback<Void> callback) {
     ClientRegionalFinderBackUpRequest request = new ClientRegionalFinderBackUpRequest();
     request.identity = identity;
     request.space = key.space;
@@ -102,7 +102,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void markDelete(Key key, String machine, Callback<Void> callback) {
+  public void markDelete(Key key, Callback<Void> callback) {
     ClientRegionalFinderDeleteMarkRequest request = new ClientRegionalFinderDeleteMarkRequest();
     request.identity = identity;
     request.space = key.space;
@@ -113,7 +113,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void commitDelete(Key key, String machine, Callback<Void> callback) {
+  public void commitDelete(Key key, Callback<Void> callback) {
     ClientRegionalFinderDeleteCommitRequest request = new ClientRegionalFinderDeleteCommitRequest();
     request.identity = identity;
     request.space = key.space;
@@ -124,7 +124,7 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void list(String machine, Callback<List<Key>> callback) {
+  public void list(Callback<List<Key>> callback) {
     ClientRegionalFinderListRequest request = new ClientRegionalFinderListRequest();
     request.identity = identity;
     request.region = region;
@@ -133,13 +133,11 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void listDeleted(String machine, Callback<List<Key>> callback) {
+  public void listDeleted(Callback<List<Key>> callback) {
     ClientRegionalFinderDeletionListRequest request = new ClientRegionalFinderDeletionListRequest();
     request.identity = identity;
     request.region = region;
     request.machine = machine;
     client.regionalFinderDeletionList(request, Wraps.wrapListKey(callback));
   }
-
-
 }

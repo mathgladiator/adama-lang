@@ -49,7 +49,7 @@ public class BaseTests {
   }
 
   public static void flow(ThrowConsumer<Base> body, ArchivingDataService data) throws Exception {
-    MockFinderService mockFinder = new MockFinderService();
+    MockFinderService mockFinder = new MockFinderService("test-machine");
     mockFinder.bindLocal(new Key("space", "key"));
     MockPostDocumentDelete delete = new MockPostDocumentDelete();
     SimpleExecutor bexecutor = SimpleExecutor.create("executor");

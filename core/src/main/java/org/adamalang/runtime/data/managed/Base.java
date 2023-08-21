@@ -25,18 +25,18 @@ public class Base {
   public final ArchivingDataService data;
   public final PostDocumentDelete delete;
   public final String region;
-  public final String target;
+  public final String machine;
   public final HashMap<Key, Machine> documents;
   public final SimpleExecutor executor;
   public final int archiveTimeMilliseconds;
   private final AtomicInteger failureBackoff;
 
-  public Base(FinderService finder, ArchivingDataService data, final PostDocumentDelete delete, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
+  public Base(FinderService finder, ArchivingDataService data, final PostDocumentDelete delete, String region, String machine, SimpleExecutor executor, int archiveTimeMilliseconds) {
     this.finder = finder;
     this.data = data;
     this.delete = delete;
     this.region = region;
-    this.target = target;
+    this.machine = machine;
     this.documents = new HashMap<>();
     this.executor = executor;
     this.archiveTimeMilliseconds = archiveTimeMilliseconds;

@@ -41,28 +41,29 @@ public class GlobalFinderTests {
       try {
         installer.install();
         Assert.assertFalse(FinderOperations.exists(dataBase, 1));
-        GlobalFinder machine = new GlobalFinder(dataBase, "region");
+        GlobalFinder machineA = new GlobalFinder(dataBase, "region", "machine-a");
+        GlobalFinder machineB = new GlobalFinder(dataBase, "region", "machine-b");
         ArrayList<DocumentIndex> listing;
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
+          machineA.find(KEY1, cb);
           cb.assertFailure(625676);
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY2, cb);
+          machineA.find(KEY2, cb);
           cb.assertFailure(625676);
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY2, cb);
+          machineA.find(KEY2, cb);
           cb.assertFailure(625676);
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);
         Assert.assertEquals(0, listing.size());
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "machineB:523", callback);
+          machineB.bind(KEY1, callback);
           callback.assertSuccess();
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);
@@ -72,7 +73,7 @@ public class GlobalFinderTests {
 
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
+          machineA.find(KEY1, cb);
           long id = cb.assertSuccessAndGetId();
           Assert.assertTrue(FinderOperations.exists(dataBase, id));
         }
@@ -83,68 +84,68 @@ public class GlobalFinderTests {
         Assert.assertEquals(KEY1.key, listing.get(0).key);
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "");
+          machineA.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b", "");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "machineB:523", callback);
+          machineB.bind(KEY1, callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "");
+          machineA.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b", "");
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "");
+          machineB.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b", "");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "machineA:124", callback);
+          machineA.bind(KEY1, callback);
           callback.assertFailure(667658);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "machineB:523", callback);
+          machineB.bind(KEY1, callback);
           callback.assertSuccess();
         }
         BackupResult result1 = new BackupResult("new-achive-key", 0, 1, 4);
         BackupResult result2 = new BackupResult("new-achive-key-old", 0, 1, 8);
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, result1, "machineA:124", callback);
+          machineA.backup(KEY1, result1, callback);
           callback.assertFailure(722034);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, result1, "machineB:523", callback);
+          machineB.backup(KEY1, result1, callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key");
+          machineB.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b", "new-achive-key");
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key");
+          machineB.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b",  "new-achive-key");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, result2, "machineB:523", callback);
+          machineB.backup(KEY1, result2, callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key-old");
+          machineB.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b", "new-achive-key-old");
         }
         CountDownLatch listFinished = new CountDownLatch(1);
-        machine.list("machineB:523", new Callback<List<Key>>() {
+        machineB.list(new Callback<List<Key>>() {
           @Override
           public void success(List<Key> value) {
             for (Key result : value) {
@@ -162,17 +163,17 @@ public class GlobalFinderTests {
         Assert.assertTrue(listFinished.await(5000, TimeUnit.MILLISECONDS));
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, result2, "machineB:523", callback);
+          machineB.backup(KEY1, result2, callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(LocationType.Machine, "machineB:523", "new-achive-key-old");
+          machineB.find(KEY1, cb);
+          cb.assertSuccess(LocationType.Machine, "machine-b", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.free(KEY1, "machineB:523", callback);
+          machineB.free(KEY1, callback);
           callback.assertSuccess();
         }
         tasks = FinderOperations.produceGCTasks(dataBase);
@@ -190,32 +191,32 @@ public class GlobalFinderTests {
         Assert.assertEquals(9, (long) inventory.get(KEY1.space));
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
+          machineA.find(KEY1, cb);
           cb.assertSuccess(LocationType.Archive, "", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "targetNew", callback);
+          machineA.bind(KEY1, callback);
           callback.assertSuccess();
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.markDelete(KEY1, "nop", callback);
+          machineB.markDelete(KEY1, callback);
           callback.assertFailure(773247);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.commitDelete(KEY1, "nop", callback);
+          machineB.commitDelete(KEY1, callback);
           callback.assertFailure(787655);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.markDelete(KEY1, "targetNew", callback);
+          machineA.markDelete(KEY1, callback);
           callback.assertSuccess();
         }
         {
           SimpleMockCallback fauxCallback = new SimpleMockCallback();
-          machine.listDeleted("targetNew", new Callback<List<Key>>() {
+          machineA.listDeleted(new Callback<List<Key>>() {
             @Override
             public void success(List<Key> value) {
               Assert.assertTrue(value.size() == 1);
@@ -231,7 +232,7 @@ public class GlobalFinderTests {
         }
         {
           SimpleMockCallback fauxCallback = new SimpleMockCallback();
-          machine.list("targetNew", new Callback<List<Key>>() {
+          machineA.list(new Callback<List<Key>>() {
             @Override
             public void success(List<Key> value) {
               Assert.assertTrue(value.size() == 0);
@@ -247,12 +248,12 @@ public class GlobalFinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "targetNew", callback);
+          machineA.bind(KEY1, callback);
           callback.assertFailure(667658);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.commitDelete(KEY1, "targetNew", callback);
+          machineA.commitDelete(KEY1, callback);
           callback.assertSuccess();
         }
         listing = FinderOperations.list(dataBase, "space-1", "", 4);

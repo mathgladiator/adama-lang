@@ -63,7 +63,7 @@ public class Machine {
 
   private void executeClosed() {
     closed = true;
-    base.finder.free(key, base.target, new Callback<Void>() {
+    base.finder.free(key, new Callback<Void>() {
       @Override
       public void success(Void value) {
         base.reportSuccess();
@@ -132,7 +132,7 @@ public class Machine {
     base.data.backup(key, new Callback<>() {
       @Override
       public void success(BackupResult result) {
-        base.finder.backup(key, result, base.target, new Callback<Void>() {
+        base.finder.backup(key, result, new Callback<Void>() {
           @Override
           public void success(Void value) {
             archive_Success(result);
@@ -164,7 +164,7 @@ public class Machine {
     }
   }
 
-  private void find_FoundMachine(String foundMachine, boolean postRestore) {
+  private void find_FoundMachine(boolean postRestore) {
     base.executor.execute(new NamedRunnable("machine-found-machine") {
       @Override
       public void execute() throws Exception {
@@ -179,22 +179,18 @@ public class Machine {
           failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_CLOSED_BEFORE_FOUND));
           return;
         }
-        if (foundMachine.equals(base.target)) {
-          state = State.OnMachine;
-          // since we found it on the machine, we _may_ have local changes
-          if (!postRestore) {
-            pendingWrites++;
-          }
-          ArrayList<Action> toact = actions;
-          actions = null;
-          for (Action action : toact) {
-            action.action.run();
-          }
-          if (pendingWrites > 0) {
-            scheduleArchiveWhileInExecutor(false);
-          }
-        } else {
-          failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRONG_MACHINE));
+        state = State.OnMachine;
+        // since we found it on the machine, we _may_ have local changes
+        if (!postRestore) {
+          pendingWrites++;
+        }
+        ArrayList<Action> toact = actions;
+        actions = null;
+        for (Action action : toact) {
+          action.action.run();
+        }
+        if (pendingWrites > 0) {
+          scheduleArchiveWhileInExecutor(false);
         }
       }
     });
@@ -219,10 +215,10 @@ public class Machine {
         base.data.restore(key, archiveKey, new Callback<Void>() {
           @Override
           public void success(Void value) {
-            base.finder.bind(key, base.target, new Callback<Void>() {
+            base.finder.bind(key, new Callback<Void>() {
               @Override
               public void success(Void value) {
-                find_FoundMachine(base.target, true);
+                find_FoundMachine(true);
               }
 
               @Override
@@ -254,7 +250,11 @@ public class Machine {
               lastArchiveKey = null;
             }
             if (found.location == LocationType.Machine) {
-              find_FoundMachine(found.machine, false);
+              if (found.region.equals(base.region) && found.machine.equals(base.machine)) {
+                find_FoundMachine(false);
+              } else {
+                failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRONG_MACHINE));
+              }
             } else {
               find_Restore(found.archiveKey);
             }

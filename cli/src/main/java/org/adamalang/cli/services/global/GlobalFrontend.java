@@ -54,7 +54,7 @@ public class GlobalFrontend {
     DomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, em.system, new GlobalDomainFinder(db.database, masterKey));
     RxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, em.system, new GlobalRxHtmlFetcher(db.database));
     int publicKeyId = Hosts.initializeHost(db.database, em.region, em.machine, "web", em.publicKey);
-    GlobalFinder globalFinder = new GlobalFinder(db.database, em.region);
+    GlobalFinder globalFinder = new GlobalFinder(db.database, em.region, em.machine);
 
     // public MultiRegionClient(LocalRegionClient local, String region, PrivateKey privateKey, int keyId, SimpleFinderService finder, TreeMap<String, SelfClient> remoteRegions) {
     MultiRegionClient adama = null; // TODO: create the multi-region client
