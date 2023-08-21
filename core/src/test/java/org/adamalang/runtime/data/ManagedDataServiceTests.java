@@ -59,7 +59,7 @@ public class ManagedDataServiceTests {
     public final MockPostDocumentDelete delete;
 
     public Setup() throws Exception {
-      this.finder = new MockFinderService();
+      this.finder = new MockFinderService("test-machine");
       this.executor = SimpleExecutor.create("setup");
       this.data = new MockInstantDataService();
       this.archive = new MockArchiveDataSource(data);

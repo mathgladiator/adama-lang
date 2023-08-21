@@ -89,7 +89,7 @@ public class CommonServiceInit {
     DataBaseBoot db = new DataBaseBoot(em.alive, config, em.metricsFactory, em.system);
     this.database = db.database;
 
-    this.globalFinder = new GlobalFinder(database, region);
+    this.globalFinder = new GlobalFinder(database, region, machine);
     this.publicKeyId = Hosts.initializeHost(database, this.region, this.machine, role.name, em.publicKey);
 
     CloudBoot cb = new CloudBoot(em.alive, em.metricsFactory, em.webBase, config.get_or_create_child("aws"), em.logsPrefix, system);

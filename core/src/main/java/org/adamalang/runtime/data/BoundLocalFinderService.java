@@ -1,3 +1,11 @@
+/*
+ * This file is subject to the terms and conditions outlined in the
+ * file 'LICENSE' (it's dual licensed) located in the root directory
+ * near the README.md which you should also read. For more information
+ * about the project which owns this file, see https://www.adama-platform.com/ .
+ *
+ * (c) 2021 - 2023 by Adama Platform Initiative, LLC
+ */
 package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
@@ -31,18 +39,18 @@ public class BoundLocalFinderService implements FinderService {
   }
 
   @Override
-  public void bind(Key key, String machine, Callback<Void> callback) {
-    global.bind(key, machine, callback);
+  public void bind(Key key, Callback<Void> callback) {
+    global.bind(key, callback);
   }
 
   @Override
-  public void findbind(Key key, String machine, Callback<DocumentLocation> callback) {
+  public void findbind(Key key, Callback<DocumentLocation> callback) {
     DocumentLocation cached = cache.get(key);
     if (cached != null) {
       callback.success(cached);
       return;
     }
-    global.findbind(key, machine, new Callback<DocumentLocation>() {
+    global.findbind(key, new Callback<>() {
       @Override
       public void success(DocumentLocation location) {
         if (BoundLocalFinderService.this.region.equals(location.region) && BoundLocalFinderService.this.machine.equals(location.machine)) {
@@ -59,34 +67,34 @@ public class BoundLocalFinderService implements FinderService {
   }
 
   @Override
-  public void free(Key key, String machineOn, Callback<Void> callback) {
+  public void free(Key key, Callback<Void> callback) {
     cache.remove(key);
-    global.free(key, machineOn, callback);
+    global.free(key, callback);
   }
 
   @Override
-  public void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback) {
-    global.backup(key, result, machineOn, callback);
+  public void backup(Key key, BackupResult result, Callback<Void> callback) {
+    global.backup(key, result, callback);
   }
 
   @Override
-  public void markDelete(Key key, String machineOn, Callback<Void> callback) {
-    global.markDelete(key, machineOn, callback);
+  public void markDelete(Key key, Callback<Void> callback) {
+    global.markDelete(key, callback);
   }
 
   @Override
-  public void commitDelete(Key key, String machineOn, Callback<Void> callback) {
+  public void commitDelete(Key key, Callback<Void> callback) {
     cache.remove(key);
-    global.commitDelete(key, machineOn, callback);
+    global.commitDelete(key, callback);
   }
 
   @Override
-  public void list(String machine, Callback<List<Key>> callback) {
-    global.list(machine, callback);
+  public void list(Callback<List<Key>> callback) {
+    global.list(callback);
   }
 
   @Override
-  public void listDeleted(String machine, Callback<List<Key>> callback) {
-    global.listDeleted(machine, callback);
+  public void listDeleted(Callback<List<Key>> callback) {
+    global.listDeleted(callback);
   }
 }

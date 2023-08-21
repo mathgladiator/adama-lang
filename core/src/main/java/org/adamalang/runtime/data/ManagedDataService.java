@@ -37,7 +37,7 @@ public class ManagedDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    base.finder.bind(key, base.target, new Callback<Void>() {
+    base.finder.bind(key, new Callback<>() {
       @Override
       public void success(Void value) {
         base.on(key, (machine) -> {
@@ -74,7 +74,7 @@ public class ManagedDataService implements DataService {
 
   @Override
   public void delete(Key key, DeleteTask task, Callback<Void> callback) {
-    base.finder.markDelete(key, base.target, new Callback<Void>() {
+    base.finder.markDelete(key, new Callback<Void>() {
       @Override
       public void success(Void value) {
         task.executeAfterMark(new Callback<Void>() {
@@ -83,7 +83,7 @@ public class ManagedDataService implements DataService {
             deleteLocal(key, new Callback<>() {
               @Override
               public void success(Void value) {
-                base.finder.commitDelete(key, base.target, callback);
+                base.finder.commitDelete(key, callback);
               }
 
               @Override

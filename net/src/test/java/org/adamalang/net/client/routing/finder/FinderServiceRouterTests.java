@@ -24,7 +24,7 @@ public class FinderServiceRouterTests {
   public void failure_retry_go_machine() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("finder-router");
     try {
-      MockFinderService finder = new MockFinderService();
+      MockFinderService finder = new MockFinderService("test-machine");
       MockMachinePicker picker = new MockMachinePicker();
       FinderServiceRouter router = new FinderServiceRouter(executor, finder, picker, "test-region");
       finder.bindLocal(new Key("space", "retry-key"));
@@ -51,7 +51,7 @@ public class FinderServiceRouterTests {
   public void failure_retry_go_region() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("finder-router");
     try {
-      MockFinderService finder = new MockFinderService();
+      MockFinderService finder = new MockFinderService("test-machine");
       MockMachinePicker picker = new MockMachinePicker();
       FinderServiceRouter router = new FinderServiceRouter(executor, finder, picker, "test-region");
       finder.bindOtherRegion(new Key("space", "retry-key"));

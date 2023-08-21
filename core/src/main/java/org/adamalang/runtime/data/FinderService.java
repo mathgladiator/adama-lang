@@ -16,27 +16,27 @@ import java.util.List;
 public interface FinderService extends SimpleFinderService {
 
   /** take over for the key */
-  void bind(Key key, String machine, Callback<Void> callback);
+  void bind(Key key, Callback<Void> callback);
 
   /** find the result and bind it to me */
-  void findbind(Key key, String machine, Callback<DocumentLocation> callback);
+  void findbind(Key key, Callback<DocumentLocation> callback);
 
   /** release the machine for the given key */
-  void free(Key key, String machineOn, Callback<Void> callback);
+  void free(Key key, Callback<Void> callback);
 
   /** set a backup copy while still active on machine */
-  void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback);
+  void backup(Key key, BackupResult result, Callback<Void> callback);
 
   /** mark the key for deletion */
-  void markDelete(Key key, String machineOn, Callback<Void> callback);
+  void markDelete(Key key, Callback<Void> callback);
 
   /** signal that deletion has been completed */
-  void commitDelete(Key key, String machineOn, Callback<Void> callback);
+  void commitDelete(Key key, Callback<Void> callback);
 
   /** list all items on a host */
-  void list(String machine, Callback<List<Key>> callback);
+  void list(Callback<List<Key>> callback);
 
   /** list all items on a host */
-  void listDeleted(String machine, Callback<List<Key>> callback);
+  void listDeleted(Callback<List<Key>> callback);
 
 }
