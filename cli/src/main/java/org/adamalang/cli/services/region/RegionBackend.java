@@ -8,5 +8,12 @@
  */
 package org.adamalang.cli.services.region;
 
+import org.adamalang.cli.Config;
+import org.adamalang.cli.services.Role;
+import org.adamalang.cli.services.common.EveryMachine;
+
 public class RegionBackend {
+  public static void run(Config config) throws Exception {
+    EveryMachine em = new EveryMachine(config, Role.Adama);
+  }
 }
