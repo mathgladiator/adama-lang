@@ -203,7 +203,7 @@ Adama.Debugger = (function() {
         update = function(value) { item.innerHTML = "\"" + value + "\""; };
       } else if (type.type == "principal") {
         item.style = "color: #BA83FF;";
-        update = function(value) { item.innerHTML = value.agent + "@" + value.authority; };
+        update = function(value) { item.innerHTML = value != null ? (value.agent + "@" + value.authority) : "null"; };
       } else if (type.type == "bool") {
         item.style = "color: #E83B3B;";
       }
