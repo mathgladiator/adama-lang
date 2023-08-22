@@ -1,0 +1,21 @@
+enum ClassifyResult {
+  Odd:1, Even:2
+}
+
+record Item {
+  public int id;
+  public formula status = classify(id);
+}
+
+table<Item> _items;
+
+procedure dump() {
+  iterate _items where status == ClassifyResult::Even;
+}
+
+function classify(int id) -> ClassifyResult {
+  if (id % 2 == 0) {
+    return ClassifyResult::Even;
+  }
+  return ClassifyResult::Odd;
+}
