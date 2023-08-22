@@ -56,7 +56,7 @@ public class GlobalAssetSystem implements AssetSystem {
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, String channel, String message, Callback<Integer> callback) {
-    PerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(database, masterKey, context, new String[] {});
+    PerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(database, masterKey, context, new String[] {}, new String[] {});
     authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser who) {

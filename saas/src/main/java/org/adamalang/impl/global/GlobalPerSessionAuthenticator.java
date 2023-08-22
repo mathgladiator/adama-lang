@@ -39,12 +39,14 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
   private final DataBase database;
   private final String masterKey;
   private final String[] superKeys;
+  private final String[] regionalPublicKeys;
 
-  public GlobalPerSessionAuthenticator(DataBase database, String masterKey, ConnectionContext defaultContext, String[] superKeys) {
+  public GlobalPerSessionAuthenticator(DataBase database, String masterKey, ConnectionContext defaultContext, String[] superKeys, String[] regionalPublicKeys) {
     super(defaultContext);
     this.masterKey = masterKey;
     this.superKeys = superKeys;
     this.database = database;
+    this.regionalPublicKeys = regionalPublicKeys;
   }
 
   @Override
@@ -109,6 +111,26 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
             .build()
             .parseClaimsJws(identity);
         AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("super", "super"), defaultContext);
+        session.identityCache.put(identity, user);
+        callback.success(user);
+        return true;
+      } catch (Exception ex) {
+        // skip
+      }
+    }
+    return false;
+  }
+
+  private boolean authRegion(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
+    for (String publicKey64 : regionalPublicKeys) {
+      PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
+      try {
+        Jwts.parserBuilder()
+            .setSigningKey(publicKey)
+            .requireIssuer("region")
+            .build()
+            .parseClaimsJws(identity);
+        AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal(parsedToken.sub, "region"), defaultContext);
         session.identityCache.put(identity, user);
         callback.success(user);
         return true;
@@ -187,6 +209,11 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       }
       else if ("super".equals(parsedToken.iss)) { // The superman machine
         if (authSuper(session, identity, parsedToken, callback)) {
+          return;
+        }
+      }
+      else if ("region".equals(parsedToken.iss)) { // The superman machine
+        if (authRegion(session, identity, parsedToken, callback)) {
           return;
         }
       }

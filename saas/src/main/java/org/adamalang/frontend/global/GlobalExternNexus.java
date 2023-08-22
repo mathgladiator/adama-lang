@@ -45,13 +45,14 @@ public class GlobalExternNexus {
   public final AssetSystem assets;
   public final FrontendMetrics frontendMetrics;
   public final String[] superPublicKeys;
+  public final String[] regionalPublicKeys;
   public final SignalControl signalControl;
   public final GlobalFinder finder;
   public final MySQLFinderCore finderCore;
   public final GlobalCapacityOverseer overseer;
   public final PrivateKeyWithId signingKey;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -68,6 +69,7 @@ public class GlobalExternNexus {
     this.webHostKey = webHostKey;
     this.publicKeyId = publicKeyId;
     this.superPublicKeys = superPublicKeys;
+    this.regionalPublicKeys = regionalPublicKeys;
     this.signalControl = signalControl;
     this.finder = finder;
     this.finderCore = finder.core;
