@@ -64,10 +64,11 @@ public class GlobalFrontend {
     Logger accessLog = LoggerFactory.getLogger("access");
     GlobalAssetSystem assets = new GlobalAssetSystem(db.database, masterKey, adama, cb.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
+    ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
 
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, cb.ses, db.database, adama, assets, em.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, masterKey, em.webBase, em.region, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
+    }, masterKey, em.webBase, em.region, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
     System.out.println("[GlobalFrontend:ExternNexus constructed]");
 
 

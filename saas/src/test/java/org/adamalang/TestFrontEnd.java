@@ -326,7 +326,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
+    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", hostKeyPair.getPrivate(), keyId, new String[] {}, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);
