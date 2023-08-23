@@ -878,6 +878,19 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: <tag .. rx:event="... te:name ...">
+  self.onTM = function (dom, type, state, name, ox, oy) {
+    reg_event(state, dom, type, function (event) {
+      var obj = {};
+      obj[name] = {
+        x:event.clientX + window.scrollX + ox,
+        y:event.clientY + window.scrollY + oy
+      };
+      var delta = path_to(state.view, obj);
+      state[state.current].tree.update(delta);
+    });
+  };
+
+  // RUNTIME: <tag .. rx:event="... te:name ...">
   self.onTE = function (dom, type, state, name) {
     reg_event(state, dom, type, function (event) {
       var obj = {};

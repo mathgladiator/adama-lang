@@ -13,7 +13,7 @@ import org.adamalang.rxhtml.template.StatePath;
 
 /** Transfer the error message into the view state */
 public class TransferError implements Command {
-  public String path;
+  private final String path;
 
   public TransferError(String path) {
     if (path.startsWith("view:") | path.startsWith("data:")) {
