@@ -151,7 +151,9 @@ public class DefineFunction extends Definition {
       depends.add(escName);
     }).scopeDefine();
     for (final FunctionArg arg : args) {
-      toUse.define(arg.argName, arg.type, pure || paint.pure || arg.type instanceof TyNativeMessage, arg.type);
+      if (arg.type != null) {
+        toUse.define(arg.argName, arg.type, pure || paint.pure || arg.type instanceof TyNativeMessage, arg.type);
+      }
     }
     toUse.setReturnType(returnType);
     return toUse;

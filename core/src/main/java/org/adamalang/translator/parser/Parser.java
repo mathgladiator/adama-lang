@@ -525,7 +525,7 @@ public class Parser {
     while ((hasMore = tokens.popIf((t) -> t.isSymbolWithTextEq("/"))) != null) {
       Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
       if (isParameter != null) {
-        Token parameter = id();
+        Token parameter = typesafe_id();
         Token starToken = tokens.popIf((t) -> t.isSymbolWithTextEq("*"));
         if (starToken != null) {
           uri.push(hasMore, isParameter, parameter, starToken, null, null);
@@ -581,14 +581,14 @@ public class Parser {
   }
 
   public Consumer<TopLevelDocumentHandler> execute_include(Token includeToken) throws AdamaLangException {
-    Token what = id();
+    Token what = typesafe_id();
     Token semicolon = consumeExpectedSymbol(";");
     Include include = new Include(includeToken, what, semicolon);
     return (doc) -> doc.add(include);
   }
 
   public Consumer<TopLevelDocumentHandler> execute_link(Token linkToken) throws AdamaLangException {
-    Token what = id();
+    Token what = typesafe_id();
     Token open = consumeExpectedSymbol("{");
     ArrayList<Consumer<Consumer<Token>>> emissions = new ArrayList<>();
     ArrayList<DefineService.ServiceAspect> aspects = new ArrayList<>();
@@ -621,7 +621,7 @@ public class Parser {
 
       if (nextOrClose.isIdentifier("replication")) {
         Token pairOpen = consumeExpectedSymbol("<");
-        Token inputTypeName = id();
+        Token inputTypeName = typesafe_id();
         Token pairClose = consumeExpectedSymbol(">");
         Token methodName = id();
         Token semicolon = consumeExpectedSymbol(";");
@@ -632,9 +632,9 @@ public class Parser {
       } else if (nextOrClose.isIdentifier("method")) {
         Token secured = tokens.popIf((t) -> t.isIdentifier("secured"));
         Token pairOpen = consumeExpectedSymbol("<");
-        Token inputTypeName = id();
+        Token inputTypeName = typesafe_id();
         Token comma = consumeExpectedSymbol(",");
-        Token outputTypeName = id();
+        Token outputTypeName = typesafe_id();
         Token outputArrayExt = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
         Token pairClose = consumeExpectedSymbol(">");
         Token methodName = id();
@@ -1247,6 +1247,64 @@ public class Parser {
   }
 
   public Token id() throws AdamaLangException {
+    Token token = testId(tokens.pop());
+    switch (token.text) {
+      case "abstract":
+      case "assert":
+      case "boolean":
+      case "break":
+      case "byte":
+      case "case":
+      case "catch":
+      case "char":
+      case "class":
+      case "const":
+      case "continue":
+      case "default":
+      case "do":
+      case "double":
+      case "else":
+      case "enum":
+      case "extends":
+      case "final":
+      case "finally":
+      case "float":
+      case "for":
+      case "goto":
+      case "if":
+      case "implements":
+      case "import":
+      case "instanceof":
+      case "int":
+      case "interface":
+      case "long":
+      case "native":
+      case "new":
+      case "package":
+      case "private":
+      case "protected":
+      case "public":
+      case "return":
+      case "short":
+      case "static":
+      case "strictfp":
+      case "super":
+      case "switch":
+      case "synchronized":
+      case "this":
+      case "throw":
+      case "throws":
+      case "transient":
+      case "try":
+      case "void":
+      case "volatile":
+      case "while":
+        throw new ParseException("Identifier '" + token.text + "' is reserved", token);
+    }
+    return token;
+  }
+
+  public Token typesafe_id() throws AdamaLangException {
     return testId(tokens.pop());
   }
 
@@ -1426,7 +1484,7 @@ public class Parser {
 
   public TyType native_type_base_with_behavior(final boolean readonly, final Token readonlyToken, boolean args) throws AdamaLangException {
     final var behavior = readonly ? TypeBehavior.ReadOnlyNativeValue : TypeBehavior.ReadWriteNative;
-    final var token = id();
+    final var token = typesafe_id();
     switch (token.text) {
       case "bool":
         return new TyNativeBoolean(behavior, readonlyToken, token);
@@ -1792,12 +1850,7 @@ public class Parser {
     return left;
   }
 
-  /** predict if we are declaring a variable natively */
-  public boolean test_native_declare() throws AdamaLangException {
-    final var token = tokens.peek();
-    if (token == null) {
-      return false;
-    }
+  public boolean is_token_native_declare(Token token) {
     switch (token.text) {
       case "bool":
       case "client":
@@ -1821,24 +1874,39 @@ public class Parser {
       case "tuple":
       case "table":
       case "readonly":
+      case "long":
         return true;
-      default:
-        final var futureToken = tokens.peek(1);
-        if (token.isIdentifier() && futureToken != null) {
-          switch (token.text) {
-            case "iterate":
-              return false;
-          }
-          if (futureToken.isIdentifier()) {
-            return true;
-          }
-          if (futureToken.isSymbolWithTextEq("[")) {
-            final var futureFutureToken = tokens.peek(2);
-            return futureFutureToken != null && futureFutureToken.isSymbolWithTextEq("]");
-          }
-        }
-        return false;
     }
+    return false;
+  }
+
+  /** predict if we are declaring a variable natively */
+  public boolean test_native_declare() throws AdamaLangException {
+    final var token = tokens.peek();
+    if (token == null) {
+      return false;
+    }
+
+    if (is_token_native_declare(token)) {
+      return true;
+    }
+
+    final var futureToken = tokens.peek(1);
+    if (token.isIdentifier() && futureToken != null) {
+      switch (token.text) {
+        case "iterate":
+          return false;
+      }
+      if (futureToken.isIdentifier()) {
+        return true;
+      }
+      if (futureToken.isSymbolWithTextEq("[")) {
+        final var futureFutureToken = tokens.peek(2);
+        return futureFutureToken != null && futureFutureToken.isSymbolWithTextEq("]");
+      }
+    }
+
+    return false;
   }
 
   private Token testId(final Token id) throws AdamaLangException {
@@ -1855,7 +1923,7 @@ public class Parser {
 
   public TokenizedItem<Token> type_parameter() throws AdamaLangException {
     final var before = consumeExpectedSymbol("<");
-    final var token = new TokenizedItem<>(id());
+    final var token = new TokenizedItem<>(typesafe_id());
     token.before(before);
     token.after(consumeExpectedSymbol(">"));
     return token;
