@@ -82,6 +82,13 @@ public class Parser {
             commands.add(new TransferError(body));
             break;
           }
+          case "tm": {
+            String[] parts = body.split(Pattern.quote("|"));
+            int offX = parts.length > 1 ? TransferMouse.parseIntOrZero(parts[0]) : 0;
+            int offY = parts.length > 2 ? TransferMouse.parseIntOrZero(parts[1]) : 0;
+            commands.add(new TransferMouse(parts[0], offX, offY));
+            break;
+          }
           case "force-auth": {
             int kEq = body.indexOf('=');
             if (kEq > 0) {
