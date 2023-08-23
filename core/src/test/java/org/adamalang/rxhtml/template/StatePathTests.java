@@ -45,6 +45,30 @@ public class StatePathTests {
   }
 
   @Test
+  public void multidive_with_dots1() {
+    StatePath sp = StatePath.resolve("path1.path2/name", "S");
+    Assert.assertEquals("$.pI($.pI(S,'path1'),'path2')", sp.command);
+    Assert.assertEquals("name", sp.name);
+    Assert.assertFalse(sp.simple);
+  }
+
+  @Test
+  public void multidive_with_dots2() {
+    StatePath sp = StatePath.resolve("path1.path2.name", "S");
+    Assert.assertEquals("$.pI($.pI(S,'path1'),'path2')", sp.command);
+    Assert.assertEquals("name", sp.name);
+    Assert.assertFalse(sp.simple);
+  }
+
+  @Test
+  public void multidive_with_dots3() {
+    StatePath sp = StatePath.resolve("path1/path2.name", "S");
+    Assert.assertEquals("$.pI($.pI(S,'path1'),'path2')", sp.command);
+    Assert.assertEquals("name", sp.name);
+    Assert.assertFalse(sp.simple);
+  }
+
+  @Test
   public void root() {
     StatePath sp = StatePath.resolve("/name", "S");
     Assert.assertEquals("$.pR(S)", sp.command);
