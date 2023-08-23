@@ -15,21 +15,29 @@ import java.util.function.Consumer;
 /** include a file into the specification */
 public class Include extends Definition {
   private final Token include;
-  public final Token resource;
+  private final Token[] resources;
   private final Token semicolon;
+  public final String import_name;
 
-  public Include(Token include, Token resource, Token semicolon) {
+  public Include(Token include, Token[] resources, Token semicolon) {
     this.include = include;
-    this.resource = resource;
+    this.resources = resources;
     this.semicolon = semicolon;
     ingest(include);
     ingest(semicolon);
+    StringBuilder name = new StringBuilder();
+    for (Token token : resources) {
+      name.append(token.text);
+    }
+    this.import_name = name.toString();
   }
 
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(include);
-    yielder.accept(resource);
+    for (Token token : resources) {
+      yielder.accept(token);
+    }
     yielder.accept(semicolon);
   }
 }

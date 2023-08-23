@@ -222,20 +222,20 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(Include in) {
-    if (in.resource.text.equals("main")) {
+    if (in.import_name.equals("main")) {
       typeChecker.issueError(in, "main is a reserved word for importing");
     }
 
-    String codeToParseIntoDoc = includes.get(in.resource.text);
+    String codeToParseIntoDoc = includes.get(in.import_name);
     if (codeToParseIntoDoc == null) {
-      typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.resource.text));
+      typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.import_name));
     } else {
-      final var tokenEngine = new TokenEngine(in.resource.text, codeToParseIntoDoc.codePoints().iterator());
+      final var tokenEngine = new TokenEngine(in.import_name, codeToParseIntoDoc.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
-        typeChecker.issueError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.resource.text, ale.getMessage()));
+        typeChecker.issueError(in, String.format("Inclusion of '%s' resulted in an error; '%s'", in.import_name, ale.getMessage()));
       }
     }
   }

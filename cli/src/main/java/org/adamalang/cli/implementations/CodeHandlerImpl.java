@@ -55,15 +55,23 @@ public class CodeHandlerImpl implements CodeHandler {
     output.out();
   }
 
-  public static HashMap<String, String> getImports(String imports) throws Exception {
-    HashMap<String, String> map = new HashMap<>();
-    File fileImports = new File(imports);
-    if (fileImports.exists() && fileImports.isDirectory()) {
-      for (File f : fileImports.listFiles((dir, name) -> name.endsWith(".adama"))) {
-        String name = f.getName().substring(0, f.getName().length() - 6);
-        map.put(name, Files.readString(f.toPath()));
+  public void fillImports(File imports, String prefix, HashMap<String, String> map) throws Exception {
+    if (imports.exists() && imports.isDirectory()) {
+      for (File f : imports.listFiles()) {
+        if (f.getName().endsWith(".adama")) {
+          String name = prefix + f.getName().substring(0, f.getName().length() - 6);
+          map.put(name, Files.readString(f.toPath()));
+        } else if (f.isDirectory()) {
+          fillImports(f, prefix + f.getName() + "/", map);
+        }
       }
     }
+  }
+
+  public HashMap<String, String> getImports(String imports) throws Exception {
+    HashMap<String, String> map = new HashMap<>();
+    File fileImports = new File(imports);
+    fillImports(fileImports, "", map);
     return map;
   }
 

@@ -580,10 +580,18 @@ public class Parser {
     }
   }
 
-  public Consumer<TopLevelDocumentHandler> execute_include(Token includeToken) throws AdamaLangException {
-    Token what = typesafe_id();
+  public Consumer<TopLevelDocumentHandler> execute_import(Token includeToken) throws AdamaLangException {
+    ArrayList<Token> resource = new ArrayList<>();
+    resource.add(typesafe_id());
+    Token path = tokens.popIf((t) -> t.isSymbolWithTextEq("/"));
+    while (path != null) {
+      resource.add(path);
+      resource.add(typesafe_id());
+      path = tokens.popIf((t) -> t.isSymbolWithTextEq("/"));
+    }
+
     Token semicolon = consumeExpectedSymbol(";");
-    Include include = new Include(includeToken, what, semicolon);
+    Include include = new Include(includeToken, resource.toArray(new Token[resource.size()]), semicolon);
     return (doc) -> doc.add(include);
   }
 
@@ -671,7 +679,7 @@ public class Parser {
       switch (op.text) {
         case "@import":
         case "@include":
-          return execute_include(op);
+          return execute_import(op);
         case "@link":
           return execute_link(op);
         case "@authorize":
