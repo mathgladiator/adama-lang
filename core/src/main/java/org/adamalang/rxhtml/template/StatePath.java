@@ -46,15 +46,27 @@ public class StatePath {
         toParse = toParse.substring(3).stripLeading();
         command = "$.pU(" + command + ")";
       } else {
-        int kSlash = toParse.indexOf('/');
-        if (kSlash > 0) {
-          String scopeInto = toParse.substring(0, kSlash).stripTrailing();
-          toParse = toParse.substring(kSlash + 1).stripLeading();
+        int kDecide = first(toParse.indexOf('/'), toParse.indexOf('.'));
+        if (kDecide > 0) {
+          String scopeInto = toParse.substring(0, kDecide).stripTrailing();
+          toParse = toParse.substring(kDecide + 1).stripLeading();
           command = "$.pI(" + command + ",'" + scopeInto + "')";
         } else {
           return new StatePath(command, toParse, command.equals(stateVar));
         }
       }
+    }
+  }
+
+  private static int first(int kDot, int kSlash) {
+    // if they are both present, then return the minimum
+    if (kDot > 0 && kSlash > 0) {
+      return Math.min(kDot, kSlash);
+    }
+    if (kDot > 0) {
+      return kDot;
+    } else {
+      return kSlash;
     }
   }
 }

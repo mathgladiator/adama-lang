@@ -1099,6 +1099,16 @@ var RxHTML = (function () {
     }
   };
 
+  var firstOccur = function(a, b) {
+    if (a > 0 && b > 0) {
+      return Math.min(a, b);
+    }
+    if (a > 0) {
+      return a;
+    } else {
+      return b;
+    }
+  };
   // HELPER | extract all the inputs from the given element and build an object
   var build_obj = function (el, objToInsertInto, allow_passwords) {
     var justSet = el.tagName.toUpperCase() == "TEXTAREA" || el.tagName.toUpperCase() == "SELECT";
@@ -1112,15 +1122,15 @@ var RxHTML = (function () {
     if (hasName && (justSet || isInputBox || isFieldSet)) {
       var name = "";
       name = el.name;
-      var kDot = name.indexOf('.');
-      while (kDot > 0) {
-        var par = name.substring(0, kDot);
+      var kDotOrSlash = firstOccur(name.indexOf('.'), name.indexOf('/'));
+      while (kDotOrSlash > 0) {
+        var par = name.substring(0, kDotOrSlash);
         if (!(par in insertAt)) {
           insertAt[par] = {};
         }
         insertAt = insertAt[par];
-        name = name.substring(kDot + 1);
-        kDot = name.indexOf('.');
+        name = name.substring(kDotOrSlash + 1);
+        kDotOrSlash = firstOccur(name.indexOf('.'), name.indexOf('/'));
       }
 
       if (name.endsWith("+")) {
@@ -2030,16 +2040,16 @@ var RxHTML = (function () {
     if ('name' in el && isSettable) {
       var name = el.name;
       var payload = input;
-      var kDot = name.indexOf('.');
-      while (kDot > 0) {
-        var item = name.substring(0, kDot);
-        name = name.substring(kDot + 1);
+      var kDotOrSlash = firstOccur(name.indexOf('.'), name.indexOf('/'));
+      while (kDotOrSlash > 0) {
+        var item = name.substring(0, kDotOrSlash);
+        name = name.substring(kDotOrSlash + 1);
         if (item in payload) {
           payload = payload[item];
         } else {
           return;
         }
-        kDot = name.indexOf('.');
+        kDotOrSlash = firstOccur(name.indexOf('.'), name.indexOf('/'));
       }
       if (name in payload) {
         var type = el.type.toUpperCase();
