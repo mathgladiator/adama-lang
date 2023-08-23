@@ -84,10 +84,15 @@ public class DevBoxAdamaMicroVerse {
       return map;
     }
 
-    public String bundle() throws Exception {
+    public String bundle(TerminalIO io) throws Exception {
       ObjectNode plan = Json.newJsonObject();
       ObjectNode version = plan.putObject("versions").putObject("file");
-      version.put("main", Files.readString(new File(mainFile).toPath()));
+      String main = Files.readString(new File(mainFile).toPath());
+      if (main.trim().equals("")) {
+        io.notice("adama|bundled failed due to empty main for '" + spaceName + "'");
+        return null;
+      }
+      version.put("main", main);
       scan(new File("."));
       ObjectNode includes = version.putObject("includes");
       if (includePath != null) {
@@ -104,7 +109,10 @@ public class DevBoxAdamaMicroVerse {
   private void rebuild() {
       for (LocalSpaceDefn defn : spaces) {
         try {
-          String plan = defn.bundle();
+          String plan = defn.bundle(io);
+          if (plan == null) {
+            continue;
+          }
           if (!defn.lastDeployedPlan.equals(plan)) {
             long start = System.currentTimeMillis();
             io.notice("adama|validating: " + defn.spaceName);
@@ -203,6 +211,8 @@ public class DevBoxAdamaMicroVerse {
       wk.reset();
     }
     if (doRebuild) {
+      // there is a bug where files show as empty immediately after a save, so wait a bit to hope the file system is stable by now
+      Thread.sleep(250);
       rebuild();
     }
     Thread.sleep(1000);
