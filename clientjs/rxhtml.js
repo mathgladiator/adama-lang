@@ -1135,6 +1135,9 @@ var RxHTML = (function () {
     if (hasName && (justSet || isInputBox || isFieldSet)) {
       var name = "";
       name = el.name;
+      if (name == "") { // this is a special name for things that don't get picked up
+        return;
+      }
       var kDotOrSlash = firstOccur(name.indexOf('.'), name.indexOf('/'));
       while (kDotOrSlash > 0) {
         var par = name.substring(0, kDotOrSlash);
@@ -1202,6 +1205,12 @@ var RxHTML = (function () {
         }
       }
     }
+  };
+
+  self.BuildFormObject = function(form) {
+    var obj = {};
+    build_obj(form, obj, false);
+    return obj;
   };
 
   // HELPER | return an object of all the inputs of the given form element

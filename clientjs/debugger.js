@@ -1,9 +1,11 @@
+/** The Amazing Internal Debugger for RxHTML Connection */
 Adama.Debugger = (function() {
   var self = {};
   self.shown = false;
-
   var connections = {};
   var current = null;
+
+  /** Helper | remove all the children of a parent */
   var nuke = function (parent) {
     var last = parent.lastChild;
     while (last) {
@@ -12,52 +14,75 @@ Adama.Debugger = (function() {
     }
   };
 
-  var viewJson = document.createElement("div");
-  viewJson.style = "font-family: \"JetBrains Mono\", source-code-pro, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: #fff; background-color: #000; width:100%"
-  var viewChannels = document.createElement("div");
-
-  var simple = function(tag, ch) {
+  /** Helper | create a simple element with the given content as the innerHTML */
+  var simple = function(tag, content) {
     var d = document.createElement(tag);
-    d.innerHTML = ch;
+    d.innerHTML = content;
     return d;
   }
 
-  var extractRecordType = function(type, types) {
+  var buttonStyle = "background:#333; border: 1px solid #f00; color:#fff; padding:3px; margin:3px; border-radius: 3px;";
+  var inputStyle = "background:#eee; color:#000;";
+  var plusSVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#77d656\" style=\"width:18px; height:18px;\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z\" /></svg>";
+  var minusSVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"#f00\" style=\"width:18px; height:18px;\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z\" /></svg>";
+
+  // we are going to create a document
+  var viewJson = document.createElement("div");
+  var viewChannels = document.createElement("div");
+
+  viewJson.style = "font-family: \"JetBrains Mono\", source-code-pro, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: #fff; background-color: #000; width:100%"
+  viewChannels.style = "font-family: \"JetBrains Mono\", source-code-pro, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: #fff; background-color: #000; width:100%"
+
+  /** Reflection | given a reflected type, extract the structure type **/
+  var extractStructureType = function(type, types) {
     if (type.nature == "reactive_ref" || type.nature == "native_ref") {
-      return extractRecordType(types[type.ref], types);
+      return extractStructureType(types[type.ref], types);
     }
     if (type.nature == "reactive_record" || type.nature == "native_message") {
       return type;
     }
     return null;
   }
-  var buttonStyle = "background:#ccc; border: 1px solid #f00; color:#000;";
+
+  /** TreeView | Given a type (and a type forest) create a 'named' dom element
+   *  along with an update delta. The update delta is a functional (or structural functional)
+   *  closure that will update the dom element such that it can be attached to an Adama Tree */
   var convertTypeToDomDelta = function(type, types) {
     if (type.nature == "reactive_ref" || type.nature == "native_ref") {
+      // go to the forest and turn the ref into a manifested type
       return convertTypeToDomDelta(types[type.ref], types);
     }
     if (type.nature == "native_maybe" || type.nature == "reactive_maybe") {
+      // a maybe is just a wrapper around another type that can null out
       var dom = document.createElement("span");
       var result = convertTypeToDomDelta(type.type, types);
       return {
         dom: dom,
         name: "maybe&lt;" + result.name + "&gt;",
         update: [result.update, function(value) {
+          nuke(dom);
           if (value == null) {
-            dom.remove(result.dom);
             dom.innerHTML = "<i>null</i>";
           } else {
-            dom.innerHTML = "";
             dom.append(result.dom);
           }
         }]
       };
     }
     if (type.nature == "native_list" || type.nature == "native_array") {
+      // this is the most complex type as it requires a differential structure.
+
+      // we create a dummy to get the name of the type
       var dummy = convertTypeToDomDelta(type.type, types);
-      var recordType = extractRecordType(type.type, types);
+
+      // so, we have two considerations. First, is this a list of structures OR a list of values.
+      var recordType = extractStructureType(type.type, types);
       if (recordType != null) {
+        // it is a list of structures, so we want to create a nice looking table with pagination!
         var tableControls = document.createElement("span");
+        var showhide = document.createElement("button");
+        tableControls.append(showhide);
+
         var tableHolder = document.createElement("table");
         tableControls.append(tableHolder);
         var tableHeader = document.createElement("thead");
@@ -76,10 +101,8 @@ Adama.Debugger = (function() {
           headerRow.append(td);
           td.style = colorStyle + "padding-left: 0.5em; padding-right: 0.5em;"
         }
-
         tableHolder.style = colorStyle + "padding: 0.5em; margin:0.5em; display:none"
         headerRow.style = colorStyle;
-
         var tableBody = document.createElement("tbody");
         tableHolder.append(tableBody);
         var rowsByKey = {};
@@ -116,9 +139,7 @@ Adama.Debugger = (function() {
               }
             }
           }
-          var showhide = document.createElement("button");
-          showhide.style = buttonStyle;
-          showhide.innerHTML = this.shown ? "hide" : "+";
+          showhide.innerHTML = this.shown ? minusSVG : plusSVG;
           showhide.onclick = function() {
             this.shown = !this.shown;
             if (this.shown) {
@@ -128,7 +149,6 @@ Adama.Debugger = (function() {
             }
             this.reform();
           }.bind(this);
-          controller.append(showhide);
         }.bind(paging);
 
 
@@ -168,6 +188,7 @@ Adama.Debugger = (function() {
           }
         }
       } else {
+        // not a record, so we use a simple list
         var listHolder = document.createElement("div");
         var domByKey = {};
         return {
@@ -194,6 +215,7 @@ Adama.Debugger = (function() {
       }
     }
     if (type.nature == "reactive_value" || type.nature == "native_value") {
+      // it's just data, so create a single node to draw it
       var item = document.createElement("span");
       item.innerHTML = "null";
       item.style = "color: #77a5ff;";
@@ -213,10 +235,10 @@ Adama.Debugger = (function() {
         update: update
       };
     }
-    if (type.nature == "reactive_record" || type.nature == "native_message") { // an object
+    if (type.nature == "reactive_record" || type.nature == "native_message") {
+      // it's a structure, so let's create a record that can show/hide
       var obj_holder = document.createElement("span");
       var showhide = document.createElement("button");
-      showhide.style = buttonStyle;
       obj_holder.append(showhide);
       obj_holder.showGroup = type.name != "Root";
 
@@ -232,18 +254,13 @@ Adama.Debugger = (function() {
         obj_holder.showGroup = ! obj_holder.showGroup;
         if (obj_holder.showGroup) {
           group.style.display = "";
-          showhide.innerHTML = "-";
+          showhide.innerHTML = minusSVG;
         } else {
           group.style.display = "none";
-          showhide.innerHTML = "+";
+          showhide.innerHTML = plusSVG;
         }
       };
       showhide.onclick();
-
-      //showhide.onclick = function() {
-//        children.shown = !children.shown;
-//        children.style.display = children.shown ? "" : "none";
-//      };
 
       var delta = {};
       for (var fieldName in type.fields) {
@@ -269,6 +286,130 @@ Adama.Debugger = (function() {
     return {dom: unknown, update: function() {}};
   };
 
+  self.formIdGen = 0;
+  var nextFormId = function() {
+    self.formIdGen++;
+    return self.formIdGen;
+  };
+  var fillOutFormForType = function(dom, name, type, types) {
+    if (type.nature == "native_ref") {
+      fillOutFormForType(dom, name, types[type.ref], types);
+      return;
+    }
+    if (type.nature == "native_message") {
+      for (var field in type.fields) {
+        var fieldType = type.fields[field].type;
+        var fieldHolder = document.createElement("div");
+        fillOutFormForType(fieldHolder, name == "" ? field : (name + "." + field), fieldType, types);
+        dom.append(fieldHolder);
+      }
+      return;
+    }
+    if (type.nature == "native_array") {
+      // TODO
+    }
+    if (type.nature == "native_maybe") {
+      var maybeHolder = document.createElement("div");
+      var label = document.createElement("label");
+      label.innerHTML = "enable " + name;
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = nextFormId();
+      checkbox.name = "";
+      label.htmlFor = checkbox.id;
+      var maybeValueRef = document.createElement("div");
+      var maybeValue = document.createElement("div");
+      fillOutFormForType(maybeValue, name, type.type, types);
+      maybeHolder.append(label);
+      maybeHolder.append(checkbox);
+      maybeHolder.append(maybeValueRef);
+      dom.append(maybeHolder);
+      checkbox.onchange = function() {
+        nuke(maybeValueRef);
+        if (checkbox.checked) {
+          maybeValueRef.append(maybeValue);
+        }
+      };
+      return;
+    }
+    if (type.nature == "native_value") {
+      var label = document.createElement("label");
+      var input = document.createElement("input");
+
+      input.id = "debugger_form_id_" + nextFormId();
+      label.innerHTML = name;
+      input.name = name;
+      input.style = inputStyle;
+      input.type = "text";
+      label.forHtml = input.id;
+      dom.append(label);
+      dom.append(input);
+      return;
+    }
+    dom.innerHTML = name + "-->" + JSON.stringify(type);
+  };
+
+  var makeChannelDebugger = function(channels, types, connection) {
+    var selector = document.createElement("select");
+    selector.style = "background: #333";
+    viewChannels.append(selector);
+    var formHolder = document.createElement("div");
+    viewChannels.append(formHolder);
+    var choose = function(channel) {
+      nuke(formHolder);
+      var form = document.createElement("form");
+      formHolder.append(form);
+      var type = types[channels[channel]];
+      fillOutFormForType(form, "", type, types);
+
+      var button = document.createElement("button");
+      button.style = buttonStyle;
+      button.onclick = function(event) {
+        event.preventDefault();
+        var message = RxHTML.BuildFormObject(form);
+        button.innerHTML = "Sending";
+        console.log(channel + ":" + JSON.stringify(message));
+        connection.send(channel, message, {
+          success: function() {
+            button.innerHTML = "Success! Send Another!";
+          },
+          failure: function(reason) {
+            button.innerHTML = "[Failed:" + reason + "], Try Again";
+          }
+        })
+
+      };
+      button.innerHTML = "Send";
+      form.append(button);
+      // BuildFormObject
+    };
+    var first = null;
+    var channelsSorted = [];
+    for (var ch in channels) {
+      channelsSorted.push(ch);
+    }
+    channelsSorted.sort();
+    for (var k in channelsSorted) {
+      var ch = channelsSorted[k];
+      if (first == null) {
+        first = ch;
+      }
+      var msgType = channels[ch];
+      var opt = document.createElement("option");
+      opt.innerHTML = ch + " : " + msgType;
+      opt.label = ch + " : " + msgType;
+      opt.value = ch;
+      selector.append(opt);
+      selector.onchange = function() {
+        choose(selector.value);
+      };
+    }
+
+    if (first != null) {
+      choose(first);
+    }
+  };
+
   var render = function(name) {
     var co = connections[name];
     if (co.rendered == co.bound) {
@@ -276,21 +417,22 @@ Adama.Debugger = (function() {
     }
     co.rendered = co.bound;
     co.debug_tree.nuke();
-    /*
-    viewJson.innerHTML = co.debug_tree.str();
-    co.debug_tree.subscribe(function() {
-      viewJson.innerHTML = turn_json_into_html(co.debug_tree.raw());
-    });
-    */
+    nuke(viewJson);
+    nuke(viewChannels);
+
     var handler = {
       success: function (payload) {
+        // handle the data inspector tab
         var reflection = payload.reflection;
         var result = convertTypeToDomDelta(reflection.types["__Root"], reflection.types);
         viewJson.append(result.dom);
         co.debug_tree.subscribe(result.update);
+        // handle the channels tab
+        makeChannelDebugger(reflection.channels, reflection.types, co.ptr);
       },
       failure: function(reason) {
-        console.log("Failed to get schema:" + reason);
+        viewJson.innerHTML = "[FAILED TO GET SCHEMA:" + reason + "]";
+        viewChannels.innerHTML = "[FAILED TO GET SCHEMA:" + reason + "]";
       }
     };
     if (co.via_domain) {
@@ -301,6 +443,7 @@ Adama.Debugger = (function() {
   };
 
   var connectionSelector = document.createElement("select");
+  connectionSelector.style = "background: #333; color: #fff";
   var switch_to_connection = function(name) {
     current = name;
     nuke(viewChannels);
