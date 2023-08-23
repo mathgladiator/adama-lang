@@ -28,6 +28,7 @@ public class PhaseValidate {
     document.addSearchPath(inputRoot.toFile());
     HashMap<String, String> inc = new HashMap<>();
     inc.put("std", "public int std_here = 123;");
+    inc.put("std/foo", "public int foo_here = 123;");
     inc.put("bad", "public int;");
     document.setIncludes(inc);
     document.importFile(path.toString(), DocumentPosition.ZERO);

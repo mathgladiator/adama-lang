@@ -138,18 +138,18 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
 
   @Override
   public void add(Include in) {
-    includes.add(in.resource.text);
-    String code = resolver.apply(in.resource.text);
+    includes.add(in.import_name);
+    String code = resolver.apply(in.import_name);
     if (code != null) {
-      final var tokenEngine = new TokenEngine(in.resource.text, code.codePoints().iterator());
+      final var tokenEngine = new TokenEngine(in.import_name, code.codePoints().iterator());
       final var parser = new Parser(tokenEngine);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
-        errors.add(in.resource.text + ":" + ale.getMessage());
+        errors.add(in.import_name + ":" + ale.getMessage());
       }
     } else {
-      errors.add("could not resolve: " + in.resource.text);
+      errors.add("could not resolve: " + in.import_name);
     }
   }
 
