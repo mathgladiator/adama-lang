@@ -489,6 +489,14 @@ var RxHTML = (function () {
     return document.createTextNode(tx);
   };
 
+  // convert a value into a boolean
+  self.B = function(val) {
+    if (val === true) {
+      return true;
+    }
+    return val == "true";
+  };
+
   // RUNTIME | <view-write name="" value="">
   self.VW = function(state, name, rxObj) {
     rxObj.__ = debounce(50, function() {

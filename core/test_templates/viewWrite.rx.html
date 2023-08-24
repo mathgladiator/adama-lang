@@ -4,6 +4,9 @@
             <input type="text" rx:sync="value_a" />
             <input type="text" rx:sync="value_b" />
             <input type="text" disabled="{view:disable}" />
+            <input type="text" disabled="true" />
+            <input type="text" disabled="false" />
+            <input type="text" disabled="{view:disable}" required="{view:required}"/>
             <view-write name="sum" value="{value_a}_{value_b}" />
         </connection>
     </page>

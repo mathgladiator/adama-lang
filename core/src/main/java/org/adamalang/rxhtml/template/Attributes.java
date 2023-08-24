@@ -17,6 +17,7 @@ import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -177,9 +178,29 @@ public class Attributes {
     }
   }
 
+  private boolean isBooleanInputValue(String value) {
+    switch (value.trim().toLowerCase(Locale.ENGLISH)) {
+      case "disabled":
+      case "required":
+      case "readonly":
+      case "checked":
+        return true;
+    }
+    return false;
+  }
+
+  private String wrapBoolValue(String expr) {
+    if ("\"true\"".equals(expr) || "true".equals(expr)) {
+      return "true";
+    }
+    if ("\"false\"".equals(expr) || "false".equals(expr)) {
+      return "false";
+    }
+    return "$.B(" + expr + ")";
+  }
+
   private void writeDomSetter(String var, String key, String expr) {
     boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input") || env.element.tagName().equalsIgnoreCase("select");
-    boolean hasChecked = env.element.tagName().equalsIgnoreCase("input") && ("checkbox".equals(env.element.attr("type")) || "radio".equals(env.element.attr("type")));
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(expr).append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
@@ -188,10 +209,8 @@ public class Attributes {
       env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
-    } else if (hasValue && key.equalsIgnoreCase("disabled")) {
-      env.writer.tab().append(var).append(".disabled='true' == (").append(expr).append(");").newline();
-    } else if (hasChecked && key.equalsIgnoreCase("checked")) {
-      env.writer.tab().append(var).append(".checked=").append(expr).append(";").newline();
+    } else if (hasValue && isBooleanInputValue(key)) {
+      env.writer.tab().append(var).append(".").append(key).append("=").append(wrapBoolValue(expr)).append(";").newline();
     } else {
       env.writer.tab().append("$.SA(").append(var).append(",'").append(key).append("',").append(expr).append(");").newline();
     }
