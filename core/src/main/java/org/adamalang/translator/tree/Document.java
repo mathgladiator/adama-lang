@@ -14,6 +14,7 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.translator.codegen.*;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.TopLevelDocumentHandler;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
@@ -221,7 +222,7 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(Include in) {
+  public void add(Include in, Scope rootScope) {
     if (in.import_name.equals("main")) {
       typeChecker.issueError(in, "main is a reserved word for importing");
     }
@@ -231,7 +232,7 @@ public class Document implements TopLevelDocumentHandler {
       typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.import_name));
     } else {
       final var tokenEngine = new TokenEngine(in.import_name, codeToParseIntoDoc.codePoints().iterator());
-      final var parser = new Parser(tokenEngine);
+      final var parser = new Parser(tokenEngine, rootScope);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
@@ -241,7 +242,7 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(LinkService link) {
+  public void add(LinkService link, Scope rootScope) {
     int id = inventClassId();
     String defn = ServiceRegistry.getLinkDefinition(link.name.text, id, link.toParams(), link.names(), (err) -> {
       typeChecker.issueError(link, err);
@@ -251,7 +252,7 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     final var tokenEngine = new TokenEngine("link:" + link.name.text, defn.codePoints().iterator());
-    final var parser = new Parser(tokenEngine);
+    final var parser = new Parser(tokenEngine, rootScope);
     try {
       parser.document().accept(this);
     } catch (AdamaLangException ale) {
@@ -441,7 +442,7 @@ public class Document implements TopLevelDocumentHandler {
    * @param position the position within the document (can't be null, use DocumentPosition.ZERO for
    * initial import)
    */
-  public void importFile(final String filename, final DocumentPosition position) {
+  public void processMain(final String filename, final DocumentPosition position) {
     final var file = search(filename);
     if (!file.exists()) {
       createError(position, String.format("File '%s' was not found", filename));
@@ -449,7 +450,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     try {
       final var tokenEngine = new TokenEngine(filename, Files.readString(file.toPath()).codePoints().iterator());
-      final var parser = new Parser(tokenEngine);
+      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
       parser.document().accept(this);
     } catch (final ScanException e) {
       createError(position, String.format("File '%s' failed to lex: %s", filename, e.getMessage()));

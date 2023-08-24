@@ -19,6 +19,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
@@ -77,7 +78,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       document.setClassName(className);
       document.setIncludes(includes);
       final var tokenEngine = new TokenEngine("main", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine);
+      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
       parser.document().accept(document);
       if (!document.check(state.scope())) {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());

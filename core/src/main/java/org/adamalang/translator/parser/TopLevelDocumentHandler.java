@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.parser;
 
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
@@ -60,9 +61,9 @@ public interface TopLevelDocumentHandler {
 
   void add(DefineWebDelete dwd);
 
-  void add(Include in);
+  void add(Include in, Scope rootScope);
 
-  void add(LinkService link);
+  void add(LinkService link, Scope rootScope);
 
   void add(DefineService ds);
 

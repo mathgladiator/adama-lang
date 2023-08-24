@@ -6,8 +6,19 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.translator.env2;
 
-public class Platform {
-  public static final String VERSION = "20230823205023";
+/** Scope is a place for variables to be define */
+public class Scope {
+  private Scope() {
+
+  }
+
+  public static Scope makeRootDocument() {
+    return new Scope();
+  }
+
+  public static Scope makeMessageHandler() {
+    return new Scope();
+  }
 }

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.ParseException;
 import org.adamalang.translator.parser.exceptions.ScanException;
@@ -183,7 +184,7 @@ public class AdamaLanguageServerProtocol {
     try {
       // create a lexer
       TokenEngine tokenEngine = new TokenEngine(code, code.codePoints().iterator());
-      Parser parser = new Parser(tokenEngine);
+      Parser parser = new Parser(tokenEngine, Scope.makeRootDocument());
       Document document = new Document();
       parser.document().accept(document);
 

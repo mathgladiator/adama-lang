@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.parser;
 
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
@@ -137,12 +138,12 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(Include in) {
+  public void add(Include in, Scope rootScope) {
     includes.add(in.import_name);
     String code = resolver.apply(in.import_name);
     if (code != null) {
       final var tokenEngine = new TokenEngine(in.import_name, code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine);
+      final var parser = new Parser(tokenEngine, rootScope);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
@@ -154,7 +155,7 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(LinkService link) {
+  public void add(LinkService link, Scope rootScope) {
   }
 
   @Override
