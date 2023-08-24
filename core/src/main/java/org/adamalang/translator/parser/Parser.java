@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.parser;
 
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.exceptions.ParseException;
 import org.adamalang.translator.parser.token.MajorTokenType;
@@ -57,10 +58,12 @@ import java.util.function.Consumer;
  * token stream (via TokenEngine) against a TopLevelDocumentHandler
  */
 public class Parser {
-  public TokenEngine tokens;
+  private final TokenEngine tokens;
+  private final Scope rootScope;
 
-  public Parser(final TokenEngine tokens) {
+  public Parser(final TokenEngine tokens, Scope rootScope) {
     this.tokens = tokens;
+    this.rootScope = rootScope;
   }
 
   public Expression additive() throws AdamaLangException {
@@ -592,7 +595,7 @@ public class Parser {
 
     Token semicolon = consumeExpectedSymbol(";");
     Include include = new Include(includeToken, resource.toArray(new Token[resource.size()]), semicolon);
-    return (doc) -> doc.add(include);
+    return (doc) -> doc.add(include, rootScope);
   }
 
   public Consumer<TopLevelDocumentHandler> execute_link(Token linkToken) throws AdamaLangException {
@@ -611,7 +614,7 @@ public class Parser {
       nextOrClose = tokens.pop();
     }
     LinkService link = new LinkService(linkToken, what, open, emissions, aspects, nextOrClose);
-    return (doc) -> doc.add(link);
+    return (doc) -> doc.add(link, rootScope);
   }
 
   public Consumer<TopLevelDocumentHandler> define_service(Token serviceToken) throws AdamaLangException {

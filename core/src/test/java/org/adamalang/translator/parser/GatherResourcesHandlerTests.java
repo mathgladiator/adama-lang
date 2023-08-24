@@ -51,14 +51,14 @@ public class GatherResourcesHandlerTests {
     includes.put("bad", "public int ");
     includes.put("good", "public int x = 123;");
     includes.put("recurse", "@include good;");
-    gi.add(new Include(null, new Token[]{Token.WRAP("recurse")}, null));
+    gi.add(new Include(null, new Token[]{Token.WRAP("recurse")}, null), null);
     Assert.assertEquals(0, gi.errors.size());
     Assert.assertTrue(gi.includes.contains("good"));
     Assert.assertTrue(gi.includes.contains("recurse"));
 
-    gi.add(new Include(null, new Token[]{Token.WRAP("nope")}, null));
+    gi.add(new Include(null, new Token[]{Token.WRAP("nope")}, null), null);
     Assert.assertEquals(1, gi.errors.size());
-    gi.add(new Include(null, new Token[]{Token.WRAP("bad")}, null));
+    gi.add(new Include(null, new Token[]{Token.WRAP("bad")}, null), null);
     Assert.assertEquals(2, gi.errors.size());
     gi.add((DefineService) null);
   }

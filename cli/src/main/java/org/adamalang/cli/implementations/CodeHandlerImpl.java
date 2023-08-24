@@ -26,6 +26,7 @@ import org.adamalang.services.FirstPartyServices;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
@@ -255,7 +256,7 @@ public class CodeHandlerImpl implements CodeHandler {
     final var document = new Document();
     document.setClassName("TempClass");
     final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
-    final var parser = new Parser(tokenEngine);
+    final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
     document.setIncludes(includes);
     parser.document().accept(document);
     boolean result = document.check(state);

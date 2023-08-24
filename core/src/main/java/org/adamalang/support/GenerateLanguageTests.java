@@ -59,7 +59,7 @@ public class GenerateLanguageTests {
       if (!test.success) {
         final var document = new Document();
         document.addSearchPath(root);
-        document.importFile(testFile.toString(), DocumentPosition.ZERO);
+        document.processMain(testFile.toString(), DocumentPosition.ZERO);
         document.setClassName("XClass");
         document.check(state);
         final var issues = (ArrayList<HashMap<String, Object>>) new JsonStreamReader(document.errorsJson()).readJavaTree();

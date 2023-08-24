@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.parser;
 
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
@@ -142,12 +143,12 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
-  public void add(Include in) {
+  public void add(Include in, Scope rootScope) {
     in.emit(this);
   }
 
   @Override
-  public void add(LinkService link) { link.emit(this); }
+  public void add(LinkService link, Scope rootScope) { link.emit(this); }
 
   @Override
   public void add(DefineService ds) {

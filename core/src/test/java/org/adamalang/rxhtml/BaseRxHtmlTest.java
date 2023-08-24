@@ -10,6 +10,7 @@ package org.adamalang.rxhtml;
 
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Assert;
@@ -42,7 +43,7 @@ public abstract class BaseRxHtmlTest {
   @Test
   public void codegen() throws Exception {
     String adamaCode = RxHtmlToAdama.codegen(source());
-    Parser parser = new Parser(new TokenEngine("test", adamaCode.codePoints().iterator()));
+    Parser parser = new Parser(new TokenEngine("test", adamaCode.codePoints().iterator()), Scope.makeRootDocument());
     parser.document();
   }
 }

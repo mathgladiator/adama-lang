@@ -31,7 +31,7 @@ public class PhaseValidate {
     inc.put("std/foo", "public int foo_here = 123;");
     inc.put("bad", "public int;");
     document.setIncludes(inc);
-    document.importFile(path.toString(), DocumentPosition.ZERO);
+    document.processMain(path.toString(), DocumentPosition.ZERO);
     document.setClassName(className);
     document.check(state.scope());
     JsonStreamWriter writer = new JsonStreamWriter();

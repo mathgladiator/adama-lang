@@ -8,19 +8,20 @@
  */
 package org.adamalang.translator.parser;
 
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.junit.Test;
 
 public class ParserSanityTests {
   @Test
   public void testGithub138_a() throws Exception {
-    Parser p = new Parser(new TokenEngine("source", "procedure foo(complex x) -> double { return x.re();//\n}".codePoints().iterator()));
+    Parser p = new Parser(new TokenEngine("source", "procedure foo(complex x) -> double { return x.re();//\n}".codePoints().iterator()), Scope.makeRootDocument());
     p.document();
   }
 
   @Test
   public void testGithub138_b() throws Exception {
-    Parser p = new Parser(new TokenEngine("source", "procedure foo(complex x) -> double { return x.re();/* yay */\n}".codePoints().iterator()));
+    Parser p = new Parser(new TokenEngine("source", "procedure foo(complex x) -> double { return x.re();/* yay */\n}".codePoints().iterator()), Scope.makeRootDocument());
     p.document();
   }
 }

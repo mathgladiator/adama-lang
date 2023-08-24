@@ -13,6 +13,7 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
@@ -27,7 +28,7 @@ public class LibAdama {
       final var document = new Document();
       document.setClassName("Validate");
       final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine);
+      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
       parser.document().accept(document);
       if (!document.check(state)) {
         return new NtDynamic(document.errorsJson());
@@ -47,7 +48,7 @@ public class LibAdama {
       final var document = new Document();
       document.setClassName("Validate");
       final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine);
+      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
       parser.document().accept(document);
       if (document.check(state)) {
         JsonStreamWriter writer = new JsonStreamWriter();
