@@ -47,7 +47,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var g = {};");
     gold.append("\n        g.__dom = f;");
     gold.append("\n        var h = (function() {");
-    gold.append("\n          this.__dom.value='true' == (this['disable']);");
+    gold.append("\n          this.__dom.disabled='true' == (this['disable']);");
     gold.append("\n        }).bind(g);");
     gold.append("\n        $.Y($.pV(e),g,'disable',h);");
     gold.append("\n        h();");
@@ -98,7 +98,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var g = {};");
     gold.append("\n        g.__dom = f;");
     gold.append("\n        var h = (function() {");
-    gold.append("\n          this.__dom.value='true' == (this['disable']);");
+    gold.append("\n          this.__dom.disabled='true' == (this['disable']);");
     gold.append("\n        }).bind(g);");
     gold.append("\n        $.Y($.pV(e),g,'disable',h);");
     gold.append("\n        h();");
