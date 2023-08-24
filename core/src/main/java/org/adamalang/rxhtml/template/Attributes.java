@@ -188,6 +188,8 @@ public class Attributes {
       env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
+    } else if (hasValue && key.equalsIgnoreCase("disabled")) {
+      env.writer.tab().append(var).append(".disabled='true' == (").append(expr).append(");").newline();
     } else if (hasChecked && key.equalsIgnoreCase("checked")) {
       env.writer.tab().append(var).append(".checked=").append(expr).append(";").newline();
     } else {
