@@ -915,6 +915,20 @@ var RxHTML = (function () {
     });
   };
 
+  // RUNTIME: <tag .. rx:event="... reset ...">
+  self.oSBMT = function (dom, type, state) {
+    reg_event(state, dom, type, function (event) {
+      var next = dom;
+      while (next != null) {
+        if (next.tagName.toUpperCase() == "FORM") {
+          next.onsubmit(new SubmitEvent("submit"));
+          return;
+        }
+        next = next.parentElement;
+      }
+    });
+  };
+
   // RUNTIME: <tag .. rx:event="... goto:uri ...">
   self.onGO = function (dom, type, state, value) {
     reg_event(state, dom, type, function () {
@@ -2124,7 +2138,9 @@ var RxHTML = (function () {
   self.aSD = function (form, state, channel) {
     form.onsubmit = function (evt) {
       evt.preventDefault();
-      state.data.connection.ptr.send(channel, get_form(form, false), {
+      var msg = get_form(form, false);
+      // TODO: pass through the debugger
+      state.data.connection.ptr.send(channel, msg, {
         success: function (/* payload */) {
           fire_success(form);
         },

@@ -113,7 +113,9 @@ public class FieldLookup extends Expression {
               addGet = true;
               aggregateType = ((DetailComputeRequiresGet) aggregateType).typeAfterGet(environment);
             }
-            return new TyNativeList(TypeBehavior.ReadWriteWithSetGet, null, null, new TokenizedItem<>(aggregateType.makeCopyWithNewPosition(this, aggregateType.behavior))).withPosition(this);
+            if (aggregateType != null) {
+              return new TyNativeList(TypeBehavior.ReadWriteWithSetGet, null, null, new TokenizedItem<>(aggregateType.makeCopyWithNewPosition(this, aggregateType.behavior))).withPosition(this);
+            }
           }
         }
       }

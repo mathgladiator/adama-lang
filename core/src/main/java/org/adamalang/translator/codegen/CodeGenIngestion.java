@@ -139,7 +139,8 @@ public class CodeGenIngestion {
         for (final Map.Entry<String, FieldDefinition> entryType : ((IsStructure) elementType).storage().fields.entrySet()) {
           final var fd = ((IsStructure) assignType).storage().fields.get(entryType.getKey());
           if (fd != null) {
-            if ("id".equals(fd.name)) {
+            boolean isLeftMessageType = environment.rules.IsNativeMessage(assignType, true);
+            if ("id".equals(fd.name) && !isLeftMessageType) {
               sb.append("/* id field skipped */");
             } else {
               final var leftAssignType = ((IsStructure) assignType).storage().fields.get(entryType.getKey()).type;

@@ -99,6 +99,8 @@ public class Parser {
       } else {
         if ("reset".equals(phrase)) {
           commands.add(new Reset());
+        } else if ("submit".equals(phrase)) {
+          commands.add(new Submit());
         }
       }
     }
