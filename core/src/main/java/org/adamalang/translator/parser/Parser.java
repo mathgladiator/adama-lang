@@ -66,11 +66,11 @@ public class Parser {
     this.rootScope = rootScope;
   }
 
-  public Expression additive() throws AdamaLangException {
-    var result = multiplicative();
+  public Expression additive(Scope scope) throws AdamaLangException {
+    var result = multiplicative(scope);
     var op = forwardScanMathOp("+", "-");
     while (op != null) {
-      result = new BinaryExpression(result, op, multiplicative());
+      result = new BinaryExpression(result, op, multiplicative(scope));
       op = forwardScanMathOp("+", "-");
     }
     return result;
@@ -99,7 +99,7 @@ public class Parser {
     }
   }
 
-  public Expression atomic() throws AdamaLangException {
+  public Expression atomic(Scope scope) throws AdamaLangException {
     var token = tokens.pop();
     if (token == null) {
       throw new ParseException("Parser was expecting an atomic expression, but got end of stream instead.", tokens.getLastTokenIfAvailable());
@@ -191,15 +191,15 @@ public class Parser {
         case "@stable":
           return new EnvStatus(token, EnvLookupName.Stable);
         case "@pair": {
-          final var keyExpr = expression();
+          final var keyExpr = expression(scope);
           final var arrow = consumeArrow("@pair was expected an arrow to bond a key to a value");
-          final var valExpr = expression();
+          final var valExpr = expression(scope);
           return new PairCons(token, keyExpr, arrow, valExpr);
         }
         case "@lambda": {
           final var varName = id();
           final var colon = consumeExpectedSymbol(":");
-          final var resultExpr = expression();
+          final var resultExpr = expression(scope.makeLambdaScope());
           return new Lambda(token, varName, colon, resultExpr);
         }
         case "@maybe":
@@ -209,7 +209,7 @@ public class Parser {
           }
           if (openExpr.isSymbolWithTextEq("(")) {
             openExpr = tokens.pop();
-            final var expr = expression();
+            final var expr = expression(scope);
             final var closeExpr = consumeExpectedSymbol(")");
             return new MaybeLift(token, null, openExpr, expr, closeExpr);
           } else if (openExpr.isSymbolWithTextEq("<")) {
@@ -224,7 +224,7 @@ public class Parser {
           final var toType = tokens.pop();
           final var closeType = consumeExpectedSymbol(">");
           final var openParen = consumeExpectedSymbol("(");
-          final var toConvert = expression();
+          final var toConvert = expression(scope);
           final var closeParen = consumeExpectedSymbol(")");
           return new ConvertMessage(token, openType, toType, closeType, openParen, toConvert, closeParen);
         }
@@ -277,7 +277,7 @@ public class Parser {
           var colon = tokens.peek();
           if (colon.isSymbolWithTextEq(":")) {
             colon = tokens.pop();
-            ao.add(commaToken, current, colon, expression());
+            ao.add(commaToken, current, colon, expression(scope));
           } else {
             ao.add(commaToken, current, null, new Lookup(current));
           }
@@ -306,7 +306,7 @@ public class Parser {
         return aa;
       }
       while (current != null && !current.isSymbolWithTextEq("]")) {
-        final var item = new TokenizedItem<>(expression());
+        final var item = new TokenizedItem<>(expression(scope));
         if (current.isSymbolWithTextEq(",")) {
           item.before(current);
         }
@@ -320,7 +320,7 @@ public class Parser {
       }
       return aa;
     } else if (token.isSymbolWithTextEq("(")) {
-      final var expr = expression();
+      final var expr = expression(scope);
       final var endParenMaybe = tokens.pop();
       if (endParenMaybe == null) {
         throw new ParseException("Parser expected a ), but instead got end of stream.", token);
@@ -332,7 +332,7 @@ public class Parser {
         anonymousTuple.add(token, expr);
         while (tokenToCheck != null && tokenToCheck.isSymbolWithTextEq(",")) {
           lastNotNullToken = tokenToCheck;
-          anonymousTuple.add(tokenToCheck, expression());
+          anonymousTuple.add(tokenToCheck, expression(scope));
           tokenToCheck = tokens.pop();
         }
         if (tokenToCheck == null) {
@@ -363,18 +363,18 @@ public class Parser {
     }
   }
 
-  public Block block() throws AdamaLangException {
+  public Block block(Scope scope) throws AdamaLangException {
     final var openBrace = tokens.popIf(t -> t.isSymbolWithTextEq("{"));
     final var b = new Block(openBrace);
     if (openBrace != null) {
       var next = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       while (next == null) {
-        b.add(statement());
+        b.add(statement(scope));
         next = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       }
       b.end(next);
     } else {
-      b.add(statement());
+      b.add(statement(scope));
     }
     return b;
   }
@@ -435,7 +435,7 @@ public class Parser {
     }
   }
 
-  public Statement declare_native_or_assign_or_eval(final boolean secondPartOfForLoop) throws AdamaLangException {
+  public Statement declare_native_or_assign_or_eval(Scope scope, final boolean secondPartOfForLoop) throws AdamaLangException {
     if (!secondPartOfForLoop) {
       if (test_native_declare()) {
         final var type = native_type(false);
@@ -443,20 +443,20 @@ public class Parser {
         final var equalToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
         Expression valueExpr = null;
         if (equalToken != null) {
-          valueExpr = expression();
+          valueExpr = expression(scope);
         }
         final var endToken = consumeExpectedSymbol(";");
         final var defineVariable = new DefineVariable(null, varName, type, equalToken, valueExpr, endToken);
         return defineVariable;
       }
     }
-    final var leftSide = expression();
+    final var leftSide = expression(scope);
     var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("<-"));
     if (hasAssignment == null) {
       hasAssignment = tokens.popIf(t -> t.isSymbolWithTextEq("="));
     }
     if (hasAssignment != null) {
-      final var value = expression();
+      final var value = expression(scope);
       Token asToken = null;
       Token ingestionToken = null;
       if (hasAssignment.isSymbolWithTextEq("<-")) {
@@ -474,14 +474,15 @@ public class Parser {
     return new Evaluate(leftSide, secondPartOfForLoop, !secondPartOfForLoop ? consumeExpectedSymbol(";") : null);
   }
 
-  public DocumentConfig define_config(final Token nameToken) throws AdamaLangException {
+  public DocumentConfig define_config(Scope scope, final Token nameToken) throws AdamaLangException {
     final var equals = consumeExpectedSymbol("=");
-    final var expr = expression();
+    final var expr = expression(scope);
     final var semicolon = consumeExpectedSymbol(";");
     return new DocumentConfig(nameToken, equals, expr, semicolon);
   }
 
   public Consumer<TopLevelDocumentHandler> define_static(Token staticToken) throws AdamaLangException {
+    Scope staticScope = rootScope.makeStaticScope();
     Token openContext = tokens.popIf((t) -> t.isSymbolWithTextEq("("));
     Token contextName = null;
     Token closeContext = null;
@@ -500,17 +501,17 @@ public class Parser {
       }
       switch (nextOrClose.text) {
         case "create":
-          definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskCreation));
+          definitions.add(define_document_event_raw(staticScope, nextOrClose, DocumentEvent.AskCreation));
           break;
         case "invent":
-          definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskInvention));
+          definitions.add(define_document_event_raw(staticScope, nextOrClose, DocumentEvent.AskInvention));
           break;
         case "send":
-          definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskSendWhileDisconnected));
+          definitions.add(define_document_event_raw(staticScope, nextOrClose, DocumentEvent.AskSendWhileDisconnected));
           break;
         case "maximum_history":
         case "delete_on_close":
-          definitions.add(define_config(nextOrClose));
+          definitions.add(define_config(staticScope, nextOrClose));
           break;
       }
       nextOrClose = tokens.pop();
@@ -557,19 +558,19 @@ public class Parser {
       final var messageTypeName = id();
       final var messageVariableName = id();
       final var close = consumeExpectedSymbol(")");
-      final var body = block();
+      final var body = block(rootScope.makeWebHandler("put"));
       // @web post URI / childPath / $var (messageType messageVar) {
       // }
       DefineWebPut dwp = new DefineWebPut(webToken, methodToken, uri, open, messageTypeName, messageVariableName, close, body);
       return (doc) -> doc.add(dwp);
     } else if ("options".equals(methodToken.text)) {
-      final var body = block();
+      final var body = block(rootScope.makeWebHandler("options"));
       // @web options URI / childPath / $var {
       // }
       DefineWebOptions dwo = new DefineWebOptions(webToken, methodToken, uri, body);
       return (doc) -> doc.add(dwo);
     } else if ("delete".equals(methodToken.text)) {
-      final var body = block();
+      final var body = block(rootScope.makeWebHandler("delete"));
       // @web delete URI / childPath / $var {
       // }
       DefineWebDelete dwd = new DefineWebDelete(webToken, methodToken, uri, body);
@@ -577,7 +578,7 @@ public class Parser {
     } else { // GET
       // @web get URI / childPath / $var {
       // }
-      final var body = block();
+      final var body = block(rootScope.makeWebHandler("get"));
       DefineWebGet dwg = new DefineWebGet(webToken, methodToken, uri, body);
       return (doc) -> doc.add(dwg);
     }
@@ -606,7 +607,7 @@ public class Parser {
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
       Token equals = consumeExpectedSymbol("=");
-      Expression val = expression();
+      Expression val = expression(rootScope.makeLinkScope());
       Token semicolon = consumeExpectedSymbol(";");
       DefineService.ServiceAspect aspect = new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon);
       emissions.add((y) -> aspect.emit(y));
@@ -655,7 +656,7 @@ public class Parser {
         emissions.add((y) -> method.emit(y));
       } else {
         Token equals = consumeExpectedSymbol("=");
-        Expression val = expression();
+        Expression val = expression(rootScope.makeServiceScope());
         Token semicolon = consumeExpectedSymbol(";");
         DefineService.ServiceAspect aspect = new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon);
         emissions.add((y) -> aspect.emit(y));
@@ -671,7 +672,7 @@ public class Parser {
     // define a state machine transition
     var op = tokens.popIf(Token::isLabel);
     if (op != null) {
-      final var dst = new DefineStateTransition(op, block());
+      final var dst = new DefineStateTransition(op, block(rootScope.makeStateMachineTransition()));
       return doc -> doc.add(dst);
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
@@ -735,21 +736,21 @@ public class Parser {
           return doc -> doc.add(avs);
         }
         case "bubble":
-          final var bubble = define_bubble(op);
+          final var bubble = define_bubble(rootScope.makeBubble(), op);
           return doc -> doc.add(bubble);
         case "policy":
-          final var policy = define_policy_trailer(op);
+          final var policy = define_policy_trailer(rootScope.makePolicy(), op);
           return doc -> doc.add(policy);
         case "replication":
-          final var replicate = define_replication(op);
+          final var replicate = define_replication(rootScope.makeReplication(), op);
           return doc -> doc.add(replicate);
       }
     }
-    final var newField = define_field_record();
+    final var newField = define_field_record(rootScope);
     return doc -> doc.add(newField);
   }
 
-  public ReplicationDefinition define_replication(Token op) throws AdamaLangException {
+  public ReplicationDefinition define_replication(Scope scope, Token op) throws AdamaLangException {
     Token open = consumeExpectedSymbol("<");
     Token service = id();
     Token split = consumeExpectedSymbol(":");
@@ -757,27 +758,27 @@ public class Parser {
     Token close = consumeExpectedSymbol(">");
     Token name = id();
     Token equals = consumeExpectedSymbol("=");
-    Expression expression = expression();
+    Expression expression = expression(scope);
     Token end = consumeExpectedSymbol(";");
     return new ReplicationDefinition(op, open, service, split, method, close, name, equals, expression, end);
   }
 
-  public BubbleDefinition define_bubble(final Token bubbleToken) throws AdamaLangException {
+  public BubbleDefinition define_bubble(Scope scope, final Token bubbleToken) throws AdamaLangException {
     final var nameToken = id();
     final var equalsToken = consumeExpectedSymbol("=");
-    final var expression = expression();
+    final var expression = expression(scope);
     final var semicolonToken = consumeExpectedSymbol(";");
     return new BubbleDefinition(bubbleToken, nameToken, equalsToken, expression, semicolonToken);
   }
 
-  public DefineDocumentEvent define_document_event_raw(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
+  public DefineDocumentEvent define_document_event_raw(final Scope scope, final Token eventToken, final DocumentEvent which) throws AdamaLangException {
     if (which.hasParameter) {
       final var openParen = consumeExpectedSymbol("(");
       final var parameterNameToken = id();
       final var closeParen = consumeExpectedSymbol(")");
-      return new DefineDocumentEvent(eventToken, which, openParen, parameterNameToken, closeParen, block());
+      return new DefineDocumentEvent(eventToken, which, openParen, parameterNameToken, closeParen, block(scope.makeDocumentEvent(which)));
     } else {
-      return new DefineDocumentEvent(eventToken, which,  null, null, null, block());
+      return new DefineDocumentEvent(eventToken, which,  null, null, null, block(scope.makeDocumentEvent(which)));
     }
   }
 
@@ -787,7 +788,7 @@ public class Parser {
     Token comma = consumeExpectedSymbol(",");
     Token password = id();
     Token closeParen = consumeExpectedSymbol(")");
-    Block code = block();
+    Block code = block(rootScope.makeAuthorize());
     return (doc) -> doc.add(new DefineAuthorization(authorizeToken, openParen, username, comma, password, closeParen, code));
   }
 
@@ -795,12 +796,12 @@ public class Parser {
     Token openParen = consumeExpectedSymbol("(");
     Token password = id();
     Token closeParen = consumeExpectedSymbol(")");
-    Block code = block();
+    Block code = block(rootScope.makePassword());
     return (doc) -> doc.add(new DefinePassword(passwordToken, openParen, password, closeParen, code));
   }
 
   public Consumer<TopLevelDocumentHandler> define_document_event(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
-    final var dce = define_document_event_raw(eventToken, which);
+    final var dce = define_document_event_raw(rootScope.makeDocumentEvent(which), eventToken, which);
     return doc -> doc.add(dce);
   }
 
@@ -810,10 +811,10 @@ public class Parser {
       final var identA = id();
       final var identB = id();
       final var endParenToken = consumeExpectedSymbol(")");
-      final var dc = new DefineConstructor(constructorToken, openParenToken, identA, identB, endParenToken, block());
+      final var dc = new DefineConstructor(constructorToken, openParenToken, identA, identB, endParenToken, block(rootScope.makeConstructor()));
       return doc -> doc.add(dc);
     } else {
-      final var dc = new DefineConstructor(constructorToken,  null, null, null, null, block());
+      final var dc = new DefineConstructor(constructorToken,  null, null, null, null, block(rootScope.makeConstructor()));
       return doc -> doc.add(dc);
     }
   }
@@ -846,7 +847,7 @@ public class Parser {
     if (introReturnType != null) {
       returnType = native_type(true);
     }
-    final var code = block();
+    final var code = block(rootScope.makeDispatch());
     final var dd = new DefineDispatcher(dispatchToken, enumNameToken, doubleColonToken, valueToken, starToken, functionName, openParen, args, closeParen, introReturnType, returnType, code);
     return doc -> doc.add(dd);
   }
@@ -889,13 +890,13 @@ public class Parser {
     return doc -> doc.add(new TyNativeEnum(TypeBehavior.ReadWriteNative, enumToken, enumName, openBrace, es, endBrace));
   }
 
-  public FieldDefinition define_field_record() throws AdamaLangException {
+  public FieldDefinition define_field_record(Scope scope) throws AdamaLangException {
     final var policy = field_privacy();
     final var isAuto = tokens.popIf(t -> t.isIdentifier("auto", "formula"));
     if (isAuto != null) {
       final var id = id();
       final var equalsToken = consumeExpectedSymbol("=");
-      final var compute = expression();
+      final var compute = expression(scope);
       return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, consumeExpectedSymbol(";"));
     } else {
       final var type = reactive_type();
@@ -903,7 +904,7 @@ public class Parser {
       final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
       Expression defaultValue = null;
       if (equalsToken != null) {
-        defaultValue = expression();
+        defaultValue = expression(scope.makeConstant());
       }
       Token required = tokens.popIf(t -> t.isIdentifier("required"));
       return new FieldDefinition(policy, null, type, id, equalsToken, null, defaultValue, required, consumeExpectedSymbol(";"));
@@ -917,8 +918,8 @@ public class Parser {
     final var closeParen = consumeExpectedSymbol(")");
     final var introReturn = consumeArrow("pure functions must have return types.");
     final var returnType = native_type(true);
-    final var code = block();
     FunctionPaint paint = new FunctionPaint(true, false, false);
+    final var code = block(rootScope.makeFunction(paint));
     final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, paint, code);
     return doc -> doc.add(df);
   }
@@ -949,7 +950,7 @@ public class Parser {
     final var messageVarToken = id();
     final var endParen = consumeExpectedSymbol(")");
     final var isOpen = tokens.popIf((t) -> t.isIdentifier("open"));
-    handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, isOpen, block());
+    handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, isOpen, block(rootScope.makeMessageHandler()));
     return doc -> doc.add(handler);
   }
 
@@ -964,7 +965,7 @@ public class Parser {
       args.add(new FunctionArg(comma, paramTyType, id()));
     }
     final var closeParen = consumeExpectedSymbol(")");
-    final var code = block();
+    final var code = block(rootScope.makeMessageHandler());
     DefineRPC rpc = new DefineRPC(rpcToken, name, openParen, clientVar, args, closeParen, code);
     return (doc) -> {
       doc.add(rpc);
@@ -978,6 +979,7 @@ public class Parser {
   }
 
   public Consumer<TopLevelDocumentHandler> define_message_trailer(final Token messageToken) throws AdamaLangException {
+    Scope scope = rootScope.makeMessageType();
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(messageToken);
     final var name = id();
@@ -991,14 +993,14 @@ public class Parser {
       } else {
         Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
         if (methodToken != null) {
-          storage.add(define_method_trailer(methodToken));
+          storage.add(define_method_trailer(scope, methodToken));
         } else {
           final var type = native_type(false);
           final var field = id();
           final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
           Expression defaultValueOverride = null;
           if (equalsToken != null) {
-            defaultValueOverride = expression();
+            defaultValueOverride = expression(rootScope.makeConstant());
           }
           Token lossy = tokens.popIf((t) -> t.isIdentifier("lossy"));
           Token end = consumeExpectedSymbol(";");
@@ -1038,7 +1040,7 @@ public class Parser {
     return new FunctionPaint(arr.toArray(new Token[arr.size()]));
   }
 
-  public DefineMethod define_method_trailer(final Token methodToken) throws AdamaLangException {
+  public DefineMethod define_method_trailer(Scope scope, final Token methodToken) throws AdamaLangException {
     final var name = id();
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
@@ -1049,13 +1051,14 @@ public class Parser {
       returnType = native_type(true);
     }
     FunctionPaint fp = painting();
-    final var code = block();
+    Scope mscope = scope.makeMethod(fp);
+    final var code = block(mscope);
     return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, fp, code);
   }
 
-  public DefineCustomPolicy define_policy_trailer(final Token definePolicy) throws AdamaLangException {
+  public DefineCustomPolicy define_policy_trailer(Scope scope, final Token definePolicy) throws AdamaLangException {
     final var id = id();
-    return new DefineCustomPolicy(definePolicy, id, block());
+    return new DefineCustomPolicy(definePolicy, id, block(scope));
   }
 
   public Consumer<TopLevelDocumentHandler> define_procedure_trailer(final Token procedureToken) throws AdamaLangException {
@@ -1069,12 +1072,13 @@ public class Parser {
       returnType = native_type(true);
     }
     FunctionPaint paint = painting();
-    final var code = block();
+    final var code = block(rootScope.makeProcedure(paint));
     final var df = new DefineFunction(procedureToken, FunctionSpecialization.Impure, name, openParen, args, closeParen, introReturn, returnType, paint, code);
     return doc -> doc.add(df);
   }
 
   public Consumer<TopLevelDocumentHandler> define_record_trailer(final Token recordToken) throws AdamaLangException {
+    Scope scope = rootScope.makeRecordType();
     final var name = id();
     final var storage = new StructureStorage(name, StorageSpecialization.Record, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyReactiveRef(name));
@@ -1088,16 +1092,16 @@ public class Parser {
             break;
           }
           case "bubble":
-            storage.add(define_bubble(op));
+            storage.add(define_bubble(scope, op));
             break;
           case "index":
             storage.add(define_indexing(op));
             break;
           case "policy":
-            storage.addPolicy(define_policy_trailer(op));
+            storage.addPolicy(define_policy_trailer(scope, op));
             break;
           case "method":
-            storage.add(define_method_trailer(op));
+            storage.add(define_method_trailer(scope, op));
             break;
         }
         op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
@@ -1109,21 +1113,21 @@ public class Parser {
         TyReactiveRecord tyRec = enrich(new TyReactiveRecord(recordToken, name, storage));
         return doc -> doc.add(tyRec);
       }
-      storage.add(define_field_record());
+      storage.add(define_field_record(scope));
     }
   }
 
   public Consumer<TopLevelDocumentHandler> define_test_trailer(final Token testToken) throws AdamaLangException {
     final var name = id();
-    final var dt = new DefineTest(testToken, name, block());
+    final var dt = new DefineTest(testToken, name, block(rootScope.makeTest()));
     return doc -> doc.add(dt);
   }
 
-  public DoWhile do_statement_trailer(final Token doToken) throws AdamaLangException {
-    final var code = block();
+  public DoWhile do_statement_trailer(Scope scope, final Token doToken) throws AdamaLangException {
+    final var code = block(scope);
     final var whileToken = consumeExpectedKeyword("while");
     final var openParen = consumeExpectedSymbol("(");
-    final var condition = expression();
+    final var condition = expression(scope);
     final var endParen = consumeExpectedSymbol(")");
     final var semicolon = consumeExpectedSymbol(";");
     return new DoWhile(doToken, code, whileToken, openParen, condition, endParen, semicolon);
@@ -1148,26 +1152,26 @@ public class Parser {
     };
   }
 
-  public Expression equality() throws AdamaLangException {
-    final var left = relate();
+  public Expression equality(Scope scope) throws AdamaLangException {
+    final var left = relate(scope);
     final var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("==", "!=", "=?"));
     if (op != null) {
-      return new BinaryExpression(left, op, relate());
+      return new BinaryExpression(left, op, relate(scope));
     }
     return left;
   }
 
-  public Expression expression() throws AdamaLangException {
+  public Expression expression(Scope scope) throws AdamaLangException {
     Expression base;
     final var iterateToken = tokens.popIf(t -> t.isIdentifier("iterate"));
     if (iterateToken != null) {
-      base = new Iterate(iterateToken, assignment());
+      base = new Iterate(iterateToken, assignment(scope));
     } else {
-      base = assignment();
+      base = assignment(scope);
     }
     Token op;
     while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
-      base = wrap_linq(base, op);
+      base = wrap_linq(scope, base, op);
     }
     return base;
   }
@@ -1193,36 +1197,36 @@ public class Parser {
     return null;
   }
 
-  public For for_statement_trailer(final Token forToken) throws AdamaLangException {
+  public For for_statement_trailer(Scope scope, final Token forToken) throws AdamaLangException {
     final var openParen = consumeExpectedSymbol("(");
     final var noInitialSemicolon = tokens.popIf(t -> t.isSymbolWithTextEq(";"));
     Statement initial = null;
     if (noInitialSemicolon == null) {
-      initial = declare_native_or_assign_or_eval(false);
+      initial = declare_native_or_assign_or_eval(scope, false);
     }
     Expression condition = null;
     var endConditionSemicolon = tokens.popIf(t -> t.isSymbolWithTextEq(";"));
     if (endConditionSemicolon == null) {
-      condition = expression();
+      condition = expression(scope);
       endConditionSemicolon = consumeExpectedSymbol(";");
     }
     final var noAdvance = tokens.peek();
     Statement advance = null;
     if (noAdvance != null && !noAdvance.isSymbolWithTextEq(")")) {
-      advance = declare_native_or_assign_or_eval(true);
+      advance = declare_native_or_assign_or_eval(scope, true);
     }
     final var endParen = consumeExpectedSymbol(")");
-    final var code = block();
+    final var code = block(scope);
     return new For(forToken, openParen, initial, noInitialSemicolon, condition, endConditionSemicolon, advance, endParen, code);
   }
 
-  public ForEach foreach_statement_trailer(final Token foreachToken) throws AdamaLangException {
+  public ForEach foreach_statement_trailer(Scope scope, final Token foreachToken) throws AdamaLangException {
     final var openToken = consumeExpectedSymbol("(");
     final var varName = id();
     final var inToken = consumeExpectedIdentifier("in");
-    final var list = expression();
+    final var list = expression(scope);
     final var endToken = consumeExpectedSymbol(")");
-    final var code = block();
+    final var code = block(scope);
     return new ForEach(foreachToken, openToken, varName, inToken, list, endToken, code);
   }
 
@@ -1322,9 +1326,9 @@ public class Parser {
     return testId(tokens.pop());
   }
 
-  public MegaIf.Condition if_condition() throws AdamaLangException {
+  public MegaIf.Condition if_condition(Scope scope) throws AdamaLangException {
     final var openParen = consumeExpectedSymbol("(");
-    final var guard = expression();
+    final var guard = expression(scope);
     final var asToken = tokens.popIf(t -> t.isIdentifier("as"));
     Token nameToken = null;
     if (asToken != null) {
@@ -1334,17 +1338,17 @@ public class Parser {
     return new MegaIf.Condition(openParen, guard, asToken, nameToken, endParen);
   }
 
-  public MegaIf if_statement_trailer(final Token ifToken) throws AdamaLangException {
-    final var primary = if_condition();
-    final var result = new MegaIf(ifToken, primary, block());
+  public MegaIf if_statement_trailer(Scope scope, final Token ifToken) throws AdamaLangException {
+    final var primary = if_condition(scope);
+    final var result = new MegaIf(ifToken, primary, block(scope.makeBranchScope()));
     var elseToken = tokens.popIf(t -> t.isKeyword("else"));
     while (elseToken != null) {
       final var ifToken2 = tokens.popIf(t -> t.isKeyword("if"));
       if (ifToken2 != null) {
-        final var branchCond = if_condition();
-        result.add(elseToken, ifToken2, branchCond, block());
+        final var branchCond = if_condition(scope);
+        result.add(elseToken, ifToken2, branchCond, block(scope.makeBranchScope()));
       } else {
-        result.setElse(elseToken, block());
+        result.setElse(elseToken, block(scope.makeBranchScope()));
         return result;
       }
       elseToken = tokens.popIf(t -> t.isKeyword("else"));
@@ -1368,41 +1372,41 @@ public class Parser {
     }
   }
 
-  public Expression logic_and() throws AdamaLangException {
-    var result = equality();
+  public Expression logic_and(Scope scope) throws AdamaLangException {
+    var result = equality(scope);
     var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("&&"));
     while (op != null) {
-      result = new BinaryExpression(result, op, equality());
+      result = new BinaryExpression(result, op, equality(scope));
       op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("&&"));
     }
     return result;
   }
 
-  public Expression logic_or() throws AdamaLangException {
-    var result = logic_and();
+  public Expression logic_or(Scope scope) throws AdamaLangException {
+    var result = logic_and(scope);
     var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("||"));
     while (op != null) {
-      result = new BinaryExpression(result, op, logic_and());
+      result = new BinaryExpression(result, op, logic_and(scope));
       op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("||"));
     }
     return result;
   }
 
-  public Expression logic_xor() throws AdamaLangException {
-    var result = logic_or();
+  public Expression logic_xor(Scope scope) throws AdamaLangException {
+    var result = logic_or(scope);
     var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("^^"));
     while (op != null) {
-      result = new BinaryExpression(result, op, logic_or());
+      result = new BinaryExpression(result, op, logic_or(scope));
       op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("^^"));
     }
     return result;
   }
 
-  public Expression multiplicative() throws AdamaLangException {
-    var result = prefix();
+  public Expression multiplicative(Scope scope) throws AdamaLangException {
+    var result = prefix(scope);
     var op = forwardScanMathOp("*", "/", "%");
     while (op != null) {
-      result = new BinaryExpression(result, op, prefix());
+      result = new BinaryExpression(result, op, prefix(scope));
       op = forwardScanMathOp("*", "/", "%");
     }
     return result;
@@ -1588,8 +1592,8 @@ public class Parser {
     }
   }
 
-  public Expression postfix() throws AdamaLangException {
-    var result = atomic();
+  public Expression postfix(Scope scope) throws AdamaLangException {
+    var result = atomic(scope);
     while (true) {
       var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("++", "--"));
       if (op == null) {
@@ -1605,7 +1609,7 @@ public class Parser {
           }
           result = new FieldLookup(result, op, field);
         } else if (op.isSymbolWithTextEq("[")) {
-          final var arg = expression();
+          final var arg = expression(scope);
           final var closeBracket = consumeExpectedSymbol("]");
           result = new IndexLookup(result, op, arg, closeBracket);
         } else if (op.isSymbolWithTextEq("(")) {
@@ -1613,7 +1617,7 @@ public class Parser {
           var next = tokens.popIf(t -> t.isSymbolWithTextEq(")"));
           Token comma = null;
           while (next == null) {
-            final var arg = new TokenizedItem<>(expression());
+            final var arg = new TokenizedItem<>(expression(scope));
             if (comma != null) {
               arg.before(comma);
             }
@@ -1634,15 +1638,15 @@ public class Parser {
     }
   }
 
-  public Expression prefix() throws AdamaLangException {
+  public Expression prefix(Scope scope) throws AdamaLangException {
     var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("++", "--"));
     if (op == null) {
       op = tokens.popIf(t -> t.isSymbolWithTextEq("!", "-"));
     }
     if (op != null) {
-      return new PrefixMutate(postfix(), op);
+      return new PrefixMutate(postfix(scope), op);
     }
-    return postfix();
+    return postfix(scope);
   }
 
   private void pumpsemicolons(final ArrayList<Consumer<TopLevelDocumentHandler>> target) throws AdamaLangException {
@@ -1726,27 +1730,27 @@ public class Parser {
     }
   }
 
-  public Expression relate() throws AdamaLangException {
-    final var left = additive();
+  public Expression relate(Scope scope) throws AdamaLangException {
+    final var left = additive(scope);
     var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("<=", ">="));
     if (op != null) {
-      return new BinaryExpression(left, op, additive());
+      return new BinaryExpression(left, op, additive(scope));
     }
     op = forwardScaRelate();
     if (op != null) {
-      return new BinaryExpression(left, op, additive());
+      return new BinaryExpression(left, op, additive(scope));
     }
     return left;
   }
 
-  public Statement statement() throws AdamaLangException {
+  public Statement statement(Scope scope) throws AdamaLangException {
     var op = tokens.popIf(t -> t.isSymbolWithTextEq(";"));
     if (op != null) {
       return new EmptyStatement(op);
     }
     op = tokens.peek();
     if (op != null && op.isSymbolWithTextEq("{")) {
-      return new ScopeWrap(block());
+      return new ScopeWrap(block(scope));
     }
     op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
     if (op == null) {
@@ -1755,33 +1759,33 @@ public class Parser {
     if (op != null) {
       switch (op.text) {
         case "if":
-          return if_statement_trailer(op);
+          return if_statement_trailer(scope, op);
         case "let":
         case "var":
         case "auto": {
           final var varName = id();
           final var eqToken = consumeExpectedSymbol("=");
-          final var value = expression();
+          final var value = expression(scope);
           final var endToken = consumeExpectedSymbol(";");
           return new DefineVariable(op, varName, null, eqToken, value, endToken);
         }
         case "do":
-          return do_statement_trailer(op);
+          return do_statement_trailer(scope, op);
         case "while":
-          return while_statement_trailer(op);
+          return while_statement_trailer(scope, op);
         case "for":
-          return for_statement_trailer(op);
+          return for_statement_trailer(scope, op);
         case "foreach":
-          return foreach_statement_trailer(op);
+          return foreach_statement_trailer(scope, op);
         case "switch": {
           Token openParen = consumeExpectedSymbol("(");
-          Expression val = expression();
+          Expression val = expression(scope);
           Token closeParen = consumeExpectedSymbol(")");
-          Block code = block();
+          Block code = block(scope);
           return new Switch(op, openParen, val, closeParen, code);
         }
         case "case": {
-          Expression val = expression();
+          Expression val = expression(scope);
           Token colon = consumeExpectedSymbol(":");
           return new Case(op, val, colon);
         }
@@ -1790,32 +1794,32 @@ public class Parser {
           return new DefaultCase(op, colon);
         }
         case "transition": {
-          final var toTransition = expression();
+          final var toTransition = expression(scope);
           final var testIn = tokens.popIf(t -> t.isIdentifier("in"));
-          final var evalIn = testIn != null ? expression() : null;
+          final var evalIn = testIn != null ? expression(scope) : null;
           return new TransitionStateMachine(op, toTransition, testIn, evalIn, consumeExpectedSymbol(";"));
         }
         case "preempt": {
-          final var toTransition = expression();
+          final var toTransition = expression(scope);
           return new PreemptStateMachine(op, toTransition, consumeExpectedSymbol(";"));
         }
         case "invoke": {
-          final var toInvoke = expression();
+          final var toInvoke = expression(scope);
           return new InvokeStateMachine(op, toInvoke, consumeExpectedSymbol(";"));
         }
         case "assert": {
-          final var toAssert = expression();
+          final var toAssert = expression(scope);
           return new AssertTruth(op, toAssert, consumeExpectedSymbol(";"));
         }
         case "@step": {
           return new Force(op, Force.Action.Step, consumeExpectedSymbol(";"));
         }
         case "@forward": {
-          final var delta = expression();
+          final var delta = expression(scope);
           return new Forward(op, delta, consumeExpectedSymbol(";"));
         }
         case "@pump": {
-          final var toAssert = expression();
+          final var toAssert = expression(scope);
           final var intoToken = consumeExpectedIdentifier("into");
           final var channelName = id();
           final var semiColon = consumeExpectedSymbol(";");
@@ -1834,31 +1838,31 @@ public class Parser {
           if (hasSemicolon != null) {
             return new Return(op, null, hasSemicolon);
           } else {
-            final var returnStatement = expression();
+            final var returnStatement = expression(scope);
             return new Return(op, returnStatement, consumeExpectedSymbol(";"));
           }
         }
       }
     }
-    return declare_native_or_assign_or_eval(false);
+    return declare_native_or_assign_or_eval(scope, false);
   }
 
-  public Expression ternary() throws AdamaLangException {
-    final var condition = logic_xor();
+  public Expression ternary(Scope scope) throws AdamaLangException {
+    final var condition = logic_xor(scope);
     final var questionToken = tokens.popIf(t -> t.isSymbolWithTextEq("?"));
     if (questionToken != null) {
-      final var trueValue = logic_xor();
+      final var trueValue = logic_xor(scope);
       final var colonToken = consumeExpectedSymbol(":");
-      return new InlineConditional(condition, questionToken, trueValue, colonToken, logic_xor());
+      return new InlineConditional(condition, questionToken, trueValue, colonToken, logic_xor(scope));
     }
     return condition;
   }
 
-  public Expression assignment() throws AdamaLangException {
-    final var left = ternary();
+  public Expression assignment(Scope scope) throws AdamaLangException {
+    final var left = ternary(scope);
     var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+=", "-=", "*="));
     if (hasAssignment != null) {
-      final var right = assignment();
+      final var right = assignment(scope);
       return new BinaryExpression(left, hasAssignment, right);
     }
     return left;
@@ -1943,24 +1947,24 @@ public class Parser {
     return token;
   }
 
-  public While while_statement_trailer(final Token whileToken) throws AdamaLangException {
+  public While while_statement_trailer(Scope scope, final Token whileToken) throws AdamaLangException {
     final var openParen = consumeExpectedSymbol("(");
-    final var condition = expression();
+    final var condition = expression(scope);
     final var endParen = consumeExpectedSymbol(")");
-    final var code = block();
+    final var code = block(scope);
     return new While(whileToken, openParen, condition, endParen, code);
   }
 
-  Expression wrap_linq(final Expression base, final Token op) throws AdamaLangException {
+  Expression wrap_linq(Scope scope, final Expression base, final Token op) throws AdamaLangException {
     switch (op.text) {
       case "materialize":
         return new Materialize(base, op);
       case "where":
-        return new Where(base, op, null, null, assignment());
+        return new Where(base, op, null, null, assignment(scope));
       case "where_as": {
         final var id = tokens.pop();
         final var colonAlias = consumeExpectedSymbol(":");
-        return new Where(base, op, id, colonAlias, assignment());
+        return new Where(base, op, id, colonAlias, assignment(scope));
       }
       case "order": {
         final var byToken = tokens.popIf(t -> t.isIdentifier("by"));
@@ -1974,7 +1978,7 @@ public class Parser {
         return new OrderBy(base, op, byToken, keysToOrderBy);
       }
       case "map": {
-        final var fun = expression();
+        final var fun = expression(scope);
         return new Map(base, op, fun);
       }
       case "shuffle":
@@ -1984,7 +1988,7 @@ public class Parser {
         final var fieldToken = id();
         final var viaToken = tokens.popIf(t -> t.isIdentifier("via"));
         if (viaToken != null) {
-          final var function = expression();
+          final var function = expression(scope);
           return new Reduce(base, op, onToken, fieldToken, viaToken, function);
         } else {
           return new Reduce(base, op, onToken, fieldToken, null, null);
@@ -1992,11 +1996,11 @@ public class Parser {
       }
       default: // this is a code coverage hack
       case "limit": {
-        final var eLim = assignment();
+        final var eLim = assignment(scope);
         return new Limit(base, op, eLim);
       }
       case "offset": {
-        final var offsetExpr = assignment();
+        final var offsetExpr = assignment(scope);
         return new Offset(base, op, offsetExpr);
       }
     }

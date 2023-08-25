@@ -13,12 +13,13 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.common.Typable;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 
 import java.util.function.Consumer;
 
-public abstract class TyType extends DocumentPosition {
+public abstract class TyType extends DocumentPosition implements Typable {
   public final TypeBehavior behavior;
   private TypeAnnotation annotation;
 
@@ -95,5 +96,10 @@ public abstract class TyType extends DocumentPosition {
 
   public void annotate(TypeAnnotation annotation) {
     this.annotation = annotation;
+  }
+
+  @Override
+  public TyType getType() {
+    return this;
   }
 }
