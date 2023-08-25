@@ -8,17 +8,110 @@
  */
 package org.adamalang.translator.env2;
 
+import org.adamalang.translator.tree.definitions.DocumentEvent;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
+
 /** Scope is a place for variables to be define */
 public class Scope {
-  private Scope() {
+  private final Scope parent;
 
+  private Scope(Scope parent) {
+    this.parent = parent;
   }
 
   public static Scope makeRootDocument() {
-    return new Scope();
+    return new Scope(null);
   }
 
-  public static Scope makeMessageHandler() {
-    return new Scope();
+  public Scope makeWebHandler(String verb) {
+    return new Scope(this);
+  }
+
+  public Scope makeStateMachineTransition() {
+    return new Scope(this);
+  }
+
+  public Scope makeDocumentEvent(DocumentEvent event) {
+    return new Scope(this);
+  }
+
+  public Scope makeAuthorize() {
+    return new Scope(this);
+  }
+
+  public Scope makePassword() {
+    return new Scope(this);
+  }
+
+  public Scope makeTest() {
+    return new Scope(this);
+  }
+
+  public Scope makeProcedure(FunctionPaint fp) {
+    return new Scope(this);
+  }
+
+  public Scope makeMethod(FunctionPaint fp) {
+    return new Scope(this);
+  }
+
+  public Scope makeFunction(FunctionPaint fp) {
+    return new Scope(this);
+  }
+
+  public Scope makePolicy() {
+    return new Scope(this);
+  }
+
+  public Scope makeBubble() {
+    return new Scope(this);
+  }
+
+  public Scope makeLambdaScope() {
+    return new Scope(this);
+  }
+
+  public Scope makeReplication() {
+    return new Scope(this);
+  }
+
+  public Scope makeStaticScope() {
+    return new Scope(this);
+  }
+
+  public Scope makeLinkScope() {
+    return new Scope(this);
+  }
+
+  public Scope makeServiceScope() {
+    return new Scope(this);
+  }
+
+  public Scope makeConstructor() {
+    return new Scope(this);
+  }
+
+  public Scope makeDispatch() {
+    return new Scope(this);
+  }
+
+  public Scope makeConstant() {
+    return new Scope(this);
+  }
+
+  public Scope makeMessageHandler() {
+    return new Scope(this);
+  }
+
+  public Scope makeBranchScope() {
+    return new Scope(this);
+  }
+
+  public Scope makeRecordType() {
+    return new Scope(this);
+  }
+
+  public Scope makeMessageType() {
+    return new Scope(this);
   }
 }
