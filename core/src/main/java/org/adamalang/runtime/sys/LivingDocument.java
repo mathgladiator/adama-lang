@@ -202,6 +202,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     return p.authority.equals("doc/" + __space + "/" + __key);
   }
 
+  /** exposed: is the principal from the space (i.e. a document within */
+  protected boolean __isFromSpace(NtPrincipal p) {
+    return p.authority.startsWith("doc/" + __space + "/");
+  }
+
   /** exposed: get a principal for the document */
   protected NtPrincipal __principalOf(String agent) {
     return new NtPrincipal(agent, "doc/" + __space + "/" + __key);

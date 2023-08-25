@@ -37,6 +37,11 @@ public class AugmentViewerState extends Definition {
   }
 
   public void typing(TypeCheckerRoot checker) {
-    checker.define(name.cloneWithNewText("viewer:" + name.text), Collections.EMPTY_SET, (env) -> env.rules.Resolve(type, false).typing(env));
+    checker.define(name.cloneWithNewText("viewer:" + name.text), Collections.EMPTY_SET, (env) -> {
+      TyType resolved = env.rules.Resolve(type, false);
+      if (resolved != null) {
+        resolved.typing(env);
+      }
+    });
   }
 }

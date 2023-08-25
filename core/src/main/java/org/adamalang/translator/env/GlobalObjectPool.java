@@ -55,6 +55,7 @@ public class GlobalObjectPool {
     client.setParentOverride(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
     client.functions.put("principalOf", generateInternalDocumentFunction("__principalOf", tyStr, tyPrincipal, "principalOf", pool.extensions));
     client.functions.put("isFromDocument", generateInternalDocumentFunction("__isFromDocument", tyPrincipal, tyBool, "isFromDocument", pool.extensions));
+    client.functions.put("isFromSpace", generateInternalDocumentFunction("__isFromSpace", tyPrincipal, tyBool, "isFromSpace", pool.extensions));
     pool.add(client);
 
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));

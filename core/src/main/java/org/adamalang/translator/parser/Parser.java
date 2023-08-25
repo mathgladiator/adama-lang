@@ -1259,6 +1259,9 @@ public class Parser {
 
   public Token id() throws AdamaLangException {
     Token token = testId(tokens.pop());
+    if (is_token_native_declare(token)) {
+      throw new ParseException("Identifier '" + token.text + "' is reserved", token);
+    }
     switch (token.text) {
       case "abstract":
       case "assert":
@@ -1438,7 +1441,7 @@ public class Parser {
       ArrayList<TokenizedItem<TypeAnnotation.Annotation>> annotations = new ArrayList<>();
       Token commaOrEnd = tokens.popIf((t) -> t.isSymbolWithTextEq(",", ")"));
       while (commaOrEnd == null || commaOrEnd.isSymbolWithTextEq(",")) {
-        Token name = id();
+        Token name = typesafe_id();
         Token comma = tokens.popIf((t) -> t.isSymbolWithTextEq("="));
         TokenizedItem<TypeAnnotation.Annotation> annotation;
         if (comma != null) {
