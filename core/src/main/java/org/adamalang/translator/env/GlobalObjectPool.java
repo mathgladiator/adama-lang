@@ -51,8 +51,8 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Templates", LibTemplates.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Search", LibSearch.class, pool.extensions));
 
-    final var client = new TyNativeGlobalObject("Client", null, false);
-    client.setParentOverride(GlobalFactory.makeGlobal("Client", LibPrincipal.class, pool.extensions));
+    final var client = new TyNativeGlobalObject("Principal", null, false);
+    client.setParentOverride(GlobalFactory.makeGlobal("Principal", LibPrincipal.class, pool.extensions));
     client.functions.put("principalOf", generateInternalDocumentFunction("__principalOf", tyStr, tyPrincipal, "principalOf", pool.extensions));
     client.functions.put("isFromDocument", generateInternalDocumentFunction("__isFromDocument", tyPrincipal, tyBool, "isFromDocument", pool.extensions));
     client.functions.put("isFromSpace", generateInternalDocumentFunction("__isFromSpace", tyPrincipal, tyBool, "isFromSpace", pool.extensions));
