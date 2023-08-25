@@ -41,7 +41,9 @@ public class LocalTypeAssignmentResult {
   public void ingest() {
     ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
     rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-    environment.rules.CanAIngestB(ltype, rtype, false);
+    if (!environment.rules.CanAIngestB(ltype, rtype, false)) {
+      environment.document.createError(ref, "Unable to  the right hand side");
+    }
     assignResult = CanAssignResult.YesWithIngestionCodeGen;
   }
 
