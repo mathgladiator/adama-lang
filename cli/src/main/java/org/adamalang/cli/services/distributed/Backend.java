@@ -85,7 +85,6 @@ public class Backend {
 
     BillingDocumentFinder billingDocumentFinder = new GlobalBillingDocumentFinder(init.database);
 
-    /*
     MeteringBatchReady submitToAdama = new MeteringBatchReady() {
       private DiskMeteringBatchMaker maker;
 
@@ -96,6 +95,7 @@ public class Backend {
 
       @Override
       public void ready(String batchId) {
+    /*
         try {
           String batch = maker.getBatch(batchId);
           maker.deleteBatch(batchId);
@@ -128,9 +128,9 @@ public class Backend {
         } catch (Exception failedToDealWithBatch) {
 
         }
+    */
       }
     };
-    */
 
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
