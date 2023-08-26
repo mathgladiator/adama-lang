@@ -85,12 +85,12 @@ public class Kickstarter {
       request.put("space", space);
       request.put("template", template);
       try {
-        System.out.println(Util.prefix("Space created!", Util.ANSI.Green));
         connection.execute(request);
+        System.out.println(Util.prefix("Space created!", Util.ANSI.Green));
         return;
       } catch (Exception ex) {
         if (ex instanceof ErrorCodeException) {
-          // IF exists, then ask "Since this project already exists, do you want to construct your environment"
+          // IF exists, then ask "Since this project already exists, do you want to just construct your environment"
           System.out.print(Util.prefix("Failed:" + ((ErrorCodeException) ex).code, Util.ANSI.Red));
         } else {
           System.err.println("Exception: " + ex.getMessage());
