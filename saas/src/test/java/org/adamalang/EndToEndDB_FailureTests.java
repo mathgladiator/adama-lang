@@ -44,7 +44,7 @@ public class EndToEndDB_FailureTests {
       Assert.assertEquals("ERROR:946179", c11.next());
       fe.kill("emails");
       Iterator<String> c12 = fe.execute("{\"id\":7,\"method\":\"init/setup-account\",\"identity\":\"" + identity + "\",\"email\":\"x@x.com\"}");
-      Assert.assertEquals("ERROR:979980", c12.next());
+      Assert.assertEquals("ERROR:901363", c12.next());
     }
   }
 }

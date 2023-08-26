@@ -120,6 +120,14 @@ public class TestFrontEnd implements AutoCloseable, Email {
     return Files.readString(file.toPath());
   }
 
+  private static String getBilling() throws Exception {
+    File file = new File("../internal/billing.adama");
+    if (!file.exists()) {
+      file = new File("internal/billing.adama");
+    }
+    return Files.readString(file.toPath());
+  }
+
   public TestFrontEnd() throws Exception {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
@@ -130,14 +138,23 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     this.alive = new AtomicBoolean(true);
     MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
-    int spaceId = Spaces.createSpace(dataBase, 0, "ide");
+    int ideId = Spaces.createSpace(dataBase, 0, "ide");
     {
       ObjectNode plan = Json.newJsonObject();
       plan.putObject("versions").put("file", getIDE());
       plan.put("default", "file");
       plan.putArray("plan");
       String planJson = plan.toString();
-      Spaces.setPlan(dataBase, spaceId, planJson, "hash");
+      Spaces.setPlan(dataBase, ideId, planJson, "hash");
+    }
+    int billingId = Spaces.createSpace(dataBase, 0, "billing");
+    {
+      ObjectNode plan = Json.newJsonObject();
+      plan.putObject("versions").put("file", getBilling());
+      plan.put("default", "file");
+      plan.putArray("plan");
+      String planJson = plan.toString();
+      Spaces.setPlan(dataBase, billingId, planJson, "hash");
     }
     String masterKey = MasterKey.generateMasterKey();
     this.caravanPath = File.createTempFile("ADAMATEST_", "caravan");
@@ -375,6 +392,10 @@ public class TestFrontEnd implements AutoCloseable, Email {
     return true;
   }
 
+  @Override
+  public boolean sendWelcome(String email) {
+    return true;
+  }
 
   public Runnable latchOnEmail(String email) {
     CountDownLatch latch = new CountDownLatch(1);

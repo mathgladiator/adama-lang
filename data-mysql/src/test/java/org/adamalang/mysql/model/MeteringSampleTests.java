@@ -29,7 +29,7 @@ public class MeteringSampleTests {
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         Assert.assertNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
-        int userId = Users.getOrCreateUserId(dataBase, "user@user.com");
+        int userId = Users.createUserId(dataBase, "user@user.com");
         int spaceId = Spaces.createSpace(dataBase, userId, "space");
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();
@@ -92,7 +92,7 @@ public class MeteringSampleTests {
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         Assert.assertNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
-        int userId = Users.getOrCreateUserId(dataBase, "user@user.com");
+        int userId = Users.createUserId(dataBase, "user@user.com");
         int spaceId = Spaces.createSpace(dataBase, userId, "space");
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();

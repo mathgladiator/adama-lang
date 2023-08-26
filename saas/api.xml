@@ -128,6 +128,7 @@
         <documentation>
             The email of an Adama developer.
         </documentation>
+        <skip-transform on="init/setup-account"/>
         <transform service="org.adamalang.contracts.UserIdResolver"
                    output-name="userId"
                    output-java-type="Integer"
