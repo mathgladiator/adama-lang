@@ -516,12 +516,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
           @Override
           public void failure(ErrorCodeException ex) {
-            try {
-              Spaces.delete(nexus.database, spaceId, request.who.id);
-            } catch (Exception failure) {
-              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION, ex, GlobalControlHandler.LOGGER));
-              return;
-            }
             responder.error(ex);
           }
         });
