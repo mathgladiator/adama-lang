@@ -153,4 +153,39 @@ public class RootHandlerImpl implements RootHandler {
       }
     }
   }
+
+  private static String confirm(Config config) {
+    System.out.println();
+    System.out.print(Util.prefix("Are you sure? [Yes/No]:", Util.ANSI.Yellow));
+    return System.console().readLine().trim().toLowerCase();
+  }
+
+  @Override
+  public void deinit(Arguments.DeinitArgs args, Output.YesOrError output) throws Exception {
+    String email = args.config.get_string("email", "");
+    if ("".equals(email)) {
+      System.err.println("This tool has not been initialized with an email, please init again prior to deinit.");
+      return;
+    }
+    System.out.println("Oh geez, we are sad to see you wanting to delete your account... :(");
+    System.out.println();
+    System.out.println("Now, before you deinit yourself, you need to delete your spaces, authorities, and domains or the command will fail. This is a safety mechanism to prevent massive data loss.");
+    System.out.println();
+    System.out.println(Util.prefix("WARNING! ", Util.ANSI.Red) + "This is going to delete the account for " + Util.prefix(email, Util.ANSI.Cyan));
+    System.out.println();
+    String confirmation = confirm(args.config).trim();
+    if ("yes".equals(confirmation)) {
+      String identity = args.config.get_string("identity", null);
+      try (WebSocketClient client = new WebSocketClient(args.config)) {
+        try (Connection connection = client.open()) {
+          ObjectNode request = Json.newJsonObject();
+          request.put("method", "deinit");
+          request.put("identity", identity);
+          connection.execute(request);
+          output.out();
+        }
+      }
+    }
+
+  }
 }
