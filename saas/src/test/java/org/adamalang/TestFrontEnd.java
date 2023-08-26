@@ -35,6 +35,7 @@ import org.adamalang.ops.*;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
+import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
@@ -214,7 +215,17 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.clientExecutor = SimpleExecutor.create("disk");
     this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService, masterKey);
     proxyDeploymentFactory.setAgent(deploymentAgent);
-    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
+    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(), 1800000L, new MeteringBatchReady() {
+      @Override
+      public void init(DiskMeteringBatchMaker me) {
+
+      }
+
+      @Override
+      public void ready(String batchId) {
+        System.out.println("Metering batch ready:" + batchId);
+      }
+    }), port, 2);
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
     LocalRegionClientMetrics localRegionClientMetrics =  new LocalRegionClientMetrics(new NoOpMetricsFactory());

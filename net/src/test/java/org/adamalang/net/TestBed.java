@@ -33,6 +33,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
+import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.junit.Assert;
 
@@ -99,7 +100,17 @@ public class TestBed implements AutoCloseable {
     billingRoot = new File(File.createTempFile("ADAMATEST_",  "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
     billingRoot.mkdir();
 
-    this.batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, billingRoot,  1800000L);
+    this.batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, billingRoot, 1800000L, new MeteringBatchReady() {
+      @Override
+      public void init(DiskMeteringBatchMaker me) {
+
+      }
+
+      @Override
+      public void ready(String batchId) {
+        System.out.println("Metering Batch Ready:" + batchId);
+      }
+    });
     this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, new LocalCapacityRequestor() {
       @Override
       public void requestCodeDeployment(String space, Callback<Void> callback) {

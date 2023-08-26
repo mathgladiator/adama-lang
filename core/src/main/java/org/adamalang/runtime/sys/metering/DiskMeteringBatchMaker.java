@@ -35,14 +35,16 @@ public class DiskMeteringBatchMaker {
   private final File current;
   private FileOutputStream output;
   private long oldestTime;
+  private final MeteringBatchReady ready;
 
-  public DiskMeteringBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds) throws Exception {
+  public DiskMeteringBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds, MeteringBatchReady ready) throws Exception {
     this.time = time;
     this.executor = executor;
     this.root = root;
     this.cutOffMilliseconds = cutOffMilliseconds;
     this.oldestTime = time.nowMilliseconds();
     this.current = new File(root, "CURRENT");
+    this.ready = ready;
     if (current.exists()) {
       File transfer = new File(root, "TRANSFER");
       try (FileOutputStream transferStream = new FileOutputStream(transfer)) {
@@ -73,6 +75,12 @@ public class DiskMeteringBatchMaker {
         close();
       }
     })));
+    ready.init(this);
+    for (File file : root.listFiles()) {
+      if (file.getName().startsWith("SUMMARY-")) {
+        ready.ready(file.getName().substring(8));
+      }
+    }
   }
 
   public void close() throws Exception {
