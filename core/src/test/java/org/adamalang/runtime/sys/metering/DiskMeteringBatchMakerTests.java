@@ -21,6 +21,20 @@ import java.util.concurrent.TimeUnit;
 
 public class DiskMeteringBatchMakerTests {
 
+  private class MockMeteringBatchReady implements MeteringBatchReady {
+    private final ArrayList<String> ready = new ArrayList<>();
+
+    @Override
+    public void init(DiskMeteringBatchMaker me) {
+
+    }
+
+    @Override
+    public synchronized void ready(String batchId) {
+      ready.add(batchId);
+    }
+  }
+
   private Runnable makeAdvance1000(MockTime time, DiskMeteringBatchMaker maker, String space) {
     return  () -> {
       maker.write(
@@ -42,7 +56,8 @@ public class DiskMeteringBatchMakerTests {
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
-      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+      MockMeteringBatchReady mock = new MockMeteringBatchReady();
+      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L, mock);
       Runnable advance1000 = makeAdvance1000(time, maker, "space");
       for (int k = 0; k < 3599; k++) {
         advance1000.run();
@@ -83,15 +98,16 @@ public class DiskMeteringBatchMakerTests {
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
+      MockMeteringBatchReady mock = new MockMeteringBatchReady();
       {
-        DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+        DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L, mock);
         Runnable advance1000 = makeAdvance1000(time, maker, "space");
         for (int k = 0; k < 3599; k++) {
           advance1000.run();
         }
         maker.close();
       }
-      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L, mock);
       Assert.assertNull(maker.getNextAvailableBatchId());
       Runnable advance1000 = makeAdvance1000(time, maker, "space");
       for (int k = 0; k < 200; k++) {
@@ -124,8 +140,9 @@ public class DiskMeteringBatchMakerTests {
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
+      MockMeteringBatchReady mock = new MockMeteringBatchReady();
       {
-        DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+        DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L, mock);
         Runnable advance1000 = makeAdvance1000(time, maker, "space");
         for (int k = 0; k < 3599; k++) {
           advance1000.run();
@@ -160,7 +177,7 @@ public class DiskMeteringBatchMakerTests {
         }
       }
 
-      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L, mock);
       Assert.assertNull(maker.getNextAvailableBatchId());
       Runnable advance1000 = makeAdvance1000(time, maker, "space");
       for (int k = 0; k < 200; k++) {

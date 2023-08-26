@@ -14,6 +14,7 @@ import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.mysql.impl.GlobalBillingDocumentFinder;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.server.Handler;
@@ -29,9 +30,7 @@ import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
-import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
-import org.adamalang.runtime.sys.metering.MeterReading;
-import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.runtime.sys.metering.*;
 
 import java.io.File;
 import java.util.List;
@@ -83,9 +82,25 @@ public class Backend {
       });
     });
 
+    BillingDocumentFinder billingDocumentFinder = new GlobalBillingDocumentFinder(init.database);
+
+    MeteringBatchReady submitToAdama = new MeteringBatchReady() {
+      private DiskMeteringBatchMaker maker;
+
+      @Override
+      public void init(DiskMeteringBatchMaker me) {
+        this.maker = me;
+      }
+
+      @Override
+      public void ready(String batchId) {
+        // TODO: load batch, summarize, and then send to the adama document
+      }
+    };
+
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
-    DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L);
+    DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L, submitToAdama);
     meteringPubSub.subscribe((bills) -> {
       for (MeterReading meterReading : bills) {
         billingBatchMaker.write(meterReading);
