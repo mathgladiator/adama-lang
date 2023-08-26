@@ -63,8 +63,14 @@ public class Kickstarter {
        + "  \"spaces\": [{\"name\": \""+space+"\", \"main\": \"backend.adama\", \"import\": \"backend\" }]\n" //
        + "}"; //
     Files.writeString(new File(spaceDir, "local.verse.json").toPath(), Json.parseJsonObject(verse).toPrettyString());
-    String readme = "README\n---------------\n";
-    Files.writeString(new File(spaceDir, "README.md").toPath(), readme);
+    StringBuilder readme = new StringBuilder();
+    readme.append("README\n");
+    readme.append("--------");
+    readme.append("This command will (assuming you have adama.jar in your home directory) start the adama devbox where you just need to go to http://localhost:8080\n\n");
+    readme.append("```sh\n");
+    readme.append("java -jar ~/adama.jar frontend dev-server\n");
+    readme.append("```\n");
+    Files.writeString(new File(spaceDir, "README.md").toPath(), readme.toString());
   }
 
   public void downloadAdama(File backendAdama) {
