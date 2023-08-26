@@ -65,6 +65,8 @@ public class EndToEnd_AuthorityTests {
       Assert.assertEquals("ERROR:983199", c16.next());
       Iterator<String> c17 = fe.execute("{\"id\":3,\"method\":\"account/get-payment-plan\",\"identity\":\"" + newIdentity + "\"}");
       Assert.assertEquals("ERROR:903375", c17.next());
+      Iterator<String> c18 = fe.execute("{\"id\":1,\"identity\":\"" + devIdentity + "\",\"method\":\"deinit\"}");
+      Assert.assertEquals("FINISH:{}", c18.next());
     }
   }
 }

@@ -21,6 +21,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Users {
+
+  public static void deleteUser(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      { // remove all grants
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`grants` WHERE `user`=" + userId + ";";
+        DataBase.executeUpdate(connection, sql);
+      }
+      { // remove all email keys
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`email_keys` WHERE `user`=" + userId + ";";
+        DataBase.executeUpdate(connection, sql);
+      }
+      { // remove core account
+        String sql = "DELETE FROM `" + dataBase.databaseName + "`.`emails` WHERE `id`=" + userId + ";";
+        DataBase.executeUpdate(connection, sql);
+      }
+    }
+  }
+
   public static int createUserId(DataBase dataBase, String email) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {

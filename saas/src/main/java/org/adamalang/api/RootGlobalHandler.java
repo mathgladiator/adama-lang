@@ -17,6 +17,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, InitCompleteAccountRequest request, InitiationResponder responder);
 
+  public void handle(Session session, DeinitRequest request, SimpleResponder responder);
+
   public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder);
 
   public void handle(Session session, AccountGetPaymentPlanRequest request, PaymentResponder responder);
@@ -130,6 +132,7 @@ public interface RootGlobalHandler {
       case "init/setup-account":
       case "init/convert-google-user":
       case "init/complete-account":
+      case "deinit":
       case "account/set-password":
       case "account/get-payment-plan":
       case "account/login":

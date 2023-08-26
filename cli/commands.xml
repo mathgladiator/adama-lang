@@ -769,6 +769,12 @@
         </documentation>
     </command>
 
+    <command name="deinit" interactive="true">
+        <documentation>
+            Destroy your account. This requires you to delete all spaces, documents, authorities, and domains.
+        </documentation>
+    </command>
+
     <group name="services" alt-name="service">
         <documentation>
             Launch a service

@@ -115,7 +115,6 @@ public class EndToEnd_SpaceInfoTests {
       Iterator<String> c19  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/reflect\",\"space\":\"nope\",\"key\":\"k\"}");
       Assert.assertEquals("ERROR:625678", c19.next());
-      // TODO: we should move the billing logic out of overlord and be able to manually trigger it here
       Iterator<String> c20  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/usage\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:null", c20.next());
@@ -126,6 +125,16 @@ public class EndToEnd_SpaceInfoTests {
       Assert.assertEquals("ERROR:947404", c22.next());
       Iterator<String> c23 = fe.execute("{\"id\":1,\"identity\":\"" + alice+ "\",\"method\":\"space/create\",\"space\":\"wildcard\"}");
       Assert.assertEquals("ERROR:947404", c23.next());
+      Iterator<String> c24 = fe.execute("{\"id\":1,\"identity\":\"" + alice+ "\",\"method\":\"deinit\"}");
+      Assert.assertEquals("ERROR:999665", c24.next());
+      Iterator<String> c25  =
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/delete\",\"space\":\"spacename\"}");
+      Assert.assertEquals("FINISH:{}", c25.next());
+      Iterator<String> c26 =
+          fe.execute("{\"id\":2,\"identity\":\"" + alice + "\",\"method\":\"space/list\"}");
+      Assert.assertEquals("FINISH:null", c26.next());
+      Iterator<String> c27 = fe.execute("{\"id\":1,\"identity\":\"" + alice+ "\",\"method\":\"deinit\"}");
+      Assert.assertEquals("FINISH:{}", c27.next());
     }
   }
 }

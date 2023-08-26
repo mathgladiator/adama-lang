@@ -72,6 +72,28 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DeinitRequest request, SimpleResponder responder) {
+    try {
+      if (!Spaces.list(nexus.database, request.who.id, "", 10).isEmpty()) {
+        responder.error(new ErrorCodeException(ErrorCodes.FAILED_DEINIT_SPACES_EXIST));
+        return;
+      }
+      if (!Authorities.list(nexus.database, request.who.id).isEmpty()) {
+        responder.error(new ErrorCodeException(ErrorCodes.FAILED_DEINIT_AUTHORITIES_EXIST));
+        return;
+      }
+      if (!Domains.list(nexus.database, request.who.id).isEmpty()) {
+        responder.error(new ErrorCodeException(ErrorCodes.FAILED_DEINIT_DOMAINS_EXIST));
+        return;
+      }
+      Users.deleteUser(nexus.database, request.who.id);
+      responder.complete();
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.FAILED_DEINIT_UNKONWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
   public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder) {
     try {
       if (request.who.isAdamaDeveloper) {
@@ -146,6 +168,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
                 String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
                 long expiry = System.currentTimeMillis() + 3 * 24 * 60 * 60000;
                 Users.addKey(nexus.database, userId, publicKey, expiry);
+                Users.validateUser(nexus.database, userId);
                 responder.complete(Jwts.builder().setSubject("" + userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
               } catch (Exception ex) {
                 responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));

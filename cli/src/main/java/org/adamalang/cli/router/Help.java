@@ -27,6 +27,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("domain", 15), Util.ANSI.Cyan) + "Manage custom domains");
     System.out.println("    " + Util.prefix(Util.justifyLeft("frontend", 15), Util.ANSI.Cyan) + "Frontend tools (rxhtml)");
     System.out.println("    " + Util.prefix(Util.justifyLeft("services", 15), Util.ANSI.Cyan) + "Launch a service");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("deinit", 15), Util.ANSI.Green) + "Destroy your account. This requires you to delete all spaces, documents, authorities, and domains.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dumpenv", 15), Util.ANSI.Green) + "Dump your environment variables");
     System.out.println("    " + Util.prefix(Util.justifyLeft("init", 15), Util.ANSI.Green) + "Initializes the config with a valid token");
     System.out.println("    " + Util.prefix(Util.justifyLeft("kickstart", 15), Util.ANSI.Green) + "Kickstart a project via an interactive process!");
