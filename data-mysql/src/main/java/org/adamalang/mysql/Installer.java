@@ -128,7 +128,7 @@ public class Installer {
             "  `unbilled_first_party_service_calls` INT(4) DEFAULT 0," + // TOKILL
             "  `unbilled_third_party_service_calls` INT(4) DEFAULT 0," + // TOKILL
             "  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0," + //
-            "  `plan` TEXT NOT NULL," + // MOVE to IDE document?
+            "  `plan` MEDIUMTEXT NOT NULL," + // MOVE to IDE document?
             "  `rxhtml` MEDIUMTEXT," + // MOVE to IDE document?
             "  `hash` VARCHAR(256) NOT NULL," + //
             "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //
