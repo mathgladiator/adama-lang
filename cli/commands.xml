@@ -565,6 +565,11 @@
                 Generates the networking codec
             </documentation>
         </command>
+        <command name="make-embed">
+            <documentation>
+                Generates the embedded templates
+            </documentation>
+        </command>
         <command name="make-api">
             <documentation>
                 Produces api files for SaaS and documentation for the WebSocket low level API.

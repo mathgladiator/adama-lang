@@ -164,7 +164,7 @@ public class DevBoxAdamaMicroVerse {
                });
               defn.lastReflection = newReflection;
               defn.lastDeployedPlan = plan;
-              awaitDeployment.await(30000, TimeUnit.MILLISECONDS);
+              awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
               io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
             } else {
               io.error("adama|failure: " + defn.spaceName);

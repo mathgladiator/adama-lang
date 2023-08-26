@@ -410,16 +410,63 @@ public class CoreService implements Deliverer, Queryable {
 
   /** connect the given person to the document hooking up a streamback */
   public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
-    connect(context, key, stream, viewerState, assetIdEncoder, true);
+    connect(context, key, stream, viewerState, assetIdEncoder);
+  }
+
+  private void loadOrCreate(CoreRequestContext context, Key key, Callback<DurableLivingDocument> callback) {
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        callback.success(document);
+      }
+
+      @Override
+      public void failure(ErrorCodeException exOriginal) {
+        if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
+          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchConnect.wrap(new Callback<>() {
+            @Override
+            public void success(LivingDocumentFactory factory) {
+              try {
+                if (!factory.canInvent(context)) {
+                  callback.failure(exOriginal);
+                  return;
+                }
+                create(context, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
+                  @Override
+                  public void success(Void value) {
+                    load(key, callback);
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException exNew) {
+                    callback.failure(exNew);
+                  }
+                }));
+              } catch (ErrorCodeException exNew) {
+                callback.failure(exNew);
+              }
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          }));
+          return;
+        }
+        callback.failure(exOriginal);
+      }
+    });
+
   }
 
   /** internal: do the connect with retry when connect executes create */
-  private void connect(CoreRequestContext context, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder, boolean canRetry) {
+  private void connect(CoreRequestContext context, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder) {
     if (!shield.canConnectExisting.get()) {
       stream.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_CONNECT_DOCUMENT));
       return;
     }
-    load(key, new Callback<>() {
+    loadOrCreate(context, key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         connectDirectMustBeInDocumentBase(context, document, stream, new JsonStreamReader(viewerState), assetIdEncoder);
@@ -427,43 +474,6 @@ public class CoreService implements Deliverer, Queryable {
 
       @Override
       public void failure(ErrorCodeException exOriginal) {
-        if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED && canRetry) {
-          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchConnect.wrap(new Callback<>() {
-            @Override
-            public void success(LivingDocumentFactory factory) {
-              try {
-                if (!factory.canInvent(context)) {
-                  stream.failure(exOriginal);
-                  return;
-                }
-                create(context, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
-                  @Override
-                  public void success(Void value) {
-                    connect(context, key, stream, viewerState, assetIdEncoder, canRetry);
-                  }
-
-                  @Override
-                  public void failure(ErrorCodeException exNew) {
-                    if (exNew.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || exNew.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED || exNew.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
-                      connect(context, key, stream, viewerState, assetIdEncoder, canRetry);
-                    } else {
-                      metrics.failed_invention.run();
-                      stream.failure(exNew);
-                    }
-                  }
-                }));
-              } catch (ErrorCodeException exNew) {
-                stream.failure(exNew);
-              }
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              stream.failure(ex);
-            }
-          }));
-          return;
-        }
         stream.failure(exOriginal);
       }
     });
@@ -608,13 +618,13 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** execute a web get against the document */
-  public void webGet(Key key, WebGet request, Callback<WebResponse> callback) {
-    load(key, new Callback<DurableLivingDocument>() {
+  public void webGet(Key key, WebGet get, Callback<WebResponse> callback) {
+    loadOrCreate(get.context.toCoreRequestContext(key), key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
         document.registerActivity();
-        document.document().__web_get(request, new Callback<WebResponse>() {
+        document.document().__web_get(get, new Callback<WebResponse>() {
           @Override
           public void success(WebResponse response) {
             if (response != null) {
@@ -640,13 +650,13 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** execute a web options against the document */
-  public void webOptions(Key key, WebGet request, Callback<WebResponse> callback) {
-    load(key, new Callback<DurableLivingDocument>() {
+  public void webOptions(Key key, WebGet options, Callback<WebResponse> callback) {
+    loadOrCreate(options.context.toCoreRequestContext(key), key, new Callback<DurableLivingDocument>() {
       @Override
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
         document.registerActivity();
-        WebResponse response = document.document().__options(request);
+        WebResponse response = document.document().__options(options);
         if (response != null) {
           response.account(inventory);
           callback.success(response);
@@ -662,13 +672,9 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
-  public void startupLoad(Key key) {
-    load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
-  }
-
   /** execute a web put against the document */
   public void webPut(Key key, WebPut put, Callback<WebResponse> callback) {
-    load(key, new Callback<>() {
+    loadOrCreate(put.context.toCoreRequestContext(key), key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
@@ -700,7 +706,7 @@ public class CoreService implements Deliverer, Queryable {
 
   /** execute a web put against the document */
   public void webDelete(Key key, WebDelete delete, Callback<WebResponse> callback) {
-    load(key, new Callback<>() {
+    loadOrCreate(delete.context.toCoreRequestContext(key), key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
@@ -730,8 +736,12 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
+  public void startupLoad(Key key) {
+    load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
+  }
+
   public void directSend(CoreRequestContext context, Key key, String marker, String channel, String message, Callback<Integer> result) {
-    load(key, new Callback<DurableLivingDocument>() {
+    loadOrCreate(context, key, new Callback<DurableLivingDocument>() {
       @Override
       public void success(DurableLivingDocument document) {
         document.send(context, null, marker, channel, message, result);

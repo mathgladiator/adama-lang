@@ -20,6 +20,7 @@ import org.adamalang.common.DefaultCopyright;
 import org.adamalang.common.Escaping;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.common.gossip.codec.GossipProtocol;
+import org.adamalang.frontend.EmbedTemplates;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
@@ -100,6 +101,13 @@ public class ContribHandlerImpl implements ContribHandler {
   public void makeCli(Arguments.ContribMakeCliArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Building CLI Router", Util.ANSI.Cyan));
     org.adamalang.clikit.Tool.buildFileSystem("./cli/commands.xml");
+    output.out();
+  }
+
+  @Override
+  public void makeEmbed(Arguments.ContribMakeEmbedArgs args, Output.YesOrError output) throws Exception {
+    System.out.println(Util.prefix("Building CLI Router", Util.ANSI.Cyan));
+    EmbedTemplates.doit();
     output.out();
   }
 

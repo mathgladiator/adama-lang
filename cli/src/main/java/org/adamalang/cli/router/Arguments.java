@@ -2320,6 +2320,40 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama contrib make-codec", Util.ANSI.Green));
 		}
 	}
+	public static class ContribMakeEmbedArgs {
+		public Config config;
+		public static ContribMakeEmbedArgs from(String[] args, int start) {
+			ContribMakeEmbedArgs returnArgs = new ContribMakeEmbedArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Generates the embedded templates", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama contrib make-embed", Util.ANSI.Green));
+		}
+	}
 	public static class ContribMakeEtArgs {
 		public Config config;
 		public static ContribMakeEtArgs from(String[] args, int start) {

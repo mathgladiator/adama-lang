@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.util.regex.Pattern;
 
 public class EmbedTemplates {
-  public static void main(String[] args) throws Exception {
+  public static void doit() throws Exception {
     File javaSpaceTemplates = new File("./saas/src/main/java/org/adamalang/frontend/SpaceTemplates.java");
     String java = Files.readString(javaSpaceTemplates.toPath());
 
@@ -29,7 +29,7 @@ public class EmbedTemplates {
       String name = file.getName().replaceAll(Pattern.quote(".adama"), "");
       String adama = Files.readString(file.toPath());
       String rxhtml = "<forest></forest>";
-      File rxhtmlFile = new File("./saas/templates/" + name + ".rxhtml");
+      File rxhtmlFile = new File("./saas/templates/" + name + ".rx.html");
       if (rxhtmlFile.exists()) {
         rxhtml = Files.readString(rxhtmlFile.toPath());
       }
