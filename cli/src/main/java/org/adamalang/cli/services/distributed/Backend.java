@@ -34,6 +34,7 @@ import org.adamalang.runtime.sys.metering.*;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class Backend {
   public final CommonServiceInit init;
@@ -84,6 +85,7 @@ public class Backend {
 
     BillingDocumentFinder billingDocumentFinder = new GlobalBillingDocumentFinder(init.database);
 
+    /*
     MeteringBatchReady submitToAdama = new MeteringBatchReady() {
       private DiskMeteringBatchMaker maker;
 
@@ -94,9 +96,41 @@ public class Backend {
 
       @Override
       public void ready(String batchId) {
-        // TODO: load batch, summarize, and then send to the adama document
+        try {
+          String batch = maker.getBatch(batchId);
+          maker.deleteBatch(batchId);
+          Map<String, String> messages = MeterReducerReader.convertMapToBillingMessages(batch, init.region, init.machine);
+          //public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
+          for(Map.Entry<String, String> message : messages.entrySet()) {
+            billingDocumentFinder.find(message.getKey(), new Callback<Key>() {
+              final String messageToSend = message.getValue();
+              @Override
+              public void success(Key billingDocument) {
+                client.directSend("0.0.0.0", "adama", init.machine, "region", billingDocument.space, billingDocument.key, "billing-document-" + init.region + "-" + init.machine + "-" + batchId, "ingest_new_usage_record", messageToSend, new Callback<Integer>() {
+                  @Override
+                  public void success(Integer value) {
+
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+
+                  }
+                });
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+
+              }
+            });
+          }
+        } catch (Exception failedToDealWithBatch) {
+
+        }
       }
     };
+    */
 
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();

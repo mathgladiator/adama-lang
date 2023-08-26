@@ -29,6 +29,11 @@ public class LibPrincipal {
   }
 
   @Extension
+  public static boolean isAdamaHost(final NtPrincipal principal) {
+    return "region".equals(principal.authority);
+  }
+
+  @Extension
   public static boolean fromAuthority(final NtPrincipal principal, String authority) {
     return authority.equals(principal.authority);
   }
