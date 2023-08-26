@@ -8,9 +8,11 @@
  */
 package org.adamalang.runtime.sys.web;
 
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.CoreRequestContext;
 
 /** the context (who, from:origin+ip) for a web request */
 public class WebContext {
@@ -22,6 +24,10 @@ public class WebContext {
     this.who = who;
     this.origin = origin;
     this.ip = ip;
+  }
+
+  public CoreRequestContext toCoreRequestContext(Key key) {
+    return new CoreRequestContext(who, origin, ip, key.key);
   }
 
   public static WebContext readFromObject(JsonStreamReader reader) {

@@ -43,14 +43,14 @@ record User {
   private principal who;
   viewer_is<who> string email required;
   private string password_hash;
-  private string temp_password_hash
-  private datatime temp_password_hash_expires;
+  private string temp_password_hash;
+  private datetime temp_password_hash_expires;
 }
 
 table<User> _users;
 
 @web put /register (WebRegister register) {
-  bool email_available = (iterate _users where email == register.email);
+  bool email_available = (iterate _users where email == register.email).size() == 0;
 
   if (!email_available) {
     return {
@@ -85,11 +85,11 @@ table<User> _users;
 @authorize (email, password) {
   if ((iterate _users where_as x: x.email == email)[0] as user) {
     if (user.password_hash.passwordCheck(password)) {
-      return "" + person.id;
+      return "" + user.id;
     }
-    if (Time.datetime() <= person.temp_password_hash_expires) {
-      if (person.temp_password_hash.passwordCheck(password)) {
-        return "" + person.id;
+    if (Time.datetime() <= user.temp_password_hash_expires) {
+      if (user.temp_password_hash.passwordCheck(password)) {
+        return "" + user.id;
       }
     }
   }
@@ -108,8 +108,8 @@ message WebForgot {
   if ((iterate _users where email == forgot.email)[0] as user) {
     if (saferandom.ask(@who, {pool:"0123456789AZ", count:8}).await() as newpw) {
       string temp_password = newpw.result;
-      person.temp_password_hash = temp_password.passwordHash();
-      person.temp_password_hash_expires = Time.datetime().future(@timespan 15 min);
+      user.temp_password_hash = temp_password.passwordHash();
+      user.temp_password_hash_expires = Time.datetime().future(@timespan 15 min);
       /*
       amazonses.send(@who, {
         from: "no-reply@your-domain",

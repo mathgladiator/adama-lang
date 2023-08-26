@@ -18,6 +18,7 @@ public interface ContribHandler {
   void makeBook(ContribMakeBookArgs args, YesOrError output) throws Exception;
   void makeCli(ContribMakeCliArgs args, YesOrError output) throws Exception;
   void makeCodec(ContribMakeCodecArgs args, YesOrError output) throws Exception;
+  void makeEmbed(ContribMakeEmbedArgs args, YesOrError output) throws Exception;
   void makeEt(ContribMakeEtArgs args, YesOrError output) throws Exception;
   void strTemp(ContribStrTempArgs args, YesOrError output) throws Exception;
   void testsAdama(ContribTestsAdamaArgs args, YesOrError output) throws Exception;

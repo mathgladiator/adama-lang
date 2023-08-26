@@ -3,9 +3,26 @@
         <a href="/register">Create a new account!</a>
         <a href="/sign-in">Sign in</a>
     </page>
-    <page uri="/register">
+    <page uri="/product">
+        This is the product!
     </page>
-    <page uri="/sign-ig">
+    <page uri="/register">
+        <div rx:if="view:failed">
+            Failed to register: <lookup path="view:errormessage" />
+        </div>
+        <form rx:action="domain:put" path="register" rx:failure="raise:failed te:errormessage" rx:success="lower:failed" rx:forward="/product">
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email"/>
+            <br/>
+
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"/>
+            <br/>
+
+            <button type="submit">Register!</button>
+        </form>
+    </page>
+    <page uri="/sign-in">
     </page>
     <page uri="/forgot">
     </page>

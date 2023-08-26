@@ -468,6 +468,16 @@ public class MainRouter {
                contribHandler.makeCodec(contribArgs, out);
                return 0;
             }
+            case "make-embed": {
+              ContribMakeEmbedArgs contribArgs = ContribMakeEmbedArgs.from(args, 2);
+              if (contribArgs == null) {
+                ContribMakeEmbedArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               contribHandler.makeEmbed(contribArgs, out);
+               return 0;
+            }
             case "make-et": {
               ContribMakeEtArgs contribArgs = ContribMakeEtArgs.from(args, 2);
               if (contribArgs == null) {
