@@ -35,17 +35,19 @@ public class ReconcileDirectoryVersusStorage {
         ArrayList<DocumentIndex> all = FinderOperations.listAll(dataBase);
         LOGGER.error("sweeping documents: {}", all.size());
         for (final DocumentIndex doc : all) {
-          cloud.exists(new Key(doc.space, doc.key), doc.archive, new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-            }
+          if (doc.archive != null && !doc.archive.equals("")) {
+            cloud.exists(new Key(doc.space, doc.key), doc.archive, new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+              }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              LOGGER.error("FAILEDFIND:" + doc.space + "/" + doc.key + " archive:" + doc.archive + " (" + ex.code + ")");
-              metrics.found_missing_document.up();
-            }
-          });
+              @Override
+              public void failure(ErrorCodeException ex) {
+                LOGGER.error("FAILEDFIND:" + doc.space + "/" + doc.key + " archive:" + doc.archive + " (" + ex.code + ")");
+                metrics.found_missing_document.up();
+              }
+            });
+          }
           Thread.sleep(50);
         }
       }

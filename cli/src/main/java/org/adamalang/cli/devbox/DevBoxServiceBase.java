@@ -106,22 +106,40 @@ public class DevBoxServiceBase implements ServiceBase {
           callback.success(new HttpResult("text/javascript", current.forestStyle.getBytes(), false));
           return;
         }
-        if (uri != null && uri.endsWith("/devlibadama.js") && localLibAdamaJS != null) {
+        if (uri != null && uri.endsWith("/devlibadama.js")) {
           StringBuilder js = new StringBuilder();
           try {
             js.append("/** tree.js **/\n\n");
-            js.append(Files.readString(new File(localLibAdamaJS, "tree.js").toPath()));
+            if (localLibAdamaJS != null) {
+              js.append(Files.readString(new File(localLibAdamaJS, "tree.js").toPath()));
+            } else {
+              js.append(JavaScriptResourcesRaw.TREE);
+            }
             js.append("/** connection.js **/\n\n");
-            String connection = Files.readString(new File(localLibAdamaJS, "connection.js").toPath());
+            String connection;
+            if (localLibAdamaJS != null) {
+              connection = Files.readString(new File(localLibAdamaJS, "connection.js").toPath());
+            } else {
+              connection = JavaScriptResourcesRaw.CONNECTION;
+            }
             if (verse != null) {
               // TODO: decide on SSL for devbox
               connection = connection.replaceAll(Pattern.quote("\"wss://\""), Matcher.quoteReplacement("\"ws://\""));
             }
             js.append(connection);
             js.append("/** debugger.js **/\n\n");
-            js.append(Files.readString(new File(localLibAdamaJS, "debugger.js").toPath()));
+            if (localLibAdamaJS != null) {
+              js.append(Files.readString(new File(localLibAdamaJS, "debugger.js").toPath()));
+            } else {
+              js.append(JavaScriptResourcesRaw.DEBUGGER);
+            }
             js.append("/** rxhtml.js **/\n\n");
-            String rxhtml = Files.readString(new File(localLibAdamaJS, "rxhtml.js").toPath());
+            String rxhtml;
+            if (localLibAdamaJS != null) {
+              rxhtml = Files.readString(new File(localLibAdamaJS, "rxhtml.js").toPath());
+            } else {
+              rxhtml = JavaScriptResourcesRaw.RXHTML;
+            }
             // TODO: have a way to point this to localhost:$port
             if (verse != null) {
               rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("\"localhost:8080\""));
