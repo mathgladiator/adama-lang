@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.parser;
 
+import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
@@ -51,14 +52,14 @@ public class GatherResourcesHandlerTests {
     includes.put("bad", "public int ");
     includes.put("good", "public int x = 123;");
     includes.put("recurse", "@include good;");
-    gi.add(new Include(null, new Token[]{Token.WRAP("recurse")}, null), null);
+    gi.add(new Include(null, new Token[]{Token.WRAP("recurse")}, null), Scope.makeRootDocument());
     Assert.assertEquals(0, gi.errors.size());
     Assert.assertTrue(gi.includes.contains("good"));
     Assert.assertTrue(gi.includes.contains("recurse"));
 
-    gi.add(new Include(null, new Token[]{Token.WRAP("nope")}, null), null);
+    gi.add(new Include(null, new Token[]{Token.WRAP("nope")}, null), Scope.makeRootDocument());
     Assert.assertEquals(1, gi.errors.size());
-    gi.add(new Include(null, new Token[]{Token.WRAP("bad")}, null), null);
+    gi.add(new Include(null, new Token[]{Token.WRAP("bad")}, null), Scope.makeRootDocument());
     Assert.assertEquals(2, gi.errors.size());
     gi.add((DefineService) null);
   }
