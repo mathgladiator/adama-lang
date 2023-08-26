@@ -22,44 +22,71 @@ message Cons {
   return @who == owner || @who.isOverlord();
 }
 
-message NewBill {
-  datetime when;
-  long cpu_ticks;
-  long memory_bytes_p95;
-  long storage_bytes;
-  long messages;
-  long bandwidth_bytes;
-  long first_party_service_calls;
-  long third_party_service_calls;
-  long documents_p95;
-  long connections_p95;
-}
-
-record Bill {
-  public datetime when;
-  public long cpu_ticks;
-  public long memory_bytes_p95;
-  public long storage_bytes;
+record MeteringRecord {
+  public long cpu;
   public long messages;
-  public long bandwidth_bytes;
+  public long count_p95;
+  public long memory_p95;
+  public long connections_p95;
+  public long bandwidth;
   public long first_party_service_calls;
   public long third_party_service_calls;
-  public long documents_p95;
-  public long connections_p95;
 }
 
-table<Bill> _bills;
+message NewMeteringRecord {
+  long cpu;
+  long messages;
+  long count_p95;
+  long memory_p95;
+  long connections_p95;
+  long bandwidth;
+  long first_party_service_calls;
+  long third_party_service_calls;
+}
 
-channel record_bill(NewBill bill) open {
-  if (@who.isOverlord()) {
-    if((iterate _bills where when == bill.when)[0] as old_bill) {
-      old_bill <- bill;
-    } else {
-      _bills <- bill;
-    }
-  } else {
-    abort;
+record UsageRecord {
+  public int id;
+  public long timestamp;
+  public string space;
+  public string region;
+  public string machine;
+  public MeteringRecord record;
+}
+
+message NewUsageRecord {
+  long timestamp;
+  string space;
+  string region;
+  string machine;
+  NewMeteringRecord record;
+}
+
+table<UsageRecord> _unbilled_usage;
+
+/* this channel is fired directly from adama */
+channel ingest_new_usage_record(NewUsageRecord record) open {
+  if (@who.isAdamaHost()) {
+    _unbilled_usage <- record;
   }
+}
+
+message NewStorage {
+  string space;
+  long timestamp;
+  long bytes_used;
+}
+
+record Storage {
+  public int id;
+  public long timestamp;
+  public string space;
+  public long bytes_used;
+}
+
+table<StorageRecord> _unbilled_storage;
+
+channel ingest_new_storage_record(NewStorage storage) {
+  _unbilled_storage <- storage;
 }
 
 message Empty {}
