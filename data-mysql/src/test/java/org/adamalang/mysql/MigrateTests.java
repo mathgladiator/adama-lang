@@ -26,9 +26,9 @@ public class MigrateTests {
       Installer installFrom = new Installer(dataBaseFrom);
       installFrom.install();
       try {
-        int userIdAlice = Users.getOrCreateUserId(dataBaseFrom, "alice@x.com");
-        int userIdBob = Users.getOrCreateUserId(dataBaseFrom, "bob@x.com");
-        int userIdCarol = Users.getOrCreateUserId(dataBaseFrom, "carol@x.com");
+        int userIdAlice = Users.createUserId(dataBaseFrom, "alice@x.com");
+        int userIdBob = Users.createUserId(dataBaseFrom, "bob@x.com");
+        int userIdCarol = Users.createUserId(dataBaseFrom, "carol@x.com");
         int spaceB = Spaces.createSpace(dataBaseFrom, userIdBob, "space-b");
         Users.setProfileIf(dataBaseFrom, userIdAlice, "New Profile", "");
         try (DataBase dataBaseTo = new DataBase(dataBaseConfigTo, new DataBaseMetrics(new NoOpMetricsFactory()))) {

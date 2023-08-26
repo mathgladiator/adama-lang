@@ -10,4 +10,6 @@ package org.adamalang.extern;
 
 public interface Email {
   boolean sendCode(String email, String code);
+
+  boolean sendWelcome(String email);
 }

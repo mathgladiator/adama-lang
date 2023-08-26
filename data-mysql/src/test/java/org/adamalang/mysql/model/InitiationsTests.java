@@ -22,7 +22,7 @@ public class InitiationsTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
+        Assert.assertEquals(1, Users.createUserId(dataBase, "x@x.com"));
         Users.addInitiationPair(dataBase, 1, "hash", System.currentTimeMillis() - 60000);
         Assert.assertEquals("hash", Users.listInitiationPairs(dataBase, 1).get(0).hash);
         Assert.assertEquals(1, Users.expireKeys(dataBase, System.currentTimeMillis()));

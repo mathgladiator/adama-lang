@@ -31,7 +31,7 @@ public class GlobalUserIdResolver implements UserIdResolver {
       @Override
       public void execute() throws Exception {
         try {
-          callback.success(Users.getOrCreateUserId(dataBase, email));
+          callback.success(Users.getUserId(dataBase, email));
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, LOGGER));
         }

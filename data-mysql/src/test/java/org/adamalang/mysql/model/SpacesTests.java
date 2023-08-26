@@ -27,8 +27,8 @@ public class SpacesTests {
       try {
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
-        int alice = Users.getOrCreateUserId(dataBase, "alice@x.com");
-        int bob = Users.getOrCreateUserId(dataBase, "bob@x.com");
+        int alice = Users.createUserId(dataBase, "alice@x.com");
+        int bob = Users.createUserId(dataBase, "bob@x.com");
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
         try {

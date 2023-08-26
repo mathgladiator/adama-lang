@@ -19,21 +19,21 @@ import org.adamalang.web.io.*;
 /** This initiates developer machine via email verification. */
 public class InitSetupAccountRequest {
   public final String email;
-  public final Integer userId;
 
-  public InitSetupAccountRequest(final String email, final Integer userId) {
+  public InitSetupAccountRequest(final String email) {
     this.email = email;
-    this.userId = userId;
   }
 
   public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<InitSetupAccountRequest> callback) {
     try {
-      final BulkLatch<InitSetupAccountRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);
       ValidateEmail.validate(email);
-      final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
-      _latch.with(() -> new InitSetupAccountRequest(email, userId.get()));
-      nexus.emailService.execute(session, email, userId);
+      nexus.executor.execute(new NamedRunnable("initsetupaccount-success") {
+        @Override
+        public void execute() throws Exception {
+           callback.success(new InitSetupAccountRequest(email));
+        }
+      });
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("initsetupaccount-error") {
         @Override
@@ -46,6 +46,5 @@ public class InitSetupAccountRequest {
 
   public void logInto(ObjectNode _node) {
     _node.put("email", email);
-    org.adamalang.contracts.UserIdResolver.logInto(userId, _node);
   }
 }

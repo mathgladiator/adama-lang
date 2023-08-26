@@ -21,7 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Users {
-  public static int getOrCreateUserId(DataBase dataBase, String email) throws Exception {
+  public static int createUserId(DataBase dataBase, String email) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`emails` (`email`, `balance`, `password`, `validations`, `payment_info_json`) VALUES (?, 500, '', 0, '{}')";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+          statement.setString(1, email);
+          statement.execute();
+          return DataBase.getInsertId(statement);
+        }
+      }
+    }
+  }
+
+  public static int getUserId(DataBase dataBase, String email) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
         String sql = "SELECT `id` FROM `" + dataBase.databaseName + "`.`emails` WHERE email=?";
@@ -34,15 +47,7 @@ public class Users {
           }
         }
       }
-
-      {
-        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`emails` (`email`, `balance`, `password`, `validations`, `payment_info_json`) VALUES (?, 500, '', 0, '{}')";
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-          statement.setString(1, email);
-          statement.execute();
-          return DataBase.getInsertId(statement);
-        }
-      }
+      throw new ErrorCodeException(ErrorCodes.USER_NOT_FOUND);
     }
   }
 

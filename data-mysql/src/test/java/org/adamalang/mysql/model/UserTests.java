@@ -24,8 +24,8 @@ public class UserTests {
       try {
         installer.install();
         Assert.assertEquals(0, Users.countUsers(dataBase));
-        Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
-        Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
+        Assert.assertEquals(1, Users.createUserId(dataBase, "x@x.com"));
+        Assert.assertEquals(1, Users.getUserId(dataBase, "x@x.com"));
         Assert.assertEquals("{}", Users.getPaymentInfo(dataBase, 1));
         Assert.assertTrue(Users.setPaymentInfo(dataBase, 1, ""));
         Assert.assertEquals("{}", Users.getPaymentInfo(dataBase, 1));
@@ -76,7 +76,7 @@ public class UserTests {
         } catch (ErrorCodeException ece) {
           Assert.assertEquals(605208, ece.code);
         }
-        Assert.assertEquals(2, Users.getOrCreateUserId(dataBase, "xz@x.com"));
+        Assert.assertEquals(2, Users.createUserId(dataBase, "xz@x.com"));
         Assert.assertEquals(2, Users.countUsers(dataBase));
       } finally {
         installer.uninstall();

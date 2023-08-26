@@ -1,0 +1,50 @@
+<mjml>
+  <mj-head>
+    <mj-title>Hello world</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:300,500"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Roboto, Helvetica, sans-serif"></mj-all>
+      <mj-text font-weight="300" font-size="16px" color="#616161" line-height="24px"></mj-text>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-section>
+      <mj-column width="40%">
+        <mj-image href="https://www.adama-platform.com/" src="https://www.adama-platform.com/i/adama-moderate.png"></mj-image>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="center">Building a brighter future with Engineered Wealth</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="50%">
+        <mj-text align="center" font-weight="500" padding="0px" font-size="18px">Your access code for Adama Platform</mj-text>
+        <mj-divider border-width="2px" border-color="#616161"></mj-divider>
+      </mj-column>
+    </mj-section>
+    <mj-section padding-top="30px">
+      <mj-column width="100%">
+        <mj-text>
+          <p>Hello there!</p>
+          <p> You have requested access to Adama, and this requires a confirmation via this email. Copy and paste this code into the developer tooling:</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+        <mj-section>
+      <mj-column width="50%">
+        <mj-text align="center" font-weight="500" padding="0px" font-size="24px">$CODE</mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding-top="30px">
+      <mj-column width="100%">
+        <mj-text>
+          <p>Thank you again for using Adama Platform.</p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -1,7 +1,7 @@
 // This is an internal Adama "program" which Adama's service depends on
 @static {
   create {
-    return @who.isOverlord();
+    return @who.isAdamaDeveloper() && @context.origin == "adama" && @context.ip == "0.0.0.0";
   }
 }
 
@@ -9,12 +9,11 @@ public principal owner;
 public string email;
 
 message Cons {
-  principal owner;
   string email;
 }
 
 @construct (Cons c) {
-  owner = c.owner;
+  owner = @who;
   email = c.email;
 }
 
@@ -76,7 +75,7 @@ message NewStorage {
   long bytes_used;
 }
 
-record Storage {
+record StorageRecord {
   public int id;
   public long timestamp;
   public string space;

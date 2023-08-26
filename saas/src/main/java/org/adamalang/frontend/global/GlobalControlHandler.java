@@ -38,6 +38,7 @@ import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
 import org.adamalang.web.client.StringCallbackHttpResponder;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
@@ -112,36 +113,50 @@ public class GlobalControlHandler implements RootGlobalHandler {
         @Override
         public void success(String value) {
           ObjectNode googleProfile = Json.parseJsonObject(value);
+          String email = googleProfile.get("email").textValue();
           try {
-            String email = googleProfile.get("email").textValue();
             ValidateEmail.validate(email);
-            int userId = Users.getOrCreateUserId(nexus.database, email);
-            String profileOld = Users.getProfile(nexus.database, userId);
-            ObjectNode profile = Json.parseJsonObject(profileOld);
-            boolean changedProfile = false;
-            if (!profile.has("name") && googleProfile.has("name")) {
-              profile.set("name", googleProfile.get("name"));
-              changedProfile = true;
-            }
-            if (!profile.has("picture") && googleProfile.has("picture")) {
-              profile.set("picture", googleProfile.get("picture"));
-              changedProfile = true;
-            }
-            if (!profile.has("locale") && googleProfile.has("locale")) {
-              profile.set("locale", googleProfile.get("locale"));
-              changedProfile = true;
-            }
-            if (changedProfile) {
-              Users.setProfileIf(nexus.database, userId, profile.toString(), profileOld);
-            }
-            KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-            String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-            long expiry = System.currentTimeMillis() + 3 * 24 * 60 * 60000;
-            Users.addKey(nexus.database, userId, publicKey, expiry);
-            responder.complete(Jwts.builder().setSubject("" + userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
-          } catch (Exception ex) {
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));
+          } catch (ErrorCodeException failedValidate) {
+            responder.error(failedValidate);
+            return;
           }
+          getOrCreateUser(email, new Callback<Integer>() {
+            @Override
+            public void success(Integer userId) {
+              try {
+                String profileOld = Users.getProfile(nexus.database, userId);
+                ObjectNode profile = Json.parseJsonObject(profileOld);
+                boolean changedProfile = false;
+                if (!profile.has("name") && googleProfile.has("name")) {
+                  profile.set("name", googleProfile.get("name"));
+                  changedProfile = true;
+                }
+                if (!profile.has("picture") && googleProfile.has("picture")) {
+                  profile.set("picture", googleProfile.get("picture"));
+                  changedProfile = true;
+                }
+                if (!profile.has("locale") && googleProfile.has("locale")) {
+                  profile.set("locale", googleProfile.get("locale"));
+                  changedProfile = true;
+                }
+                if (changedProfile) {
+                  Users.setProfileIf(nexus.database, userId, profile.toString(), profileOld);
+                }
+                KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+                String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+                long expiry = System.currentTimeMillis() + 3 * 24 * 60 * 60000;
+                Users.addKey(nexus.database, userId, publicKey, expiry);
+                responder.complete(Jwts.builder().setSubject("" + userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
+              } catch (Exception ex) {
+                responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));
+              }
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              responder.error(ex);
+            }
+          });
         }
 
         @Override
@@ -172,17 +187,57 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
+  private void getOrCreateUser(String email, Callback<Integer> callback) {
+    try {
+      int userId = Users.createUserId(nexus.database, email);
+      nexus.email.sendWelcome(email);
+      JsonStreamWriter arg = new JsonStreamWriter();
+      arg.beginObject();
+      arg.writeObjectFieldIntro("email");
+      arg.writeString(email);
+      arg.endObject();
+      AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), new ConnectionContext("adama", "0.0.0.0", "adama", null));
+      nexus.adama.create(user, "billing", "" + userId, null, arg.toString(), new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          callback.success(userId);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
+    } catch (Exception failedCreate) {
+      try {
+        callback.success(Users.getUserId(nexus.database, email));
+      } catch (Exception failedFind) {
+        callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_FAILED_FIND_UNKNOWN_EXCEPTION, failedFind, LOGGER));
+      }
+    }
+  }
+
   @Override
   public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder) {
-    try {
-      String generatedCode = generateCode();
-      String hash = SCryptUtil.scrypt(generatedCode, 16384, 8, 1);
-      Users.addInitiationPair(nexus.database, request.userId, hash, System.currentTimeMillis() + 15 * 60000);
-      nexus.email.sendCode(request.email, generatedCode);
-      responder.complete();
-    } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_SETUP_UNKNOWN_EXCEPTION, ex, LOGGER));
-    }
+    getOrCreateUser(request.email, new Callback<Integer>() {
+      @Override
+      public void success(Integer userId) {
+        try {
+          String generatedCode = generateCode();
+          String hash = SCryptUtil.scrypt(generatedCode, 16384, 8, 1);
+          Users.addInitiationPair(nexus.database, userId, hash, System.currentTimeMillis() + 15 * 60000);
+          nexus.email.sendCode(request.email, generatedCode);
+          responder.complete();
+        } catch (Exception ex) {
+          responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_SETUP_UNKNOWN_EXCEPTION, ex, LOGGER));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override

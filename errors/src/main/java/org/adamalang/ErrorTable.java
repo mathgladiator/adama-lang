@@ -323,6 +323,8 @@ public class ErrorTable {
     descriptions.put(674832, "no description of error (yet)");
     names.put(634899, "USER_FAILED_TO_SET_PROFILE");
     descriptions.put(634899, "no description of error (yet)");
+    names.put(604191, "USER_NOT_FOUND");
+    descriptions.put(604191, "no description of error (yet)");
     names.put(982253, "AUTH_FAILED_DOC_AUTHENTICATE");
     descriptions.put(982253, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
