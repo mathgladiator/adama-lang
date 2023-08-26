@@ -41,13 +41,15 @@ message WebRegister {
 record User {
   public int id;
   private principal who;
-  viewer_is<who> string email required;
+  public string email required;
   private string password_hash;
   private string temp_password_hash;
   private datetime temp_password_hash_expires;
 }
 
 table<User> _users;
+
+public formula others = iterate _users;
 
 @web put /register (WebRegister register) {
   bool email_available = (iterate _users where email == register.email).size() == 0;
