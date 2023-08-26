@@ -48,6 +48,14 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
   }
 
+  /** deinit */
+  public void deinit(ClientDeinitRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "deinit");
+    node.put("identity", request.identity);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
   /** account/set-password */
   public void accountSetPassword(ClientAccountSetPasswordRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

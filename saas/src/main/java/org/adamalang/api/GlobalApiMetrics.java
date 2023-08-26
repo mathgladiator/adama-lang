@@ -15,6 +15,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_InitSetupAccount;
   public final RequestResponseMonitor monitor_InitConvertGoogleUser;
   public final RequestResponseMonitor monitor_InitCompleteAccount;
+  public final RequestResponseMonitor monitor_Deinit;
   public final RequestResponseMonitor monitor_AccountSetPassword;
   public final RequestResponseMonitor monitor_AccountGetPaymentPlan;
   public final RequestResponseMonitor monitor_AccountLogin;
@@ -73,6 +74,7 @@ public class GlobalApiMetrics {
     this.monitor_InitSetupAccount = factory.makeRequestResponseMonitor("init/setup-account");
     this.monitor_InitConvertGoogleUser = factory.makeRequestResponseMonitor("init/convert-google-user");
     this.monitor_InitCompleteAccount = factory.makeRequestResponseMonitor("init/complete-account");
+    this.monitor_Deinit = factory.makeRequestResponseMonitor("deinit");
     this.monitor_AccountSetPassword = factory.makeRequestResponseMonitor("account/set-password");
     this.monitor_AccountGetPaymentPlan = factory.makeRequestResponseMonitor("account/get-payment-plan");
     this.monitor_AccountLogin = factory.makeRequestResponseMonitor("account/login");

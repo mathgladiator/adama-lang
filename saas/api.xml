@@ -671,6 +671,13 @@
         </documentation>
     </method>
 
+    <method name="deinit" responder="simple" scope="global">
+        <parameter name="identity"/>
+        <documentation>
+            This will destroy a developer account. We require all spaces to be deleted along with all authorities.
+        </documentation>
+    </method>
+
     <method name="account/set-password" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="password"/>

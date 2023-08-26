@@ -377,6 +377,8 @@ public class ErrorTable {
     descriptions.put(903375, "no description of error (yet)");
     names.put(965636, "API_INIT_SETUP_UNKNOWN_EXCEPTION");
     descriptions.put(965636, "no description of error (yet)");
+    names.put(901363, "API_INIT_FAILED_FIND_UNKNOWN_EXCEPTION");
+    descriptions.put(901363, "no description of error (yet)");
     names.put(946179, "API_INIT_COMPLETE_UNKNOWN_EXCEPTION");
     descriptions.put(946179, "no description of error (yet)");
     names.put(916486, "API_INIT_COMPLETE_CODE_MISMATCH");
@@ -668,6 +670,14 @@ public class ErrorTable {
     descriptions.put(904461, "no description of error (yet)");
     names.put(966888, "GLOBAL_DOMAIN_FIND_EXCEPTION");
     descriptions.put(966888, "no description of error (yet)");
+    names.put(999665, "FAILED_DEINIT_SPACES_EXIST");
+    descriptions.put(999665, "no description of error (yet)");
+    names.put(918771, "FAILED_DEINIT_AUTHORITIES_EXIST");
+    descriptions.put(918771, "no description of error (yet)");
+    names.put(970995, "FAILED_DEINIT_DOMAINS_EXIST");
+    descriptions.put(970995, "no description of error (yet)");
+    names.put(989427, "FAILED_DEINIT_UNKONWN_EXCEPTION");
+    descriptions.put(989427, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

@@ -296,6 +296,15 @@ class WebSocketAdamaConnection {
       request: {"method":"init/complete-account", "id":parId, "email": email, "revoke": revoke, "code": code}
     });
   }
+  Deinit(identity, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"deinit", "id":parId, "identity": identity}
+    });
+  }
   AccountSetPassword(identity, password, responder) {
     var self = this;
     var parId = self.__id();

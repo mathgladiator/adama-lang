@@ -4000,6 +4000,40 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama services solo", Util.ANSI.Green));
 		}
 	}
+	public static class DeinitArgs {
+		public Config config;
+		public static DeinitArgs from(String[] args, int start) {
+			DeinitArgs returnArgs = new DeinitArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Destroy your account. This requires you to delete all spaces, documents, authorities, and domains.", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama deinit", Util.ANSI.Green));
+		}
+	}
 	public static class DumpenvArgs {
 		public Config config;
 		public static DumpenvArgs from(String[] args, int start) {

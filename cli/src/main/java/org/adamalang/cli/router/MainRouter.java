@@ -872,6 +872,16 @@ public class MainRouter {
               System.err.println("See 'adama services help' for a list of subcommands.");
               return 1;
           }
+          case "deinit": {
+            DeinitArgs mainArgs = DeinitArgs.from(args, 1);
+            if (mainArgs == null) {
+              DeinitArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.deinit(mainArgs , out);
+             return 0;
+          }
           case "dumpenv": {
             DumpenvArgs mainArgs = DumpenvArgs.from(args, 1);
             if (mainArgs == null) {
