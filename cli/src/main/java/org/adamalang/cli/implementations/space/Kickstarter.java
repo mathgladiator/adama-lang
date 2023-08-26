@@ -62,7 +62,7 @@ public class Kickstarter {
        + "  ],\n" //
        + "  \"spaces\": [{\"name\": \""+space+"\", \"main\": \"backend.adama\", \"import\": \"backend\" }]\n" //
        + "}"; //
-    Files.writeString(new File(spaceDir, "local.verse.json").toPath(), verse);
+    Files.writeString(new File(spaceDir, "local.verse.json").toPath(), Json.parseJsonObject(verse).toPrettyString());
   }
 
   public void downloadAdama(File backendAdama) {
