@@ -245,7 +245,6 @@ public class DevBoxAdamaMicroVerse {
     }
     Key domainKeyToUse = null;
 
-    HashMap<Key, Long> keys = new HashMap<>();
     JsonNode documentsNode = defn.get("documents");
     if (documentsNode != null && documentsNode.isArray()) {
       ArrayNode documents = (ArrayNode) documentsNode;
@@ -256,7 +255,6 @@ public class DevBoxAdamaMicroVerse {
           if (document.has("domain")) {
             domainKeyToUse = key;
           }
-          keys.put(key, document.get("id").longValue());
         }
       }
     }
