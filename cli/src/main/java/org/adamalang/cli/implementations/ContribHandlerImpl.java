@@ -11,6 +11,7 @@ package org.adamalang.cli.implementations;
 import org.adamalang.GenerateTables;
 import org.adamalang.caravan.events.Events;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.devbox.BundleRawJavaScriptForDevBox;
 import org.adamalang.cli.implementations.docgen.BookGenerator;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
@@ -69,8 +70,10 @@ public class ContribHandlerImpl implements ContribHandler {
 
   @Override
   public void bundleJs(Arguments.ContribBundleJsArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Bundling JavaScript", Util.ANSI.Cyan));
+    System.out.println(Util.prefix("Bundling JavaScript for Web", Util.ANSI.Cyan));
     Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), BundleJavaScript.bundle("./release/libadama.js"));
+    System.out.println(Util.prefix("Bundling JavaScript for DevBox", Util.ANSI.Cyan));
+    Files.writeString(new File("cli/src/main/java/org/adamalang/cli/devbox/JavaScriptResourcesRaw.java").toPath(), BundleRawJavaScriptForDevBox.bundle(new File("./clientjs")));
     output.out();
   }
 
@@ -85,7 +88,6 @@ public class ContribHandlerImpl implements ContribHandler {
   public void makeApi(Arguments.ContribMakeApiArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Assembling Public API", Util.ANSI.Cyan));
     org.adamalang.apikit.Tool.build("saas/api.xml", new File("."));
-    System.out.println(Util.prefix("Assembling Global Control Plane API", Util.ANSI.Cyan));
     output.out();
   }
 

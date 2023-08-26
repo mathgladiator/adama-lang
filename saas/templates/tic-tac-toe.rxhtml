@@ -26,11 +26,11 @@
     </table>
   </template>
   <page uri="/">
-    <connection name="player1" identity="direct:anonymous:alice" space="$TEMPLATE_SPACE" key="demo-{view:__session_id}">
+    <connection name="player1" identity="direct:anonymous:alice" space="$TEMPLATE_SPACE" key="demo">
       <div rx:template="game">Alice</div>
     </connection>
     <hr />
-    <connection name="player2" identity="direct:anonymous:bob" space="$TEMPLATE_SPACE" key="demo-{view:__session_id}">
+    <connection name="player2" identity="direct:anonymous:bob" space="$TEMPLATE_SPACE" key="demo">
       <div rx:template="game">Bob</div>
     </connection>
   </page>

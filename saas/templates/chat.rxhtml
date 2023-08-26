@@ -17,11 +17,11 @@
   </template>
   <page uri="/">
     <table><tr><td>
-      <connection name="alice" space="$TEMPLATE_SPACE" key="talk" identity="direct:anonymous:alice">
+      <connection name="alice" space="$TEMPLATE_SPACE" key="demo" identity="direct:anonymous:alice">
         <div rx:template="chatter">Alice</div>
       </connection>
     </td><td>
-      <connection name="bob" space="$TEMPLATE_SPACE" key="talk" identity="direct:anonymous:bob">
+      <connection name="bob" space="$TEMPLATE_SPACE" key="demo" identity="direct:anonymous:bob">
         <div rx:template="chatter">Bob</div>
       </connection>
     </td></tr></table>

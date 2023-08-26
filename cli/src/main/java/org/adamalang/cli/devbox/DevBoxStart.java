@@ -71,7 +71,13 @@ public class DevBoxStart {
     File localLibAdamaJSFile = null;
     if (localLibAdamaJSPath == null) {
       localLibAdamaJSPath = args.config.get_nullable_string("local-libadama-path-default");
-      terminal.info("js|using 'local-libadama-path-default' from config to pull Adama javascript from " + localLibAdamaJSPath);
+      if (localLibAdamaJSPath == null) {
+        terminal.info("js|using built-in libadama");
+      } else {
+        terminal.info("js|using 'local-libadama-path-default' from config: '" + localLibAdamaJSPath + "'");
+      }
+    } else {
+      terminal.info("js|using libadama from args: '" + localLibAdamaJSPath + "'");
     }
     if (localLibAdamaJSPath != null) {
       localLibAdamaJSFile = new File(localLibAdamaJSPath);
@@ -99,12 +105,6 @@ public class DevBoxStart {
         terminal.error("verse|microverse: '" + args.microverse + "' is not present, using production");
       }
     }
-    if (localLibAdamaJSPath == null && verse != null) {
-      terminal.error("js|currently, --local-libadama-path is required (or configured) when using a verse");
-      return;
-    }
-
-
     terminal.info("devbox|starting up");
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {

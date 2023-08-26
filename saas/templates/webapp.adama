@@ -1,0 +1,127 @@
+@link saferandom {}
+
+/*
+@link amazonses {
+  access_id = // your encrypted access id
+  secret_key = // your encrypted secret key
+  region = "us-east-2";
+}
+*/
+
+@static {
+  create {
+    return true;
+  }
+  invent {
+    return true;
+  }
+}
+
+@connected {
+  return true;
+}
+
+@disconnected {
+}
+
+@construct {
+
+}
+
+
+message WebRegister {
+  string email;
+  string password;
+}
+
+@web options /register {
+  return {cors:true};
+}
+
+record User {
+  public int id;
+  private principal who;
+  viewer_is<who> string email required;
+  private string password_hash;
+  private string temp_password_hash
+  private datatime temp_password_hash_expires;
+}
+
+table<User> _users;
+
+@web put /register (WebRegister register) {
+  bool email_available = (iterate _users where email == register.email);
+
+  if (!email_available) {
+    return {
+      error: "Email already registered",
+      cors: true
+    };
+  }
+
+  _users <- {
+    email: register.email,
+    password_hash: register.password,
+  } as user_id;
+
+  if((iterate _users where id == user_id)[0] as user) {
+    user.who = Principal.principalOf("" + user_id);
+  }
+
+  /*
+  var result = amazonses.send(@who, {
+    from: "no-reply@YOURDOMAIN",
+    replyTo: "no-reply@YOURDOMAIN",
+    subject: "Welcome!",
+    to: register.email,
+    text: "Welcome to YOURSOFTWARE",
+    html: "Welcome to YOURSOFTWARE"
+  });
+  */
+  return {sign:"" + user_id, cors:true};
+}
+
+
+@authorize (email, password) {
+  if ((iterate _users where_as x: x.email == email)[0] as user) {
+    if (user.password_hash.passwordCheck(password)) {
+      return "" + person.id;
+    }
+    if (Time.datetime() <= person.temp_password_hash_expires) {
+      if (person.temp_password_hash.passwordCheck(password)) {
+        return "" + person.id;
+      }
+    }
+  }
+  abort;
+}
+
+message WebForgot {
+  string email;
+}
+
+@web options /forgot {
+  return {cors:true};
+}
+
+@web put /forgot (WebForgot forgot) {
+  if ((iterate _users where email == forgot.email)[0] as user) {
+    if (saferandom.ask(@who, {pool:"0123456789AZ", count:8}).await() as newpw) {
+      string temp_password = newpw.result;
+      person.temp_password_hash = temp_password.passwordHash();
+      person.temp_password_hash_expires = Time.datetime().future(@timespan 15 min);
+      /*
+      amazonses.send(@who, {
+        from: "no-reply@your-domain",
+        replyTo: "no-reply@your-domain",
+        subject: "Welcome to YOURSOFTWARE",
+        to: forgot.email,
+        text: "Temp password:" + temp_password,
+        html: "Temp password:" + temp_password
+      });
+      */
+      return {html:"OK", cors:true};
+    }
+  }
+  return {html:"NotOK", cors:true};
+}
