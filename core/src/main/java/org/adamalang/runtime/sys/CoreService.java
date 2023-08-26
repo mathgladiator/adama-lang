@@ -439,7 +439,12 @@ public class CoreService implements Deliverer, Queryable {
 
                   @Override
                   public void failure(ErrorCodeException exNew) {
-                    callback.failure(exNew);
+                    if (exNew.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || exNew.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED || exNew.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
+                      load(key, callback);
+                    } else {
+                      metrics.failed_invention.run();
+                      callback.failure(exNew);
+                    }
                   }
                 }));
               } catch (ErrorCodeException exNew) {
