@@ -105,6 +105,7 @@ public class FrontendHttpHandler implements HttpHandler {
               getSpace(domain.space, uri, headers, parametersJson, callback);
             }
           } else {
+            LOGGER.error("domain-no-mapped:" + host);
             callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
           }
         }

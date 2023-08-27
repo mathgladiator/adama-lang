@@ -157,7 +157,7 @@ public class MultiRegionClient {
           }
         } else {
           // TODO: this really shouldn't happen once the finder does a findbind
-          local.directSend(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, marker, channel, message, callback);
+          local.directSend(user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, marker, channel, message, callback);
         }
       }
 
