@@ -11,6 +11,7 @@ package org.adamalang.net.client.contracts;
 import java.util.Set;
 
 /** events for space routing */
+@Deprecated
 public interface SpaceTrackingEvents {
   /** a request created the new to track a space */
   void gainInterestInSpace(String space);

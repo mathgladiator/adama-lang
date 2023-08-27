@@ -8,6 +8,7 @@
  */
 package org.adamalang.net.client.contracts;
 
+@Deprecated
 public interface MeteringStream {
   void handle(String target, String batch, Runnable after);
 

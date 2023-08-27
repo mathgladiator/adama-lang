@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
+@Deprecated
 public class AggregatedCacheRouter implements RoutingTarget, Router {
   private final SimpleExecutor executor;
   private final RoutingTable table;

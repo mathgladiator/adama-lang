@@ -8,6 +8,7 @@
  */
 package org.adamalang.net.client.contracts;
 
+@Deprecated
 public interface ScanDeploymentCallback {
   /*
   static StreamObserver<ScanDeploymentsResponse> WRAP(ScanDeploymentCallback callback) {

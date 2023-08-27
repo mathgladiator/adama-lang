@@ -45,5 +45,9 @@ public class RoutingTableTests {
     table.integrate("t1", Collections.emptyList());
     table.integrate("t2", Collections.emptyList());
     table.integrate("t3", Collections.emptyList());
+
+    Assert.assertEquals("t3", table.pick("booom"));
+    Assert.assertEquals("t1", table.pick("booooom"));
+    Assert.assertEquals("t2", table.pick("boooooooooooooom chaka"));
   }
 }

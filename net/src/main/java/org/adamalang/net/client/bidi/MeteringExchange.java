@@ -18,6 +18,7 @@ import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 
+@Deprecated
 public class MeteringExchange extends ServerCodec.StreamMetering implements Callback<ByteStream> {
   private static final ClientMessage.MeteringBegin COMMON_BEGIN = new ClientMessage.MeteringBegin();
   private final String target;

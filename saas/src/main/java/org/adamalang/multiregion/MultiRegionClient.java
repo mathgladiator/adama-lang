@@ -10,6 +10,7 @@ package org.adamalang.multiregion;
 
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.net.client.LocalFinder;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
