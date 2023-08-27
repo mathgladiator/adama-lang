@@ -35,7 +35,6 @@ import org.adamalang.runtime.sys.metering.*;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 public class Backend {
   public final CommonServiceInit init;
@@ -60,7 +59,9 @@ public class Backend {
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     ProxyDeploymentFactory factoryProxy = new ProxyDeploymentFactory(deploymentFactoryBase);
 
-    CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, init.globalFinder, init.s3, init.s3);
+    BoundLocalFinderService finder = new BoundLocalFinderService(init.globalFinder, init.region, init.machine);
+
+    CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, finder, init.s3, init.s3);
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.system, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service, init.masterKey);
@@ -161,7 +162,6 @@ public class Backend {
       }
     });
 
-    BoundLocalFinderService finder = new BoundLocalFinderService(init.globalFinder, init.region, init.machine);
     ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, finder, deployAgent, meteringPubSub, billingBatchMaker, init.servicePort, 4);
     ServerHandle handle = init.netBase.serve(init.servicePort, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
