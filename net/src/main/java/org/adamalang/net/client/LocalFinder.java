@@ -13,23 +13,21 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.routing.cache.RoutingTable;
+import org.adamalang.net.client.routing.cache.RoutingTableTarget;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.SimpleFinderService;
 
-import java.util.Collection;
-
 /** a simplified finder for finding where a document _could_ live within the local region */
-public class LocalFinder implements SimpleFinderService, RoutingTarget {
+public class LocalFinder implements SimpleFinderService {
   private final SimpleExecutor executor;
   private final RoutingTable table;
   private final InstanceClientFinder clientFinder;
 
-  public LocalFinder(SimpleExecutor executor, InstanceClientFinder clientFinder) {
-    this.executor = executor;
-    this.table = new RoutingTable();
+  public LocalFinder(RoutingTableTarget target, InstanceClientFinder clientFinder) {
+    this.executor = target.executor;
+    this.table = target.table;
     this.clientFinder = clientFinder;
   }
 
@@ -61,16 +59,6 @@ public class LocalFinder implements SimpleFinderService, RoutingTarget {
           return;
         }
         executeFind(localMachine, key, callback);
-      }
-    });
-  }
-
-  @Override
-  public void integrate(String target, Collection<String> spaces) {
-    executor.execute(new NamedRunnable("routing-integrate", target) {
-      @Override
-      public void execute() throws Exception {
-        table.integrate(target, spaces);
       }
     });
   }

@@ -11,6 +11,7 @@ package org.adamalang.net.client.contracts;
 import org.adamalang.common.ErrorCodeException;
 
 /** what happens when you subscribe to a key */
+@Deprecated
 public interface RoutingCallback {
 
   /** routing found the document in another region */

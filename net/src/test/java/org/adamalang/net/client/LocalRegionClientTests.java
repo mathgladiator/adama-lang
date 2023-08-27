@@ -18,6 +18,7 @@ import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.mocks.MockMeteringFlow;
+import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -91,7 +92,7 @@ public class LocalRegionClientTests {
         });
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchCreatedKey = new CountDownLatch(1);
-        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
             latchCreatedKey.countDown();
@@ -108,7 +109,7 @@ public class LocalRegionClientTests {
         CountDownLatch latchGotConnected = new CountDownLatch(1);
         CountDownLatch latchGotData = new CountDownLatch(1);
         CountDownLatch latchGotDisconnect = new CountDownLatch(1);
-        Connection connection = client.connect("127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", null, new SimpleEvents() {
+        Connection connection = client. connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", null, new SimpleEvents() {
           @Override
           public void connected() {
             latchGotConnected.countDown();
@@ -133,7 +134,7 @@ public class LocalRegionClientTests {
         Assert.assertTrue(latchGotData.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchGotReflection = new CountDownLatch(1);
         CountDownLatch latchFailedOnReflectionBadSpace = new CountDownLatch(1);
-        client.reflect("space", "key", new Callback<String>() {
+        client.reflect("127.0.0.1:" + bed.port, "space", "key", new Callback<String>() {
           @Override
           public void success(String value) {
             latchGotReflection.countDown();
@@ -144,7 +145,7 @@ public class LocalRegionClientTests {
 
           }
         });
-        client.reflect("nope", "key", new Callback<String>() {
+        client.reflect("127.0.0.1:" + bed.port, "nope", "key", new Callback<String>() {
           @Override
           public void success(String value) {
           }
@@ -152,16 +153,34 @@ public class LocalRegionClientTests {
           @Override
           public void failure(ErrorCodeException ex) {
             System.err.println("EX:" + ex.code);
-            Assert.assertEquals(753724, ex.code);
+            Assert.assertEquals(134214, ex.code);
             latchFailedOnReflectionBadSpace.countDown();
           }
         });
+
         Assert.assertTrue(latchGotReflection.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latchFailedOnReflectionBadSpace.await(5000, TimeUnit.MILLISECONDS));
+
+        CountDownLatch latchFinder = new CountDownLatch(1);
+        client.finder.find(new Key("some-space", "some-key"), new Callback<DocumentLocation>() {
+          @Override
+          public void success(DocumentLocation location) {
+            System.out.println(location.region + "/" + location.machine);
+            latchFinder.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("Failed to find!");
+            System.err.println(ex.code);
+          }
+        });
+        Assert.assertTrue(latchFinder.await(5000, TimeUnit.MILLISECONDS));
+
         connection.close();
         Assert.assertTrue(latchGotDisconnect.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch deleteByOverlord = new CountDownLatch(1);
-        client.delete("127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
+        client.delete("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
           @Override
           public void success(Void value) {
             deleteByOverlord.countDown();
@@ -221,7 +240,7 @@ public class LocalRegionClientTests {
         Assert.assertTrue(got.get());
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchCreatedKey = new CountDownLatch(1);
-        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
             latchCreatedKey.countDown();
@@ -235,7 +254,7 @@ public class LocalRegionClientTests {
         Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
 
         CountDownLatch getLatches = new CountDownLatch(3);
-        client.webGet("space", "key1", new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webGet("127.0.0.1:" + bed.port, "space", "key1", new WebGet(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("root", value.body);
@@ -248,7 +267,7 @@ public class LocalRegionClientTests {
 
           }
         });
-        client.webGet("space", "key1", new WebGet(CONTEXT, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webGet("127.0.0.1:" + bed.port, "space", "key1", new WebGet(CONTEXT, "/cors", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("my-cors", value.body);
@@ -265,7 +284,7 @@ public class LocalRegionClientTests {
         });
         TreeMap<String, String> header1 = new TreeMap<>();
         header1.put("x", "y");
-        client.webGet("space", "key1", new WebGet(CONTEXT, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
+        client.webGet("127.0.0.1:" + bed.port, "space", "key1", new WebGet(CONTEXT, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
           }
@@ -278,7 +297,7 @@ public class LocalRegionClientTests {
         });
 
         CountDownLatch putLatches = new CountDownLatch(4);
-        client.webPut("space", "key1", new WebPut(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
+        client.webPut("127.0.0.1:" + bed.port, "space", "key1", new WebPut(CONTEXT, "/", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertEquals("c:123", value.body);
@@ -290,7 +309,7 @@ public class LocalRegionClientTests {
           }
         });
 
-        client.webPut("space", "key1", new WebPut(CONTEXT, "/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
+        client.webPut("127.0.0.1:" + bed.port, "space", "key1", new WebPut(CONTEXT, "/nope", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             System.err.println(value.body);
@@ -302,7 +321,7 @@ public class LocalRegionClientTests {
           }
         });
 
-        client.webDelete("space", "key1", new WebDelete(CONTEXT, "/deldel", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webDelete("127.0.0.1:" + bed.port, "space", "key1", new WebDelete(CONTEXT, "/deldel", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             System.err.println(value.body);
@@ -316,7 +335,7 @@ public class LocalRegionClientTests {
           }
         });
 
-        client.webOptions("space", "key1", new WebGet(CONTEXT, "/moop", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        client.webOptions("127.0.0.1:" + bed.port, "space", "key1", new WebGet(CONTEXT, "/moop", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
           @Override
           public void success(WebResponse value) {
             Assert.assertTrue(value.cors);
@@ -387,7 +406,7 @@ public class LocalRegionClientTests {
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
         client.notifyDeployment("127.0.0.1:" + bed.port, "space");
-        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
             System.err.println("Success");
@@ -396,7 +415,7 @@ public class LocalRegionClientTests {
           @Override
           public void failure(ErrorCodeException ex) {
             System.err.println("L1:" + ex.code);
-            Assert.assertEquals(753724, ex.code);
+            Assert.assertEquals(719932, ex.code);
             latch1Failed.countDown();
           }
         });
@@ -418,7 +437,7 @@ public class LocalRegionClientTests {
           }
         });
         CountDownLatch latch3Failed = new CountDownLatch(1);
-        client.reflect("x", "y", new Callback<String>() {
+        client.reflect("127.0.0.1:" + bed.port, "x", "y", new Callback<String>() {
           @Override
           public void success(String value) {
 
@@ -427,13 +446,13 @@ public class LocalRegionClientTests {
           @Override
           public void failure(ErrorCodeException ex) {
             System.err.println("L3:" + ex.code);
-            Assert.assertEquals(753724, ex.code);
+            Assert.assertEquals(719932, ex.code);
             latch3Failed.countDown();
           }
         });
 
         CountDownLatch deleteByOverlord = new CountDownLatch(1);
-        client.delete("127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
+        client.delete("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
           @Override
           public void success(Void value) {
             System.err.println("Successful delete?");
@@ -441,7 +460,8 @@ public class LocalRegionClientTests {
 
           @Override
           public void failure(ErrorCodeException ex) {
-            Assert.assertEquals(753724, ex.code);
+            System.err.println("DEx:" + ex.code);
+            Assert.assertEquals(719932, ex.code);
             deleteByOverlord.countDown();
           }
         });
@@ -480,7 +500,7 @@ public class LocalRegionClientTests {
       try {
         waitForRouting(bed, client);
         CountDownLatch latchFailed = new CountDownLatch(1);
-        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
 
@@ -512,7 +532,7 @@ public class LocalRegionClientTests {
       try {
         waitForRouting(bed, client);
         CountDownLatch created = new CountDownLatch(1);
-        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1:" + bed.port,  "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
             created.countDown();
@@ -524,7 +544,7 @@ public class LocalRegionClientTests {
         });
         Assert.assertTrue(created.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch deleted = new CountDownLatch(1);
-        client.delete("127.0.0.1", "origin", "me", "dev", "space", "key1", new Callback<Void>() {
+        client.delete("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", new Callback<Void>() {
           @Override
           public void success(Void value) {
           }
@@ -598,7 +618,7 @@ public class LocalRegionClientTests {
             @Override
             public void finished() {}
           });
-      client.reflect("x", "y", new Callback<String>() {
+      client.reflect("127.0.0.1:" + bed.port, "x", "y", new Callback<String>() {
         @Override
         public void success(String value) {
 
@@ -607,11 +627,11 @@ public class LocalRegionClientTests {
         @Override
         public void failure(ErrorCodeException ex) {
           System.err.println("R1:" + ex.code);
-          Assert.assertEquals(753724, ex.code);
+          Assert.assertEquals(123456789, ex.code);
           failures.countDown();
         }
       });
-      client.reflect("space", "y", new Callback<String>() {
+      client.reflect("127.0.0.1:" + bed.port, "space", "y", new Callback<String>() {
         @Override
         public void success(String value) {
 
@@ -625,19 +645,20 @@ public class LocalRegionClientTests {
         }
       });
       CountDownLatch deleted = new CountDownLatch(1);
-      client.delete("127.0.0.1", "origin", "me", "dev", "space", "key1", new Callback<Void>() {
+      client.delete("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", new Callback<Void>() {
         @Override
         public void success(Void value) {
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
+          System.err.println("CD2:" + ex.code);
           Assert.assertEquals(123456789, ex.code);
           deleted.countDown();
         }
       });
       Assert.assertTrue(deleted.await(5000, TimeUnit.MILLISECONDS));
-      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
+      client.connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
         @Override
         public void connected() {
 
@@ -660,7 +681,7 @@ public class LocalRegionClientTests {
 
         }
       });
-      client.create("127.0.0.1", "origin", "agent", "au", "space", "key", null, "{}", new Callback<Void>() {
+      client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "au", "space", "key", null, "{}", new Callback<Void>() {
         @Override
         public void success(Void value) {
 
@@ -723,7 +744,7 @@ public class LocalRegionClientTests {
       LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       waitForRouting(bed, client);
       CountDownLatch closures = new CountDownLatch(1);
-      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
+      client.connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
         @Override
         public void connected() {
           System.err.println("connected!");

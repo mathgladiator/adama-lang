@@ -20,6 +20,7 @@ import org.adamalang.runtime.sys.capacity.MachinePicker;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Deprecated
 public class FinderServiceRouter implements Router {
 
   private final SimpleExecutor executor;

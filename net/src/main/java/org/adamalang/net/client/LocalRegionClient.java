@@ -15,6 +15,8 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
+import org.adamalang.net.client.routing.cache.RoutingTable;
+import org.adamalang.net.client.routing.cache.RoutingTableTarget;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.DocumentLocation;
@@ -39,21 +41,32 @@ public class LocalRegionClient {
   private final Random rng;
   private final ClientConfig config;
   private final SimpleExecutor finderExecutor;
+  public final LocalFinder finder;
 
   public LocalRegionClient(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, ClientRouter router, HeatMonitor monitor) {
     this.config = config;
     this.metrics = metrics;
     this.router = router;
-    this.clientFinder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, router.engine, ExceptionLogger.FOR(LocalRegionClient.class));
+    this.finderExecutor = SimpleExecutorFactory.DEFAULT.makeSingle("local-finder");
+    RoutingTableTarget table = new RoutingTableTarget(finderExecutor);
+    this.clientFinder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, new RoutingTarget() {
+      @Override
+      public void integrate(String target, Collection<String> spaces) {
+        router.engine.integrate(target, spaces);
+        table.integrate(target, spaces);
+      }
+    }, ExceptionLogger.FOR(LocalRegionClient.class));
+    this.finder = new LocalFinder(table, clientFinder);
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
-    this.finderExecutor = SimpleExecutorFactory.DEFAULT.makeSingle("local-finder");
   }
 
-  public LocalFinder makeLocalFinder() {
-    return new LocalFinder(finderExecutor, clientFinder);
+  /** This is how the client learns of targets that are in the mesh */
+  public Consumer<Collection<String>> getTargetPublisher() {
+    return (targets) -> clientFinder.sync(new TreeSet<>(targets));
   }
 
+  @Deprecated
   public AggregatedCacheRouter routing() {
     return router.engine;
   }
@@ -65,20 +78,6 @@ public class LocalRegionClient {
         stream.accept(target);
       }
     }, 3));
-  }
-
-  public void find(String machine, Key key, Callback<DocumentLocation> callback) {
-    clientFinder.find(machine, new Callback<>() {
-      @Override
-      public void success(InstanceClient client) {
-        client.find(key, callback);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
   }
 
   public void waitForCapacity(String space, int timeout, Consumer<Boolean> done) {
@@ -146,9 +145,7 @@ public class LocalRegionClient {
     });
   }
 
-  public Consumer<Collection<String>> getTargetPublisher() {
-    return (targets) -> clientFinder.sync(new TreeSet<>(targets));
-  }
+
 
   @Deprecated
   public void reflect(String space, String key, Callback<String> callback) {

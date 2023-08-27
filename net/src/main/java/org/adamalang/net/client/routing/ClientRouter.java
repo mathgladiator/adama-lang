@@ -16,6 +16,7 @@ import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.net.client.routing.finder.ReactiveCacheMachinePicker;
 import org.adamalang.runtime.data.FinderService;
 
+@Deprecated
 public class ClientRouter {
   private final SimpleExecutor executor;
   public final AggregatedCacheRouter engine;

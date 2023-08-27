@@ -106,7 +106,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.FindRequest payload) {
-    nexus.finder.find(new Key(payload.space, payload.key), new Callback<DocumentLocation>() {
+    nexus.finder.findbind(new Key(payload.space, payload.key), new Callback<DocumentLocation>() {
       @Override
       public void success(DocumentLocation value) {
         ServerMessage.FindResponse response = new ServerMessage.FindResponse();

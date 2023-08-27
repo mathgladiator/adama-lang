@@ -13,6 +13,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 
 /** Helper abstraction around RoutingCallback to reduce some duplicate code around failures */
+@Deprecated
 public abstract class InRegionRoutingCallbackWrapper<T> implements RoutingCallback {
   private final RequestResponseMonitor.RequestResponseMonitorInstance mInstance;
   private final int errorCodeOnRegion;

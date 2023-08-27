@@ -17,6 +17,7 @@ import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.capacity.MachinePicker;
 
+@Deprecated
 public class ReactiveCacheMachinePicker implements MachinePicker {
   private final LocalRegionClientMetrics metrics;
   private final AggregatedCacheRouter engine;
