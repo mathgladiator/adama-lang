@@ -17,6 +17,8 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.TestClientConfig;
+import org.adamalang.net.client.routing.finder.MockFinderService;
+import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.NaughyHandler;
@@ -61,6 +63,7 @@ public class TestBed implements AutoCloseable {
   public final DiskMeteringBatchMaker batchMaker;
   private final File billingRoot;
   public final ClientConfig clientConfig;
+  public final MockFinderService finderService;
 
   public TestBed(int port, String code) throws Exception {
     DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>());
@@ -111,7 +114,9 @@ public class TestBed implements AutoCloseable {
         System.out.println("Metering Batch Ready:" + batchId);
       }
     });
-    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, new LocalCapacityRequestor() {
+    finderService = new MockFinderService("the-machine");
+    BoundLocalFinderService finder = new BoundLocalFinderService(finderService, "the-region", "the-machine");
+    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, finder, new LocalCapacityRequestor() {
       @Override
       public void requestCodeDeployment(String space, Callback<Void> callback) {
         if (deploymentScans.incrementAndGet() == 3) {

@@ -42,6 +42,10 @@ public class RoutingTable {
     return getOrCreateSpaceState(space).pick(key);
   }
 
+  public String pick(String key) {
+    return SpaceState.pick(history.keySet(), key);
+  }
+
   public String random() {
     ArrayList<String> targets = new ArrayList<>(history.keySet());
     if (targets.size() > 0) {

@@ -14,7 +14,7 @@ import org.junit.Test;
 public class HandlerTests {
   @Test
   public void trivial() {
-    Handler handler = new Handler(new ServerNexus(null, null, null, new ServerMetrics(new NoOpMetricsFactory()), null, null, null, null, 1, 2), null);
+    Handler handler = new Handler(new ServerNexus(null, null, null, new ServerMetrics(new NoOpMetricsFactory()), null, null, null, null, null, 1, 2), null);
     handler.request(-1);
     handler.create(-1);
   }

@@ -12,6 +12,7 @@ import org.adamalang.common.Hashing;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Set;
 import java.util.TreeSet;
 
 /** the collection of targets for a single space; core element of the routing table */
@@ -36,6 +37,10 @@ public class SpaceState {
   }
 
   public String pick(String key) {
+    return pick(targets, key);
+  }
+
+  public static String pick(Set<String> targets, String key) {
     String winner = null;
     String winningHash = "";
     byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);

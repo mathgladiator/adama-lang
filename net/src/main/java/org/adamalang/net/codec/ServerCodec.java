@@ -908,6 +908,7 @@ public class ServerCodec {
     o.archive = Helper.readString(buf);
     o.region = Helper.readString(buf);
     o.machine = Helper.readString(buf);
+    o.deleted = buf.readBoolean();
     return o;
   }
 
@@ -1118,6 +1119,7 @@ public class ServerCodec {
     Helper.writeString(buf, o.archive);;
     Helper.writeString(buf, o.region);;
     Helper.writeString(buf, o.machine);;
+    buf.writeBoolean(o.deleted);
   }
 
   public static void write(ByteBuf buf, PingResponse o) {
