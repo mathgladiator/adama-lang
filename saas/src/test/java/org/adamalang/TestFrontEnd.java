@@ -318,7 +318,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PublicKeyCodec.encodePublicKey(hostKeyPair));
 
-    MultiRegionClient adama = new MultiRegionClient(client, "test-region", hostKeyPair.getPrivate(), keyId, globalFinder, new TreeMap<>());
+    MultiRegionClient adama = new MultiRegionClient(client, "test-region", hostKeyPair.getPrivate(), keyId, new TreeMap<>());
     AssetSystem assets = new AssetSystem() {
       @Override
       public void request(AssetRequest request, AssetStream stream) {

@@ -103,7 +103,7 @@ public class CommonServiceInit {
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {
-    return new MultiRegionClient(client, region, hostKey, publicKeyId, globalFinder, new TreeMap<>());
+    return new MultiRegionClient(client, region, hostKey, publicKeyId, new TreeMap<>());
   }
 
   public LocalRegionClient makeLocalClient(HeatMonitor heat) {
