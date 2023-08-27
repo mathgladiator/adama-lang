@@ -59,7 +59,7 @@ public class GlobalFrontend {
     // public MultiRegionClient(LocalRegionClient local, String region, PrivateKey privateKey, int keyId, SimpleFinderService finder, TreeMap<String, SelfClient> remoteRegions) {
     MultiRegionClient adama = null; // TODO: create the multi-region client
 
-    FrontendHttpHandler http = new FrontendHttpHandler(em.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(publicKeyId, em.hostKey));
+    FrontendHttpHandler http = new FrontendHttpHandler(em.alive, em.system, em.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(publicKeyId, em.hostKey));
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
     GlobalAssetSystem assets = new GlobalAssetSystem(db.database, masterKey, adama, cb.s3);

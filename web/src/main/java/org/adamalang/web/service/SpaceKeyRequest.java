@@ -39,4 +39,8 @@ public class SpaceKeyRequest {
     }
     return null;
   }
+
+  public String cacheKey(String parameters) {
+    return space + "/" + key + "/" + uri + "?" + parameters;
+  }
 }

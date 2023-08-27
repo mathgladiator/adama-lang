@@ -10,10 +10,7 @@ package org.adamalang.cli.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -27,11 +24,14 @@ import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.service.KeyPrefixUri;
 import org.adamalang.web.service.SpaceKeyRequest;
 import org.adamalang.web.service.WebConfig;
+import org.adamalang.web.service.cache.HttpResultCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
@@ -42,13 +42,16 @@ public class FrontendHttpHandler implements HttpHandler {
   private final RxHtmlFetcher rxHtmlFetcher;
   private final WebConfig webConfig;
   private final PrivateKeyWithId signingKey;
+  private final HttpResultCache getCache;
 
-  public FrontendHttpHandler(WebConfig webConfig, DomainFinder domainFinder, RxHtmlFetcher rxHtmlFetcher, MultiRegionClient client, PrivateKeyWithId signingKey) {
+  public FrontendHttpHandler(AtomicBoolean alive, SimpleExecutor executor, WebConfig webConfig, DomainFinder domainFinder, RxHtmlFetcher rxHtmlFetcher, MultiRegionClient client, PrivateKeyWithId signingKey) {
     this.webConfig = webConfig;
     this.domainFinder = domainFinder;
     this.client = client;
     this.rxHtmlFetcher = rxHtmlFetcher;
     this.signingKey = signingKey;
+    this.getCache = new HttpResultCache(TimeSource.REAL_TIME);
+    HttpResultCache.sweeper(executor, alive, this.getCache, 500, 1500);
   }
 
   @Override
@@ -120,7 +123,7 @@ public class FrontendHttpHandler implements HttpHandler {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
       WebDelete delete = new WebDelete(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
-      client.webDelete(skr.space, skr.key, delete, route(skr, callback));
+      client.webDelete(skr.space, skr.key, delete, route(skr, callback, null));
     }
     callback.failure(new ErrorCodeException(-1));
   }
@@ -129,31 +132,37 @@ public class FrontendHttpHandler implements HttpHandler {
     return new WebContext(NtPrincipal.NO_ONE, headers.get("origin"), headers.get("remote-ip"));
   }
 
-  private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback) {
+  private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback, BiConsumer<Integer, HttpResult> writeToCache) {
     return new Callback<>() {
       @Override
       public void success(WebResponse response) {
         if (response != null) {
+          final HttpResult result;
           if ("text/agent".equals(response.contentType)) {
             try {
               String identity = signingKey.signDocumentIdentity(response.body, skr.space, skr.key, response.cache_ttl_seconds);
               ObjectNode json = Json.newJsonObject();
               json.put("identity", identity);
-              callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+              result = new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
             } catch (Exception ex) {
               callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
+              return;
             }
           } else if ("text/identity".equals(response.contentType)) {
             ObjectNode json = Json.newJsonObject();
             json.put("identity", response.body);
-            callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+            result = new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
           } else {
             if (response.asset != null) {
-              callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
+              result = new HttpResult(skr.space, skr.key, response.asset, response.cors);
             } else {
-              callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
+              result = new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors);
             }
           }
+          if (writeToCache != null && response.cache_ttl_seconds > 0) {
+            writeToCache.accept(response.cache_ttl_seconds, result);
+          }
+          callback.success(result);
         } else {
           callback.success(null);
         }
@@ -198,7 +207,7 @@ public class FrontendHttpHandler implements HttpHandler {
   private void post(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     if (skr != null) {
       WebPut put = new WebPut(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson), body);
-      client.webPut(skr.space, skr.key, put, route(skr, callback));
+      client.webPut(skr.space, skr.key, put, route(skr, callback, null));
     } else {
       callback.success(null);
     }
@@ -220,7 +229,13 @@ public class FrontendHttpHandler implements HttpHandler {
   private void get(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     if (skr != null) {
       WebGet get = new WebGet(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
-      client.webGet(skr.space, skr.key, get, route(skr, callback));
+      String cacheKey = skr.cacheKey(parametersJson);
+      HttpResult cachedResult = getCache.get(cacheKey);
+      if (cachedResult != null) {
+        callback.success(cachedResult);
+        return;
+      }
+      client.webGet(skr.space, skr.key, get, route(skr, callback, getCache.inject(cacheKey)));
     } else {
       callback.success(null);
     }
