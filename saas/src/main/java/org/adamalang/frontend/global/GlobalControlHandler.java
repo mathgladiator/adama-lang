@@ -505,18 +505,27 @@ public class GlobalControlHandler implements RootGlobalHandler {
       if (request.who.isAdamaDeveloper) {
         int spaceId = Spaces.createSpace(nexus.database, request.who.id, request.space);
         SpaceTemplates.SpaceTemplate template = SpaceTemplates.REGISTRY.of(request.template);
-        Spaces.setRxHtml(nexus.database, spaceId, template.initialRxHTML(request.space)); // TODO: put into createSpace? Or, rely on the document
         nexus.adama.create(request.who, "ide", request.space, null, template.idearg(request.space), new Callback<Void>() {
           @Override
           public void success(Void value) {
             SpacePolicy policy = new SpacePolicy(new SpaceInfo(spaceId, request.who.id, Collections.singleton(request.who.id), true, 0));
             handle(session, new SpaceSetRequest(request.identity, request.who, request.space, policy, template.plan()), new SimpleResponder(new NoOpJsonResponder()));
-            responder.complete();
+            try {
+              Spaces.setRxHtml(nexus.database, spaceId, template.initialRxHTML(request.space)); // TODO: put into createSpace? Or, rely on the document
+              responder.complete();
+            } catch (Exception ex) {
+              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNABLE_SET_RXHTML_EXCEPTION, ex, LOGGER));
+            }
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
-            responder.error(ex);
+            if (ex.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
+              // it already exists, assume it has been deployed so we don't nuke it!
+              responder.complete();
+            } else {
+              responder.error(ex);
+            }
           }
         });
       } else {

@@ -347,12 +347,12 @@ public class ErrorTable {
     descriptions.put(942318, "no description of error (yet)");
     names.put(900104, "API_SPACE_CREATE_UNKNOWN_EXCEPTION");
     descriptions.put(900104, "no description of error (yet)");
+    names.put(980204, "API_SPACE_CREATE_UNABLE_SET_RXHTML_EXCEPTION");
+    descriptions.put(980204, "no description of error (yet)");
     names.put(909436, "API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION");
     descriptions.put(909436, "no description of error (yet)");
     names.put(998384, "API_SPACE_CREATE_FAILED_NOT_ADAMA_DEVELOPER");
     descriptions.put(998384, "no description of error (yet)");
-    names.put(980204, "API_AUTH_DOCUMENT_UNKNOWN_EXCEPTION");
-    descriptions.put(980204, "no description of error (yet)");
     names.put(902399, "API_AUTH_DOMAIN_AUTH_DOMAIN_INVALID_MAPPED");
     descriptions.put(902399, "no description of error (yet)");
     names.put(983294, "API_AUTH_DOMAIN_AUTH_NO_KEY_MAPPED");
@@ -877,6 +877,8 @@ public class ErrorTable {
     descriptions.put(772272, "no description of error (yet)");
     names.put(721095, "WEBBASE_CONNECT_REJECTED");
     descriptions.put(721095, "no description of error (yet)");
+    names.put(716993, "MULTI_REGION_CLIENT_NO_ROUTE");
+    descriptions.put(716993, "no description of error (yet)");
     names.put(707675, "CARAVAN_KEY_NOT_LOADED_PATCH");
     descriptions.put(707675, "no description of error (yet)");
     names.put(790622, "CARAVAN_KEY_NOT_LOADED_COMPUTE");

@@ -28,6 +28,8 @@ import org.adamalang.translator.tree.Document;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * converts a DeploymentPlan into a LivingDocumentFactoryFactory; if this can be created, then it is
@@ -60,7 +62,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
         }
       }
       if (factory == null) {
-        factory = compile(name, spacePrefix + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer, keys);
+        factory = compile(name, spacePrefix.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_")) + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer, keys);
       }
       _memoryUsed += factory.memoryUsage;
       factories.put(entry.getKey(), factory);

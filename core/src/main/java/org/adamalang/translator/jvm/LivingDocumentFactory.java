@@ -21,6 +21,8 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -34,7 +36,8 @@ import java.util.TreeMap;
 
 /** responsible for compiling java code into a LivingDocumentFactory */
 public class LivingDocumentFactory {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LivingDocumentFactory.class);
+  private static final Logger LOG = LoggerFactory.getLogger(LivingDocumentFactory.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   public final String reflection;
   private final Constructor<?> constructor;
   private final Method creationPolicyMethod;
@@ -56,6 +59,7 @@ public class LivingDocumentFactory {
       for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
         report.append(diagnostic.toString() + "\n");
       }
+      LOG.error("failure-compile:" + report.toString());
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
     }
     try {
