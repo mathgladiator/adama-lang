@@ -58,6 +58,9 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
       String[] parts = identity.split(Pattern.quote("/"));
       return new NtPrincipal(parts[3], "doc/" + parts[1] + "/" + parts[2]);
     }
+    if (identity.startsWith("anonymous:")) {
+      return new NtPrincipal(identity.substring(10), "anonymous");
+    }
     // TODO: parse identity and then resolve against a table
     return NtPrincipal.NO_ONE;
   }

@@ -351,7 +351,7 @@ Adama.Debugger = (function() {
 
   var makeChannelDebugger = function(channels, types, connection) {
     var selector = document.createElement("select");
-    selector.style = "background: #333";
+    selector.style = "background: #333; color:#fff;";
     viewChannels.append(selector);
     var formHolder = document.createElement("div");
     viewChannels.append(formHolder);
@@ -448,13 +448,11 @@ Adama.Debugger = (function() {
     current = name;
     nuke(viewChannels);
     nuke(viewJson);
-    var co = connections[name];
-    if (co.bound == co.debugging && typeof(co.bound) == "string") {
-      render(name);
-    }
+    connections[name].rendered = "";
+    render(name);
   };
   connectionSelector.onchange = function() {
-    // TODO
+    switch_to_connection(connectionSelector.value);
   };
   var refresh_select = function() {
     nuke(connectionSelector);
