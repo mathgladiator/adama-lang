@@ -33,6 +33,8 @@ public class ServerMessage {
     public String region;
     @FieldOrder(5)
     public String machine;
+    @FieldOrder(6)
+    public boolean deleted;
   }
 
   @TypeId(1018)

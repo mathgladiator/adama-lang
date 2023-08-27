@@ -30,6 +30,7 @@ import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
 import org.adamalang.mysql.impl.GlobalFinder;
 import org.adamalang.mysql.model.*;
+import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.sys.capacity.MachinePicker;
 import org.adamalang.ops.*;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
@@ -232,7 +233,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.clientExecutor = SimpleExecutor.create("disk");
     this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService, masterKey);
     proxyDeploymentFactory.setAgent(deploymentAgent);
-    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(), 1800000L, new MeteringBatchReady() {
+    BoundLocalFinderService finder = new BoundLocalFinderService(globalFinder, "test-region", identity.ip + ":" + port);
+    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, finder, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(), 1800000L, new MeteringBatchReady() {
       @Override
       public void init(DiskMeteringBatchMaker me) {
 

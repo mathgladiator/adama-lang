@@ -10,6 +10,8 @@ package org.adamalang.net.server;
 
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.runtime.data.BoundLocalFinderService;
+import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
@@ -26,8 +28,9 @@ public class ServerNexus {
   public final LocalCapacityRequestor capacityRequestor;
   public final int port;
   public final int handlerThreads;
+  public final BoundLocalFinderService finder;
 
-  public ServerNexus(NetBase base, MachineIdentity identity, CoreService service, ServerMetrics metrics, DeploymentFactoryBase deploymentFactoryBase, LocalCapacityRequestor capacityRequestor, MeteringPubSub meteringPubSub, DiskMeteringBatchMaker meteringBatchMaker, int port, int handlerThreads) {
+  public ServerNexus(NetBase base, MachineIdentity identity, CoreService service, ServerMetrics metrics, DeploymentFactoryBase deploymentFactoryBase, BoundLocalFinderService finder, LocalCapacityRequestor capacityRequestor, MeteringPubSub meteringPubSub, DiskMeteringBatchMaker meteringBatchMaker, int port, int handlerThreads) {
     this.base = base;
     this.identity = identity;
     this.service = service;
@@ -38,5 +41,6 @@ public class ServerNexus {
     this.meteringBatchMaker = meteringBatchMaker;
     this.port = port;
     this.handlerThreads = handlerThreads;
+    this.finder = finder;
   }
 }

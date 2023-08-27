@@ -106,9 +106,27 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.FindRequest payload) {
-    // TODO: check the local finder that proxies a global finder
-    upstream.error(0);
-    upstream.completed();
+    nexus.finder.find(new Key(payload.space, payload.key), new Callback<DocumentLocation>() {
+      @Override
+      public void success(DocumentLocation value) {
+        ServerMessage.FindResponse response = new ServerMessage.FindResponse();
+        response.archive = value.archiveKey;
+        response.id = value.id;
+        response.location = value.location.type;
+        response.machine = value.machine;
+        response.region = value.region;
+        response.deleted = value.deleted;
+        ByteBuf buf = upstream.create(256);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
   }
 
   @Override

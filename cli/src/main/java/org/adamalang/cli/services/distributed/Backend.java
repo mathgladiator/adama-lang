@@ -23,6 +23,7 @@ import org.adamalang.net.server.ServerNexus;
 import org.adamalang.ops.DeploymentAgent;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.ops.ProxyDeploymentFactory;
+import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -160,7 +161,8 @@ public class Backend {
       }
     });
 
-    ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, deployAgent, meteringPubSub, billingBatchMaker, init.servicePort, 4);
+    BoundLocalFinderService finder = new BoundLocalFinderService(init.globalFinder, init.region, init.machine);
+    ServerNexus nexus = new ServerNexus(init.netBase, init.identity, service, new ServerMetrics(init.metricsFactory), deploymentFactoryBase, finder, deployAgent, meteringPubSub, billingBatchMaker, init.servicePort, 4);
     ServerHandle handle = init.netBase.serve(init.servicePort, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
     serverThread.start();

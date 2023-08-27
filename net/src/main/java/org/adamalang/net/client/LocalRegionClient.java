@@ -38,6 +38,7 @@ public class LocalRegionClient {
   private final SimpleExecutor[] executors;
   private final Random rng;
   private final ClientConfig config;
+  private final SimpleExecutor finderExecutor;
 
   public LocalRegionClient(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, ClientRouter router, HeatMonitor monitor) {
     this.config = config;
@@ -46,6 +47,11 @@ public class LocalRegionClient {
     this.clientFinder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, router.engine, ExceptionLogger.FOR(LocalRegionClient.class));
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
+    this.finderExecutor = SimpleExecutorFactory.DEFAULT.makeSingle("local-finder");
+  }
+
+  public LocalFinder makeLocalFinder() {
+    return new LocalFinder(finderExecutor, clientFinder);
   }
 
   public AggregatedCacheRouter routing() {
