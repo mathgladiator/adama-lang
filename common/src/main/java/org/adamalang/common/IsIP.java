@@ -8,6 +8,11 @@
  */
 package org.adamalang.common;
 
-public class Platform {
-  public static final String VERSION = "20230828185414";
+import java.util.regex.Pattern;
+
+/** test if a host an IP address */
+public class IsIP {
+  public static boolean test(String host) {
+    return Pattern.compile("[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+").matcher(host).matches();
+  }
 }

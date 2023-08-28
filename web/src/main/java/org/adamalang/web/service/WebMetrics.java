@@ -21,6 +21,7 @@ public class WebMetrics {
   public final Runnable websockets_end_exception;
   public final Runnable redirect_server_heartbeat;
 
+  public final Runnable bad_traffic;
   public final Runnable webhandler_get;
   public final Runnable webhandler_post;
   public final Runnable webhandler_delete;
@@ -66,6 +67,7 @@ public class WebMetrics {
     this.webhandler_failed_cookie_set = factory.counter("webhandler_failed_cookie_set");
     this.webhandler_failed_cookie_get = factory.counter("webhandler_failed_cookie_get");
     this.redirect_server_heartbeat = factory.counter("redirect_server_heartbeat");
+    this.bad_traffic = factory.counter("webhandler_bad_traffic");
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");
     this.webhandler_delete = factory.counter("webhandler_delete");

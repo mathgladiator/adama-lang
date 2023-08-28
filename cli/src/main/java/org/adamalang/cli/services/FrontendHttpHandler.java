@@ -79,6 +79,10 @@ public class FrontendHttpHandler implements HttpHandler {
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     String host = headers.get("host");
     if (host != null) {
+      if (IsIP.test(host)) {
+        callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
+        return;
+      }
       boolean isSpecial = webConfig.specialDomains.contains(host);
       if (!isSpecial) {
         if (host.endsWith("." + webConfig.regionalDomain)) {
