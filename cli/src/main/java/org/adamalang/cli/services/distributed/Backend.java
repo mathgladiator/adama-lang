@@ -60,7 +60,7 @@ public class Backend {
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     ProxyDeploymentFactory factoryProxy = new ProxyDeploymentFactory(deploymentFactoryBase);
 
-    BoundLocalFinderService finder = new BoundLocalFinderService(init.globalFinder, init.region, init.machine);
+    BoundLocalFinderService finder = new BoundLocalFinderService(init.system, init.globalFinder, init.region, init.machine);
 
     CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, finder, init.s3, init.s3);
 

@@ -115,7 +115,7 @@ public class TestBed implements AutoCloseable {
       }
     });
     finderService = new MockFinderService("the-machine");
-    BoundLocalFinderService finder = new BoundLocalFinderService(finderService, "the-region", "the-machine");
+    BoundLocalFinderService finder = new BoundLocalFinderService(this.clientExecutor, finderService, "the-region", "the-machine");
     this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, finder, new LocalCapacityRequestor() {
       @Override
       public void requestCodeDeployment(String space, Callback<Void> callback) {
