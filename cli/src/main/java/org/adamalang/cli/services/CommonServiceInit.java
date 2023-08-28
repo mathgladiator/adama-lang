@@ -43,6 +43,7 @@ public class CommonServiceInit {
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonServiceInit.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
 
+  public final EveryMachine em;
   public final int monitoringPort;
   public final MachineIdentity identity;
   public final PrivateKey hostKey;
@@ -69,6 +70,7 @@ public class CommonServiceInit {
 
   public CommonServiceInit(Config config, Role role) throws Exception {
     EveryMachine em = new EveryMachine(config, role);
+    this.em = em;
     this.identity = em.identity;
     this.hostKey = em.hostKey;
     this.metricsFactory = em.metricsFactory;

@@ -12,8 +12,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.FrontendHttpHandler;
 import org.adamalang.cli.services.Role;
-import org.adamalang.common.ConfigObject;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
@@ -24,9 +23,7 @@ import org.adamalang.mysql.impl.GlobalDomainFinder;
 import org.adamalang.mysql.impl.GlobalRxHtmlFetcher;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.sys.domains.CachedDomainFinder;
-import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
-import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.CertificateBoot;
@@ -43,7 +40,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Frontend {
-
   public final MultiRegionClient adama;
 
   public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
@@ -58,12 +54,10 @@ public class Frontend {
     GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
-
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     System.err.println("ExternNexus constructed");
-
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
     CountDownLatch latchForHeartbeat = new CountDownLatch(1);

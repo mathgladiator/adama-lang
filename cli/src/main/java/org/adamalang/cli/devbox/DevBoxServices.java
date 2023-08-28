@@ -46,7 +46,7 @@ public class DevBoxServices {
   }
 
   public static void install(SimpleExecutor executor, Consumer<String> logger) {
-    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null);
+    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
     logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));

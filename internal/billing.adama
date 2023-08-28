@@ -18,7 +18,7 @@ message Cons {
 }
 
 @connected {
-  return @who == owner || @who.isOverlord();
+  return @who == owner || @who.isAdamaHost();
 }
 
 record MeteringRecord {
@@ -84,8 +84,10 @@ record StorageRecord {
 
 table<StorageRecord> _unbilled_storage;
 
-channel ingest_new_storage_record(NewStorage storage) {
-  _unbilled_storage <- storage;
+channel ingest_new_storage_record(NewStorage storage) open {
+  if (@who.isAdamaHost()) {
+    _unbilled_storage <- storage;
+  }
 }
 
 message Empty {}
