@@ -8,6 +8,13 @@
  */
 package org.adamalang.common;
 
-public class Platform {
-  public static final String VERSION = "20230828185414";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class IsIPTests {
+  @Test
+  public void flow() {
+    Assert.assertFalse(IsIP.test("www.foo.com"));
+    Assert.assertTrue(IsIP.test("1.23.34.56"));
+  }
 }

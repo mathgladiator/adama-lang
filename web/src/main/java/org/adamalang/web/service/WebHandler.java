@@ -22,6 +22,7 @@ import io.netty.handler.codec.http.multipart.Attribute;
 import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
@@ -594,7 +595,11 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        LOG.error("failed-web-handler:" + ex.getMessage());
+        if (ex.code == ErrorCodes.FRONTEND_IP_DONT_RESOLVE || ex.code == ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING) {
+          metrics.bad_traffic.run();
+        } else {
+          LOG.error("failed-web-handler:" + ex.getMessage());
+        }
         handleHttpResult(null, ctx, req);
       }
     };
