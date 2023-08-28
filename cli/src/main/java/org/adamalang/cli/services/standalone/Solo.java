@@ -11,12 +11,21 @@ package org.adamalang.cli.services.standalone;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.distributed.Backend;
 import org.adamalang.cli.services.distributed.Frontend;
+import org.adamalang.net.client.LocalRegionClient;
+import org.adamalang.runtime.sys.capacity.HeatMonitor;
 
 public class Solo {
   public static void run(Config config) throws Exception {
     // run the core service
     Backend backend = Backend.run(config);
+
+    LocalRegionClient client = backend.init.makeLocalClient(new HeatMonitor() {
+      @Override
+      public void heat(String machine, double cpu, double memory) {
+
+      }
+    });
     // spin up the frontend
-    new Frontend(config, backend.init, backend.client);
+    new Frontend(config, backend.init, client);
   }
 }

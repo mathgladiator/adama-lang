@@ -33,14 +33,17 @@ public class LocalFinderTests {
                  "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
+      bed.finderService.bindArchive(new Key("archive", "key"), "archive");
+      bed.finderService.bindLocal(new Key("space", "key"));
       LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       try {
         LocalRegionClientTests.waitForRouting(bed, client);
 
-        CountDownLatch latch = new CountDownLatch(2);
+        CountDownLatch latch = new CountDownLatch(3);
         client.finder.find(new Key("space", "key"), new Callback<DocumentLocation>() {
           @Override
           public void success(DocumentLocation value) {
+            System.err.println("WUT:" + value.region + "/" + value.machine);
             Assert.assertEquals("test-region", value.region);
             Assert.assertEquals("the-machine", value.machine);
             latch.countDown();
@@ -48,26 +51,41 @@ public class LocalFinderTests {
 
           @Override
           public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
 
           }
         });
 
-        client.finder.find(new Key("this-space-can-exist", "key"), new Callback<DocumentLocation>() {
+        client.finder.find(new Key("archive", "key"), new Callback<DocumentLocation>() {
           @Override
           public void success(DocumentLocation value) {
-            Assert.assertEquals("test-region", value.region);
+            System.err.println("WUT:" + value.region + "/" + value.machine);
+            Assert.assertEquals("the-region", value.region);
             Assert.assertEquals("the-machine", value.machine);
             latch.countDown();
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
+          }
+        });
 
+        client.finder.find(new Key("nope", "key"), new Callback<DocumentLocation>() {
+          @Override
+          public void success(DocumentLocation value) {
+            System.err.println("WUT:" + value.region + "/" + value.machine);
+            Assert.assertEquals("the-region", value.region);
+            Assert.assertEquals("the-machine", value.machine);
+            latch.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
           }
         });
         Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
-
-
 
       } finally{
         client.shutdown();

@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /** a local cache of items bound to the current host */
 public class BoundLocalFinderService implements FinderService {
   private final FinderService global;
-  private final String region;
-  private final String machine;
+  public final String region;
+  public final String machine;
   private final ConcurrentHashMap<Key, DocumentLocation> cache;
 
   public BoundLocalFinderService(FinderService global, String region, String machine) {
@@ -40,7 +40,29 @@ public class BoundLocalFinderService implements FinderService {
 
   @Override
   public void bind(Key key, Callback<Void> callback) {
-    global.bind(key, callback);
+    global.bind(key, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        global.find(key, new Callback<DocumentLocation>() {
+          @Override
+          public void success(DocumentLocation result) {
+            cache.put(key, result);
+            callback.success(null);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            // technically, the bind was a success; we just couldn't cache it
+            callback.success(null);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   @Override
