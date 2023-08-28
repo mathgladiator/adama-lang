@@ -16,6 +16,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.mysql.impl.GlobalBillingDocumentFinder;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
+import org.adamalang.mysql.impl.MySQLFinderCore;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -23,7 +24,9 @@ import org.adamalang.net.server.ServerNexus;
 import org.adamalang.ops.DeploymentAgent;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.ops.ProxyDeploymentFactory;
+import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.BoundLocalFinderService;
+import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -32,19 +35,20 @@ import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.metering.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 
 public class Backend {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Backend.class);
   public final CommonServiceInit init;
   public final Thread serverThread;
-  public final LocalRegionClient client;
 
-  public Backend(CommonServiceInit init, Thread serverThread, LocalRegionClient client) {
+  public Backend(CommonServiceInit init, Thread serverThread) {
     this.init = init;
     this.serverThread = serverThread;
-    this.client = client;
   }
 
   public static Backend run(Config config) throws Exception {
@@ -62,6 +66,7 @@ public class Backend {
     BoundLocalFinderService finder = new BoundLocalFinderService(init.globalFinder, init.region, init.machine);
 
     CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, finder, init.s3, init.s3);
+
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
     DeploymentAgent deployAgent = new DeploymentAgent(init.system, init.database, deploymentMetrics, init.region, init.machine, deploymentFactoryBase, service, init.masterKey);
@@ -75,7 +80,6 @@ public class Backend {
     deploymentFactoryBase.attachDeliverer(service);
     // tell the proxy how to pull code on demand
     factoryProxy.setAgent(deployAgent);
-    LocalRegionClient client = init.makeLocalClient(capacityAgent);
 
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
@@ -176,6 +180,6 @@ public class Backend {
       }
     })));
     System.err.println("backend running");
-    return new Backend(init, serverThread, client);
+    return new Backend(init, serverThread);
   }
 }

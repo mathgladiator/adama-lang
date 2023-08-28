@@ -31,6 +31,8 @@ import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -38,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Handler implements ByteStream, ClientCodec.HandlerServer, Streamback {
+  private static final Logger LOG = LoggerFactory.getLogger(Handler.class);
   private static final ServerMessage.CreateResponse SHARED_CREATE_RESPONSE_EMPTY = new ServerMessage.CreateResponse();
   private static final ServerMessage.DeleteResponse SHARED_DELETE_RESPONSE_EMPTY = new ServerMessage.DeleteResponse();
   private final ServerNexus nexus;
@@ -106,16 +109,22 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.FindRequest payload) {
-    nexus.finder.findbind(new Key(payload.space, payload.key), new Callback<DocumentLocation>() {
+    nexus.finder.find(new Key(payload.space, payload.key), new Callback<DocumentLocation>() {
       @Override
       public void success(DocumentLocation value) {
         ServerMessage.FindResponse response = new ServerMessage.FindResponse();
         response.archive = value.archiveKey;
         response.id = value.id;
-        response.location = value.location.type;
+        response.deleted = value.deleted;
         response.machine = value.machine;
         response.region = value.region;
-        response.deleted = value.deleted;
+        if (value.location == LocationType.Archive) {
+          response.machine = nexus.finder.machine;
+          response.region = nexus.finder.region;
+          response.location = LocationType.Machine.type;
+        } else {
+          response.location = value.location.type;
+        }
         ByteBuf buf = upstream.create(256);
         ServerCodec.write(buf, response);
         upstream.next(buf);
@@ -124,7 +133,21 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
       @Override
       public void failure(ErrorCodeException ex) {
-        upstream.error(ex.code);
+        if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
+          ServerMessage.FindResponse response = new ServerMessage.FindResponse();
+          response.archive = null;
+          response.id = 0;
+          response.deleted = false;
+          response.machine = nexus.finder.machine;
+          response.region = nexus.finder.region;
+          response.location = LocationType.Machine.type;
+          ByteBuf buf = upstream.create(256);
+          ServerCodec.write(buf, response);
+          upstream.next(buf);
+          upstream.completed();
+        } else {
+          upstream.error(ex.code);
+        }
       }
     });
   }
