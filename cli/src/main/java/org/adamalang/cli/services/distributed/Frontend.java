@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Frontend {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Frontend.class);
   public final MultiRegionClient adama;
 
   public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
@@ -95,6 +96,7 @@ public class Frontend {
       }
     }));
     System.err.println("running frontend");
+    LOGGER.error("Started");
     runnable.run();
     System.err.println("frontend finished");
   }
