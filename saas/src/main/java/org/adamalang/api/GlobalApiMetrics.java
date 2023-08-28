@@ -53,7 +53,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_RegionalInitHost;
   public final RequestResponseMonitor monitor_RegionalFinderFind;
   public final RequestResponseMonitor monitor_RegionalFinderFree;
-  public final RequestResponseMonitor monitor_RegionalFinderFindbind;
+  public final RequestResponseMonitor monitor_RegionalFinderBind;
   public final RequestResponseMonitor monitor_RegionalFinderDeleteMark;
   public final RequestResponseMonitor monitor_RegionalFinderDeleteCommit;
   public final RequestResponseMonitor monitor_RegionalFinderBackUp;
@@ -112,7 +112,7 @@ public class GlobalApiMetrics {
     this.monitor_RegionalInitHost = factory.makeRequestResponseMonitor("regional/init-host");
     this.monitor_RegionalFinderFind = factory.makeRequestResponseMonitor("regional/finder/find");
     this.monitor_RegionalFinderFree = factory.makeRequestResponseMonitor("regional/finder/free");
-    this.monitor_RegionalFinderFindbind = factory.makeRequestResponseMonitor("regional/finder/findbind");
+    this.monitor_RegionalFinderBind = factory.makeRequestResponseMonitor("regional/finder/bind");
     this.monitor_RegionalFinderDeleteMark = factory.makeRequestResponseMonitor("regional/finder/delete/mark");
     this.monitor_RegionalFinderDeleteCommit = factory.makeRequestResponseMonitor("regional/finder/delete/commit");
     this.monitor_RegionalFinderBackUp = factory.makeRequestResponseMonitor("regional/finder/back-up");

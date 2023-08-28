@@ -8,8 +8,8 @@
  */
 package org.adamalang.api;
 
-/** generated request type for regional/finder/findbind */
-public class ClientRegionalFinderFindbindRequest {
+/** generated request type for regional/finder/bind */
+public class ClientRegionalFinderBindRequest {
   public String identity;
   public String space;
   public String key;

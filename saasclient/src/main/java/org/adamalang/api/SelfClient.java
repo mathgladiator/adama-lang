@@ -516,16 +516,16 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
-  /** regional/finder/findbind */
-  public void regionalFinderFindbind(ClientRegionalFinderFindbindRequest request, Callback<ClientFinderResultResponse> callback) {
+  /** regional/finder/bind */
+  public void regionalFinderBind(ClientRegionalFinderBindRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();
-    node.put("method", "regional/finder/findbind");
+    node.put("method", "regional/finder/bind");
     node.put("identity", request.identity);
     node.put("space", request.space);
     node.put("key", request.key);
     node.put("region", request.region);
     node.put("machine", request.machine);
-    pool.requestResponse(node, (obj) -> new ClientFinderResultResponse(obj), callback);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
   /** regional/finder/delete/mark */

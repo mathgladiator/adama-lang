@@ -66,29 +66,6 @@ public class BoundLocalFinderService implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, Callback<DocumentLocation> callback) {
-    DocumentLocation cached = cache.get(key);
-    if (cached != null) {
-      callback.success(cached);
-      return;
-    }
-    global.findbind(key, new Callback<>() {
-      @Override
-      public void success(DocumentLocation location) {
-        if (BoundLocalFinderService.this.region.equals(location.region) && BoundLocalFinderService.this.machine.equals(location.machine)) {
-          cache.put(key, location);
-        }
-        callback.success(location);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
-  }
-
-  @Override
   public void free(Key key, Callback<Void> callback) {
     cache.remove(key);
     global.free(key, callback);

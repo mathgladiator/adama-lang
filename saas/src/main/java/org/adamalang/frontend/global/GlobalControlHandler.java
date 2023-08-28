@@ -878,14 +878,14 @@ public class GlobalControlHandler implements RootGlobalHandler {
       nexus.finder.find(new Key(request.space, request.key), WRAP(responder));
     }
   }
+
   @Override
-  public void handle(Session session, RegionalFinderFindbindRequest request, FinderResultResponder responder) {
+  public void handle(Session session, RegionalFinderBindRequest request, SimpleResponder responder) {
     if (checkRegionalHost(request.who, responder.responder)) {
-      Key key = new Key(request.space, request.key);
-      nexus.finderCore.bind(key, request.region, request.machine, new Callback<Void>() {
+      nexus.finderCore.bind(new Key(request.space, request.key), request.region, request.machine, new Callback<Void>() {
         @Override
         public void success(Void value) {
-          nexus.finder.find(key, WRAP(responder));
+          responder.complete();
         }
 
         @Override

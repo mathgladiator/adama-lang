@@ -75,21 +75,6 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, Callback<DocumentLocation> callback) {
-    bind(key, new Callback<Void>() {
-      @Override
-      public void success(Void value) {
-        find(key, callback);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        find(key, callback);
-      }
-    });
-  }
-
-  @Override
   public void bind(Key key, Callback<Void> callback) {
     if (key.key.contains("cant-bind")) {
       callback.failure(new ErrorCodeException(-1234));
