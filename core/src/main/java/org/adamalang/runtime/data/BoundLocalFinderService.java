@@ -10,7 +10,10 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,23 +22,30 @@ public class BoundLocalFinderService implements FinderService {
   private final FinderService global;
   public final String region;
   public final String machine;
-  private final ConcurrentHashMap<Key, DocumentLocation> cache;
+  private final HashMap<Key, DocumentLocation> cacheLocked;
+  private final SimpleExecutor executor;
 
-  public BoundLocalFinderService(FinderService global, String region, String machine) {
+  public BoundLocalFinderService(SimpleExecutor executor, FinderService global, String region, String machine) {
+    this.executor = executor;
     this.global = global;
     this.region = region;
     this.machine = machine;
-    this.cache = new ConcurrentHashMap<>();
+    this.cacheLocked = new HashMap<>();
   }
 
   @Override
   public void find(Key key, Callback<DocumentLocation> callback) {
-    DocumentLocation cached = cache.get(key);
-    if (cached != null) {
-      callback.success(cached);
-      return;
-    }
-    global.find(key, callback);
+    executor.execute(new NamedRunnable("find") {
+      @Override
+      public void execute() throws Exception {
+        DocumentLocation cached = cacheLocked.get(key);
+        if (cached != null) {
+          callback.success(cached);
+          return;
+        }
+        global.find(key, callback);
+      }
+    });
   }
 
   @Override
@@ -43,17 +53,28 @@ public class BoundLocalFinderService implements FinderService {
     global.bind(key, new Callback<Void>() {
       @Override
       public void success(Void value) {
-        global.find(key, new Callback<DocumentLocation>() {
+        // do this in a different thread to avoid a deadlock
+        executor.execute(new NamedRunnable("find-after-bind") {
           @Override
-          public void success(DocumentLocation result) {
-            cache.put(key, result);
-            callback.success(null);
-          }
+          public void execute() throws Exception {
+            global.find(key, new Callback<DocumentLocation>() {
+              @Override
+              public void success(DocumentLocation result) {
+                executor.execute(new NamedRunnable("write-cache") {
+                  @Override
+                  public void execute() throws Exception {
+                    cacheLocked.put(key, result);
+                  }
+                });
+                callback.success(null);
+              }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            // technically, the bind was a success; we just couldn't cache it
-            callback.success(null);
+              @Override
+              public void failure(ErrorCodeException ex) {
+                // technically, the bind was a success; we just couldn't cache it
+                callback.success(null);
+              }
+            });
           }
         });
       }
@@ -67,13 +88,27 @@ public class BoundLocalFinderService implements FinderService {
 
   @Override
   public void free(Key key, Callback<Void> callback) {
-    cache.remove(key);
-    global.free(key, callback);
+    executor.execute(new NamedRunnable("cache-free") {
+      @Override
+      public void execute() throws Exception {
+        cacheLocked.remove(key);
+        global.free(key, callback);
+      }
+    });
   }
 
   @Override
   public void backup(Key key, BackupResult result, Callback<Void> callback) {
-    global.backup(key, result, callback);
+    executor.execute(new NamedRunnable("cache-backup") {
+      @Override
+      public void execute() throws Exception {
+        DocumentLocation location = cacheLocked.get(key);
+        if (location != null) {
+          cacheLocked.put(key, new DocumentLocation(location.id, location.location, location.region, location.machine, result.archiveKey, location.deleted));
+        }
+        global.backup(key, result, callback);
+      }
+    });
   }
 
   @Override
@@ -83,8 +118,13 @@ public class BoundLocalFinderService implements FinderService {
 
   @Override
   public void commitDelete(Key key, Callback<Void> callback) {
-    cache.remove(key);
-    global.commitDelete(key, callback);
+    executor.execute(new NamedRunnable("cache-commit-delete") {
+      @Override
+      public void execute() throws Exception {
+        cacheLocked.remove(key);
+        global.commitDelete(key, callback);
+      }
+    });
   }
 
   @Override

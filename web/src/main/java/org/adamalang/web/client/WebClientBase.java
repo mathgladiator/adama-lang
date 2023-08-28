@@ -47,11 +47,12 @@ public class WebClientBase {
   private final EventLoopGroup group;
   private final AsyncPool<WebEndpoint, WebClientSharedConnection> pool;
   private final WebClientSharedConnectionActions actions;
+  private final SimpleExecutor executor;
 
   public WebClientBase(WebConfig config) {
+    this.executor = SimpleExecutor.create("web-client-base");
     this.config = config;
     group = new NioEventLoopGroup();
-    EventLoopGroundSimpleExecutor executor = new EventLoopGroundSimpleExecutor(group);
     this.actions = new WebClientSharedConnectionActions(group);
     this.pool = new AsyncPool<>(executor, TimeSource.REAL_TIME, //
         config.sharedConnectionPoolMaxLifetimeMilliseconds, //
@@ -62,6 +63,7 @@ public class WebClientBase {
   }
 
   public void shutdown() {
+    executor.shutdown();
     group.shutdownGracefully(50, 500, TimeUnit.MILLISECONDS);
   }
 

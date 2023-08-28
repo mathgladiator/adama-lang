@@ -233,7 +233,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.clientExecutor = SimpleExecutor.create("disk");
     this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService, masterKey);
     proxyDeploymentFactory.setAgent(deploymentAgent);
-    BoundLocalFinderService finder = new BoundLocalFinderService(globalFinder, "test-region", identity.ip + ":" + port);
+    BoundLocalFinderService finder = new BoundLocalFinderService(this.clientExecutor, globalFinder, "test-region", identity.ip + ":" + port);
     ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, finder, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(), 1800000L, new MeteringBatchReady() {
       @Override
       public void init(DiskMeteringBatchMaker me) {
