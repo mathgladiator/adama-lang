@@ -19,8 +19,8 @@ import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/** Find the host, and if not bound then take possession */
-public class RegionalFinderFindbindRequest {
+/** Bind the host */
+public class RegionalFinderBindRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String space;
@@ -29,7 +29,7 @@ public class RegionalFinderFindbindRequest {
   public final String region;
   public final String machine;
 
-  public RegionalFinderFindbindRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final String region, final String machine) {
+  public RegionalFinderBindRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final String region, final String machine) {
     this.identity = identity;
     this.who = who;
     this.space = space;
@@ -39,9 +39,9 @@ public class RegionalFinderFindbindRequest {
     this.machine = machine;
   }
 
-  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<RegionalFinderFindbindRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<RegionalFinderBindRequest> callback) {
     try {
-      final BulkLatch<RegionalFinderFindbindRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
+      final BulkLatch<RegionalFinderBindRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getStringNormalize("space", true, 461828);
@@ -51,11 +51,11 @@ public class RegionalFinderFindbindRequest {
       ValidateKey.validate(key);
       final String region = request.getString("region", true, 9006);
       final String machine = request.getString("machine", true, 9005);
-      _latch.with(() -> new RegionalFinderFindbindRequest(identity, who.get(), space, policy.get(), key, region, machine));
+      _latch.with(() -> new RegionalFinderBindRequest(identity, who.get(), space, policy.get(), key, region, machine));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("regionalfinderfindbind-error") {
+      nexus.executor.execute(new NamedRunnable("regionalfinderbind-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);

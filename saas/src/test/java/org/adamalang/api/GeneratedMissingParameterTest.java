@@ -700,10 +700,10 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c147 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:9005", c147.next());
       node.put("machine", "xzya");
-      //RegionalFinderFindbind
+      //RegionalFinderBind
       node = Json.newJsonObject();
       node.put("id", 147);
-      node.put("method", "regional/finder/findbind");
+      node.put("method", "regional/finder/bind");
       Iterator<String> c148 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c148.next());
       node.put("identity", _identity);

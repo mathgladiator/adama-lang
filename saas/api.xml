@@ -1393,9 +1393,9 @@
         <parameter name="machine" />
     </method>
 
-    <method name="regional/finder/findbind" responder="finder-result" scope="global" internal="true">
+    <method name="regional/finder/bind" responder="simple" scope="global" internal="true">
         <documentation>
-            Find the host, and if not bound then take possession
+            Bind the host
         </documentation>
         <parameter name="identity"/>
         <parameter name="space" />

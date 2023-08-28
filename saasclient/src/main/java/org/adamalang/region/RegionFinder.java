@@ -39,40 +39,14 @@ public class RegionFinder implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, Callback<DocumentLocation> callback) {
-    ClientRegionalFinderFindbindRequest request = new ClientRegionalFinderFindbindRequest();
-    request.identity = identity;
-    request.space = key.space;
-    request.key = key.key;
-    request.region = region;
-    request.machine = machine;
-    client.regionalFinderFindbind(request, Wraps.wrapResult(callback));
-  }
-
-  @Override
   public void bind(Key key, Callback<Void> callback) {
-    ClientRegionalFinderFindbindRequest request = new ClientRegionalFinderFindbindRequest();
+    ClientRegionalFinderBindRequest request = new ClientRegionalFinderBindRequest();
     request.identity = identity;
     request.space = key.space;
     request.key = key.key;
     request.region = region;
     request.machine = machine;
-    client.regionalFinderFindbind(request, new Callback<>() {
-      @Override
-      public void success(ClientFinderResultResponse value) {
-        if (region.equals(value.region) && machine.equals(value.region)) {
-          callback.success(null);
-        } else {
-          // failed to bind
-          callback.failure(new ErrorCodeException(-1));
-        }
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-    });
+    client.regionalFinderBind(request, Wraps.wrapVoid(callback));
   }
 
   @Override

@@ -33,21 +33,6 @@ public class GlobalFinder implements FinderService {
   }
 
   @Override
-  public void findbind(Key key, Callback<DocumentLocation> callback) {
-    core.bind(key, region, machine, new Callback<Void>() {
-      @Override
-      public void success(Void value) {
-        core.find(key, callback);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        core.find(key, callback);
-      }
-    });
-  }
-
-  @Override
   public void bind(Key key, Callback<Void> callback) {
     core.bind(key, region, machine, callback);
   }

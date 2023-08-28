@@ -93,7 +93,7 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, RegionalFinderFreeRequest request, SimpleResponder responder);
 
-  public void handle(Session session, RegionalFinderFindbindRequest request, FinderResultResponder responder);
+  public void handle(Session session, RegionalFinderBindRequest request, SimpleResponder responder);
 
   public void handle(Session session, RegionalFinderDeleteMarkRequest request, SimpleResponder responder);
 
@@ -170,7 +170,7 @@ public interface RootGlobalHandler {
       case "regional/init-host":
       case "regional/finder/find":
       case "regional/finder/free":
-      case "regional/finder/findbind":
+      case "regional/finder/bind":
       case "regional/finder/delete/mark":
       case "regional/finder/delete/commit":
       case "regional/finder/back-up":

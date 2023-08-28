@@ -789,13 +789,13 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
-            case "regional/finder/findbind": {
-              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderFindbind.start();
-              RegionalFinderFindbindRequest.resolve(session, nexus, request, new Callback<>() {
+            case "regional/finder/bind": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_RegionalFinderBind.start();
+              RegionalFinderBindRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
-                public void success(RegionalFinderFindbindRequest resolved) {
+                public void success(RegionalFinderBindRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new FinderResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

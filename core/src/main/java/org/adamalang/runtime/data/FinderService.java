@@ -18,9 +18,6 @@ public interface FinderService extends SimpleFinderService {
   /** take over for the key */
   void bind(Key key, Callback<Void> callback);
 
-  /** find the result and bind it to me */
-  void findbind(Key key, Callback<DocumentLocation> callback);
-
   /** release the machine for the given key */
   void free(Key key, Callback<Void> callback);
 
