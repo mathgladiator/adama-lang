@@ -35,14 +35,8 @@ import org.slf4j.LoggerFactory;
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
-  public static void install(SimpleExecutor executor, MetricsFactory factory, WebClientBase webClientBase, InternalSigner signer) {
+  public static void install(SimpleExecutor executor, MetricsFactory factory, WebClientBase webClientBase, SelfClient adamaClientRaw, InternalSigner signer) {
     FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
-    SelfClient adamaClientRaw = null;
-    if (executor != null){
-      // TODO: sort out a plan for variuos endpoints... OR make it part of the signature
-      MultiWebClientRetryPool pool = new MultiWebClientRetryPool(executor, webClientBase, new MultiWebClientRetryPoolMetrics(factory), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
-      adamaClientRaw = new SelfClient(pool);
-    }
     final SelfClient adamaClient = adamaClientRaw;
     ServiceRegistry.add("adama", Adama.class, (space, configRaw, keys) -> { // TODO
       ServiceConfig config = new ServiceConfig(space, configRaw, keys);

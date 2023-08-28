@@ -39,6 +39,27 @@ public class Users {
     }
   }
 
+  public static class UserIdAndEmail {
+    public final int id;
+    public final String email;
+    public UserIdAndEmail(int id, String email) {
+      this.id = id;
+      this.email = email;
+    }
+  }
+
+  public static List<UserIdAndEmail> listUsers(DataBase dataBase) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      ArrayList<UserIdAndEmail> users = new ArrayList<>();
+      String sql = "SELECT `id`, `email` FROM `" + dataBase.databaseName + "`.`emails`";
+      DataBase.walk(connection, (rs) -> {
+        users.add(new UserIdAndEmail(rs.getInt(1), rs.getString(2)));
+      }, sql);
+      return users;
+    });
+  }
+
+
   public static int createUserId(DataBase dataBase, String email) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {

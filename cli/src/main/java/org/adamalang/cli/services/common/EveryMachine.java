@@ -8,6 +8,7 @@
  */
 package org.adamalang.cli.services.common;
 
+import org.adamalang.api.SelfClient;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
@@ -18,8 +19,16 @@ import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.internal.InternalSigner;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
+import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
+import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.socket.ConnectionReady;
+import org.adamalang.web.client.socket.MultiWebClientRetryPool;
+import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
+import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +56,10 @@ public class EveryMachine {
   public final String logsPrefix;
   public final NetBase netBase;
   public final SimpleExecutor system;
+  public final SimpleExecutor regionClient;
+  public final MultiWebClientRetryPool regionPool;
   public final Engine engine;
+  public final SelfClient adamaCurrentRegionClient;
 
   public EveryMachine(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -73,6 +85,11 @@ public class EveryMachine {
     }
     this.machine = this.identity.ip + ":" + servicePort;
     this.webBase = new WebClientBase(this.webConfig);
+
+    this.regionClient = SimpleExecutor.create("region-client");
+    this.regionPool =  new MultiWebClientRetryPool(this.regionClient, webBase, new MultiWebClientRetryPoolMetrics(metricsFactory), new MultiWebClientRetryPoolConfig(new ConfigObject(config.get_or_create_child("http-web"))), ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
+    this.adamaCurrentRegionClient = new SelfClient(regionPool);
+
     this.logsPrefix = role.name + "/" + identity.ip + "/" + monitoringPort;
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       alive.set(false);
@@ -95,6 +112,14 @@ public class EveryMachine {
         netBase.shutdown();
       } catch (Exception ex) {
       }
+      try {
+        regionPool.shutdown();
+      } catch (Exception ex) {
+      }
+      try {
+        regionClient.shutdown();
+      } catch (Exception ex) {
+      }
     })));
 
     System.out.println("[EveryMachine-Setup]");
@@ -109,8 +134,7 @@ public class EveryMachine {
 
   public void installServices(int publicKeyId) {
     SimpleExecutor services = SimpleExecutor.create("executor");
-    FirstPartyServices.install(services, metricsFactory, webBase, new InternalSigner(publicKeyId, hostKey));
-
+    FirstPartyServices.install(services, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey));
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[Services-Shutdown]");
       alive.set(false);
@@ -120,5 +144,22 @@ public class EveryMachine {
 
       }
     })));
+  }
+
+  public MeteringBatchReady makeMeteringBatchReady(BillingDocumentFinder billingDocumentFinder, int publicKeyId) {
+    final String identity = new InternalSigner(publicKeyId, hostKey).toIdentity(new NtPrincipal(region + "/" + machine, "region"));
+    // MeteringBatchSubmit submit = new MeteringBatchSubmit(identity, region, machine, billingDocumentFinder, adamaCurrentRegionClient);
+    return new MeteringBatchReady() {
+      private DiskMeteringBatchMaker maker;
+
+      @Override
+      public void init(DiskMeteringBatchMaker me) {
+        this.maker = me;
+      }
+
+      @Override
+      public void ready(String batchId) {
+      }
+    };
   }
 }

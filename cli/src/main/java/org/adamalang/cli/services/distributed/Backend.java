@@ -16,17 +16,14 @@ import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.mysql.impl.GlobalBillingDocumentFinder;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
-import org.adamalang.mysql.impl.MySQLFinderCore;
-import org.adamalang.net.client.LocalRegionClient;
+import org.adamalang.mysql.model.Users;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.ops.DeploymentAgent;
 import org.adamalang.ops.DeploymentMetrics;
 import org.adamalang.ops.ProxyDeploymentFactory;
-import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.BoundLocalFinderService;
-import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -91,52 +88,8 @@ public class Backend {
 
     BillingDocumentFinder billingDocumentFinder = new GlobalBillingDocumentFinder(init.database);
 
-    MeteringBatchReady submitToAdama = new MeteringBatchReady() {
-      private DiskMeteringBatchMaker maker;
 
-      @Override
-      public void init(DiskMeteringBatchMaker me) {
-        this.maker = me;
-      }
-
-      @Override
-      public void ready(String batchId) {
-    /*
-        try {
-          String batch = maker.getBatch(batchId);
-          maker.deleteBatch(batchId);
-          Map<String, String> messages = MeterReducerReader.convertMapToBillingMessages(batch, init.region, init.machine);
-          //public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
-          for(Map.Entry<String, String> message : messages.entrySet()) {
-            billingDocumentFinder.find(message.getKey(), new Callback<Key>() {
-              final String messageToSend = message.getValue();
-              @Override
-              public void success(Key billingDocument) {
-                client.directSend("0.0.0.0", "adama", init.machine, "region", billingDocument.space, billingDocument.key, "billing-document-" + init.region + "-" + init.machine + "-" + batchId, "ingest_new_usage_record", messageToSend, new Callback<Integer>() {
-                  @Override
-                  public void success(Integer value) {
-
-                  }
-
-                  @Override
-                  public void failure(ErrorCodeException ex) {
-
-                  }
-                });
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-
-              }
-            });
-          }
-        } catch (Exception failedToDealWithBatch) {
-
-        }
-    */
-      }
-    };
+    MeteringBatchReady submitToAdama = init.em.makeMeteringBatchReady(billingDocumentFinder, init.publicKeyId);
 
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();

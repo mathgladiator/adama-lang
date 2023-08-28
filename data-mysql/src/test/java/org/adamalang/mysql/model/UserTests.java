@@ -14,6 +14,8 @@ import org.adamalang.mysql.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 public class UserTests {
 
   @Test
@@ -33,6 +35,10 @@ public class UserTests {
         Assert.assertEquals("XYZ", Users.getPaymentInfo(dataBase, 1));
         Assert.assertEquals(1, Users.countUsers(dataBase));
         Assert.assertEquals("{}", Users.getProfile(dataBase, 1));
+        List<Users.UserIdAndEmail> users = Users.listUsers(dataBase);
+        Assert.assertEquals(1, users.size());
+        Assert.assertEquals("x@x.com", users.get(0).email);
+        Assert.assertEquals(1, users.get(0).id);
         try {
           Users.getProfile(dataBase, 50);
           Assert.fail();
