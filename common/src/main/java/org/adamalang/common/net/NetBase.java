@@ -24,10 +24,7 @@ import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,7 +97,9 @@ public class NetBase {
         @Override
         public void operationComplete(ChannelFuture channelFuture) throws Exception {
           if (!channelFuture.isSuccess()) {
-            LOGGER.error("failed-connect({}) : {}", target, channelFuture.cause().getMessage());
+            if (!StartUp.hasRecentlyStartedUp()) {
+              LOGGER.error("failed-connect({}) : {}", target, channelFuture.cause().getMessage());
+            }
             lifecycle.failed(new ErrorCodeException(ErrorCodes.NET_CONNECT_FAILED_TO_CONNECT));
           }
         }
