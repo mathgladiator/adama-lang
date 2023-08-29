@@ -19,11 +19,13 @@ import java.util.Collection;
 
 /** ensures an instance is always alive by fetching plans... on demand  */
 public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFactory, Undeploy, Deploy {
+  private final DeploymentMetrics metrics;
   private final DeploymentFactoryBase base;
   private final PlanFetcher fetcher;
   private final DeploySync sync;
 
-  public OndemandDeploymentFactoryBase(DeploymentFactoryBase base, PlanFetcher fetcher, DeploySync sync) {
+  public OndemandDeploymentFactoryBase(DeploymentMetrics metrics, DeploymentFactoryBase base, PlanFetcher fetcher, DeploySync sync) {
+    this.metrics = metrics;
     this.base = base;
     this.fetcher = fetcher;
     this.sync = sync;
@@ -32,9 +34,11 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
   @Override
   public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
     if (base.contains(key.space)) {
+      metrics.deploy_cache_hit.run();
       base.fetch(key, callback);
     } else {
-      fetcher.find(key.space, new Callback<>() {
+      metrics.deploy_cache_miss.run();
+      fetcher.find(key.space, metrics.deploy_plan_fetch.wrap(new Callback<>() {
         @Override
         public void success(DeploymentBundle bundle) {
           try {
@@ -50,13 +54,13 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
         public void failure(ErrorCodeException ex) {
           callback.failure(ex);
         }
-      });
+      }));
     }
   }
 
   @Override
   public void deploy(String space, Callback<Void> callback) {
-    fetcher.find(space, new Callback<DeploymentBundle>() {
+    fetcher.find(space, metrics.deploy_plan_push.wrap(new Callback<DeploymentBundle>() {
       @Override
       public void success(DeploymentBundle bundle) {
         try {
@@ -72,12 +76,13 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
       }
-    });
+    }));
   }
 
   @Override
   public void undeploy(String space) {
     base.undeploy(space);
+    metrics.deploy_undo.run();
   }
 
   @Override

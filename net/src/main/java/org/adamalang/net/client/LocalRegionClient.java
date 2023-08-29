@@ -71,7 +71,6 @@ public class LocalRegionClient {
     return router.engine;
   }
 
-  @Deprecated
   public void getDeploymentTargets(String space, Consumer<String> stream) {
     router.engine.list(space, targets -> clientFinder.findCapacity(targets, (set) -> {
       for (String target : set) {

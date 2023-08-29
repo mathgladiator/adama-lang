@@ -29,10 +29,13 @@ import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
 import org.adamalang.mysql.impl.GlobalFinder;
+import org.adamalang.mysql.impl.GlobalPlanFetcher;
 import org.adamalang.mysql.model.*;
 import org.adamalang.runtime.data.BoundLocalFinderService;
+import org.adamalang.runtime.deploy.DeploySync;
+import org.adamalang.runtime.deploy.DeploymentMetrics;
+import org.adamalang.runtime.deploy.OndemandDeploymentFactoryBase;
 import org.adamalang.runtime.sys.capacity.MachinePicker;
-import org.adamalang.ops.*;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
@@ -108,7 +111,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   private final CountDownLatch threadDeath;
   private final WebClientBase webBase;
   private final KeyPair hostKeyPair;
-  public final DeploymentAgent deploymentAgent;
+
   public final CapacityAgent capacityAgent;
   public final File caravanPath;
   public final MockPostDocumentDelete delete;
@@ -219,22 +222,32 @@ public class TestFrontEnd implements AutoCloseable, Email {
     flusher.start();
 
     deploymentFactoryBase = new DeploymentFactoryBase();
-    ProxyDeploymentFactory proxyDeploymentFactory = new ProxyDeploymentFactory(deploymentFactoryBase);
+    // TODO: test the
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, new GlobalPlanFetcher(dataBase, masterKey), new DeploySync() {
+      @Override
+      public void watch(String space) {
+
+      }
+
+      @Override
+      public void unwatch(String space) {
+
+      }
+    });
+
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     coreService =
         new CoreService(
             new CoreMetrics(new NoOpMetricsFactory()),
-            proxyDeploymentFactory, //
+            ondemand, //
             meteringPubSub.publisher(), //
             dataService, //
             TimeSource.REAL_TIME,
             1);
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
-    this.deploymentAgent = new DeploymentAgent(this.clientExecutor, dataBase, new DeploymentMetrics(new NoOpMetricsFactory()), "test-region", identity.ip + ":" + port, deploymentFactoryBase, coreService, masterKey);
-    proxyDeploymentFactory.setAgent(deploymentAgent);
     BoundLocalFinderService finder = new BoundLocalFinderService(this.clientExecutor, globalFinder, "test-region", identity.ip + ":" + port);
-    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, finder, deploymentAgent, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(), 1800000L, new MeteringBatchReady() {
+    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, finder, ondemand, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(), 1800000L, new MeteringBatchReady() {
       @Override
       public void init(DiskMeteringBatchMaker me) {
 
@@ -287,7 +300,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         ex.printStackTrace();
       }
     });
-    backendNexus.capacityRequestor.requestCodeDeployment("ide", Callback.DONT_CARE_VOID);
+    backendNexus.deployer.deploy("ide", Callback.DONT_CARE_VOID);
     do {
       System.err.println("Waiting for routing table to be built...");
       router.engine.get(new Key("ide", "default"), new RoutingCallback() {

@@ -251,7 +251,7 @@
 
     <arg-definition name="imports" type="string" short="i">
         <documentation>
-            Placeholder
+            A directory containing adama files to import into the main
         </documentation>
     </arg-definition>
 
@@ -490,7 +490,7 @@
             </documentation>
             <arg name="output" />
             <arg name="main" />
-            <arg name="imports" default="imports" />
+            <arg name="imports" default="backend" />
         </command>
 
         <command name="compile-file">
@@ -498,7 +498,7 @@
                 Compiles the adama file and shows any problems
             </documentation>
             <arg name="file" />
-            <arg name="imports" default="imports" />
+            <arg name="imports" default="backend" />
             <arg name="dump-to" default="null" />
         </command>
 
@@ -507,7 +507,7 @@
                 Compiles the adama file and dumps the reflection json
             </documentation>
             <arg name="file" />
-            <arg name="imports" default="imports" />
+            <arg name="imports" default="backend" />
             <arg name="dump-to" default="null" />
         </command>
 

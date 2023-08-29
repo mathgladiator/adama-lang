@@ -11,6 +11,8 @@ package org.adamalang.runtime.sys;
 import org.adamalang.common.AwaitHelper;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.data.FinderService;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.runtime.sys.capacity.CapacityOverseer;
@@ -57,5 +59,33 @@ public class ServiceBoot {
       }
     });
     AwaitHelper.block(latch, deployBootTimeMilliseconds + 250);
+  }
+
+  /** [async-optimistic] initialize documents on the host */
+  public static void startup(FinderService finder, CoreService service) {
+    finder.list(new Callback<List<Key>>() {
+      @Override
+      public void success(List<Key> keys) {
+        for (Key key : keys) {
+          service.startupLoad(key);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.exit(-1);
+      }
+    });
+    finder.listDeleted(new Callback<List<Key>>() {
+      @Override
+      public void success(List<Key> value) {
+        // TODO: re-issue a delete
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
   }
 }

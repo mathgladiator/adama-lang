@@ -55,7 +55,7 @@ public class Kickstarter {
     downloadAdama(new File(spaceDir, "backend.adama"));
     downloadRxHTML(new File(frontendDir, "initial.rx.html"));
     Files.writeString(new File(backendDir, ".gitkeep").toPath(), "");
-    String gitignore = "logs\n" + "node_modules\n" + "plan.json\n" + "caravan\n" + "cloud\n" + "css.freq.json\n" + "summary.html";
+    String gitignore = "logs\nnode_modules\nplan.json\nfrontend.rx.html\ncaravan\ncloud\ncss.freq.json\nsummary.html\n";
     Files.writeString(new File(spaceDir, ".gitkeep").toPath(), gitignore);
     String verse = "{\n  \"documents\":[\n" //
        + "    {\"space\": \"" + space + "\", \"key\":\"demo\", \"domain\":true}\n" //
@@ -65,12 +65,39 @@ public class Kickstarter {
     Files.writeString(new File(spaceDir, "local.verse.json").toPath(), Json.parseJsonObject(verse).toPrettyString());
     StringBuilder readme = new StringBuilder();
     readme.append("README\n");
-    readme.append("--------");
-    readme.append("This command will (assuming you have adama.jar in your home directory) start the adama devbox where you just need to go to http://localhost:8080\n\n");
+    readme.append("--------\n");
+    readme.append("# Local Development \n");
+    readme.append("This command will (assuming you have adama.jar in your home directory). You can start the adama devbox where you just need to go to http://localhost:8080 to test the application. Running this in this path will start the devbox.\n\n");
     readme.append("```sh\n");
     readme.append("java -jar ~/adama.jar frontend dev-server\n");
     readme.append("```\n");
+    readme.append("# Production Backend \n");
+    readme.append("Now, Deploying backend changes requires first bundling up the backend.adama and backend/*.adama via\n");
+    readme.append("```sh\n");
+    readme.append("java -jar ~/adama.jar code bundle-plan --main backend.adama -o plan.json --imports backend\n");
+    readme.append("```\n");
+    readme.append("Now, deploy the plan\n");
+    readme.append("```sh\n");
+    readme.append("java -jar ~/adama.jar space deploy --space " + space + " --plan plan.json\n");
+    readme.append("```\n");
+    readme.append("You may keep or delete the created plan.json file.\n\n");
+    readme.append("# Production Frontend \n");
+    readme.append("Deploying frontend changes requires bundling all the *.rx.html files from the frontend directory via:\n");
+    readme.append("```sh\n");
+    readme.append("java -jar ~/adama.jar frontend bundle\n");
+    readme.append("```\n");
+    readme.append("Now, deploy the frontend via:\n");
+    readme.append("```sh\n");
+    readme.append("java -jar ~/adama.jar spaces set-rxhtml --space " + space + "--file frontend.rx.html\n");
+    readme.append("```\n");
+    readme.append("You may keep or delete the created frontend.rx.html file. ");
+    readme.append("Changes are available via https://" + space + ".adama.games (usually after a minute for various caches to expire)\n\n");
+    readme.append("\n");
     Files.writeString(new File(spaceDir, "README.md").toPath(), readme.toString());
+    System.out.println("Directory '" + Util.prefix(space, Util.ANSI.Cyan) + "' was created which contains a useful README.md\n");
+    System.out.println("Your app is available online at https://" + space + ".adama.games/ \n");
+    System.out.println(Util.prefix("Thank you for using Adama", Util.ANSI.Green));
+    System.out.println();
   }
 
   public void downloadAdama(File backendAdama) {
@@ -142,7 +169,8 @@ public class Kickstarter {
         System.out.println();
         continue;
       }
-      System.out.println("OK, the space name looks good! Let's see if it is globally unique by talking to the platform. Beep Blop...");
+      System.out.println();
+      System.out.println("OK, the space name looks good! Let's see if it is globally unique by talking to the platform...");
       ObjectNode request = Json.newJsonObject();
       request.put("method", "space/create");
       request.put("identity", identity);
@@ -153,7 +181,9 @@ public class Kickstarter {
       request.put("template", template);
       try {
         connection.execute(request);
+        System.out.println();
         System.out.println(Util.prefix("Space created!", Util.ANSI.Green));
+        System.out.println();
         return;
       } catch (Exception ex) {
         if (ex instanceof ErrorCodeException) {

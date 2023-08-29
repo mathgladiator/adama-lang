@@ -28,8 +28,9 @@ import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.server.ServerMetrics;
+import org.adamalang.region.AdamaDeploymentSyncMetrics;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
-import org.adamalang.ops.DeploymentMetrics;
+import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.services.FirstPartyMetrics;
@@ -85,6 +86,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new CoreMetrics(metricsFactory);
     metricsFactory.page("deploy", "Deploy");
     new DeploymentMetrics(metricsFactory);
+    new AdamaDeploymentSyncMetrics(metricsFactory);
     metricsFactory.page("capacity", "Capacity");
     new CapacityMetrics(metricsFactory);
     metricsFactory.page("database", "Database");

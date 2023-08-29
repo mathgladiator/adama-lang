@@ -14,10 +14,12 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.region.AdamaDeploymentSync;
+import org.adamalang.region.AdamaDeploymentSyncMetrics;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.deploy.Deploy;
+import org.adamalang.runtime.deploy.Undeploy;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.web.client.WebClientBase;
@@ -48,8 +50,9 @@ public class DevBoxStart {
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
     MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
     SelfClient production = new SelfClient(productionPool);
-    AdamaDeploymentSync sync = new AdamaDeploymentSync(production, offload, developerIdentity, new Deploy() {
+    AdamaDeploymentSync sync = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(new NoOpMetricsFactory()), production, offload, developerIdentity, new Deploy() {
       private HashSet<String> ignoredFirst = new HashSet<>();
+
       @Override
       public void deploy(String space, Callback<Void> callback) {
         if (ignoredFirst.contains(space)) {
@@ -57,6 +60,11 @@ public class DevBoxStart {
         } else {
           ignoredFirst.add(space);
         }
+      }
+    }, new Undeploy() {
+      @Override
+      public void undeploy(String space) {
+
       }
     });
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {

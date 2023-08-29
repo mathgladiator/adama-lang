@@ -632,10 +632,8 @@ public class ErrorTable {
     descriptions.put(999619, "no description of error (yet)");
     names.put(973020, "FRONTEND_NO_DOMAIN_MAPPING");
     descriptions.put(973020, "no description of error (yet)");
-    names.put(909532, "FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP_GET");
+    names.put(909532, "FRONTEND_IP_DONT_RESOLVE");
     descriptions.put(909532, "no description of error (yet)");
-    names.put(979194, "FRONTEND_UNKNOWN_EXCEPTION_DOMAIN_LOOKUP_POST");
-    descriptions.put(979194, "no description of error (yet)");
     names.put(917740, "FRONTEND_SECRETS_SIGNING_EXCEPTION");
     descriptions.put(917740, "no description of error (yet)");
     names.put(999675, "FRONTEND_POST_NO_HOST");

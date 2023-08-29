@@ -18,19 +18,23 @@ import org.slf4j.LoggerFactory;
 public class TriggerDeployment implements Callback<Void>, DeploymentMonitor {
   private static Logger LOG = LoggerFactory.getLogger(TriggerDeployment.class);
   private final CoreService service;
+  private final Callback<Void> other;
 
-  public TriggerDeployment(CoreService service) {
+  public TriggerDeployment(CoreService service, Callback<Void> other) {
     this.service = service;
+    this.other = other;
   }
 
   @Override
   public void success(Void value) {
     this.service.deploy(this);
+    this.other.success(value);
   }
 
   @Override
   public void failure(ErrorCodeException ex) {
     witnessException(ex);
+    other.failure(ex);
   }
 
   @Override

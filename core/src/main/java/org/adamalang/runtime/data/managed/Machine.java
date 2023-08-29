@@ -256,7 +256,11 @@ public class Machine {
                 failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_WRONG_MACHINE));
               }
             } else {
-              find_Restore(found.archiveKey);
+              if (lastArchiveKey == null) {
+                failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_NULL_ARCHIVE, key.space + "/" + key.key));
+              } else {
+                find_Restore(lastArchiveKey);
+              }
             }
           }
         });

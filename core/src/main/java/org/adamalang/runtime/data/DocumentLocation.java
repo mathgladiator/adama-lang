@@ -22,7 +22,7 @@ public class DocumentLocation {
     this.location = location;
     this.region = region;
     this.machine = machine;
-    this.archiveKey = archiveKey;
+    this.archiveKey = "".equals(archiveKey) ? null : archiveKey;
     this.deleted = deleted;
   }
 }
