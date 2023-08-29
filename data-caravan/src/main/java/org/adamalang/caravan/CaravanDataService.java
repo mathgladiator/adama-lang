@@ -256,7 +256,7 @@ public class CaravanDataService implements ArchivingDataService {
 
             @Override
             public void failure(ErrorCodeException ex) {
-              LOGGER.error("caravan-failure-load", ex);
+              LOGGER.error("caravan-failure-load:" + ex.code + "/msg=" + ex.getMessage());
               callback.failure(ex);
             }
           });
@@ -275,7 +275,7 @@ public class CaravanDataService implements ArchivingDataService {
           LocalCache builder = this;
           LocalDocumentChange result = builder.build();
           if (result == null) {
-            callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
+            callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED, "failed:" + key.space + "/" + key.key));
             return;
           }
           executor.execute(new NamedRunnable("commit-cache") {

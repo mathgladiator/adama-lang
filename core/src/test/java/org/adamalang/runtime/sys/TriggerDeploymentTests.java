@@ -8,6 +8,7 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
@@ -30,7 +31,7 @@ public class TriggerDeploymentTests {
     MockInstantDataService dataService = new MockInstantDataService();
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {
     }, dataService, time, 3);
-    TriggerDeployment td = new TriggerDeployment(service);
+    TriggerDeployment td = new TriggerDeployment(service, Callback.DONT_CARE_VOID);
     td.success(null);
     td.finished(100);
     td.bumpDocument(true);

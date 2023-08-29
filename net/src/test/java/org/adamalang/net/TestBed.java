@@ -19,6 +19,7 @@ import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.finder.MockFinderService;
 import org.adamalang.runtime.data.BoundLocalFinderService;
+import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.NaughyHandler;
@@ -116,9 +117,9 @@ public class TestBed implements AutoCloseable {
     });
     finderService = new MockFinderService("the-machine");
     BoundLocalFinderService finder = new BoundLocalFinderService(this.clientExecutor, finderService, "the-region", "the-machine");
-    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, finder, new LocalCapacityRequestor() {
+    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, finder, new Deploy() {
       @Override
-      public void requestCodeDeployment(String space, Callback<Void> callback) {
+      public void deploy(String space, Callback<Void> callback) {
         if (deploymentScans.incrementAndGet() == 3) {
           callback.failure(new ErrorCodeException(-13));
           return;

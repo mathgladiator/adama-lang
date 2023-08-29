@@ -19,7 +19,13 @@ import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.internal.InternalSigner;
+import org.adamalang.region.AdamaDeploymentSync;
+import org.adamalang.runtime.contracts.PlanFetcher;
+import org.adamalang.runtime.deploy.DelayedDeploy;
+import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.deploy.OndemandDeploymentFactoryBase;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.TriggerDeployment;
 import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
@@ -60,6 +66,7 @@ public class EveryMachine {
   public final MultiWebClientRetryPool regionPool;
   public final Engine engine;
   public final SelfClient adamaCurrentRegionClient;
+  public final String regionalIdentity;
 
   public EveryMachine(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -68,6 +75,7 @@ public class EveryMachine {
       configObjectForWeb.intOf("http-port", 8081);
     }
     String identityFileName = config.get_string("identity-filename", "me.identity");
+    this.regionalIdentity = config.get_string("regional-identity", null);
     this.identity = MachineIdentity.fromFile(identityFileName);
     KeyPair keyPair = PublicKeyCodec.inventHostKey();
     this.hostKey = keyPair.getPrivate();
@@ -87,7 +95,8 @@ public class EveryMachine {
     this.webBase = new WebClientBase(this.webConfig);
 
     this.regionClient = SimpleExecutor.create("region-client");
-    this.regionPool =  new MultiWebClientRetryPool(this.regionClient, webBase, new MultiWebClientRetryPoolMetrics(metricsFactory), new MultiWebClientRetryPoolConfig(new ConfigObject(config.get_or_create_child("http-web"))), ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
+    String selfEndpoint = "wss://aws-us-east-2.adama-platform.com/~s";
+    this.regionPool =  new MultiWebClientRetryPool(this.regionClient, webBase, new MultiWebClientRetryPoolMetrics(metricsFactory), new MultiWebClientRetryPoolConfig(new ConfigObject(config.get_or_create_child("http-web"))), ConnectionReady.TRIVIAL, selfEndpoint);
     this.adamaCurrentRegionClient = new SelfClient(regionPool);
 
     this.logsPrefix = role.name + "/" + identity.ip + "/" + monitoringPort;

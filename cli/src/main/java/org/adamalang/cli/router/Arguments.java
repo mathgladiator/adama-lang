@@ -1623,7 +1623,7 @@ public class Arguments {
 		public Config config;
 		public String output;
 		public String main;
-		public String imports = "imports";
+		public String imports = "backend";
 		public static CodeBundlePlanArgs from(String[] args, int start) {
 			CodeBundlePlanArgs returnArgs = new CodeBundlePlanArgs();
 			try {
@@ -1701,13 +1701,13 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 			System.out.println("    " + Util.prefix("-m, --main", Util.ANSI.Green) + " " + Util.prefix("<main>", Util.ANSI.White) + " : The main/primary adama file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : A directory containing adama files to import into the main");
 		}
 	}
 	public static class CodeCompileFileArgs {
 		public Config config;
 		public String file;
-		public String imports = "imports";
+		public String imports = "backend";
 		public String dumpTo = null;
 		public static CodeCompileFileArgs from(String[] args, int start) {
 			CodeCompileFileArgs returnArgs = new CodeCompileFileArgs();
@@ -1784,7 +1784,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : A directory containing adama files to import into the main");
 			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
@@ -1913,7 +1913,7 @@ public class Arguments {
 	public static class CodeReflectDumpArgs {
 		public Config config;
 		public String file;
-		public String imports = "imports";
+		public String imports = "backend";
 		public String dumpTo = null;
 		public static CodeReflectDumpArgs from(String[] args, int start) {
 			CodeReflectDumpArgs returnArgs = new CodeReflectDumpArgs();
@@ -1990,7 +1990,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : Placeholder");
+			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : A directory containing adama files to import into the main");
 			System.out.println("    " + Util.prefix("-d, --dump-to", Util.ANSI.Green) + " " + Util.prefix("<dump-to>", Util.ANSI.White) + " : Placeholder");
 		}
 	}

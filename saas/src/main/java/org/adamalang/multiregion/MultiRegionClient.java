@@ -63,11 +63,6 @@ public class MultiRegionClient {
     });
   }
 
-  public void deployCrossRegion(AuthenticatedUser who, String space) {
-    // TODO: find remote instances, and do a cross-region deployment...
-    // TODO: also have each Adama host periodically download all spaces, and check if a deployment is needed
-  }
-
   private <T> SelfClient remoteForRegion(String region, Callback<T> callback) {
     SelfClient client = remoteRegions.get(region);
     if (client == null) {

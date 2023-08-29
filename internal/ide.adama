@@ -51,6 +51,9 @@ record Presence {
 table<Presence> _presence;
 
 @connected {
+  if (@who.isAdamaHost()) {
+    return true;
+  }
   list<Presence> whom = (iterate _presence where who == @who);
   if (whom.size() == 0) {
     _presence <- {who:@who, active:true};

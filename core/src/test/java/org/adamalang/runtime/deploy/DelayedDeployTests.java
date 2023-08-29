@@ -9,6 +9,16 @@
 package org.adamalang.runtime.deploy;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.LivingDocumentTests;
+import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.mocks.MockInstantDataService;
+import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +26,14 @@ import java.util.ArrayList;
 
 public class DelayedDeployTests {
   @Test
-  public void flow() {
+  public void flow() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile("", Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(new CoreMetrics(new NoOpMetricsFactory()), factoryFactory, (bill) -> {}, dataService, time, 3);
+
     DelayedDeploy dd = new DelayedDeploy();
     dd.deploy("space", Callback.DONT_CARE_VOID);
     ArrayList<String> deployed = new ArrayList<>();
@@ -26,7 +43,7 @@ public class DelayedDeployTests {
         deployed.add(space);
         callback.success(null);
       }
-    });
+    }, service);
     Assert.assertEquals(1, deployed.size());
     dd.deploy("now", Callback.DONT_CARE_VOID);
     Assert.assertEquals(2, deployed.size());

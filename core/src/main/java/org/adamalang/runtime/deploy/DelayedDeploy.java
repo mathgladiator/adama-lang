@@ -9,15 +9,18 @@
 package org.adamalang.runtime.deploy;
 
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.TriggerDeployment;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** the cyclic reference for the binding of deployments to deployment */
 public class DelayedDeploy implements Deploy {
   private Deploy actual;
-
-  private ArrayList<Consumer<Deploy>> delayed;
+  private CoreService service;
+  private ArrayList<BiConsumer<Deploy, CoreService>> delayed;
 
   public DelayedDeploy() {
     this.actual = null;
@@ -27,16 +30,17 @@ public class DelayedDeploy implements Deploy {
   @Override
   public synchronized void deploy(String space, Callback<Void> callback) {
     if (this.actual == null) {
-      delayed.add((d) -> d.deploy(space, callback));
+      delayed.add((d, s) -> d.deploy(space, new TriggerDeployment(service, callback)));
     } else {
-      this.actual.deploy(space, callback);
+      this.actual.deploy(space, new TriggerDeployment(service, callback));
     }
   }
 
-  public synchronized void set(Deploy deploy) {
+  public synchronized void set(Deploy deploy, CoreService service) {
     this.actual = deploy;
-    for (Consumer<Deploy> c : delayed) {
-      c.accept(actual);
+    this.service = service;
+    for (BiConsumer<Deploy, CoreService> c : delayed) {
+      c.accept(actual, service);
     }
     delayed = null;
   }

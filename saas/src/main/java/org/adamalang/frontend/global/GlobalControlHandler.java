@@ -581,7 +581,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
           @Override
           public void success(Integer value) {
             nexus.adama.deployLocal(request.space);
-            nexus.adama.deployCrossRegion(request.who, request.space);
             nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
               if (found) {
                 responder.complete();

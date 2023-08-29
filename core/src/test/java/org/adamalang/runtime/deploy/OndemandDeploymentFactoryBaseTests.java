@@ -10,6 +10,7 @@ package org.adamalang.runtime.deploy;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.PlanFetcher;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -30,7 +31,7 @@ public class OndemandDeploymentFactoryBaseTests {
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
-    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
       @Override
       public void find(String space, Callback<DeploymentBundle> callback) {
         Assert.assertEquals("space", space);
@@ -90,7 +91,7 @@ public class OndemandDeploymentFactoryBaseTests {
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
-    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
       @Override
       public void find(String space, Callback<DeploymentBundle> callback) {
         Assert.assertEquals("space", space);
@@ -147,7 +148,7 @@ public class OndemandDeploymentFactoryBaseTests {
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
-    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
       @Override
       public void find(String space, Callback<DeploymentBundle> callback) {
         Assert.assertEquals("space", space);
@@ -178,7 +179,7 @@ public class OndemandDeploymentFactoryBaseTests {
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
-    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
       @Override
       public void find(String space, Callback<DeploymentBundle> callback) {
         Assert.assertEquals("space", space);
@@ -208,7 +209,7 @@ public class OndemandDeploymentFactoryBaseTests {
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
-    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(base, new PlanFetcher() {
+    OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
       @Override
       public void find(String space, Callback<DeploymentBundle> callback) {
         callback.failure(new ErrorCodeException(123));

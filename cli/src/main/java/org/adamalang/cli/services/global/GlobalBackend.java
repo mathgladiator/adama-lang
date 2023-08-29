@@ -12,7 +12,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
 import org.adamalang.cli.services.common.EveryMachine;
 import org.adamalang.common.TimeSource;
-import org.adamalang.ops.DeploymentMetrics;
+import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
