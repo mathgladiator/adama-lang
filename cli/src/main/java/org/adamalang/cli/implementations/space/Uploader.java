@@ -60,6 +60,14 @@ public class Uploader {
     }
   }
 
+  private static boolean hasRemoteListing(ObjectNode ideDoc) {
+    try {
+      return ideDoc.get("delta").has("data");
+    } catch (Exception ex) {
+      return false;
+    }
+  }
+
   private static HashMap<String, NtAsset> buildRemoteListing(ObjectNode ideDoc) {
     HashMap<String, NtAsset> remote = new HashMap<>();
     try {
@@ -127,6 +135,10 @@ public class Uploader {
         BlockingDeque<Connection.IdObject> ideQueue = connection.stream_queue(start);
         Connection.IdObject first = ideQueue.take();
         ObjectNode ideDoc = first.node();
+        if (!hasRemoteListing(ideDoc)) { // skip the view filter update
+          first = ideQueue.take();
+          ideDoc = first.node();
+        }
         try {
           HashMap<String, NtAsset> remote = buildRemoteListing(ideDoc);
 
