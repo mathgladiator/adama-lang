@@ -3,6 +3,7 @@
   create {
     return @who.isAdamaDeveloper();
   }
+  maximum_history = 250;
 }
 
 public principal owner;
