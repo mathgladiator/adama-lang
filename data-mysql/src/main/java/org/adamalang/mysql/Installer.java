@@ -122,7 +122,7 @@ public class Installer {
             "  `owner` INT(4) UNSIGNED NOT NULL," + //
             "  `name` VARCHAR(128) NOT NULL," + //
             "  `enabled` BOOLEAN DEFAULT TRUE," + //
-            "  `storage_bytes` INT(8) DEFAULT 0," + //
+            "  `storage_bytes` BIGINT DEFAULT 0," + //
             "  `unbilled_storage_bytes_hours` BIGINT DEFAULT 0," + // TOKILL
             "  `unbilled_bandwidth_hours` BIGINT DEFAULT 0," + // TOKILL
             "  `unbilled_first_party_service_calls` INT(4) DEFAULT 0," + // TOKILL
