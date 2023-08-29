@@ -47,7 +47,11 @@ public class SimpleFinderCallback implements Callback<DocumentLocation> {
     Assert.assertTrue(success);
     Assert.assertEquals(location, value.location);
     Assert.assertEquals(machine, value.machine);
-    Assert.assertEquals(archiveKey, value.archiveKey);
+    if ("".equals(archiveKey) || archiveKey == null) {
+      Assert.assertNull(value.archiveKey);
+    } else {
+      Assert.assertEquals(archiveKey, value.archiveKey);
+    }
   }
 
   public long assertSuccessAndGetId() {
