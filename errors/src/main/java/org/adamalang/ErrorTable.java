@@ -859,6 +859,8 @@ public class ErrorTable {
     descriptions.put(799836, "no description of error (yet)");
     names.put(735344, "MANAGED_STORAGE_WRONG_MACHINE");
     descriptions.put(735344, "no description of error (yet)");
+    names.put(778433, "MANAGED_STORAGE_NULL_ARCHIVE");
+    descriptions.put(778433, "no description of error (yet)");
     names.put(734320, "MANAGED_STORAGE_WRITE_FAILED_CLOSED");
     descriptions.put(734320, "no description of error (yet)");
     names.put(768112, "MANAGED_STORAGE_READ_FAILED_CLOSED");

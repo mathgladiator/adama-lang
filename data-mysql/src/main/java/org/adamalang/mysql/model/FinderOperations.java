@@ -9,6 +9,7 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.contracts.SQLConsumer;
 import org.adamalang.mysql.data.DocumentIndex;
 import org.adamalang.mysql.data.GCTask;
 import org.adamalang.runtime.data.LocationType;
@@ -17,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 /** operations on the directory */
 public class FinderOperations {
@@ -24,11 +26,22 @@ public class FinderOperations {
   public static HashMap<String, Long> inventoryStorage(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
       HashMap<String, Long> bytes = new HashMap<>();
-      String sql = "SELECT `space`, SUM(delta_bytes), SUM(asset_bytes) FROM `" + dataBase.databaseName + //
-          "`.`directory` GROUP BY `space`";
-      DataBase.walk(connection, (rs) -> {
-        bytes.put(rs.getString(1), rs.getLong(2) + rs.getLong(3));
-      }, sql);
+      SQLConsumer add = (rs) -> {
+        String space = rs.getString(1);
+        long controlStorage = rs.getLong(2);
+        Long prior = bytes.get(space);
+        if (prior == null) {
+          bytes.put(space, controlStorage);
+        } else {
+          bytes.put(space, prior + controlStorage);
+        }
+      };
+      String sqlData = "SELECT `space`, SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` != 'ide' GROUP BY `space`";
+      DataBase.walk(connection, add, sqlData);
+      String sqlStaticAssets = "SELECT `key`,SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` = 'ide' GROUP BY `space`";
+      DataBase.walk(connection, add, sqlStaticAssets);
+      String sqlControl = "SELECT `name`, IF(`plan` IS NULL, 0, LENGTH(`plan`)) + IF(`rxhtml` IS NULL, 0, LENGTH(`rxhtml`)) as `bytes` FROM `" + dataBase.databaseName + "`.`spaces`;";
+      DataBase.walk(connection, add, sqlControl);
       return bytes;
     });
   }

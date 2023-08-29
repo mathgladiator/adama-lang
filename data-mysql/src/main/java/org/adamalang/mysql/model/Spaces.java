@@ -31,6 +31,18 @@ public class Spaces {
     });
   }
 
+  public static void setSpaceStorage(DataBase dataBase, String space, long storageBytes) throws Exception {
+    dataBase.transactSimple((connection) -> {
+      String sqlUpdateSpace = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `storage_bytes`=? WHERE `name`=? LIMIT 1";
+      try (PreparedStatement statementUpdateSpace = connection.prepareStatement(sqlUpdateSpace)) {
+        statementUpdateSpace.setLong(1, storageBytes);
+        statementUpdateSpace.setString(2, space);
+        statementUpdateSpace.execute();
+      }
+      return null;
+    });
+  }
+
   public static Integer getLatestBillingHourCode(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sqlTestWater = "SELECT `latest_billing_hour` FROM `" + dataBase.databaseName + "`.`spaces` ORDER BY `latest_billing_hour` DESC LIMIT 1";

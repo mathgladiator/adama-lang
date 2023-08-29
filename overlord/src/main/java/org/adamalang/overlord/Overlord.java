@@ -13,6 +13,7 @@ import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.impl.GlobalBillingDocumentFinder;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.roles.*;
@@ -39,6 +40,8 @@ public class Overlord {
 
       // start doing the accounting work
       GlobalHourlyAccountant.kickOff(metrics, client, dataBase, handler);
+
+      GlobalStorageReporter.kickOff(metrics, client, dataBase, new GlobalBillingDocumentFinder(dataBase));
     }
 
     // detect dead things

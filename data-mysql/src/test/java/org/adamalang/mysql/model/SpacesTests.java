@@ -31,6 +31,7 @@ public class SpacesTests {
         int bob = Users.createUserId(dataBase, "bob@x.com");
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
+        Spaces.setSpaceStorage(dataBase, "space1", 456);
         try {
           Spaces.getRxHtml(dataBase, 1);
         } catch (ErrorCodeException ex) {
@@ -77,6 +78,7 @@ public class SpacesTests {
           Assert.assertEquals(1, ls2.size());
           Assert.assertEquals("space1", ls1.get(0).name);
           Assert.assertEquals("space2", ls2.get(0).name);
+          Assert.assertEquals(456, ls1.get(0).storageBytes);
           Assert.assertEquals("owner", ls1.get(0).callerRole);
           Assert.assertEquals("owner", ls2.get(0).callerRole);
         }
