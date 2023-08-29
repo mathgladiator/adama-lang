@@ -63,6 +63,7 @@ public class AdamaDeploymentSync implements DeploySync {
       callbackWrite = metrics.adamasync_connected.wrap(new Callback<SelfClient.DocumentStreamHandler>() {
         @Override
         public void success(SelfClient.DocumentStreamHandler value) {
+          monitor.progress();
           executor.execute(new NamedRunnable("set-handler") {
             @Override
             public void execute() throws Exception {
@@ -103,7 +104,6 @@ public class AdamaDeploymentSync implements DeploySync {
 
         @Override
         public void complete() {
-          monitor.progress();
           monitor.finish();
         }
 
@@ -114,7 +114,6 @@ public class AdamaDeploymentSync implements DeploySync {
             unwatch(space);
             return;
           }
-          monitor.progress();
           monitor.failure(ex.code);
           backoff = (int) Math.min(5000, backoff * (1 + Math.random()));
           executor.execute(new NamedRunnable("deploymentsync-failed") {
