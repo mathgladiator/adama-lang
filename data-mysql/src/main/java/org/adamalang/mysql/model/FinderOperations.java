@@ -38,7 +38,7 @@ public class FinderOperations {
       };
       String sqlData = "SELECT `space`, SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` != 'ide' GROUP BY `space`";
       DataBase.walk(connection, add, sqlData);
-      String sqlStaticAssets = "SELECT `key`,SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` = 'ide' GROUP BY `space`";
+      String sqlStaticAssets = "SELECT `key`,SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` = 'ide' GROUP BY `key`";
       DataBase.walk(connection, add, sqlStaticAssets);
       String sqlControl = "SELECT `name`, IF(`plan` IS NULL, 0, LENGTH(`plan`)) + IF(`rxhtml` IS NULL, 0, LENGTH(`rxhtml`)) as `bytes` FROM `" + dataBase.databaseName + "`.`spaces`;";
       DataBase.walk(connection, add, sqlControl);
