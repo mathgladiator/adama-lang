@@ -78,7 +78,6 @@ public class ClientCodec {
 
     public abstract void handle(StreamConnect payload);
 
-
     public abstract void handle(ScanDeployment payload);
 
     public abstract void handle(ReflectRequest payload);
@@ -655,7 +654,6 @@ public class ClientCodec {
     return o;
   }
 
-
   public static ScanDeployment read_ScanDeployment(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 8921:
@@ -999,7 +997,6 @@ public class ClientCodec {
     Helper.writeString(buf, o.ip);;
     Helper.writeString(buf, o.assetKey);;
   }
-
 
   public static void write(ByteBuf buf, ScanDeployment o) {
     if (o == null) {
