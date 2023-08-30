@@ -68,20 +68,6 @@ public class ServerMessage {
   public static class ScanDeploymentResponse {
   }
 
-  @TypeId(1246)
-  @Flow("Metering")
-  public static class MeteringBatchFound {
-    @FieldOrder(1)
-    public String id;
-    @FieldOrder(2)
-    public String batch;
-  }
-
-  @TypeId(1248)
-  @Flow("Metering")
-  public static class MeteringBatchRemoved {
-  }
-
   @TypeId(12546)
   @Flow("Document")
   public static class StreamStatus {

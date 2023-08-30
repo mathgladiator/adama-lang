@@ -31,8 +31,6 @@ import org.adamalang.net.codec.ClientMessage.StreamUpdate;
 import org.adamalang.net.codec.ClientMessage.StreamPassword;
 import org.adamalang.net.codec.ClientMessage.StreamSend;
 import org.adamalang.net.codec.ClientMessage.StreamConnect;
-import org.adamalang.net.codec.ClientMessage.MeteringDeleteBatch;
-import org.adamalang.net.codec.ClientMessage.MeteringBegin;
 import org.adamalang.net.codec.ClientMessage.ScanDeployment;
 import org.adamalang.net.codec.ClientMessage.ReflectRequest;
 import org.adamalang.net.codec.ClientMessage.DeleteRequest;
@@ -80,9 +78,6 @@ public class ClientCodec {
 
     public abstract void handle(StreamConnect payload);
 
-    public abstract void handle(MeteringDeleteBatch payload);
-
-    public abstract void handle(MeteringBegin payload);
 
     public abstract void handle(ScanDeployment payload);
 
@@ -164,12 +159,6 @@ public class ClientCodec {
         case 12345:
           handle(readBody_12345(buf, new StreamConnect()));
           return;
-        case 1245:
-          handle(readBody_1245(buf, new MeteringDeleteBatch()));
-          return;
-        case 1243:
-          handle(readBody_1243(buf, new MeteringBegin()));
-          return;
         case 8921:
           handle(readBody_8921(buf, new ScanDeployment()));
           return;
@@ -214,8 +203,6 @@ public class ClientCodec {
     public void handle(StreamPassword payload);
     public void handle(StreamSend payload);
     public void handle(StreamConnect payload);
-    public void handle(MeteringDeleteBatch payload);
-    public void handle(MeteringBegin payload);
     public void handle(ScanDeployment payload);
     public void handle(ReflectRequest payload);
     public void handle(DeleteRequest payload);
@@ -280,12 +267,6 @@ public class ClientCodec {
         return;
       case 12345:
         handler.handle(readBody_12345(buf, new StreamConnect()));
-        return;
-      case 1245:
-        handler.handle(readBody_1245(buf, new MeteringDeleteBatch()));
-        return;
-      case 1243:
-        handler.handle(readBody_1243(buf, new MeteringBegin()));
         return;
       case 8921:
         handler.handle(readBody_8921(buf, new ScanDeployment()));
@@ -674,32 +655,6 @@ public class ClientCodec {
     return o;
   }
 
-  public static MeteringDeleteBatch read_MeteringDeleteBatch(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 1245:
-        return readBody_1245(buf, new MeteringDeleteBatch());
-    }
-    return null;
-  }
-
-
-  private static MeteringDeleteBatch readBody_1245(ByteBuf buf, MeteringDeleteBatch o) {
-    o.id = Helper.readString(buf);
-    return o;
-  }
-
-  public static MeteringBegin read_MeteringBegin(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 1243:
-        return readBody_1243(buf, new MeteringBegin());
-    }
-    return null;
-  }
-
-
-  private static MeteringBegin readBody_1243(ByteBuf buf, MeteringBegin o) {
-    return o;
-  }
 
   public static ScanDeployment read_ScanDeployment(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -1045,22 +1000,6 @@ public class ClientCodec {
     Helper.writeString(buf, o.assetKey);;
   }
 
-  public static void write(ByteBuf buf, MeteringDeleteBatch o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(1245);
-    Helper.writeString(buf, o.id);;
-  }
-
-  public static void write(ByteBuf buf, MeteringBegin o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(1243);
-  }
 
   public static void write(ByteBuf buf, ScanDeployment o) {
     if (o == null) {

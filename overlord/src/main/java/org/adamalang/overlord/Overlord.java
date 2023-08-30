@@ -38,9 +38,6 @@ public class Overlord {
       // kick off the garbage collector to clean up documents
       GlobalGarbageCollector.kickOff(metrics, dataBase, lister, cloud, alive);
 
-      // start doing the accounting work
-      // GlobalHourlyAccountant.kickOff(metrics, client, dataBase, handler);
-
       GlobalStorageReporter.kickOff(metrics, client, dataBase, new GlobalBillingDocumentFinder(dataBase));
     }
 
@@ -49,9 +46,6 @@ public class Overlord {
 
     // do a round to reconcile storage
     ReconcileDirectoryVersusStorage.kickOff(dataBase, metrics, cloud);
-
-    // start aggregating bills from hosts and write them to database
-    // MeteringAggregator.kickOff(metrics, localClient, dataBase, handler);
 
     // make a table of a dump of all gossip
     GossipDumper.kickOff(metrics, engine, handler);

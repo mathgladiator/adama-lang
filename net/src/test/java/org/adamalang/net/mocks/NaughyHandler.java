@@ -273,43 +273,6 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
-  public void handle(ClientMessage.MeteringDeleteBatch payload) {
-    if (bits.fail) {
-      upstream.error(123456789);
-      return;
-    }
-
-    ByteBuf toWrite = upstream.create(4);
-    ServerCodec.write(toWrite, new ServerMessage.MeteringBatchRemoved());
-    upstream.next(toWrite);
-    // real.handle(payload);
-  }
-
-  boolean hasFakeBatch = true;
-
-  @Override
-  public void handle(ClientMessage.MeteringBegin payload) {
-    if (bits.fail) {
-      upstream.error(123456789);
-      return;
-    }
-
-    if (hasFakeBatch) {
-      hasFakeBatch = false;
-      ServerMessage.MeteringBatchFound found = new ServerMessage.MeteringBatchFound();
-      found.id = "fake-id";
-      found.batch = "fake-batch";
-      ByteBuf toWrite = upstream.create(found.id.length() + found.batch.length() + 8);
-      ServerCodec.write(toWrite, found);
-      upstream.next(toWrite);
-      return;
-    }
-
-
-    real.handle(payload);
-  }
-
-  @Override
   public void handle(ClientMessage.ScanDeployment payload) {
     if (bits.fail) {
       upstream.error(123456789);
