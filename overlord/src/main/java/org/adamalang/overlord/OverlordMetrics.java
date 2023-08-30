@@ -11,7 +11,6 @@ package org.adamalang.overlord;
 import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.mysql.model.metrics.MeteringMetrics;
 
 public class OverlordMetrics {
   public final Runnable targets_watcher_fired;
@@ -30,29 +29,7 @@ public class OverlordMetrics {
   public final Runnable reconcile_end_listing;
   public final Runnable reconcile_failed_listing;
 
-  public final Runnable capacity_monitor_sweep;
-  public final Runnable capacity_monitor_sweep_failed;
-  public final Runnable capacity_monitor_sweep_finished;
-  public final Runnable capacity_monitor_queue_space;
-  public final Runnable capacity_monitor_dequeue_space;
-  public final Runnable capacity_monitor_failed_space;
-  public final Runnable capacity_monitor_retry_space;
-
-  public final Runnable capacity_monitor_found_inconsistent_deployment;
-  public final Runnable capacity_monitor_fixed_inconsistent_deployment;
-  public final Runnable capacity_monitor_found_weak_space;
-
-  public final Runnable metering_fetch_found;
-  public final Runnable metering_fetch_saved;
-  public final Runnable metering_fetch_empty;
-  public final Runnable metering_fetch_failed;
-  public final Runnable metering_fetch_finished;
-
   public final Runnable gossip_dump;
-
-  public final Runnable accountant_task;
-
-  public final MeteringMetrics metering_metrics;
 
   public final Runnable delete_bot_wake;
   public final Runnable delete_bot_found;
@@ -83,28 +60,7 @@ public class OverlordMetrics {
     reconcile_end_listing = factory.counter("overlord_reconcile_end_listing");
     reconcile_failed_listing = factory.counter("overlord_reconcile_failed_listing");
 
-    capacity_monitor_sweep = factory.counter("capacity_monitor_sweep");
-    capacity_monitor_sweep_failed = factory.counter("capacity_monitor_sweep_failed");
-    capacity_monitor_sweep_finished = factory.counter("capacity_monitor_sweep_finished");
-    capacity_monitor_queue_space = factory.counter("capacity_monitor_queue_space");
-    capacity_monitor_dequeue_space = factory.counter("capacity_monitor_dequeue_space");
-    capacity_monitor_retry_space = factory.counter("capacity_monitor_retry_space");
-    capacity_monitor_failed_space = factory.counter("capacity_monitor_failed_space");
-    capacity_monitor_found_inconsistent_deployment = factory.counter("capacity_monitor_found_inconsistent_deployment");
-    capacity_monitor_fixed_inconsistent_deployment = factory.counter("capacity_monitor_fixed_inconsistent_deployment");
-    capacity_monitor_found_weak_space = factory.counter("capacity_monitor_found_weak_space");
-
-    metering_fetch_found = factory.counter("metering_fetch_found");
-    metering_fetch_saved = factory.counter("metering_fetch_saved");
-    metering_fetch_empty = factory.counter("metering_fetch_empty");
-    metering_fetch_failed = factory.counter("metering_fetch_failed");
-    metering_fetch_finished = factory.counter("metering_fetch_finished");
-
     gossip_dump = factory.counter("gossip_dump");
-
-    accountant_task = factory.counter("accountant_task");
-
-    metering_metrics = new MeteringMetrics(factory);
 
     delete_bot_wake = factory.counter("delete_bot_wake");
     delete_bot_found = factory.counter("delete_bot_found");
