@@ -36,7 +36,7 @@ public class WebClientBaseTests {
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
-    WebClientBase clientBase = new WebClientBase(webConfig);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
     try {
       AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
       CountDownLatch connectedLatch = new CountDownLatch(1);
@@ -100,7 +100,7 @@ public class WebClientBaseTests {
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
-    WebClientBase clientBase = new WebClientBase(webConfig);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
     try {
       AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
       CountDownLatch connectedLatch = new CountDownLatch(1);
@@ -145,7 +145,7 @@ public class WebClientBaseTests {
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
-    WebClientBase clientBase = new WebClientBase(webConfig);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
     try {
       AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
       CountDownLatch connectedLatch = new CountDownLatch(1);
@@ -192,7 +192,7 @@ public class WebClientBaseTests {
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
-    WebClientBase clientBase = new WebClientBase(webConfig);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
     try {
       AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
       CountDownLatch connectedLatch = new CountDownLatch(1);
@@ -252,7 +252,7 @@ public class WebClientBaseTests {
   @Test
   public void nope() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest4);
-    WebClientBase clientBase = new WebClientBase(webConfig);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
     try {
       AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
       CountDownLatch failure = new CountDownLatch(1);

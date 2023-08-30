@@ -11,8 +11,6 @@ package org.adamalang.caravan;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
@@ -20,8 +18,6 @@ import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.ManagedDataService;
 import org.adamalang.runtime.data.PostDocumentDelete;
 import org.adamalang.runtime.data.managed.Base;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** booting a production caravan data service */
 public class CaravanBoot {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CaravanBoot.class);
   private final SimpleExecutor caravanExecutor;
   private final SimpleExecutor managedExecutor;
   public final ManagedDataService service;
@@ -51,23 +46,8 @@ public class CaravanBoot {
     Base managedBase = new Base(finder, caravanDataService, delete, region, machine, managedExecutor, 2 * 60 * 1000);
     this.service = new ManagedDataService(managedBase);
     this.flusher = new Thread(() -> {
-      int diagnostics = 0;
       while (alive.get()) {
         try {
-          if (diagnostics-- < 0) {
-            diagnostics = 1000 * 60 * 2;
-            caravanDataService.diagnostics(new Callback<String>() {
-              @Override
-              public void success(String value) {
-                LOGGER.error("caravan-dump: " + value);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                LOGGER.error("failed-caravan-dump:" + ex.code);
-              }
-            });
-          }
           Thread.sleep(0, 800000);
           caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException ie) {

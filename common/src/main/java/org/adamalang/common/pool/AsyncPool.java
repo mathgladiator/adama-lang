@@ -41,7 +41,7 @@ public class AsyncPool<R, S> {
     executor.schedule(new NamedRunnable("sweep") {
       @Override
       public void execute() throws Exception {
-        sweep();
+        sweepInExecutor();
         if (alive.get()) {
           executor.schedule(this, maxLifetimeMilliseconds);
         }
@@ -49,7 +49,7 @@ public class AsyncPool<R, S> {
     }, maxLifetimeMilliseconds);
   }
 
-  protected int sweep() {
+  protected int sweepInExecutor() {
     int cleaned = 0;
     long now = time.nowMilliseconds();
     Iterator<Map.Entry<R, Pool<RefS>>> itMap = pools.entrySet().iterator();

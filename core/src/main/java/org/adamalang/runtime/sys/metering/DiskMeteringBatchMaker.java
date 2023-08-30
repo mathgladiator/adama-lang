@@ -76,11 +76,16 @@ public class DiskMeteringBatchMaker {
       }
     })));
     ready.init(this);
-    for (File file : root.listFiles()) {
-      if (file.getName().startsWith("SUMMARY-")) {
-        ready.ready(file.getName().substring(8));
+    executor.schedule(new NamedRunnable("wait-for-warm-up") {
+      @Override
+      public void execute() throws Exception {
+        for (File file : root.listFiles()) {
+          if (file.getName().startsWith("SUMMARY-")) {
+            ready.ready(file.getName().substring(8));
+          }
+        }
       }
-    }
+    }, 30000);
   }
 
   public void close() throws Exception {
@@ -123,6 +128,7 @@ public class DiskMeteringBatchMaker {
       File finalSummary = new File(root, "SUMMARY-" + batchId);
       Files.writeString(inflightSummary.toPath(), reducer.toJson());
       inflightSummary.renameTo(finalSummary);
+      ready.ready(batchId);
     } finally {
       // if we fail, then we simply delete the batch
       cuttingBatch.delete();

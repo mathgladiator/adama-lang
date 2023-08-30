@@ -21,19 +21,22 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.pool.PoolActions;
+import org.adamalang.web.client.WebClientBaseMetrics;
 
 /** how the shared connection pool is acted upon */
 public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint, WebClientSharedConnection> {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebClientSharedConnectionActions.class);
   private final EventLoopGroup group;
+  private final WebClientBaseMetrics metrics;
 
-  public WebClientSharedConnectionActions(EventLoopGroup group) {
+  public WebClientSharedConnectionActions(WebClientBaseMetrics metrics, EventLoopGroup group) {
+    this.metrics = metrics;
     this.group = group;
   }
 
   @Override
   public void create(WebEndpoint request, Callback<WebClientSharedConnection> created) {
-    WebClientSharedConnection connection = new WebClientSharedConnection(request, group);
+    WebClientSharedConnection connection = new WebClientSharedConnection(metrics, request, group);
     final var b = new Bootstrap();
     b.group(group);
     b.channel(NioSocketChannel.class);

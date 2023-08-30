@@ -14,12 +14,15 @@ import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.internal.InternalSigner;
 import org.adamalang.region.AdamaDeploymentSync;
+import org.adamalang.region.MeteringBatchSubmit;
+import org.adamalang.region.MeteringBatchSubmitMetrics;
 import org.adamalang.runtime.contracts.PlanFetcher;
 import org.adamalang.runtime.deploy.DelayedDeploy;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -31,6 +34,7 @@ import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
 import org.adamalang.web.client.socket.MultiWebClientRetryPool;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
@@ -92,7 +96,7 @@ public class EveryMachine {
       this.servicePort = this.webConfig.port;
     }
     this.machine = this.identity.ip + ":" + servicePort;
-    this.webBase = new WebClientBase(this.webConfig);
+    this.webBase = new WebClientBase(new WebClientBaseMetrics(metricsFactory), this.webConfig);
 
     this.regionClient = SimpleExecutor.create("region-client");
     String selfEndpoint = "wss://aws-us-east-2.adama-platform.com/~s";
@@ -157,18 +161,6 @@ public class EveryMachine {
 
   public MeteringBatchReady makeMeteringBatchReady(BillingDocumentFinder billingDocumentFinder, int publicKeyId) {
     final String identity = new InternalSigner(publicKeyId, hostKey).toIdentity(new NtPrincipal(region + "/" + machine, "region"));
-    // MeteringBatchSubmit submit = new MeteringBatchSubmit(identity, region, machine, billingDocumentFinder, adamaCurrentRegionClient);
-    return new MeteringBatchReady() {
-      private DiskMeteringBatchMaker maker;
-
-      @Override
-      public void init(DiskMeteringBatchMaker me) {
-        this.maker = me;
-      }
-
-      @Override
-      public void ready(String batchId) {
-      }
-    };
+    return new MeteringBatchSubmit(new MeteringBatchSubmitMetrics(metricsFactory), identity, region, machine, billingDocumentFinder, adamaCurrentRegionClient);
   }
 }

@@ -12,7 +12,9 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Platform;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.WebClientConnection;
 import org.adamalang.web.contracts.WebLifecycle;
 import org.adamalang.web.service.WebConfig;
@@ -27,7 +29,7 @@ public class WebSocketClient implements AutoCloseable {
   private final String endpoint;
 
   public WebSocketClient(Config config) throws Exception {
-    this.base = new WebClientBase(new WebConfig(new ConfigObject(config.read())));
+    this.base = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(config.read())));
     this.endpoint = config.get_string("endpoint", "wss://aws-us-east-2.adama-platform.com/~s");
   }
 
