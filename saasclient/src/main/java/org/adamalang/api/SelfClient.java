@@ -153,16 +153,6 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientKeyPairResponse(obj), callback);
   }
 
-  /** space/usage */
-  public void spaceUsage(ClientSpaceUsageRequest request, Stream<ClientBillingUsageResponse> streamback) {
-    ObjectNode node = Json.newJsonObject();
-    node.put("method", "space/usage");
-    node.put("identity", request.identity);
-    node.put("space", request.space);
-    node.put("limit", request.limit);
-    pool.requestStream(node, (obj) -> new ClientBillingUsageResponse(obj), streamback);
-  }
-
   /** space/get */
   public void spaceGet(ClientSpaceGetRequest request, Callback<ClientPlanResponse> callback) {
     ObjectNode node = Json.newJsonObject();

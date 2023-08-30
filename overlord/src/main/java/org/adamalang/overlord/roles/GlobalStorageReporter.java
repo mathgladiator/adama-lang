@@ -13,13 +13,8 @@ import org.adamalang.common.*;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.data.MeteringSpaceSummary;
-import org.adamalang.mysql.data.ResourcesPerPenny;
-import org.adamalang.mysql.data.UnbilledResources;
 import org.adamalang.mysql.model.*;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
-import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
@@ -27,9 +22,6 @@ import org.adamalang.web.io.ConnectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 

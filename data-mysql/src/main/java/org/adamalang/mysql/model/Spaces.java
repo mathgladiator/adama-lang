@@ -20,17 +20,6 @@ import java.sql.Statement;
 import java.util.*;
 
 public class Spaces {
-  public static HashMap<String, UnbilledResources> collectUnbilledResources(DataBase dataBase) throws Exception {
-    return dataBase.transactSimple((connection) -> {
-      HashMap<String, UnbilledResources> byteHours = new HashMap<>();
-      String sql = "SELECT `name`, `unbilled_storage_bytes_hours`, `unbilled_bandwidth_hours`, `unbilled_first_party_service_calls`, `unbilled_third_party_service_calls`  FROM `" + dataBase.databaseName + "`.`spaces`";
-      DataBase.walk(connection, (rs) -> {
-        byteHours.put(rs.getString(1), new UnbilledResources(rs.getLong(2), rs.getLong(3), rs.getLong(4), rs.getLong(5)));
-      }, sql);
-      return byteHours;
-    });
-  }
-
   public static void setSpaceStorage(DataBase dataBase, String space, long storageBytes) throws Exception {
     dataBase.transactSimple((connection) -> {
       String sqlUpdateSpace = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `storage_bytes`=? WHERE `name`=? LIMIT 1";

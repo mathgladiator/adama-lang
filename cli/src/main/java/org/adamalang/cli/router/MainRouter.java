@@ -176,16 +176,6 @@ public class MainRouter {
                spaceHandler.upload(spaceArgs, out);
                return 0;
             }
-            case "usage": {
-              SpaceUsageArgs spaceArgs = SpaceUsageArgs.from(args, 2);
-              if (spaceArgs == null) {
-                SpaceUsageArgs.help();
-                return 1;
-               }
-               JsonOrError out = output.makeJsonOrError();
-               spaceHandler.usage(spaceArgs, out);
-               return 0;
-            }
             case "--help":
             case "-h":
             case "help": {

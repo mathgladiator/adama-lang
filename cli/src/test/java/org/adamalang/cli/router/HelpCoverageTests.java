@@ -29,7 +29,6 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"space", "set-role", "--help"});
     Main.testMain(new String[]{"space", "set-rxhtml", "--help"});
     Main.testMain(new String[]{"space", "upload", "--help"});
-    Main.testMain(new String[]{"space", "usage", "--help"});
     Main.testMain(new String[]{"authority", "--help"});
     Main.testMain(new String[]{"authority", "append-local", "--help"});
     Main.testMain(new String[]{"authority", "create", "--help"});

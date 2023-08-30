@@ -167,18 +167,6 @@ public class Installer {
             " DEFAULT CHARACTER SET = utf8mb4;" //
         ;
 
-    String createBillingTableSQL = // KILL
-        "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`bills` (" + //
-            "  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT," + //
-            "  `space` INT(4) UNSIGNED NOT NULL," + // (i.e. who is going to pay)
-            "  `hour` INT(8) UNSIGNED NOT NULL," + // the UTC hour for the resource consumption
-            "  `summary` LONGTEXT NOT NULL," + "  `pennies` INT(4) UNSIGNED NOT NULL," + "  PRIMARY KEY (`id`)," + //
-            "  INDEX `s` (`space`)," + //
-            "  INDEX `h` (`hour`))" + //
-            " ENGINE = InnoDB" + //
-            " DEFAULT CHARACTER SET = utf8mb4;" //
-        ;
-
     String createHostsTableSQL = //
         "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`hosts` (" + //
             "  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT," + //
@@ -244,7 +232,6 @@ public class Installer {
       DataBase.execute(connection, createSpaceTableSQL);
       DataBase.execute(connection, createGrantTableSQL);
       DataBase.execute(connection, createAuthoritiesTableSQL);
-      DataBase.execute(connection, createBillingTableSQL);
       DataBase.execute(connection, createHostsTableSQL);
       DataBase.execute(connection, createSecretsTableSQL);
       DataBase.execute(connection, createDomainsTableSQL);
@@ -263,7 +250,6 @@ public class Installer {
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`spaces`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`grants`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`authorities`;");
-      DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`bills`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`directory`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`document_secrets`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`capacity`;");

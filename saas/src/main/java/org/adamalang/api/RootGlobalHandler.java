@@ -41,8 +41,6 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, SpaceGenerateKeyRequest request, KeyPairResponder responder);
 
-  public void handle(Session session, SpaceUsageRequest request, BillingUsageResponder responder);
-
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder);
 
   public void handle(Session session, SpaceSetRequest request, SimpleResponder responder);
@@ -144,7 +142,6 @@ public interface RootGlobalHandler {
       case "authority/destroy":
       case "space/create":
       case "space/generate-key":
-      case "space/usage":
       case "space/get":
       case "space/set":
       case "space/redeploy-kick":

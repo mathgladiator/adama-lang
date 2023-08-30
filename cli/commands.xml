@@ -338,14 +338,6 @@
             <arg name="space" />
         </command>
 
-        <command name="usage" output="json">
-            <documentation>
-                Iterate the billed usage
-            </documentation>
-            <arg name="space" />
-            <arg name="limit" default="336" />
-        </command>
-
         <command name="reflect">
             <documentation>
                 Get a file of the reflection of a space
