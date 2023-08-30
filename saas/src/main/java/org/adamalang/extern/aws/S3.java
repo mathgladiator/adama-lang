@@ -194,6 +194,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
           File dest = new File(root, archiveKey);
           try {
             Files.move(temp.toPath(), dest.toPath(), StandardCopyOption.ATOMIC_MOVE);
+            instance.success();
             callback.success(dest);
           } catch (Exception ex) {
             S3.LOGGER.error("failed-restore-file", ex);
