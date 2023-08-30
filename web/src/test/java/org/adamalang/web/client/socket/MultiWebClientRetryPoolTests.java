@@ -14,6 +14,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
@@ -38,7 +39,7 @@ public class MultiWebClientRetryPoolTests {
     thread.start();
     runnable.waitForReady(1000);
     SimpleExecutor executor = SimpleExecutor.create("simple");
-    WebClientBase webbase = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
+    WebClientBase webbase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
     try {
       runnable.waitForReady(1000);
       MultiWebClientRetryPoolMetrics metrics = new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory());

@@ -19,10 +19,15 @@ import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReducerReader;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/** convert batches from disk to messages and send them to the billing document */
 public class MeteringBatchSubmit implements MeteringBatchReady {
+  private static final Logger LOGGER = LoggerFactory.getLogger(MeteringBatchSubmit.class);
+  private final MeteringBatchSubmitMetrics metrics;
   private final String identity;
   private final String region;
   private final String machine;
@@ -30,7 +35,8 @@ public class MeteringBatchSubmit implements MeteringBatchReady {
   private final SelfClient adama;
   private DiskMeteringBatchMaker maker;
 
-  public MeteringBatchSubmit(String identity, String region, String machine, BillingDocumentFinder billingDocumentFinder, SelfClient adama) {
+  public MeteringBatchSubmit(MeteringBatchSubmitMetrics metrics, String identity, String region, String machine, BillingDocumentFinder billingDocumentFinder, SelfClient adama) {
+    this.metrics = metrics;
     this.identity = identity;
     this.region = region;
     this.machine = machine;
@@ -49,40 +55,42 @@ public class MeteringBatchSubmit implements MeteringBatchReady {
       String batch = maker.getBatch(batchId);
       maker.deleteBatch(batchId);
       Map<String, String> messages = MeterReducerReader.convertMapToBillingMessages(batch, region, machine);
-      //public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
       for(Map.Entry<String, String> message : messages.entrySet()) {
-        billingDocumentFinder.find(message.getKey(), new Callback<Key>() {
+        billingDocumentFinder.find(message.getKey(), metrics.metering_batch_submit_find.wrap(new Callback<Key>() {
           final String messageToSend = message.getValue();
+          String space = message.getKey();
           @Override
           public void success(Key billingDocument) {
             ClientMessageDirectSendOnceRequest request = new ClientMessageDirectSendOnceRequest();
-            request.dedupe = "billing-document-" + region + "-" + machine + "-" + batchId;
+            request.dedupe = "billing-document-" + region + "-" + machine + "-" + batchId + "-" + space;
             request.identity = identity;
             request.space = billingDocument.space;
             request.key = billingDocument.key;
             request.channel = "ingest_new_usage_record";
             request.message = Json.parseJsonObject(messageToSend);
-            adama.messageDirectSendOnce(request, new Callback<ClientSeqResponse>() {
+            adama.messageDirectSendOnce(request, metrics.metering_batch_submit_send.wrap(new Callback<>() {
               @Override
               public void success(ClientSeqResponse value) {
-
+                metrics.metering_batch_happy.run();
               }
 
               @Override
               public void failure(ErrorCodeException ex) {
-
+                LOGGER.error("lost-metering-batch-send:" + ex.code + "/" + space);
+                metrics.metering_batch_lost.run();
               }
-            });
+            }));
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
-
+            LOGGER.error("lost-metering-batch-find:" + ex.code + "/" + space);
+            metrics.metering_batch_lost.run();
           }
-        });
+        }));
       }
     } catch (Exception failedToDealWithBatch) {
-
+      metrics.metering_batch_exception.run();
     }
   }
 }

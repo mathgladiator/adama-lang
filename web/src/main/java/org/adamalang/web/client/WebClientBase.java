@@ -26,7 +26,6 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.pool.AsyncPool;
 import org.adamalang.common.pool.PoolItem;
-import org.adamalang.web.client.pool.EventLoopGroundSimpleExecutor;
 import org.adamalang.web.client.pool.WebClientSharedConnection;
 import org.adamalang.web.client.pool.WebClientSharedConnectionActions;
 import org.adamalang.web.client.pool.WebEndpoint;
@@ -47,13 +46,15 @@ public class WebClientBase {
   private final EventLoopGroup group;
   private final AsyncPool<WebEndpoint, WebClientSharedConnection> pool;
   private final WebClientSharedConnectionActions actions;
+  private final WebClientBaseMetrics metrics;
   private final SimpleExecutor executor;
 
-  public WebClientBase(WebConfig config) {
+  public WebClientBase(WebClientBaseMetrics metrics, WebConfig config) {
+    this.metrics = metrics;
     this.executor = SimpleExecutor.create("web-client-base");
     this.config = config;
     group = new NioEventLoopGroup();
-    this.actions = new WebClientSharedConnectionActions(group);
+    this.actions = new WebClientSharedConnectionActions(metrics, group);
     this.pool = new AsyncPool<>(executor, TimeSource.REAL_TIME, //
         config.sharedConnectionPoolMaxLifetimeMilliseconds, //
         config.sharedConnectionPoolMaxUsageCount, //

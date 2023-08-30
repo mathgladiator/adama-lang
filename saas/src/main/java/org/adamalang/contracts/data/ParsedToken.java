@@ -49,19 +49,14 @@ public class ParsedToken {
           }
           if (tree.has("puid")) {
             this.proxy_user_id = tree.get("puid").asInt();
-            this.proxy_authority = Json.readString(tree, "pa");
-            this.proxy_origin = Json.readString(tree, "po");
-            this.proxy_ip = Json.readString(tree, "pip");
-            this.proxy_asset_key = Json.readString(tree, "pak");
-            this.proxy_useragent = Json.readString(tree, "pua");
           } else {
             this.proxy_user_id = 0;
-            this.proxy_authority = null;
-            this.proxy_origin = null;
-            this.proxy_ip = null;
-            this.proxy_useragent = null;
-            this.proxy_asset_key = null;
           }
+          this.proxy_authority = Json.readString(tree, "pa");
+          this.proxy_origin = Json.readString(tree, "po");
+          this.proxy_ip = Json.readString(tree, "pip");
+          this.proxy_asset_key = Json.readString(tree, "pak");
+          this.proxy_useragent = Json.readString(tree, "pua");
           if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
             this.iss = _iss.textValue();
             this.sub = _sub.textValue();

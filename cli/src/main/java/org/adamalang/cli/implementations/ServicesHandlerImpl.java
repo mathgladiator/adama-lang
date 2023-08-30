@@ -29,11 +29,13 @@ import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.region.AdamaDeploymentSyncMetrics;
+import org.adamalang.region.MeteringBatchSubmitMetrics;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.service.WebMetrics;
 
 import java.io.File;
@@ -78,6 +80,8 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new FrontendMetrics(metricsFactory);
     new GlobalApiMetrics(metricsFactory);
     new RegionApiMetrics(metricsFactory);
+    metricsFactory.page("billing", "Billing");
+    new MeteringBatchSubmitMetrics(metricsFactory);
     metricsFactory.page("client", "Web to Adama");
     new LocalRegionClientMetrics(metricsFactory);
     metricsFactory.page("server", "Adama Service");
@@ -101,6 +105,8 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new NetMetrics(metricsFactory);
     metricsFactory.page("aws", "AWS");
     new AWSMetrics(metricsFactory);
+    metricsFactory.page("aws", "Web Client");
+    new WebClientBaseMetrics(metricsFactory);
     metricsFactory.page("fp", "First Party");
     new FirstPartyMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));

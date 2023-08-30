@@ -23,6 +23,7 @@ import org.adamalang.runtime.deploy.Undeploy;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
 import org.adamalang.web.client.socket.MultiWebClientRetryPool;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
@@ -46,7 +47,7 @@ public class DevBoxStart {
     TerminalIO terminal = new TerminalIO();
     String developerIdentity = args.config.get_string("identity", null);
     SimpleExecutor offload = SimpleExecutor.create("executor");
-    WebClientBase webClientBase = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
+    WebClientBase webClientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
     MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
     SelfClient production = new SelfClient(productionPool);

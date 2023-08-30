@@ -172,10 +172,10 @@ public class AsyncPoolTests {
       }
     });
     time.currentTime = 4999;
-    Assert.assertEquals(0, pool.sweep());
+    Assert.assertEquals(0, pool.sweepInExecutor());
     time.currentTime = 5000;
-    Assert.assertEquals(1, pool.sweep());
-    Assert.assertEquals(0, pool.sweep());
+    Assert.assertEquals(1, pool.sweepInExecutor());
+    Assert.assertEquals(0, pool.sweepInExecutor());
   }
 
   @Test

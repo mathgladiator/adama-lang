@@ -16,6 +16,7 @@ import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.service.WebConfig;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -43,7 +44,7 @@ public class S3Tests {
     File archivePath = File.createTempFile("ADAMATEST_", "System-" + System.currentTimeMillis());
     archivePath.delete();
     Assert.assertTrue(archivePath.mkdirs());
-    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
+    WebClientBase base = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
     try {
       File configFile = new File("./saas/aws.config.json");
       if (!configFile.exists()) {

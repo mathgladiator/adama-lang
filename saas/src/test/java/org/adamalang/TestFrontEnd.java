@@ -43,6 +43,7 @@ import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.contracts.*;
 import org.adamalang.extern.Email;
 import org.adamalang.frontend.global.GlobalExternNexus;
@@ -327,7 +328,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
 
-    this.webBase = new WebClientBase(new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
+    this.webBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
     this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PublicKeyCodec.encodePublicKey(hostKeyPair));
 
