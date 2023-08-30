@@ -206,39 +206,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void webDelete(String space, String key, WebDelete request, Callback<WebResponse> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webdelete_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
-      @Override
-      public void onRegion(String region) {
-        failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_WEBDELETE_FOUND_REGION_RATHER_THAN_MACHINE));
-      }
-
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<InstanceClient>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.webDelete(space, key, request, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        mInstance.failure(ex.code);
-        callback.failure(ex);
-      }
-    });
-  }
-
   public void webDelete(String machine, String space, String key, WebDelete request, Callback<WebResponse> callback) {
     clientFinder.find(machine,  new Callback<InstanceClient>() {
       @Override
