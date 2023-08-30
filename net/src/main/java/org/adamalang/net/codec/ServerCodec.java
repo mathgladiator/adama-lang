@@ -973,7 +973,6 @@ public class ServerCodec {
     buf.writeIntLE(o.code);
   }
 
-
   public static void write(ByteBuf buf, ScanDeploymentResponse o) {
     if (o == null) {
       buf.writeIntLE(0);
