@@ -27,7 +27,6 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_AuthorityDestroy;
   public final RequestResponseMonitor monitor_SpaceCreate;
   public final RequestResponseMonitor monitor_SpaceGenerateKey;
-  public final RequestResponseMonitor monitor_SpaceUsage;
   public final RequestResponseMonitor monitor_SpaceGet;
   public final RequestResponseMonitor monitor_SpaceSet;
   public final RequestResponseMonitor monitor_SpaceRedeployKick;
@@ -86,7 +85,6 @@ public class GlobalApiMetrics {
     this.monitor_AuthorityDestroy = factory.makeRequestResponseMonitor("authority/destroy");
     this.monitor_SpaceCreate = factory.makeRequestResponseMonitor("space/create");
     this.monitor_SpaceGenerateKey = factory.makeRequestResponseMonitor("space/generate-key");
-    this.monitor_SpaceUsage = factory.makeRequestResponseMonitor("space/usage");
     this.monitor_SpaceGet = factory.makeRequestResponseMonitor("space/get");
     this.monitor_SpaceSet = factory.makeRequestResponseMonitor("space/set");
     this.monitor_SpaceRedeployKick = factory.makeRequestResponseMonitor("space/redeploy-kick");

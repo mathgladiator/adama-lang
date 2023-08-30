@@ -55,7 +55,6 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-role", 15), Util.ANSI.Green) + "Set the role of another developer");
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-rxhtml", 15), Util.ANSI.Green) + "Set the frontend RxHTML forest");
     System.out.println("    " + Util.prefix(Util.justifyLeft("upload", 15), Util.ANSI.Green) + "Placeholder");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("usage", 15), Util.ANSI.Green) + "Iterate the billed usage");
   }
   public static void displayAuthorityHelp() {
     System.out.println(Util.prefix("Manage authorities", Util.ANSI.Green));

@@ -537,22 +537,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
-  public void handle(Session session, SpaceUsageRequest request, BillingUsageResponder responder) {
-    try {
-      if (request.policy.canUserGetBillingUsage(request.who)) {
-        for (BillingUsage usage : Billing.usageReport(nexus.database, request.policy.id, request.limit != null ? request.limit.intValue() : 336)) {
-          responder.next(usage.hour, usage.cpu, usage.memory, usage.connections, usage.documents, usage.messages, usage.storageBytes, usage.bandwidth, usage.firstPartyServiceCalls, usage.thirdPartyServiceCalls);
-        }
-        responder.finish();
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_BILLING_USAGE_NO_PERMISSION_TO_EXECUTE));
-      }
-    } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_BILLING_UNKNOWN_EXCEPTION, ex, LOGGER));
-    }
-  }
-
-  @Override
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder) {
     try {
       if (request.policy.canUserGetPlan(request.who)) {

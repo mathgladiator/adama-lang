@@ -26,5 +26,4 @@ public interface SpaceHandler {
   void setRole(SpaceSetRoleArgs args, YesOrError output) throws Exception;
   void setRxhtml(SpaceSetRxhtmlArgs args, YesOrError output) throws Exception;
   void upload(SpaceUploadArgs args, JsonOrError output) throws Exception;
-  void usage(SpaceUsageArgs args, JsonOrError output) throws Exception;
 }

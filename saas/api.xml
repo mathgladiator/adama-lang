@@ -584,18 +584,7 @@
         <field name="rxhtml"/>
     </responder>
 
-    <responder name="billing-usage" stream="true">
-        <field name="hour"/>
-        <field name="cpu"/>
-        <field name="memory"/>
-        <field name="connections"/>
-        <field name="documents"/>
-        <field name="messages"/>
-        <field name="storage-bytes"/>
-        <field name="bandwidth"/>
-        <field name="first-party-service-calls"/>
-        <field name="third-party-service-calls"/>
-    </responder>
+
 
     <responder name="simple">
     </responder>
@@ -816,15 +805,6 @@
             These credentials must be encrypted within the Adama document using a public-private key, and the secret is derived via a key exchange.
             Here, the server will generate a public/private key pair and store the private key securely and give the developer a public key.
             The developer then generates a public/private key, encrypts the token with the private key, throws away the private key, and then embeds the key id, the developer's public key, and the encrypted credential within the adama source code.
-        </documentation>
-    </method>
-
-    <method name="space/usage" responder="billing-usage" scope="global">
-        <parameter name="identity"/>
-        <parameter name="space"/>
-        <parameter name="limit"/>
-        <documentation>
-            Get the most recent space usage in terms of billable hours.
         </documentation>
     </method>
 

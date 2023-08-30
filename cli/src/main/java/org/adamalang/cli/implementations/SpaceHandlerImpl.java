@@ -275,26 +275,4 @@ public class SpaceHandlerImpl implements SpaceHandler {
   public void upload(Arguments.SpaceUploadArgs args, Output.JsonOrError output) throws Exception {
     Uploader.upload(args, output);
   }
-
-  @Override
-  public void usage(Arguments.SpaceUsageArgs args, Output.JsonOrError output) throws Exception {
-    Config config = args.config;
-    String identity = config.get_string("identity", null);
-    int limit = Integer.parseInt(args.limit);
-
-    try (WebSocketClient client = new WebSocketClient(config)) {
-      try (Connection connection = client.open()) {
-        ObjectNode request = Json.newJsonObject();
-        request.put("method", "space/usage");
-        request.put("identity", identity);
-        request.put("space", args.space);
-        request.put("limit", limit);
-        connection.stream(request, (cId, response) -> {
-          output.add(response);
-        });
-        output.out();
-      }
-    }
-  }
-
 }

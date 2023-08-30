@@ -404,15 +404,6 @@ class WebSocketAdamaConnection {
       request: {"method":"space/generate-key", "id":parId, "identity": identity, "space": space}
     });
   }
-  SpaceUsage(identity, space, limit, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/usage", "id":parId, "identity": identity, "space": space, "limit": limit}
-    });
-  }
   SpaceGet(identity, space, responder) {
     var self = this;
     var parId = self.__id();
