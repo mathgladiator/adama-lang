@@ -15,11 +15,9 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
-import org.adamalang.net.client.routing.cache.RoutingTable;
 import org.adamalang.net.client.routing.cache.RoutingTableTarget;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
-import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.sys.web.WebDelete;
@@ -127,65 +125,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void randomMeteringExchange(MeteringStream metering) {
-    router.engine.random(target -> {
-      clientFinder.find(target, new Callback<>() {
-        @Override
-        public void success(InstanceClient value) {
-          value.startMeteringExchange(metering);
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          metering.failure(ex.code);
-        }
-      });
-    });
-  }
-
-
-
-  @Deprecated
-  public void reflect(String space, String key, Callback<String> callback) {
-    router.routerForDocuments.get(new Key(space, key), new RoutingCallback() {
-      @Override
-      public void onRegion(String region) {
-        failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_REFLECT_FOUND_REGION_RATHER_THAN_MACHINE));
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
-      }
-
-      @Override
-      public void onMachine(String machine) {
-        clientFinder.find(machine, new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.reflect(space, key, new Callback<>() {
-              @Override
-              public void success(String value) {
-                callback.success(value);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                callback.failure(ex);
-              }
-            });
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-    });
-  }
-
   public void reflect(String machine, String space, String key, Callback<String> callback) {
     clientFinder.find(machine, new Callback<>() {
       @Override
@@ -210,28 +149,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_auth_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_AUTH_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.authorize(ip, origin, space, key, username, password, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-    });
-  }
-
   public void authorize(String machineToAsk, String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
     clientFinder.find(machineToAsk,  new Callback<>() {
       @Override
@@ -246,27 +163,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void webGet(String space, String key, WebGet request, Callback<WebResponse> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webget_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.webGet(space, key, request, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-    });
-  }
 
   public void webGet(String machine, String space, String key, WebGet request, Callback<WebResponse> callback) {
     clientFinder.find(machine,  new Callback<>() {
@@ -282,28 +178,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void webOptions(String space, String key, WebGet request, Callback<WebResponse> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_weboptions_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.webOptions(space, key, request, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-    });
-  }
-
   public void webOptions(String machine, String space, String key, WebGet request, Callback<WebResponse> callback) {
     clientFinder.find(machine,  new Callback<>() {
       @Override
@@ -314,28 +188,6 @@ public class LocalRegionClient {
       @Override
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
-      }
-    });
-  }
-
-  @Deprecated
-  public void webPut(String space, String key, WebPut request, Callback<WebResponse> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_webput_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.webPut(space, key, request, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
       }
     });
   }
@@ -401,28 +253,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_create_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<InstanceClient>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-    });
-  }
-
   public void create(String machine, String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     clientFinder.find(machine,  new Callback<InstanceClient>() {
       @Override
@@ -433,28 +263,6 @@ public class LocalRegionClient {
       @Override
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
-      }
-    });
-  }
-
-  @Deprecated
-  public void delete(String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_delete_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<InstanceClient>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.delete(ip, origin, agent, authority, space, key, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
       }
     });
   }
@@ -473,28 +281,6 @@ public class LocalRegionClient {
     });
   }
 
-  @Deprecated
-  public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
-    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_directsend_found_machine.start();
-    router.routerForDocuments.get(new Key(space, key), new InRegionRoutingCallbackWrapper<>(mInstance, callback, ErrorCodes.ADAMA_NET_DIRECTSEND_FOUND_REGION_RATHER_THAN_MACHINE) {
-      @Override
-      public void onMachine(String machine) {
-        mInstance.success();
-        clientFinder.find(machine,  new Callback<>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.directSend(ip, origin, agent, authority, space, key, marker, channel, message, callback);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }
-    });
-  }
-
   public void directSend(String machine, String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callback) {
     clientFinder.find(machine,  new Callback<>() {
       @Override
@@ -507,15 +293,6 @@ public class LocalRegionClient {
         callback.failure(ex);
       }
     });
-  }
-
-  /** Connect to a document with a state machine */
-  @Deprecated
-  public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
-    ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
-    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
-    connection.open();
-    return connection;
   }
 
   /** Connect to a machine directly */

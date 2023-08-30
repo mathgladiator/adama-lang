@@ -513,40 +513,6 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
-  public void handle(ClientMessage.MeteringDeleteBatch payload) {
-    try {
-      nexus.metrics.server_metering_delete_batch.run();
-      nexus.meteringBatchMaker.deleteBatch(payload.id);
-      ByteBuf toWrite = upstream.create(4);
-      ServerCodec.write(toWrite, new ServerMessage.MeteringBatchRemoved());
-      upstream.next(toWrite);
-    } catch (Exception ex) {
-      upstream.error(-1);
-    }
-  }
-
-  @Override
-  public void handle(ClientMessage.MeteringBegin payload) {
-    try {
-      String id = nexus.meteringBatchMaker.getNextAvailableBatchId();
-      nexus.metrics.server_metering_begin.run();
-      if (id != null) {
-        String batch = nexus.meteringBatchMaker.getBatch(id);
-        ServerMessage.MeteringBatchFound found = new ServerMessage.MeteringBatchFound();
-        found.id = id;
-        found.batch = batch;
-        ByteBuf toWrite = upstream.create(id.length() + batch.length() + 8);
-        ServerCodec.write(toWrite, found);
-        upstream.next(toWrite);
-      } else {
-        upstream.completed();
-      }
-    } catch (Exception ex) {
-      upstream.error(-1);
-    }
-  }
-
-  @Override
   public void handle(ClientMessage.ScanDeployment payload) {
     try {
       nexus.metrics.server_scan_deployment.run();

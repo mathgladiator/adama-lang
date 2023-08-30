@@ -24,8 +24,6 @@ import org.adamalang.net.codec.ServerMessage.StreamAskAttachmentResponse;
 import org.adamalang.net.codec.ServerMessage.StreamError;
 import org.adamalang.net.codec.ServerMessage.StreamData;
 import org.adamalang.net.codec.ServerMessage.StreamStatus;
-import org.adamalang.net.codec.ServerMessage.MeteringBatchRemoved;
-import org.adamalang.net.codec.ServerMessage.MeteringBatchFound;
 import org.adamalang.net.codec.ServerMessage.ScanDeploymentResponse;
 import org.adamalang.net.codec.ServerMessage.ReflectResponse;
 import org.adamalang.net.codec.ServerMessage.DeleteResponse;
@@ -571,50 +569,6 @@ public class ServerCodec {
   }
 
 
-  public static abstract class StreamMetering implements ByteStream {
-    public abstract void handle(MeteringBatchRemoved payload);
-
-    public abstract void handle(MeteringBatchFound payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      return Unpooled.buffer();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 1248:
-          handle(readBody_1248(buf, new MeteringBatchRemoved()));
-          return;
-        case 1246:
-          handle(readBody_1246(buf, new MeteringBatchFound()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerMetering {
-    public void handle(MeteringBatchRemoved payload);
-    public void handle(MeteringBatchFound payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerMetering handler) {
-    switch (buf.readIntLE()) {
-      case 1248:
-        handler.handle(readBody_1248(buf, new MeteringBatchRemoved()));
-        return;
-      case 1246:
-        handler.handle(readBody_1246(buf, new MeteringBatchFound()));
-        return;
-    }
-  }
-
-
   public static ReplicaData read_ReplicaData(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 10548:
@@ -794,34 +748,6 @@ public class ServerCodec {
 
   private static StreamStatus readBody_12546(ByteBuf buf, StreamStatus o) {
     o.code = buf.readIntLE();
-    return o;
-  }
-
-  public static MeteringBatchRemoved read_MeteringBatchRemoved(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 1248:
-        return readBody_1248(buf, new MeteringBatchRemoved());
-    }
-    return null;
-  }
-
-
-  private static MeteringBatchRemoved readBody_1248(ByteBuf buf, MeteringBatchRemoved o) {
-    return o;
-  }
-
-  public static MeteringBatchFound read_MeteringBatchFound(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 1246:
-        return readBody_1246(buf, new MeteringBatchFound());
-    }
-    return null;
-  }
-
-
-  private static MeteringBatchFound readBody_1246(ByteBuf buf, MeteringBatchFound o) {
-    o.id = Helper.readString(buf);
-    o.batch = Helper.readString(buf);
     return o;
   }
 
@@ -1047,23 +973,6 @@ public class ServerCodec {
     buf.writeIntLE(o.code);
   }
 
-  public static void write(ByteBuf buf, MeteringBatchRemoved o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(1248);
-  }
-
-  public static void write(ByteBuf buf, MeteringBatchFound o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(1246);
-    Helper.writeString(buf, o.id);;
-    Helper.writeString(buf, o.batch);;
-  }
 
   public static void write(ByteBuf buf, ScanDeploymentResponse o) {
     if (o == null) {

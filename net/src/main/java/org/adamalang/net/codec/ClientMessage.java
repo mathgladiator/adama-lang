@@ -96,18 +96,6 @@ public class ClientMessage {
     public String space;
   }
 
-  @TypeId(1243)
-  @Flow("Server")
-  public static class MeteringBegin {
-  }
-
-  @TypeId(1245)
-  @Flow("Server")
-  public static class MeteringDeleteBatch {
-    @FieldOrder(1)
-    public String id;
-  }
-
   @TypeId(12345)
   @Flow("Server")
   public static class StreamConnect {

@@ -19,8 +19,6 @@ public class ClientCodecTests {
     ClientMessage.CreateRequest createRequest = new ClientMessage.CreateRequest();
     ClientMessage.ReflectRequest reflectRequest = new ClientMessage.ReflectRequest();
     ClientMessage.ScanDeployment scanDeployment = new ClientMessage.ScanDeployment();
-    ClientMessage.MeteringBegin meteringBegin = new ClientMessage.MeteringBegin();
-    ClientMessage.MeteringDeleteBatch meteringDeleteBatch = new ClientMessage.MeteringDeleteBatch();
     ClientMessage.StreamConnect streamConnect = new ClientMessage.StreamConnect();
     ClientMessage.StreamSend streamSend = new ClientMessage.StreamSend();
     ClientMessage.StreamUpdate streamUpdate = new ClientMessage.StreamUpdate();

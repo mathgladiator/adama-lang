@@ -345,12 +345,6 @@ public class InstanceClientTests {
         waitError.run();
         connectEvents.assertWrite(0, "ERROR:702524");
 
-        MockMeteringFlow meteringFlow = new MockMeteringFlow();
-        Runnable waitFlowError = meteringFlow.latchAt(1);
-        client.startMeteringExchange(meteringFlow);
-        waitFlowError.run();
-        meteringFlow.assertWrite(0, "ERROR:786495");
-
         LatchedVoidCallback reflectCallback = new LatchedVoidCallback();
         client.reflect("space", "key", new Callback<String>() {
           @Override

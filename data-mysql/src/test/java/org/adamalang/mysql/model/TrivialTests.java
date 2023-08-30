@@ -14,7 +14,6 @@ public class TrivialTests {
   @Test
   public void coverage() {
     new Authorities();
-    new MeteringSampleTests();
     new Spaces();
     new Users();
   }

@@ -17,10 +17,8 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.bidi.DocumentExchange;
-import org.adamalang.net.client.bidi.MeteringExchange;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
-import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamWriter;
@@ -786,26 +784,6 @@ public class InstanceClient implements AutoCloseable {
           @Override
           protected void failure(int code) {
             callback.failure(new ErrorCodeException(code));
-          }
-        });
-      }
-    });
-  }
-
-  public void startMeteringExchange(MeteringStream meteringStream) {
-    executor.execute(new NamedRunnable("metering-exchange") {
-      @Override
-      public void execute() throws Exception {
-        client.add(new ItemAction<>(ErrorCodes.ADAMA_NET_METERING_TIMEOUT, ErrorCodes.ADAMA_NET_METERING_REJECTED, metrics.client_metering_exchange.start()) {
-          @Override
-          protected void executeNow(ChannelClient client) {
-            MeteringExchange exchange = new MeteringExchange(target, meteringStream);
-            client.open(exchange, exchange);
-          }
-
-          @Override
-          protected void failure(int code) {
-            meteringStream.failure(code);
           }
         });
       }

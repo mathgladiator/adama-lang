@@ -12,18 +12,14 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.client.sm.Connection;
-import org.adamalang.net.mocks.MockMeteringFlow;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
-import org.adamalang.runtime.sys.PredictiveInventory;
-import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -61,8 +57,6 @@ public class LocalRegionClientTests {
             });
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         client.notifyDeployment("127.0.0.1:12500", "space");
-        CountDownLatch latchRandomBillingExchangeFinishes = new CountDownLatch(1);
-
         CountDownLatch latchFound = new CountDownLatch(1);
         AtomicReference<Boolean> got = new AtomicReference<>(null);
         client.waitForCapacity("space", 5000, new Consumer<Boolean>() {
@@ -74,22 +68,6 @@ public class LocalRegionClientTests {
         });
         Assert.assertTrue(latchFound.await(7500, TimeUnit.MILLISECONDS));
         Assert.assertTrue(got.get());
-        client.randomMeteringExchange(new MeteringStream() {
-          @Override
-          public void handle(String target, String batch, Runnable after) {
-            after.run();
-          }
-
-          @Override
-          public void failure(int code) {
-
-          }
-
-          @Override
-          public void finished() {
-            latchRandomBillingExchangeFinishes.countDown();
-          }
-        });
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchCreatedKey = new CountDownLatch(1);
         client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
@@ -357,45 +335,6 @@ public class LocalRegionClientTests {
   }
 
   @Test
-  public void metering_happy() throws Exception {
-    try (TestBed bed =
-             new TestBed(
-                 12501,
-                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
-      bed.startServer();
-      ClientConfig clientConfig = new TestClientConfig();
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
-      try {
-        waitForRouting(bed, client);
-        {
-          MockMeteringFlow mock = new MockMeteringFlow();
-          Runnable latch = mock.latchAt(1);
-          client.randomMeteringExchange(mock);
-          latch.run();
-          mock.assertWrite(0, "FINISHED");
-        }
-
-        CountDownLatch finished = new CountDownLatch(1);
-        bed.batchMaker.write(new MeterReading(0, System.currentTimeMillis(), "space", "hash", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4, 5, 6, 7)));
-        bed.batchMaker.flush(finished);
-        Assert.assertTrue(finished.await(5000, TimeUnit.MILLISECONDS));
-        String id = bed.batchMaker.getNextAvailableBatchId();
-        Assert.assertNotNull(id);
-        {
-          MockMeteringFlow mock = new MockMeteringFlow();
-          Runnable latch = mock.latchAt(2);
-          client.randomMeteringExchange(mock);
-          latch.run();
-          mock.assertWrite(0, "HANDLE!");
-          mock.assertWrite(1, "FINISHED");
-        }
-      } finally{
-        client.shutdown();
-      }
-    }
-  }
-
-  @Test
   public void no_capacity() throws Exception {
     try (TestBed bed =
              new TestBed(
@@ -417,23 +356,6 @@ public class LocalRegionClientTests {
             System.err.println("L1:" + ex.code);
             Assert.assertEquals(719932, ex.code);
             latch1Failed.countDown();
-          }
-        });
-        CountDownLatch latch2Failed = new CountDownLatch(1);
-        client.randomMeteringExchange(new MeteringStream() {
-          @Override
-          public void handle(String target, String batch, Runnable after) {
-          }
-
-          @Override
-          public void failure(int code) {
-            System.err.println("L2:" + code);
-            Assert.assertEquals(753724, code);
-            latch2Failed.countDown();
-          }
-
-          @Override
-          public void finished() {
           }
         });
         CountDownLatch latch3Failed = new CountDownLatch(1);
@@ -477,7 +399,6 @@ public class LocalRegionClientTests {
           }
         });
         Assert.assertTrue(latch1Failed.await(5000, TimeUnit.MILLISECONDS));
-        Assert.assertTrue(latch2Failed.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latch3Failed.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latch4.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertFalse(got.get());
@@ -598,26 +519,9 @@ public class LocalRegionClientTests {
       ClientConfig clientConfig = new TestClientConfig();
       LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       waitForRouting(bed, client);
-      CountDownLatch failures = new CountDownLatch(5);
+      CountDownLatch failures = new CountDownLatch(4);
       client.notifyDeployment("127.0.0.1:" + bed.port, "*");
       client.notifyDeployment("127.0.0.1:" + (bed.port + 1), "*");
-      client.randomMeteringExchange(
-          new MeteringStream() {
-            @Override
-            public void handle(String target, String batch, Runnable after) {
-              after.run();
-            }
-
-            @Override
-            public void failure(int code) {
-              System.err.println("RME:" + code);
-              Assert.assertEquals(123456789, code);
-              failures.countDown();
-            }
-
-            @Override
-            public void finished() {}
-          });
       client.reflect("127.0.0.1:" + bed.port, "x", "y", new Callback<String>() {
         @Override
         public void success(String value) {
@@ -709,27 +613,6 @@ public class LocalRegionClientTests {
       LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
       waitForRouting(bed, client);
       client.notifyDeployment("127.0.0.1:12505", "*");
-      CountDownLatch meteringLatch = new CountDownLatch(2);
-      client.randomMeteringExchange(
-          new MeteringStream() {
-            @Override
-            public void handle(String target, String batch, Runnable after) {
-              if ("fake-batch".equals(batch)) {
-                meteringLatch.countDown();
-              }
-              after.run();
-            }
-
-            @Override
-            public void failure(int code) {
-            }
-
-            @Override
-            public void finished() {
-              meteringLatch.countDown();
-            }
-          });
-      Assert.assertTrue(meteringLatch.await(2000, TimeUnit.MILLISECONDS));
     }
   }
 
