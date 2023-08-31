@@ -4099,4 +4099,38 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama kickstart", Util.ANSI.Green));
 		}
 	}
+	public static class VersionArgs {
+		public Config config;
+		public static VersionArgs from(String[] args, int start) {
+			VersionArgs returnArgs = new VersionArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Dump the current Adama version", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama version", Util.ANSI.Green));
+		}
+	}
 }

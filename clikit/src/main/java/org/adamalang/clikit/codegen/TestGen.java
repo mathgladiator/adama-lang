@@ -35,7 +35,7 @@ public class TestGen {
                 sb.append("    Main.testMain(new String[]{\"").append(command.name).append("\", \"--help\"});\n");
             }
             sb.append("  }\n");
-            sb.append("}");
+            sb.append("}\n");
             returnTests.put("HelpCoverageTests.java", sb.toString());
         }
         return returnTests;
