@@ -26,4 +26,5 @@ public interface RootHandler {
   void dumpenv(DumpenvArgs args, YesOrError output) throws Exception;
   void init(InitArgs args, YesOrError output) throws Exception;
   void kickstart(KickstartArgs args, YesOrError output) throws Exception;
+  void version(VersionArgs args, YesOrError output) throws Exception;
 }

@@ -127,7 +127,7 @@ public class MainRouterGen {
         sb.append("      return 1;\n");
         sb.append("    }\n");
         sb.append("  }\n");
-        sb.append("}");
+        sb.append("}\n");
         return sb.toString();
     }
 }

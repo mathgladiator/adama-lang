@@ -912,6 +912,16 @@ public class MainRouter {
              handler.kickstart(mainArgs , out);
              return 0;
           }
+          case "version": {
+            VersionArgs mainArgs = VersionArgs.from(args, 1);
+            if (mainArgs == null) {
+              VersionArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.version(mainArgs , out);
+             return 0;
+          }
           default:
             System.err.println("Invalid command '" + args[0] + "'");
             System.err.println("See 'adama help' for a list of commands.");
