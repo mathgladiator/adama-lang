@@ -15,7 +15,7 @@ OpenJDK Runtime Environment (build 11.0.13+8-Ubuntu-0ubuntu1.20.04)
 OpenJDK 64-Bit Server VM (build 11.0.13+8-Ubuntu-0ubuntu1.20.04, mixed mode, sharing)
 ```
 
-That's all you need for Adama to work. Once Java is working, you can download the latest jar using wget [download directly](https://github.com/mathgladiator/adama-lang/releases/download/nightly/adama.jar) from production (note: it requires a reasonable connection speed or it will timeout)
+That's all you need for Adama to work. Once Java is working, you can download the latest jar using wget [download directly](https://aws-us-east-2.adama-platform.com/adama.jar) from production (note: it requires a reasonable connection speed or it will timeout)
 
 ```shell
 wget https://aws-us-east-2.adama-platform.com/adama.jar
