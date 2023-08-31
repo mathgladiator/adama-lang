@@ -181,6 +181,7 @@ public class Attributes {
   private boolean isBooleanInputValue(String value) {
     switch (value.trim().toLowerCase(Locale.ENGLISH)) {
       case "disabled":
+      case "hidden":
       case "required":
       case "readonly":
       case "checked":
@@ -200,7 +201,7 @@ public class Attributes {
   }
 
   private void writeDomSetter(String var, String key, String expr) {
-    boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input") || env.element.tagName().equalsIgnoreCase("select");
+    boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input") || env.element.tagName().equalsIgnoreCase("select") || env.element.tagName().equalsIgnoreCase("option");
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(expr).append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
