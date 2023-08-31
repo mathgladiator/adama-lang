@@ -1379,6 +1379,7 @@ var RxHTML = (function () {
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
     var init = {};
+    init.viewer_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {

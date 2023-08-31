@@ -49,12 +49,14 @@ public interface SimpleExecutor {
 
       @Override
       public Runnable schedule(NamedRunnable command, long milliseconds) {
+        command.bind(name);
         ScheduledFuture<?> future = realExecutor.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
         return () -> future.cancel(false);
       }
 
       @Override
       public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+        command.bind(name);
         ScheduledFuture<?> future = realExecutor.schedule(command, nanoseconds, TimeUnit.NANOSECONDS);
         return () -> future.cancel(false);
       }

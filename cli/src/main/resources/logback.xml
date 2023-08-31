@@ -37,4 +37,24 @@
     <root level="ERROR">
         <appender-ref ref="ASYNC-ERROR" />
     </root>
+
+    <appender name="PERFORMANCE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/perf.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/perf.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC-PERFORMANCE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="PERFORMANCE" />
+    </appender>
+
+    <logger name="perf" level="DEBUG" additivity="false">
+        <appender-ref ref="ASYNC-PERFORMANCE"/>
+    </logger>
 </configuration>

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 /** for complex executor bouncing, this helps understand what is going on */
 public abstract class NamedRunnable implements Runnable {
+  private static final Logger PERF_LOG = LoggerFactory.getLogger("perf");
   private static final Logger RUNNABLE_LOGGER = LoggerFactory.getLogger("nrex");
   public final String __runnableName;
   private String runningIn = "unknown";
@@ -42,8 +43,14 @@ public abstract class NamedRunnable implements Runnable {
     long ran = System.currentTimeMillis();
     try {
       execute();
-      long finished = System.currentTimeMillis();
-      // TODO: report.. somewhere
+      long now = System.currentTimeMillis();
+      long queueTime = now - created;
+      long runTime = now - ran;
+      // TODO: this is for performance measuring (need to automate in a meaningful way)
+      boolean skip = queueTime <= 1 && runTime <= 1;
+      if (skip) {
+        // PERF_LOG.error(__runnableName + "," + runningIn + "," + (queueTime) + "," + (queueTime > 10 ? "delayed" : "quick") + "," + runTime + "," + (runTime > 25 ? "slow" : "fast"));
+      }
     } catch (Exception ex) {
       boolean noise = noisy(ex);
       if (!noise) {
