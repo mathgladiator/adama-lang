@@ -278,7 +278,7 @@ public class CaravanDataService implements ArchivingDataService {
             callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED, "failed:" + key.space + "/" + key.key));
             return;
           }
-          executor.execute(new NamedRunnable("commit-cache") {
+          executor.execute(new NamedRunnable("load-jump-callback") {
             @Override
             public void execute() throws Exception {
               callback.success(builder);

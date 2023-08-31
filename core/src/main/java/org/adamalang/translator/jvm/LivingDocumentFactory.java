@@ -117,7 +117,7 @@ public class LivingDocumentFactory {
     if (value != null && value instanceof Integer) {
       return ((Integer) value).intValue();
     } else {
-      return 10000;
+      return 1000;
     }
   }
 
