@@ -17,6 +17,7 @@ import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.*;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
+import org.adamalang.common.Platform;
 
 import java.util.Map;
 
@@ -76,6 +77,11 @@ public class RootHandlerImpl implements RootHandler {
     for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
       System.err.println(entry.getKey() + "=" + entry.getValue());
     }
+  }
+
+  @Override
+  public void version(Arguments.VersionArgs args, Output.YesOrError output) throws Exception {
+      System.err.println("adama version " + Util.prefix(Platform.VERSION, Util.ANSI.Green));
   }
 
   @Override
