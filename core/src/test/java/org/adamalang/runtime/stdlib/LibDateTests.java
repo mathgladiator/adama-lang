@@ -256,4 +256,35 @@ public class LibDateTests {
     NtTime t = LibDate.time(present);
     Assert.assertEquals("17:57", t.toString());
   }
+
+  @Test
+  public void shift_time_zone() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    NtDateTime inUTC = LibDate.adjustTimeZone(present, "UTC").get();
+    Assert.assertEquals("2023-04-24T22:57:19.802528800Z[UTC]", inUTC.toString());
+    NtDateTime inLA = LibDate.adjustTimeZone(present, "America/Los_Angeles").get();
+    Assert.assertEquals("2023-04-24T15:57:19.802528800-07:00[America/Los_Angeles]", inLA.toString());
+    Assert.assertFalse(LibDate.adjustTimeZone(present, "NoWhere").has());
+  }
+
+  @Test
+  public void formatting_usa() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    Assert.assertEquals("04/24/2023", LibDate.format(present, "MM/dd/yyyy").get());
+    Assert.assertFalse(LibDate.format(present, "pZ").has());
+  }
+
+  @Test
+  public void formatting_jp() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    Assert.assertEquals("04/24/2023", LibDate.format(present, "MM/dd/yyyy", "JP").get());
+    Assert.assertFalse(LibDate.format(present, "pZ", "JP").has());
+  }
+
+  @Test
+  public void formatting_en_us() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    Assert.assertEquals("04/24/2023", LibDate.format(present, "MM/dd/yyyy", "en-US").get());
+    Assert.assertFalse(LibDate.format(present, "pZ", "en-US").has());
+  }
 }

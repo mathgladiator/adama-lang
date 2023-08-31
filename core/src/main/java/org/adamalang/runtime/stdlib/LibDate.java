@@ -13,8 +13,8 @@ import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
@@ -186,5 +186,32 @@ public class LibDate {
   public static NtTime time(NtDateTime dt) {
     LocalTime lt = dt.dateTime.toLocalTime();
     return new NtTime(lt.getHour(), lt.getMinute());
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> adjustTimeZone(NtDateTime dt, String newTimeZone) {
+    try {
+      return new NtMaybe<>(new NtDateTime(dt.dateTime.withZoneSameInstant(ZoneId.of(newTimeZone))));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=String.class) NtMaybe<String> format(NtDateTime dt, String pattern, String lang) {
+    try {
+      return new NtMaybe<>(dt.dateTime.format(DateTimeFormatter.ofPattern(pattern, Locale.forLanguageTag(lang))));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=String.class) NtMaybe<String> format(NtDateTime dt, String pattern) {
+    try {
+      return new NtMaybe<>(dt.dateTime.format(DateTimeFormatter.ofPattern(pattern, Locale.US)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
   }
 }

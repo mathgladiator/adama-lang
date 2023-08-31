@@ -1379,7 +1379,12 @@ var RxHTML = (function () {
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
     var init = {};
-    init.viewer_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    try {
+      init.viewer_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      init.viewer_language = navigator.language;
+    } catch (browserBad) {
+      // we just don't see the viewstate if we don't have these available
+    }
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {
