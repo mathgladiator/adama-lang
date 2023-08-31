@@ -18,6 +18,7 @@ public abstract class NamedRunnable implements Runnable {
   public final String __runnableName;
   private String runningIn = "unknown";
   private long created;
+  private long delay;
 
   public NamedRunnable(String first, String... tail) {
     if (tail == null || tail.length == 0) {
@@ -32,10 +33,15 @@ public abstract class NamedRunnable implements Runnable {
       this.__runnableName = sb.toString();
     }
     this.created = System.currentTimeMillis();
+    this.delay = 0;
   }
 
   public void bind(String executorName) {
     this.runningIn = executorName;
+  }
+
+  public void delay(long ms) {
+    this.delay = ms;
   }
 
   @Override
@@ -44,12 +50,12 @@ public abstract class NamedRunnable implements Runnable {
     try {
       execute();
       long now = System.currentTimeMillis();
-      long queueTime = now - created;
+      long queueTime = now - created - delay;
       long runTime = now - ran;
-      // TODO: this is for performance measuring (need to automate in a meaningful way)
+      this.created = now; // for periodic tasks
       boolean skip = queueTime <= 1 && runTime <= 1;
-      if (skip) {
-        // PERF_LOG.error(__runnableName + "," + runningIn + "," + (queueTime) + "," + (queueTime > 10 ? "delayed" : "quick") + "," + runTime + "," + (runTime > 25 ? "slow" : "fast"));
+      if (!skip) { // TODO: this is for performance measuring (need to automate in a meaningful way)
+        // PERF_LOG.error(__runnableName + "," + runningIn + "," + (queueTime) + "," + (queueTime > 500 ? "delayed" : "quick") + "," + runTime + "," + (runTime > 25 ? "slow" : "fast"));
       }
     } catch (Exception ex) {
       boolean noise = noisy(ex);
