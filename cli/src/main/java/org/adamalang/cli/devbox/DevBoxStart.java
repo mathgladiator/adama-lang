@@ -116,7 +116,7 @@ public class DevBoxStart {
     }
     terminal.info("devbox|starting up");
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), localLibAdamaJSPath != null, (b) -> bundle.set(b))) {
+    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null, (b) -> bundle.set(b))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
       terminal.notice("devbox|starting webserver");
       DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, verse);

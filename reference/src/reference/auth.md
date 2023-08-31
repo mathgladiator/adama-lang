@@ -69,4 +69,33 @@ java -jar adama.jar authority append-local \
 
 ## Document
 
-TODO
+Documents can create a signed identity via a document PUT by returning a object with a sign field like so:
+
+```adama
+message WebRegister {
+  string email;
+  string password;
+}
+
+@web put /register (WebRegister register) {
+  // .. validate the registration and insert into a table
+  return { sign: register.email; }
+}
+```
+
+We leverage web put because we most likely don't have a connection to the document as we are trying to get credentials to connect to the document.
+The web put allows us to register users, and passwords must be hashed prior to being sent to the server.
+Since a web put will write a message to the change log, we shouldn't use it for authenticating a user.
+Instead, there is an @authorize handler that accepts an username or email along with a plaintext password.
+
+```adama
+@authorize (email, password) {
+  // the password is plaintext, and you should only store a hash
+  if (password_hash.passwordCheck(email)) {
+    return email; // this is going to the agent
+  }
+  abort;
+}
+```
+
+Whatever these functions result is considered the agent (or subject) of the principal while the authority is the document (doc/$space/key).
