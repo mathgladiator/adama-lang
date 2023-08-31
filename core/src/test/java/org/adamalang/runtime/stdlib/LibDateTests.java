@@ -268,6 +268,13 @@ public class LibDateTests {
   }
 
   @Test
+  public void shift_time_zone_2() {
+    NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
+    NtDateTime inNY = LibDate.adjustTimeZone(present, "America/New_York").get();
+    Assert.assertEquals("2023-04-24T18:57:19.802528800-04:00[America/New_York]", inNY.toString());
+  }
+
+  @Test
   public void formatting_usa() {
     NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
     Assert.assertEquals("04/24/2023", LibDate.format(present, "MM/dd/yyyy").get());
