@@ -142,7 +142,7 @@ public class DevBoxServiceBase implements ServiceBase {
             }
             // TODO: have a way to point this to localhost:$port
             if (verse != null) {
-              rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("\"localhost:8080\""));
+              rxhtml = rxhtml.replaceAll(Pattern.quote("/*ENDPOINT=[*/Adama.Production/*]*/"), Matcher.quoteReplacement("location.host"));
               // TODO: decide on SSL for devbox
               rxhtml = rxhtml.replaceAll(Pattern.quote("\"https://\""), Matcher.quoteReplacement("\"http://\""));
             }
