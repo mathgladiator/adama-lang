@@ -828,4 +828,10 @@
         </documentation>
     </command>
 
+    <command name="version">
+        <documentation>
+            Dump the current Adama version
+        </documentation>
+    </command>
+
 </cli>

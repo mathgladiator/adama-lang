@@ -33,7 +33,7 @@ public class RootHandlerGen {
             }
             sb.append("  void ").append(command.camel).append("(").append(command.capName).append("Args args, ").append(outputType).append(" output) throws Exception;\n");
         }
-        sb.append("}");
+        sb.append("}\n");
         return sb.toString();
     }
 }

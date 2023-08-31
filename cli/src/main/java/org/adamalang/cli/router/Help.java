@@ -31,6 +31,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("dumpenv", 15), Util.ANSI.Green) + "Dump your environment variables");
     System.out.println("    " + Util.prefix(Util.justifyLeft("init", 15), Util.ANSI.Green) + "Initializes the config with a valid token");
     System.out.println("    " + Util.prefix(Util.justifyLeft("kickstart", 15), Util.ANSI.Green) + "Kickstart a project via an interactive process!");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("version", 15), Util.ANSI.Green) + "Dump the current Adama version");
   }
   public static void displaySpaceHelp() {
     System.out.println(Util.prefix("Provides command related to working with space collections...", Util.ANSI.Green));
