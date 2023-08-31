@@ -6,7 +6,7 @@
 - [The Basics of Adama](./basics.md)
 - [Adama as a ?](./adama-as-a.md)
 - [Tuturial Zero to Hero](./zero-hero/start.md)
-  - [Install the tool](./zero-hero/00.install.md)
+  - [Install the tool](./zero-hero/00-install.md)
   - [Initializing your developer account](./zero-hero/01-init.md)
   - [Kickstart a web app](./zero-hero/02-kickstart.md)
   - [Add a table](./zero-hero/03-add-a-table.md)
