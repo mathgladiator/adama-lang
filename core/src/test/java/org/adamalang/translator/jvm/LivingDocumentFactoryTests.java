@@ -109,7 +109,7 @@ public class LivingDocumentFactoryTests {
             "}",
         "{}", Deliverer.FAILURE, new TreeMap<>());
 
-    Assert.assertEquals(10000, factory.maximum_history);
+    Assert.assertEquals(1000, factory.maximum_history);
     try {
       factory.canCreate(ContextSupport.WRAP(NtPrincipal.NO_ONE));
       Assert.fail();
