@@ -18,13 +18,15 @@ import org.adamalang.runtime.json.JsonStreamWriter;
  * to learn if changes have happened since the last time a commited happened
  */
 public class RxGuard extends RxBase implements RxChild {
-  boolean invalid;
+  protected boolean invalid;
   private int generation;
+  private boolean raisingDirtyParent;
 
   public RxGuard(RxParent parent) {
     super(parent);
     generation = 0;
     invalid = true;
+    raisingDirtyParent = false;
   }
 
   @Override
@@ -63,6 +65,15 @@ public class RxGuard extends RxBase implements RxChild {
 
   @Override
   public boolean __raiseInvalid() {
+    if (__parent != null) {
+      if (raisingDirtyParent) {
+        return true;
+      } else {
+        raisingDirtyParent = true;
+        __parent.__raiseDirty();
+        raisingDirtyParent = false;
+      }
+    }
     inc();
     invalid = true;
     return true;
