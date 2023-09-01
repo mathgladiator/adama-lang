@@ -534,6 +534,40 @@ var RxHTML = (function () {
     return dom;
   };
 
+  // RUNTIME | <lookup path=... transform="$transform" />
+  self.LTdT = function (state, name, transform, freq) {
+    var dom = document.createTextNode("");
+    // create the nexus object
+    var obj = {};
+    obj.freq = freq;
+    obj.value = "";
+
+    // update will execute the transform on the value
+    obj.update = function() {
+      dom.nodeValue = transform(this.value);
+    }.bind(obj);
+
+    // subscription will sync the value
+    var sub = function (value) {
+      if (value != null) {
+        this.value = value;
+        this.update();
+      }
+    }.bind(obj);
+
+    // refresh will re-execute the update (and thus the transform)
+    obj.refresh = function() {
+      this.update();
+      if (document.body.contains(dom)) { // will run so long as the DOM contains the node we manipulated
+        window.setTimeout(this.refresh, this.freq);
+      }
+    }.bind(obj);
+    // kick off the auto transform
+    window.setTimeout(obj.refresh, freq);
+    subscribe(state, name, sub);
+    return dom;
+  };
+
   // RUNTIME | <tag>
   self.E = function (tag, ns) {
     if (ns == undefined || ns == null) {
@@ -844,6 +878,14 @@ var RxHTML = (function () {
     // TODO: connected/disconnected as special events to consider
     if (type == "load") {
       window.setTimeout(runnable, 1);
+     } else if (type.startsWith("delay:")) {
+      // delay will run after $delayTimeMS IF the dom element is still visible to the document
+      var delayTimeMS = parseInt(type.substring(6));
+      window.setTimeout(function() {
+        if (document.body.contains(dom)) {
+          runnable();
+        }
+      }, delayTimeMS);
     } else {
       dom.addEventListener(type, runnable);
     }
@@ -1922,6 +1964,7 @@ var RxHTML = (function () {
   transforms['is_empty_str'] = function(x) { return x == ""; };
   transforms['is_not_empty_str'] = function(x) { return x != ""; };
   transforms['jsonify'] = function(x) { return JSON.stringify(x); };
+  transforms['time_now'] = function(x) { return Date.now() + ""; };
 
   self.RTR = function(name, transform) {
     transforms[name] = transform;
