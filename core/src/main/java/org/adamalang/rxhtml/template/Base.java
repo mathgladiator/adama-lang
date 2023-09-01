@@ -9,11 +9,9 @@
 package org.adamalang.rxhtml.template;
 
 import org.adamalang.common.Escaping;
-import org.jsoup.nodes.Comment;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.*;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -48,6 +46,16 @@ public class Base {
     }
   }
 
+  private static String[] extractDelayEvents(Environment env) {
+    ArrayList<String> delayEvents = new ArrayList<>();
+    for (Attribute attr : env.element.attributes().asList()) {
+      if (attr.getKey().startsWith("rx:delay")) {
+        delayEvents.add(attr.getKey().substring(3));
+      }
+    }
+    return delayEvents.toArray(new String[delayEvents.size()]);
+  }
+
   private static String writeIntro(Environment env, String xmlns) {
     String eVar = env.pool.ask();
     env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
@@ -61,6 +69,10 @@ public class Base {
         rx._event(event);
       }
     }
+    for (String delay : extractDelayEvents(env)) {
+      rx._delay(delay);
+    }
+
     if (env.element.hasAttr("rx:link")) {
       env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(",'").append(env.element.attr("rx:link")).append("',$);").newline();
     }

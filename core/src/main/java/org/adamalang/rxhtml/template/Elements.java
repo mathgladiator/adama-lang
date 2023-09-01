@@ -51,7 +51,17 @@ public class Elements {
     if (transform == null || "".equals(transform)) {
       env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(",'").append(path.name).append("'));").newline();
     } else {
-      env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("')));").newline();
+      if (env.element.hasAttr("refresh")) {
+        int freq = 10000;
+        try {
+          freq = Integer.parseInt(env.element.attr("refresh"));
+        } catch (Exception ex) {
+          env.feedback.warn(env.element, env.element.attr("refresh") + " should be a numeric value");
+        }
+        env.writer.tab().append(env.parentVariable).append(".append($.LTdT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("'),").append("" + freq).append("));").newline();
+      } else {
+        env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("')));").newline();
+      }
     }
   }
 

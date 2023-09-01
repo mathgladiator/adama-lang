@@ -220,6 +220,31 @@ public class Attributes {
   public void _event(String event) {
     try {
       ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
+      env.element.removeAttr("rx:" + event);
+      env.pool.ask();
+      for (Command command : commands) {
+        command.write(env, event, eVar);
+      }
+    } catch (ParseException ex) {
+      env.feedback.warn(env.element, "event '" + event + "' has parser problems:" + ex.getMessage());
+    }
+  }
+
+  public void _delay(String event) {
+    try {
+      ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
+      int kColon = event.indexOf(':');
+      if (kColon < 4) {
+        env.feedback.warn(env.element, "delay '" + event + "' is not a well formed delay");
+      } else {
+        String delayTime = event.substring(kColon + 1);
+        try {
+          Integer.parseInt(delayTime);
+        } catch (NumberFormatException nfe) {
+          env.feedback.warn(env.element, "delay '" + event + "' is not a well formed delay (failed to parse " + delayTime + " as int)");
+        }
+      }
+      env.element.removeAttr("rx:" + event);
       env.pool.ask();
       for (Command command : commands) {
         command.write(env, event, eVar);
