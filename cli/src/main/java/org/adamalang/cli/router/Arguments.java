@@ -3963,6 +3963,54 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama services solo", Util.ANSI.Green));
 		}
 	}
+	public static class CanaryArgs {
+		public Config config;
+		public String scenario = "connection-load";
+		public static CanaryArgs from(String[] args, int start) {
+			CanaryArgs returnArgs = new CanaryArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-sn":
+					case "--scenario": {
+						if (k+1 < args.length) {
+							returnArgs.scenario = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Run an E2E test suite against production", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama canary", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-sn, --scenario", Util.ANSI.Green) + " " + Util.prefix("<scenario>", Util.ANSI.White));
+		}
+	}
 	public static class DeinitArgs {
 		public Config config;
 		public static DeinitArgs from(String[] args, int start) {

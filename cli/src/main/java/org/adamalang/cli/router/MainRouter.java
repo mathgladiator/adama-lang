@@ -872,6 +872,16 @@ public class MainRouter {
               System.err.println("See 'adama services help' for a list of subcommands.");
               return 1;
           }
+          case "canary": {
+            CanaryArgs mainArgs = CanaryArgs.from(args, 1);
+            if (mainArgs == null) {
+              CanaryArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.canary(mainArgs , out);
+             return 0;
+          }
           case "deinit": {
             DeinitArgs mainArgs = DeinitArgs.from(args, 1);
             if (mainArgs == null) {

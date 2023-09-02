@@ -9,6 +9,7 @@
 package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.canary.Canary;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.implementations.space.Kickstarter;
@@ -192,6 +193,12 @@ public class RootHandlerImpl implements RootHandler {
         }
       }
     }
+  }
 
+  @Override
+  public void canary(Arguments.CanaryArgs args, Output.YesOrError output) throws Exception {
+    Canary.run(args.config.get_string("canary-endpoint", "wss://aws-us-east-2.adama-platform.com/~s"), args.scenario, (out) -> {
+      System.out.println(out);
+    });
   }
 }
