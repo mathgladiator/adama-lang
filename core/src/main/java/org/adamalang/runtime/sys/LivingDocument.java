@@ -653,6 +653,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** reset the cost */
   public void __zeroOutCodeCost() {
     __code_cost = 0;
+    __goodwillBudget = __goodwillLimitOfBudget;
   }
 
   /** get the number of connected clients */
