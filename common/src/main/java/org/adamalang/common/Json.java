@@ -92,12 +92,29 @@ public class Json {
     return node.booleanValue();
   }
 
+
+  public static boolean readBool(ObjectNode tree, String field, boolean defaultValue) {
+    JsonNode node = tree.get(field);
+    if (node == null || node.isNull() || !node.isBoolean()) {
+      return defaultValue;
+    }
+    return node.booleanValue();
+  }
+
   public static Integer readInteger(ObjectNode tree, String field) {
     Long lng = readLong(tree, field);
     if (lng != null) {
       return lng.intValue();
     }
     return null;
+  }
+
+  public static int readInteger(ObjectNode tree, String field, int defaultValue) {
+    Integer ival = readInteger(tree, field);
+    if (ival == null) {
+      return defaultValue;
+    }
+    return ival.intValue();
   }
 
   public static Long readLong(ObjectNode tree, String field) {

@@ -833,7 +833,7 @@
     </command>
 
     <command name="canary">
-        <arg name="scenario" default="connection-load" />
+        <arg name="scenario" />
         <documentation>
             Run an E2E test suite against production
         </documentation>

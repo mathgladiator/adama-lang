@@ -105,6 +105,20 @@ public class JsonTests {
   }
 
   @Test
+  public void subfield_int_def() {
+    Assert.assertEquals(123, Json.readInteger(Json.parseJsonObject("{}"), "x", 123));
+    Assert.assertEquals(42, Json.readInteger(Json.parseJsonObject("{\"x\":42}"), "x", 123));
+  }
+
+  @Test
+  public void subfield_bool_def() {
+    Assert.assertEquals(false, Json.readBool(Json.parseJsonObject("{}"), "x", false));
+    Assert.assertEquals(true, Json.readBool(Json.parseJsonObject("{}"), "x", true));
+    Assert.assertEquals(true, Json.readBool(Json.parseJsonObject("{\"x\":true}"), "x", true));
+    Assert.assertEquals(true, Json.readBool(Json.parseJsonObject("{\"x\":true}"), "x", false));
+  }
+
+  @Test
   public void subfield_objs() {
     Assert.assertNotNull(Json.readObject(Json.parseJsonObject("{\"x\":{}}"), "x"));
     Assert.assertNull(Json.readObject(Json.parseJsonObject("{}"), "x"));
