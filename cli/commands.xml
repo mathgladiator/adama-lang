@@ -14,6 +14,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="scenario" type="string" short="sn">
+        <documentation>
+            A canary scenario
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="microverse" type="string" short="mv">
         <documentation>
             The microverse plan which defines the local devbox solo mode.
@@ -826,4 +832,12 @@
         </documentation>
     </command>
 
+    <command name="canary">
+        <arg name="scenario" default="connection-load" />
+        <documentation>
+            Run an E2E test suite against production
+        </documentation>
+    </command>
+
 </cli>
+

@@ -22,6 +22,7 @@ public interface RootHandler {
   DomainHandler makeDomainHandler();
   FrontendHandler makeFrontendHandler();
   ServicesHandler makeServicesHandler();
+  void canary(CanaryArgs args, YesOrError output) throws Exception;
   void deinit(DeinitArgs args, YesOrError output) throws Exception;
   void dumpenv(DumpenvArgs args, YesOrError output) throws Exception;
   void init(InitArgs args, YesOrError output) throws Exception;
