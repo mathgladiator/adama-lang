@@ -112,7 +112,7 @@ public class CodeGenDeltaClass {
     sb.append("}").writeNewline();
   }
 
-  public static void writeRecordDeltaClass(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final String className, final boolean forceManifest) {
+  public static void writeRecordDeltaClass(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final String className, final boolean forceManifestBecauseRoot) {
 
     final var fds = new ArrayList<FieldDefinition>();
     sb.append("private class Delta").append(className).append(" implements DeltaNode {").tabUp().writeNewline();
@@ -140,6 +140,12 @@ public class CodeGenDeltaClass {
     }
     writeCommonConstructorAndCost(fds, bubbles, sb, environment, className);
     sb.append("public void show(").append(className).append(" __item, PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
+    if (forceManifestBecauseRoot) {
+      sb.append("DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);").writeNewline();
+      sb.append("__writer.setCacheObject(__policy_cache);").writeNewline();
+    } else {
+      sb.append("DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();").writeNewline();
+    }
     final var cost = fds.size() + storage.bubbles.size();
     if (cost > 0 && !environment.state.hasNoCost()) {
       sb.append("__code_cost += ").append("" + cost).append(";").writeNewline();
@@ -151,7 +157,7 @@ public class CodeGenDeltaClass {
       sb.append("}").writeNewline();
     }
     sb.append("PrivateLazyDeltaWriter __obj = __writer.planObject();").writeNewline();
-    if (forceManifest) {
+    if (forceManifestBecauseRoot) {
       sb.append("__obj.manifest();").writeNewline();
     }
     for (final FieldDefinition fd : fds) {
