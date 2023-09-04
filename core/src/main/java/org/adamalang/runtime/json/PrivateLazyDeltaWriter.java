@@ -15,6 +15,7 @@ public class PrivateLazyDeltaWriter {
   public static final Runnable DO_NOTHING = () -> {
   };
   public final NtPrincipal who;
+  public Object cacheObject;
   public final Object viewerState;
   public final AssetIdEncoder assetIdEncoder;
   private final Runnable onEndWithManifest;
@@ -23,8 +24,9 @@ public class PrivateLazyDeltaWriter {
   private final JsonStreamWriter writer;
   private boolean manifested;
 
-  private PrivateLazyDeltaWriter(final NtPrincipal who, final JsonStreamWriter writer, final PrivateLazyDeltaWriter parent, final Runnable onManifest, final Runnable onEndWithManifest, final Object viewerState, final AssetIdEncoder assetIdEncoder) {
+  private PrivateLazyDeltaWriter(final NtPrincipal who, Object cacheObject, final JsonStreamWriter writer, final PrivateLazyDeltaWriter parent, final Runnable onManifest, final Runnable onEndWithManifest, final Object viewerState, final AssetIdEncoder assetIdEncoder) {
     this.who = who;
+    this.cacheObject = cacheObject;
     this.writer = writer;
     this.parent = parent;
     this.onManifest = onManifest;
@@ -35,7 +37,7 @@ public class PrivateLazyDeltaWriter {
   }
 
   public static PrivateLazyDeltaWriter bind(final NtPrincipal who, final JsonStreamWriter writer, Object viewerState, AssetIdEncoder encoder) {
-    return new PrivateLazyDeltaWriter(who, writer, null, DO_NOTHING, DO_NOTHING, viewerState, encoder);
+    return new PrivateLazyDeltaWriter(who, null, writer, null, DO_NOTHING, DO_NOTHING, viewerState, encoder);
   }
 
   public boolean end() {
@@ -55,20 +57,28 @@ public class PrivateLazyDeltaWriter {
     }
   }
 
+  public void setCacheObject(Object cacheObject) {
+    this.cacheObject = cacheObject;
+  }
+
+  public Object getCacheObject() {
+    return cacheObject;
+  }
+
   public PrivateLazyDeltaWriter planArray() {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.beginArray(), () -> writer.endArray(), viewerState, assetIdEncoder);
+    return new PrivateLazyDeltaWriter(who,  cacheObject, writer, this, () -> writer.beginArray(), () -> writer.endArray(), viewerState, assetIdEncoder);
   }
 
   public PrivateLazyDeltaWriter planField(final int fieldId) {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro("" + fieldId), DO_NOTHING, viewerState, assetIdEncoder);
+    return new PrivateLazyDeltaWriter(who,  cacheObject, writer, this, () -> writer.writeObjectFieldIntro("" + fieldId), DO_NOTHING, viewerState, assetIdEncoder);
   }
 
   public PrivateLazyDeltaWriter planField(final String fieldName) {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro(fieldName), DO_NOTHING, viewerState, assetIdEncoder);
+    return new PrivateLazyDeltaWriter(who,  cacheObject, writer, this, () -> writer.writeObjectFieldIntro(fieldName), DO_NOTHING, viewerState, assetIdEncoder);
   }
 
   public PrivateLazyDeltaWriter planObject() {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.beginObject(), () -> writer.endObject(), viewerState, assetIdEncoder);
+    return new PrivateLazyDeltaWriter(who, cacheObject, writer,this, () -> writer.beginObject(), () -> writer.endObject(), viewerState, assetIdEncoder);
   }
 
   public void writeBool(final boolean b) {
