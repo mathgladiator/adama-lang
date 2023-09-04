@@ -1965,6 +1965,42 @@ var RxHTML = (function () {
   transforms['is_not_empty_str'] = function(x) { return x != ""; };
   transforms['jsonify'] = function(x) { return JSON.stringify(x); };
   transforms['time_now'] = function(x) { return Date.now() + ""; };
+  transforms['time_ago'] = function(dt) {
+    // only transform strings
+    if (typeof (dt) == "string") {
+      // let's strip out everything after the brackets
+      var s = dt;
+      var k = s.indexOf('[');
+      if (k >= 0) {
+        s = s.substring(0, k);
+      }
+      var d = Date.parse(s);
+      if (Number.isNaN(d)) {
+        // it isn't a number, so we didn't get a date stamp; default to the input
+        return dt;
+      }
+      // we are interested in producing a string like "X minutes ago", so start with seconds
+      var delta = (Date.now() - d)/1000; // seconds;
+      if (delta < 60) {
+        return Math.floor(delta) + " seconds ago";
+      }
+      // it wasn't 90 seconds ago or less, so let's refine towards minutes
+      delta /= 60; // now it is minutes
+      if (delta < 60) {
+        return Math.floor(delta) + " minutes ago";
+      }
+      // it wasn't 90 minutes ago, so let's just put the time stamp up
+      var dthen = new Date(d);
+      var dnow = new Date();
+      if (dthen.toLocaleDateString() != dnow.toLocaleDateString()) {
+        return dthen.toLocaleDateString() + " " + dthen.toLocaleTimeString();
+      }
+      return dthen.toLocaleTimeString();
+    } else {
+      // do nothing
+      return dt;
+    }
+  };
 
   self.RTR = function(name, transform) {
     transforms[name] = transform;
