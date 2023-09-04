@@ -403,6 +403,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    wz.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaFunctionPassing_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaFunctionPassing_2() {");
@@ -1365,6 +1368,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    sz3.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaHappy_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaHappy_3() {");
@@ -2158,6 +2164,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaIndexing_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaIndexing_4() {");
@@ -2943,6 +2952,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    sz.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTableCopy_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

@@ -113,6 +113,7 @@ public class CodeGenDeltaClass {
   }
 
   public static void writeRecordDeltaClass(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final String className, final boolean forceManifest) {
+
     final var fds = new ArrayList<FieldDefinition>();
     sb.append("private class Delta").append(className).append(" implements DeltaNode {").tabUp().writeNewline();
     final var bubbles = new ArrayList<FieldDefinition>();

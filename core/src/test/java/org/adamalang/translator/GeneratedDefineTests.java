@@ -434,6 +434,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    raw.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaBringLazyIntoPicture_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaBringLazyIntoPicture_3() {");
@@ -1070,6 +1073,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    b.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaBumpHappy_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -1993,6 +1999,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    src.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaDeclareVariableHappy_8 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaDeclareVariableHappy_8() {");
@@ -2818,6 +2827,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDoubleBumpList_9 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -3701,6 +3713,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    src.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLegacySuper_12 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaLegacySuper_12() {");
@@ -4540,6 +4555,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaMaybeAssignments_13 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaMaybeAssignments_13() {");
@@ -5170,6 +5188,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    i.__revert();");
     gold.append("\n    d.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaPostFixLegacy_14 implements DeltaNode {");
     gold.append("\n    private DInt32 __di;");
@@ -5958,6 +5979,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    md.__revert();");
     gold.append("\n    mi.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaPrefixLegacy_15 implements DeltaNode {");
     gold.append("\n    private DInt32 __di;");
@@ -6808,6 +6832,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    ry.__revert();");
     gold.append("\n    sy.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaVariousAssignments_18 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

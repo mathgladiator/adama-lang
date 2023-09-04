@@ -350,6 +350,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    status.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaAsyncLegacy_1 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaAsyncLegacy_1() {");
@@ -1196,6 +1199,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEsotericMessages_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2176,6 +2182,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaHandlerLegacy_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaHandlerLegacy_4() {");
@@ -2945,6 +2954,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    last_ip.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaHasContext_5 implements DeltaNode {");
     gold.append("\n    private DString __dlast_origin;");
     gold.append("\n    private DString __dlast_ip;");
@@ -3634,6 +3646,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMessageHasEnum_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -4463,6 +4478,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaMessageHasMethod_7 implements DeltaNode {");
     gold.append("\n    private DDynamic __dz;");
     gold.append("\n    private boolean __emitted;");
@@ -5233,6 +5251,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaOpen1_10 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaOpen1_10() {");
@@ -5921,6 +5942,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaOpen2_11 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

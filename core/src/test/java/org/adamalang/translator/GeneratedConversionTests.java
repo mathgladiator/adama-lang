@@ -524,6 +524,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    cake.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLegacy_5 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaLegacy_5() {");
@@ -1662,6 +1665,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRecordToMessage_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

@@ -648,6 +648,12 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n    z2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public final boolean foo;");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {");
+    gold.append("\n      this.foo=__POLICY_foo(__who);");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaGlobalPolicy_8 implements DeltaNode {");
     gold.append("\n    private DInt32 __dz2;");
     gold.append("\n    private boolean __emitted;");

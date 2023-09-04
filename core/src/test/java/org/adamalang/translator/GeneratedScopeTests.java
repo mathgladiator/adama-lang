@@ -430,6 +430,9 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaIfMultiDefine_3 implements DeltaNode {");
     gold.append("\n    private DInt32 __dv;");
     gold.append("\n    private boolean __emitted;");

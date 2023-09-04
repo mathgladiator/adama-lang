@@ -342,6 +342,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaBubbleDataFake_1 implements DeltaNode {");
     gold.append("\n    private long __gthis_day_calendar;");
     gold.append("\n    private DList<DeltaRTx_AutoMaxRecord_9> __dthis_day_calendar;");
@@ -1317,6 +1320,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    things.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLegacy_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2482,6 +2488,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMegaTypeConstruction_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -3988,6 +3997,9 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTypeConstruction_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

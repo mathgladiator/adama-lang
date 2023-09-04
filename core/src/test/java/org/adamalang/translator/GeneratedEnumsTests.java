@@ -542,6 +542,9 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n    head.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaCycle_5 implements DeltaNode {");
     gold.append("\n    private DInt32 __dhead;");
     gold.append("\n    private int __gn1;");
@@ -1357,6 +1360,9 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n    y.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaDispatchInvoke_8 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private DInt32 __dy;");
@@ -2114,6 +2120,9 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n    u.__revert();");
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDispatchOverloading_10 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

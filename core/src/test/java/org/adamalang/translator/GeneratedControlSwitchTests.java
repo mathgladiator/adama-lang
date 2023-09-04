@@ -350,6 +350,9 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaAliveCode_1 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaAliveCode_1() {");
@@ -1147,6 +1150,9 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n    sum.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaHappyEnum_6 implements DeltaNode {");
     gold.append("\n    private DInt32 __dv;");
     gold.append("\n    private DInt32 __dsum;");
@@ -1823,6 +1829,9 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n    sum.__revert();");
     gold.append("\n    sum3.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaHappy_7 implements DeltaNode {");
     gold.append("\n    private DInt32 __dsum;");

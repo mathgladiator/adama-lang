@@ -362,6 +362,9 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n    r.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaHappy_1 implements DeltaNode {");
     gold.append("\n    private long __gff;");
     gold.append("\n    private DInt32 __dff;");

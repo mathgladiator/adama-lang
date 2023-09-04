@@ -350,6 +350,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    _items.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaFormulaUsingOtherFormula_1 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaFormulaUsingOtherFormula_1() {");
@@ -1183,6 +1186,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMethodSubscriptions_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2304,6 +2310,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    y.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaReorderBetweenRecords_3 implements DeltaNode {");
     gold.append("\n    private DeltaRTxX __dx;");
     gold.append("\n    private DeltaRTxY __dy;");
@@ -3334,6 +3343,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaReorderTyping_4 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");

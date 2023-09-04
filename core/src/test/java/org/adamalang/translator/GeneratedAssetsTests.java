@@ -374,6 +374,9 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    latest.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaAttachment_1 implements DeltaNode {");
     gold.append("\n    private DAsset __dlatest;");
     gold.append("\n    private int __gmy_file;");
@@ -1171,6 +1174,9 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    latest.__revert();");
     gold.append("\n    te.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaSanity_4 implements DeltaNode {");
     gold.append("\n    private DAsset __dlatest;");

@@ -457,6 +457,9 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaDynamic_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaDynamic_4() {");
@@ -1152,6 +1155,9 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaHappy_5 implements DeltaNode {");
     gold.append("\n    private DInt32 __dz;");

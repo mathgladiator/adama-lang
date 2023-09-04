@@ -456,6 +456,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    lastValue.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLegacyBlock_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaLegacyBlock_3() {");
@@ -1243,6 +1246,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    zzz.__revert();");
     gold.append("\n    out.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLegacyForEach_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2234,6 +2240,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    bbbb.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLegacyIf_5 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaLegacyIf_5() {");
@@ -3023,6 +3032,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    out.__revert();");
     gold.append("\n    tbl2.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLegacyLoops_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -4144,6 +4156,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    lastV.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLegacy_7 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaLegacy_7() {");
@@ -4934,6 +4949,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaMaybeBool_8 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private boolean __emitted;");
@@ -5586,6 +5604,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMegaIfLegacy_9 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -6270,6 +6291,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    sum.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaVariousFor_11 implements DeltaNode {");
     gold.append("\n    private DInt32 __dsum;");

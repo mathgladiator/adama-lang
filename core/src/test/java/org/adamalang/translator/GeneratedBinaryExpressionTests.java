@@ -350,6 +350,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaAggregateMath_1 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaAggregateMath_1() {");
@@ -1335,6 +1338,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    final_foo3.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaComplexMath_2 implements DeltaNode {");
     gold.append("\n    private int __gspecial_one;");
     gold.append("\n    private DComplex __dspecial_one;");
@@ -2015,6 +2021,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaNumberCompare_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2701,6 +2710,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    other.__revert();");
     gold.append("\n    s.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaOperationsHappy_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -3488,6 +3500,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaSearch_5 implements DeltaNode {");
     gold.append("\n    private int __gx;");
     gold.append("\n    private DBoolean __dx;");
@@ -4110,6 +4125,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaStringCompare_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

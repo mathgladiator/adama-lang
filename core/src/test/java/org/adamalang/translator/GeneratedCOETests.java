@@ -537,6 +537,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    _people.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaIssue20230513_5 implements DeltaNode {");
     gold.append("\n    private long __gyour_family_1;");
     gold.append("\n    private DMaybe<DeltaRTxFamily> __dyour_family_1;");

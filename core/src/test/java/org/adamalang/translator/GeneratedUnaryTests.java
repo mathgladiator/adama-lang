@@ -350,6 +350,9 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaAggregateOps_1 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaAggregateOps_1() {");
@@ -1262,6 +1265,9 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n    ry.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaHappy_2 implements DeltaNode {");
     gold.append("\n    private DInt32 __drx;");

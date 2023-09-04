@@ -489,6 +489,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __cx.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaInvokeDynamic_4 implements DeltaNode {");
     gold.append("\n    private DString __dm;");
     gold.append("\n    private int __gx;");
@@ -1239,6 +1242,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    x.get();");
     gold.append("\n    __cx.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaInvoke_5 implements DeltaNode {");
     gold.append("\n    private DString __dm;");
@@ -2015,6 +2021,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLinkSampleFound_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -2818,6 +2827,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaPlay_10 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaPlay_10() {");
@@ -3610,6 +3622,9 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    foo.get();");
     gold.append("\n    __cfoo.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaResultFunctions_11 implements DeltaNode {");
     gold.append("\n    private int __gfoo;");
