@@ -376,6 +376,9 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    p1.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaClient_1 implements DeltaNode {");
     gold.append("\n    private DPrincipal __dp0;");
     gold.append("\n    private DBoolean __db0;");
@@ -1061,6 +1064,9 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    z2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaFunctionOverloading_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaFunctionOverloading_3() {");
@@ -1725,6 +1731,9 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    y.__revert();");
     gold.append("\n    zzz.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaMathLib_4 implements DeltaNode {");
     gold.append("\n    private DDouble __dx;");
@@ -2486,6 +2495,9 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    d1.__revert();");
     gold.append("\n    l.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRandom_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");

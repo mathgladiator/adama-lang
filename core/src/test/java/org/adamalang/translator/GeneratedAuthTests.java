@@ -390,6 +390,9 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n    password_last.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaPrimary_2 implements DeltaNode {");
     gold.append("\n    private DString __dpassword_last;");
     gold.append("\n    private boolean __emitted;");

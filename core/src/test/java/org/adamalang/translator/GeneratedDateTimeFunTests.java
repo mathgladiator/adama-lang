@@ -387,6 +387,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    eq1.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaDateParsing_1 implements DeltaNode {");
     gold.append("\n    private DDate __dx;");
     gold.append("\n    private int __gx_yr;");
@@ -1382,6 +1385,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    eq1.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaDateTimeParsing_2 implements DeltaNode {");
     gold.append("\n    private DDateTime __dx;");
@@ -2387,6 +2393,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    b2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaFutureExpiry_4 implements DeltaNode {");
     gold.append("\n    private DDateTime __ddeepnow;");
     gold.append("\n    private DDateTime __dexpiry;");
@@ -3093,6 +3102,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    nt.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaIntern_5 implements DeltaNode {");
     gold.append("\n    private DInt64 __dnow;");
     gold.append("\n    private DDate __dtoday;");
@@ -3789,6 +3801,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    eq1.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTimeParsing_6 implements DeltaNode {");
     gold.append("\n    private DTime __dx;");
@@ -4748,6 +4763,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    eq1.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTimeSpanParsing_7 implements DeltaNode {");
     gold.append("\n    private DTimeSpan __dx;");

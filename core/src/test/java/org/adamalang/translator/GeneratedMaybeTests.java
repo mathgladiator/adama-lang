@@ -350,6 +350,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaCastIntToDefault_1 implements DeltaNode {");
     gold.append("\n    private DDouble __dz;");
     gold.append("\n    private boolean __emitted;");
@@ -969,6 +972,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaEnum_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -1787,6 +1793,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    abc.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaInitRxMaybeWithMaybe_3 implements DeltaNode {");
     gold.append("\n    private DMaybe<DDouble> __dxyz;");
     gold.append("\n    private DMaybe<DDouble> __dabc;");
@@ -2426,6 +2435,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaIntEqualityRegression_4 implements DeltaNode {");
     gold.append("\n    private int __gall;");
@@ -3447,6 +3459,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    r.__revert();");
     gold.append("\n    hey.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaUnpack_5 implements DeltaNode {");
     gold.append("\n    private DMaybe<DeltaRTxR> __dr;");

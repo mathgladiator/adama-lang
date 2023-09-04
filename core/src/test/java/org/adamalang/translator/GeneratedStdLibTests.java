@@ -374,6 +374,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    _b.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLists_1 implements DeltaNode {");
     gold.append("\n    private int __gx;");
     gold.append("\n    private DList<DInt32> __dx;");
@@ -1787,6 +1790,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    d2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaNumericalExtensions_2 implements DeltaNode {");
     gold.append("\n    private DString __dx1;");
     gold.append("\n    private DString __dx2;");
@@ -2949,6 +2955,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    x6.__revert();");
     gold.append("\n    x7.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaStats_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
@@ -4168,6 +4177,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    _s.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaStrings_4 implements DeltaNode {");
     gold.append("\n    private DString __dx1;");
     gold.append("\n    private DString __dx2;");
@@ -5370,6 +5382,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    wp.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTablesJoin_5 implements DeltaNode {");
     gold.append("\n    private DeltaRTxWeekPattern __dwp;");

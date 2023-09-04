@@ -376,6 +376,9 @@ public class GeneratedViewerSendTests extends GeneratedBase {
     gold.append("\n    wrote.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaValid_1 implements DeltaNode {");
     gold.append("\n    private DBoolean __dsent;");
     gold.append("\n    private DBoolean __dwent;");

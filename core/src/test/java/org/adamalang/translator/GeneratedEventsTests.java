@@ -376,6 +376,9 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("\n    last_ip.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaHaveContext_1 implements DeltaNode {");
     gold.append("\n    private DPrincipal __dlast_who;");
     gold.append("\n    private DString __dlast_origin;");
@@ -1107,6 +1110,9 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaLoadChange_2 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private boolean __emitted;");
@@ -1726,6 +1732,9 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaLoadNoChange_3 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");

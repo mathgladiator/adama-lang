@@ -354,6 +354,9 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    document.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaAppend_1 implements DeltaNode {");
     gold.append("\n    private DText __ddocument;");
     gold.append("\n    private int __gdocument_str;");
@@ -1042,6 +1045,9 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    document.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaCompileAdama_2 implements DeltaNode {");
     gold.append("\n    private DText __ddocument;");
     gold.append("\n    private int __gdocument_str;");
@@ -1705,6 +1711,9 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    document.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaFlow_3 implements DeltaNode {");
     gold.append("\n    private DText __ddocument;");
@@ -2464,6 +2473,9 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    document.__revert();");
     gold.append("\n    r.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaIngestion_4 implements DeltaNode {");
     gold.append("\n    private DText __ddocument;");

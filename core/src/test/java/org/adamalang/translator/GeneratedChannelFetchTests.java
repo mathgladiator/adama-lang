@@ -363,6 +363,9 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaTimeoutArrayHappy_1 implements DeltaNode {");
     gold.append("\n    private DInt32 __dz;");
     gold.append("\n    private boolean __emitted;");
@@ -1145,6 +1148,9 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    person.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTimeoutHappy_2 implements DeltaNode {");
     gold.append("\n    private DInt32 __dz;");
@@ -1941,6 +1947,9 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    person.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaTimeoutTimesOut_3 implements DeltaNode {");
     gold.append("\n    private DInt32 __dz;");

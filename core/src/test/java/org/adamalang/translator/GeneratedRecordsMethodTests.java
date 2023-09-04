@@ -377,6 +377,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaCallingMethod_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaCallingMethod_2() {");
@@ -1174,6 +1177,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaOverloading_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaOverloading_3() {");
@@ -1964,6 +1970,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    card.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaReactive_4 implements DeltaNode {");
     gold.append("\n    private DeltaRTxCard __dcard;");
@@ -2771,6 +2780,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    _things.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaSimpleAccess_5 implements DeltaNode {");
     gold.append("\n    private long __gthings;");
@@ -3653,6 +3665,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaSimple_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaSimple_6() {");
@@ -4474,6 +4489,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    _things.__revert();");
     gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
     gold.append("\n  private class DeltaViewerAccess_7 implements DeltaNode {");
     gold.append("\n    private long __gthings;");

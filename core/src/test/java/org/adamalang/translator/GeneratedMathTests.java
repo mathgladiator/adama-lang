@@ -432,6 +432,9 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    c4.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaComplex_1 implements DeltaNode {");
     gold.append("\n    private DComplex __dc2;");
     gold.append("\n    private DComplex __dc4;");

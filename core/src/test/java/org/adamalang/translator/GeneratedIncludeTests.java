@@ -403,6 +403,9 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("\n    foo_here.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  public class DeltaPrivacyCache {");
+    gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
+    gold.append("\n  }");
     gold.append("\n  private class DeltaFound_2 implements DeltaNode {");
     gold.append("\n    private DInt32 __dstd_here;");
     gold.append("\n    private DInt32 __dfoo_here;");
