@@ -151,7 +151,11 @@ public class CodeGenDeltaClass {
       sb.append("__code_cost += ").append("" + cost).append(";").writeNewline();
     }
     for (String policy : storage.policiesForVisibility) {
-      sb.append("if (!").append(storage.policies.containsKey(policy) ? "__item." : "").append("__POLICY_").append(policy).append("(__writer.who)) {").tabUp().writeNewline();
+      if (storage.policies.containsKey(policy)) {
+        sb.append("if (!__item.__POLICY_").append(policy).append("(__writer.who)) {").tabUp().writeNewline();
+      } else {
+        sb.append("if (!__policy_cache.").append(policy).append(") {").tabUp().writeNewline();
+      }
       sb.append("hide(__writer);").writeNewline();
       sb.append("return;").tabDown().writeNewline();
       sb.append("}").writeNewline();

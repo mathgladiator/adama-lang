@@ -1,0 +1,8 @@
+use_policy<p> formula v42 = 42;
+use_policy<p> int x;
+use_policy<p> int y;
+use_policy<p> int z;
+
+policy p {
+  return @who != @no_one;
+}

@@ -77,10 +77,12 @@ public class UseCustomPolicy extends Policy {
       } else {
         sb.append(" && ");
       }
-      if (!globals.contains(policyToCheck)) {
-        sb.append("__item.");
+      if (globals.contains(policyToCheck)) {
+        sb.append("__policy_cache.").append(policyToCheck);
+      } else {
+        sb.append("__item.__POLICY_").append(policyToCheck).append("(__writer.who)");
       }
-      sb.append("__POLICY_").append(policyToCheck).append("(__writer.who)");
+
     }
     sb.append(") {").tabUp().writeNewline();
     return true;
