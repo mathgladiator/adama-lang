@@ -75,10 +75,8 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
         return promise;
       }));
     }
-    pipeline.addLast(new HttpServerCodec());
-    pipeline.addLast(new ReadTimeoutHandler(webConfig.readTimeoutSeconds));
-    pipeline.addLast(new WriteTimeoutHandler(webConfig.writeTimeoutSeconds));
     pipeline.addLast(new IdleStateHandler(webConfig.idleReadSeconds, webConfig.idleWriteSeconds, webConfig.idleAllSeconds, TimeUnit.SECONDS));
+    pipeline.addLast(new HttpServerCodec());
     pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());
     pipeline.addLast(new WebSocketServerProtocolHandler("/~s", null, true, webConfig.maxWebSocketFrameSize, false, true, webConfig.timeoutWebsocketHandshake));
