@@ -23,6 +23,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 
 import java.io.File;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,7 +36,7 @@ public class DevCoreServiceFactory {
   public final DeploymentFactoryBase base;
   public final CoreService service;
 
-  public DevCoreServiceFactory(AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
+  public DevCoreServiceFactory(TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
     this.alive = alive;
     this.caravanExecutor = SimpleExecutor.create("caravan");
     File walRoot = new File(caravanPath, "wal");
@@ -43,7 +44,14 @@ public class DevCoreServiceFactory {
     File storePath = new File(dataRoot, "store");
     walRoot.mkdir();
     dataRoot.mkdir();
+    io.info("caravan|loading store");
     DurableListStore store = new DurableListStore(new DiskMetrics(metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
+    int count = 0;
+    for (Map.Entry<Key, Integer> entry : store.map().entrySet()) {
+      io.info("caravan|has '" + entry.getKey().space + "/" + entry.getKey().key + "` at " + entry.getValue());
+      count++;
+    }
+    io.info("caravan|stored loaded " + count + " document(s)");
     Cloud cloud = new Cloud() {
       @Override
       public File path() {

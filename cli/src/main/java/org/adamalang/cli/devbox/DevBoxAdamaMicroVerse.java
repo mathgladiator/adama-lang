@@ -258,7 +258,7 @@ public class DevBoxAdamaMicroVerse {
         }
       }
     }
-    DevCoreServiceFactory factory = new DevCoreServiceFactory(alive, caravanPath, cloudPath, new NoOpMetricsFactory());
+    DevCoreServiceFactory factory = new DevCoreServiceFactory(io, alive, caravanPath, cloudPath, new NoOpMetricsFactory());
     JsonNode spacesNode = defn.get("spaces");
     if (spacesNode == null || !spacesNode.isArray()) {
       io.notice("verse|lacked a spaces array in microverse config");
