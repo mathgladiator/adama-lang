@@ -79,8 +79,8 @@ public abstract class RxBase {
           it.remove();
         }
       }
+      __notifying = false;
     }
-    __notifying = false;
   }
 
   /** inform the object that it is dirty, which in turn will notify the parents */
