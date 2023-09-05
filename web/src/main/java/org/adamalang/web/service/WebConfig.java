@@ -50,11 +50,11 @@ public class WebConfig {
     this.deepHealthCheckPath = config.strOf("http-deep-health-check-path", "/~deep_health_check_status_page");
     // WebSocket properties
     this.timeoutWebsocketHandshake = config.intOf("websocket-handshake-timeout-ms", 2500);
-    this.readTimeoutSeconds = config.intOf("http-read-timeout-sec", 30);
-    this.writeTimeoutSeconds = config.intOf("http-write-timeout-sec", 30);
+    this.readTimeoutSeconds = config.intOf("http-read-timeout-sec", 45);
+    this.writeTimeoutSeconds = config.intOf("http-write-timeout-sec", 45);
     this.idleReadSeconds = config.intOf("http-read-idle-sec", 0);
     this.idleWriteSeconds = config.intOf("http-write-idle-sec", 0);
-    this.idleAllSeconds = config.intOf("websocket-all-idle-sec", 30);
+    this.idleAllSeconds = config.intOf("websocket-all-idle-sec", 45);
     this.maxWebSocketFrameSize = config.intOf("websocket-max-frame-size", 1048576);
     this.heartbeatTimeMilliseconds = config.intOf("websocket-heart-beat-ms", 1000);
     this.bossThreads = config.intOf("http-boss-threads", 2);

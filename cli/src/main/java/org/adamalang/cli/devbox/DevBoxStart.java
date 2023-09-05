@@ -201,6 +201,7 @@ public class DevBoxStart {
               public void success(String value) {
                 try {
                   Files.writeString(new File(file).toPath(), value);
+                  terminal.info("saved " + file);
                 } catch (Exception ex) {
                   terminal.error("failed save: " + ex.getMessage());
                 }
