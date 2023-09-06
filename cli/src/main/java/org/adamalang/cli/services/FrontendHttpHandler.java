@@ -75,52 +75,63 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
+  private String extractHost(TreeMap<String, String> headers, Callback<HttpResult> callback) {
+    String host = headers.get("host");
+    if (IsIP.test(host)) {
+      callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
+      return null;
+    }
+    if (host == null) {
+      callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_HOST_HEADER));
+      return null;
+    }
+    return host;
+  }
+
   @Override
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    String host = headers.get("host");
-    if (host != null) {
-      if (IsIP.test(host)) {
-        callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
+    String host = extractHost(headers, callback);
+    if (host == null) {
+      return; // handled by extractHost
+    }
+
+    boolean isSpecial = webConfig.specialDomains.contains(host);
+    if (!isSpecial) {
+      if (host.endsWith("." + webConfig.regionalDomain)) {
+        get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
         return;
       }
-      boolean isSpecial = webConfig.specialDomains.contains(host);
-      if (!isSpecial) {
-        if (host.endsWith("." + webConfig.regionalDomain)) {
-          get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
+
+      for (String suffix : webConfig.globalDomains) {
+        if (host.endsWith("." + suffix)) {
+          String space = host.substring(0, host.length() - suffix.length() - 1);
+          getSpace(space, uri, headers, parametersJson, callback);
           return;
         }
-
-        for (String suffix : webConfig.globalDomains) {
-          if (host.endsWith("." + suffix)) {
-            String space = host.substring(0, host.length() - suffix.length() - 1);
-            getSpace(space, uri, headers, parametersJson, callback);
-            return;
+      }
+    }
+    domainFinder.find(host, new Callback<>() {
+      @Override
+      public void success(Domain domain) {
+        if (domain != null) {
+          if (domain.key != null && domain.routeKey) {
+            SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
+            get(skr, headers, parametersJson, callback);
+          } else {
+            getSpace(domain.space, uri, headers, parametersJson, callback);
           }
+        } else {
+          LOGGER.error("domain-not-mapped:" + host);
+          callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
         }
       }
-      domainFinder.find(host, new Callback<>() {
-        @Override
-        public void success(Domain domain) {
-          if (domain != null) {
-            if (domain.key != null && domain.routeKey) {
-              SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
-              get(skr, headers, parametersJson, callback);
-            } else {
-              getSpace(domain.space, uri, headers, parametersJson, callback);
-            }
-          } else {
-            LOGGER.error("domain-no-mapped:" + host);
-            callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_DOMAIN_MAPPING));
-          }
-        }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          LOGGER.error("failed-find-domain: " + host, ex);
-          callback.failure(ex);
-        }
-      });
-    }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        LOGGER.error("failed-find-domain: " + host, ex);
+        callback.failure(ex);
+      }
+    });
   }
 
   @Override
@@ -182,10 +193,20 @@ public class FrontendHttpHandler implements HttpHandler {
 
   @Override
   public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-    String host = headers.get("host");
+    String host = extractHost(headers, callback);
     if (host == null) {
-      callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_POST_NO_HOST));
       return;
+    }
+    if (host.endsWith("." + webConfig.regionalDomain)) {
+      post(SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
+      return;
+    }
+    for (String suffix : webConfig.globalDomains) {
+      if (host.endsWith("." + suffix)) {
+        String space = host.substring(0, host.length() - suffix.length() - 1);
+        post(new SpaceKeyRequest(space, "default-document", uri), headers, parametersJson, body, callback);
+        return;
+      }
     }
     domainFinder.find(host, new Callback<Domain>() {
       @Override
