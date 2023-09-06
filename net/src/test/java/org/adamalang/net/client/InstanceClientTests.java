@@ -81,7 +81,7 @@ public class InstanceClientTests {
         remote.update("{\"z\":100}");
         SimpleIntCallback sic = new SimpleIntCallback();
         client.directSend("127.0.0.1", "origin", "overlord", "overlord", "space", "1", null, "foo", "{\"z\":1000}", sic);
-        sic.assertSuccess(6);
+        sic.assertSuccess(5);
         remote.send("foo", "marker", "{\"z\":\"100\"}", new Callback<Integer>() {
           @Override
           public void success(Integer value) {
@@ -97,9 +97,9 @@ public class InstanceClientTests {
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"view-state-filter\":[\"z\"]}");
         events.assertWrite(2, "DELTA:{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":4}");
-        events.assertWrite(3, "DELTA:{\"data\":{\"zpx\":1100},\"seq\":5}");
-        events.assertWrite(4, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":6}");
-        events.assertWrite(5, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":7}");
+        events.assertWrite(3, "DELTA:{\"data\":{\"zpx\":1100}}");
+        events.assertWrite(4, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":5}");
+        events.assertWrite(5, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":6}");
         events.assertWrite(6, "DISCONNECTED");
       }
     }
