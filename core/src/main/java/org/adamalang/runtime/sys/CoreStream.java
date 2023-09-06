@@ -49,8 +49,12 @@ public class CoreStream implements AdamaStream {
       public void execute() throws Exception {
         inventory.message();
         view.ingestViewUpdate(patch);
-        document.invalidate(Callback.DONT_CARE_INTEGER);
-        // TODO: for efficiency sake, we can recompute just the view. However, it does require no patch being inflight to not leak data.
+        if (document.document().__hasInflightAsyncWork()) {
+          // this is, at core, fundamentally expensive
+          document.invalidate(Callback.DONT_CARE_INTEGER);
+        } else {
+          view.triggerRefresh();
+        }
       }
     });
   }

@@ -22,6 +22,7 @@ public abstract class PrivateView {
   private boolean alive;
   private PrivateView usurper;
   private String lastWrittenFutures;
+  private Runnable refresh;
 
   /** construct the view based on the person (who) and the connection (perspective) */
   public PrivateView(final int viewId, final NtPrincipal who, final Perspective perspective, final AssetIdEncoder assetIdEncoder) {
@@ -31,6 +32,20 @@ public abstract class PrivateView {
     this.assetIdEncoder = assetIdEncoder;
     this.perspective = perspective;
     this.lastWrittenFutures = DEFAULT_FUTURES;
+    this.refresh = null;
+  }
+
+  /** this is an optimized way to update the viewer without causing an invalidate */
+  public void setRefresh(Runnable refresh) {
+    this.refresh = refresh;
+  }
+
+  public void triggerRefresh() {
+    if (usurper != null) {
+      usurper.triggerRefresh();
+    } else {
+      refresh.run();
+    }
   }
 
   /**

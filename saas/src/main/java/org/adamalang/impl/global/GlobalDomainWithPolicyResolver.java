@@ -19,17 +19,31 @@ import org.adamalang.contracts.DomainWithPolicyResolver;
 import org.adamalang.contracts.SpacePolicyLocator;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.contracts.data.SpacePolicy;
+import org.adamalang.web.service.SpaceKeyRequest;
+import org.adamalang.web.service.WebConfig;
 
 public class GlobalDomainWithPolicyResolver implements DomainWithPolicyResolver {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DomainWithPolicyResolver.class);
   private final SimpleExecutor executor;
   private final SpacePolicyLocator spacePolicyLocator;
   private final DataBase dataBase;
+  private final WebConfig webConfig;
 
   public GlobalDomainWithPolicyResolver(SimpleExecutor executor, SpacePolicyLocator spacePolicyLocator, GlobalExternNexus nexus) {
     this.executor = executor;
     this.spacePolicyLocator = spacePolicyLocator;
     this.dataBase = nexus.database;
+    this.webConfig = nexus.webBase.config;
+  }
+
+  private Domain testForInventedDomain(String domain) {
+    for (String suffix : webConfig.globalDomains) {
+      if (domain.endsWith("." + suffix)) {
+        String space = domain.substring(0, domain.length() - suffix.length() - 1);
+        return new Domain(domain, 0, space, "default-document", false, null, null, System.currentTimeMillis());
+      }
+    }
+    return null;
   }
 
   public void execute(Session session, String domain, Callback<DomainWithPolicy> callback) {
@@ -37,7 +51,11 @@ public class GlobalDomainWithPolicyResolver implements DomainWithPolicyResolver 
       @Override
       public void execute() throws Exception {
         try {
-          Domain domainRecord = Domains.get(dataBase, domain);
+          Domain _domainRecord = testForInventedDomain(domain);
+          if (_domainRecord == null) {
+            _domainRecord = Domains.get(dataBase, domain);
+          }
+          final Domain domainRecord = _domainRecord;
           if (domainRecord == null) {
             callback.success(new DomainWithPolicy(null, null));
             return;

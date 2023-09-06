@@ -378,8 +378,34 @@ public abstract class LivingDocument implements RxParent, Caller {
     usurpingDocument.__code_cost = __code_cost;
   }
 
+  private String __makeRefreshJustData(PrivateView pv) {
+    JsonStreamWriter data = new JsonStreamWriter();
+    pv.update(data);
+    String dataStr = data.toString();
+    if (!"{}".equals(dataStr)) {
+      final var writer = new JsonStreamWriter();
+      writer.beginObject();
+      writer.writeObjectFieldIntro("data");
+      writer.inline(dataStr);
+      writer.force_comma_introduction();
+      writer.endObject();
+      return writer.toString();
+    }
+    return null;
+  }
+
+  public boolean __hasInflightAsyncWork() {
+    return __queue.size() > 0 || __webQueue.size() > 0;
+  }
+
   public PrivateView __createView(final NtPrincipal __who, final Perspective perspective, AssetIdEncoder __encoder) {
     final var view = __createPrivateView(__who, perspective, __encoder);
+    view.setRefresh(() -> {
+      String delta = __makeRefreshJustData(view);
+      if (delta != null) {
+        view.deliver(delta);
+      }
+    });
     var viewsForWho = __trackedViews.get(__who);
     if (viewsForWho == null) {
       viewsForWho = new ArrayList<>();

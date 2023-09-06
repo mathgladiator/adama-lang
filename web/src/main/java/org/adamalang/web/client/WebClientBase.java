@@ -42,7 +42,7 @@ public class WebClientBase {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(WebClientBase.class);
   private static final byte[] EMPTY_BODY = new byte[0];
 
-  private final WebConfig config;
+  public final WebConfig config;
   private final EventLoopGroup group;
   private final AsyncPool<WebEndpoint, WebClientSharedConnection> pool;
   private final WebClientSharedConnectionActions actions;
