@@ -1,0 +1,7 @@
+record R {
+  int x;
+}
+
+message M {
+  R r;
+}

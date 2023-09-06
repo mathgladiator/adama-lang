@@ -24,6 +24,8 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
+import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
+import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -31,6 +33,7 @@ import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
+import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnlyForSet;
 import org.adamalang.translator.tree.types.traits.details.*;
@@ -166,6 +169,15 @@ public class TyNativeMessage extends TyType implements //
   @Override
   public void typing(TypeCheckerRoot checker) {
     storage.typing(name, checker);
+
+    checker.register(Collections.emptySet(), (env) -> {
+      for (FieldDefinition fd : storage.fieldsByOrder) {
+        TyType resolved = env.rules.Resolve(fd.type, false);
+        if (resolved instanceof IsReactiveValue || resolved instanceof TyReactiveRecord || resolved instanceof TyReactiveTable || resolved instanceof TyNativeTable) {
+          env.document.createError(TyNativeMessage.this, String.format("Messages can't have a field type of '%s'", resolved.getAdamaType()));
+        }
+      }
+    });
   }
 
   @Override

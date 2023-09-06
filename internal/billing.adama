@@ -113,3 +113,9 @@ message BillingInformation {
 channel update_billing_information(BillingInformation bi) {
 
 }
+
+@load {
+  // for now, we don't keep anything until we reduce down into daily usage reports
+  (iterate _unbilled_storage).delete();
+  (iterate _unbilled_usage).delete();
+}
