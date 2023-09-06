@@ -3338,7 +3338,7 @@ public class Arguments {
 	public static class FrontendDevServerArgs {
 		public Config config;
 		public String rxhtmlPath = "frontend";
-		public String assetPath = ".";
+		public String assetPath = "assets";
 		public String microverse = "local.verse.json";
 		public String localLibadamaPath = null;
 		public static FrontendDevServerArgs from(String[] args, int start) {

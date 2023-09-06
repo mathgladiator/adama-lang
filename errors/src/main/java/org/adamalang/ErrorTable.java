@@ -630,14 +630,14 @@ public class ErrorTable {
     descriptions.put(904394, "no description of error (yet)");
     names.put(999619, "SUPER_UNEXPECTED_EXCEPTION_SET_AUTOMATIC");
     descriptions.put(999619, "no description of error (yet)");
+    names.put(979194, "FRONTEND_NO_HOST_HEADER");
+    descriptions.put(979194, "no description of error (yet)");
     names.put(973020, "FRONTEND_NO_DOMAIN_MAPPING");
     descriptions.put(973020, "no description of error (yet)");
     names.put(909532, "FRONTEND_IP_DONT_RESOLVE");
     descriptions.put(909532, "no description of error (yet)");
     names.put(917740, "FRONTEND_SECRETS_SIGNING_EXCEPTION");
     descriptions.put(917740, "no description of error (yet)");
-    names.put(999675, "FRONTEND_POST_NO_HOST");
-    descriptions.put(999675, "no description of error (yet)");
     names.put(929987, "CACHE_ASSET_FILE_FAILED_WRITE");
     descriptions.put(929987, "no description of error (yet)");
     names.put(920811, "CACHE_ASSET_FILE_CLOSED_PRIOR_ATTACH");

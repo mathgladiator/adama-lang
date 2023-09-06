@@ -50,13 +50,15 @@ public class Kickstarter {
     spaceDir.mkdirs();
     File backendDir = new File(spaceDir, "backend");
     File frontendDir = new File(spaceDir, "frontend");
+    File assetDir = new File(spaceDir, "assets");
     backendDir.mkdirs();
     frontendDir.mkdirs();
     downloadAdama(new File(spaceDir, "backend.adama"));
     downloadRxHTML(new File(frontendDir, "initial.rx.html"));
     Files.writeString(new File(backendDir, ".gitkeep").toPath(), "");
+    Files.writeString(new File(assetDir, ".gitkeep").toPath(), "");
     String gitignore = "logs\nnode_modules\nplan.json\nfrontend.rx.html\ncaravan\ncloud\ncss.freq.json\nsummary.html\n";
-    Files.writeString(new File(spaceDir, ".gitkeep").toPath(), gitignore);
+    Files.writeString(new File(spaceDir, ".gitignore").toPath(), gitignore);
     String verse = "{\n  \"documents\":[\n" //
        + "    {\"space\": \"" + space + "\", \"key\":\"demo\", \"domain\":true}\n" //
        + "  ],\n" //

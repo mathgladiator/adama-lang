@@ -1,0 +1,12 @@
+record R {
+  int x;
+}
+
+message T {
+  int z;
+}
+
+message M {
+  table<R> tbl1;
+  table<T> tbl2;
+}
