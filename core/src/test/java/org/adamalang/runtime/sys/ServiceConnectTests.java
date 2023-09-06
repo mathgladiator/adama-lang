@@ -286,7 +286,7 @@ public class ServiceConnectTests {
       Assert.assertEquals("{\"data\":{\"x\":42,\"zpx\":42},\"seq\":3}", streamback.get(2));
       streamback.get().update("{\"z\":100}");
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"zpx\":142},\"seq\":4}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"zpx\":142}}", streamback.get(3));
     } finally {
       service.shutdown();
     }
