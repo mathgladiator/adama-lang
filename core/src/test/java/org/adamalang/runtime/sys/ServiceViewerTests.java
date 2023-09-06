@@ -55,7 +55,7 @@ public class ServiceViewerTests {
       Assert.assertEquals("{\"data\":{\"my_x\":42},\"seq\":4}", streamback.get(2));
       streamback.get().update("{\"x\":5050}");
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"my_x\":5050},\"seq\":5}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"my_x\":5050}}", streamback.get(3));
     } finally {
       service.shutdown();
     }
