@@ -993,6 +993,40 @@ var RxHTML = (function () {
     });
   };
 
+  var order_toggle = function(prior, val) {
+
+    var parts = prior.split(",");
+    var prefix = '';
+    var next = [""];
+    for (var k = 0; k < parts.length; k++) {
+      if (parts[k] == "") {
+        continue;
+      } else if (val == parts[k]) {
+        prefix = '-';
+      } else if ("-" + val ==parts[k]) {
+        prefix = '';
+      } else {
+        next.push(parts[k]);
+      }
+    }
+    next[0] = prefix + val;
+    return next.join(",");
+  }
+
+  // RUNTIME: <tag .. rx:event="... order-toggle:name=val ...">
+  self.onOT = function (dom, type, state, name, val) {
+    var captured = { value: "" };
+    reg_event(state, dom, type, function () {
+      var obj = {};
+      obj[name] = order_toggle(captured.value, val);
+      var delta = path_to(state.view, obj);
+      state[state.current].tree.update(delta);
+    });
+    subscribe(state, name, function (value) {
+      captured.value = value;
+    });
+  };
+
   // RUNTIME: <tag .. rx:event="... delta:name=diff" ...">
   self.onD = function (dom, type, state, name, diff) {
     var captured = { value: 0 };
