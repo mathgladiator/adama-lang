@@ -10,6 +10,7 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
+import org.adamalang.translator.codegen.CodeGenDynCompare;
 import org.adamalang.translator.codegen.CodeGenIndexing;
 import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.Environment;
@@ -143,6 +144,7 @@ public class TyReactiveRecord extends TyType implements //
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, "RTx" + name, false);
+    CodeGenDynCompare.writeDynCompare(storage, sb, environment, "RTx" + name);
   }
 
   @Override

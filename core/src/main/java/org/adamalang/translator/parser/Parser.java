@@ -1170,7 +1170,7 @@ public class Parser {
       base = assignment(scope);
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
       base = wrap_linq(scope, base, op);
     }
     return base;
@@ -1977,6 +1977,9 @@ public class Parser {
         }
         return new OrderBy(base, op, byToken, keysToOrderBy);
       }
+      case "order_dyn":
+        Expression str = expression(scope);
+        return new OrderDyn(base, op, str);
       case "map": {
         final var fun = expression(scope);
         return new Map(base, op, fun);

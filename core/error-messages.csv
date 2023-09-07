@@ -403,6 +403,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/InventionPolicy_NotSimpleConstructor_failure.a,1,9,3,3,"Invention requires all constructors to not accept messages"
 ./test_code/InventionPolicy_TimeNotStatic_failure.a,2,12,2,20,"Global 'Time' lacks 'now'"
 ./test_code/InventionPolicy_TimeNotStatic_failure.a,2,12,2,20,"Expression is not a function"
+./test_code/LinqDyn_OrderDynSadNeedRx_failure.a,6,2,6,26,"order_dyn requires the list to contain reactive records"
+./test_code/LinqDyn_OrderDynSadNeedString_failure.a,16,43,16,46,"Type check failure: must have a type of 'string', but the type is actually 'int'"
 ./test_code/Linq_ErrorsFindingTables_failure.a,4,0,4,7,"The type 'table<Z>' is using a type that was not found."
 ./test_code/Linq_ErrorsFindingTables_failure.a,4,0,4,11,"The field 't' has no type"
 ./test_code/Linq_ErrorsFindingTables_failure.a,4,0,4,11,"Variable 't' has no backing type"

@@ -1,0 +1,18 @@
+record X {
+  public int id;
+  public int z;
+}
+
+table<X> t;
+
+@construct {
+  t <- {z:0};
+  t <- {z:1};
+  t <- {z:2};
+  t <- {z:5};
+  t <- {z:0};
+  t <- {z:0};
+}
+
+public formula happy = iterate t order_dyn "z";
+
