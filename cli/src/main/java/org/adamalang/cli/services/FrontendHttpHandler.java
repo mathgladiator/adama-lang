@@ -77,12 +77,12 @@ public class FrontendHttpHandler implements HttpHandler {
 
   private String extractHost(TreeMap<String, String> headers, Callback<HttpResult> callback) {
     String host = headers.get("host");
-    if (IsIP.test(host)) {
-      callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
-      return null;
-    }
     if (host == null) {
       callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_HOST_HEADER));
+      return null;
+    }
+    if (IsIP.test(host)) {
+      callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
       return null;
     }
     return host;
