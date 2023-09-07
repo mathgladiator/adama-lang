@@ -64,7 +64,7 @@ public class GlobalDataHandler implements RootRegionHandler {
   @Override
   public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder) {
     try {
-      Domain domain = Domains.get(nexus.database, request.domain);
+      Domain domain = request.resolvedDomain.domain;
       if (domain != null) {
         if (domain.key != null) {
           commonAuthorize(session, new Key(domain.space, domain.key), request.username, request.password, responder);
