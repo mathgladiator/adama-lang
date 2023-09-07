@@ -80,11 +80,20 @@ public class Backend {
     CapacityAgent capacityAgent = new CapacityAgent(new CapacityMetrics(init.metricsFactory), overseer, service, deploymentFactoryBase, estimator, init.system, init.alive, service.shield, init.region, init.machine);
     deploymentFactoryBase.attachDeliverer(service);
 
+    meteringPubSub.subscribe((bills) -> {
+      estimator.apply(bills);
+      return true;
+    });
+
     init.engine.createLocalApplicationHeartbeat("adama", init.servicePort, init.monitoringPort, (hb) -> {
-      meteringPubSub.subscribe((bills) -> {
-        estimator.apply(bills);
-        hb.run();
-        return true;
+      init.system.execute(new NamedRunnable("heartbeat") {
+        @Override
+        public void execute() throws Exception {
+          hb.run();
+          if (init.alive.get()) {
+            init.system.schedule(this, 100);
+          }
+        }
       });
     });
 
