@@ -6,8 +6,15 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.runtime.natives.algo;
 
-public class Platform {
-  public static final String VERSION = "20230907000255";
+/** a field that has been parsed along with a +/- */
+public class CompareField {
+  public final String name;
+  public final boolean desc;
+
+  public CompareField(String name, boolean desc) {
+    this.name = name;
+    this.desc = desc;
+  }
 }

@@ -99,6 +99,19 @@ public formula young_records =
   where age < 18;
 ```
 
+
+### where_as
+
+Simillar to **where**, except we bind the record to a variable rather than build an environment.
+This has the advantage of eliminating conflicts between the variables feeding the query versus variables within
+
+```adama
+view int age;
+bubble records_younger_than_viewer =
+  iterate _records
+  where_as x: x.age < @viewer.age;
+```
+
 ### indexing!
 
 Yes, we can make things faster by indexing our tables. The ```index``` keyword within a record will indicate how tables should index the record.
@@ -143,6 +156,19 @@ Since the canonical ordering by id is the insertion/creation ordering, **order**
 public formula people_by_age =
   iterate _records
   order by age asc;
+```
+
+### order_dyn
+
+Many times, the user wants to be in control of ordering the results of a query. This is available via **order_dyn** where the right hand expression is a string containing ordering instructions.
+
+For example, a string of form "age" would sort records by age in ascending order while a string like "-age" would sort in descending order. This compose via a comma such that "age,name" would sort by age first, and everyone with the same age would be sorted by name.
+
+```adama
+view string sort_people_by;
+bubble people =
+  iterate _records
+  order_dyn @viewer.sort_people_by;
 ```
 
 ### limit

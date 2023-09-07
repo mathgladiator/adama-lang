@@ -1,0 +1,8 @@
+message M {
+  int z;
+}
+
+#sm {
+  table<M> m;
+  iterate m order_dyn "+z";
+}

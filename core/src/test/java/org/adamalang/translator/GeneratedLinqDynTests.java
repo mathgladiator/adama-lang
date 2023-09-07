@@ -10,206 +10,46 @@ package org.adamalang.translator;
 
 import org.junit.Test;
 
-public class GeneratedCOETests extends GeneratedBase {
-  private String cached_InfiniteCrossFormula_1 = null;
-  private String get_InfiniteCrossFormula_1() {
-    if (cached_InfiniteCrossFormula_1 != null) {
-      return cached_InfiniteCrossFormula_1;
+public class GeneratedLinqDynTests extends GeneratedBase {
+  private String cached_OrderDynHappy_1 = null;
+  private String get_OrderDynHappy_1() {
+    if (cached_OrderDynHappy_1 != null) {
+      return cached_OrderDynHappy_1;
     }
-    cached_InfiniteCrossFormula_1 = generateTestOutput(false, "InfiniteCrossFormula_1", "./test_code/COE_InfiniteCrossFormula_failure.a");
-    return cached_InfiniteCrossFormula_1;
+    cached_OrderDynHappy_1 = generateTestOutput(true, "OrderDynHappy_1", "./test_code/LinqDyn_OrderDynHappy_success.a");
+    return cached_OrderDynHappy_1;
   }
 
   @Test
-  public void testInfiniteCrossFormulaFailure() {
-    assertLiveFail(get_InfiniteCrossFormula_1());
+  public void testOrderDynHappyEmission() {
+    assertEmissionGood(get_OrderDynHappy_1());
   }
 
   @Test
-  public void testInfiniteCrossFormulaNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteCrossFormula_1());
+  public void testOrderDynHappySuccess() {
+    assertLivePass(get_OrderDynHappy_1());
   }
 
   @Test
-  public void testInfiniteCrossFormulaExceptionFree() {
-    assertExceptionFree(get_InfiniteCrossFormula_1());
+  public void testOrderDynHappyGoodWillHappy() {
+    assertGoodWillHappy(get_OrderDynHappy_1());
   }
 
   @Test
-  public void testInfiniteCrossFormulaTODOFree() {
-    assertTODOFree(get_InfiniteCrossFormula_1());
+  public void testOrderDynHappyExceptionFree() {
+    assertExceptionFree(get_OrderDynHappy_1());
   }
 
   @Test
-  public void stable_InfiniteCrossFormula_1() {
-    String live = get_InfiniteCrossFormula_1();
+  public void testOrderDynHappyTODOFree() {
+    assertTODOFree(get_OrderDynHappy_1());
+  }
+
+  @Test
+  public void stable_OrderDynHappy_1() {
+    String live = get_OrderDynHappy_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:COE_InfiniteCrossFormula_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: A, B, A\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
-    assertStable(live, gold);
-  }
-  private String cached_InfiniteCycle_2 = null;
-  private String get_InfiniteCycle_2() {
-    if (cached_InfiniteCycle_2 != null) {
-      return cached_InfiniteCycle_2;
-    }
-    cached_InfiniteCycle_2 = generateTestOutput(false, "InfiniteCycle_2", "./test_code/COE_InfiniteCycle_failure.a");
-    return cached_InfiniteCycle_2;
-  }
-
-  @Test
-  public void testInfiniteCycleFailure() {
-    assertLiveFail(get_InfiniteCycle_2());
-  }
-
-  @Test
-  public void testInfiniteCycleNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteCycle_2());
-  }
-
-  @Test
-  public void testInfiniteCycleExceptionFree() {
-    assertExceptionFree(get_InfiniteCycle_2());
-  }
-
-  @Test
-  public void testInfiniteCycleTODOFree() {
-    assertTODOFree(get_InfiniteCycle_2());
-  }
-
-  @Test
-  public void stable_InfiniteCycle_2() {
-    String live = get_InfiniteCycle_2();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:COE_InfiniteCycle_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":19,\"byte\":63},\"end\":{\"line\":2,\"character\":20,\"byte\":64}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' was not defined\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":44},\"end\":{\"line\":2,\"character\":21,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'z' has no type\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":44},\"end\":{\"line\":2,\"character\":21,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'z' has no backing type\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":19,\"byte\":41},\"end\":{\"line\":1,\"character\":20,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' was not defined\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":22},\"end\":{\"line\":1,\"character\":21,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'y' has no type\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":22},\"end\":{\"line\":1,\"character\":21,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'y' has no backing type\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":19,\"byte\":19},\"end\":{\"line\":0,\"character\":20,\"byte\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' was not defined\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":21,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'x' has no type\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":21,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'x' has no backing type\",\"file\":\"./test_code/COE_InfiniteCycle_failure.a\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
-    assertStable(live, gold);
-  }
-  private String cached_InfiniteInvalidate_3 = null;
-  private String get_InfiniteInvalidate_3() {
-    if (cached_InfiniteInvalidate_3 != null) {
-      return cached_InfiniteInvalidate_3;
-    }
-    cached_InfiniteInvalidate_3 = generateTestOutput(false, "InfiniteInvalidate_3", "./test_code/COE_InfiniteInvalidate_failure.a");
-    return cached_InfiniteInvalidate_3;
-  }
-
-  @Test
-  public void testInfiniteInvalidateFailure() {
-    assertLiveFail(get_InfiniteInvalidate_3());
-  }
-
-  @Test
-  public void testInfiniteInvalidateNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteInvalidate_3());
-  }
-
-  @Test
-  public void testInfiniteInvalidateExceptionFree() {
-    assertExceptionFree(get_InfiniteInvalidate_3());
-  }
-
-  @Test
-  public void testInfiniteInvalidateTODOFree() {
-    assertTODOFree(get_InfiniteInvalidate_3());
-  }
-
-  @Test
-  public void stable_InfiniteInvalidate_3() {
-    String live = get_InfiniteInvalidate_3();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:COE_InfiniteInvalidate_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: X, Y, X\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
-    assertStable(live, gold);
-  }
-  private String cached_InfiniteRecord_4 = null;
-  private String get_InfiniteRecord_4() {
-    if (cached_InfiniteRecord_4 != null) {
-      return cached_InfiniteRecord_4;
-    }
-    cached_InfiniteRecord_4 = generateTestOutput(false, "InfiniteRecord_4", "./test_code/COE_InfiniteRecord_failure.a");
-    return cached_InfiniteRecord_4;
-  }
-
-  @Test
-  public void testInfiniteRecordFailure() {
-    assertLiveFail(get_InfiniteRecord_4());
-  }
-
-  @Test
-  public void testInfiniteRecordNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteRecord_4());
-  }
-
-  @Test
-  public void testInfiniteRecordExceptionFree() {
-    assertExceptionFree(get_InfiniteRecord_4());
-  }
-
-  @Test
-  public void testInfiniteRecordTODOFree() {
-    assertTODOFree(get_InfiniteRecord_4());
-  }
-
-  @Test
-  public void stable_InfiniteRecord_4() {
-    String live = get_InfiniteRecord_4();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:COE_InfiniteRecord_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: R, R\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
-    assertStable(live, gold);
-  }
-  private String cached_Issue20230513_5 = null;
-  private String get_Issue20230513_5() {
-    if (cached_Issue20230513_5 != null) {
-      return cached_Issue20230513_5;
-    }
-    cached_Issue20230513_5 = generateTestOutput(true, "Issue20230513_5", "./test_code/COE_Issue20230513_success.a");
-    return cached_Issue20230513_5;
-  }
-
-  @Test
-  public void testIssue20230513Emission() {
-    assertEmissionGood(get_Issue20230513_5());
-  }
-
-  @Test
-  public void testIssue20230513Success() {
-    assertLivePass(get_Issue20230513_5());
-  }
-
-  @Test
-  public void testIssue20230513GoodWillHappy() {
-    assertGoodWillHappy(get_Issue20230513_5());
-  }
-
-  @Test
-  public void testIssue20230513ExceptionFree() {
-    assertExceptionFree(get_Issue20230513_5());
-  }
-
-  @Test
-  public void testIssue20230513TODOFree() {
-    assertTODOFree(get_Issue20230513_5());
-  }
-
-  @Test
-  public void stable_Issue20230513_5() {
-    String live = get_Issue20230513_5();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:COE_Issue20230513_success.a");
+    gold.append("Path:LinqDyn_OrderDynHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -240,34 +80,21 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Issue20230513_5 extends LivingDocument {");
-    gold.append("\n  private final RxTable<RTxFamily> _families;");
-    gold.append("\n  private final RxTable<RTxPerson> _people;");
-    gold.append("\n  private final RxGuard ___your_family_1;");
-    gold.append("\n  private final RxGuard ___your_family_2;");
-    gold.append("\n  public NtMaybe<RTxFamily> __COMPUTE_your_family_1(NtPrincipal __who, RTx__ViewerType __viewer) {");
-    gold.append("\n    return (_families.iterate(false).where(true, new __CLOSURE_WhereClause1(__who, _people))).lookup(0);");
-    gold.append("\n  }");
-    gold.append("\n  public NtMaybe<RTxFamily> __COMPUTE_your_family_2(NtPrincipal __who, RTx__ViewerType __viewer) {");
-    gold.append("\n    return (_families.iterate(false).where(true, new __CLOSURE_WhereClause2(__who, _people))).lookup(0);");
-    gold.append("\n  }");
+    gold.append("\npublic class OrderDynHappy_1 extends LivingDocument {");
+    gold.append("\n  private final RxTable<RTxX> t;");
+    gold.append("\n  private final RxLazy<NtList<RTxX>> happy;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
-    gold.append("\n    __sum += _families.__memory();");
-    gold.append("\n    __sum += _people.__memory();");
+    gold.append("\n    __sum += t.__memory();");
+    gold.append("\n    __sum += happy.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Issue20230513_5(DocumentMonitor __monitor) {");
+    gold.append("\n  public OrderDynHappy_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    _families = new RxTable<>(__self, this, \"_families\", (RxParent __parent) -> new RTxFamily(__parent).__link(), 0);");
-    gold.append("\n    _people = new RxTable<>(__self, this, \"_people\", (RxParent __parent) -> new RTxPerson(__parent).__link(), 0);");
-    gold.append("\n    ___your_family_1 =  new RxGuard(this);");
-    gold.append("\n    _families.__subscribe(___your_family_1);");
-    gold.append("\n    _people.__subscribe(___your_family_1);");
-    gold.append("\n    ___your_family_2 =  new RxGuard(this);");
-    gold.append("\n    _families.__subscribe(___your_family_2);");
-    gold.append("\n    _people.__subscribe(___your_family_2);");
+    gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
+    gold.append("\n    happy = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(t.iterate(false).orderBy(true,new DynCmp_RTxX(\"z\"))));");
+    gold.append("\n    t.__subscribe(happy);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -277,11 +104,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"_families\":");
-    gold.append("\n            _families.__insert(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"_people\":");
-    gold.append("\n            _people.__insert(__reader);");
+    gold.append("\n          case \"t\":");
+    gold.append("\n            t.__insert(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__insert(__reader);");
@@ -364,11 +188,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"_families\":");
-    gold.append("\n            _families.__patch(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"_people\":");
-    gold.append("\n            _people.__patch(__reader);");
+    gold.append("\n          case \"t\":");
+    gold.append("\n            t.__patch(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__patch(__reader);");
@@ -448,10 +269,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"_families\");");
-    gold.append("\n    _families.__dump(__writer);");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"_people\");");
-    gold.append("\n    _people.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
+    gold.append("\n    t.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
@@ -513,8 +332,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
-    gold.append("\n    _families.__commit(\"_families\", __forward, __reverse);");
-    gold.append("\n    _people.__commit(\"_people\", __forward, __reverse);");
+    gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -533,64 +351,47 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
-    gold.append("\n    _families.__revert();");
-    gold.append("\n    _people.__revert();");
+    gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaIssue20230513_5 implements DeltaNode {");
-    gold.append("\n    private long __gyour_family_1;");
-    gold.append("\n    private DMaybe<DeltaRTxFamily> __dyour_family_1;");
-    gold.append("\n    private long __gyour_family_2;");
-    gold.append("\n    private DMaybe<DeltaRTxFamily> __dyour_family_2;");
+    gold.append("\n  private class DeltaOrderDynHappy_1 implements DeltaNode {");
+    gold.append("\n    private int __ghappy;");
+    gold.append("\n    private DRecordList<DeltaRTxX> __dhappy;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaIssue20230513_5() {");
-    gold.append("\n      __gyour_family_1 = -1;");
-    gold.append("\n      __dyour_family_1 = new DMaybe<DeltaRTxFamily>();");
-    gold.append("\n      __gyour_family_2 = -1;");
-    gold.append("\n      __dyour_family_2 = new DMaybe<DeltaRTxFamily>();");
+    gold.append("\n    private DeltaOrderDynHappy_1() {");
+    gold.append("\n      __ghappy = -1;");
+    gold.append("\n      __dhappy = new DRecordList<DeltaRTxX>();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = 40;");
-    gold.append("\n      __sum += __dyour_family_1.__memory();");
-    gold.append("\n      __sum += __dyour_family_2.__memory();");
+    gold.append("\n      __sum += __dhappy.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Issue20230513_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(OrderDynHappy_1 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
-    gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___your_family_1.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
-    gold.append("\n      if (__gyour_family_1 != __CHECK)  {");
-    gold.append("\n        NtMaybe<RTxFamily> __local_your_family_1 = __item.__COMPUTE_your_family_1(__writer.who, __VIEWER);");
-    gold.append("\n        if (__local_your_family_1.has()) {");
-    gold.append("\n          RTxFamily __maybeElement1 = (RTxFamily)(__local_your_family_1.get());");
-    gold.append("\n          DeltaRTxFamily __maybeDeltaElement2 = __dyour_family_1.get(() -> new DeltaRTxFamily());");
-    gold.append("\n          __maybeDeltaElement2.show(__maybeElement1, __obj.planField(\"your_family_1\"));");
-    gold.append("\n        } else {");
-    gold.append("\n          __dyour_family_1.hide(__obj.planField(\"your_family_1\"));");
+    gold.append("\n      if (__ghappy != __item.happy.getGeneration()) {");
+    gold.append("\n        {");
+    gold.append("\n          PrivateLazyDeltaWriter __list6 = __obj.planField(\"happy\").planObject();");
+    gold.append("\n          DRecordList<DeltaRTxX> __deltaList7 = __dhappy;");
+    gold.append("\n          DRecordList<DeltaRTxX>.Walk __deltaListWalker8 = __deltaList7.begin();");
+    gold.append("\n          for (RTxX __listElement9 : __item.happy.get()) {");
+    gold.append("\n            DeltaRTxX __deltaElement10 = __deltaList7.getPrior(__listElement9.__id(), () -> new DeltaRTxX());");
+    gold.append("\n            __deltaElement10.show(__listElement9, __list6.planField(__listElement9.__id()));");
+    gold.append("\n            __deltaListWalker8.next(__listElement9.__id());");
+    gold.append("\n          }");
+    gold.append("\n          __deltaListWalker8.end(__list6);");
+    gold.append("\n          __list6.end();");
     gold.append("\n        }");
-    gold.append("\n        __gyour_family_1 = __CHECK;");
-    gold.append("\n      }");
-    gold.append("\n      __CHECK = __item.___your_family_2.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
-    gold.append("\n      if (__gyour_family_2 != __CHECK)  {");
-    gold.append("\n        NtMaybe<RTxFamily> __local_your_family_2 = __item.__COMPUTE_your_family_2(__writer.who, __VIEWER);");
-    gold.append("\n        if (__local_your_family_2.has()) {");
-    gold.append("\n          RTxFamily __maybeElement3 = (RTxFamily)(__local_your_family_2.get());");
-    gold.append("\n          DeltaRTxFamily __maybeDeltaElement4 = __dyour_family_2.get(() -> new DeltaRTxFamily());");
-    gold.append("\n          __maybeDeltaElement4.show(__maybeElement3, __obj.planField(\"your_family_2\"));");
-    gold.append("\n        } else {");
-    gold.append("\n          __dyour_family_2.hide(__obj.planField(\"your_family_2\"));");
-    gold.append("\n        }");
-    gold.append("\n        __gyour_family_2 = __CHECK;");
+    gold.append("\n        __ghappy = __item.happy.getGeneration();");
     gold.append("\n      }");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
@@ -598,9 +399,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
-    gold.append("\n      __dyour_family_1.clear();");
-    gold.append("\n      __dyour_family_2.clear();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __dhappy.clear();");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
@@ -619,8 +419,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Issue20230513_5 __self = this;");
-    gold.append("\n    DeltaIssue20230513_5 __state = new DeltaIssue20230513_5();");
+    gold.append("\n    OrderDynHappy_1 __self = this;");
+    gold.append("\n    DeltaOrderDynHappy_1 __state = new DeltaOrderDynHappy_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -699,16 +499,16 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static String[] __INDEX_COLUMNS_Family = new String[] {};");
-    gold.append("\n  private class RTxFamily extends RxRecordBase<RTxFamily> {");
-    gold.append("\n    private final RTxFamily __this;");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_X = new String[] {};");
+    gold.append("\n  private class RTxX extends RxRecordBase<RTxX> {");
+    gold.append("\n    private final RTxX __this;");
     gold.append("\n    private final RxInt32 id;");
-    gold.append("\n    private final RxString name;");
-    gold.append("\n    private RTxFamily(RxParent __owner) {");
+    gold.append("\n    private final RxInt32 z;");
+    gold.append("\n    private RTxX(RxParent __owner) {");
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      name = new RxString(this, \"\");");
+    gold.append("\n      z = new RxInt32(this, 0);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
     gold.append("\n      } else {");
@@ -719,12 +519,12 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = super.__memory();");
     gold.append("\n      __sum += id.__memory();");
-    gold.append("\n      __sum += name.__memory();");
+    gold.append("\n      __sum += z.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String[] __getIndexColumns() {");
-    gold.append("\n      return __INDEX_COLUMNS_Family;");
+    gold.append("\n      return __INDEX_COLUMNS_X;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
@@ -735,8 +535,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      switch (__name) {");
     gold.append("\n        case \"id\":");
     gold.append("\n          return id;");
-    gold.append("\n        case \"name\":");
-    gold.append("\n          return name;");
+    gold.append("\n        case \"z\":");
+    gold.append("\n          return z;");
     gold.append("\n        default:");
     gold.append("\n          return null;");
     gold.append("\n      }");
@@ -750,8 +550,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n            case \"id\":");
     gold.append("\n              id.__insert(__reader);");
     gold.append("\n              break;");
-    gold.append("\n            case \"name\":");
-    gold.append("\n              name.__insert(__reader);");
+    gold.append("\n            case \"z\":");
+    gold.append("\n              z.__insert(__reader);");
     gold.append("\n              break;");
     gold.append("\n            default:");
     gold.append("\n              __reader.skipValue();");
@@ -768,8 +568,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n            case \"id\":");
     gold.append("\n              id.__patch(__reader);");
     gold.append("\n              break;");
-    gold.append("\n            case \"name\":");
-    gold.append("\n              name.__patch(__reader);");
+    gold.append("\n            case \"z\":");
+    gold.append("\n              z.__patch(__reader);");
     gold.append("\n              break;");
     gold.append("\n            default:");
     gold.append("\n              __reader.skipValue();");
@@ -782,8 +582,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"id\");");
     gold.append("\n      id.__dump(__writer);");
-    gold.append("\n      __writer.writeObjectFieldIntro(\"name\");");
-    gold.append("\n      name.__dump(__writer);");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"z\");");
+    gold.append("\n      z.__dump(__writer);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -794,7 +594,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
-    gold.append("\n        name.__commit(\"name\", __forward, __reverse);");
+    gold.append("\n        z.__commit(\"z\", __forward, __reverse);");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -805,19 +605,19 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      if (__isDirty()) {");
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
-    gold.append("\n        name.__revert();");
+    gold.append("\n        z.__revert();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
-    gold.append("\n    public RTxFamily __link() {");
+    gold.append("\n    public RTxX __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
-    gold.append("\n      return \"Family\";");
+    gold.append("\n      return \"X\";");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __deindex() {");
@@ -839,28 +639,28 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRTxFamily implements DeltaNode {");
+    gold.append("\n  private class DeltaRTxX implements DeltaNode {");
     gold.append("\n    private DInt32 __did;");
-    gold.append("\n    private DString __dname;");
+    gold.append("\n    private DInt32 __dz;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRTxFamily() {");
+    gold.append("\n    private DeltaRTxX() {");
     gold.append("\n      __did = new DInt32();");
-    gold.append("\n      __dname = new DString();");
+    gold.append("\n      __dz = new DInt32();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = 40;");
     gold.append("\n      __sum += __did.__memory();");
-    gold.append("\n      __sum += __dname.__memory();");
+    gold.append("\n      __sum += __dz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxFamily __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __did.show(__item.id.get(), __obj.planField(\"id\"));");
-    gold.append("\n      __dname.show(__item.name.get(), __obj.planField(\"name\"));");
+    gold.append("\n      __dz.show(__item.z.get(), __obj.planField(\"z\"));");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
@@ -868,7 +668,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
     gold.append("\n      __did.clear();");
-    gold.append("\n      __dname.clear();");
+    gold.append("\n      __dz.clear();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
@@ -879,21 +679,21 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  class DynCmp_RTxFamily implements Comparator<RTxFamily> {");
+    gold.append("\n  class DynCmp_RTxX implements Comparator<RTxX> {");
     gold.append("\n    private final CompareField[] parsed;");
-    gold.append("\n    DynCmp_RTxFamily(String instructions) {");
+    gold.append("\n    DynCmp_RTxX(String instructions) {");
     gold.append("\n      this.parsed = DynCompareParser.parse(instructions);");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public int compare(RTxFamily __a, RTxFamily __b) {");
+    gold.append("\n    public int compare(RTxX __a, RTxX __b) {");
     gold.append("\n      for (CompareField field : parsed) {");
     gold.append("\n        int delta = 0;");
     gold.append("\n        switch (field.name) {");
     gold.append("\n          case \"id\":");
     gold.append("\n            delta = __a.id.compareTo(__b.id);");
     gold.append("\n            break;");
-    gold.append("\n          case \"name\":");
-    gold.append("\n            delta = __a.name.compareTo(__b.name);");
+    gold.append("\n          case \"z\":");
+    gold.append("\n            delta = __a.z.compareTo(__b.z);");
     gold.append("\n            break;");
     gold.append("\n        }");
     gold.append("\n        if (delta != 0) {");
@@ -903,197 +703,79 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      return 0;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private static String[] __INDEX_COLUMNS_Person = new String[] {};");
-    gold.append("\n  private class RTxPerson extends RxRecordBase<RTxPerson> {");
-    gold.append("\n    private final RTxPerson __this;");
-    gold.append("\n    private final RxInt32 id;");
-    gold.append("\n    private final RxPrincipal account;");
-    gold.append("\n    private final RxInt32 family_id;");
-    gold.append("\n    private RTxPerson(RxParent __owner) {");
-    gold.append("\n      super(__owner);");
-    gold.append("\n      this.__this = this;");
-    gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      account = new RxPrincipal(this, NtPrincipal.NO_ONE);");
-    gold.append("\n      family_id = new RxInt32(this, 0);");
-    gold.append("\n      if (__owner instanceof RxTable) {");
-    gold.append("\n        /* ok */");
-    gold.append("\n      } else {");
-    gold.append("\n        /* ok */");
-    gold.append("\n      }");
+    gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
+    gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
+    gold.append("\n    private int z = 0;");
+    gold.append("\n    public void __hash(HashBuilder __hash) {");
+    gold.append("\n      __hash.hashString(\"z\");");
+    gold.append("\n      __hash.hashInteger(this.z);");
+    gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
-    gold.append("\n      __sum += id.__memory();");
-    gold.append("\n      __sum += account.__memory();");
-    gold.append("\n      __sum += family_id.__memory();");
-    gold.append("\n      return __sum;");
-    gold.append("\n    }");
+    gold.append("\n    private static String[] __INDEX_COLUMNS__AnonObjConvert_0 = new String[] {};");
     gold.append("\n    @Override");
     gold.append("\n    public String[] __getIndexColumns() {");
-    gold.append("\n      return __INDEX_COLUMNS_Person;");
+    gold.append("\n      return __INDEX_COLUMNS__AnonObjConvert_0;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public Object __fieldOf(String __name) {");
-    gold.append("\n      switch (__name) {");
-    gold.append("\n        case \"id\":");
-    gold.append("\n          return id;");
-    gold.append("\n        case \"account\":");
-    gold.append("\n          return account;");
-    gold.append("\n        case \"family_id\":");
-    gold.append("\n          return family_id;");
-    gold.append("\n        default:");
-    gold.append("\n          return null;");
-    gold.append("\n      }");
+    gold.append("\n    private RTx_AnonObjConvert_0(JsonStreamReader __reader) {");
+    gold.append("\n      __this = this;");
+    gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __insert(JsonStreamReader __reader) {");
-    gold.append("\n      if (__reader.startObject()) {");
-    gold.append("\n        while(__reader.notEndOfObject()) {");
-    gold.append("\n          String __fieldName = __reader.fieldName();");
-    gold.append("\n          switch (__fieldName) {");
-    gold.append("\n            case \"id\":");
-    gold.append("\n              id.__insert(__reader);");
-    gold.append("\n              break;");
-    gold.append("\n            case \"account\":");
-    gold.append("\n              account.__insert(__reader);");
-    gold.append("\n              break;");
-    gold.append("\n            case \"family_id\":");
-    gold.append("\n              family_id.__insert(__reader);");
-    gold.append("\n              break;");
-    gold.append("\n            default:");
-    gold.append("\n              __reader.skipValue();");
-    gold.append("\n          }");
+    gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n      __reader.mustStartObject();");
+    gold.append("\n      while (__reader.notEndOfObject()) {");
+    gold.append("\n        String __fieldName = __reader.fieldName();");
+    gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"z\":");
+    gold.append("\n            this.z = __reader.readInteger();");
+    gold.append("\n            break;");
+    gold.append("\n          default:");
+    gold.append("\n            __reader.skipValue();");
     gold.append("\n        }");
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __patch(JsonStreamReader __reader) {");
-    gold.append("\n      if (__reader.startObject()) {");
-    gold.append("\n        while(__reader.notEndOfObject()) {");
-    gold.append("\n          String __fieldName = __reader.fieldName();");
-    gold.append("\n          switch (__fieldName) {");
-    gold.append("\n            case \"id\":");
-    gold.append("\n              id.__patch(__reader);");
-    gold.append("\n              break;");
-    gold.append("\n            case \"account\":");
-    gold.append("\n              account.__patch(__reader);");
-    gold.append("\n              break;");
-    gold.append("\n            case \"family_id\":");
-    gold.append("\n              family_id.__patch(__reader);");
-    gold.append("\n              break;");
-    gold.append("\n            default:");
-    gold.append("\n              __reader.skipValue();");
-    gold.append("\n          }");
-    gold.append("\n        }");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __dump(JsonStreamWriter __writer) {");
+    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
     gold.append("\n      __writer.beginObject();");
-    gold.append("\n      __writer.writeObjectFieldIntro(\"id\");");
-    gold.append("\n      id.__dump(__writer);");
-    gold.append("\n      __writer.writeObjectFieldIntro(\"account\");");
-    gold.append("\n      account.__dump(__writer);");
-    gold.append("\n      __writer.writeObjectFieldIntro(\"family_id\");");
-    gold.append("\n      family_id.__dump(__writer);");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"z\");");
+    gold.append("\n      __writer.writeInteger(z);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
-    gold.append("\n      if (__isDirty()) {");
-    gold.append("\n        __forward.writeObjectFieldIntro(__name);");
-    gold.append("\n        __forward.beginObject();");
-    gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
-    gold.append("\n        __reverse.beginObject();");
-    gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
-    gold.append("\n        account.__commit(\"account\", __forward, __reverse);");
-    gold.append("\n        family_id.__commit(\"family_id\", __forward, __reverse);");
-    gold.append("\n        __forward.endObject();");
-    gold.append("\n        __reverse.endObject();");
-    gold.append("\n        __lowerDirtyCommit();");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __revert() {");
-    gold.append("\n      if (__isDirty()) {");
-    gold.append("\n        __isDying = false;");
-    gold.append("\n        id.__revert();");
-    gold.append("\n        account.__revert();");
-    gold.append("\n        family_id.__revert();");
-    gold.append("\n        __lowerDirtyRevert();");
-    gold.append("\n      }");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __killFields() {}");
-    gold.append("\n    @Override");
-    gold.append("\n    public RTxPerson __link() {");
-    gold.append("\n      return this;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public String __name() {");
-    gold.append("\n      return \"Person\";");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __deindex() {");
-    gold.append("\n      /* ok */");
-    gold.append("\n    }");
-    gold.append("\n    public void __reindex() {");
-    gold.append("\n      /* ok */");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public int __id() {");
-    gold.append("\n      return id.get();");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void __setId(int __id, boolean __force) {");
-    gold.append("\n      if (__force) {");
-    gold.append("\n        id.forceSet(__id);");
-    gold.append("\n      } else {");
-    gold.append("\n        id.set(__id);");
-    gold.append("\n      }");
+    gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
+    gold.append("\n    private RTx_AnonObjConvert_0(int z) {");
+    gold.append("\n      this.__this = this;");
+    gold.append("\n      this.z = z;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRTxPerson implements DeltaNode {");
-    gold.append("\n    private DInt32 __did;");
-    gold.append("\n    private DPrincipal __daccount;");
-    gold.append("\n    private DInt32 __dfamily_id;");
+    gold.append("\n  private class DeltaRTx_AnonObjConvert_0 implements DeltaNode {");
+    gold.append("\n    private DInt32 __dz;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRTxPerson() {");
-    gold.append("\n      __did = new DInt32();");
-    gold.append("\n      __daccount = new DPrincipal();");
-    gold.append("\n      __dfamily_id = new DInt32();");
+    gold.append("\n    private DeltaRTx_AnonObjConvert_0() {");
+    gold.append("\n      __dz = new DInt32();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
     gold.append("\n      long __sum = 40;");
-    gold.append("\n      __sum += __did.__memory();");
-    gold.append("\n      __sum += __daccount.__memory();");
-    gold.append("\n      __sum += __dfamily_id.__memory();");
+    gold.append("\n      __sum += __dz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxPerson __item, PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
-    gold.append("\n      __code_cost += 3;");
+    gold.append("\n    public void show(RTx_AnonObjConvert_0 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
-    gold.append("\n      __did.show(__item.id.get(), __obj.planField(\"id\"));");
-    gold.append("\n      __daccount.show(__item.account.get(), __obj.planField(\"account\"));");
-    gold.append("\n      __dfamily_id.show(__item.family_id.get(), __obj.planField(\"family_id\"));");
+    gold.append("\n      __dz.show(__item.z, __obj.planField(\"z\"));");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
-    gold.append("\n      __did.clear();");
-    gold.append("\n      __daccount.clear();");
-    gold.append("\n      __dfamily_id.clear();");
-    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      __dz.clear();");
+    gold.append("\n      __code_cost += 1;");
     gold.append("\n    }");
     gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      if (__emitted) {");
@@ -1102,46 +784,6 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
     gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  class DynCmp_RTxPerson implements Comparator<RTxPerson> {");
-    gold.append("\n    private final CompareField[] parsed;");
-    gold.append("\n    DynCmp_RTxPerson(String instructions) {");
-    gold.append("\n      this.parsed = DynCompareParser.parse(instructions);");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public int compare(RTxPerson __a, RTxPerson __b) {");
-    gold.append("\n      for (CompareField field : parsed) {");
-    gold.append("\n        int delta = 0;");
-    gold.append("\n        switch (field.name) {");
-    gold.append("\n          case \"id\":");
-    gold.append("\n            delta = __a.id.compareTo(__b.id);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"account\":");
-    gold.append("\n            delta = __a.account.compareTo(__b.account);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"family_id\":");
-    gold.append("\n            delta = __a.family_id.compareTo(__b.family_id);");
-    gold.append("\n            break;");
-    gold.append("\n        }");
-    gold.append("\n        if (delta != 0) {");
-    gold.append("\n          return field.desc ? -delta : delta;");
-    gold.append("\n        }");
-    gold.append("\n      }");
-    gold.append("\n      return 0;");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private int __FUNC_0_your_family_id_or_zero(NtPrincipal w) {");
-    gold.append("\n    __code_cost += 3;");
-    gold.append("\n    __track(0);");
-    gold.append("\n    NtMaybe<RTxPerson> _AutoConditionperson_5;");
-    gold.append("\n    if ((_AutoConditionperson_5 = (_people.iterate(false).where(true, new __CLOSURE_WhereClause0(w))).lookup(0)).has()) {");
-    gold.append("\n      RTxPerson person = _AutoConditionperson_5.get();");
-    gold.append("\n      __code_cost += 2;");
-    gold.append("\n      __track(1);");
-    gold.append("\n      return person.family_id.get();");
-    gold.append("\n    }");
-    gold.append("\n    __track(2);");
-    gold.append("\n    return 0;");
     gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
@@ -1181,10 +823,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
     gold.append("\n    __writer.beginObject();");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"_families\");");
-    gold.append("\n    _families.debug(__writer);");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"_people\");");
-    gold.append("\n    _people.debug(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
+    gold.append("\n    t.debug(__writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1256,104 +896,65 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
+    gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
+    gold.append("\n    __code_cost += 7;");
+    gold.append("\n    __track(0);");
+    gold.append("\n    {");
+    gold.append("\n      RxTable<RTxX> _AutoRef11 = t;");
+    gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr13 = new RTx_AnonObjConvert_0(0);");
+    gold.append("\n      RTxX _CreateRef12 = _AutoRef11.make();");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      _CreateRef12.z.set(_AutoExpr13.z);");
+    gold.append("\n    }");
+    gold.append("\n    __track(1);");
+    gold.append("\n    {");
+    gold.append("\n      RxTable<RTxX> _AutoRef14 = t;");
+    gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr16 = new RTx_AnonObjConvert_0(1);");
+    gold.append("\n      RTxX _CreateRef15 = _AutoRef14.make();");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      _CreateRef15.z.set(_AutoExpr16.z);");
+    gold.append("\n    }");
+    gold.append("\n    __track(2);");
+    gold.append("\n    {");
+    gold.append("\n      RxTable<RTxX> _AutoRef17 = t;");
+    gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr19 = new RTx_AnonObjConvert_0(2);");
+    gold.append("\n      RTxX _CreateRef18 = _AutoRef17.make();");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      _CreateRef18.z.set(_AutoExpr19.z);");
+    gold.append("\n    }");
+    gold.append("\n    __track(3);");
+    gold.append("\n    {");
+    gold.append("\n      RxTable<RTxX> _AutoRef20 = t;");
+    gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr22 = new RTx_AnonObjConvert_0(5);");
+    gold.append("\n      RTxX _CreateRef21 = _AutoRef20.make();");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      _CreateRef21.z.set(_AutoExpr22.z);");
+    gold.append("\n    }");
+    gold.append("\n    __track(4);");
+    gold.append("\n    {");
+    gold.append("\n      RxTable<RTxX> _AutoRef23 = t;");
+    gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr25 = new RTx_AnonObjConvert_0(0);");
+    gold.append("\n      RTxX _CreateRef24 = _AutoRef23.make();");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      _CreateRef24.z.set(_AutoExpr25.z);");
+    gold.append("\n    }");
+    gold.append("\n    __track(5);");
+    gold.append("\n    {");
+    gold.append("\n      RxTable<RTxX> _AutoRef26 = t;");
+    gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr28 = new RTx_AnonObjConvert_0(0);");
+    gold.append("\n      RTxX _CreateRef27 = _AutoRef26.make();");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      _CreateRef27.z.set(_AutoExpr28.z);");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    __reader.skipValue();");
     gold.append("\n    return NtMessageBase.NULL;");
     gold.append("\n  }");
-    gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxPerson> {");
-    gold.append("\n    private NtPrincipal w;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
-    gold.append("\n    @Override");
-    gold.append("\n    public Integer getPrimaryKey() {");
-    gold.append("\n      return null;");
-    gold.append("\n    }");
-    gold.append("\n    private __CLOSURE_WhereClause0(NtPrincipal w) {");
-    gold.append("\n      this.w = w;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public boolean test(RTxPerson __obj) {");
-    gold.append("\n      NtPrincipal account = __obj.account.get();");
-    gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (account).equals(w);");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxFamily> {");
-    gold.append("\n    private NtPrincipal __who;");
-    gold.append("\n    private RxTable<RTxPerson> _people;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
-    gold.append("\n    @Override");
-    gold.append("\n    public Integer getPrimaryKey() {");
-    gold.append("\n      return __FUNC_0_your_family_id_or_zero(__who);");
-    gold.append("\n    }");
-    gold.append("\n    private __CLOSURE_WhereClause1(NtPrincipal __who, RxTable<RTxPerson> _people) {");
-    gold.append("\n      this.__who = __who;");
-    gold.append("\n      this._people = _people;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public boolean test(RTxFamily __obj) {");
-    gold.append("\n      int id = __obj.id.get();");
-    gold.append("\n      __code_cost ++;");
-    gold.append("\n      return ((int) id) == ((int) __FUNC_0_your_family_id_or_zero(__who));");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxFamily> {");
-    gold.append("\n    private NtPrincipal __who;");
-    gold.append("\n    private RxTable<RTxPerson> _people;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
-    gold.append("\n    @Override");
-    gold.append("\n    public Integer getPrimaryKey() {");
-    gold.append("\n      return LibMath.forceId((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((item) -> ((RTxPerson) item).family_id.get()));");
-    gold.append("\n    }");
-    gold.append("\n    private __CLOSURE_WhereClause2(NtPrincipal __who, RxTable<RTxPerson> _people) {");
-    gold.append("\n      this.__who = __who;");
-    gold.append("\n      this._people = _people;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public boolean test(RTxFamily __obj) {");
-    gold.append("\n      int id = __obj.id.get();");
-    gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibMath.equality((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((item) -> ((RTxPerson) item).family_id.get()), id, (__x, __y) -> __x.intValue() == (int) __y);");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxPerson> {");
-    gold.append("\n    private NtPrincipal __who;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
-    gold.append("\n    @Override");
-    gold.append("\n    public Integer getPrimaryKey() {");
-    gold.append("\n      return null;");
-    gold.append("\n    }");
-    gold.append("\n    private __CLOSURE_WhereClause3(NtPrincipal __who) {");
-    gold.append("\n      this.__who = __who;");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
-    gold.append("\n    public boolean test(RTxPerson __obj) {");
-    gold.append("\n      NtPrincipal account = __obj.account.get();");
-    gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (account).equals(__who);");
-    gold.append("\n    }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __construct_intern(CoreRequestContext __context, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -1361,34 +962,114 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
     gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"_families\":{\"type\":{\"nature\":\"reactive_table\",\"record_name\":\"Family\"},\"privacy\":\"private\"},\"_people\":{\"type\":{\"nature\":\"reactive_table\",\"record_name\":\"Person\"},\"privacy\":\"private\"},\"your_family_1\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"reactive_ref\",\"ref\":\"Family\"}},\"privacy\":\"bubble\"},\"your_family_2\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"reactive_ref\",\"ref\":\"Family\"}},\"privacy\":\"bubble\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"Family\":{\"nature\":\"reactive_record\",\"name\":\"Family\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"name\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"string\"},\"privacy\":\"public\"}}},\"Person\":{\"nature\":\"reactive_record\",\"name\":\"Person\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"account\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"principal\"},\"privacy\":\"public\"},\"family_id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"t\":{\"type\":{\"nature\":\"reactive_table\",\"record_name\":\"X\"},\"privacy\":\"private\"},\"happy\":{\"type\":{\"nature\":\"native_list\",\"type\":{\"nature\":\"reactive_ref\",\"ref\":\"X\"}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"X\":{\"nature\":\"reactive_record\",\"name\":\"X\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"_AnonObjConvert_0\":{\"nature\":\"native_message\",\"name\":\"_AnonObjConvert_0\",\"anonymous\":true,\"fields\":{\"z\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:0");
-    gold.append("\nMEMORY:624");
+    gold.append("\nCPU:13");
+    gold.append("\nMEMORY:1478");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"happy\":{\"1\":{\"id\":1,\"z\":0},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"@o\":[1,5,6,2,3,4]}},\"seq\":3}");
     gold.append("\nNO_ONE|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
-    gold.append("\n+ RANDO DELTA:{\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"happy\":{\"1\":{\"id\":1,\"z\":0},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"@o\":[1,5,6,2,3,4]}},\"seq\":4}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:902");
+    gold.append("\nMEMORY:3900");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"_families\":{},\"_people\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"_families\":{},\"_people\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
-    gold.append("\n{\"_families\":{},\"_people\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    assertStable(live, gold);
+  }
+  private String cached_OrderDynSadNeedRx_2 = null;
+  private String get_OrderDynSadNeedRx_2() {
+    if (cached_OrderDynSadNeedRx_2 != null) {
+      return cached_OrderDynSadNeedRx_2;
+    }
+    cached_OrderDynSadNeedRx_2 = generateTestOutput(false, "OrderDynSadNeedRx_2", "./test_code/LinqDyn_OrderDynSadNeedRx_failure.a");
+    return cached_OrderDynSadNeedRx_2;
+  }
+
+  @Test
+  public void testOrderDynSadNeedRxFailure() {
+    assertLiveFail(get_OrderDynSadNeedRx_2());
+  }
+
+  @Test
+  public void testOrderDynSadNeedRxNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_OrderDynSadNeedRx_2());
+  }
+
+  @Test
+  public void testOrderDynSadNeedRxExceptionFree() {
+    assertExceptionFree(get_OrderDynSadNeedRx_2());
+  }
+
+  @Test
+  public void testOrderDynSadNeedRxTODOFree() {
+    assertTODOFree(get_OrderDynSadNeedRx_2());
+  }
+
+  @Test
+  public void stable_OrderDynSadNeedRx_2() {
+    String live = get_OrderDynSadNeedRx_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:LinqDyn_OrderDynSadNeedRx_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":46},\"end\":{\"line\":6,\"character\":26,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"order_dyn requires the list to contain reactive records\",\"file\":\"./test_code/LinqDyn_OrderDynSadNeedRx_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_OrderDynSadNeedString_3 = null;
+  private String get_OrderDynSadNeedString_3() {
+    if (cached_OrderDynSadNeedString_3 != null) {
+      return cached_OrderDynSadNeedString_3;
+    }
+    cached_OrderDynSadNeedString_3 = generateTestOutput(false, "OrderDynSadNeedString_3", "./test_code/LinqDyn_OrderDynSadNeedString_failure.a");
+    return cached_OrderDynSadNeedString_3;
+  }
+
+  @Test
+  public void testOrderDynSadNeedStringFailure() {
+    assertLiveFail(get_OrderDynSadNeedString_3());
+  }
+
+  @Test
+  public void testOrderDynSadNeedStringNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_OrderDynSadNeedString_3());
+  }
+
+  @Test
+  public void testOrderDynSadNeedStringExceptionFree() {
+    assertExceptionFree(get_OrderDynSadNeedString_3());
+  }
+
+  @Test
+  public void testOrderDynSadNeedStringTODOFree() {
+    assertTODOFree(get_OrderDynSadNeedString_3());
+  }
+
+  @Test
+  public void stable_OrderDynSadNeedString_3() {
+    String live = get_OrderDynSadNeedString_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:LinqDyn_OrderDynSadNeedString_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":16,\"character\":43,\"byte\":189},\"end\":{\"line\":16,\"character\":46,\"byte\":192}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'string', but the type is actually 'int'\",\"file\":\"./test_code/LinqDyn_OrderDynSadNeedString_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
 }

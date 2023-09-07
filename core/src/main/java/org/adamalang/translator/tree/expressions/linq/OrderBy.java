@@ -20,6 +20,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.natives.TyNativeRef;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
+import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
@@ -61,6 +62,19 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
     }
   }
 
+  public static TyType getOrderableType(FieldDefinition fd, Environment environment) {
+    var fieldType = fd.type;
+    if (fieldType instanceof TyReactiveLazy) {
+      fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
+    } else {
+      fieldType = RuleSetCommon.Resolve(environment, fieldType, false);
+    }
+    if (fieldType instanceof TyReactiveMaybe || fieldType instanceof TyNativeMaybe) {
+      fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
+    }
+    return fieldType;
+  }
+
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     final var typeSql = sql.typing(environment, null /* no suggestion makes sense */);
@@ -72,15 +86,7 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
         for (final OrderPair key : keys) {
           final var fd = ((IsStructure) element).storage().fields.get(key.name);
           if (fd != null) {
-            var fieldType = fd.type;
-            if (fieldType instanceof TyReactiveLazy) {
-              fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
-            } else {
-              fieldType = RuleSetCommon.Resolve(environment, fieldType, false);
-            }
-            if (fieldType instanceof TyReactiveMaybe || fieldType instanceof TyNativeMaybe) {
-              fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
-            }
+            var fieldType = getOrderableType(fd, environment);
             if (!(fieldType instanceof IsOrderable)) {
               environment.document.createError(key, String.format("Typing issue: the structure '%s' has field '%s' but it is not orderable..", element.getAdamaType(), key.name));
             }
@@ -94,6 +100,24 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
     return null;
   }
 
+  public static String getCompareLine(FieldDefinition fd, Environment environment, OrderPair key) {
+    final var cmpLine = new StringBuilder();
+    var addLazyGet = false;
+    var compareType = fd.type;
+    if (compareType instanceof TyReactiveLazy || compareType instanceof TyNativeRef) {
+      compareType = environment.rules.ExtractEmbeddedType(compareType, false);
+      addLazyGet = true;
+    } else {
+      compareType = RuleSetCommon.Resolve(environment, compareType, false);
+    }
+    if (compareType instanceof TyReactiveMaybe || compareType instanceof TyNativeMaybe) {
+      cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.compareTo(__y))");
+    } else {
+      cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareTo(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
+    }
+    return cmpLine.toString();
+  }
+
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
     final var comparatorNameBuilder = new StringBuilder();
@@ -103,21 +127,7 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
       comparatorNameBuilder.append("_").append(key.name).append(key.asc ? "_a" : "_d");
       final var fd = elementType.storage().fields.get(key.name);
       if (fd != null) {
-        final var cmpLine = new StringBuilder();
-        var addLazyGet = false;
-        var compareType = fd.type;
-        if (compareType instanceof TyReactiveLazy || compareType instanceof TyNativeRef) {
-          compareType = environment.rules.ExtractEmbeddedType(compareType, false);
-          addLazyGet = true;
-        } else {
-          compareType = RuleSetCommon.Resolve(environment, compareType, false);
-        }
-        if (compareType instanceof TyReactiveMaybe || compareType instanceof TyNativeMaybe) {
-          cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.compareTo(__y))");
-        } else {
-          cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareTo(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
-        }
-        compareLines.add(cmpLine.toString());
+        compareLines.add(getCompareLine(fd, environment, key));
       }
     }
     comparatorName = comparatorNameBuilder.toString();
