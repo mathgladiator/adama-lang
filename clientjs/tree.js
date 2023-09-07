@@ -263,8 +263,10 @@ function AdamaTree() {
                   var start = instr[0];
                   var end = instr[1];
                   for (var j = start; j <= end; j++) { // iterate over the range and copy
-                    after.push(before[j]); // the items from the previous copy
-                    msg.push(before[j].__key); // and annotate the keys
+                    if (before[j]) {
+                      after.push(before[j]); // the items from the previous copy
+                      msg.push(before[j].__key); // and annotate the keys
+                    }
                   }
                 }
               }

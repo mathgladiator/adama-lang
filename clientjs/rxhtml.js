@@ -45,6 +45,9 @@ var RxHTML = (function () {
   }
 
   var fixHref = function (href) {
+    if (!href) {
+      return "#";
+    }
     if (href.startsWith("/")) {
       return rootReplace + href.substring(1);
     }
