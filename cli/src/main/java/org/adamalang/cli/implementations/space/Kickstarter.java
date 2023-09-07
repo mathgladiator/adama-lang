@@ -90,11 +90,17 @@ public class Kickstarter {
     readme.append("```\n");
     readme.append("Now, deploy the frontend via:\n");
     readme.append("```sh\n");
-    readme.append("java -jar ~/adama.jar spaces set-rxhtml --space " + space + "--file frontend.rx.html\n");
+    readme.append("java -jar ~/adama.jar spaces set-rxhtml --space " + space + " --file frontend.rx.html\n");
     readme.append("```\n");
     readme.append("You may keep or delete the created frontend.rx.html file. ");
     readme.append("Changes are available via https://" + space + ".adama.games (usually after a minute for various caches to expire)\n\n");
     readme.append("\n");
+    readme.append("If you have any static resources in assets, then you can upload them to the space via\n");
+    readme.append("```sh\n");
+    readme.append("java -jar ~/adama.jar space upload --space " + space + " --directory assets\n");
+    readme.append("```\n");
+    readme.append("\n");
+
     Files.writeString(new File(spaceDir, "README.md").toPath(), readme.toString());
     System.out.println("Directory '" + Util.prefix(space, Util.ANSI.Cyan) + "' was created which contains a useful README.md\n");
     System.out.println("Your app is available online at https://" + space + ".adama.games/ \n");
