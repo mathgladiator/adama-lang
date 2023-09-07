@@ -78,6 +78,14 @@ public class Parser {
             }
             break;
           }
+          case "ot":
+          case "order-toggle": {
+            int kEq = body.indexOf('=');
+            if (kEq > 0) {
+              commands.add(new OrderToggle(body.substring(0, kEq).trim(), body.substring(kEq + 1).trim()));
+            }
+            break;
+          }
           case "te": {
             commands.add(new TransferError(body));
             break;
