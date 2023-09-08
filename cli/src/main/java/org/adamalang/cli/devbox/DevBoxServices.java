@@ -14,9 +14,11 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.remote.SimpleService;
+import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.security.GoogleValidator;
 
 import java.util.HashSet;
 import java.util.function.Consumer;
@@ -51,5 +53,7 @@ public class DevBoxServices {
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     // TODO: Stripe?
+    // TODO: provide a real webClientBase
+    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, null));
   }
 }
