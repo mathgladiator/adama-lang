@@ -19,7 +19,7 @@ public class CommonTest {
 
 
   public static Instance A() {
-    return new Instance(newBuilder().setCounter(100).setId("id-a").setIp("ip1").setRole("proxy").setPort(123).setMonitoringPort(200).build(), 0);
+    return new Instance(newBuilder().setCounter(100).setId("id-a").setIp("ip1").setRole("proxy").setPort(123).setMonitoringPort(200).build(), 0, true);
   }
 
   public static EndpointBuilder newBuilder() {
@@ -27,15 +27,15 @@ public class CommonTest {
   }
 
   public static Instance B() {
-    return new Instance(newBuilder().setCounter(200).setId("id-b").setIp("ip2").setRole("proxy").setPort(234).setMonitoringPort(201).build(), 0);
+    return new Instance(newBuilder().setCounter(200).setId("id-b").setIp("ip2").setRole("proxy").setPort(234).setMonitoringPort(201).build(), 0, false);
   }
 
   public static Instance C() {
-    return new Instance(newBuilder().setCounter(300).setId("id-c").setIp("ip1").setRole("proxy").setPort(345).setMonitoringPort(202).build(), 0);
+    return new Instance(newBuilder().setCounter(300).setId("id-c").setIp("ip1").setRole("proxy").setPort(345).setMonitoringPort(202).build(), 0, false);
   }
 
   public static Instance D() {
-    return new Instance(newBuilder().setCounter(400).setId("id-d").setIp("ip2").setRole("proxy").setPort(456).setMonitoringPort(203).build(), 0);
+    return new Instance(newBuilder().setCounter(400).setId("id-d").setIp("ip2").setRole("proxy").setPort(456).setMonitoringPort(203).build(), 0, false);
   }
 
   public static TreeSet<Instance> INSTANCES(Instance... instances) {

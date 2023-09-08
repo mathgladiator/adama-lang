@@ -22,8 +22,9 @@ public class Instance implements Comparable<Instance> {
   public final long created;
   private int counter;
   private long witness;
+  public final boolean local;
 
-  public Instance(GossipProtocol.Endpoint endpoint, long now) {
+  public Instance(GossipProtocol.Endpoint endpoint, long now, boolean local) {
     this.id = endpoint.id;
     this.ip = endpoint.ip;
     this.port = endpoint.port;
@@ -32,6 +33,7 @@ public class Instance implements Comparable<Instance> {
     this.counter = endpoint.counter;
     this.witness = now;
     this.created = endpoint.created;
+    this.local = local;
   }
 
   public static int humanizeCompare(Instance x, Instance y) {

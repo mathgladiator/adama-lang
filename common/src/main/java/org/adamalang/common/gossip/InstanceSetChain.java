@@ -97,7 +97,7 @@ public class InstanceSetChain {
     while (iterator.hasNext()) {
       Map.Entry<String, Instance> entry = iterator.next();
       Instance instance = entry.getValue();
-      if (instance.tooOldMustDelete(now)) {
+      if (instance.tooOldMustDelete(now) && !instance.local) {
         if (clone == null) {
           clone = current.clone();
         }
@@ -124,7 +124,7 @@ public class InstanceSetChain {
     recentlyLearnedAbout.gc(now);
   }
 
-  public boolean ingest(GossipProtocol.Endpoint[] endpoints, String[] deletes) {
+  public boolean ingest(GossipProtocol.Endpoint[] endpoints, String[] deletes, boolean local) {
     long now = time.nowMilliseconds();
     TreeSet<Instance> clone = null;
     for (GossipProtocol.Endpoint ep : endpoints) {
@@ -134,7 +134,7 @@ public class InstanceSetChain {
       } else {
         Instance newInstance = recentlyDeleted.remove(ep.id);
         if (newInstance == null) {
-          newInstance = new Instance(ep, now);
+          newInstance = new Instance(ep, now, local);
         } else {
           newInstance.absorb(ep.counter, now);
         }

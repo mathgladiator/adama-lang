@@ -44,7 +44,7 @@ public class InstanceSetChainTests extends CommonTest {
     InstanceSetChain chain = new InstanceSetChain(time);
     Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
     time.currentTime = 5000;
-    chain.ingest(ENDPOINTS(A(), B()), new String[]{});
+    chain.ingest(ENDPOINTS(A(), B()), new String[]{}, false);
     chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
     time.currentTime = 15000;
@@ -59,28 +59,48 @@ public class InstanceSetChainTests extends CommonTest {
   }
 
   @Test
+  public void scan_local_dont_change() {
+    MockTime time = new MockTime();
+    InstanceSetChain chain = new InstanceSetChain(time);
+    Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
+    time.currentTime = 5000;
+    chain.ingest(ENDPOINTS(A(), B()), new String[]{}, true);
+    chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
+    Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
+    time.currentTime = 15000;
+    Assert.assertEquals(5000, chain.scan());
+    Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
+    time.currentTime = 15000;
+    Assert.assertEquals(5000, chain.scan());
+    Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
+    time.currentTime = 15001;
+    Assert.assertEquals(5000, chain.scan());
+    Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
+  }
+
+  @Test
   public void ingest() {
     MockTime time = new MockTime();
     InstanceSetChain chain = new InstanceSetChain(time);
     Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
-    chain.ingest(ENDPOINTS(A(), B()), new String[]{});
+    chain.ingest(ENDPOINTS(A(), B()), new String[]{}, false);
     time.currentTime = 5000;
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
     chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
     time.currentTime = 10000;
-    chain.ingest(ENDPOINTS(), new String[]{"id-a"});
+    chain.ingest(ENDPOINTS(), new String[]{"id-a"}, false);
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
     Assert.assertEquals(0, chain.deletes().length);
     time.currentTime = 15000;
-    chain.ingest(ENDPOINTS(), new String[]{"id-a"});
+    chain.ingest(ENDPOINTS(), new String[]{"id-a"}, false);
     Assert.assertEquals("PlBLj9Ty9gKbLiKc59dLig==", chain.current().hash());
     Assert.assertEquals(1, chain.deletes().length);
     Assert.assertEquals("id-a", chain.deletes()[0]);
-    chain.ingest(ENDPOINTS(A(), B()), new String[]{});
+    chain.ingest(ENDPOINTS(A(), B()), new String[]{}, false);
     Assert.assertEquals(0, chain.deletes().length);
     time.currentTime = 30001;
-    chain.ingest(ENDPOINTS(), new String[]{"id-a"});
+    chain.ingest(ENDPOINTS(), new String[]{"id-a"}, false);
     Assert.assertEquals(1, chain.deletes().length);
     chain.gc();
     Assert.assertEquals(1, chain.deletes().length);
