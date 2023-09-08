@@ -2002,6 +2002,39 @@ var RxHTML = (function () {
   transforms['is_not_empty_str'] = function(x) { return x != ""; };
   transforms['jsonify'] = function(x) { return JSON.stringify(x); };
   transforms['time_now'] = function(x) { return Date.now() + ""; };
+  transforms['vulgar_fraction'] = function(xraw) {
+    var x = 0.0;
+    if (typeof(xraw) == 'number') {
+      x = xraw;
+    } else {
+      try {
+        x = parseFloat(xraw);
+      } catch (ex) {
+
+      }
+    }
+    var ival = Math.floor(x);
+    var change = x - ival;
+    var suffix = "";
+    if (change <= 0.0625) {
+      // 0
+    } else if (change <= 0.1875) {
+      suffix = "⅛";
+    } else if (change <= 0.3125) {
+      suffix = "¼";
+    } else if (change <= 0.4375) {
+      suffix = "⅜";
+    } else if (change <= 0.5625) {
+      suffix = "½";
+    } else if (change <= 0.6875) {
+      suffix = "⅝";
+    } else if (change <= 0.8125) {
+      suffix = "¾"; // 3/4
+    } else if (change <= 0.9375) {
+      suffix = "⅞";
+    } // else 1
+    return ival + suffix;
+  }
   transforms['time_ago'] = function(dt) {
     // only transform strings
     if (typeof (dt) == "string") {
