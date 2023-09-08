@@ -92,7 +92,7 @@ public class Engine {
         endpoint.created = System.currentTimeMillis();
         GossipProtocol.Endpoint[] local = new GossipProtocol.Endpoint[]{endpoint};
         String[] deletes = new String[]{};
-        chain.ingest(local, deletes);
+        chain.ingest(local, deletes, true);
         callback.accept(chain.pick(id));
       }
     });
@@ -190,7 +190,7 @@ public class Engine {
           @Override
           public void execute() throws Exception {
             metrics.gossip_read_forward_slow_gossip.run();
-            boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes, false);
             GossipProtocol.ReverseSlowGossip slow = new GossipProtocol.ReverseSlowGossip();
             slow.all_endpoints = chain.all();
             slow.recent_deletes = chain.deletes();
@@ -215,7 +215,7 @@ public class Engine {
           public void execute() throws Exception {
             metrics.gossip_read_reverse_hash_found.run();
             set.ingest(payload.counters, chain.now());
-            boolean changed = chain.ingest(payload.missing_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.missing_endpoints, payload.recent_deletes, false);
             GossipProtocol.ReverseQuickGossip quick = new GossipProtocol.ReverseQuickGossip();
             quick.counters = set.counters();
             quick.missing_endpoints = chain.missing(set);
@@ -238,7 +238,7 @@ public class Engine {
           public void execute() throws Exception {
             metrics.gossip_read_forward_quick_gossip.run();
             set.ingest(payload.counters, chain.now());
-            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes, false);
             upstream.completed();
             if (changed) {
               broadcastChangesWhileInExecutor();
@@ -253,7 +253,7 @@ public class Engine {
           @Override
           public void execute() throws Exception {
             metrics.gossip_read_begin_gossip.run();
-            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+            boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes, false);
             set = chain.find(payload.hash);
             ByteBuf buf = upstream.create(1024);
             if (set != null) {
@@ -323,7 +323,7 @@ public class Engine {
         @Override
         public void execute() throws Exception {
           metrics.gossip_read_reverse_slow_gossip.run();
-          boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes);
+          boolean changed = chain.ingest(payload.all_endpoints, payload.recent_deletes, false);
           remote.completed();
           if (changed) {
             broadcastChangesWhileInExecutor();
@@ -339,7 +339,7 @@ public class Engine {
         public void execute() throws Exception {
           metrics.gossip_read_reverse_quick_gossip.run();
           current.ingest(payload.counters, chain.now());
-          chain.ingest(payload.missing_endpoints, payload.recent_deletes);
+          chain.ingest(payload.missing_endpoints, payload.recent_deletes, false);
           remote.completed();
           if (payload.missing_endpoints.length > 0 || payload.recent_deletes.length > 0) {
             broadcastChangesWhileInExecutor();
@@ -354,7 +354,7 @@ public class Engine {
         @Override
         public void execute() throws Exception {
           metrics.gossip_read_hash_not_found.run();
-          boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+          boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes, false);
           current = chain.find(payload.hash);
           ByteBuf buf = remote.create(1024);
           if (current != null) {
@@ -386,7 +386,7 @@ public class Engine {
         public void execute() throws Exception {
           metrics.gossip_read_hash_found_forward_quick_gossip.run();
           current.ingest(payload.counters, chain.now());
-          boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes);
+          boolean changed = chain.ingest(payload.recent_endpoints, payload.recent_deletes, false);
           GossipProtocol.ForwardQuickGossip quick = new GossipProtocol.ForwardQuickGossip();
           quick.counters = current.counters();
           quick.recent_endpoints = chain.recent();
