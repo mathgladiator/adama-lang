@@ -19,6 +19,7 @@ import org.adamalang.services.FirstPartyServices;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.security.GoogleValidator;
+import org.adamalang.web.client.WebClientBase;
 
 import java.util.HashSet;
 import java.util.function.Consumer;
@@ -47,13 +48,12 @@ public class DevBoxServices {
     }
   }
 
-  public static void install(SimpleExecutor executor, Consumer<String> logger) {
+  public static void install(WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
     FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
     logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     // TODO: Stripe?
-    // TODO: provide a real webClientBase
-    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, null));
+    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, webClientBase));
   }
 }

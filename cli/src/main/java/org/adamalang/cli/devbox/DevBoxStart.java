@@ -95,7 +95,7 @@ public class DevBoxStart {
         localLibAdamaJSFile = null;
       }
     }
-    DevBoxServices.install(offload, (line) -> terminal.info(line));
+    DevBoxServices.install(webClientBase, offload, (line) -> terminal.info(line));
     DevBoxAdamaMicroVerse verse = null;
     if (args.microverse != null) {
       File microverseDef = new File(args.microverse);
