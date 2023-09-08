@@ -941,5 +941,9 @@ public class ErrorTable {
     descriptions.put(823242, "no description of error (yet)");
     names.put(823243, "FIRST_PARTY_AMAZON_SES_MISSING_ARGS");
     descriptions.put(823243, "no description of error (yet)");
+    names.put(758768, "FIRST_PARTY_GOOGLE_UNKNOWN_FAILURE");
+    descriptions.put(758768, "no description of error (yet)");
+    names.put(709617, "FIRST_PARTY_GOOGLE_MISSING_EMAIL");
+    descriptions.put(709617, "no description of error (yet)");
   }
 }
