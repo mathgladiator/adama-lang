@@ -17,6 +17,13 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 public class LibDateTests {
+
+  @Test
+  public void ageFractional() {
+    Assert.assertEquals(2.833333, LibDate.periodYearsFractional(new NtDate(2020, 4, 25), new NtDate(2023, 2, 25)), 0.01);
+    Assert.assertEquals(5.5, LibDate.periodYearsFractional(new NtDate(2018, 4, 25), new NtDate(2023, 10, 25)), 0.01);
+  }
+
   @Test
   public void calendarViewOf_LaunchSample() {
     NtList<NtDate> cal = LibDate.calendarViewOf(new NtDate(2023, 4, 25));

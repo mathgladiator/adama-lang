@@ -214,4 +214,10 @@ public class LibDate {
       return new NtMaybe<>();
     }
   }
+
+  @Extension
+  public static double periodYearsFractional(NtDate from, NtDate to) {
+    Period p = Period.between(from.toLocalDate(), to.toLocalDate());
+    return p.getYears() + p.getMonths() / 12.0;
+  }
 }
