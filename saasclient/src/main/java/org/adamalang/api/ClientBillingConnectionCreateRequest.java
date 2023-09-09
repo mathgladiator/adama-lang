@@ -6,8 +6,9 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230909112343";
+/** generated request type for billing-connection/create */
+public class ClientBillingConnectionCreateRequest {
+  public String identity;
 }

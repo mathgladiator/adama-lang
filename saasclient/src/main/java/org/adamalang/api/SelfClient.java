@@ -427,6 +427,14 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientHashedPasswordResponse(obj), callback);
   }
 
+  /** billing-connection/create */
+  public void billingConnectionCreate(ClientBillingConnectionCreateRequest request, Callback<DocumentStreamHandler> callback, Stream<ClientDataResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "billing-connection/create");
+    node.put("identity", request.identity);
+    pool.requestStream(node, (wcc, id) -> new DocumentStreamHandler(wcc, id), (obj) -> new ClientDataResponse(obj), callback, streamback);
+  }
+
   /** configure/make-or-get-asset-key */
   public void configureMakeOrGetAssetKey(ClientConfigureMakeOrGetAssetKeyRequest request, Callback<ClientAssetKeyResponse> callback) {
     ObjectNode node = Json.newJsonObject();

@@ -29,6 +29,8 @@ public interface RootRegionHandler {
 
   public void handle(Session session, DocumentsHashPasswordRequest request, HashedPasswordResponder responder);
 
+  public DocumentStreamHandler handle(Session session, BillingConnectionCreateRequest request, DataResponder responder);
+
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
   public void disconnect();
@@ -51,6 +53,7 @@ public interface RootRegionHandler {
       case "connection/update":
       case "connection/end":
       case "documents/hash-password":
+      case "billing-connection/create":
       case "attachment/start":
       case "attachment/append":
       case "attachment/finish":

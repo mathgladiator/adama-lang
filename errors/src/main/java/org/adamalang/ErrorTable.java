@@ -439,6 +439,8 @@ public class ErrorTable {
     descriptions.put(990417, "no description of error (yet)");
     names.put(916689, "API_CONNECT_DOMAIN_NO_KEY_FOUND");
     descriptions.put(916689, "no description of error (yet)");
+    names.put(903415, "API_CONNECT_BILING_MUST_BE_ADAMA_DEVELOPER");
+    descriptions.put(903415, "no description of error (yet)");
     names.put(995505, "API_CREATE_DOCUMENT_SPACE_RESERVED");
     descriptions.put(995505, "no description of error (yet)");
     names.put(947404, "API_CREATE_SPACE_RESERVED");
