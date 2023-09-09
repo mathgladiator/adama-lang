@@ -547,6 +547,7 @@ public class ErrorCodes {
 
   public static final int GLOBAL_DOMAIN_FIND_EXCEPTION = 966888;
 
+  @RetryInternally
   public static final int FAILED_FIND_LOCAL_CAPACITY = 978162;
 
   public static final int FAILED_DEINIT_SPACES_EXIST = 999665;
