@@ -35,6 +35,8 @@ public class DefineMetric extends Definition {
     this.expression = expression;
     this.semicolonToken = semicolonToken;
     this.metricType = null;
+    ingest(semicolonToken);
+    ingest(metricToken);
   }
 
   @Override
