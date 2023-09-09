@@ -115,6 +115,7 @@ channel ingest_new_storage_record(NewStorage storage) open {
 
 public formula unbilled_storage = iterate _unbilled_storage;
 public formula unbilled_usage = iterate _unbilled_usage;
+public formula unbilled_system_usage = iterate _unbilled_system_usage;
 
 message Empty {}
 

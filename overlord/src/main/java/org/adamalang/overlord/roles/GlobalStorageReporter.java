@@ -116,7 +116,7 @@ public class GlobalStorageReporter {
         message.put("domains", entry.getValue().domains);
         message.put("authorities", entry.getValue().authorities);
         String msg = message.toString();
-        client.directSend(user, "billing", "" + entry.getKey(), "system-usage-" + timestamp + "-" + entry.getKey(), "ingest_new_storage_record", msg, metrics.system_usage_record_sent.wrap(new Callback<Integer>() {
+        client.directSend(user, "billing", "" + entry.getKey(), "system-usage-" + timestamp + "-" + entry.getKey(), "ingest_new_system_usage", msg, metrics.system_usage_record_sent.wrap(new Callback<Integer>() {
           @Override
           public void success(Integer value) {
           }
