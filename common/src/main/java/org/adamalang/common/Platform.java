@@ -9,5 +9,5 @@
 package org.adamalang.common;
 
 public class Platform {
-  public static final String VERSION = "20230909063857";
+  public static final String VERSION = "20230909083423";
 }
