@@ -676,6 +676,7 @@ public class ErrorTable {
     descriptions.put(966888, "no description of error (yet)");
     names.put(978162, "FAILED_FIND_LOCAL_CAPACITY");
     descriptions.put(978162, "no description of error (yet)");
+    retry.add(978162);
     names.put(999665, "FAILED_DEINIT_SPACES_EXIST");
     descriptions.put(999665, "no description of error (yet)");
     names.put(918771, "FAILED_DEINIT_AUTHORITIES_EXIST");

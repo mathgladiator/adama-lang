@@ -394,7 +394,7 @@ public class Attributes {
         return true;
       }
       return "code".equals(name);
-    }, "email", "password", "code");
+    }, "password", "code");
   }
 
   private void convertFailureVariableToEvents(Element element, String defaultVar) {

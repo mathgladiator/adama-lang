@@ -124,8 +124,18 @@ public class Elements {
     if (!env.element.hasAttr("redirect")) {
       env.element.attr("redirect", "/sign-in");
     }
-    if (env.element.hasAttr("use-domain")) {
+    if (env.element.hasAttr("billing")) {
       // TODO: test this
+      RxObject obj = new RxObject(env, "name", "identity", "redirect");
+      env.writer.tab().append("$.BCONNECT(") //
+          .append(env.stateVar) //
+          .append(",").append(obj.rxObj) //
+          .append(");").newline();
+      obj.finish();
+      if (env.element.childNodeSize() > 0) {
+        Elements.pick(env);
+      }
+    } else if (env.element.hasAttr("use-domain")) {
       RxObject obj = new RxObject(env, "name", "identity", "redirect");
       env.writer.tab().append("$.DCONNECT(") //
           .append(env.stateVar) //
