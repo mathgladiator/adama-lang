@@ -435,6 +435,11 @@ Adama.Debugger = (function() {
         viewChannels.innerHTML = "[FAILED TO GET SCHEMA:" + reason + "]";
       }
     };
+    if (co.via_billing) {
+      viewJson.innerHTML = "Bililng document not supported";
+      viewChannels.innerHTML = viewJson.innerHTML;
+      return;
+    }
     if (co.via_domain) {
       co.raw.DomainReflect(co.identity, co.domain, handler);
     } else {

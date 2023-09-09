@@ -174,10 +174,11 @@ class WebSocketAdamaConnection {
   _write(request, callback) {
     if (!this.connected) {
       callback({ failure: 600, reason: 999 });
-      return;
+      return false;
     }
     this.callbacks.set(request.id, callback);
     this.socket.send(JSON.stringify(request));
+    return true;
   }
 
   /** api: wait for a connection */
@@ -211,7 +212,7 @@ class WebSocketAdamaConnection {
   __execute_rr(sm) {
     var self = this;
     sm.first = true;
-    self._write(sm.request, function (response) {
+    if (self._write(sm.request, function (response) {
       if (sm.first) {
         sm.first = false;
         if ("failure" in response) {
@@ -225,18 +226,20 @@ class WebSocketAdamaConnection {
         }
       }
       self.onreconnect.delete(sm.id);
-    });
-    self.onreconnect.set(sm.id, sm);
-    sm.__retry = function () {
-      self.__execute_rr(sm);
-    };
-    return sm;
+    })) {
+      self.onreconnect.set(sm.id, sm);
+      sm.__retry = function () {
+        self.__execute_rr(sm);
+      };
+      return sm;
+    }
+    return null;
   }
 
   /** execute a stream request with the given state machine */
   __execute_stream(sm) {
     var self = this;
-    self._write(sm.request, function (response) {
+    if (self._write(sm.request, function (response) {
       if ("failure" in response) {
         if ('failure' in sm.responder) {
           sm.responder.failure(response.reason);
@@ -255,12 +258,14 @@ class WebSocketAdamaConnection {
         }
         self.onreconnect.delete(sm.id);
       }
-    });
-    self.onreconnect.set(sm.id, sm);
-    sm.__retry = function () {
-      self.__execute_stream(sm);
-    };
-    return sm;
+    })) {
+      self.onreconnect.set(sm.id, sm);
+      sm.__retry = function () {
+        self.__execute_stream(sm);
+      };
+      return sm;
+    }
+    return null;
   }
 
   __id() {

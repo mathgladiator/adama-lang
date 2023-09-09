@@ -1781,6 +1781,50 @@ var RxHTML = (function () {
     return bind;
   };
 
+  // <connection billing ...>
+  self.BCONNECT = function (state, rxobj) {
+    var unsub = {
+      view: function () {
+      }
+    };
+    rxobj.__ = debounce(5, function () {
+      if (!('name' in rxobj)) {
+        return;
+      }
+      var idLookup = self.ID(rxobj.identity, function () { return rxobj.redirect; });
+      if (idLookup.abort) {
+        return;
+      }
+      var co = get_connection_obj(rxobj.name);
+      var desired = ":billing:" + idLookup.identity;
+      var bind = setup_co(desired, unsub, co, state);
+      if (bind === false) {
+        return;
+      }
+      co.bound = desired;
+      var identity = idLookup.identity;
+      var cleanup = idLookup.cleanup;
+      unsub.view();
+      co.identity = identity;
+      co.handlers = {};
+      co.viewstate_sent = true;
+      co.label = "Billing [ " + rxobj.name + "]";
+      co.via_billing = true;
+      co.via_domain = false;
+      var retry_sm = {};
+      retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
+      retry_sm.go = function() {
+        // bias to nothing new
+        co.viewstate_clone = "{}";
+        co.ptr = connection.BillingConnectionCreate(identity, retry_sm.responder);
+      };
+      retry_sm.go();
+      co.tree.update({});
+      bind(false);
+    });
+  };
+
+
   // <connection use-domain ...>
   self.DCONNECT = function (state, rxobj) {
     var unsub = {
@@ -1812,6 +1856,7 @@ var RxHTML = (function () {
       co.viewstate_sent = true;
       co.label = "Domain:" + domain + " [ " + rxobj.name + "]";
       co.via_domain = true;
+      co.via_billing = false;
       co.domain = domain;
       var retry_sm = {};
       retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
@@ -1859,6 +1904,7 @@ var RxHTML = (function () {
       co.viewstate_sent = true;
       co.label = co.space + "/" + co.key + " [ " + rxobj.name + "]";
       co.via_domain = false;
+      co.via_billing = false;
       var retry_sm = {};
       retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
       retry_sm.go = function() {
