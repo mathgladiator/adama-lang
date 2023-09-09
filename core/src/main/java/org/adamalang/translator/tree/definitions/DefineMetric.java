@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.tree.definitions;
 
+import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -49,9 +50,12 @@ public class DefineMetric extends Definition {
     FreeEnvironment fe = FreeEnvironment.root();
     expression.free(fe);
     checker.register(fe.free, (environment) -> {
-      metricType = expression.typing(environment, new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this));
+      metricType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this));
       // we only support numeric types (for now))
-      environment.rules.IsNumeric(metricType, false);
+      boolean good = environment.rules.IsLong(metricType, true) || environment.rules.IsNumeric(metricType, true);
+      if (!good && metricType != null) {
+        environment.document.createError(this, String.format("Type check failure: must have a type of int, long, or double; instead, but the type is actually '%s'", metricType.getAdamaType()));
+      }
     });
   }
 }

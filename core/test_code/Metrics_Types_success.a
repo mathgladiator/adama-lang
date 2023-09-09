@@ -1,0 +1,3 @@
+metric x = 1.2;
+metric y = 5L;
+metric z = 12;
