@@ -519,13 +519,13 @@ For regional proxies to emit metrics for a document
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
-| marker | no | String | A key to skip ahead a listing.             When iterating, values will be returned that are after marker.             To paginate an entire list, pick the last key or name returned and use it as the next marker. |
+| prefix | no | String | A prefix of a key used to filter results in a listing or computation |
 | metric-query | no | ObjectNode | A metric query to override the behavior on aggregation for specific fields |
 
 
 ### Template
 ```js
-connection.SpaceMetrics(identity, space, marker, metric-query, {
+connection.SpaceMetrics(identity, space, prefix, metric-query, {
   success: function(response) {
     // response.metrics
     // response.count

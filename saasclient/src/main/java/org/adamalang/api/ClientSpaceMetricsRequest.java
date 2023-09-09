@@ -14,6 +14,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class ClientSpaceMetricsRequest {
   public String identity;
   public String space;
-  public String marker;
+  public String prefix;
   public ObjectNode metricQuery;
 }

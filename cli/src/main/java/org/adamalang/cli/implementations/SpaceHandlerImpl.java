@@ -52,6 +52,23 @@ public class SpaceHandlerImpl implements SpaceHandler {
   }
 
   @Override
+  public void metrics(Arguments.SpaceMetricsArgs args, Output.JsonOrError output) throws Exception {
+    Config config = args.config;
+    String identity = config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/metrics");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        request.put("prefix", args.prefix == null ? "" : args.prefix);
+        output.add(connection.execute(request));
+        output.out();
+      }
+    }
+  }
+
+  @Override
   public void delete(Arguments.SpaceDeleteArgs args, Output.YesOrError output) throws Exception {
     Config config = args.config;
     String identity = config.get_string("identity", null);

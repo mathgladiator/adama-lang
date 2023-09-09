@@ -181,12 +181,17 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="prefix" type="string" optional="true" logged="true">
+        <documentation>
+            A prefix of a key used to filter results in a listing or computation
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="dedupe" type="string" optional="true" logged="true">
         <documentation>
             A key used to dedupe request such that at-most once processing is used.
         </documentation>
     </parameter-definition>
-
 
     <parameter-definition name="name" type="string" missing-error="453647" logged="true">
         <documentation>
@@ -882,7 +887,7 @@
     <method name="space/metrics" responder="metrics-aggregate" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
-        <parameter name="marker"/>
+        <parameter name="prefix"/>
         <parameter name="metric-query"/>
         <documentation>
             For regional proxies to emit metrics for a document

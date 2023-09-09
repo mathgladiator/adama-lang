@@ -2030,12 +2030,12 @@ public class JavaScriptResourcesRaw {
     sb.append("ID0gc2VsZi5fX2lkKCk7CiAgICByZXR1cm4gc2VsZi5fX2V4ZWN1dGVfcnIoewogICAgICBpZDogcGFy");
     sb.append("SWQsCiAgICAgIHJlc3BvbmRlcjogcmVzcG9uZGVyLAogICAgICByZXF1ZXN0OiB7Im1ldGhvZCI6InNw");
     sb.append("YWNlL2dldC1yeGh0bWwiLCAiaWQiOnBhcklkLCAiaWRlbnRpdHkiOiBpZGVudGl0eSwgInNwYWNlIjog");
-    sb.append("c3BhY2V9CiAgICB9KTsKICB9CiAgU3BhY2VNZXRyaWNzKGlkZW50aXR5LCBzcGFjZSwgbWFya2VyLCBt");
+    sb.append("c3BhY2V9CiAgICB9KTsKICB9CiAgU3BhY2VNZXRyaWNzKGlkZW50aXR5LCBzcGFjZSwgcHJlZml4LCBt");
     sb.append("ZXRyaWNRdWVyeSwgcmVzcG9uZGVyKSB7CiAgICB2YXIgc2VsZiA9IHRoaXM7CiAgICB2YXIgcGFySWQg");
     sb.append("PSBzZWxmLl9faWQoKTsKICAgIHJldHVybiBzZWxmLl9fZXhlY3V0ZV9ycih7CiAgICAgIGlkOiBwYXJJ");
     sb.append("ZCwKICAgICAgcmVzcG9uZGVyOiByZXNwb25kZXIsCiAgICAgIHJlcXVlc3Q6IHsibWV0aG9kIjoic3Bh");
     sb.append("Y2UvbWV0cmljcyIsICJpZCI6cGFySWQsICJpZGVudGl0eSI6IGlkZW50aXR5LCAic3BhY2UiOiBzcGFj");
-    sb.append("ZSwgIm1hcmtlciI6IG1hcmtlciwgIm1ldHJpYy1xdWVyeSI6IG1ldHJpY1F1ZXJ5fQogICAgfSk7CiAg");
+    sb.append("ZSwgInByZWZpeCI6IHByZWZpeCwgIm1ldHJpYy1xdWVyeSI6IG1ldHJpY1F1ZXJ5fQogICAgfSk7CiAg");
     sb.append("fQogIFNwYWNlRGVsZXRlKGlkZW50aXR5LCBzcGFjZSwgcmVzcG9uZGVyKSB7CiAgICB2YXIgc2VsZiA9");
     sb.append("IHRoaXM7CiAgICB2YXIgcGFySWQgPSBzZWxmLl9faWQoKTsKICAgIHJldHVybiBzZWxmLl9fZXhlY3V0");
     sb.append("ZV9ycih7CiAgICAgIGlkOiBwYXJJZCwKICAgICAgcmVzcG9uZGVyOiByZXNwb25kZXIsCiAgICAgIHJl");

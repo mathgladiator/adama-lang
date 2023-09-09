@@ -25,6 +25,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"space", "get", "--help"});
     Main.testMain(new String[]{"space", "get-rxhtml", "--help"});
     Main.testMain(new String[]{"space", "list", "--help"});
+    Main.testMain(new String[]{"space", "metrics", "--help"});
     Main.testMain(new String[]{"space", "reflect", "--help"});
     Main.testMain(new String[]{"space", "set-role", "--help"});
     Main.testMain(new String[]{"space", "set-rxhtml", "--help"});
