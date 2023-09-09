@@ -32,6 +32,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SpaceRedeployKick;
   public final RequestResponseMonitor monitor_SpaceSetRxhtml;
   public final RequestResponseMonitor monitor_SpaceGetRxhtml;
+  public final RequestResponseMonitor monitor_SpaceMetrics;
   public final RequestResponseMonitor monitor_SpaceDelete;
   public final RequestResponseMonitor monitor_SpaceSetRole;
   public final RequestResponseMonitor monitor_SpaceListDevelopers;
@@ -49,6 +50,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
   public final RequestResponseMonitor monitor_SuperSetDomainCertificate;
   public final RequestResponseMonitor monitor_RegionalDomainLookup;
+  public final RequestResponseMonitor monitor_RegionalEmitMetrics;
   public final RequestResponseMonitor monitor_RegionalInitHost;
   public final RequestResponseMonitor monitor_RegionalFinderFind;
   public final RequestResponseMonitor monitor_RegionalFinderFree;
@@ -90,6 +92,7 @@ public class GlobalApiMetrics {
     this.monitor_SpaceRedeployKick = factory.makeRequestResponseMonitor("space/redeploy-kick");
     this.monitor_SpaceSetRxhtml = factory.makeRequestResponseMonitor("space/set-rxhtml");
     this.monitor_SpaceGetRxhtml = factory.makeRequestResponseMonitor("space/get-rxhtml");
+    this.monitor_SpaceMetrics = factory.makeRequestResponseMonitor("space/metrics");
     this.monitor_SpaceDelete = factory.makeRequestResponseMonitor("space/delete");
     this.monitor_SpaceSetRole = factory.makeRequestResponseMonitor("space/set-role");
     this.monitor_SpaceListDevelopers = factory.makeRequestResponseMonitor("space/list-developers");
@@ -107,6 +110,7 @@ public class GlobalApiMetrics {
     this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");
     this.monitor_SuperSetDomainCertificate = factory.makeRequestResponseMonitor("super/set-domain-certificate");
     this.monitor_RegionalDomainLookup = factory.makeRequestResponseMonitor("regional/domain-lookup");
+    this.monitor_RegionalEmitMetrics = factory.makeRequestResponseMonitor("regional/emit-metrics");
     this.monitor_RegionalInitHost = factory.makeRequestResponseMonitor("regional/init-host");
     this.monitor_RegionalFinderFind = factory.makeRequestResponseMonitor("regional/finder/find");
     this.monitor_RegionalFinderFree = factory.makeRequestResponseMonitor("regional/finder/free");

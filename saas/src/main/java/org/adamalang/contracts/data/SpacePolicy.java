@@ -85,6 +85,16 @@ public class SpacePolicy {
     return false;
   }
 
+  public boolean canGetMetrics(AuthenticatedUser user) {
+    if (user.isAdamaDeveloper) {
+      if (user.id == owner) {
+        return true;
+      }
+      return developers.contains(user.id);
+    }
+    return false;
+  }
+
   public boolean canUserGetRxHTML(AuthenticatedUser user) {
     if (user.isAdamaDeveloper) {
       if (user.id == owner) {

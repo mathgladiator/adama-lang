@@ -200,6 +200,17 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientRxhtmlResponse(obj), callback);
   }
 
+  /** space/metrics */
+  public void spaceMetrics(ClientSpaceMetricsRequest request, Callback<ClientMetricsAggregateResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "space/metrics");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("marker", request.marker);
+    node.set("metric-query", request.metricQuery);
+    pool.requestResponse(node, (obj) -> new ClientMetricsAggregateResponse(obj), callback);
+  }
+
   /** space/delete */
   public void spaceDelete(ClientSpaceDeleteRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();
@@ -470,6 +481,17 @@ private final MultiWebClientRetryPool pool;
     node.put("identity", request.identity);
     node.put("domain", request.domain);
     pool.requestResponse(node, (obj) -> new ClientDomainRawResponse(obj), callback);
+  }
+
+  /** regional/emit-metrics */
+  public void regionalEmitMetrics(ClientRegionalEmitMetricsRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/emit-metrics");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.set("metrics", request.metrics);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
   /** regional/init-host */

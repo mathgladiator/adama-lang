@@ -473,6 +473,10 @@ public class ErrorTable {
     descriptions.put(928959, "no description of error (yet)");
     names.put(992319, "API_SPACE_GET_RXHTML_UNKNOWN_EXCEPTION");
     descriptions.put(992319, "no description of error (yet)");
+    names.put(996596, "API_SPACE_GET_METRICS_NOT_AUTHORIZED");
+    descriptions.put(996596, "no description of error (yet)");
+    names.put(999675, "API_SPACE_GET_METRICS_UNKNOWN_EXCEPTION");
+    descriptions.put(999675, "no description of error (yet)");
     names.put(945213, "API_METHOD_NOT_FOUND");
     descriptions.put(945213, "no description of error (yet)");
     names.put(919676, "API_INVALID_KEY_EMPTY");

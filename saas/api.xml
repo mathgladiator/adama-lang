@@ -98,6 +98,18 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="metrics" type="json-object" missing-error="425213">
+        <documentation>
+            A metrics object is a bunch of counters/event-tally
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="metric-query" type="json-object" optional="true">
+        <documentation>
+            A metric query to override the behavior on aggregation for specific fields
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="connection" type="long" missing-error="405505">
         <documentation>
             A unique key to locate a document connection.
@@ -340,6 +352,18 @@
     <field-definition name="change" type="json-object">
         <documentation>
             A json change behind a replica.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="metrics" type="json-object">
+        <documentation>
+            A metrics object is a bunch of counters/event-tally
+        </documentation>
+    </field-definition>
+
+    <field-definition name="count" type="int">
+        <documentation>
+            The number of items considered/available.
         </documentation>
     </field-definition>
 
@@ -850,6 +874,21 @@
         </documentation>
     </method>
 
+    <responder name="metrics-aggregate">
+        <field name="metrics" />
+        <field name="count" />
+    </responder>
+
+    <method name="space/metrics" responder="metrics-aggregate" scope="global">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="marker"/>
+        <parameter name="metric-query"/>
+        <documentation>
+            For regional proxies to emit metrics for a document
+        </documentation>
+    </method>
+
     <method name="space/delete" responder="simple" scope="global">
         <parameter name="identity"/>
         <parameter name="space"/>
@@ -1274,6 +1313,16 @@
         </documentation>
     </method>
 
+    <method name="regional/emit-metrics" responder="simple" scope="global" internal="true">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="metrics"/>
+        <documentation>
+            For regional proxies to emit metrics for a document
+        </documentation>
+    </method>
+
     <responder name="host-init">
         <field name="key-id"/>
     </responder>
@@ -1294,7 +1343,6 @@
             For regional proxies to lookup domains.
         </documentation>
     </method>
-
 
     <parameter-definition name="machine" type="string" missing-error="9005" logged="true">
         <documentation>
@@ -1710,7 +1758,6 @@
 409852
 470268
 475388
-425213
 445693
 463100
 462075

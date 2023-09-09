@@ -51,6 +51,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, SpaceGetRxhtmlRequest request, RxhtmlResponder responder);
 
+  public void handle(Session session, SpaceMetricsRequest request, MetricsAggregateResponder responder);
+
   public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder);
 
   public void handle(Session session, SpaceSetRoleRequest request, SimpleResponder responder);
@@ -84,6 +86,8 @@ public interface RootGlobalHandler {
   public void handle(Session session, SuperSetDomainCertificateRequest request, SimpleResponder responder);
 
   public void handle(Session session, RegionalDomainLookupRequest request, DomainRawResponder responder);
+
+  public void handle(Session session, RegionalEmitMetricsRequest request, SimpleResponder responder);
 
   public void handle(Session session, RegionalInitHostRequest request, HostInitResponder responder);
 
@@ -147,6 +151,7 @@ public interface RootGlobalHandler {
       case "space/redeploy-kick":
       case "space/set-rxhtml":
       case "space/get-rxhtml":
+      case "space/metrics":
       case "space/delete":
       case "space/set-role":
       case "space/list-developers":
@@ -164,6 +169,7 @@ public interface RootGlobalHandler {
       case "super/list-automatic-domains":
       case "super/set-domain-certificate":
       case "regional/domain-lookup":
+      case "regional/emit-metrics":
       case "regional/init-host":
       case "regional/finder/find":
       case "regional/finder/free":

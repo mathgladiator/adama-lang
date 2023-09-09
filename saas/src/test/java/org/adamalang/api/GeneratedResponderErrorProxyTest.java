@@ -57,17 +57,18 @@ public class GeneratedResponderErrorProxyTest {
     new KeyPairResponder(responder).error(new ErrorCodeException(19));
     new KeysResponder(responder).error(new ErrorCodeException(20));
     new KeystoreResponder(responder).error(new ErrorCodeException(21));
-    new PaymentResponder(responder).error(new ErrorCodeException(22));
-    new PlanResponder(responder).error(new ErrorCodeException(23));
-    new PlanWithKeysResponder(responder).error(new ErrorCodeException(24));
-    new ProgressResponder(responder).error(new ErrorCodeException(25));
-    new ReflectionResponder(responder).error(new ErrorCodeException(26));
-    new ReplicaResponder(responder).error(new ErrorCodeException(27));
-    new RxhtmlResponder(responder).error(new ErrorCodeException(28));
-    new SeqResponder(responder).error(new ErrorCodeException(29));
-    new SimpleResponder(responder).error(new ErrorCodeException(30));
-    new SpaceListingResponder(responder).error(new ErrorCodeException(31));
-    new YesResponder(responder).error(new ErrorCodeException(32));
-    Assert.assertEquals(528, errorCount.get());
+    new MetricsAggregateResponder(responder).error(new ErrorCodeException(22));
+    new PaymentResponder(responder).error(new ErrorCodeException(23));
+    new PlanResponder(responder).error(new ErrorCodeException(24));
+    new PlanWithKeysResponder(responder).error(new ErrorCodeException(25));
+    new ProgressResponder(responder).error(new ErrorCodeException(26));
+    new ReflectionResponder(responder).error(new ErrorCodeException(27));
+    new ReplicaResponder(responder).error(new ErrorCodeException(28));
+    new RxhtmlResponder(responder).error(new ErrorCodeException(29));
+    new SeqResponder(responder).error(new ErrorCodeException(30));
+    new SimpleResponder(responder).error(new ErrorCodeException(31));
+    new SpaceListingResponder(responder).error(new ErrorCodeException(32));
+    new YesResponder(responder).error(new ErrorCodeException(33));
+    Assert.assertEquals(561, errorCount.get());
   }
 }

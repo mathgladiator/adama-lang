@@ -10,6 +10,7 @@ package org.adamalang.frontend.global;
 
 import org.adamalang.api.GlobalApiMetrics;
 import org.adamalang.api.RegionApiMetrics;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.extern.Email;
@@ -19,6 +20,7 @@ import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.impl.GlobalFinder;
+import org.adamalang.mysql.impl.GlobalMetricsReporter;
 import org.adamalang.mysql.impl.MySQLFinderCore;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
 import org.adamalang.web.assets.AssetSystem;
@@ -51,6 +53,8 @@ public class GlobalExternNexus {
   public final MySQLFinderCore finderCore;
   public final GlobalCapacityOverseer overseer;
   public final PrivateKeyWithId signingKey;
+  public final GlobalMetricsReporter metricsReporter;
+  public final SimpleExecutor metrics;
 
   public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
@@ -75,11 +79,14 @@ public class GlobalExternNexus {
     this.finderCore = finder.core;
     this.overseer = new GlobalCapacityOverseer(database);
     this.signingKey = signingKey;
+    this.metrics = SimpleExecutor.create("metrics-report");
+    this.metricsReporter = new GlobalMetricsReporter(database, metrics);
     attachmentRoot.mkdir();
   }
   public void close() throws Exception {
     database.close();
     adama.shutdown();
     webBase.shutdown();
+    metrics.shutdown();
   }
 }
