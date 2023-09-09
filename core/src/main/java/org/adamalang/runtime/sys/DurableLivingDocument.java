@@ -74,6 +74,7 @@ public class DurableLivingDocument implements Queryable {
   private int trackingSeq;
   private long lastActivityMS;
   private boolean metricsScheduled;
+  private boolean disableMetrics;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -92,6 +93,7 @@ public class DurableLivingDocument implements Queryable {
     this.lastActivityMS = base.time.nowMilliseconds();
     this.observers = new ArrayList<>();
     this.metricsScheduled = false;
+    this.disableMetrics = false;
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -343,6 +345,7 @@ public class DurableLivingDocument implements Queryable {
     int newSize = dumpNew.toString().length();
     document = newDocument;
     currentFactory = factory;
+    disableMetrics = false;
     load(new Callback<LivingDocumentChange>() {
       @Override
       public void success(LivingDocumentChange value) {
@@ -369,15 +372,17 @@ public class DurableLivingDocument implements Queryable {
   }
 
   private void scheduleMetricsDumpWhileInExecutor() {
-    if (metricsScheduled) {
+    if (metricsScheduled || disableMetrics) {
       return;
     }
     metricsScheduled = true;
     base.executor.schedule(new NamedRunnable("dump-document-metrics") {
       @Override
       public void execute() throws Exception {
-        base.metricsReporter.emitMetrics(key, document.__metrics());
+        String metrics = document.__metrics();
+        base.metricsReporter.emitMetrics(key, metrics);
         metricsScheduled = false;
+        disableMetrics = "{}".equals(metrics);
       }
     }, 60000);
   }
