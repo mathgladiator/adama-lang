@@ -220,4 +220,11 @@ public class LibDate {
     Period p = Period.between(from.toLocalDate(), to.toLocalDate());
     return p.getYears() + p.getMonths() / 12.0;
   }
+
+  @Extension
+  public static int periodMonths(NtDate from, NtDate to) {
+    Period p = Period.between(from.toLocalDate(), to.toLocalDate());
+    return p.getYears() * 12 + p.getMonths();
+  }
+
 }

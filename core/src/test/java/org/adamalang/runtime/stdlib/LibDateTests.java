@@ -25,6 +25,12 @@ public class LibDateTests {
   }
 
   @Test
+  public void ageMonths() {
+    Assert.assertEquals(34, LibDate.periodMonths(new NtDate(2020, 4, 25), new NtDate(2023, 2, 25)));
+    Assert.assertEquals(66, LibDate.periodMonths(new NtDate(2018, 4, 25), new NtDate(2023, 10, 25)));
+  }
+
+  @Test
   public void calendarViewOf_LaunchSample() {
     NtList<NtDate> cal = LibDate.calendarViewOf(new NtDate(2023, 4, 25));
     Assert.assertEquals("2023-03-26", cal.lookup(0).get().toString());
