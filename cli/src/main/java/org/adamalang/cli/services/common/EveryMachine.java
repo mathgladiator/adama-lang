@@ -71,6 +71,7 @@ public class EveryMachine {
   public final Engine engine;
   public final SelfClient adamaCurrentRegionClient;
   public final String regionalIdentity;
+  public final SimpleExecutor metrics;
 
   public EveryMachine(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -114,6 +115,7 @@ public class EveryMachine {
     this.netBase = new NetBase(new NetMetrics(metricsFactory), identity, 1, 2);
     this.system = SimpleExecutor.create("system");
     this.engine = netBase.startGossiping();
+    this.metrics = SimpleExecutor.create("metrics");
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[EveryMachine-Shutdown]");
       alive.set(false);
@@ -131,6 +133,10 @@ public class EveryMachine {
       }
       try {
         regionClient.shutdown();
+      } catch (Exception ex) {
+      }
+      try {
+        metrics.shutdown();
       } catch (Exception ex) {
       }
     })));
