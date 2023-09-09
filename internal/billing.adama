@@ -141,6 +141,7 @@ record BillingRecord {
   public int domains;
   public int authorities;
   public long bytes_used;
+  public long cost_ap;
 }
 
 table<BillingRecord> _records;
@@ -164,20 +165,34 @@ function convert_records_to_brick(list<MeteringRecord> records) -> Brick {
   return b;
 }
 
-// cut all unbilled usage into a single record for a given hour
-procedure cut_billing_record() {
+
+
+message PreviewBillingRecord {
+  datetime at;
+  long bricks;
+  long cpu;
+  long messages;
+  long count;
+  long memory;
+  long connections;
+  long bandwidth;
+  long first_party_service_calls;
+  long third_party_service_calls;
+  int domains;
+  int authorities;
+  long bytes_used;
+  long cost_ap;
+}
+
+function preview_record(list<StorageRecord> storage_records_in_play, list<SystemUsage> system_usage_in_play, list<UsageRecord> usage_in_play) -> PreviewBillingRecord {
   long bytes_used = 0;
-  list<StorageRecord> storage_records_in_play = iterate _unbilled_storage where timestamp <= cutoff;
   foreach (kvp in (storage_records_in_play reduce space via @lambda x: x.bytes_used.average())) {
     bytes_used += kvp.value.longOf().getOrDefaultTo(0L);
   }
-  list<SystemUsage> system_usage_in_play = iterate _unbilled_system_usage where timestamp <= cutoff;
   int domains = system_usage_in_play.domains.average().ceil().intOf().getOrDefaultTo(0);
   int authorities = system_usage_in_play.authorities.average().ceil().intOf().getOrDefaultTo(0);
-
-  list<UsageRecord> usage_in_play = iterate _unbilled_usage where timestamp <= cutoff;
-  long third_party_service_calls = usage_in_play.record.third_party_service_calls.sum().getOrDefaultTo(0L);
   long first_party_service_calls = usage_in_play.record.first_party_service_calls.sum().getOrDefaultTo(0L);
+  long third_party_service_calls = usage_in_play.record.third_party_service_calls.sum().getOrDefaultTo(0L);
   long bandwidth = usage_in_play.record.bandwidth.sum().getOrDefaultTo(0L);
   long bricks = 0;
   long cpu = 0;
@@ -185,7 +200,6 @@ procedure cut_billing_record() {
   long count = 0;
   long memory = 0;
   long connections = 0;
-
   foreach (kvp in usage_in_play reduce org_key via @lambda x: convert_records_to_brick(x.record)) {
     bricks += kvp.value.bricks;
     cpu += kvp.value.cpu;
@@ -194,27 +208,45 @@ procedure cut_billing_record() {
     connections += kvp.value.connections;
   }
 
-  // TODO: it may be worth if it the cost is worth it to archive all the various usage records in play and then store them in S3.
-
-  _records <- {
+  long cost_ap = bricks * 10 // 10 AP/brick-hr
+    + connections // 1 AP/connection-hr
+    + Math.ceil(bytes_used / 10737418.24).longOf().getOrDefaultTo(0) // 100 AP / 1 GB-hr ~ 1 AP / 10 MB-hr
+    + Math.ceil(bandwidth / 10485.76).longOf().getOrDefaultTo(0) // 100 AP / MB ~ 1 AP / 10K
+    + first_party_service_calls * 10 // 10 AP per call
+    + third_party_service_calls * 20 // 25 AP per call
+    + domains * 700 // 700 AP/domain hour
+    ;
+  return {
     at: Time.datetime(),
     bricks:bricks,
     cpu:cpu,
     messages:messages,
     count:count,
     memory:memory,
-    bandwidth:bandwidth,
     connections:connections,
+    bandwidth:bandwidth,
     first_party_service_calls:first_party_service_calls,
     third_party_service_calls:third_party_service_calls,
     domains:domains,
-    authorities,
-    bytes_used:bytes_used
+    authorities:authorities,
+    bytes_used:bytes_used,
+    cost_ap:cost_ap
   };
+}
+
+// cut all unbilled usage into a single record for a given hour
+procedure cut_billing_record() {
+  list<StorageRecord> storage_records_in_play = iterate _unbilled_storage where timestamp <= cutoff;
+  list<SystemUsage> system_usage_in_play = iterate _unbilled_system_usage where timestamp <= cutoff;
+  list<UsageRecord> usage_in_play = iterate _unbilled_usage where timestamp <= cutoff;
+  _records <- preview_record(storage_records_in_play, system_usage_in_play, usage_in_play);
+  // TODO: consider storing to S3 (could use a nice and dandy little s3 archiver)
   storage_records_in_play.delete();
   system_usage_in_play.delete();
   usage_in_play.delete();
 }
+
+public formula preview_current_record = preview_record(iterate _unbilled_storage where timestamp <= cutoff, iterate _unbilled_system_usage where timestamp <= cutoff, iterate _unbilled_usage where timestamp <= cutoff);
 
 // an event feed from various unbilled record insertions
 procedure on_next_timestamp(long timestamp) {
@@ -232,9 +264,9 @@ procedure on_next_timestamp(long timestamp) {
 public formula current_records_for_invoice = iterate _records;
 
 // For debugging, TODO: remove
-public formula unbilled_storage = iterate _unbilled_storage;
-public formula unbilled_usage = iterate _unbilled_usage;
-public formula unbilled_system_usage = iterate _unbilled_system_usage;
+public formula unbilled_storage = iterate _unbilled_storage where timestamp <= cutoff;
+public formula unbilled_usage = iterate _unbilled_usage where timestamp <= cutoff;
+public formula unbilled_system_usage = iterate _unbilled_system_usage where timestamp <= cutoff;
 
 /////////////////////////////////////////////////////////////////////////
 // Collect user information to process stripe transaction

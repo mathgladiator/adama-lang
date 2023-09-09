@@ -612,11 +612,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
             responder.error(ex);
           }
         };
-        if (isReservedSpace(request.space)) {
-          postDirectSend.success(0);
-        } else {
-          nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
-        }
+        nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
       }

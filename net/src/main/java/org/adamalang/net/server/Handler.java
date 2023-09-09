@@ -29,6 +29,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
+import org.adamalang.runtime.sys.TriggerDeployment;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.*;
 import org.slf4j.Logger;
@@ -516,7 +517,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.ScanDeployment payload) {
     try {
       nexus.metrics.server_scan_deployment.run();
-      nexus.deployer.deploy(payload.space, new Callback<Void>() {
+      nexus.deployer.deploy(payload.space, new TriggerDeployment(nexus.service, new Callback<Void>() {
         @Override
         public void success(Void value) {
           ByteBuf buf = upstream.create(4);
@@ -529,7 +530,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
         public void failure(ErrorCodeException ex) {
           upstream.error(ex.code);
         }
-      });
+      }));
     } catch (Exception ex) {
       upstream.error(ErrorCodes.NET_HANDLER_SCAN_EXCEPTION);
     }
