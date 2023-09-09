@@ -1,0 +1,8 @@
+int x;
+
+procedure foo() -> int {
+  x++;
+  return x;
+}
+
+metric x = foo();

@@ -465,6 +465,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Messages_CantHaveTables_failure.a,8,0,11,1,"Messages can't have a field type of 'table<T>'"
 ./test_code/Metrics_BadTypes_failure.a,0,0,0,15,"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'string'"
 ./test_code/Metrics_BadTypes_failure.a,1,0,1,14,"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'complex'"
+./test_code/Metrics_RequireReadOnly_failure.a,7,11,7,14,"Read only methods can only call other read-only methods or pure functions"
 ./test_code/NativeTables_BadMethod_failure.a,6,2,6,8,"Type 'table<M>' lacks field 'nope'"
 ./test_code/NativeTables_BadMethod_failure.a,6,2,6,8,"Expression is not a function"
 ./test_code/NativeTables_NoMessage_failure.a,1,2,1,9,"The type 'table<M>' is using a type that was not found."

@@ -1,0 +1,7 @@
+int x;
+
+procedure foo() -> int readonly {
+  return x;
+}
+
+metric x = foo();

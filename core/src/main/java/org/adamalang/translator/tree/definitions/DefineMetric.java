@@ -9,6 +9,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.ComputeContext;
+import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -52,7 +53,8 @@ public class DefineMetric extends Definition {
     FreeEnvironment fe = FreeEnvironment.root();
     expression.free(fe);
     checker.register(fe.free, (environment) -> {
-      metricType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this));
+      Environment next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeAsReadOnlyBoundary();
+      metricType = expression.typing(next, new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this));
       // we only support numeric types (for now))
       boolean good = environment.rules.IsLong(metricType, true) || environment.rules.IsNumeric(metricType, true);
       if (!good && metricType != null) {
