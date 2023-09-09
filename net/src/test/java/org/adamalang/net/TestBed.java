@@ -18,6 +18,7 @@ import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.finder.MockFinderService;
+import org.adamalang.net.mocks.MockMetricsReporter;
 import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
@@ -65,6 +66,7 @@ public class TestBed implements AutoCloseable {
   private final File billingRoot;
   public final ClientConfig clientConfig;
   public final MockFinderService finderService;
+  public final MockMetricsReporter metricsReporter;
 
   public TestBed(int port, String code) throws Exception {
     DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>());
@@ -89,12 +91,13 @@ public class TestBed implements AutoCloseable {
 
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
     this.meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, base);
-
+    this.metricsReporter = new MockMetricsReporter();
     this.coreService =
         new CoreService(
             new CoreMetrics(new NoOpMetricsFactory()),
             base, //
             meteringPubSub.publisher(), //
+            metricsReporter, //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             TimeSource.REAL_TIME,
             2);

@@ -47,7 +47,7 @@ public class ServiceCompactingTests {
     TimeSource time = new MockTime();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
@@ -96,7 +96,7 @@ public class ServiceCompactingTests {
     TimeSource time = new MockTime();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
@@ -157,7 +157,7 @@ public class ServiceCompactingTests {
         callback.failure(new ErrorCodeException(-1));
       }
     };
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);

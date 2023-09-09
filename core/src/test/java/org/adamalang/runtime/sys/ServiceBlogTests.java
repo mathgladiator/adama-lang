@@ -33,7 +33,7 @@ public class ServiceBlogTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", "1", created);
@@ -73,7 +73,7 @@ public class ServiceBlogTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", "1", created);

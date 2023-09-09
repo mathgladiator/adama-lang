@@ -21,6 +21,7 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
+import org.adamalang.runtime.sys.mocks.MockMetricsReporter;
 import org.adamalang.runtime.sys.mocks.NullCallbackLatch;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -59,7 +60,7 @@ public class ServiceWebTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);

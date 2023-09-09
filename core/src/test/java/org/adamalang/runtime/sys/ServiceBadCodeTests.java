@@ -41,7 +41,7 @@ public class ServiceBadCodeTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory,(bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", "1", created);
