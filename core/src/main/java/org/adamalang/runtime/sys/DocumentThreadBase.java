@@ -13,6 +13,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.remote.MetricsReporter;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -37,9 +38,11 @@ public class DocumentThreadBase {
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
   private int millisecondsInactivityBeforeCleanup;
+  public final MetricsReporter metricsReporter;
 
-  public DocumentThreadBase(ServiceShield shield, DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(ServiceShield shield, MetricsReporter metricsReporter, DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.shield = shield;
+    this.metricsReporter = metricsReporter;
     this.service = service;
     this.metrics = metrics;
     this.executor = executor;

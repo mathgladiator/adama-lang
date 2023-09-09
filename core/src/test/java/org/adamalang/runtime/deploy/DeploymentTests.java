@@ -17,6 +17,7 @@ import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
+import org.adamalang.runtime.sys.mocks.MockMetricsReporter;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class DeploymentTests {
 
               MockInstantDataService dataService = new MockInstantDataService();
               DocumentThreadBase docBase =
-                  new DocumentThreadBase(new ServiceShield(), dataService, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, new MockTime());
+                  new DocumentThreadBase(new ServiceShield(), new MockMetricsReporter(), dataService, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, new MockTime());
               DurableLivingDocument.fresh(
                   new Key("space", "key"),
                   factory,
