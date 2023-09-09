@@ -10,12 +10,14 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
+import org.adamalang.mysql.data.SystemUsageInventoryRecord;
 import org.adamalang.runtime.sys.domains.Domain;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DomainsTest {
   @Test
@@ -54,6 +56,8 @@ public class DomainsTest {
         Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space", "over",true, null));
         Assert.assertTrue(Domains.map(dataBase, 500, "www.my-domain.com", "space2", null,false, null));
         ArrayList<Domain> simpleList = Domains.list(dataBase, 500);
+        HashMap<Integer, SystemUsageInventoryRecord> records = Inventory.inventorySystemUsage(dataBase);
+        Assert.assertEquals(1, records.get(500).domains);
         Assert.assertEquals("space2", simpleList.get(0).space);
         Assert.assertEquals(0, Domains.list(dataBase, -1).size());
         ArrayList<Domain> superList = Domains.superListAutoDomains(dataBase, 100);

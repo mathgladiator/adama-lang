@@ -70,6 +70,28 @@ channel ingest_new_usage_record(NewUsageRecord record) open {
   }
 }
 
+message NewSystemUsage {
+  long timestamp;
+  int domains;
+  int authorities;
+}
+
+record SystemUsage {
+  public int id;
+  public long timestamp;
+  public int domains;
+  public int authorities;
+}
+
+table<SystemUsage> _unbilled_system_usage;
+
+channel ingest_new_system_usage(NewSystemUsage usage) open {
+  if (@who.isAdamaHost()) {
+    _unbilled_system_usage <- usage;
+  }
+}
+
+
 message NewStorage {
   string space;
   long timestamp;
@@ -116,6 +138,6 @@ channel update_billing_information(BillingInformation bi) {
 
 @load {
   // for now, we don't keep anything until we reduce down into daily usage reports
-  (iterate _unbilled_storage).delete();
-  (iterate _unbilled_usage).delete();
+  // (iterate _unbilled_storage).delete();
+  // (iterate _unbilled_usage).delete();
 }

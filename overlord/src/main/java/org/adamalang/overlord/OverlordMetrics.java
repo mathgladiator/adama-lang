@@ -44,6 +44,10 @@ public class OverlordMetrics {
 
   public final Inflight found_missing_document;
 
+  public final Inflight users;
+  public final CallbackMonitor storage_record_sent;
+  public final CallbackMonitor system_usage_record_sent;
+
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
     targets_made = factory.counter("overlord_targets_made");
@@ -72,5 +76,9 @@ public class OverlordMetrics {
     garbage_collector_found_task = factory.counter("garbage_collector_found_task");
     found_missing_document = factory.inflight("alarm_missing_document");
     targets_scan_zero_backend = factory.inflight("alertm_targets_scan_zero_backend");
+
+    users = factory.inflight("current_users");
+    storage_record_sent = factory.makeCallbackMonitor("storage_record_sent");
+    system_usage_record_sent = factory.makeCallbackMonitor("system_usage_record_sent");
   }
 }

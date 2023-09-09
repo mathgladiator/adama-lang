@@ -13,6 +13,7 @@ import org.adamalang.common.*;
 import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.data.SystemUsageInventoryRecord;
 import org.adamalang.mysql.model.*;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.data.Key;
@@ -53,18 +54,25 @@ public class GlobalStorageReporter {
     @Override
     public void execute() throws Exception {
       try {
-        accountForStorage();
+        long timestamp = System.currentTimeMillis();
+        try {
+          accountForStorage(timestamp);
+        } catch (Exception ex) {
+          LOGGER.error("failed-storage-accounting", ex);
+        }
+        try {
+          accountForSystemUsage(timestamp);
+        } catch (Exception ex) {
+          LOGGER.error("failed-usage-accounting", ex);
+        }
       } finally {
         executor.schedule(this, 1000 * 60 * 5);
       }
     }
 
-    public void accountForStorage() throws Exception {
+    public void accountForStorage(long timestamp) throws Exception {
       AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("overlord", "region"), new ConnectionContext("adama", "0.0.0.0", "adama", null));
-
-      // inventory the backend
-      long timestamp = System.currentTimeMillis();
-      HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
+      HashMap<String, Long> inventory = Inventory.inventoryStorage(dataBase);
       for (Map.Entry<String, Long> entry : inventory.entrySet()) {
         ObjectNode message = Json.newJsonObject();
         message.put("space", entry.getKey());
@@ -75,24 +83,20 @@ public class GlobalStorageReporter {
         } catch (Exception ex) {
           LOGGER.error("failed-set-storage: " + entry.getKey(), ex);
         }
-
-
         finder.find(entry.getKey(), new Callback<Key>() {
           String space = entry.getKey();
           String msg = message.toString();
           @Override
           public void success(Key key) {
-            client.directSend(user, key.space, key.key, "storage-" + timestamp + "-" + space, "ingest_new_storage_record", msg, new Callback<Integer>() {
+            client.directSend(user, key.space, key.key, "storage-" + timestamp + "-" + space, "ingest_new_storage_record", msg, metrics.storage_record_sent.wrap(new Callback<Integer>() {
               @Override
-              public void success(Integer value) {
-                LOGGER.error("billed-for:" + space);
-              }
+              public void success(Integer value) {}
 
               @Override
               public void failure(ErrorCodeException ex) {
                 LOGGER.error("failed-storage-billing:" + space + ":" + ex.code);
               }
-            });
+            }));
           }
 
           @Override
@@ -100,6 +104,26 @@ public class GlobalStorageReporter {
             LOGGER.error("failed-find:" + space + ":" + ex.code);
           }
         });
+      }
+    }
+
+    public void accountForSystemUsage(long timestamp) throws Exception {
+      AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("overlord", "region"), new ConnectionContext("adama", "0.0.0.0", "adama", null));
+      HashMap<Integer, SystemUsageInventoryRecord> inventory = Inventory.inventorySystemUsage(dataBase);
+      for (Map.Entry<Integer, SystemUsageInventoryRecord> entry : inventory.entrySet()) {
+        ObjectNode message = Json.newJsonObject();
+        message.put("timestamp", timestamp);
+        message.put("domains", entry.getValue().domains);
+        message.put("authorities", entry.getValue().authorities);
+        String msg = message.toString();
+        client.directSend(user, "billing", "" + entry.getKey(), "system-usage-" + timestamp + "-" + entry.getKey(), "ingest_new_storage_record", msg, metrics.system_usage_record_sent.wrap(new Callback<Integer>() {
+          @Override
+          public void success(Integer value) {
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {}
+        }));
       }
     }
   }

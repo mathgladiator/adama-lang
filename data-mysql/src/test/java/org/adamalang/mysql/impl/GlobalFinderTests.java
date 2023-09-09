@@ -17,6 +17,7 @@ import org.adamalang.mysql.data.GCTask;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.mysql.model.FinderOperations;
+import org.adamalang.mysql.model.Inventory;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocationType;
@@ -186,7 +187,7 @@ public class GlobalFinderTests {
         FinderOperations.lowerTask(dataBase, tasks.get(0));
         tasks = FinderOperations.produceGCTasks(dataBase);
         Assert.assertEquals(0, tasks.size());
-        HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBase);
+        HashMap<String, Long> inventory = Inventory.inventoryStorage(dataBase);
         Assert.assertEquals(1, inventory.size());
         Assert.assertEquals(9, (long) inventory.get(KEY1.space));
         {
