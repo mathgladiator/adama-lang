@@ -73,6 +73,7 @@ public class DurableLivingDocument implements Queryable {
   private boolean inflightCompact;
   private int trackingSeq;
   private long lastActivityMS;
+  private boolean metricsScheduled;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -90,6 +91,7 @@ public class DurableLivingDocument implements Queryable {
     this.trackingSeq = document.__seq.get();
     this.lastActivityMS = base.time.nowMilliseconds();
     this.observers = new ArrayList<>();
+    this.metricsScheduled = false;
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -366,6 +368,20 @@ public class DurableLivingDocument implements Queryable {
     }
   }
 
+  private void scheduleMetricsDumpWhileInExecutor() {
+    if (metricsScheduled) {
+      return;
+    }
+    metricsScheduled = true;
+    base.executor.schedule(new NamedRunnable("") {
+      @Override
+      public void execute() throws Exception {
+        base.metricsReporter.emitMetrics(key, document.__metrics());
+        metricsScheduled = false;
+      }
+    }, 60000);
+  }
+
   private void finishSuccessDataServicePatchWhileInExecutor(boolean checkInvalidate) {
     this.inflightPatch = false;
     if (pending.size() == 0) {
@@ -385,6 +401,7 @@ public class DurableLivingDocument implements Queryable {
       }
       executeNow(remaining);
     }
+    scheduleMetricsDumpWhileInExecutor();
   }
 
   public void shedWhileInExecutor() {
