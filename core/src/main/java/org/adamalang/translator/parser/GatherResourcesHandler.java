@@ -169,6 +169,8 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   public void add(DefinePassword dp) {}
 
   @Override
-  public void add(ReplicationDefinition rd) {
-  }
+  public void add(ReplicationDefinition rd) {}
+
+  @Override
+  public void add(DefineMetric dm) {}
 }

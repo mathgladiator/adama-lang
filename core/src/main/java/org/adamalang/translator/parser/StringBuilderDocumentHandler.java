@@ -167,4 +167,9 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   public void add(ReplicationDefinition rd) {
     rd.emit(this);
   }
+
+  @Override
+  public void add(DefineMetric dm) {
+    dm.emit(this);
+  }
 }

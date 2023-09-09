@@ -83,6 +83,7 @@ public class Document implements TopLevelDocumentHandler {
   public final LinkedHashMap<String, DefineService> services;
   private final HashSet<String> defined;
   private final HashSet<String> viewDefined;
+  public final LinkedHashMap<String, DefineMetric> metrics;
 
   public Document() {
     autoClassId = 0;
@@ -117,6 +118,7 @@ public class Document implements TopLevelDocumentHandler {
     viewDefined = new HashSet<>();
     auths = new ArrayList<>();
     passwords = new ArrayList<>();
+    metrics = new LinkedHashMap<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -437,6 +439,16 @@ public class Document implements TopLevelDocumentHandler {
     }
   }
 
+  @Override
+  public void add(DefineMetric dm) {
+    if (metrics.containsKey(dm.nameToken.text)) {
+      typeChecker.issueError(dm, String.format("Metric '%s' was already defined.", dm.nameToken.text));
+    } else {
+      metrics.put(dm.nameToken.text, dm);
+    }
+    dm.typing(typeChecker);
+  }
+
   /**
    * @param filename the filename to import
    * @param position the position within the document (can't be null, use DocumentPosition.ZERO for
@@ -591,6 +603,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenViewStateFilter.writeViewStateFilter(sb, environment);
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
     CodeGenReplication.writeReplicationBind(sb, environment);
+    CodeGenMetrics.writeMetricsDump(sb, environment);
     CodeGenDebug.writeDebugInfo(sb, environment);
     CodeGenAuth.writeAuth(sb, environment);
     CodeGenWeb.writeWebHandlers(sb, environment);
