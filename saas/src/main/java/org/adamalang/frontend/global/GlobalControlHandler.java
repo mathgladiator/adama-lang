@@ -8,6 +8,7 @@
  */
 package org.adamalang.frontend.global;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
 import io.jsonwebtoken.Jwts;
@@ -491,6 +492,38 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
+  @Override
+  public void handle(Session session, SpaceMetricsRequest request, MetricsAggregateResponder responder) {
+    try {
+      if (request.policy.canGetMetrics(request.who)) {
+        List<String> metrics = Metrics.downloadMetrics(nexus.database, request.space, request.marker);
+        nexus.metrics.execute(new NamedRunnable("build-report") {
+          @Override
+          public void execute() throws Exception {
+            ObjectNode result = Json.newJsonObject();
+            for (String metric : metrics) {
+              Iterator<Map.Entry<String, JsonNode>> it = Json.parseJsonObject(metric).fields();
+              while (it.hasNext()) {
+                Map.Entry<String, JsonNode> val = it.next();
+                JsonNode prior = result.get(val.getKey());
+                if (prior == null) {
+                  result.set(val.getKey(), val.getValue());
+                } else {
+                  result.put(val.getKey(), val.getValue().doubleValue() + prior.doubleValue());
+                }
+              }
+            }
+            responder.complete(result, metrics.size());
+          }
+        });
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_METRICS_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_METRICS_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
   private boolean isReservedSpace(String space) {
     return "ide".equals(space) || "wildcard".equals(space) || "billing".equals(space);
   }
@@ -849,6 +882,14 @@ public class GlobalControlHandler implements RootGlobalHandler {
       } catch (Exception ex) {
         responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_DOMAIN_FIND_EXCEPTION, ex, LOGGER));
       }
+    }
+  }
+
+  @Override
+  public void handle(Session session, RegionalEmitMetricsRequest request, SimpleResponder responder) {
+    if (checkRegionalHost(request.who, responder.responder)) {
+      nexus.metricsReporter.emitMetrics(new Key(request.space, request.key), request.metrics.toString());
+      responder.complete();
     }
   }
 

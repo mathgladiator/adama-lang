@@ -6,8 +6,14 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230909105138";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+/** generated request type for space/metrics */
+public class ClientSpaceMetricsRequest {
+  public String identity;
+  public String space;
+  public String marker;
+  public ObjectNode metricQuery;
 }
