@@ -1,0 +1,6 @@
+enum Breed { Lamancha:1, Boer:2, Numbian:3, Pygmy:4, Alpine:5 }
+record Goat {
+  Breed breed;
+}
+table<Goat> goats;
+public formula grouped_by_breed = iterate goats reduce breed via (@lambda x: x);

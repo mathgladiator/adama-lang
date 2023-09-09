@@ -5,7 +5,7 @@
   }
   maximum_history = 250;
 }
-
+public long cutoff = 0;
 public principal owner;
 public string email;
 
@@ -22,6 +22,8 @@ message Cons {
   return @who == owner || @who.isAdamaHost();
 }
 
+/////////////////////////////////////////////////////////////////////////
+// Records and messages for storing and receiving messages from the fleet
 record MeteringRecord {
   public long cpu;
   public long messages;
@@ -31,6 +33,39 @@ record MeteringRecord {
   public long bandwidth;
   public long first_party_service_calls;
   public long third_party_service_calls;
+}
+
+record UsageRecord {
+  public int id;
+  public long timestamp;
+  public string space;
+  public string region;
+  public string machine;
+  public MeteringRecord record;
+
+  public formula org_key = region + "/" + machine + "/" + space;
+}
+
+record SystemUsage {
+  public int id;
+  public long timestamp;
+  public int domains;
+  public int authorities;
+}
+
+record StorageRecord {
+  public int id;
+  public long timestamp;
+  public string space;
+  public long bytes_used;
+}
+
+message NewUsageRecord {
+  long timestamp;
+  string space;
+  string region;
+  string machine;
+  NewMeteringRecord record;
 }
 
 message NewMeteringRecord {
@@ -44,30 +79,10 @@ message NewMeteringRecord {
   long third_party_service_calls;
 }
 
-record UsageRecord {
-  public int id;
-  public long timestamp;
-  public string space;
-  public string region;
-  public string machine;
-  public MeteringRecord record;
-}
-
-message NewUsageRecord {
-  long timestamp;
+message NewStorage {
   string space;
-  string region;
-  string machine;
-  NewMeteringRecord record;
-}
-
-table<UsageRecord> _unbilled_usage;
-
-/* this channel is fired directly from adama */
-channel ingest_new_usage_record(NewUsageRecord record) open {
-  if (@who.isAdamaHost()) {
-    _unbilled_usage <- record;
-  }
+  long timestamp;
+  long bytes_used;
 }
 
 message NewSystemUsage {
@@ -76,46 +91,153 @@ message NewSystemUsage {
   int authorities;
 }
 
-record SystemUsage {
-  public int id;
-  public long timestamp;
-  public int domains;
-  public int authorities;
-}
+/////////////////////////////////////////////////////////////////////////
+// Tables for unbilled resources
 
+table<UsageRecord> _unbilled_usage;
 table<SystemUsage> _unbilled_system_usage;
+table<StorageRecord> _unbilled_storage;
 
-channel ingest_new_system_usage(NewSystemUsage usage) open {
+/////////////////////////////////////////////////////////////////////////
+// Data flow into the unbilled tables
+
+/* this channel is fired directly from adama */
+channel ingest_new_usage_record(NewUsageRecord u) open {
   if (@who.isAdamaHost()) {
-    _unbilled_system_usage <- usage;
+    _unbilled_usage <- u;
+    on_next_timestamp(u.timestamp);
   }
 }
 
-
-message NewStorage {
-  string space;
-  long timestamp;
-  long bytes_used;
+channel ingest_new_storage_record(NewStorage u) open {
+  if (@who.isAdamaHost()) {
+    _unbilled_storage <- u;
+    on_next_timestamp(u.timestamp);
+  }
 }
 
-record StorageRecord {
+channel ingest_new_system_usage(NewSystemUsage u) open {
+  if (@who.isAdamaHost()) {
+    _unbilled_system_usage <- u;
+    on_next_timestamp(u.timestamp);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////
+// Reduction from unbilled resources to billing records
+
+record BillingRecord {
   public int id;
-  public long timestamp;
-  public string space;
+  public datetime at;
+  public long bricks;
+  public long cpu;
+  public long messages;
+  public long count;
+  public long memory;
+  public long connections;
+  public long bandwidth;
+  public long first_party_service_calls;
+  public long third_party_service_calls;
+  public int domains;
+  public int authorities;
   public long bytes_used;
 }
 
-table<StorageRecord> _unbilled_storage;
+table<BillingRecord> _records;
 
-channel ingest_new_storage_record(NewStorage storage) open {
-  if (@who.isAdamaHost()) {
-    _unbilled_storage <- storage;
+message Brick {
+  long cpu;
+  long memory;
+  long bricks; // this is a combination of cpu and memory
+  long count;
+  long connections;
+}
+
+// this is one time series for a space and host
+function convert_records_to_brick(list<MeteringRecord> records) -> Brick {
+  Brick b;
+  b.cpu = records.cpu.sum().getOrDefaultTo(0);
+  b.memory = records.memory_p95.average().longOf().getOrDefaultTo(0);
+  b.count = records.count_p95.average().longOf().getOrDefaultTo(0);
+  b.connections = records.connections_p95.average().longOf().getOrDefaultTo(0);
+  b.bricks = Math.max((b.cpu / 1000000).ceil(), (b.memory / 1048576).ceil()).longOf().getOrDefaultTo(1);
+  return b;
+}
+
+// cut all unbilled usage into a single record for a given hour
+procedure cut_billing_record() {
+  long bytes_used = 0;
+  list<StorageRecord> storage_records_in_play = iterate _unbilled_storage where timestamp <= cutoff;
+  foreach (kvp in (storage_records_in_play reduce space via @lambda x: x.bytes_used.average())) {
+    bytes_used += kvp.value.longOf().getOrDefaultTo(0L);
+  }
+  list<SystemUsage> system_usage_in_play = iterate _unbilled_system_usage where timestamp <= cutoff;
+  int domains = system_usage_in_play.domains.average().ceil().intOf().getOrDefaultTo(0);
+  int authorities = system_usage_in_play.authorities.average().ceil().intOf().getOrDefaultTo(0);
+
+  list<UsageRecord> usage_in_play = iterate _unbilled_usage where timestamp <= cutoff;
+  long third_party_service_calls = usage_in_play.record.third_party_service_calls.sum().getOrDefaultTo(0L);
+  long first_party_service_calls = usage_in_play.record.first_party_service_calls.sum().getOrDefaultTo(0L);
+  long bandwidth = usage_in_play.record.bandwidth.sum().getOrDefaultTo(0L);
+  long bricks = 0;
+  long cpu = 0;
+  long messages = usage_in_play.record.messages.sum().getOrDefaultTo(0L);
+  long count = 0;
+  long memory = 0;
+  long connections = 0;
+
+  foreach (kvp in usage_in_play reduce org_key via @lambda x: convert_records_to_brick(x.record)) {
+    bricks += kvp.value.bricks;
+    cpu += kvp.value.cpu;
+    count += kvp.value.count;
+    memory += kvp.value.memory;
+    connections += kvp.value.connections;
+  }
+
+  // TODO: it may be worth if it the cost is worth it to archive all the various usage records in play and then store them in S3.
+
+  _records <- {
+    at: Time.datetime(),
+    bricks:bricks,
+    cpu:cpu,
+    messages:messages,
+    count:count,
+    memory:memory,
+    bandwidth:bandwidth,
+    connections:connections,
+    first_party_service_calls:first_party_service_calls,
+    third_party_service_calls:third_party_service_calls,
+    domains:domains,
+    authorities,
+    bytes_used:bytes_used
+  };
+  storage_records_in_play.delete();
+  system_usage_in_play.delete();
+  usage_in_play.delete();
+}
+
+// an event feed from various unbilled record insertions
+procedure on_next_timestamp(long timestamp) {
+  if (cutoff == 0) { // there has been no timeline established
+    cutoff = timestamp + 3600000;
+  }
+  // we are 30 minutes past the cutoff
+  if (timestamp > cutoff + 1800000) {
+    // cut the records and reset the timeline
+    cut_billing_record();
+    cutoff += 3600000;
   }
 }
 
+public formula current_records_for_invoice = iterate _records;
+
+// For debugging, TODO: remove
 public formula unbilled_storage = iterate _unbilled_storage;
 public formula unbilled_usage = iterate _unbilled_usage;
 public formula unbilled_system_usage = iterate _unbilled_system_usage;
+
+/////////////////////////////////////////////////////////////////////////
+// Collect user information to process stripe transaction
 
 message Empty {}
 
@@ -123,7 +245,19 @@ channel initialize_token(Empty m) {
   ViewState.log("Hello World");
 }
 
-message BillingInformation {
+record BillingInformation {
+  public string name;
+  public string address1;
+  public string address2;
+  public string city;
+  public string state;
+  public string country;
+  public string postal;
+}
+
+public BillingInformation billing_information;
+
+message UpdateBillingInformation {
   string name;
   string address1;
   string address2;
@@ -133,12 +267,7 @@ message BillingInformation {
   string postal;
 }
 
-channel update_billing_information(BillingInformation bi) {
-
-}
-
-@load {
-  // for now, we don't keep anything until we reduce down into daily usage reports
-  // (iterate _unbilled_storage).delete();
-  // (iterate _unbilled_usage).delete();
+channel update_billing_information(UpdateBillingInformation bi) {
+  billing_information <- bi;
+  // TODO: sync with Stripe
 }
