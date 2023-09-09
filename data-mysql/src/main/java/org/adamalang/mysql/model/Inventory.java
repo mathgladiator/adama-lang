@@ -32,8 +32,10 @@ public class Inventory {
           bytes.put(space, prior + controlStorage);
         }
       };
-      String sqlData = "SELECT `space`, SUM(delta_bytes) + SUM(asset_bytes) + IF(`metrics` IS NULL, 0, LENGTH(`metrics`)) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` != 'ide' GROUP BY `space`";
+      String sqlData = "SELECT `space`, SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` != 'ide' GROUP BY `space`";
       DataBase.walk(connection, add, sqlData);
+      String sqlMetrics = "SELECT `space`, SUM(IF(`metrics` IS NULL, 0, LENGTH(`metrics`))) as `bytes` FROM `" + dataBase.databaseName + "`.`metrics` WHERE `space` != 'ide' GROUP BY `space`";
+      DataBase.walk(connection, add, sqlMetrics);
       String sqlStaticAssets = "SELECT `key`,SUM(delta_bytes) + SUM(asset_bytes) as `bytes` FROM `" + dataBase.databaseName + "`.`directory` WHERE `space` = 'ide' GROUP BY `key`";
       DataBase.walk(connection, add, sqlStaticAssets);
       String sqlControl = "SELECT `name`, IF(`plan` IS NULL, 0, LENGTH(`plan`)) + IF(`rxhtml` IS NULL, 0, LENGTH(`rxhtml`)) as `bytes` FROM `" + dataBase.databaseName + "`.`spaces`;";
