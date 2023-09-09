@@ -17,6 +17,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.remote.SampleService;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -45,7 +46,11 @@ public class PhaseRun {
     });
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
     Key key = new Key("0", "0");
-    DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), new MetricsReporter() {
+      @Override
+      public void emitMetrics(Key key, String metricsPayload) {
+      }
+    }, dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     DurableLivingDocument.fresh(key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", key.key), "{}", "0", monitor, base, acquire);
     DurableLivingDocument doc = acquire.get();
     doc.invalidate(Callback.DONT_CARE_INTEGER);

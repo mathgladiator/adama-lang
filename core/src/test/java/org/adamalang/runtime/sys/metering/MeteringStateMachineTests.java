@@ -18,6 +18,7 @@ import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.*;
+import org.adamalang.runtime.sys.mocks.MockMetricsReporter;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class MeteringStateMachineTests {
     DocumentThreadBase[] bases = new DocumentThreadBase[5];
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
-          new DocumentThreadBase(new ServiceShield(),
+          new DocumentThreadBase(new ServiceShield(), new MockMetricsReporter(),
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
@@ -92,7 +93,7 @@ public class MeteringStateMachineTests {
     DocumentThreadBase[] bases = new DocumentThreadBase[5];
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
-          new DocumentThreadBase(new ServiceShield(),
+          new DocumentThreadBase(new ServiceShield(), new MockMetricsReporter(),
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
@@ -186,7 +187,7 @@ public class MeteringStateMachineTests {
     DocumentThreadBase[] bases = new DocumentThreadBase[5];
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
-          new DocumentThreadBase(new ServiceShield(),
+          new DocumentThreadBase(new ServiceShield(), new MockMetricsReporter(),
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override

@@ -57,7 +57,6 @@ public class CoreService implements Deliverer, Queryable {
   private final DocumentThreadBase[] bases;
   private final AtomicBoolean alive;
   private final Random rng;
-  private final MetricsReporter metricsReporter;
 
   /**
    * @param livingDocumentFactoryFactory a mapping of how living documents come into existence
@@ -68,13 +67,12 @@ public class CoreService implements Deliverer, Queryable {
   public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.dataService = dataService;
-    this.metricsReporter = metricsReporter;
     this.shield = new ServiceShield();
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      bases[k] = new DocumentThreadBase(shield, dataService, metrics, SimpleExecutor.create("core-" + k), time);
+      bases[k] = new DocumentThreadBase(shield, metricsReporter, dataService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
