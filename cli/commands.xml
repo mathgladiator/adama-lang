@@ -110,6 +110,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="prefix" type="string" short="p">
+        <documentation>
+            Items that have this prefixed are included
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="output" type="string" short="o">
         <documentation>
             A file to output to.
@@ -277,6 +283,14 @@
                 Creates a new space
             </documentation>
             <arg name="space" />
+        </command>
+
+        <command name="metrics" output="json">
+            <documentation>
+                Get a metric report for the space and the documents that share the prefix
+            </documentation>
+            <arg name="space" />
+            <arg name="prefix" default="null" />
         </command>
 
         <command name="delete">

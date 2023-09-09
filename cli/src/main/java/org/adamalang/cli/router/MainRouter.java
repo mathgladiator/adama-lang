@@ -136,6 +136,16 @@ public class MainRouter {
                spaceHandler.list(spaceArgs, out);
                return 0;
             }
+            case "metrics": {
+              SpaceMetricsArgs spaceArgs = SpaceMetricsArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceMetricsArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               spaceHandler.metrics(spaceArgs, out);
+               return 0;
+            }
             case "reflect": {
               SpaceReflectArgs spaceArgs = SpaceReflectArgs.from(args, 2);
               if (spaceArgs == null) {

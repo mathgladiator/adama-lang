@@ -24,15 +24,15 @@ public class SpaceMetricsRequest {
   public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
-  public final String marker;
+  public final String prefix;
   public final ObjectNode metricQuery;
 
-  public SpaceMetricsRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String marker, final ObjectNode metricQuery) {
+  public SpaceMetricsRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String prefix, final ObjectNode metricQuery) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
-    this.marker = marker;
+    this.prefix = prefix;
     this.metricQuery = metricQuery;
   }
 
@@ -44,9 +44,9 @@ public class SpaceMetricsRequest {
       final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String marker = request.getString("marker", false, 0);
+      final String prefix = request.getString("prefix", false, 0);
       final ObjectNode metricQuery = request.getObject("metric-query", false, 0);
-      _latch.with(() -> new SpaceMetricsRequest(identity, who.get(), space, policy.get(), marker, metricQuery));
+      _latch.with(() -> new SpaceMetricsRequest(identity, who.get(), space, policy.get(), prefix, metricQuery));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
@@ -63,6 +63,6 @@ public class SpaceMetricsRequest {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("space", space);
     org.adamalang.contracts.SpacePolicyLocator.logInto(policy, _node);
-    _node.put("marker", marker);
+    _node.put("prefix", prefix);
   }
 }

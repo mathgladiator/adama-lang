@@ -496,7 +496,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   public void handle(Session session, SpaceMetricsRequest request, MetricsAggregateResponder responder) {
     try {
       if (request.policy.canGetMetrics(request.who)) {
-        List<String> metrics = Metrics.downloadMetrics(nexus.database, request.space, request.marker);
+        List<String> metrics = Metrics.downloadMetrics(nexus.database, request.space, request.prefix == null ? "" : request.prefix);
         nexus.metrics.execute(new NamedRunnable("build-report") {
           @Override
           public void execute() throws Exception {

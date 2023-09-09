@@ -42,13 +42,13 @@ public class Metrics {
     });
   }
 
-  public static List<String> downloadMetrics(DataBase dataBase, String space, String marker) throws Exception {
+  public static List<String> downloadMetrics(DataBase dataBase, String space, String prefix) throws Exception {
     return dataBase.transactSimple((connection) -> {
       ArrayList<String> metrics = new ArrayList<>();
-      String sqlUpdate = "SELECT `metrics` FROM `" + dataBase.databaseName + "`.`metrics` WHERE `space`=? AND LEFT(`key`," + marker.length() + ")=?";
+      String sqlUpdate = "SELECT `metrics` FROM `" + dataBase.databaseName + "`.`metrics` WHERE `space`=? AND LEFT(`key`," + prefix.length() + ")=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlUpdate)) {
         statement.setString(1, space);
-        statement.setString(2, marker);
+        statement.setString(2, prefix);
         try (ResultSet rs = statement.executeQuery()) {
           while (rs.next()) {
             metrics.add(rs.getString(1));

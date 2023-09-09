@@ -179,7 +179,7 @@ public class JavaScriptClient {
     sb.append("KHtpZDppLHJlc3BvbmRlcjpuLHJlcXVlc3Q6e21ldGhvZDoic3BhY2UvZ2V0LXJ4aHRtbCIsaWQ6aSxp");
     sb.append("ZGVudGl0eTplLHNwYWNlOnR9fSl9U3BhY2VNZXRyaWNzKGUsdCxuLGkscil7dmFyIG89dGhpcy5fX2lk");
     sb.append("KCk7cmV0dXJuIHRoaXMuX19leGVjdXRlX3JyKHtpZDpvLHJlc3BvbmRlcjpyLHJlcXVlc3Q6e21ldGhv");
-    sb.append("ZDoic3BhY2UvbWV0cmljcyIsaWQ6byxpZGVudGl0eTplLHNwYWNlOnQsbWFya2VyOm4sIm1ldHJpYy1x");
+    sb.append("ZDoic3BhY2UvbWV0cmljcyIsaWQ6byxpZGVudGl0eTplLHNwYWNlOnQscHJlZml4Om4sIm1ldHJpYy1x");
     sb.append("dWVyeSI6aX19KX1TcGFjZURlbGV0ZShlLHQsbil7dmFyIGk9dGhpcy5fX2lkKCk7cmV0dXJuIHRoaXMu");
     sb.append("X19leGVjdXRlX3JyKHtpZDppLHJlc3BvbmRlcjpuLHJlcXVlc3Q6e21ldGhvZDoic3BhY2UvZGVsZXRl");
     sb.append("IixpZDppLGlkZW50aXR5OmUsc3BhY2U6dH19KX1TcGFjZVNldFJvbGUoZSx0LG4saSxyKXt2YXIgbz10");

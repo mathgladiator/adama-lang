@@ -206,7 +206,7 @@ private final MultiWebClientRetryPool pool;
     node.put("method", "space/metrics");
     node.put("identity", request.identity);
     node.put("space", request.space);
-    node.put("marker", request.marker);
+    node.put("prefix", request.prefix);
     node.set("metric-query", request.metricQuery);
     pool.requestResponse(node, (obj) -> new ClientMetricsAggregateResponse(obj), callback);
   }

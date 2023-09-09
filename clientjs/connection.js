@@ -454,13 +454,13 @@ class WebSocketAdamaConnection {
       request: {"method":"space/get-rxhtml", "id":parId, "identity": identity, "space": space}
     });
   }
-  SpaceMetrics(identity, space, marker, metricQuery, responder) {
+  SpaceMetrics(identity, space, prefix, metricQuery, responder) {
     var self = this;
     var parId = self.__id();
     return self.__execute_rr({
       id: parId,
       responder: responder,
-      request: {"method":"space/metrics", "id":parId, "identity": identity, "space": space, "marker": marker, "metric-query": metricQuery}
+      request: {"method":"space/metrics", "id":parId, "identity": identity, "space": space, "prefix": prefix, "metric-query": metricQuery}
     });
   }
   SpaceDelete(identity, space, responder) {
