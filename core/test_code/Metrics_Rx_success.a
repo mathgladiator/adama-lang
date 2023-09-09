@@ -1,0 +1,5 @@
+long val;
+metric val = val + val;
+
+double sum;
+metric sss = sum;

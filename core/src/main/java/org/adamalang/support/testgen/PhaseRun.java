@@ -65,6 +65,8 @@ public class PhaseRun {
     outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
     outputFile.append(doc.json()).append("\n");
     outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
+    outputFile.append(doc.document().__metrics()).append("\n");
+    outputFile.append("--METRIC RESULTS-----------------------------------").append("\n");
     final var json = doc.json();
     dds.setData(json);
     outputFile.append(json).append("\n");

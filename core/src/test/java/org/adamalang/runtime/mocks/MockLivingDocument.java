@@ -49,7 +49,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected String __metrics() {
+  public String __metrics() {
     return "{}";
   }
 
