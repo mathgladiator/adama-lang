@@ -176,8 +176,8 @@ public class CodeGenIngestion {
             new Lookup(Token.WRAP(assignVar)), Token.WRAP("="), //
             new Lookup(Token.WRAP(elementVar)), null, null, null, false);
 
-        environment.define(assignVar, assignType, false, assignType);
-        environment.define(elementVar, elementType, false, elementType);
+        environment.define(assignVar, environment.rules.Resolve(assignType, true), false, assignType);
+        environment.define(elementVar, environment.rules.Resolve(elementType, true), false, elementType);
         ass.typing(environment);
         ass.writeJava(sb, environment);
         sb.tabDown().writeNewline();
