@@ -148,15 +148,25 @@ public class MySQLFinderCore {
 
   public void commitDelete(Key key, String region, String machine, Callback<Void> callback) {
     database.transact((connection) -> {
-      String deleteSQL = //
+      boolean deleted = false;
+      String deleteFromDirectory = //
           "DELETE FROM `" + database.databaseName + "`.`directory` " + //
               " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
-      try (PreparedStatement statementDelete = connection.prepareStatement(deleteSQL)) {
+      try (PreparedStatement statementDelete = connection.prepareStatement(deleteFromDirectory)) {
         statementDelete.setString(1, key.space);
         statementDelete.setString(2, key.key);
         statementDelete.setString(3, machine);
         statementDelete.setString(4, region);
         if (statementDelete.executeUpdate() == 1) {
+          deleted = true;
+        }
+      }
+      if (deleted) {
+        String deleteFromMetrics = "DELETE FROM `" + database.databaseName + "`.`metrics` WHERE `space`=? AND `key`=?";
+        try (PreparedStatement statementDelete = connection.prepareStatement(deleteFromMetrics)) {
+          statementDelete.setString(1, key.space);
+          statementDelete.setString(2, key.key);
+          statementDelete.executeUpdate();
           return null;
         }
       }
