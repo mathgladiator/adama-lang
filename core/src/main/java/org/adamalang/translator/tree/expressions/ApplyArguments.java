@@ -145,6 +145,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       if (returnType == null) {
         returnType = new TyNativeVoid();
       }
+      returnType = environmentToUse.rules.Resolve(returnType, false);
       if (isAggregate) {
         return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(returnType)).withPosition(this);
       } else {
