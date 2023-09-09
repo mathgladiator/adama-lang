@@ -40,7 +40,7 @@ public class ServiceImplicitCreateTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latchClient = streamback.latchAt(2);
@@ -66,7 +66,7 @@ public class ServiceImplicitCreateTests {
     TimeSource time = new MockTime();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
       MockStreamback streamback2 = new MockStreamback();
@@ -116,7 +116,7 @@ public class ServiceImplicitCreateTests {
     };
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, proxyFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, proxyFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
       service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
@@ -135,7 +135,7 @@ public class ServiceImplicitCreateTests {
     MockInstantDataService realDataService = new MockInstantDataService();
     realDataService.failInitializationAgainWithWrongErrorCode();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
       MockStreamback streamback2 = new MockStreamback();

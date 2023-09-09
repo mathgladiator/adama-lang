@@ -19,6 +19,7 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 
@@ -91,7 +92,13 @@ public class DevCoreServiceFactory {
     });
     flusher.start();
     this.base = new DeploymentFactoryBase();
-    this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {}, dataService, TimeSource.REAL_TIME, 2);
+    this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
+    }, new MetricsReporter() {
+      @Override
+      public void emitMetrics(Key key, String metricsPayload) {
+        io.info("metrics:" + metricsPayload);
+      }
+    }, dataService, TimeSource.REAL_TIME, 2);
     base.attachDeliverer(service);
   }
 

@@ -31,7 +31,7 @@ public class ServiceStartupTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, time, 3);
     try {
       CoreService.DONT_CARE_DOCUMENT.failure(null);
       CoreService.DONT_CARE_DOCUMENT.success(null);

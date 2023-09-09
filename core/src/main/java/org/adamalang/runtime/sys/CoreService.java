@@ -20,6 +20,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.runtime.sys.web.WebDelete;
@@ -56,6 +57,7 @@ public class CoreService implements Deliverer, Queryable {
   private final DocumentThreadBase[] bases;
   private final AtomicBoolean alive;
   private final Random rng;
+  private final MetricsReporter metricsReporter;
 
   /**
    * @param livingDocumentFactoryFactory a mapping of how living documents come into existence
@@ -63,9 +65,10 @@ public class CoreService implements Deliverer, Queryable {
    * @param time the source of time
    * @param nThreads the number of threads to use
    */
-  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, DataService dataService, TimeSource time, int nThreads) {
+  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.dataService = dataService;
+    this.metricsReporter = metricsReporter;
     this.shield = new ServiceShield();
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];

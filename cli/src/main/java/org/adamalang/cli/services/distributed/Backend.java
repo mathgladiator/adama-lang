@@ -27,6 +27,7 @@ import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.*;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
@@ -69,7 +70,13 @@ public class Backend {
     CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, finder, init.s3, init.s3);
 
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
-    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), caravan.service, TimeSource.REAL_TIME, coreThreads);
+    MetricsReporter metricsReporter = new MetricsReporter() { // TODO: make this real
+      @Override
+      public void emitMetrics(Key key, String metricsPayload) {
+
+      }
+    };
+    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, TimeSource.REAL_TIME, coreThreads);
     delayedDeploy.set(factoryProxy, service);
 
     ServiceHeatEstimator.HeatVector low = config.get_heat("heat-low", 1, 100, 1, 100);

@@ -36,7 +36,7 @@ public class ServiceLoadShedTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       Runnable latch = dataService.latchLogAt(5);
       NullCallbackLatch created = new NullCallbackLatch();

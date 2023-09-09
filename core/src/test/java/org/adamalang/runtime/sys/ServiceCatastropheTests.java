@@ -40,7 +40,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       Runnable latch = realDataService.latchLogAt(2);
       NullCallbackLatch created = new NullCallbackLatch();
@@ -78,7 +78,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -129,7 +129,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -189,7 +189,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -235,7 +235,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsForCleanupCheck(25);

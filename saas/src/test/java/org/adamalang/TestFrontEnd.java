@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.extern.MockMetricsReporter;
 import org.adamalang.extern.MockPostDocumentDelete;
 import org.adamalang.extern.SignalControl;
 import org.adamalang.impl.common.PublicKeyCodec;
@@ -236,12 +237,14 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     });
 
+    MockMetricsReporter metricsReporter = new MockMetricsReporter();
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     coreService =
         new CoreService(
             new CoreMetrics(new NoOpMetricsFactory()),
             ondemand, //
             meteringPubSub.publisher(), //
+            metricsReporter,
             dataService, //
             TimeSource.REAL_TIME,
             1);
