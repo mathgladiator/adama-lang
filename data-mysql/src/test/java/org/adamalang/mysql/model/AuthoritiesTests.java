@@ -11,10 +11,12 @@ package org.adamalang.mysql.model;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
+import org.adamalang.mysql.data.SystemUsageInventoryRecord;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AuthoritiesTests {
   @Test
@@ -84,6 +86,8 @@ public class AuthoritiesTests {
         Assert.assertEquals("{\"x\":2}", Authorities.getKeystoreInternal(dataBase, "auth_space_1"));
         Authorities.setKeystore(dataBase, 1, "auth_space_1", "{\"x\":3}");
         Assert.assertEquals("{\"x\":3}", Authorities.getKeystoreInternal(dataBase, "auth_space_1"));
+        HashMap<Integer, SystemUsageInventoryRecord> records = Inventory.inventorySystemUsage(dataBase);
+        Assert.assertEquals(1, records.get(1).authorities);
         {
           ArrayList<String> listing = Authorities.list(dataBase, 1);
           Assert.assertEquals(1, listing.size());
@@ -104,7 +108,6 @@ public class AuthoritiesTests {
           Assert.assertEquals(662528, ece.code);
         }
         Assert.assertEquals(7, failures);
-
       } finally {
         installer.uninstall();
       }

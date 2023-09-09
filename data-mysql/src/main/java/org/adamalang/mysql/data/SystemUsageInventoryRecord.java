@@ -6,8 +6,15 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.mysql.data;
 
-public class Platform {
-  public static final String VERSION = "20230909131423";
+/** a record of things in the system that have an hourly cost */
+public class SystemUsageInventoryRecord {
+  public final int domains;
+  public final int authorities;
+
+  public SystemUsageInventoryRecord(int domains, int authorities) {
+    this.domains = domains;
+    this.authorities = authorities;
+  }
 }
