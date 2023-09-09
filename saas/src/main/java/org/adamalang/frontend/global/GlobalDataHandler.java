@@ -13,7 +13,9 @@ import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.contracts.SimpleEvents;
@@ -170,6 +172,16 @@ public class GlobalDataHandler implements RootRegionHandler {
       return null;
     }
     return handle(session, new ConnectionCreateRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.policy, request.resolvedDomain.domain.key, request.viewerState), responder);
+  }
+
+  @Override
+  public DocumentStreamHandler handle(Session session, BillingConnectionCreateRequest request, DataResponder responder) {
+    if (request.who.isAdamaDeveloper) {
+      return handle(session, new ConnectionCreateRequest(request.identity, request.who, "billing", null, "" + request.who.id, Json.newJsonObject()), responder);
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_BILING_MUST_BE_ADAMA_DEVELOPER));
+      return null;
+    }
   }
 
   @Override

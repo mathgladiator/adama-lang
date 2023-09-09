@@ -1169,6 +1169,13 @@
         </documentation>
     </method>
 
+    <method name="billing-connection/create" responder="data" create="document-stream" scope="region">
+        <parameter name="identity"/>
+        <documentation>
+            Create a connection to the billing document of the given identity.
+        </documentation>
+    </method>
+
     <!-- cross region replication
     <method name="replication/create" responder="replica" create="replication-stream" scope="region">
         <parameter name="identity"/>

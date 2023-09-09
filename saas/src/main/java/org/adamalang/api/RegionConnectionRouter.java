@@ -429,6 +429,28 @@ public class RegionConnectionRouter {
                 }
               });
             } return;
+            case "billing-connection/create": {
+              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_BillingConnectionCreate.start();
+              BillingConnectionCreateRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(BillingConnectionCreateRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerMade = handler.handle(session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder, _accessLogItem, nexus.logger)));
+                  if (handlerMade != null) {
+                    inflightDocumentStream.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "attachment/start": {
               StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_AttachmentStart.start();
               AttachmentStartRequest.resolve(session, nexus, request, new Callback<>() {
