@@ -677,7 +677,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric"));
     }
     if (op != null) {
       switch (op.text) {
@@ -744,10 +744,21 @@ public class Parser {
         case "replication":
           final var replicate = define_replication(rootScope.makeReplication(), op);
           return doc -> doc.add(replicate);
+        case "metric":
+          final var metric = define_metric(rootScope, op);
+          return doc -> doc.add(metric);
       }
     }
     final var newField = define_field_record(rootScope);
     return doc -> doc.add(newField);
+  }
+
+  public DefineMetric define_metric(Scope scope, Token op) throws AdamaLangException {
+    Token name = id();
+    Token equals = consumeExpectedSymbol("=");
+    Expression value = expression(scope);
+    Token semicolon = consumeExpectedSymbol(";");
+    return new DefineMetric(op, name, equals, value, semicolon);
   }
 
   public ReplicationDefinition define_replication(Scope scope, Token op) throws AdamaLangException {

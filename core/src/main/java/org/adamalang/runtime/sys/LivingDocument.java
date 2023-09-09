@@ -271,6 +271,8 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected abstract void __bindReplication();
 
+  protected abstract String __metrics();
+
   protected abstract void __executeServiceCalls(boolean cancel);
 
   /** for Caller */

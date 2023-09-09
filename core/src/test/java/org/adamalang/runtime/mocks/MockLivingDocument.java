@@ -49,6 +49,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  protected String __metrics() {
+    return "{}";
+  }
+
+  @Override
   protected boolean __is_direct_channel(String channel) {
     return "__direct".equals(channel);
   }
