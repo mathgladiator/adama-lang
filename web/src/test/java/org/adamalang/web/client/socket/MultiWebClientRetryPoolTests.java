@@ -20,6 +20,7 @@ import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebConfigTests;
 import org.adamalang.web.service.WebMetrics;
+import org.adamalang.web.service.mocks.MockDomainFinder;
 import org.adamalang.web.service.mocks.MockServiceBase;
 import org.adamalang.web.service.mocks.NullCertificateFinder;
 import org.junit.Assert;
@@ -34,7 +35,7 @@ public class MultiWebClientRetryPoolTests {
     EventLoopGroup group = new NioEventLoopGroup();
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Pool);
     MockServiceBase base = new MockServiceBase();
-    var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
+    var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), new MockDomainFinder(), () -> {});
     var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
@@ -126,7 +127,7 @@ public class MultiWebClientRetryPoolTests {
         });
         Assert.assertTrue(cant_connect.await(10000, TimeUnit.MILLISECONDS));
 
-        runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
+        runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), new MockDomainFinder(), () -> {});
         thread = new Thread(runnable);
         thread.start();
         runnable.waitForReady(1000);

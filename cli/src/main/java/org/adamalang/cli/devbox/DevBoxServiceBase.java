@@ -19,6 +19,8 @@ import org.adamalang.common.web.UriMatcher;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.domains.Domain;
+import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
@@ -231,12 +233,16 @@ public class DevBoxServiceBase implements ServiceBase {
   }
 
   public Thread start() throws Exception {
-    ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), this, new CertificateFinder() {
+    ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), this, (domain, callback) -> callback.success(null), new DomainFinder() {
       @Override
-      public void fetch(String domain, Callback<SslContext> callback) {
-        callback.success(null);
+      public void find(String domain, Callback<Domain> callback) {
+        if (verse != null && verse.domainKeyToUse != null) {
+          callback.success(new Domain(domain, 0, verse.domainKeyToUse.space, verse.domainKeyToUse.key, true, null, null, 0));
+        } else {
+          callback.failure(new ErrorCodeException(-404));
+        }
       }
-    }, () -> {
+     }, () -> {
     });
     Thread serviceThread = new Thread(webServer);
     serviceThread.start();

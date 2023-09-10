@@ -26,6 +26,8 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.sys.domains.Domain;
+import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.web.assets.*;
 import org.adamalang.web.assets.cache.CachedAsset;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
@@ -37,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -67,14 +70,16 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final AssetSystem assets;
   private final WebHandlerAssetCache cache;
   private final ExecutorService jarThread;
+  private final DomainFinder domainFinder;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache, DomainFinder domainFinder) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
     this.assets = assets;
     this.cache = cache;
     this.jarThread = Executors.newSingleThreadExecutor();
+    this.domainFinder = domainFinder;
   }
 
   private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
@@ -260,10 +265,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     try {
       HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
       ArrayList<FileUpload> files = new ArrayList<>();
-      String identity = null;
+      String _identity = null;
       String space = null;
       String key = null;
-      String channel = null;
+      String _channel = null;
       String domain = null;
       HashMap<String, String> message_parts = new HashMap<>();
       for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
@@ -272,7 +277,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             Attribute attribute = (Attribute) data;
             switch (attribute.getName()) {
               case "identity":
-                identity = attribute.getValue();
+                _identity = attribute.getValue();
                 break;
               case "space":
                 space = attribute.getValue();
@@ -281,16 +286,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 key = attribute.getValue();
                 break;
               case "channel":
-                channel = attribute.getValue();
+                _channel = attribute.getValue();
                 break;
               case "domain":
                 domain = attribute.getValue();
                 break;
               default: {
-                if (attribute.getName().startsWith("message_")) {
-                  message_parts.put(attribute.getName().substring(8), attribute.getValue());
-                }
-                if (attribute.getName().startsWith("message.")) {
+                if (attribute.getName().startsWith("message_") || attribute.getName().startsWith("message.")) {
                   message_parts.put(attribute.getName().substring(8), attribute.getValue());
                 }
               }
@@ -303,78 +305,108 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             break;
         }
       }
-      ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
-      if (domain != null) {
-        // TODO: look up the key
-      }
-      if (identity != null && space != null && key != null) {
-        Key uploadKey = new Key(space, key);
-        // TODO Need a multi-latch to report success
-        for (FileUpload upload : files) {
-          AssetUploadBody body = new AssetUploadBody() {
-            @Override
-            public File getFileIfExists() {
+      final String identity = _identity;
+      final String channel = _channel;
+      final ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
+      if (identity != null && domain != null) {
+        domainFinder.find(domain, new Callback<Domain>() {
+          @Override
+          public void success(final Domain domainValue) {
+            if (domainValue == null) {
+              failure(new ErrorCodeException(ErrorCodes.DOMAIN_LOOKUP_WEB_NULL_FAILURE));
+              return;
+            }
+            if (domainValue.space == null || domainValue.key == null) {
+              failure(new ErrorCodeException(ErrorCodes.DOMAIN_LOOKUP_WEB_NO_KEY_FAILURE));
+              return;
+            }
+            Key uploadKey = new Key(domainValue.space, domainValue.key);
+            ctx.executor().execute(() -> {
               try {
-                return upload.getFile();
+                finishAssetUpload(context, identity, uploadKey, channel, files, message_parts, ctx, req);
               } catch (Exception ex) {
-                return null;
+                sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
               }
-            }
-
-            @Override
-            public byte[] getBytes() {
-              try {
-                return upload.get();
-              } catch (Exception ex) {
-                return null;
-              }
-            }
-          };
-          AssetFact fact = AssetFact.of(body);
-          NtAsset asset = new NtAsset(ProtectedUUID.generate(), upload.getFilename(), upload.getContentType(), fact.size, fact.md5, fact.sha384);
-          final String message;
-          if (channel != null) {
-            ObjectNode messageNode = Json.newJsonObject();
-            messageNode.put("asset_id", asset.id);
-            for (Map.Entry<String, String> entry : message_parts.entrySet()) {
-              messageNode.put(entry.getKey(), entry.getValue());
-            }
-            message = messageNode.toString();
-          } else {
-            message = null;
+            });
           }
-          final String channelFinal = channel;
-          final String identityFinal = identity;
-          assets.upload(uploadKey, asset, body, new Callback<>() {
-            @Override
-            public void success(Void value) {
-              assets.attach(identityFinal, context, uploadKey, asset, channelFinal, message, new Callback<Integer>() {
-                @Override
-                public void success(Integer value) {
-                  // TODO: multi-latch report success
-                }
 
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  // TODO: multi-latch report failure @ attach
-                }
-              });
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              // TODO: multi-latch report failure @ upload
-            }
-          });
-        }
-        // TODO: leverage a multi-latch
-        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
+          @Override
+          public void failure(ErrorCodeException ex) {
+            sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
+          }
+        });
+      } else if (identity != null && space != null && key != null) {
+        Key uploadKey = new Key(space, key);
+        finishAssetUpload(context, identity, uploadKey, channel, files, message_parts, ctx, req);
       } else {
         sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_UPLOAD_INCOMPLETE_FIELDS, "text/html; charset=UTF-8", true);
       }
     } catch (Exception ex) {
       sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
     }
+  }
+
+  private void finishAssetUpload(ConnectionContext context, String identity, Key uploadKey, String channel, ArrayList<FileUpload> files, HashMap<String, String> message_parts, final ChannelHandlerContext ctx, final FullHttpRequest req) throws IOException {
+    // TODO Need a multi-latch to report success
+    for (FileUpload upload : files) {
+      AssetUploadBody body = new AssetUploadBody() {
+        @Override
+        public File getFileIfExists() {
+          try {
+            return upload.getFile();
+          } catch (Exception ex) {
+            return null;
+          }
+        }
+
+        @Override
+        public byte[] getBytes() {
+          try {
+            return upload.get();
+          } catch (Exception ex) {
+            return null;
+          }
+        }
+      };
+      AssetFact fact = AssetFact.of(body);
+      NtAsset asset = new NtAsset(ProtectedUUID.generate(), upload.getFilename(), upload.getContentType(), fact.size, fact.md5, fact.sha384);
+      final String message;
+      if (channel != null) {
+        ObjectNode messageNode = Json.newJsonObject();
+        messageNode.put("asset_id", asset.id);
+        for (Map.Entry<String, String> entry : message_parts.entrySet()) {
+          messageNode.put(entry.getKey(), entry.getValue());
+        }
+        message = messageNode.toString();
+      } else {
+        message = null;
+      }
+      final String channelFinal = channel;
+      final String identityFinal = identity;
+      assets.upload(uploadKey, asset, body, new Callback<>() {
+        @Override
+        public void success(Void value) {
+          assets.attach(identityFinal, context, uploadKey, asset, channelFinal, message, new Callback<Integer>() {
+            @Override
+            public void success(Integer value) {
+              // TODO: multi-latch report success
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              // TODO: multi-latch report failure @ attach
+            }
+          });
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          // TODO: multi-latch report failure @ upload
+        }
+      });
+    }
+    // TODO: leverage a multi-latch
+    sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
   }
 
   private static final String CACHED_ADAMA_JAR_MD5 = hashAdamaJar();

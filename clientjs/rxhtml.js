@@ -1973,6 +1973,32 @@ var RxHTML = (function () {
     form.action = "https://aws-us-east-2.adama-platform.com/~upload";
     form.method = "post";
     form.enctype = "multipart/form-data";
+    var identityInput = document.createElement("input");
+    identityInput.type = "hidden";
+    identityInput.name = "identity";
+    identityInput.value = idLookup.identity;
+    form.appendChild(identityInput);
+    var identityInput = document.createElement("input");
+    identityInput.type = "hidden";
+    identityInput.name = "domain";
+    identityInput.value = location.host.split(":")[0];
+    form.appendChild(identityInput);
+    var iframeTarget = document.createElement("iframe");
+    iframeTarget.name = "UPLOAD_" + Math.random();
+    iframeTarget.width = "1";
+    iframeTarget.height = "1";
+    form.appendChild(iframeTarget);
+    form.target = iframeTarget.name;
+  };
+
+  self.aDUP = function (form, state, identityName, rxobj) {
+    var idLookup = self.ID(identityName, function () { return rxobj.rx_forward; }); // TODO: make rxvar
+    if (idLookup.abort) {
+      return;
+    }
+    form.action = "https://aws-us-east-2.adama-platform.com/~upload";
+    form.method = "post";
+    form.enctype = "multipart/form-data";
     {
       var identityInput = document.createElement("input");
       identityInput.type = "hidden";
