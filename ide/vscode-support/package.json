@@ -2,12 +2,12 @@
     "name": "adama-language-support",
     "displayName": "Adama Language Support",
     "description": "Adama Language Extension",
-    "version": "0.0.1",
+    "version": "0.8.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Microsoft/vscode-extension-samples"
+        "url": "https://github.com/mathgladiator/adama-lang"
     },
-    "publisher": "vscode-samples",
+    "publisher": "adama-platform",
     "categories": [
         "Programming Languages"
     ],

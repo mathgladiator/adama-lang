@@ -5,7 +5,7 @@
 	"publisher": "vscode",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/mathgladiator/adama-lang"
 	},
 	"engines": {
 		"vscode": "^1.75.0"
