@@ -20,6 +20,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
+import org.adamalang.contracts.data.DefaultPolicyBehavior;
 import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
 import org.adamalang.mysql.data.*;
@@ -387,7 +388,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder) {
     try {
-      if (request.who.isAdamaDeveloper) {
+      if (request.resolvedDomain.domain != null && request.resolvedDomain.policy != null && request.resolvedDomain.policy.checkPolicy("domain/get", DefaultPolicyBehavior.Owner, request.who)) {
         Domain domain = Domains.get(nexus.database, fixDomain(request.domain));
         if (domain != null) {
           responder.complete(domain.space);
@@ -402,20 +403,16 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
-  private void handleDomainMap(SpacePolicy policy, AuthenticatedUser who, String domain, String certificate, String space, String key, boolean route, SimpleResponder responder) {
+  private void handleDomainMap(int spaceOwner, String domain, String certificate, String space, String key, boolean route, SimpleResponder responder) {
     try {
-      if (policy.canUserManageDomain(who)) {
-        String cert = certificate != null ? MasterKey.encrypt(nexus.masterKey, certificate) : null;
-        if (Domains.map(nexus.database, who.id, fixDomain(domain), space, key, route, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
-          if (cert == null) {
-            nexus.signalControl.raiseAutomaticDomain(domain);
-          }
-          responder.complete();
-        } else {
-          responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_FAILED));
+      String cert = certificate != null ? MasterKey.encrypt(nexus.masterKey, certificate) : null;
+      if (Domains.map(nexus.database, spaceOwner, fixDomain(domain), space, key, route, cert)) { // Domains.map ensures ownership on UPDATE to prevent conflicts
+        if (cert == null) {
+          nexus.signalControl.raiseAutomaticDomain(domain);
         }
+        responder.complete();
       } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_NOT_AUTHORIZED));
+        responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_MAP_FAILED));
       }
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_MAP_UNKNOWN_EXCEPTION, ex, LOGGER));
@@ -424,12 +421,12 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
-    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, null, false, responder);
+    handleDomainMap(request.policy.owner, request.domain, request.certificate, request.space, null, false, responder);
   }
 
   @Override
   public void handle(Session session, DomainMapDocumentRequest request, SimpleResponder responder) {
-    handleDomainMap(request.policy, request.who, request.domain, request.certificate, request.space, request.key, false, responder);
+    handleDomainMap(request.policy.owner, request.domain, request.certificate, request.space, request.key, false, responder);
   }
 
   @Override
@@ -449,10 +446,22 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DomainListBySpaceRequest request, DomainListingResponder responder) {
+    try {
+      for (Domain domain : Domains.listBySpace(nexus.database, request.space)) {
+        responder.next(domain.domain, domain.space, domain.key, domain.routeKey);
+      }
+      responder.finish();
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_LIST_BY_SPACE_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
   public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder) {
     try {
-      if (request.who.isAdamaDeveloper) {
-        if (Domains.unmap(nexus.database, request.who.id, fixDomain(request.domain))) {
+      if (request.resolvedDomain.domain != null && request.resolvedDomain.policy != null && request.resolvedDomain.policy.checkPolicy("domain/unmap", DefaultPolicyBehavior.Owner, request.who)) {
+        if (Domains.unmap(nexus.database, request.resolvedDomain.domain.owner, fixDomain(request.domain))) {
           responder.complete();
         } else {
           responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_UNMAP_FAILED));
@@ -467,22 +476,14 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, SpaceGetPolicyRequest request, AccessPolicyResponder responder) {
-      // if (request.policy.(request.who)) {
-        responder.complete(request.policy.policy);
-      // } else {
-//        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_RXHTML_NOT_AUTHORIZED));
-      //}
+    responder.complete(request.policy.policy);
   }
 
   @Override
   public void handle(Session session, SpaceSetPolicyRequest request, SimpleResponder responder) {
     try {
-      if (request.policy.canUserSetRxHTML(request.who)) {
-        Spaces.setPolicy(nexus.database, request.policy.id, request.space);
-        responder.complete();
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_RXHTML_NOT_AUTHORIZED));
-      }
+      Spaces.setPolicy(nexus.database, request.policy.id, request.space);
+      responder.complete();
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_POLICY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -491,11 +492,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceGetRxhtmlRequest request, RxhtmlResponder responder) {
     try {
-      if (request.policy.canUserGetRxHTML(request.who)) {
-        responder.complete(Spaces.getRxHtml(nexus.database, request.policy.id));
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_RXHTML_NOT_AUTHORIZED));
-      }
+      responder.complete(Spaces.getRxHtml(nexus.database, request.policy.id));
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_RXHTML_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -504,12 +501,8 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceSetRxhtmlRequest request, SimpleResponder responder) {
     try {
-      if (request.policy.canUserSetRxHTML(request.who)) {
-        Spaces.setRxHtml(nexus.database, request.policy.id, request.rxhtml);
-        responder.complete();
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_RXHTML_NOT_AUTHORIZED));
-      }
+      Spaces.setRxHtml(nexus.database, request.policy.id, request.rxhtml);
+      responder.complete();
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_RXHTML_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -518,30 +511,26 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceMetricsRequest request, MetricsAggregateResponder responder) {
     try {
-      if (request.policy.canGetMetrics(request.who)) {
-        List<String> metrics = Metrics.downloadMetrics(nexus.database, request.space, request.prefix == null ? "" : request.prefix);
-        nexus.metrics.execute(new NamedRunnable("build-report") {
-          @Override
-          public void execute() throws Exception {
-            ObjectNode result = Json.newJsonObject();
-            for (String metric : metrics) {
-              Iterator<Map.Entry<String, JsonNode>> it = Json.parseJsonObject(metric).fields();
-              while (it.hasNext()) {
-                Map.Entry<String, JsonNode> val = it.next();
-                JsonNode prior = result.get(val.getKey());
-                if (prior == null) {
-                  result.set(val.getKey(), val.getValue());
-                } else {
-                  result.put(val.getKey(), val.getValue().doubleValue() + prior.doubleValue());
-                }
+      List<String> metrics = Metrics.downloadMetrics(nexus.database, request.space, request.prefix == null ? "" : request.prefix);
+      nexus.metrics.execute(new NamedRunnable("build-report") {
+        @Override
+        public void execute() throws Exception {
+          ObjectNode result = Json.newJsonObject();
+          for (String metric : metrics) {
+            Iterator<Map.Entry<String, JsonNode>> it = Json.parseJsonObject(metric).fields();
+            while (it.hasNext()) {
+              Map.Entry<String, JsonNode> val = it.next();
+              JsonNode prior = result.get(val.getKey());
+              if (prior == null) {
+                result.set(val.getKey(), val.getValue());
+              } else {
+                result.put(val.getKey(), val.getValue().doubleValue() + prior.doubleValue());
               }
             }
-            responder.complete(result, metrics.size());
           }
-        });
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_METRICS_NOT_AUTHORIZED));
-      }
+          responder.complete(result, metrics.size());
+        }
+      });
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_METRICS_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -595,11 +584,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder) {
     try {
-      if (request.policy.canUserGetPlan(request.who)) {
-        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.database, request.policy.id)));
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
-      }
+      responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.database, request.policy.id)));
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -608,37 +593,33 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceSetRequest request, SimpleResponder responder) {
     try {
-      if (request.policy.canUserSetPlan(request.who)) {
-        String planJson = request.plan.toString();
-        // hash the plan
-        MessageDigest digest = Hashing.md5();
-        digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
-        String hash = Hashing.finishAndEncode(digest);
-        // Change the master plan
-        Spaces.setPlan(nexus.database, request.policy.id, planJson, hash);
-        // iterate the targets with this space loaded
-        Callback<Integer> postDirectSend = new Callback<>() {
-          @Override
-          public void success(Integer value) {
-            nexus.adama.deployLocal(request.space);
-            nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
-              if (found) {
-                responder.complete();
-              } else {
-                responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY));
-              }
-            });
-          }
+      String planJson = request.plan.toString();
+      // hash the plan
+      MessageDigest digest = Hashing.md5();
+      digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
+      String hash = Hashing.finishAndEncode(digest);
+      // Change the master plan
+      Spaces.setPlan(nexus.database, request.policy.id, planJson, hash);
+      // iterate the targets with this space loaded
+      Callback<Integer> postDirectSend = new Callback<>() {
+        @Override
+        public void success(Integer value) {
+          nexus.adama.deployLocal(request.space);
+          nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
+            if (found) {
+              responder.complete();
+            } else {
+              responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY));
+            }
+          });
+        }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.error(ex);
-          }
-        };
-        nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
-      } else {
-        throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
-      }
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      };
+      nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -647,31 +628,23 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceRedeployKickRequest request, SimpleResponder responder) {
     try {
-      if (request.policy.canUserSetPlan(request.who)) {
-        nexus.adama.deployLocal(request.space);
-      } else {
-        throw new ErrorCodeException(ErrorCodes.API_SPACE_KICK_NO_PERMISSION_TO_EXECUTE);
-      }
+      nexus.adama.deployLocal(request.space);
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_KICK_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
   @Override
-  public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder) {
+  public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder) { // policy check is generated
     try {
-      if (request.policy.canUserDeleteSpace(request.who)) {
-        if (FinderOperations.list(nexus.database, request.space, null, 1).size() > 0) {
-          responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
-          return;
-        }
-        Spaces.changePrimaryOwner(nexus.database, request.policy.id, request.policy.owner, 0);
-        Domains.deleteSpace(nexus.database, request.space);
-        Capacity.removeAll(nexus.database, request.space);
-        responder.complete();
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
+      if (FinderOperations.list(nexus.database, request.space, null, 1).size() > 0) {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
+        return;
       }
+      Spaces.changePrimaryOwner(nexus.database, request.policy.id, request.policy.owner, 0);
+      Domains.deleteSpace(nexus.database, request.space);
+      Capacity.removeAll(nexus.database, request.space);
+      responder.complete();
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -681,32 +654,28 @@ public class GlobalControlHandler implements RootGlobalHandler {
   public void handle(Session session, SpaceSetRoleRequest request, SimpleResponder responder) {
     try {
       Role role = Role.from(request.role);
-      if (request.policy.canUserSetRole(request.who)) {
-        Spaces.setRole(nexus.database, request.policy.id, request.userId, role);
-        SpaceInfo updatedSpaceInfo = Spaces.getSpaceInfo(nexus.database, request.space);
-        JsonStreamWriter syncDevelopers = new JsonStreamWriter();
-        syncDevelopers.beginObject();
-        syncDevelopers.writeObjectFieldIntro("developers");
-        syncDevelopers.beginArray();
-        for (Integer devId : updatedSpaceInfo.developers) {
-          syncDevelopers.writeNtPrincipal(new NtPrincipal("" + devId, "adama"));
-        }
-        syncDevelopers.endArray();
-        syncDevelopers.endObject();
-        nexus.adama.directSend(request.who, "ide", request.space, null, "set_developers_from_frontend", syncDevelopers.toString(), new Callback<Integer>() {
-          @Override
-          public void success(Integer value) {
-            responder.complete();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.error(ex);
-          }
-        });
-      } else {
-        throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
+      Spaces.setRole(nexus.database, request.policy.id, request.userId, role);
+      SpaceInfo updatedSpaceInfo = Spaces.getSpaceInfo(nexus.database, request.space);
+      JsonStreamWriter syncDevelopers = new JsonStreamWriter();
+      syncDevelopers.beginObject();
+      syncDevelopers.writeObjectFieldIntro("developers");
+      syncDevelopers.beginArray();
+      for (Integer devId : updatedSpaceInfo.developers) {
+        syncDevelopers.writeNtPrincipal(new NtPrincipal("" + devId, "adama"));
       }
+      syncDevelopers.endArray();
+      syncDevelopers.endObject();
+      nexus.adama.directSend(request.who, "ide", request.space, null, "set_developers_from_frontend", syncDevelopers.toString(), new Callback<Integer>() {
+        @Override
+        public void success(Integer value) {
+          responder.complete();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -715,14 +684,10 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceListDevelopersRequest request, DeveloperResponder responder) {
     try {
-      if (request.policy.canUserListDeveloper(request.who)) {
-        for (Developer developer : Spaces.listDevelopers(nexus.database, request.policy.id)) {
-          responder.next(developer.email, developer.role);
-        }
-        responder.finish();
-      } else {
-        throw new ErrorCodeException(ErrorCodes.API_SPACE_LIST_DEVELOPERS_NO_PERMISSION_TO_EXECUTE);
+      for (Developer developer : Spaces.listDevelopers(nexus.database, request.policy.id)) {
+        responder.next(developer.email, developer.role);
       }
+      responder.finish();
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_DEVELOPERS_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -730,26 +695,22 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
-    if (request.policy.canUserSeeReflection(request.who)) {
-      nexus.adama.reflect(request.space, request.key, new Callback<String>() {
-        @Override
-        public void success(String value) {
-          responder.complete(Json.parseJsonObject(value));
-        }
+    nexus.adama.reflect(request.space, request.key, new Callback<String>() {
+      @Override
+      public void success(String value) {
+        responder.complete(Json.parseJsonObject(value));
+      }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          responder.error(ex);
-        }
-      });
-    } else {
-      responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
-    }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override
   public void handle(Session session, DomainReflectRequest request, ReflectionResponder responder) {
-    if (request.resolvedDomain.policy != null && request.resolvedDomain.policy.canUserSeeReflection(request.who)) {
+    if (request.resolvedDomain.domain != null && request.resolvedDomain.policy != null && request.resolvedDomain.policy.checkPolicy("domain/reflect", DefaultPolicyBehavior.OwnerAndDevelopers, request.who)) {
       String key = request.resolvedDomain.domain.key != null ? request.resolvedDomain.domain.key : "";
       nexus.adama.reflect(request.resolvedDomain.domain.space, key, new Callback<String>() {
         @Override
@@ -763,7 +724,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
         }
       });
     } else {
-      responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
+      responder.error(new ErrorCodeException(ErrorCodes.API_REFLECT_BY_DOMAIN_NOT_AUTHORIZED));
     }
   }
 
@@ -786,14 +747,10 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
-      if (request.policy.canUserSeeKeyListing(request.who)) {
-        for (DocumentIndex item : FinderOperations.list(nexus.database, request.space, request.marker, request.limit != null ? request.limit : 100)) {
-          responder.next(item.key, item.created, item.updated, item.seq);
-        }
-        responder.finish();
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_LIST_DOCUMENTS_NO_PERMISSION));
+      for (DocumentIndex item : FinderOperations.list(nexus.database, request.space, request.marker, request.limit != null ? request.limit : 100)) {
+        responder.next(item.key, item.created, item.updated, item.seq);
       }
+      responder.finish();
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
@@ -802,14 +759,10 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, SpaceGenerateKeyRequest request, KeyPairResponder responder) {
     try {
-      if (request.policy.canUserGeneratePrivateKey(request.who)) {
-        KeyPair pair = PublicPrivateKeyPartnership.genKeyPair();
-        String privateKeyEncrypted = MasterKey.encrypt(nexus.masterKey, PublicPrivateKeyPartnership.privateKeyOf(pair));
-        int keyId = Secrets.insertSecretKey(nexus.database, request.space, privateKeyEncrypted);
-        responder.complete(keyId, PublicPrivateKeyPartnership.publicKeyOf(pair));
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_GENERATE_KEY_NO_PERMISSION));
-      }
+      KeyPair pair = PublicPrivateKeyPartnership.genKeyPair();
+      String privateKeyEncrypted = MasterKey.encrypt(nexus.masterKey, PublicPrivateKeyPartnership.privateKeyOf(pair));
+      int keyId = Secrets.insertSecretKey(nexus.database, request.space, privateKeyEncrypted);
+      responder.complete(keyId, PublicPrivateKeyPartnership.publicKeyOf(pair));
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_GENERATE_KEY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }

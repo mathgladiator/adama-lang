@@ -13,16 +13,17 @@ import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
-import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.runtime.contracts.AdamaStream;
-import org.adamalang.mysql.model.*;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,17 +162,24 @@ public class GlobalDataHandler implements RootRegionHandler {
     });
   }
 
+  private boolean validateDomain(DomainWithPolicy resolvedDomain, JsonResponder responder) {
+    if (resolvedDomain.domain == null || resolvedDomain.policy == null) {
+      responder.error(new ErrorCodeException(ErrorCodes.API_VALIDATE_DOMAIN_NO_SPACE_FOUND));
+      return false;
+    }
+    if (resolvedDomain.domain.key == null) {
+      responder.error(new ErrorCodeException(ErrorCodes.API_VALIDATE_DOMAIN_NO_KEY_FOUND));
+      return false;
+    }
+    return true;
+  }
+
   @Override
   public DocumentStreamHandler handle(Session session, ConnectionCreateViaDomainRequest request, DataResponder responder) {
-    if (request.resolvedDomain.domain == null || request.resolvedDomain.policy == null) {
-      responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_DOMAIN_NO_SPACE_FOUND));
-      return null;
+    if (validateDomain(request.resolvedDomain, responder.responder)) {
+      return handle(session, new ConnectionCreateRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.policy, request.resolvedDomain.domain.key, request.viewerState), responder);
     }
-    if (request.resolvedDomain.domain.key == null) {
-      responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_DOMAIN_NO_KEY_FOUND));
-      return null;
-    }
-    return handle(session, new ConnectionCreateRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.policy, request.resolvedDomain.domain.key, request.viewerState), responder);
+    return null;
   }
 
   @Override
@@ -281,6 +289,14 @@ public class GlobalDataHandler implements RootRegionHandler {
         connect.logInto(node);
       }
     };
+  }
+
+  @Override
+  public AttachmentUploadHandler handle(Session session, AttachmentStartByDomainRequest request, ProgressResponder responder) {
+    if (validateDomain(request.resolvedDomain, responder.responder)) {
+      handle(session, new AttachmentStartRequest(request.identity, request.who, request.resolvedDomain.domain.space, request.resolvedDomain.policy, request.resolvedDomain.domain.key, request.filename, request.contentType), responder);
+    }
+    return null;
   }
 
   @Override

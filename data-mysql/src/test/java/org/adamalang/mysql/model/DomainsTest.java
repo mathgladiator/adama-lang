@@ -31,6 +31,8 @@ public class DomainsTest {
         Assert.assertNull(result);
         Assert.assertTrue(Domains.map(dataBase, 141, "www.domain.com", "my-space", null, true, "certificate-yay"));
         result = Domains.get(dataBase, "www.domain.com");
+        Assert.assertEquals(1, Domains.listBySpace(dataBase, "my-space").size());
+        Assert.assertEquals("www.domain.com", Domains.listBySpace(dataBase, "my-space").get(0).domain);
         Assert.assertEquals("my-space", result.space);
         Assert.assertEquals("certificate-yay", result.certificate);
         Assert.assertEquals(141, result.owner);

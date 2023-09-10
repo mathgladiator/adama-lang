@@ -339,47 +339,28 @@ public class ErrorCodes {
   public static final int API_INIT_COMPLETE_UNKNOWN_EXCEPTION = 946179;
   public static final int API_INIT_COMPLETE_CODE_MISMATCH = 916486;
 
-  public static final int API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE = 901127;
   public static final int API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION = 904318;
   public static final int API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY = 965747;
-
-  public static final int API_SPACE_KICK_NO_PERMISSION_TO_EXECUTE = 962752;
   public static final int API_SPACE_KICK_UNKNOWN_EXCEPTION = 998593;
-
-  public static final int API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE = 965635;
   public static final int API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION = 913408;
-
-  public static final int API_SPACE_GET_BILLING_USAGE_NO_PERMISSION_TO_EXECUTE = 909452;
-  public static final int API_SPACE_GET_BILLING_UNKNOWN_EXCEPTION = 901263;
-
   public static final int API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION = 986120;
-  public static final int API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE = 921607;
-
   public static final int API_SPACE_LIST_DEVELOPERS_UNKNOWN_EXCEPTION = 988380;
-  public static final int API_SPACE_LIST_DEVELOPERS_NO_PERMISSION_TO_EXECUTE = 966875;
-
   public static final int API_SPACE_LIST_UNKNOWN_EXCEPTION = 941064;
   public static final int API_SPACE_LIST_NO_PERMISSION_TO_EXECUTE = 920576;
-
-  public static final int API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE = 907343;
-
   public static final int API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION = 982016;
   public static final int API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 990208;
-
   public static final int API_SET_AUTHORITY_UNKNOWN_EXCEPTION = 900098;
   public static final int API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 970780;
-
   public static final int API_GET_AUTHORITY_UNKNOWN_EXCEPTION = 928819;
   public static final int API_GET_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 978992;
-
   public static final int API_LIST_AUTHORITY_UNKNOWN_EXCEPTION = 998430;
   public static final int API_LIST_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 904223;
 
   public static final int API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION = 913436;
   public static final int API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 901144;
 
-  public static final int API_CONNECT_DOMAIN_NO_SPACE_FOUND = 990417;
-  public static final int API_CONNECT_DOMAIN_NO_KEY_FOUND = 916689;
+  public static final int API_VALIDATE_DOMAIN_NO_SPACE_FOUND = 990417;
+  public static final int API_VALIDATE_DOMAIN_NO_KEY_FOUND = 916689;
 
   public static final int API_CONNECT_BILING_MUST_BE_ADAMA_DEVELOPER = 903415;
 
@@ -391,24 +372,20 @@ public class ErrorCodes {
   public static final int API_DOMAIN_GET_UNKNOWN_EXCEPTION = 997516;
 
   public static final int API_DOMAIN_MAP_FAILED = 904343;
-  public static final int API_DOMAIN_MAP_NOT_AUTHORIZED = 998539;
   public static final int API_DOMAIN_MAP_UNKNOWN_EXCEPTION = 984111;
   public static final int API_DOMAIN_LIST_NOT_AUTHORIZED = 928991;
   public static final int API_DOMAIN_LIST_UNKNOWN_EXCEPTION = 901251;
+  public static final int API_DOMAIN_LIST_BY_SPACE_UNKNOWN_EXCEPTION = 914676;
 
+  public static final int API_REFLECT_BY_DOMAIN_NOT_AUTHORIZED = 991435;
   public static final int API_DOMAIN_UNMAP_FAILED = 901163;
   public static final int API_DOMAIN_UNMAP_NOT_AUTHORIZED = 916527;
   public static final int API_DOMAIN_UNMAP_UNKNOWN_EXCEPTION = 913447;
 
-  public static final int API_SPACE_SET_RXHTML_NOT_AUTHORIZED = 966835;
   public static final int API_SPACE_SET_RXHTML_UNKNOWN_EXCEPTION = 949427;
 
   public static final int API_SPACE_SET_POLICY_UNKNOWN_EXCEPTION = 984268;
-
-  public static final int API_SPACE_GET_RXHTML_NOT_AUTHORIZED = 928959;
   public static final int API_SPACE_GET_RXHTML_UNKNOWN_EXCEPTION = 992319;
-
-  public static final int API_SPACE_GET_METRICS_NOT_AUTHORIZED = 996596;
   public static final int API_SPACE_GET_METRICS_UNKNOWN_EXCEPTION = 999675;
 
   public static final int API_METHOD_NOT_FOUND = 945213;
@@ -447,13 +424,10 @@ public class ErrorCodes {
   public static final int API_ASSET_ATTACHMENT_UNKNOWN_EXCEPTION = 985219;
 
   public static final int API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION = 903232;
-  public static final int API_LIST_DOCUMENTS_NO_PERMISSION = 900160;
   public static final int API_SPACE_DELETE_UNKNOWN_EXCEPTION = 904256;
-  public static final int API_SPACE_DELETE_NO_PERMISSION = 904285;
   public static final int API_SPACE_DELETE_NOT_EMPTY = 998495;
 
   public static final int API_GENERATE_KEY_UNKNOWN_EXCEPTION = 925840;
-  public static final int API_GENERATE_KEY_NO_PERMISSION = 908435;
 
   public static final int API_CHANNEL_VALIDATION_FAILED_EMPTY = 950399;
   public static final int API_CHANNEL_VALIDATION_BAD_START_CHARACTER = 908415;
@@ -499,10 +473,6 @@ public class ErrorCodes {
 
   @RetryInternally
   public static final int NET_LCSM_TIMEOUT = 928828;
-
-  public static final int WEB_CLIENT_CONNECTION_TIMEOUT = 904392;
-  public static final int WEB_CLIENT_CONNECTION_REJECTED = 991435;
-  public static final int WEB_CLIENT_STREAM_TIMEOUT = 924877;
 
   public static final int WEB_VOID_CALLBACK_NOT_200 = 931015;
   public static final int WEB_STRING_CALLBACK_NOT_200 = 979143;
@@ -556,7 +526,7 @@ public class ErrorCodes {
   public static final int FAILED_DEINIT_DOMAINS_EXIST = 970995;
   public static final int FAILED_DEINIT_UNKONWN_EXCEPTION = 989427;
   /**
-   * 984312 930039 914676 913655
+   * 984312 930039
    * 997647 971023 934159 903435 969987 946435 924928 982272 986396 982291 901421 930111 922943
    * 901428 955700 991540 904502 998708 995636 986419 966962 916784 903475 904499 930097 995663
    * 933196 998732 995695 970108 916924 998839 932279 995763 921008 996784 920015 995788 904648

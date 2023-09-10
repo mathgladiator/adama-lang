@@ -33,6 +33,8 @@ public interface RootRegionHandler {
 
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
+  public AttachmentUploadHandler handle(Session session, AttachmentStartByDomainRequest request, ProgressResponder responder);
+
   public void disconnect();
 
   public static boolean test(String method) {
@@ -55,6 +57,7 @@ public interface RootRegionHandler {
       case "documents/hash-password":
       case "billing-connection/create":
       case "attachment/start":
+      case "attachment/start-by-domain":
       case "attachment/append":
       case "attachment/finish":
         return true;

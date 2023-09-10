@@ -27,6 +27,7 @@ public class AssembleConnectionRouter {
     router.append("import com.fasterxml.jackson.databind.node.ObjectNode;\n");
     router.append("import org.adamalang.common.*;\n");
     router.append("import org.adamalang.common.metrics.*;\n");
+    router.append("import org.adamalang.contracts.data.DefaultPolicyBehavior;\n");
     router.append("import " + sessionImport + ";\n");
     router.append("import org.adamalang.web.io.*;\n");
     router.append("import org.adamalang.ErrorCodes;\n");
@@ -96,6 +97,12 @@ public class AssembleConnectionRouter {
       router.append("              ").append(method.camelName).append("Request.resolve(session, nexus, request, new Callback<>() {\n");
       router.append("                @Override\n");
       router.append("                public void success(").append(method.camelName).append("Request resolved) {\n");
+      if (method.checkPolicy) {
+        router.append("                  if (!resolved.policy.checkPolicy(\"").append(method.name).append("\", DefaultPolicyBehavior.").append(method.defaultPolicyBehavior).append(", resolved.who)) {\n");
+        router.append("                    responder.error(new ErrorCodeException(").append(method.policyErrorCode).append("));\n");
+        router.append("                    return;\n");
+        router.append("                  }\n");
+      }
       router.append("                  resolved.logInto(_accessLogItem);\n");
       if (method.findBy != null) {
         router.append("                  ").append(method.handler).append("Handler handlerToUse = inflight").append(method.handler).append(method.destroy ? ".remove" : ".get").append("(resolved.").append(method.findBy).append(");\n");

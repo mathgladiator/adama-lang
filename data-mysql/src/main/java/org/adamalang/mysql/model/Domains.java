@@ -126,6 +126,22 @@ public class Domains {
     });
   }
 
+  public static ArrayList<Domain> listBySpace(DataBase dataBase, String space) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `domain`, `owner`, `space`, `key`, `route`, `certificate`,`updated`, `automatic_timestamp` FROM `" + dataBase.databaseName + "`.`domains` WHERE `space` =?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<Domain> domains = new ArrayList<>();
+          while (rs.next()) {
+            domains.add(domainOf(rs));
+          }
+          return domains;
+        }
+      }
+    });
+  }
+
   public static boolean superSetAutoCert(DataBase dataBase, String domain, String certificate, long timestampNext) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sqlUpdate = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `certificate`=?, `automatic`=TRUE, `automatic_timestamp`=? WHERE `domain`=? AND `automatic`";

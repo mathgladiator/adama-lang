@@ -6,9 +6,10 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.contracts.data;
+package org.adamalang.api;
 
-public enum DefaultPolicyBehavior {
-  Owner,
-  OwnerAndDevelopers
+/** generated request type for domain/list-by-space */
+public class ClientDomainListBySpaceRequest {
+  public String identity;
+  public String space;
 }

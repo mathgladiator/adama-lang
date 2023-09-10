@@ -6,9 +6,12 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.contracts.data;
+package org.adamalang.api;
 
-public enum DefaultPolicyBehavior {
-  Owner,
-  OwnerAndDevelopers
+/** generated request type for attachment/start-by-domain */
+public class ClientAttachmentStartByDomainRequest {
+  public String identity;
+  public String domain;
+  public String filename;
+  public String contentType;
 }

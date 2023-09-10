@@ -8,6 +8,7 @@
  */
 package org.adamalang.contracts.data;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.data.SpaceInfo;
@@ -39,117 +40,12 @@ public class SpacePolicy {
     if (user.isAdamaDeveloper && user.id == owner) {
       return true;
     }
-    // TODO LOOK UP IN THE POLICY BY METHOD
-
-    return false;
-  }
-
-  public boolean canUserDeleteSpace(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      return user.id == owner;
+    // TODO: look up a policy and then resolve it here
+    JsonNode node = policy.get(method);
+    if (node != null && node.isObject()) {
     }
-    return false;
-  }
 
-  public boolean canUserGeneratePrivateKey(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserSetRole(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      return user.id == owner;
-    }
-    return false;
-  }
-
-  public boolean canUserSetPlan(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserManageDomain(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      return user.id == owner;
-    }
-    return false;
-  }
-
-  public boolean canUserListDeveloper(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserSetRxHTML(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canGetMetrics(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserGetRxHTML(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserSeeReflection(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserSeeKeyListing(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
-      return developers.contains(user.id);
-    }
-    return false;
-  }
-
-  public boolean canUserGetPlan(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      if (user.id == owner) {
-        return true;
-      }
+    if (defaultPolicyBehavior == DefaultPolicyBehavior.OwnerAndDevelopers) {
       return developers.contains(user.id);
     }
     return false;

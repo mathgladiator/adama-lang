@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.*;
+import org.adamalang.contracts.data.DefaultPolicyBehavior;
 import org.adamalang.frontend.Session;
 import org.adamalang.web.io.*;
 import org.adamalang.ErrorCodes;
@@ -456,6 +457,28 @@ public class RegionConnectionRouter {
               AttachmentStartRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentStartRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  AttachmentUploadHandler handlerMade = handler.handle(session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder, _accessLogItem, nexus.logger)));
+                  if (handlerMade != null) {
+                    inflightAttachmentUpload.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "attachment/start-by-domain": {
+              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_AttachmentStartByDomain.start();
+              AttachmentStartByDomainRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(AttachmentStartByDomainRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   AttachmentUploadHandler handlerMade = handler.handle(session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder, _accessLogItem, nexus.logger)));
                   if (handlerMade != null) {
