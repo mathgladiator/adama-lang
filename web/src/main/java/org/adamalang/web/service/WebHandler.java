@@ -347,7 +347,17 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   }
 
   private void finishAssetUpload(ConnectionContext context, String identity, Key uploadKey, String channel, ArrayList<FileUpload> files, HashMap<String, String> message_parts, final ChannelHandlerContext ctx, final FullHttpRequest req) throws IOException {
-    // TODO Need a multi-latch to report success
+    final MultiVoidCallbackLatch latch = new MultiVoidCallbackLatch(metrics.web_asset_upload.wrap(new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
+      }
+    }), files.size(), ErrorCodes.WEB_FAILED_ASSET_UPLOAD_ALL);
     for (FileUpload upload : files) {
       AssetUploadBody body = new AssetUploadBody() {
         @Override
@@ -389,24 +399,24 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           assets.attach(identityFinal, context, uploadKey, asset, channelFinal, message, new Callback<Integer>() {
             @Override
             public void success(Integer value) {
-              // TODO: multi-latch report success
+              latch.success();
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
-              // TODO: multi-latch report failure @ attach
+              latch.failure();
+              LOG.error("failed-asset-attach:" + ex.code);
             }
           });
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
-          // TODO: multi-latch report failure @ upload
+          latch.failure();
+          LOG.error("failed-asset-post-upload:" + ex.code);
         }
       });
     }
-    // TODO: leverage a multi-latch
-    sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
   }
 
   private static final String CACHED_ADAMA_JAR_MD5 = hashAdamaJar();

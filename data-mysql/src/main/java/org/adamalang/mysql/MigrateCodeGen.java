@@ -108,6 +108,7 @@ public class MigrateCodeGen {
               case "varchar":
               case "text":
               case "longtext":
+              case "mediumtext":
                 copyLine.add("_ins.setString(" + fieldIdWrite.get() + ", rs.getString(" + fieldIdRead.get() + "))");
                 break;
               case "datetime":

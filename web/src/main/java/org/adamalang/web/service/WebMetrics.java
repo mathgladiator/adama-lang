@@ -8,6 +8,7 @@
  */
 package org.adamalang.web.service;
 
+import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 
@@ -48,6 +49,8 @@ public class WebMetrics {
   public final Runnable websockets_start;
   public final Runnable websockets_end;
 
+  public final CallbackMonitor web_asset_upload;
+
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
     this.websockets_active_child_connections = factory.inflight("websockets_active_child_connections");
@@ -82,5 +85,6 @@ public class WebMetrics {
     this.webhandler_wta_crash = factory.counter("webhandler_wta_crash");
     this.webhandler_options = factory.counter("webhandler_options");
     this.webhandler_options_failure = factory.counter("webhandler_options_failure");
+    this.web_asset_upload = factory.makeCallbackMonitor("web_asset_upload");
   }
 }
