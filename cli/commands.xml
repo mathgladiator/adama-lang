@@ -325,6 +325,22 @@
             <arg name="output" />
         </command>
 
+        <command name="set-policy">
+            <documentation>
+                Set the space's access control policy
+            </documentation>
+            <arg name="space" />
+            <arg name="file" />
+        </command>
+
+        <command name="get-policy">
+            <documentation>
+                Get the access control policy for the space
+            </documentation>
+            <arg name="space" />
+            <arg name="output" />
+        </command>
+
         <command name="upload" output="json">
             <documentation>
                 Placeholder

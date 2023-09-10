@@ -8,6 +8,8 @@
  */
 package org.adamalang.contracts.data;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.mysql.data.SpaceInfo;
 
 import java.util.Set;
@@ -17,11 +19,29 @@ public class SpacePolicy {
   public final int id;
   public final int owner;
   private final Set<Integer> developers;
+  public ObjectNode policy;
 
   public SpacePolicy(SpaceInfo space) {
     this.id = space.id;
     this.owner = space.owner;
     this.developers = space.developers;
+    this.policy = Json.parseJsonObject(space.policy);
+  }
+
+  public boolean isOwner(AuthenticatedUser user) {
+    if (user.isAdamaDeveloper) {
+      return user.id == owner;
+    }
+    return false;
+  }
+
+  public boolean checkPolicy(String method, DefaultPolicyBehavior defaultPolicyBehavior, AuthenticatedUser user) {
+    if (user.isAdamaDeveloper && user.id == owner) {
+      return true;
+    }
+    // TODO LOOK UP IN THE POLICY BY METHOD
+
+    return false;
   }
 
   public boolean canUserDeleteSpace(AuthenticatedUser user) {

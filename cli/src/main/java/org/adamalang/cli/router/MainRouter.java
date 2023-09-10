@@ -116,6 +116,16 @@ public class MainRouter {
                spaceHandler.get(spaceArgs, out);
                return 0;
             }
+            case "get-policy": {
+              SpaceGetPolicyArgs spaceArgs = SpaceGetPolicyArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceGetPolicyArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.getPolicy(spaceArgs, out);
+               return 0;
+            }
             case "get-rxhtml": {
               SpaceGetRxhtmlArgs spaceArgs = SpaceGetRxhtmlArgs.from(args, 2);
               if (spaceArgs == null) {
@@ -154,6 +164,16 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                spaceHandler.reflect(spaceArgs, out);
+               return 0;
+            }
+            case "set-policy": {
+              SpaceSetPolicyArgs spaceArgs = SpaceSetPolicyArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceSetPolicyArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.setPolicy(spaceArgs, out);
                return 0;
             }
             case "set-role": {

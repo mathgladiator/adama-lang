@@ -51,7 +51,7 @@ public class GlobalSpacePolicyLocator implements SpacePolicyLocator {
               public void execute() throws Exception {
                 policies.remove(spaceName);
               }
-            }, 30000);
+            }, 60000);
           }
         } catch (Exception ex) {
           callback.failure(

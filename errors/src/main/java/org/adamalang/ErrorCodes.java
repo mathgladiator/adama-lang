@@ -403,6 +403,8 @@ public class ErrorCodes {
   public static final int API_SPACE_SET_RXHTML_NOT_AUTHORIZED = 966835;
   public static final int API_SPACE_SET_RXHTML_UNKNOWN_EXCEPTION = 949427;
 
+  public static final int API_SPACE_SET_POLICY_UNKNOWN_EXCEPTION = 984268;
+
   public static final int API_SPACE_GET_RXHTML_NOT_AUTHORIZED = 928959;
   public static final int API_SPACE_GET_RXHTML_UNKNOWN_EXCEPTION = 992319;
 
@@ -501,7 +503,6 @@ public class ErrorCodes {
   public static final int WEB_CLIENT_CONNECTION_TIMEOUT = 904392;
   public static final int WEB_CLIENT_CONNECTION_REJECTED = 991435;
   public static final int WEB_CLIENT_STREAM_TIMEOUT = 924877;
-  public static final int WEB_CLIENT_STREAM_REJECTED = 984268;
 
   public static final int WEB_VOID_CALLBACK_NOT_200 = 931015;
   public static final int WEB_STRING_CALLBACK_NOT_200 = 979143;

@@ -23,10 +23,12 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"space", "encrypt-secret", "--help"});
     Main.testMain(new String[]{"space", "generate-key", "--help"});
     Main.testMain(new String[]{"space", "get", "--help"});
+    Main.testMain(new String[]{"space", "get-policy", "--help"});
     Main.testMain(new String[]{"space", "get-rxhtml", "--help"});
     Main.testMain(new String[]{"space", "list", "--help"});
     Main.testMain(new String[]{"space", "metrics", "--help"});
     Main.testMain(new String[]{"space", "reflect", "--help"});
+    Main.testMain(new String[]{"space", "set-policy", "--help"});
     Main.testMain(new String[]{"space", "set-role", "--help"});
     Main.testMain(new String[]{"space", "set-rxhtml", "--help"});
     Main.testMain(new String[]{"space", "upload", "--help"});
