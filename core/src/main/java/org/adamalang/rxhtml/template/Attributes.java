@@ -361,7 +361,6 @@ public class Attributes {
       if ("channel".equals(name)) {
         return true;
       }
-      env.feedback.warn(el, "The input '" + name + "' is excessive.");
       return false;
     }, checks);
   }
@@ -462,6 +461,15 @@ public class Attributes {
       check_action_upload(false);
       RxObject obj = new RxObject(env, "rx:forward");
       env.writer.tab().append("$.aUP(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("',").append(obj.rxObj) //
+          .append(");").newline();
+    } else if ("domain:upload-asset".equalsIgnoreCase(action)) { // upload an asset
+      convertFailureVariableToEvents(env.element, "asset_upload_failed");
+      check_action_upload(true);
+      RxObject obj = new RxObject(env, "rx:forward");
+      env.writer.tab().append("$.aDUP(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("',").append(obj.rxObj) //

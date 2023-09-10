@@ -17,6 +17,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.common.TimeSource;
+import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
@@ -40,12 +41,14 @@ public class ServiceRunnable implements Runnable {
   private final WebHandlerAssetCache cache;
   private Channel channel;
   private boolean stopped;
+  private final DomainFinder domainFinder;
 
-  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, CertificateFinder certificateFinder, Runnable heartbeat) {
+  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, CertificateFinder certificateFinder, DomainFinder domainFinder, Runnable heartbeat) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.base = base;
     this.certificateFinder = certificateFinder;
+    this.domainFinder = domainFinder;
     started = new AtomicBoolean();
     channel = null;
     stopped = false;
@@ -82,7 +85,7 @@ public class ServiceRunnable implements Runnable {
             final var b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)//
              .channel(NioServerSocketChannel.class) //
-             .childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache));
+             .childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache, domainFinder));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");

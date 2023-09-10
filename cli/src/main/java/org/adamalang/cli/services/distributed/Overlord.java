@@ -11,11 +11,15 @@ package org.adamalang.cli.services.distributed;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
+import org.adamalang.runtime.sys.domains.Domain;
+import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
@@ -48,7 +52,12 @@ public class Overlord {
     MultiRegionClient adama = init.makeGlobalClient(client);
     HttpHandler handler = org.adamalang.overlord.Overlord.execute(overlordHandler, isGlobalOverlord, client, adama, init.engine, init.metricsFactory, targetsPath, init.database, init.s3, init.s3, init.alive);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
-    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, (domain, callback) -> callback.success(null), () -> {
+    final var runnable = new ServiceRunnable(init.webConfig, new WebMetrics(init.metricsFactory), serviceBase, (domain, callback) -> callback.success(null), new DomainFinder() {
+      @Override
+      public void find(String domain, Callback<Domain> callback) {
+        callback.failure(new ErrorCodeException(0));
+      }
+    }, () -> {
     });
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override

@@ -325,6 +325,10 @@ public class ErrorTable {
     descriptions.put(634899, "no description of error (yet)");
     names.put(604191, "USER_NOT_FOUND");
     descriptions.put(604191, "no description of error (yet)");
+    names.put(642079, "DOMAIN_LOOKUP_WEB_NULL_FAILURE");
+    descriptions.put(642079, "no description of error (yet)");
+    names.put(647199, "DOMAIN_LOOKUP_WEB_NO_KEY_FAILURE");
+    descriptions.put(647199, "no description of error (yet)");
     names.put(982253, "AUTH_FAILED_DOC_AUTHENTICATE");
     descriptions.put(982253, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");

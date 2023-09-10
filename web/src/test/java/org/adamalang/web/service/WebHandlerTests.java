@@ -15,6 +15,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
+import org.adamalang.web.service.mocks.MockDomainFinder;
 import org.adamalang.web.service.mocks.MockServiceBase;
 import org.adamalang.web.service.mocks.NullCertificateFinder;
 import org.junit.Assert;
@@ -29,7 +30,7 @@ public class WebHandlerTests {
     EventLoopGroup group = new NioEventLoopGroup();
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ProdScope);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), () -> {});
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), new MockDomainFinder(), () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);

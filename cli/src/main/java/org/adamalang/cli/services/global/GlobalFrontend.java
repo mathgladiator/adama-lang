@@ -89,7 +89,7 @@ public class GlobalFrontend {
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
     CertificateFinder certificateFinder = CertificateBoot.make(em.webConfig, domainFinder, em.system);
-    final var runnable = new ServiceRunnable(em.webConfig, webMetrics, serviceBase, certificateFinder, heartbeat.get());
+    final var runnable = new ServiceRunnable(em.webConfig, webMetrics, serviceBase, certificateFinder, domainFinder, heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       System.err.println("shutting down frontend");
       try {
