@@ -102,9 +102,9 @@ public class Migrate {
             _ins.setString(2, rs.getString(3));
             _ins.setInt(3, rs.getInt(4));
             _ins.setLong(4, rs.getLong(5));
-            // NO IDEA:plan::mediumtext;
-            // NO IDEA:rxhtml::mediumtext;
-            // NO IDEA:policy::mediumtext;
+            _ins.setString(5, rs.getString(6));
+            _ins.setString(6, rs.getString(7));
+            _ins.setString(7, rs.getString(8));
             _ins.setString(8, rs.getString(9));
             _ins.setDate(9, rs.getDate(10));
             _ins.setDate(10, rs.getDate(11));
@@ -182,7 +182,7 @@ public class Migrate {
           try (PreparedStatement _ins = _to.prepareStatement(_insert, Statement.RETURN_GENERATED_KEYS)) {
             _ins.setString(1, rs.getString(2));
             _ins.setString(2, rs.getString(3));
-            // NO IDEA:metrics::mediumtext;
+            _ins.setString(3, rs.getString(4));
             _ins.execute();
           }
         }, _walk);
