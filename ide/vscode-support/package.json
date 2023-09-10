@@ -21,7 +21,7 @@
         "onLanguage:adama",
         "onCommand:showAdamaConfig"
     ],
-    "main": "./client/out/extension.js",
+    "main": "./out/extension.js",
     "contributes": {
         "configuration": {
             "type": "object",
