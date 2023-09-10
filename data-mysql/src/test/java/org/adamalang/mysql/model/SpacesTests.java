@@ -26,7 +26,6 @@ public class SpacesTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         int alice = Users.createUserId(dataBase, "alice@x.com");
         int bob = Users.createUserId(dataBase, "bob@x.com");
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
@@ -42,7 +41,6 @@ public class SpacesTests {
         Assert.assertEquals(1, Spaces.getSpaceInfo(dataBase, "space1").id);
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
-        Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         ArrayList<String> names = Spaces.listAllSpaceNames(dataBase);
         Assert.assertEquals(2, names.size());
         Assert.assertEquals("space1", names.get(0));

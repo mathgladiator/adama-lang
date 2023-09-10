@@ -129,6 +129,7 @@ public class Installer {
             " DEFAULT CHARACTER SET = utf8mb4;" //
         ;
 
+
     String createSpaceTableSQL = //
         "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`spaces` (" + //
             "  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT," + //
@@ -136,13 +137,9 @@ public class Installer {
             "  `name` VARCHAR(128) NOT NULL," + //
             "  `enabled` BOOLEAN DEFAULT TRUE," + //
             "  `storage_bytes` BIGINT DEFAULT 0," + //
-            "  `unbilled_storage_bytes_hours` BIGINT DEFAULT 0," + // TOKILL
-            "  `unbilled_bandwidth_hours` BIGINT DEFAULT 0," + // TOKILL
-            "  `unbilled_first_party_service_calls` INT(4) DEFAULT 0," + // TOKILL
-            "  `unbilled_third_party_service_calls` INT(4) DEFAULT 0," + // TOKILL
-            "  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0," + //
-            "  `plan` MEDIUMTEXT NOT NULL," + // MOVE to IDE document?
-            "  `rxhtml` MEDIUMTEXT," + // MOVE to IDE document?
+            "  `plan` MEDIUMTEXT NOT NULL," +
+            "  `rxhtml` MEDIUMTEXT," +
+            "  `policy` MEDIUMTEXT," +
             "  `hash` VARCHAR(256) NOT NULL," + //
             "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //
             "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," + //
