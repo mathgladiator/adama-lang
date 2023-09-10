@@ -61,7 +61,7 @@ public class Spaces {
 
   public static SpaceInfo getSpaceInfo(DataBase dataBase, String space) throws Exception {
     return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `id`,`owner`,`enabled`,`storage_bytes` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
+      String sql = "SELECT `id`,`owner`,`enabled`,`storage_bytes`,`policy` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
@@ -75,7 +75,7 @@ public class Spaces {
                 developers.add(g.getInt(1));
               }
             }, sqlGrants);
-            return new SpaceInfo(rs.getInt(1), owner, developers, rs.getBoolean(3), rs.getLong(2));
+            return new SpaceInfo(rs.getInt(1), owner, developers, rs.getBoolean(3), rs.getLong(4), rs.getString(5));
           }
           throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
         }
@@ -89,6 +89,17 @@ public class Spaces {
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, plan);
         statement.setString(2, hash);
+        statement.execute();
+      }
+      return null;
+    });
+  }
+
+  public static void setPolicy(DataBase dataBase, int spaceId, String policy) throws Exception {
+    dataBase.transactSimple((connection) -> {
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `policy`=?  WHERE `id`=" + spaceId + " LIMIT 1";
+      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setString(1, policy);
         statement.execute();
       }
       return null;

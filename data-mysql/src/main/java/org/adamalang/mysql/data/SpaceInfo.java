@@ -10,18 +10,21 @@ package org.adamalang.mysql.data;
 
 import java.util.Set;
 
+/** information about a space */
 public class SpaceInfo {
   public final int id;
   public final int owner;
   public final Set<Integer> developers;
   public final boolean enabled;
   public final long storageBytes;
+  public final String policy;
 
-  public SpaceInfo(int id, int owner, Set<Integer> developers, boolean enabled, long storageBytes) {
+  public SpaceInfo(int id, int owner, Set<Integer> developers, boolean enabled, long storageBytes, String policy) {
     this.id = id;
     this.owner = owner;
     this.developers = developers;
     this.enabled = enabled;
     this.storageBytes = storageBytes;
+    this.policy = policy == null ? "{}" : policy;
   }
 }

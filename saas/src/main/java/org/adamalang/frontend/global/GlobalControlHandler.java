@@ -541,7 +541,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
         nexus.adama.create(request.who, "ide", request.space, null, template.idearg(request.space), new Callback<Void>() {
           @Override
           public void success(Void value) {
-            SpacePolicy policy = new SpacePolicy(new SpaceInfo(spaceId, request.who.id, Collections.singleton(request.who.id), true, 0));
+            SpacePolicy policy = new SpacePolicy(new SpaceInfo(spaceId, request.who.id, Collections.singleton(request.who.id), true, 0, "{}"));
             handle(session, new SpaceSetRequest(request.identity, request.who, request.space, policy, template.plan()), new SimpleResponder(new NoOpJsonResponder()));
             try {
               Spaces.setRxHtml(nexus.database, spaceId, template.initialRxHTML(request.space)); // TODO: put into createSpace? Or, rely on the document

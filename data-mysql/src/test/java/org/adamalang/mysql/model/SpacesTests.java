@@ -39,8 +39,12 @@ public class SpacesTests {
         Spaces.setRxHtml(dataBase, 1, "<forest>");
         Assert.assertEquals("<forest>", Spaces.getRxHtml(dataBase, 1));
         Assert.assertEquals(1, Spaces.getSpaceInfo(dataBase, "space1").id);
+        Assert.assertEquals("{}", Spaces.getSpaceInfo(dataBase, "space1").policy);
+        Spaces.setPolicy(dataBase, 1, "{\"POLICY\":true}");
+        Assert.assertEquals("{\"POLICY\":true}", Spaces.getSpaceInfo(dataBase, "space1").policy);
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
+        Assert.assertEquals("{}", Spaces.getSpaceInfo(dataBase, "space2").policy);
         ArrayList<String> names = Spaces.listAllSpaceNames(dataBase);
         Assert.assertEquals(2, names.size());
         Assert.assertEquals("space1", names.get(0));
