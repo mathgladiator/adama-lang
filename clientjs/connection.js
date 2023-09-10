@@ -562,6 +562,15 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/list", "id":parId, "identity": identity}
     });
   }
+  DomainListBySpace(identity, space, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/list-by-space", "id":parId, "identity": identity, "space": space}
+    });
+  }
   DomainUnmap(identity, domain, responder) {
     var self = this;
     var parId = self.__id();
@@ -863,6 +872,31 @@ class WebSocketAdamaConnection {
       id: parId,
       responder: responder,
       request: {"method":"attachment/start", "id":parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
+      append: function(chunkMd5, base64Bytes, subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "attachment/append", id: subId, "upload":parId, "chunk-md5": chunkMd5, "base64-bytes": base64Bytes}
+        });
+      },
+      finish: function(subResponder) {
+        var subId = self.__id();
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "attachment/finish", id: subId, "upload":parId}
+        });
+      }
+    });
+  }
+  AttachmentStartByDomain(identity, domain, filename, contentType, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"attachment/start-by-domain", "id":parId, "identity": identity, "domain": domain, "filename": filename, "content-type": contentType},
       append: function(chunkMd5, base64Bytes, subResponder) {
         var subId = self.__id();
         self.__execute_rr({

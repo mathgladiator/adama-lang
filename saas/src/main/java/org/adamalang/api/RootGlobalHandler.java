@@ -75,6 +75,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, DomainListRequest request, DomainListingResponder responder);
 
+  public void handle(Session session, DomainListBySpaceRequest request, DomainListingResponder responder);
+
   public void handle(Session session, DomainUnmapRequest request, SimpleResponder responder);
 
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder);
@@ -167,6 +169,7 @@ public interface RootGlobalHandler {
       case "domain/reflect":
       case "domain/map-document":
       case "domain/list":
+      case "domain/list-by-space":
       case "domain/unmap":
       case "domain/get":
       case "document/list":

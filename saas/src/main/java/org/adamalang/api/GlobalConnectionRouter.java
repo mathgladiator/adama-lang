@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.*;
+import org.adamalang.contracts.data.DefaultPolicyBehavior;
 import org.adamalang.frontend.Session;
 import org.adamalang.web.io.*;
 import org.adamalang.ErrorCodes;
@@ -308,6 +309,10 @@ public class GlobalConnectionRouter {
               SpaceGenerateKeyRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGenerateKeyRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/generate-key", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(908435));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new KeyPairResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -326,6 +331,10 @@ public class GlobalConnectionRouter {
               SpaceGetRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGetRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/get", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(965635));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -344,6 +353,10 @@ public class GlobalConnectionRouter {
               SpaceSetRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/set", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(901127));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -362,6 +375,10 @@ public class GlobalConnectionRouter {
               SpaceRedeployKickRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceRedeployKickRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/redeploy-kick", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(962752));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -380,6 +397,10 @@ public class GlobalConnectionRouter {
               SpaceSetRxhtmlRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRxhtmlRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/set-rxhtml", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(966835));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -398,6 +419,10 @@ public class GlobalConnectionRouter {
               SpaceGetRxhtmlRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGetRxhtmlRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/get-rxhtml", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(928959));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new RxhtmlResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -416,6 +441,10 @@ public class GlobalConnectionRouter {
               SpaceSetPolicyRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetPolicyRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/set-policy", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(904392));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -434,6 +463,10 @@ public class GlobalConnectionRouter {
               SpaceGetPolicyRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGetPolicyRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/get-policy", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(991435));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new AccessPolicyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -452,6 +485,10 @@ public class GlobalConnectionRouter {
               SpaceMetricsRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceMetricsRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/metrics", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(996596));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new MetricsAggregateResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -470,6 +507,10 @@ public class GlobalConnectionRouter {
               SpaceDeleteRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceDeleteRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/delete", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(904285));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -488,6 +529,10 @@ public class GlobalConnectionRouter {
               SpaceSetRoleRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRoleRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/set-role", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(921607));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -506,6 +551,10 @@ public class GlobalConnectionRouter {
               SpaceListDevelopersRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceListDevelopersRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/list-developers", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(966875));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new DeveloperResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -524,6 +573,10 @@ public class GlobalConnectionRouter {
               SpaceReflectRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceReflectRequest resolved) {
+                  if (!resolved.policy.checkPolicy("space/reflect", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(907343));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -560,6 +613,10 @@ public class GlobalConnectionRouter {
               DomainMapRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(DomainMapRequest resolved) {
+                  if (!resolved.policy.checkPolicy("domain/map", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(998539));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -596,6 +653,10 @@ public class GlobalConnectionRouter {
               DomainMapDocumentRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(DomainMapDocumentRequest resolved) {
+                  if (!resolved.policy.checkPolicy("domain/map-document", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(924877));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -614,6 +675,28 @@ public class GlobalConnectionRouter {
               DomainListRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(DomainListRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new DomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "domain/list-by-space": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DomainListBySpace.start();
+              DomainListBySpaceRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DomainListBySpaceRequest resolved) {
+                  if (!resolved.policy.checkPolicy("domain/list-by-space", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(913655));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new DomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
@@ -668,6 +751,10 @@ public class GlobalConnectionRouter {
               DocumentListRequest.resolve(session, nexus, request, new Callback<>() {
                 @Override
                 public void success(DocumentListRequest resolved) {
+                  if (!resolved.policy.checkPolicy("document/list", DefaultPolicyBehavior.OwnerAndDevelopers, resolved.who)) {
+                    responder.error(new ErrorCodeException(900160));
+                    return;
+                  }
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }

@@ -320,6 +320,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientDomainListingResponse(obj), streamback);
   }
 
+  /** domain/list-by-space */
+  public void domainListBySpace(ClientDomainListBySpaceRequest request, Stream<ClientDomainListingResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "domain/list-by-space");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    pool.requestStream(node, (obj) -> new ClientDomainListingResponse(obj), streamback);
+  }
+
   /** domain/unmap */
   public void domainUnmap(ClientDomainUnmapRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();
@@ -468,6 +477,17 @@ private final MultiWebClientRetryPool pool;
     node.put("identity", request.identity);
     node.put("space", request.space);
     node.put("key", request.key);
+    node.put("filename", request.filename);
+    node.put("content-type", request.contentType);
+    pool.requestStream(node, (wcc, id) -> new AttachmentUploadHandler(wcc, id), (obj) -> new ClientProgressResponse(obj), callback, streamback);
+  }
+
+  /** attachment/start-by-domain */
+  public void attachmentStartByDomain(ClientAttachmentStartByDomainRequest request, Callback<AttachmentUploadHandler> callback, Stream<ClientProgressResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "attachment/start-by-domain");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
     node.put("filename", request.filename);
     node.put("content-type", request.contentType);
     pool.requestStream(node, (wcc, id) -> new AttachmentUploadHandler(wcc, id), (obj) -> new ClientProgressResponse(obj), callback, streamback);

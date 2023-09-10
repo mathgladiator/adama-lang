@@ -10,13 +10,14 @@
                    error-code="444420"/>
     </parameter-definition>
 
-    <parameter-definition name="space" type="string" missing-error="461828" logged="true" normalize="true">
+    <parameter-definition name="space" type="string" missing-error="461828" logged="true" normalize="true" requires-policy="true">
         <documentation>
             A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
             denote the name of that collection.
 
             Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--'
         </documentation>
+        <!-- implicitly, the policy is going to require a policy-check -->
         <transform service="org.adamalang.contracts.SpacePolicyLocator"
                    output-name="policy"
                    output-java-type="org.adamalang.contracts.data.SpacePolicy"
@@ -294,7 +295,7 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="domain" type="string" missing-error="488444">
+    <parameter-definition name="domain" type="string" missing-error="488444" requires-policy="true">
         <documentation>
             A domain name.
         </documentation>
@@ -828,7 +829,7 @@
         </documentation>
     </method>
 
-    <method name="space/create" responder="simple" scope="global">
+    <method name="space/create" responder="simple" scope="global" policy-manual="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="template"/>
@@ -837,7 +838,7 @@
         </documentation>
     </method>
 
-    <method name="space/generate-key" responder="key-pair" scope="global">
+    <method name="space/generate-key" responder="key-pair" scope="global" policy="true" policy-failure-code="908435">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -851,7 +852,7 @@
         </documentation>
     </method>
 
-    <method name="space/get" responder="plan" scope="global">
+    <method name="space/get" responder="plan" scope="global" policy="true" policy-failure-code="965635" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -859,7 +860,7 @@
         </documentation>
     </method>
 
-    <method name="space/set" responder="simple" scope="global">
+    <method name="space/set" responder="simple" scope="global" policy="true" policy-failure-code="901127" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="plan"/>
@@ -868,7 +869,7 @@
         </documentation>
     </method>
 
-    <method name="space/redeploy-kick" responder="simple" scope="global">
+    <method name="space/redeploy-kick" responder="simple" scope="global" policy="true" policy-failure-code="962752" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -876,7 +877,7 @@
         </documentation>
     </method>
 
-    <method name="space/set-rxhtml" responder="simple" scope="global">
+    <method name="space/set-rxhtml" responder="simple" scope="global" policy="true" policy-failure-code="966835" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="rxhtml"/>
@@ -885,7 +886,7 @@
         </documentation>
     </method>
 
-    <method name="space/get-rxhtml" responder="rxhtml" scope="global">
+    <method name="space/get-rxhtml" responder="rxhtml" scope="global" policy="true" policy-failure-code="928959" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -893,7 +894,7 @@
         </documentation>
     </method>
 
-    <method name="space/set-policy" responder="simple" scope="global">
+    <method name="space/set-policy" responder="simple" scope="global" policy="true" policy-failure-code="904392">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="access-policy"/>
@@ -902,7 +903,7 @@
         </documentation>
     </method>
 
-    <method name="space/get-policy" responder="access-policy" scope="global">
+    <method name="space/get-policy" responder="access-policy" scope="global" policy="true" policy-failure-code="991435" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -915,7 +916,7 @@
         <field name="count" />
     </responder>
 
-    <method name="space/metrics" responder="metrics-aggregate" scope="global">
+    <method name="space/metrics" responder="metrics-aggregate" scope="global" policy="true" policy-failure-code="996596" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="prefix"/>
@@ -925,7 +926,7 @@
         </documentation>
     </method>
 
-    <method name="space/delete" responder="simple" scope="global">
+    <method name="space/delete" responder="simple" scope="global" policy="true" policy-failure-code="904285">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -936,7 +937,7 @@
         </documentation>
     </method>
 
-    <method name="space/set-role" responder="simple" scope="global">
+    <method name="space/set-role" responder="simple" scope="global" policy="true" policy-failure-code="921607">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="email"/>
@@ -948,7 +949,7 @@
         </documentation>
     </method>
 
-    <method name="space/list-developers" responder="developer" scope="global">
+    <method name="space/list-developers" responder="developer" scope="global" policy="true" policy-failure-code="966875" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -956,7 +957,7 @@
         </documentation>
     </method>
 
-    <method name="space/reflect" responder="reflection" devbox="true" scope="global">
+    <method name="space/reflect" responder="reflection" devbox="true" scope="global" policy="true" policy-failure-code="907343" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -974,7 +975,7 @@
         </documentation>
     </method>
 
-    <method name="domain/map" responder="simple" scope="global">
+    <method name="domain/map" responder="simple" scope="global" policy="true" policy-failure-code="998539">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="space"/>
@@ -984,7 +985,7 @@
         </documentation>
     </method>
 
-    <method name="domain/reflect" responder="reflection" devbox="true" scope="global">
+    <method name="domain/reflect" responder="reflection" devbox="true" scope="global" policy-manual="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
@@ -992,7 +993,7 @@
         </documentation>
     </method>
 
-    <method name="domain/map-document" responder="simple" scope="global">
+    <method name="domain/map-document" responder="simple" scope="global" policy="true" policy-failure-code="924877">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="space"/>
@@ -1012,13 +1013,21 @@
     </responder>
 
     <method name="domain/list" responder="domain-listing" scope="global">
-        <parameter name="identity"/>
+        <parameter name="identity" />
         <documentation>
             List the domains for the given developer
         </documentation>
     </method>
 
-    <method name="domain/unmap" responder="simple" scope="global">
+    <method name="domain/list-by-space" responder="domain-listing" scope="global" policy="true" policy-failure-code="913655">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <documentation>
+            List the domains for the given developer
+        </documentation>
+    </method>
+
+    <method name="domain/unmap" responder="simple" scope="global" policy-manual="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
@@ -1026,7 +1035,7 @@
         </documentation>
     </method>
 
-    <method name="domain/get" responder="domain-policy" scope="global">
+    <method name="domain/get" responder="domain-policy" scope="global" policy-manual="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
@@ -1034,7 +1043,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorize" responder="initiation" devbox="true" scope="region">
+    <method name="document/authorize" responder="initiation" devbox="true" scope="region" policy-via-document="true">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="username"/>
@@ -1044,7 +1053,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="region">
+    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true">
         <parameter name="domain"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -1053,7 +1062,7 @@
         </documentation>
     </method>
 
-    <method name="document/create" responder="simple" scope="region">
+    <method name="document/create" responder="simple" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1066,7 +1075,7 @@
         </documentation>
     </method>
 
-    <method name="document/delete" responder="simple" scope="region">
+    <method name="document/delete" responder="simple" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1075,7 +1084,7 @@
         </documentation>
     </method>
 
-    <method name="document/list" responder="key-listing" scope="global">
+    <method name="document/list" responder="key-listing" scope="global" policy="true" policy-failure-code="900160" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="marker"/>
@@ -1085,7 +1094,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send" responder="seq" scope="region">
+    <method name="message/direct-send" responder="seq" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1096,7 +1105,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send-once" responder="seq" scope="region">
+    <method name="message/direct-send-once" responder="seq" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1108,7 +1117,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create" responder="data" create="document-stream" devbox="true" scope="region">
+    <method name="connection/create" responder="data" create="document-stream" devbox="true" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1118,7 +1127,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true" scope="region">
+    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="viewer-state"/>
@@ -1267,10 +1276,20 @@
         </documentation>
     </method>
 
-    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region">
+    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region" policy-via-document="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
+        <parameter name="filename"/>
+        <parameter name="content-type"/>
+        <documentation>
+            Start an upload for the given document with the given filename and content type.
+        </documentation>
+    </method>
+
+    <method name="attachment/start-by-domain" responder="progress" create="attachment-upload" scope="region" policy-via-document="true">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
         <parameter name="filename"/>
         <parameter name="content-type"/>
         <documentation>

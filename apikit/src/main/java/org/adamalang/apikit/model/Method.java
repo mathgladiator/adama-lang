@@ -35,8 +35,11 @@ public class Method {
   public final boolean devbox;
   public final String scope;
   public final boolean internal;
+  public final boolean checkPolicy;
+  public final int policyErrorCode;
+  public final String defaultPolicyBehavior;
 
-  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect, boolean devbox, String scope, boolean internal) {
+  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect, boolean devbox, String scope, boolean internal, boolean checkPolicy, int policyErrorCode, String defaultPolicyBehavior) {
     this.name = name;
     this.camelName = Common.camelize(name);
     this.camelName2 = Common.camelize(name, true);
@@ -53,6 +56,9 @@ public class Method {
     this.devbox = devbox;
     this.scope = scope;
     this.internal = internal;
+    this.checkPolicy = checkPolicy;
+    this.policyErrorCode = policyErrorCode;
+    this.defaultPolicyBehavior = defaultPolicyBehavior;
   }
 
   public static Method[] methodsOf(Document document, Map<String, ParameterDefinition> parameters, Map<String, Responder> responders) throws Exception {
@@ -73,6 +79,8 @@ public class Method {
       int errorCantFindBy = 0;
       if (findByValue != null && findByValue.length() > 0) {
         errorCantFindBy = Integer.parseInt(errorCantFindByText);
+      } else {
+        findByValue = null;
       }
       String handlerValue = element.getAttribute("handler");
       String scope = element.getAttribute("scope");
@@ -86,6 +94,22 @@ public class Method {
       boolean devbox = "true".equals(element.getAttribute("devbox"));
       boolean callOnDisconnect = "true".equals(element.getAttribute("call-on-disconnect"));
 
+      boolean checkPolicy = "true".equals(element.getAttribute("policy"));
+      int policyErrorCode = 0;
+      String defaultPolicyBehavior = "Owner";
+      if (checkPolicy) {
+        try {
+          policyErrorCode = Integer.parseInt(element.getAttribute("policy-failure-code"));
+        } catch (Exception ex) {
+          throw new Exception(element.toString() + " is missing 'policy-failure-code'");
+        }
+      }
+      if (element.hasAttribute("policy-default")) {
+        defaultPolicyBehavior = element.getAttribute("policy-default");
+      }
+
+      boolean shouldDoAPolicyCheck = false;
+      boolean inferedPolicy = findByValue != null;
       String documentation = null;
       ArrayList<ParameterDefinition> parametersArrayList = new ArrayList<>();
       NodeList children = node.getChildNodes();
@@ -99,6 +123,9 @@ public class Method {
             if (parameter == null) {
               throw new Exception("unable to find parameter: " + parameterName);
             }
+            if (parameter.requiresPolicyCheck) {
+              shouldDoAPolicyCheck = true;
+            }
             parametersArrayList.add(parameter);
           } else if ("documentation".equals(childElement.getTagName())) {
             documentation = childElement.getTextContent();
@@ -110,8 +137,13 @@ public class Method {
       if (documentation == null) {
         throw new Exception("method has no documentation");
       }
-      System.out.println("\u001b[36mAPI:\u001b[0m" + name);
-      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect, devbox, scope, internal));
+      System.out.println("\u001b[36mAPI:\u001b[0m" + name + (inferedPolicy && !internal ? " \u001b[35m(POLICY INFER)\u001b[0m" : "") + (shouldDoAPolicyCheck && !internal ? " \u001b[36m(POLICY CHECKED)\u001b[0m" : "") + (internal ? " \u001b[31m(INTERNAL)\u001b[0m" : ""));
+      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect, devbox, scope, internal, checkPolicy, policyErrorCode, defaultPolicyBehavior));
+      boolean hasManualPolicy =  "true".equals(element.getAttribute("policy-manual"));
+      boolean hasDocumentPolicy = "true".equals(element.getAttribute("policy-via-document"));
+      if (shouldDoAPolicyCheck && !(hasManualPolicy || checkPolicy || hasDocumentPolicy || internal)) {
+        throw new Exception("the method '" + name + "' has no policy aspect defined, yet is using a protected resource");
+      }
     }
     return methodsArrayList.toArray(new Method[methodsArrayList.size()]);
   }

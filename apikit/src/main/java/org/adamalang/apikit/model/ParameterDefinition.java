@@ -31,8 +31,9 @@ public class ParameterDefinition {
   public final HashSet<String> skipTransformOnMethods;
   public final boolean logged;
   public final String limitToPrefix;
+  public final boolean requiresPolicyCheck;
 
-  public ParameterDefinition(final String name, Type type, boolean optional, boolean normalize, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged, String limitToPrefix) {
+  public ParameterDefinition(final String name, Type type, boolean optional, boolean normalize, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged, String limitToPrefix, boolean requiresPolicyCheck) {
     this.name = name;
     this.camelName = Common.camelize(name, true);
     this.type = type;
@@ -45,6 +46,7 @@ public class ParameterDefinition {
     this.skipTransformOnMethods = skipTransformOnMethods;
     this.logged = logged;
     this.limitToPrefix = limitToPrefix;
+    this.requiresPolicyCheck = requiresPolicyCheck;
   }
 
   public String invent() {
@@ -109,6 +111,7 @@ public class ParameterDefinition {
       boolean optional = "true".equals(element.getAttribute("optional"));
       boolean normalize = "true".equals(element.getAttribute("normalize"));
       boolean logged = "true".equals(element.getAttribute("logged"));
+      boolean requiresPolicyCheck = "true".equals(element.getAttribute("requires-policy"));
 
       String documentation = null;
       Transform transform = null;
@@ -183,7 +186,7 @@ public class ParameterDefinition {
       if (errorCodeIfMissing == 0 && !optional) {
         throw new Exception("non-optional parameter is missing non-zero error code:" + name);
       }
-      ParameterDefinition definition = new ParameterDefinition(name, type, optional, normalize, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged, limitToPrefix);
+      ParameterDefinition definition = new ParameterDefinition(name, type, optional, normalize, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged, limitToPrefix, requiresPolicyCheck);
       if (parameters.containsKey(name)) {
         throw new Exception("parameter already defined: " + name);
       }
