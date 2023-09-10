@@ -27,6 +27,7 @@ public class SpacePolicy {
     this.owner = space.owner;
     this.developers = space.developers;
     this.policy = Json.parseJsonObject(space.policy);
+
   }
 
   public boolean isOwner(AuthenticatedUser user) {
@@ -40,11 +41,25 @@ public class SpacePolicy {
     if (user.isAdamaDeveloper && user.id == owner) {
       return true;
     }
-    // TODO: look up a policy and then resolve it here
     JsonNode node = policy.get(method);
     if (node != null && node.isObject()) {
+      if (Json.readBool((ObjectNode) node, "developers", false)) {
+        if (developers.contains(user.id)) {
+          return true;
+        }
+      }
+      JsonNode authorities = node.get("allowed-authorities");
+      if (authorities != null && authorities.isArray()) {
+        for (int k = 0; k < authorities.size(); k++) {
+          JsonNode authority = authorities.get(k);
+          if (authority != null && authority.isTextual()) {
+            if (user.who.authority.equals(authority.textValue())) {
+              return true;
+            }
+          }
+        }
+      }
     }
-
     if (defaultPolicyBehavior == DefaultPolicyBehavior.OwnerAndDevelopers) {
       return developers.contains(user.id);
     }
