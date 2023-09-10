@@ -51,6 +51,7 @@ public class MigrateCodeGen {
       makeCopy(dataBase, "authorities", java, false, lookups("owner", "emails"));
       makeCopy(dataBase, "secrets", java, true, lookups());
       makeCopy(dataBase, "domains", java, false, lookups("owner", "emails"));
+      makeCopy(dataBase, "metrics", java, false, lookups());
       java.append("      }\n");
       java.append("    }\n");
       java.append("  }\n");

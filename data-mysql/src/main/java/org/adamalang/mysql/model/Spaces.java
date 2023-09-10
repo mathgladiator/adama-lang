@@ -32,20 +32,6 @@ public class Spaces {
     });
   }
 
-  public static Integer getLatestBillingHourCode(DataBase dataBase) throws Exception {
-    return dataBase.transactSimple((connection) -> {
-      String sqlTestWater = "SELECT `latest_billing_hour` FROM `" + dataBase.databaseName + "`.`spaces` ORDER BY `latest_billing_hour` DESC LIMIT 1";
-      try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
-        ResultSet rs = statement.executeQuery();
-        if (rs.next()) {
-          return rs.getInt(1);
-        } else {
-          return null;
-        }
-      }
-    });
-  }
-
   public static int createSpace(DataBase dataBase, int userId, String space) throws Exception {
     return dataBase.transactSimple((connection) -> {
       try {
