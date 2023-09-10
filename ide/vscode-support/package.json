@@ -3,16 +3,25 @@
     "displayName": "Adama Language Support",
     "description": "Adama Language Extension",
     "version": "0.0.1",
-    "engines": {
-        "vscode": "^1.47.0"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Microsoft/vscode-extension-samples"
     },
+    "publisher": "vscode-samples",
     "categories": [
         "Programming Languages"
     ],
-    "main": "./out/extension",
-    "activationEvents": [
-        "onLanguage:adama"
+    "keywords": [
+        "multi-root ready"
     ],
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "activationEvents": [
+        "onLanguage:adama",
+        "onCommand:showAdamaConfig"
+    ],
+    "main": "./client/out/extension.js",
     "contributes": {
         "configuration": {
             "type": "object",
@@ -32,6 +41,23 @@
                     ],
                     "default": "off",
                     "description": "Traces the communication between VSCode and the Adama DevKit service."
+                },
+                "languageServerExample.maxNumberOfProblems": {
+                    "scope": "resource",
+                    "type": "number",
+                    "default": 100,
+                    "description": "Controls the maximum number of problems produced by the server."
+                },
+                "languageServerExample.trace.server": {
+                    "scope": "window",
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VS Code and the language server."
                 }
             }
         },
@@ -54,24 +80,39 @@
                 "scopeName": "source.adama",
                 "path": "./syntaxes/adama.tmLanguage.json"
             }
+        ],
+        "commands": [
+            {
+                "command": "ui-adama.showUI",
+                "title": "Show My Extension UI"
+            },
+            {
+                "command": "showAdamaConfig",
+                "title": "Show Adama Configuration"
+            }
         ]
-    },
-    "dependencies": {
-        "vscode-languageclient": "^8.1.0"
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -b",
-        "watch": "tsc -b -w"
+        "watch": "tsc -b -w",
+        "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+        "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+        "test": "sh ./scripts/e2e.sh"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^8.1.0",
+        "vscode-languageserver-textdocument": "^1.0.8"
     },
     "devDependencies": {
-        "@types/mocha": "^7.0.2",
-        "@types/node": "^12.12.53",
-        "@types/vscode": "1.43.0",
-        "@typescript-eslint/parser": "^2.3.0",
-        "eslint": "^8.43.0",
-        "mocha": "^10.1.0",
-        "typescript": "^3.9.4",
+        "@types/mocha": "^9.1.0",
+        "@types/node": "^16.18.34",
+        "@typescript-eslint/eslint-plugin": "^5.54.0",
+        "@typescript-eslint/parser": "^5.54.0",
+        "chai": "^4.3.8",
+        "eslint": "^8.35.0",
+        "mocha": "^9.2.2",
+        "typescript": "^5.1.3",
         "vscode-test": "^1.3.0"
     }
 }
