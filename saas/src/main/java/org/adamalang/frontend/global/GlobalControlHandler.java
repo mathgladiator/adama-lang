@@ -466,6 +466,29 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, SpaceGetPolicyRequest request, AccessPolicyResponder responder) {
+      // if (request.policy.(request.who)) {
+        responder.complete(request.policy.policy);
+      // } else {
+//        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_RXHTML_NOT_AUTHORIZED));
+      //}
+  }
+
+  @Override
+  public void handle(Session session, SpaceSetPolicyRequest request, SimpleResponder responder) {
+    try {
+      if (request.policy.canUserSetRxHTML(request.who)) {
+        Spaces.setPolicy(nexus.database, request.policy.id, request.space);
+        responder.complete();
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_RXHTML_NOT_AUTHORIZED));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_POLICY_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
   public void handle(Session session, SpaceGetRxhtmlRequest request, RxhtmlResponder responder) {
     try {
       if (request.policy.canUserGetRxHTML(request.who)) {

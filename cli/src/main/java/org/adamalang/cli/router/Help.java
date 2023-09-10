@@ -51,10 +51,12 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("encrypt-secret", 15), Util.ANSI.Green) + "Encrypt a secret to store within code");
     System.out.println("    " + Util.prefix(Util.justifyLeft("generate-key", 15), Util.ANSI.Green) + "Generate a server-side key to use for storing secrets");
     System.out.println("    " + Util.prefix(Util.justifyLeft("get", 15), Util.ANSI.Green) + "Get a space's plan");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("get-policy", 15), Util.ANSI.Green) + "Get the access control policy for the space");
     System.out.println("    " + Util.prefix(Util.justifyLeft("get-rxhtml", 15), Util.ANSI.Green) + "Get the frontend RxHTML forest");
     System.out.println("    " + Util.prefix(Util.justifyLeft("list", 15), Util.ANSI.Green) + "List spaces available to your account");
     System.out.println("    " + Util.prefix(Util.justifyLeft("metrics", 15), Util.ANSI.Green) + "Get a metric report for the space and the documents that share the prefix");
     System.out.println("    " + Util.prefix(Util.justifyLeft("reflect", 15), Util.ANSI.Green) + "Get a file of the reflection of a space");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("set-policy", 15), Util.ANSI.Green) + "Set the space's access control policy");
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-role", 15), Util.ANSI.Green) + "Set the role of another developer");
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-rxhtml", 15), Util.ANSI.Green) + "Set the frontend RxHTML forest");
     System.out.println("    " + Util.prefix(Util.justifyLeft("upload", 15), Util.ANSI.Green) + "Placeholder");

@@ -289,6 +289,40 @@ public class SpaceHandlerImpl implements SpaceHandler {
   }
 
   @Override
+  public void setPolicy(Arguments.SpaceSetPolicyArgs args, Output.YesOrError output) throws Exception {
+    Config config = args.config;
+    String identity = config.get_string("identity", null);
+    String source = Files.readString(new File(args.file).toPath());
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/set-policy");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        request.set("access-policy", Json.parseJsonObject(source));
+        connection.execute(request);
+        output.out();
+      }
+    }
+  }
+
+  @Override
+  public void getPolicy(Arguments.SpaceGetPolicyArgs args, Output.YesOrError output) throws Exception {
+    Config config = args.config;
+    String identity = config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/get-policy");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        Files.writeString(new File(args.output).toPath(), connection.execute(request).get("policy").toPrettyString());
+        output.out();
+      }
+    }
+  }
+
+  @Override
   public void upload(Arguments.SpaceUploadArgs args, Output.JsonOrError output) throws Exception {
     Uploader.upload(args, output);
   }

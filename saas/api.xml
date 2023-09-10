@@ -317,6 +317,12 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="access-policy" type="json-object" missing-error="402255">
+        <documentation>
+            A policy to control who can do what against a space.
+        </documentation>
+    </parameter-definition>
+
     <field-definition name="success" type="boolean">
         <documentation>
             Indicates if the operation or method was successful.
@@ -555,6 +561,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="access-policy" type="json-object">
+        <documentation>
+            A policy to control who can do what against a space.
+        </documentation>
+    </field-definition>
+
     <field-definition name="owner" type="int">
         <documentation>
             Adama ID for the owner of an asset (encoded email)
@@ -613,7 +625,9 @@
         <field name="rxhtml"/>
     </responder>
 
-
+    <responder name="access-policy">
+        <field name="access-policy"/>
+    </responder>
 
     <responder name="simple">
     </responder>
@@ -876,6 +890,23 @@
         <parameter name="space"/>
         <documentation>
             Get the RxHTML forest for the space when viewed via a domain name.
+        </documentation>
+    </method>
+
+    <method name="space/set-policy" responder="simple" scope="global">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="access-policy"/>
+        <documentation>
+            Set the access control policy for a space
+        </documentation>
+    </method>
+
+    <method name="space/get-policy" responder="access-policy" scope="global">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <documentation>
+            returns the
         </documentation>
     </method>
 
@@ -1969,7 +2000,6 @@
 474959
 474958
 426831
-402255
 410444
 425804
 444240

@@ -200,6 +200,25 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientRxhtmlResponse(obj), callback);
   }
 
+  /** space/set-policy */
+  public void spaceSetPolicy(ClientSpaceSetPolicyRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "space/set-policy");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.set("access-policy", request.accessPolicy);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
+  /** space/get-policy */
+  public void spaceGetPolicy(ClientSpaceGetPolicyRequest request, Callback<ClientAccessPolicyResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "space/get-policy");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    pool.requestResponse(node, (obj) -> new ClientAccessPolicyResponse(obj), callback);
+  }
+
   /** space/metrics */
   public void spaceMetrics(ClientSpaceMetricsRequest request, Callback<ClientMetricsAggregateResponse> callback) {
     ObjectNode node = Json.newJsonObject();

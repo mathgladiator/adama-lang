@@ -454,6 +454,24 @@ class WebSocketAdamaConnection {
       request: {"method":"space/get-rxhtml", "id":parId, "identity": identity, "space": space}
     });
   }
+  SpaceSetPolicy(identity, space, accessPolicy, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/set-policy", "id":parId, "identity": identity, "space": space, "access-policy": accessPolicy}
+    });
+  }
+  SpaceGetPolicy(identity, space, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"space/get-policy", "id":parId, "identity": identity, "space": space}
+    });
+  }
   SpaceMetrics(identity, space, prefix, metricQuery, responder) {
     var self = this;
     var parId = self.__id();
