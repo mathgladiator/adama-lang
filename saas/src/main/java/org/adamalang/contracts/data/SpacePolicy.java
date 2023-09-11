@@ -27,14 +27,6 @@ public class SpacePolicy {
     this.owner = space.owner;
     this.developers = space.developers;
     this.policy = Json.parseJsonObject(space.policy);
-
-  }
-
-  public boolean isOwner(AuthenticatedUser user) {
-    if (user.isAdamaDeveloper) {
-      return user.id == owner;
-    }
-    return false;
   }
 
   public boolean checkPolicy(String method, DefaultPolicyBehavior defaultPolicyBehavior, AuthenticatedUser user) {
