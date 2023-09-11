@@ -478,20 +478,19 @@ public class InstanceClientTests {
           Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
         }
         {
-          CountDownLatch latchGotHappy = new CountDownLatch(1);
+          CountDownLatch latchGotFailure = new CountDownLatch(1);
           client.authorize("127.0.0.1", "origin", "space", "1", "user", "yop", null, new Callback<String>() {
             @Override
             public void success(String value) {
-              System.err.println(value);
-              latchGotHappy.countDown();
+
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
-              ex.printStackTrace();
+              latchGotFailure.countDown();
             }
           });
-          Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(latchGotFailure.await(5000, TimeUnit.MILLISECONDS));
         }
 
 

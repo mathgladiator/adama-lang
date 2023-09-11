@@ -27,8 +27,9 @@ public class EndToEnd_DocumentTests {
                   "@delete { return true; }" +
                   "@authorize (u, p) { return u + \":\" + p; }" +
                   "public int x = 1;" +
-                  "@password (p) { x = 1000; } " +
+                  "@password (p) { x = 1000; pw = p; } " +
                   "message M { int z; }" +
+                  "public string pw;" +
                   "channel foo(M m) { x += m.z; }" +
                   "view int z; bubble zpx = @viewer.z + x;"
           ) + "}");
@@ -37,15 +38,18 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("FINISH:{}", c5.next());
       Iterator<String> c6 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
       Assert.assertEquals("STREAM:{\"delta\":{\"view-state-filter\":[\"z\"]}}", c6.next());
-      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1,\"zpx\":1},\"seq\":4}}", c6.next());
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1,\"pw\":\"\",\"zpx\":1},\"seq\":4}}", c6.next());
       Iterator<String> c7 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
       Assert.assertEquals("FINISH:{\"seq\":5}", c7.next());
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":3,\"zpx\":3},\"seq\":5}}", c6.next());
       fe.execute("{\"id\":8,\"method\":\"connection/update\",\"connection\":100,\"viewer-state\":{\"z\":100}}");
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"zpx\":103}}}", c6.next());
       Iterator<String> cPASSWORD = fe.execute("{\"id\":8,\"method\":\"connection/password\",\"username\":\"meh\",\"password\":\"meh\",\"new_password\":\"pw\",\"connection\":100}");
-      Assert.assertEquals("FINISH:{\"seq\":6}", cPASSWORD.next());
-      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1000,\"zpx\":1100},\"seq\":6}}", c6.next());
+      Assert.assertEquals("FINISH:{}", cPASSWORD.next());
+      Iterator<String> cLOGIN2 = fe.execute("{\"id\":200,\"method\":\"document/authorize-with-reset\",\"space\":\"newspace\",\"key\":\"a\",\"username\":\"cake\",\"password\":\"ninja\",\"new_password\":\"gnome\"}");
+      Assert.assertTrue(cLOGIN2.next().startsWith("FINISH:{\"identity\":\""));
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1000,\"pw\":\"pw\",\"zpx\":1100},\"seq\":6}}", c6.next());
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"pw\":\"gnome\"},\"seq\":7}}", c6.next());
       Iterator<String> c8 = fe.execute("{\"id\":8,\"method\":\"connection/end\",\"connection\":100}");
       Assert.assertEquals("FINISH:{}", c8.next());
       Assert.assertEquals("FINISH:null", c6.next());
@@ -62,7 +66,7 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("ERROR:474128", fe.execute("{\"id\":1000,\"method\":\"connection/end\",\"connection\":1000}").next());
       Iterator<String> c12 = fe.execute("{\"id\":125,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
       Assert.assertEquals("STREAM:{\"delta\":{\"view-state-filter\":[\"z\"]}}", c12.next());
-      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":11}}", c12.next());
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1000,\"pw\":\"gnome\",\"zpx\":1000},\"seq\":12}}", c12.next());
       Iterator<String> c13 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"ide\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("ERROR:995505", c13.next());
       Iterator<String> c14 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"ide\",\"key\":\"newspace\"}");
@@ -71,6 +75,7 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("ERROR:625678", c15.next());
       Iterator<String> c16 = fe.execute("{\"id\":8,\"identity\":\"" + devIdentity + "\",\"method\":\"document/delete\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("FINISH:{}", c16.next());
+
     }
   }
 }
