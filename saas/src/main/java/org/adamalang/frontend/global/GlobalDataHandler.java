@@ -21,6 +21,7 @@ import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.io.JsonResponder;
@@ -45,8 +46,8 @@ public class GlobalDataHandler implements RootRegionHandler {
     this.rng = new Random();
   }
 
-  private void commonAuthorize(Session session, Key key, String username, String password, InitiationResponder responder) {
-    nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, key.space, key.key, username, password, new Callback<String>() {
+  private void commonAuthorize(Session session, Key key, String username, String password, String new_password, InitiationResponder responder) {
+    nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, key.space, key.key, username, password, new_password, new Callback<String>() {
       @Override
       public void success(String agent) {
         responder.complete(nexus.signingKey.signDocumentIdentity(agent, key.space, key.key, 0));
@@ -59,26 +60,44 @@ public class GlobalDataHandler implements RootRegionHandler {
     });
   }
 
-  @Override
-  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder) {
-    commonAuthorize(session, new Key(request.space, request.key), request.username, request.password, responder);
+  private Domain domainToUse(DomainWithPolicy domainWithPolicy, InitiationResponder responder) {
+    Domain domain = domainWithPolicy.domain;
+    if (domain != null) {
+      if (domain.key != null) {
+        return domain;
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_DOMAIN_AUTH_NO_KEY_MAPPED));
+      }
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_DOMAIN_AUTH_DOMAIN_INVALID_MAPPED));
+    }
+    return null;
   }
 
   @Override
+  public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder) {
+    commonAuthorize(session, new Key(request.space, request.key), request.username, request.password, null, responder);
+  }
+
+
+  @Override
   public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder) {
-    try {
-      Domain domain = request.resolvedDomain.domain;
-      if (domain != null) {
-        if (domain.key != null) {
-          commonAuthorize(session, new Key(domain.space, domain.key), request.username, request.password, responder);
-        } else {
-          responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_DOMAIN_AUTH_NO_KEY_MAPPED));
-        }
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_DOMAIN_AUTH_DOMAIN_INVALID_MAPPED));
-      }
-    } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_AUTH_DOMAIN_AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
+    Domain domain = domainToUse(request.resolvedDomain, responder);
+    if (domain != null) {
+      commonAuthorize(session, new Key(domain.space, domain.key), request.username, request.password, null, responder);
+    }
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizeWithResetRequest request, InitiationResponder responder) {
+    commonAuthorize(session, new Key(request.space, request.key), request.username, request.password, request.new_password, responder);
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizeDomainWithResetRequest request, InitiationResponder responder) {
+    Domain domain = domainToUse(request.resolvedDomain, responder);
+    if (domain != null) {
+      commonAuthorize(session, new Key(domain.space, domain.key), request.username, request.password, request.new_password, responder);
     }
   }
 
@@ -258,12 +277,11 @@ public class GlobalDataHandler implements RootRegionHandler {
       }
 
       @Override
-      public void handle(ConnectionPasswordRequest request, SeqResponder responder) {
-        // public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
-        nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, connect.space, connect.key, request.username, request.password, new Callback<String>() {
+      public void handle(ConnectionPasswordRequest request, SimpleResponder responder) {
+        nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, connect.space, connect.key, request.username, request.password, request.new_password, new Callback<String>() {
           @Override
           public void success(String identity) {
-            connection.password(request.password, WRAP(responder));
+            responder.complete();
           }
 
           @Override

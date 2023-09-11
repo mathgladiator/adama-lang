@@ -24,13 +24,17 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder);
 
+  public abstract void handle_DocumentAuthorizeWithReset(long requestId, String space, String key, String username, String password, String new_password, InitiationResponder responder);
+
+  public abstract void handle_DocumentAuthorizeDomainWithReset(long requestId, String domain, String username, String password, String new_password, InitiationResponder responder);
+
   public abstract void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder);
 
   public abstract void handle_ConnectionCreateViaDomain(long requestId, String identity, String domain, ObjectNode viewerState, DataResponder responder);
 
   public abstract void handle_ConnectionSend(long requestId, Long connection, String channel, JsonNode message, SeqResponder responder);
 
-  public abstract void handle_ConnectionPassword(long requestId, Long connection, String username, String password, String new_password, SeqResponder responder);
+  public abstract void handle_ConnectionPassword(long requestId, Long connection, String username, String password, String new_password, SimpleResponder responder);
 
   public abstract void handle_ConnectionSendOnce(long requestId, Long connection, String channel, String dedupe, JsonNode message, SeqResponder responder);
 
@@ -77,6 +81,23 @@ public abstract class DevBoxRouter {
           request.getString("password", true, 465917), //
           new InitiationResponder(responder));
           return;
+        case "document/authorize-with-reset":
+          handle_DocumentAuthorizeWithReset(requestId, //
+          request.getStringNormalize("space", true, 461828), //
+          request.getString("key", true, 466947), //
+          request.getString("username", true, 458737), //
+          request.getString("password", true, 465917), //
+          request.getString("new_password", true, 466931), //
+          new InitiationResponder(responder));
+          return;
+        case "document/authorize-domain-with-reset":
+          handle_DocumentAuthorizeDomainWithReset(requestId, //
+          request.getString("domain", true, 488444), //
+          request.getString("username", true, 458737), //
+          request.getString("password", true, 465917), //
+          request.getString("new_password", true, 466931), //
+          new InitiationResponder(responder));
+          return;
         case "connection/create":
           handle_ConnectionCreate(requestId, //
           request.getString("identity", true, 458759), //
@@ -105,7 +126,7 @@ public abstract class DevBoxRouter {
           request.getString("username", true, 458737), //
           request.getString("password", true, 465917), //
           request.getString("new_password", true, 466931), //
-          new SeqResponder(responder));
+          new SimpleResponder(responder));
           return;
         case "connection/send-once":
           handle_ConnectionSendOnce(requestId, //

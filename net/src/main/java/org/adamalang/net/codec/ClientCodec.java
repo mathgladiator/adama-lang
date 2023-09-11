@@ -341,6 +341,7 @@ public class ClientCodec {
     o.key = Helper.readString(buf);
     o.username = Helper.readString(buf);
     o.password = Helper.readString(buf);
+    o.new_password = Helper.readString(buf);
     o.ip = Helper.readString(buf);
     o.origin = Helper.readString(buf);
     return o;
@@ -776,6 +777,7 @@ public class ClientCodec {
     Helper.writeString(buf, o.key);;
     Helper.writeString(buf, o.username);;
     Helper.writeString(buf, o.password);;
+    Helper.writeString(buf, o.new_password);;
     Helper.writeString(buf, o.ip);;
     Helper.writeString(buf, o.origin);;
   }

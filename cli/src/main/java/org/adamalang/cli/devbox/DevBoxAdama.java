@@ -96,8 +96,8 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   // public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
-  private void commonAuthorize(Key key, String username, String password, InitiationResponder responder) {
-    verse.service.authorize(context.origin, context.remoteIp, key, username, password, new Callback<String>() {
+  private void commonAuthorize(Key key, String username, String password, String new_password, InitiationResponder responder) {
+    verse.service.authorize(context.origin, context.remoteIp, key, username, password, new_password, new Callback<String>() {
       @Override
       public void success(String value) {
         responder.complete("document/" + key.space + "/" + key.key + "/" + value);
@@ -112,13 +112,27 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder) {
-    commonAuthorize(new Key(space, key), username, password, responder);
+    commonAuthorize(new Key(space, key), username, password, null, responder);
   }
 
   @Override
   public void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder) {
     if (verse.domainKeyToUse != null) {
-      commonAuthorize(verse.domainKeyToUse, username, password, responder);
+      commonAuthorize(verse.domainKeyToUse, username, password, null, responder);
+    } else {
+      responder.error(new ErrorCodeException(1));
+    }
+  }
+
+  @Override
+  public void handle_DocumentAuthorizeWithReset(long requestId, String space, String key, String username, String password, String new_password, InitiationResponder responder) {
+    commonAuthorize(new Key(space, key), username, password, new_password, responder);
+  }
+
+  @Override
+  public void handle_DocumentAuthorizeDomainWithReset(long requestId, String domain, String username, String password, String new_password, InitiationResponder responder) {
+    if (verse.domainKeyToUse != null) {
+      commonAuthorize(verse.domainKeyToUse, username, password, new_password, responder);
     } else {
       responder.error(new ErrorCodeException(1));
     }
@@ -189,13 +203,13 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   @Override
-  public void handle_ConnectionPassword(long requestId, Long connection, String username, String password, String new_password, SeqResponder responder) {
+  public void handle_ConnectionPassword(long requestId, Long connection, String username, String password, String new_password, SimpleResponder responder) {
     LocalStream stream = streams.get(connection);
     if (stream != null) {
-      verse.service.authorize(context.origin, context.remoteIp, stream.key, username, password, new Callback<String>() {
+      verse.service.authorize(context.origin, context.remoteIp, stream.key, username, password, new_password, new Callback<String>() {
         @Override
         public void success(String value) {
-          stream.ref.password(new_password, wrap(responder));
+          responder.complete();
         }
 
         @Override

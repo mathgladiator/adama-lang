@@ -339,6 +339,45 @@ public class Attributes {
     }, checks);
   }
 
+  private void check_action_document_sign_in_reset(boolean domain) {
+    String[] checks = domain ? new String[]{"username", "password", "new_password", "remember"} : new String[]{"username", "password", "new_password", "space", "key", "remember"};
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      String type = el.attr("type");
+      if ("password".equals(name)) {
+        if (!("password".equals(type))) {
+          env.feedback.warn(el, "Passwords should have type 'password'.");
+        }
+        return true;
+      }
+      if ("new_password".equals(name)) {
+        if (!("password".equals(type))) {
+          env.feedback.warn(el, "New password should have type 'password'.");
+        }
+        return true;
+      }
+      if ("username".equals(name)) {
+        return true;
+      }
+      if (!domain) {
+        if ("space".equals(name)) {
+          return true;
+        }
+        if ("key".equals(name)) {
+          return true;
+        }
+      }
+      if ("remember".equals(name)) {
+        return true;
+      }
+      if ("submit".equals(type)) {
+        return true;
+      }
+      env.feedback.warn(el, "The input '" + name + "' is excessive.");
+      return false;
+    }, checks);
+  }
+
   private void check_action_upload(boolean domain) {
     String[] checks = domain ? new String[]{"files"} : new String[]{"space", "key", "files"};
     walkAndValidateAndCheck(env, (el) -> {
@@ -413,9 +452,26 @@ public class Attributes {
     String action = env.element.attr("rx:action").trim();
     boolean isSignIn = "document:sign-in".equalsIgnoreCase(action);
     boolean isDomainSignIn = "domain:sign-in".equalsIgnoreCase(action);
+
+    boolean isSignInAndReset = "document:sign-in-reset".equalsIgnoreCase(action);
+    boolean isDomainSignInAndReset = "domain:sign-in-reset".equalsIgnoreCase(action);
+
     boolean documentPut = "document:put".equalsIgnoreCase(action);
     boolean domainDocumentPut = "domain:put".equalsIgnoreCase(action);
-    if (isSignIn || isDomainSignIn) { // sign in as an Adama user
+    if (isDomainSignInAndReset || isDomainSignInAndReset) {
+      check_action_document_sign_in_reset(isDomainSignInAndReset);
+      check_action_document_sign_in(isDomainSignIn);
+      if (!env.element.hasAttr("rx:forward")) {
+        env.element.attr("rx:forward", "/");
+      }
+      convertFailureVariableToEvents(env.element, "sign_in_failed");
+      RxObject obj = new RxObject(env, "rx:forward");
+      env.writer.tab().append(isDomainSignIn ? "$.adDSOr(" : "$.aDSOr(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("',").append(obj.rxObj) //
+          .append(");").newline();
+    } else if (isSignIn || isDomainSignIn) { // sign in as an Adama user
       check_action_document_sign_in(isDomainSignIn);
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");

@@ -455,27 +455,46 @@ public class InstanceClientTests {
     try (TestBed bed =
              new TestBed(
                  10013,
-                 "@static { create { return true; } invent { return true; } } @connected { return true; } @authorize (ur, pw) { return ur; }")) {
+                 "@static { create { return true; } invent { return true; } } @connected { return true; } @authorize (ur, pw) { if (pw == \"pass\") { return ur; } abort; }")) {
       bed.startServer();
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
+        {
+          CountDownLatch latchGotHappy = new CountDownLatch(1);
+          client.authorize("127.0.0.1", "origin", "space", "1", "user", "pass", "yop", new Callback<String>() {
+            @Override
+            public void success(String value) {
+              System.err.println(value);
+              latchGotHappy.countDown();
+            }
 
-        CountDownLatch latchGotHappy = new CountDownLatch(1);
-        client.authorize("127.0.0.1", "origin", "space", "1", "user", "pass", new Callback<String>() {
-          @Override
-          public void success(String value) {
-            System.err.println(value);
-            latchGotHappy.countDown();
-          }
+            @Override
+            public void failure(ErrorCodeException ex) {
+              ex.printStackTrace();
+            }
+          });
+          Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+        }
+        {
+          CountDownLatch latchGotHappy = new CountDownLatch(1);
+          client.authorize("127.0.0.1", "origin", "space", "1", "user", "yop", null, new Callback<String>() {
+            @Override
+            public void success(String value) {
+              System.err.println(value);
+              latchGotHappy.countDown();
+            }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            ex.printStackTrace();
-          }
-        });
-        Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+            @Override
+            public void failure(ErrorCodeException ex) {
+              ex.printStackTrace();
+            }
+          });
+          Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+        }
+
+
       }
     }
   }

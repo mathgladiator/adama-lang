@@ -20,4 +20,22 @@ public interface SimpleEvents {
 
   /** the document was disconnected */
   void disconnected();
+
+  public static final SimpleEvents NO_OP = new SimpleEvents() {
+    @Override
+    public void connected() {
+    }
+
+    @Override
+    public void delta(String data) {
+    }
+
+    @Override
+    public void error(int code) {
+    }
+
+    @Override
+    public void disconnected() {
+    }
+  };
 }

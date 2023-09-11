@@ -2062,7 +2062,49 @@ var RxHTML = (function () {
       });
     };
   };
-  // transform = format_date_usa
+
+
+  // RUNTIME | rx:action=domain:sign-in-reset
+  self.adDSOr = function (form, state, identityName, rxobj) {
+    rxobj.__ = function () { };
+    form.onsubmit = function (evt) {
+      evt.preventDefault();
+      var req = get_form(form, true);
+      connection.DocumentAuthorizeDomainWithReset(location.hostname, req.username, req.password, req.new_password,{
+        success: function (payload) {
+          identities[identityName] = payload.identity;
+          localStorage.setItem("identity_" + identityName, payload.identity);
+          // TODO: blow away connections
+          self.goto(rxobj.rx_forward);
+          fire_success(form);
+        },
+        failure: function (reason) {
+          fire_failure(form, "Failed signing into document:" + reason);
+        }
+      });
+    };
+  }
+
+  // RUNTIME | rx:action=document:sign-in-reset
+  self.aDSOr = function (form, state, identityName, rxobj) {
+    rxobj.__ = function () { };
+    form.onsubmit = function (evt) {
+      evt.preventDefault();
+      var req = get_form(form, true);
+      connection.DocumentAuthorizeWithReset(req.space, req.key, req.username, req.password, req.new_password,{
+        success: function (payload) {
+          identities[identityName] = payload.identity;
+          localStorage.setItem("identity_" + identityName, payload.identity);
+          // TODO: blow away connections
+          self.goto(rxobj.rx_forward);
+          fire_success(form);
+        },
+        failure: function (reason) {
+          fire_failure(form, "Failed signing into document:" + reason);
+        }
+      });
+    };
+  };
 
   var transforms = {};
   transforms['principal.agent'] = function(x) { return x.agent; };

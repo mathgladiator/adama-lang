@@ -607,6 +607,24 @@ class WebSocketAdamaConnection {
       request: {"method":"document/authorize-domain", "id":parId, "domain": domain, "username": username, "password": password}
     });
   }
+  DocumentAuthorizeWithReset(space, key, username, password, new_password, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"document/authorize-with-reset", "id":parId, "space": space, "key": key, "username": username, "password": password, "new_password": new_password}
+    });
+  }
+  DocumentAuthorizeDomainWithReset(domain, username, password, new_password, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"document/authorize-domain-with-reset", "id":parId, "domain": domain, "username": username, "password": password, "new_password": new_password}
+    });
+  }
   DocumentCreate(identity, space, key, entropy, arg, responder) {
     var self = this;
     var parId = self.__id();

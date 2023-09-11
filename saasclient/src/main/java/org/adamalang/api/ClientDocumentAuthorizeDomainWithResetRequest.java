@@ -6,8 +6,12 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20230911130249";
+/** generated request type for document/authorize-domain-with-reset */
+public class ClientDocumentAuthorizeDomainWithResetRequest {
+  public String domain;
+  public String username;
+  public String password;
+  public String new_password;
 }

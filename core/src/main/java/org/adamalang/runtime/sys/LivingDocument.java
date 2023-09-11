@@ -1386,9 +1386,6 @@ public abstract class LivingDocument implements RxParent, Caller {
       __monitor.push("TransactionPassword");
     }
     try {
-      if (!__clients.containsKey(context.who)) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NOT_CONNECTED);
-      }
       __seq.bumpUpPre();
       __randomizeOutOfBand();
       __password(context, password);

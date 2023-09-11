@@ -14,6 +14,8 @@ import org.adamalang.common.metrics.*;
 public class RegionApiMetrics {
   public final RequestResponseMonitor monitor_DocumentAuthorize;
   public final RequestResponseMonitor monitor_DocumentAuthorizeDomain;
+  public final RequestResponseMonitor monitor_DocumentAuthorizeWithReset;
+  public final RequestResponseMonitor monitor_DocumentAuthorizeDomainWithReset;
   public final RequestResponseMonitor monitor_DocumentCreate;
   public final RequestResponseMonitor monitor_DocumentDelete;
   public final RequestResponseMonitor monitor_MessageDirectSend;
@@ -37,6 +39,8 @@ public class RegionApiMetrics {
   public RegionApiMetrics(MetricsFactory factory) {
     this.monitor_DocumentAuthorize = factory.makeRequestResponseMonitor("document/authorize");
     this.monitor_DocumentAuthorizeDomain = factory.makeRequestResponseMonitor("document/authorize-domain");
+    this.monitor_DocumentAuthorizeWithReset = factory.makeRequestResponseMonitor("document/authorize-with-reset");
+    this.monitor_DocumentAuthorizeDomainWithReset = factory.makeRequestResponseMonitor("document/authorize-domain-with-reset");
     this.monitor_DocumentCreate = factory.makeRequestResponseMonitor("document/create");
     this.monitor_DocumentDelete = factory.makeRequestResponseMonitor("document/delete");
     this.monitor_MessageDirectSend = factory.makeRequestResponseMonitor("message/direct-send");

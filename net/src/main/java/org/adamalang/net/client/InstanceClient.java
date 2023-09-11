@@ -201,7 +201,7 @@ public class InstanceClient implements AutoCloseable {
     return success.get();
   }
 
-  public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+  public void authorize(String ip, String origin, String space, String key, String username, String password, String new_password, Callback<String> callback) {
     executor.execute(new NamedRunnable("execute-authorize") {
       @Override
       public void execute() throws Exception {
@@ -232,6 +232,7 @@ public class InstanceClient implements AutoCloseable {
                 auth.key = key;
                 auth.username = username;
                 auth.password = password;
+                auth.new_password = new_password;
                 auth.origin = origin;
                 auth.ip = ip;
                 ClientCodec.write(toWrite, auth);

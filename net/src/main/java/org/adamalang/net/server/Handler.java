@@ -181,7 +181,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.Authorize payload) {
     Key key = new Key(payload.space, payload.key);
-    nexus.service.authorize(payload.origin, payload.ip, key, payload.username, payload.password, new Callback<String>() {
+    nexus.service.authorize(payload.origin, payload.ip, key, payload.username, payload.password, payload.new_password, new Callback<String>() {
       @Override
       public void success(String agent) {
         ServerMessage.AuthResponse response = new ServerMessage.AuthResponse();

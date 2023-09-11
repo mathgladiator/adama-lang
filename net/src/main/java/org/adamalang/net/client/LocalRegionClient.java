@@ -149,11 +149,11 @@ public class LocalRegionClient {
     });
   }
 
-  public void authorize(String machineToAsk, String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+  public void authorize(String machineToAsk, String ip, String origin, String space, String key, String username, String password, String new_password, Callback<String> callback) {
     clientFinder.find(machineToAsk,  new Callback<>() {
       @Override
       public void success(InstanceClient client) {
-        client.authorize(ip, origin, space, key, username, password, callback);
+        client.authorize(ip, origin, space, key, username, password, new_password, callback);
       }
 
       @Override

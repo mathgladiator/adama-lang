@@ -81,8 +81,6 @@ public class ErrorTable {
     descriptions.put(197852, "no description of error (yet)");
     names.put(199907, "LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_PASSWORD");
     descriptions.put(199907, "no description of error (yet)");
-    names.put(113884, "LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NOT_CONNECTED");
-    descriptions.put(113884, "no description of error (yet)");
     names.put(184333, "LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED");
     descriptions.put(184333, "no description of error (yet)");
     names.put(147186, "LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED");
@@ -363,8 +361,6 @@ public class ErrorTable {
     descriptions.put(902399, "no description of error (yet)");
     names.put(983294, "API_AUTH_DOMAIN_AUTH_NO_KEY_MAPPED");
     descriptions.put(983294, "no description of error (yet)");
-    names.put(994556, "API_AUTH_DOMAIN_AUTH_UNKNOWN_EXCEPTION");
-    descriptions.put(994556, "no description of error (yet)");
     names.put(991368, "API_SET_PASSWORD_UNKNOWN_EXCEPTION");
     descriptions.put(991368, "no description of error (yet)");
     names.put(983199, "API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION");

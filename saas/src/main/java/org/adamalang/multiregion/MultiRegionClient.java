@@ -322,13 +322,13 @@ public class MultiRegionClient {
     return stream;
   }
 
-  public void authorize(String ip, String origin, String space, String key, String username, String password, Callback<String> callback) {
+  public void authorize(String ip, String origin, String space, String key, String username, String password, String new_password, Callback<String> callback) {
     local.finder.find(new Key(space, key), new Callback<DocumentLocation>() {
       @Override
       public void success(DocumentLocation location) {
         if (location.location == LocationType.Machine) {
           if (location.region.equals(region)) {
-            local.authorize(location.machine, ip, origin, space, key, username, password, callback);
+            local.authorize(location.machine, ip, origin, space, key, username, password, new_password, callback);
             return;
           } else {
             // TODO: remote

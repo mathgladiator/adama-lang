@@ -100,6 +100,42 @@ public class RegionConnectionRouter {
                 }
               });
             } return;
+            case "document/authorize-with-reset": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentAuthorizeWithReset.start();
+              DocumentAuthorizeWithResetRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentAuthorizeWithResetRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "document/authorize-domain-with-reset": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentAuthorizeDomainWithReset.start();
+              DocumentAuthorizeDomainWithResetRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentAuthorizeDomainWithResetRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "document/create": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentCreate.start();
               DocumentCreateRequest.resolve(session, nexus, request, new Callback<>() {
@@ -253,7 +289,7 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
                     _accessLogItem.put("success", false);
                     _accessLogItem.put("failure-code", 462832);

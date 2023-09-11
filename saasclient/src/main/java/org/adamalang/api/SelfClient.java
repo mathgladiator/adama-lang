@@ -368,6 +368,29 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
   }
 
+  /** document/authorize-with-reset */
+  public void documentAuthorizeWithReset(ClientDocumentAuthorizeWithResetRequest request, Callback<ClientInitiationResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/authorize-with-reset");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("username", request.username);
+    node.put("password", request.password);
+    node.put("new_password", request.new_password);
+    pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
+  }
+
+  /** document/authorize-domain-with-reset */
+  public void documentAuthorizeDomainWithReset(ClientDocumentAuthorizeDomainWithResetRequest request, Callback<ClientInitiationResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/authorize-domain-with-reset");
+    node.put("domain", request.domain);
+    node.put("username", request.username);
+    node.put("password", request.password);
+    node.put("new_password", request.new_password);
+    pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
+  }
+
   /** document/create */
   public void documentCreate(ClientDocumentCreateRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();
@@ -792,14 +815,14 @@ private final MultiWebClientRetryPool pool;
     }
   
     /** connection/password */
-    public void password(ClientConnectionPasswordRequest request, Callback<ClientSeqResponse> callback) {
+    public void password(ClientConnectionPasswordRequest request, Callback<ClientSimpleResponse> callback) {
       ObjectNode node = Json.newJsonObject();
       node.put("method", "connection/password");
       node.put("connection", _id);
       node.put("username", request.username);
       node.put("password", request.password);
       node.put("new_password", request.new_password);
-      _direct.requestResponse(node, (obj) -> new ClientSeqResponse(obj), callback);
+      _direct.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
     }
   
     /** connection/send-once */

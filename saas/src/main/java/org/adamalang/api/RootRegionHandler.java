@@ -15,6 +15,10 @@ public interface RootRegionHandler {
 
   public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder);
 
+  public void handle(Session session, DocumentAuthorizeWithResetRequest request, InitiationResponder responder);
+
+  public void handle(Session session, DocumentAuthorizeDomainWithResetRequest request, InitiationResponder responder);
+
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder);
 
   public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder);
@@ -41,6 +45,8 @@ public interface RootRegionHandler {
     switch (method) {
       case "document/authorize":
       case "document/authorize-domain":
+      case "document/authorize-with-reset":
+      case "document/authorize-domain-with-reset":
       case "document/create":
       case "document/delete":
       case "message/direct-send":

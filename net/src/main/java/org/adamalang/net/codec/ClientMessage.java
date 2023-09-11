@@ -352,8 +352,10 @@ public class ClientMessage {
     @FieldOrder(4)
     public String password;
     @FieldOrder(5)
-    public String ip;
+    public String new_password;
     @FieldOrder(6)
+    public String ip;
+    @FieldOrder(7)
     public String origin;
   }
 }
