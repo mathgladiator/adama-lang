@@ -51,43 +51,83 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_FunctionPassing_2 = null;
-  private String get_FunctionPassing_2() {
-    if (cached_FunctionPassing_2 != null) {
-      return cached_FunctionPassing_2;
+  private String cached_CantUseRecord_2 = null;
+  private String get_CantUseRecord_2() {
+    if (cached_CantUseRecord_2 != null) {
+      return cached_CantUseRecord_2;
     }
-    cached_FunctionPassing_2 = generateTestOutput(true, "FunctionPassing_2", "./test_code/NativeTables_FunctionPassing_success.a");
-    return cached_FunctionPassing_2;
+    cached_CantUseRecord_2 = generateTestOutput(false, "CantUseRecord_2", "./test_code/NativeTables_CantUseRecord_failure.a");
+    return cached_CantUseRecord_2;
+  }
+
+  @Test
+  public void testCantUseRecordFailure() {
+    assertLiveFail(get_CantUseRecord_2());
+  }
+
+  @Test
+  public void testCantUseRecordNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantUseRecord_2());
+  }
+
+  @Test
+  public void testCantUseRecordExceptionFree() {
+    assertExceptionFree(get_CantUseRecord_2());
+  }
+
+  @Test
+  public void testCantUseRecordTODOFree() {
+    assertTODOFree(get_CantUseRecord_2());
+  }
+
+  @Test
+  public void stable_CantUseRecord_2() {
+    String live = get_CantUseRecord_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:NativeTables_CantUseRecord_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2,\"character\":1,\"byte\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'message', but got a type of 'M'.\",\"file\":\"./test_code/NativeTables_CantUseRecord_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_FunctionPassing_3 = null;
+  private String get_FunctionPassing_3() {
+    if (cached_FunctionPassing_3 != null) {
+      return cached_FunctionPassing_3;
+    }
+    cached_FunctionPassing_3 = generateTestOutput(true, "FunctionPassing_3", "./test_code/NativeTables_FunctionPassing_success.a");
+    return cached_FunctionPassing_3;
   }
 
   @Test
   public void testFunctionPassingEmission() {
-    assertEmissionGood(get_FunctionPassing_2());
+    assertEmissionGood(get_FunctionPassing_3());
   }
 
   @Test
   public void testFunctionPassingSuccess() {
-    assertLivePass(get_FunctionPassing_2());
+    assertLivePass(get_FunctionPassing_3());
   }
 
   @Test
   public void testFunctionPassingGoodWillHappy() {
-    assertGoodWillHappy(get_FunctionPassing_2());
+    assertGoodWillHappy(get_FunctionPassing_3());
   }
 
   @Test
   public void testFunctionPassingExceptionFree() {
-    assertExceptionFree(get_FunctionPassing_2());
+    assertExceptionFree(get_FunctionPassing_3());
   }
 
   @Test
   public void testFunctionPassingTODOFree() {
-    assertTODOFree(get_FunctionPassing_2());
+    assertTODOFree(get_FunctionPassing_3());
   }
 
   @Test
-  public void stable_FunctionPassing_2() {
-    String live = get_FunctionPassing_2();
+  public void stable_FunctionPassing_3() {
+    String live = get_FunctionPassing_3();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_FunctionPassing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -120,7 +160,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class FunctionPassing_2 extends LivingDocument {");
+    gold.append("\npublic class FunctionPassing_3 extends LivingDocument {");
     gold.append("\n  private final RxInt32 sz;");
     gold.append("\n  private final RxInt32 wz;");
     gold.append("\n  @Override");
@@ -130,7 +170,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __sum += wz.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public FunctionPassing_2(DocumentMonitor __monitor) {");
+    gold.append("\n  public FunctionPassing_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    sz = new RxInt32(this, 0);");
     gold.append("\n    wz = new RxInt32(this, 0);");
@@ -406,9 +446,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaFunctionPassing_2 implements DeltaNode {");
+    gold.append("\n  private class DeltaFunctionPassing_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaFunctionPassing_2() {");
+    gold.append("\n    private DeltaFunctionPassing_3() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -416,7 +456,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(FunctionPassing_2 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(FunctionPassing_3 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -446,8 +486,8 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    FunctionPassing_2 __self = this;");
-    gold.append("\n    DeltaFunctionPassing_2 __state = new DeltaFunctionPassing_2();");
+    gold.append("\n    FunctionPassing_3 __self = this;");
+    gold.append("\n    DeltaFunctionPassing_3 __state = new DeltaFunctionPassing_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -1009,43 +1049,43 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Happy_3 = null;
-  private String get_Happy_3() {
-    if (cached_Happy_3 != null) {
-      return cached_Happy_3;
+  private String cached_Happy_4 = null;
+  private String get_Happy_4() {
+    if (cached_Happy_4 != null) {
+      return cached_Happy_4;
     }
-    cached_Happy_3 = generateTestOutput(true, "Happy_3", "./test_code/NativeTables_Happy_success.a");
-    return cached_Happy_3;
+    cached_Happy_4 = generateTestOutput(true, "Happy_4", "./test_code/NativeTables_Happy_success.a");
+    return cached_Happy_4;
   }
 
   @Test
   public void testHappyEmission() {
-    assertEmissionGood(get_Happy_3());
+    assertEmissionGood(get_Happy_4());
   }
 
   @Test
   public void testHappySuccess() {
-    assertLivePass(get_Happy_3());
+    assertLivePass(get_Happy_4());
   }
 
   @Test
   public void testHappyGoodWillHappy() {
-    assertGoodWillHappy(get_Happy_3());
+    assertGoodWillHappy(get_Happy_4());
   }
 
   @Test
   public void testHappyExceptionFree() {
-    assertExceptionFree(get_Happy_3());
+    assertExceptionFree(get_Happy_4());
   }
 
   @Test
   public void testHappyTODOFree() {
-    assertTODOFree(get_Happy_3());
+    assertTODOFree(get_Happy_4());
   }
 
   @Test
-  public void stable_Happy_3() {
-    String live = get_Happy_3();
+  public void stable_Happy_4() {
+    String live = get_Happy_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1078,7 +1118,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Happy_3 extends LivingDocument {");
+    gold.append("\npublic class Happy_4 extends LivingDocument {");
     gold.append("\n  private final RxInt32 sz1;");
     gold.append("\n  private final RxInt32 sz2;");
     gold.append("\n  private final RxInt32 sz3;");
@@ -1090,7 +1130,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __sum += sz3.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Happy_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public Happy_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    sz1 = new RxInt32(this, 0);");
     gold.append("\n    sz2 = new RxInt32(this, 0);");
@@ -1377,9 +1417,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaHappy_3 implements DeltaNode {");
+    gold.append("\n  private class DeltaHappy_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaHappy_3() {");
+    gold.append("\n    private DeltaHappy_4() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1387,7 +1427,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Happy_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Happy_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -1417,8 +1457,8 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Happy_3 __self = this;");
-    gold.append("\n    DeltaHappy_3 __state = new DeltaHappy_3();");
+    gold.append("\n    Happy_4 __self = this;");
+    gold.append("\n    DeltaHappy_4 __state = new DeltaHappy_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -1850,43 +1890,43 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Indexing_4 = null;
-  private String get_Indexing_4() {
-    if (cached_Indexing_4 != null) {
-      return cached_Indexing_4;
+  private String cached_Indexing_5 = null;
+  private String get_Indexing_5() {
+    if (cached_Indexing_5 != null) {
+      return cached_Indexing_5;
     }
-    cached_Indexing_4 = generateTestOutput(true, "Indexing_4", "./test_code/NativeTables_Indexing_success.a");
-    return cached_Indexing_4;
+    cached_Indexing_5 = generateTestOutput(true, "Indexing_5", "./test_code/NativeTables_Indexing_success.a");
+    return cached_Indexing_5;
   }
 
   @Test
   public void testIndexingEmission() {
-    assertEmissionGood(get_Indexing_4());
+    assertEmissionGood(get_Indexing_5());
   }
 
   @Test
   public void testIndexingSuccess() {
-    assertLivePass(get_Indexing_4());
+    assertLivePass(get_Indexing_5());
   }
 
   @Test
   public void testIndexingGoodWillHappy() {
-    assertGoodWillHappy(get_Indexing_4());
+    assertGoodWillHappy(get_Indexing_5());
   }
 
   @Test
   public void testIndexingExceptionFree() {
-    assertExceptionFree(get_Indexing_4());
+    assertExceptionFree(get_Indexing_5());
   }
 
   @Test
   public void testIndexingTODOFree() {
-    assertTODOFree(get_Indexing_4());
+    assertTODOFree(get_Indexing_5());
   }
 
   @Test
-  public void stable_Indexing_4() {
-    String live = get_Indexing_4();
+  public void stable_Indexing_5() {
+    String live = get_Indexing_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_Indexing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1919,13 +1959,13 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Indexing_4 extends LivingDocument {");
+    gold.append("\npublic class Indexing_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Indexing_4(DocumentMonitor __monitor) {");
+    gold.append("\n  public Indexing_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2179,9 +2219,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaIndexing_4 implements DeltaNode {");
+    gold.append("\n  private class DeltaIndexing_5 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaIndexing_4() {");
+    gold.append("\n    private DeltaIndexing_5() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2189,7 +2229,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Indexing_4 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Indexing_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -2219,8 +2259,8 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Indexing_4 __self = this;");
-    gold.append("\n    DeltaIndexing_4 __state = new DeltaIndexing_4();");
+    gold.append("\n    Indexing_5 __self = this;");
+    gold.append("\n    DeltaIndexing_5 __state = new DeltaIndexing_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -2592,38 +2632,38 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_NoMessage_5 = null;
-  private String get_NoMessage_5() {
-    if (cached_NoMessage_5 != null) {
-      return cached_NoMessage_5;
+  private String cached_NoMessage_6 = null;
+  private String get_NoMessage_6() {
+    if (cached_NoMessage_6 != null) {
+      return cached_NoMessage_6;
     }
-    cached_NoMessage_5 = generateTestOutput(false, "NoMessage_5", "./test_code/NativeTables_NoMessage_failure.a");
-    return cached_NoMessage_5;
+    cached_NoMessage_6 = generateTestOutput(false, "NoMessage_6", "./test_code/NativeTables_NoMessage_failure.a");
+    return cached_NoMessage_6;
   }
 
   @Test
   public void testNoMessageFailure() {
-    assertLiveFail(get_NoMessage_5());
+    assertLiveFail(get_NoMessage_6());
   }
 
   @Test
   public void testNoMessageNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_NoMessage_5());
+    assertNotTerribleLineNumbers(get_NoMessage_6());
   }
 
   @Test
   public void testNoMessageExceptionFree() {
-    assertExceptionFree(get_NoMessage_5());
+    assertExceptionFree(get_NoMessage_6());
   }
 
   @Test
   public void testNoMessageTODOFree() {
-    assertTODOFree(get_NoMessage_5());
+    assertTODOFree(get_NoMessage_6());
   }
 
   @Test
-  public void stable_NoMessage_5() {
-    String live = get_NoMessage_5();
+  public void stable_NoMessage_6() {
+    String live = get_NoMessage_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_NoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2632,43 +2672,43 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_TableCopy_6 = null;
-  private String get_TableCopy_6() {
-    if (cached_TableCopy_6 != null) {
-      return cached_TableCopy_6;
+  private String cached_TableCopy_7 = null;
+  private String get_TableCopy_7() {
+    if (cached_TableCopy_7 != null) {
+      return cached_TableCopy_7;
     }
-    cached_TableCopy_6 = generateTestOutput(true, "TableCopy_6", "./test_code/NativeTables_TableCopy_success.a");
-    return cached_TableCopy_6;
+    cached_TableCopy_7 = generateTestOutput(true, "TableCopy_7", "./test_code/NativeTables_TableCopy_success.a");
+    return cached_TableCopy_7;
   }
 
   @Test
   public void testTableCopyEmission() {
-    assertEmissionGood(get_TableCopy_6());
+    assertEmissionGood(get_TableCopy_7());
   }
 
   @Test
   public void testTableCopySuccess() {
-    assertLivePass(get_TableCopy_6());
+    assertLivePass(get_TableCopy_7());
   }
 
   @Test
   public void testTableCopyGoodWillHappy() {
-    assertGoodWillHappy(get_TableCopy_6());
+    assertGoodWillHappy(get_TableCopy_7());
   }
 
   @Test
   public void testTableCopyExceptionFree() {
-    assertExceptionFree(get_TableCopy_6());
+    assertExceptionFree(get_TableCopy_7());
   }
 
   @Test
   public void testTableCopyTODOFree() {
-    assertTODOFree(get_TableCopy_6());
+    assertTODOFree(get_TableCopy_7());
   }
 
   @Test
-  public void stable_TableCopy_6() {
-    String live = get_TableCopy_6();
+  public void stable_TableCopy_7() {
+    String live = get_TableCopy_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:NativeTables_TableCopy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2701,7 +2741,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class TableCopy_6 extends LivingDocument {");
+    gold.append("\npublic class TableCopy_7 extends LivingDocument {");
     gold.append("\n  private final RxInt32 sz;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2709,7 +2749,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __sum += sz.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public TableCopy_6(DocumentMonitor __monitor) {");
+    gold.append("\n  public TableCopy_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    sz = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -2974,9 +3014,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaTableCopy_6 implements DeltaNode {");
+    gold.append("\n  private class DeltaTableCopy_7 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaTableCopy_6() {");
+    gold.append("\n    private DeltaTableCopy_7() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2984,7 +3024,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(TableCopy_6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(TableCopy_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -3014,8 +3054,8 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    TableCopy_6 __self = this;");
-    gold.append("\n    DeltaTableCopy_6 __state = new DeltaTableCopy_6();");
+    gold.append("\n    TableCopy_7 __self = this;");
+    gold.append("\n    DeltaTableCopy_7 __state = new DeltaTableCopy_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

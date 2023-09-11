@@ -82,7 +82,7 @@ public class TyNativeTable extends TyType implements //
 
   @Override
   public void typing(final Environment environment) {
-    environment.rules.Resolve(new TyNativeRef(behavior, null, messageNameToken.item), false);
+    environment.rules.IsNativeMessage(environment.rules.Resolve(new TyNativeRef(behavior, null, messageNameToken.item), false), false);
   }
 
   @Override

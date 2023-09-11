@@ -1,0 +1,7 @@
+record M {
+  int x;
+}
+
+#bad {
+  table<M> t;
+}
