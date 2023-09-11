@@ -55,11 +55,11 @@ public class GoogleValidator extends SimpleService  {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("message _GoolgleValidate_Req").append(" { string token; }\n");
-    sb.append("message _GoolgleValidate_Result").append(" { string email; maybe<string> name; maybe<string> picture; }\n");
+    sb.append("message _GoogleValidate_Req").append(" { string token; }\n");
+    sb.append("message _GoogleValidate_Result").append(" { string email; maybe<string> name; maybe<string> picture; }\n");
     sb.append("service googlevalidator {\n");
     sb.append("  class=\"googlevalidator\";\n");
-    sb.append("  method<_GoolgleValidate_Req").append(", _GoolgleValidate_Result").append("> validate;\n");
+    sb.append("  method<_GoogleValidate_Req").append(", _GoogleValidate_Result").append("> validate;\n");
     sb.append("}\n");
     return sb.toString();
   }
