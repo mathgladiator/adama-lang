@@ -95,12 +95,12 @@ public class DevBoxStart {
         localLibAdamaJSFile = null;
       }
     }
-    DevBoxServices.install(webClientBase, offload, (line) -> terminal.info(line));
     DevBoxAdamaMicroVerse verse = null;
     if (args.microverse != null) {
       File microverseDef = new File(args.microverse);
       if (microverseDef.exists() && microverseDef.isFile()) {
         ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
+        DevBoxServices.install(defn, webClientBase, offload, (line) -> terminal.info(line));
         verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
