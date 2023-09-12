@@ -26,6 +26,9 @@ public class MemoryMappedFileStorage implements Storage {
   public MemoryMappedFileStorage(File storeFile, long size) throws IOException {
     this.storage = new RandomAccessFile(storeFile, "rw");
     storage.setLength(size);
+    if (storeFile.exists()) {
+      storeFile.setWritable(true, false);
+    }
     this.size = size;
     this.memory = storage.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, size);
     this.dirty = false;

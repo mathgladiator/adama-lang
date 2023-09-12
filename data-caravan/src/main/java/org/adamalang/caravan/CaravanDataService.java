@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -40,6 +41,7 @@ public class CaravanDataService implements ArchivingDataService {
   private final DurableListStore store;
   private final SimpleExecutor executor;
   private final HashMap<Key, LocalCache> cache;
+  private boolean failWrites;
 
   public CaravanDataService(CaravanMetrics metrics, Cloud cloud, DurableListStore store, SimpleExecutor executor) {
     this.metrics = metrics;
@@ -533,6 +535,19 @@ public class CaravanDataService implements ArchivingDataService {
       @Override
       public void execute() throws Exception {
         store.flush(force);
+        latch.countDown();
+      }
+    });
+    return latch;
+  }
+
+  public CountDownLatch shutdown() {
+    CountDownLatch latch = new CountDownLatch(1);
+    executor.execute(new NamedRunnable("flush") {
+      @Override
+      public void execute() throws Exception {
+        store.flush(true);
+        store.shutdown();
         latch.countDown();
       }
     });

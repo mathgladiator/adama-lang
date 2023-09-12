@@ -29,6 +29,7 @@ import java.util.Set;
 
 public class DurableListStore {
   private static final Logger LOGGER = LoggerFactory.getLogger(DurableListStore.class);
+  private static final boolean IS_NOISY = System.getProperty("NOISY_DLS") != null;
   // the data structures to manage the giant linear space
   private final DiskMetrics metrics;
   private final Index index;
@@ -174,6 +175,9 @@ public class DurableListStore {
     DataOutputStream newOutput = new DataOutputStream(new FileOutputStream(newWalFile));
     ByteBuf first = Unpooled.buffer();
     new OrganizationSnapshot(heap, index, keymap).write(first);
+    if (IS_NOISY) {
+      LOGGER.error("preparing new WAL file;" + keymap.toString());
+    }
     writePage(newOutput, first);
     newOutput.flush();
     newOutput.close();
@@ -184,7 +188,7 @@ public class DurableListStore {
   private void openLogForWriting() throws IOException {
     File file = new File(walRoot, "WAL");
     if (file.exists()) {
-      file.setWritable(true);
+      file.setWritable(true, false);
     }
     this.output = new DataOutputStream(new FileOutputStream(file, true));
     this.bytesWrittenToLog = 0;
@@ -192,6 +196,10 @@ public class DurableListStore {
 
   /** internal: write a page to the log */
   private boolean writePage(DataOutputStream dos, ByteBuf page) throws IOException {
+    if (IS_NOISY) {
+      LOGGER.error("writePage(WI:" + page.writerIndex() + ", IR:" + page.isReadable() + ", HA:" + page.hasArray() + " WI:" + page.writerIndex() + ")");
+    }
+
     if (page.writerIndex() == 0) {
       return false;
     }
@@ -199,7 +207,6 @@ public class DurableListStore {
     bytesWrittenToLog += page.writerIndex();
 
     // TODO: we are using too many buffers, we should simply use an arraylist of writes then build it up directly
-    // maybe, it's ok to use DataOutputstream directly? maybe with BufferedOutputStream?
     if (page.hasArray() && page.writerIndex() < page.array().length) {
       dos.write(page.array(), 0, page.writerIndex());
     } else {
@@ -243,6 +250,10 @@ public class DurableListStore {
 
   /** append a byte array to the given id */
   public Integer append(Key key, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
+    if (IS_NOISY) {
+      LOGGER.error("appending to " + key.space + "/" + key.key + " [batch:" + batch.size() + "]");
+    }
+
     // allocate the items in the batch
     ArrayList<RegionByteArrayPairing> wheres = new ArrayList<>();
     for (byte[] bytes : batch) {
@@ -281,6 +292,10 @@ public class DurableListStore {
 
   /** flush to disk */
   public void flush(boolean forceCutOver) {
+    if (IS_NOISY) {
+      LOGGER.error("flushing :" + forceCutOver);
+    }
+
     try {
       metrics.flush.run();
       if (writePage(output, buffer)) {
@@ -310,6 +325,9 @@ public class DurableListStore {
 
   /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
   private void cutOver() throws IOException {
+    if (IS_NOISY) {
+      LOGGER.error("cutting over to new log");
+    }
     storage.flush();
     output.close();
     File newFile = prepare();
@@ -318,6 +336,10 @@ public class DurableListStore {
   }
 
   public Integer append(Key key, byte[] bytes, int seq, long assetBytes, Runnable notification) {
+    if (IS_NOISY) {
+      LOGGER.error("appending to " + key.space + "/" + key.key + " [solo]");
+    }
+
     Region where = heap.ask(bytes.length);
     if (where == null) {
       metrics.failed_append.run();
@@ -356,6 +378,10 @@ public class DurableListStore {
 
   /** remove the $count appends from the head of the object */
   public boolean trim(Key key, int maxSize, Runnable notification) {
+    if (IS_NOISY) {
+      LOGGER.error("TRIM" + key.space + "/" + key.key + " max:" + maxSize);
+    }
+
     Integer id = keymap.get(key);
     if (maxSize > 0 && id != null) {
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
@@ -379,6 +405,9 @@ public class DurableListStore {
 
   /** delete the given object by id */
   public boolean delete(Key key, Runnable notification) {
+    if (IS_NOISY) {
+      LOGGER.error("DELETE" + key.space + "/" + key.key);
+    }
     Integer id = keymap.get(key);
     if (id == null) {
       return false;

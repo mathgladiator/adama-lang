@@ -60,11 +60,13 @@ public class CaravanBoot {
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
       @Override
       public void run() throws Exception {
-        System.err.println("[caravan shutting down]");
+        System.err.println("[caravan shutting down: started]");
         alive.set(false);
-        flusher.interrupt();
-        caravanExecutor.shutdown();
+        flusher.join();
+        caravanDataService.shutdown().await(2500, TimeUnit.MILLISECONDS);
+        caravanExecutor.shutdown().await(2500, TimeUnit.MILLISECONDS);
         managedExecutor.shutdown();
+        System.err.println("[caravan shutting down: clean]");
       }
     })));
   }

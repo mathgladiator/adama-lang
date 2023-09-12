@@ -22,6 +22,8 @@ import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
@@ -29,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DevCoreServiceFactory {
-
+  private static final Logger LOG = LoggerFactory.getLogger(DevCoreServiceFactory.class);
   private final AtomicBoolean alive;
   private final SimpleExecutor caravanExecutor;
   private final Thread flusher;
@@ -86,6 +88,8 @@ public class DevCoreServiceFactory {
           Thread.sleep(0, 800000);
           dataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException ie) {
+          LOG.error("caravan-flushing", ie);
+          io.error("caravan|flushing stopped");
           return;
         }
       }
@@ -105,6 +109,7 @@ public class DevCoreServiceFactory {
   public void shutdown() throws Exception {
     alive.set(false);
     flusher.join();
+    dataService.shutdown().await(1000, TimeUnit.MILLISECONDS);
     caravanExecutor.shutdown().await(1000, TimeUnit.MILLISECONDS);
   }
 }
