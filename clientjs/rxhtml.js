@@ -700,31 +700,27 @@ var RxHTML = (function () {
   self.RP = function (parentDom, state, name, expandView, maker) {
     var it_state = self.pIE(state, name, expandView);
     var sub = function (value) {
+      var n = 0;
       try {
-        var n = typeof (value) == 'number' ? value : parseInt(value);
-        console.log("GOT:" + n + " // " + this.at);
-        while (this.at < n - 1) {
-          console.log("UP");
-          this.at ++;
-          this.track ++;
-          var new_state = fork(self.pIE(it_state, this.track + "", expandView));
-          var unsub = make_unsub();
-          var dom = maker(new_state);
-          this.items[this.at] = {unsub:unsub, dom:dom};
-          parentDom.append(dom);
-          subscribe_state(new_state, unsub);
-        }
-        while (this.at >= n && this.at >= 0) {
-          console.log("DOWN");
-          fire_unsub(this.items[this.at].unsub);
-          parentDom.removeChild(this.items[this.at].dom);
-          this.items[this.at] = null;
-          delete this.items[this.at];
-          this.at--;
-        }
+        n = typeof (value) == 'number' ? value : parseInt(value);
       } catch (failedParsingN) {
-        console.log(failedParsingN);
-        // silent fail?
+      }
+      while (this.at < n - 1) {
+        this.at ++;
+        this.track ++;
+        var new_state = fork(self.pIE(it_state, this.track + "", expandView));
+        var unsub = make_unsub();
+        var dom = maker(new_state);
+        this.items[this.at] = {unsub:unsub, dom:dom};
+        parentDom.append(dom);
+        subscribe_state(new_state, unsub);
+      }
+      while (this.at >= n && this.at >= 0) {
+        fire_unsub(this.items[this.at].unsub);
+        parentDom.removeChild(this.items[this.at].dom);
+        this.items[this.at] = null;
+        delete this.items[this.at];
+        this.at--;
       }
     }.bind({items:[], at:-1, track:0});
     subscribe(state, name, sub);
