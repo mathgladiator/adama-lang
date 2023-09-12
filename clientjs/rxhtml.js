@@ -1167,7 +1167,7 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:if / rx:ifnot = "path"
   self.IF = function (parent, priorState, name, shouldBe, expandView, makerTrue, makerFalse) {
-    self.IF(parent, priorState, priorState, name, shouldBe, expandView, makerTrue, makerFalse);
+    self.IFx(parent, priorState, priorState, name, shouldBe, expandView, makerTrue, makerFalse);
   };
   self.IFx = function (parent, originalState, priorState, name, shouldBe, expandView, makerTrue, makerFalse) {
     var unsub = make_unsub();
