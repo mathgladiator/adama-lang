@@ -58,7 +58,7 @@ public class DevBoxServices {
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
-    if (servicesDefn.has("stripe")) {
+    if (servicesDefn != null && servicesDefn.has("stripe")) {
       String apiKey = servicesDefn.get("stripe").textValue();
       ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> new Stripe(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKey));
     }

@@ -15,9 +15,25 @@
             <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>
-        <form rx:action="domain:sign-in" rx:failure-variable="docnope" rx:forward="/w00t">
+        <form rx:action="document:sign-in-reset" rx:failure-variable="docnope" rx:forward="/w00t">
+            <input type="hidden" name="space" value="s "/>
+            <input type="hidden" name="key" value="k" />
             <input name="username" type="username" />
             <input name="password" type="password" />
+            <input name="new_password" type="password" />
+            <input name="remember" type="checkbox" />
+            <input type="submit" />
+        </form>
+        <form rx:action="domain:sign-in" rx:failure-variable="docnope1" rx:forward="/w00t">
+            <input name="username" type="username" />
+            <input name="password" type="password" />
+            <input name="remember" type="checkbox" />
+            <input type="submit" />
+        </form>
+        <form rx:action="domain:sign-in-reset" rx:failure-variable="docnope2" rx:forward="/w00t">
+            <input name="username" type="username" />
+            <input name="password" type="password" />
+            <input name="new_password" type="password" />
             <input name="remember" type="checkbox" />
             <input type="submit" />
         </form>

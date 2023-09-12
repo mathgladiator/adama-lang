@@ -697,6 +697,38 @@ var RxHTML = (function () {
     subscribe(state, name, sub);
   };
 
+  self.RP = function (parentDom, state, name, expandView, maker) {
+    var it_state = self.pIE(state, name, expandView);
+    var sub = function (value) {
+      try {
+        var n = typeof (value) == 'number' ? value : parseInt(value);
+        console.log("GOT:" + n + " // " + this.at);
+        while (this.at < n - 1) {
+          console.log("UP");
+          this.at ++;
+          this.track ++;
+          var new_state = fork(self.pIE(it_state, this.track + "", expandView));
+          var unsub = make_unsub();
+          var dom = maker(new_state);
+          this.items[this.at] = {unsub:unsub, dom:dom};
+          parentDom.append(dom);
+          subscribe_state(new_state, unsub);
+        }
+        while (this.at >= n && this.at >= 0) {
+          console.log("DOWN");
+          fire_unsub(this.items[this.at].unsub);
+          parentDom.removeChild(this.items[this.at].dom);
+          this.items[this.at] = null;
+          delete this.items[this.at];
+          this.at--;
+        }
+      } catch (failedParsingN) {
+        console.log(failedParsingN);
+        // silent fail?
+      }
+    }.bind({items:[], at:-1, track:0});
+    subscribe(state, name, sub);
+  }
   var find = function (state, channel, key, value) {
     if (channel in state["data"].connection.outstanding) {
       var arr = state["data"].connection.outstanding[channel].options;
@@ -1137,7 +1169,11 @@ var RxHTML = (function () {
     });
   };
 
+  // RUNTIME | rx:if / rx:ifnot = "path"
   self.IF = function (parent, priorState, name, shouldBe, expandView, makerTrue, makerFalse) {
+    self.IF(parent, priorState, priorState, name, shouldBe, expandView, makerTrue, makerFalse);
+  };
+  self.IFx = function (parent, originalState, priorState, name, shouldBe, expandView, makerTrue, makerFalse) {
     var unsub = make_unsub();
     var set = function (value) {
       var show = (value ? true : false) === shouldBe;
@@ -1147,22 +1183,24 @@ var RxHTML = (function () {
       this.shown = show;
       nuke(parent);
       fire_unsub(unsub);
-      var state = fork(priorState);
-      var next = state;
+      var next = null;
       if (typeof (value) == "object") {
+        next = fork(priorState);
         next = self.pI(next, name);
         if (expandView) {
           next = self.pEV(next, name);
         }
+        next.current = 'data';
+      } else {
+        next = fork(originalState);
       }
       // we default back to data in the IF case
-      next.current = 'data';
       if (show) {
         makerTrue(parent, next);
       } else {
         makerFalse(parent, next);
       }
-      subscribe_state(state, unsub);
+      subscribe_state(next, unsub);
     }.bind({ shown: 'no' });
     subscribe(priorState, name, set);
   };

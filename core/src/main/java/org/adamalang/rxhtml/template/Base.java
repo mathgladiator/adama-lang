@@ -90,12 +90,14 @@ public class Base {
   }
 
   private static void body(Environment env, String eVar) {
-    if (countAttr(env.element, "rx:iterate", "rx:if", "rx:ifnot", "rx:wrap", "rx:switch", "rx:template") > 1) {
+    if (countAttr(env.element, "rx:iterate", "rx:repeat", "rx:if", "rx:ifnot", "rx:wrap", "rx:switch", "rx:template") > 1) {
       env.feedback.warn(env.element, "Too many incompatible rx:flags");
     }
     Attributes rx = new Attributes(env, eVar);
     if (env.element.hasAttr("rx:iterate")) {
       rx._iterate();
+    } else if (env.element.hasAttr("rx:repeat")) {
+      rx._repeat();
     } else if (env.element.hasAttr("rx:if")) {
       rx._if();
     } else if (env.element.hasAttr("rx:ifnot")) {

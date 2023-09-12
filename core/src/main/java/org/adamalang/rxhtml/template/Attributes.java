@@ -55,7 +55,7 @@ public class Attributes {
       env.writer.append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     } else {
       StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
-      env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
+      env.writer.tab().append("$.IFx(").append(eVar).append(",").append(env.stateVar).append(",").append(path.command);
       env.writer.append(",'").append(path.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     }
     Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
@@ -80,6 +80,22 @@ public class Attributes {
 
   public void _ifnot() {
     commonBetweenIfAndIfNot("rx:ifnot");
+  }
+
+  public void _repeat() {
+    StatePath path = StatePath.resolve(env.element.attr("rx:repeat"), env.stateVar);
+    String childStateVar = env.pool.ask();
+    env.writer.tab().append("$.RP(").append(eVar).append(",").append(path.command).append(",'").append(path.name).append("',").append(expand ? "true" : "false").append(",function(").append(childStateVar).append(") {").tabUp().newline();
+    Element soloChild = env.soloChildIfPossible();
+    if (soloChild == null) {
+      soloChild = new Element("div");
+      soloChild.appendChildren(env.element.children());
+    }
+    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true), true);
+    env.writer.tab().append("return ").append(childDomVar).append(";").newline();
+    env.pool.give(childDomVar);
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
   }
 
   public void _iterate() {
@@ -452,15 +468,12 @@ public class Attributes {
     String action = env.element.attr("rx:action").trim();
     boolean isSignIn = "document:sign-in".equalsIgnoreCase(action);
     boolean isDomainSignIn = "domain:sign-in".equalsIgnoreCase(action);
-
     boolean isSignInAndReset = "document:sign-in-reset".equalsIgnoreCase(action);
     boolean isDomainSignInAndReset = "domain:sign-in-reset".equalsIgnoreCase(action);
-
     boolean documentPut = "document:put".equalsIgnoreCase(action);
     boolean domainDocumentPut = "domain:put".equalsIgnoreCase(action);
-    if (isDomainSignInAndReset || isDomainSignInAndReset) {
+    if (isSignInAndReset || isDomainSignInAndReset) {
       check_action_document_sign_in_reset(isDomainSignInAndReset);
-      check_action_document_sign_in(isDomainSignIn);
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");
       }
