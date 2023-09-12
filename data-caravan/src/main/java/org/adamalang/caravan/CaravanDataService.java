@@ -41,7 +41,6 @@ public class CaravanDataService implements ArchivingDataService {
   private final DurableListStore store;
   private final SimpleExecutor executor;
   private final HashMap<Key, LocalCache> cache;
-  private boolean failWrites;
 
   public CaravanDataService(CaravanMetrics metrics, Cloud cloud, DurableListStore store, SimpleExecutor executor) {
     this.metrics = metrics;
