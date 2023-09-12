@@ -9,6 +9,7 @@
 package org.adamalang.runtime.stdlib;
 
 import com.lambdaworks.crypto.SCryptUtil;
+import org.adamalang.common.ProtectedUUID;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
@@ -540,5 +541,32 @@ public class LibString {
 
   public static String of(final long x) {
     return String.valueOf(x);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> intOf(final String x) {
+    try {
+      return new NtMaybe<>(Integer.parseInt(x));
+    } catch (NumberFormatException nfe) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> longOf(final String x) {
+    try {
+      return new NtMaybe<>(Long.parseLong(x));
+    } catch (NumberFormatException nfe) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> doubleOf(final String x) {
+    try {
+      return new NtMaybe<>(Double.parseDouble(x));
+    } catch (NumberFormatException nfe) {
+      return new NtMaybe<>();
+    }
   }
 }

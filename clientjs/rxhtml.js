@@ -246,6 +246,17 @@ var RxHTML = (function () {
   };
   self.fresh = fresh;
 
+  // HELPER: remove potentially sensitive information from an object
+  var safe_filter = function(o) {
+    if ('password' in o) {
+      delete o['password'];
+    }
+    if ('one_time_password' in o) {
+      delete o['one_time_password'];
+    }
+    return o;
+  }
+
   // HELPER | create a new delta copy from the given specific state (i.e. either data or view)
   var new_delta_copy = function (ss) {
     if (ss == null) {
@@ -1762,7 +1773,7 @@ var RxHTML = (function () {
   var setup_co = function(desired, unsub, co, state) {
     var sync_tree = function () {
       // let's copy out the tree from the viewstate
-      var new_tree = state.view.tree.copy();
+      var new_tree = safe_filter(state.view.tree.copy());
 
       // if we have got a filter from the server, then let's filter
       if (co.has_filter) {
@@ -1897,7 +1908,7 @@ var RxHTML = (function () {
       retry_sm.go = function() {
         // bias to nothing new
         co.viewstate_clone = "{}";
-        co.ptr = connection.ConnectionCreateViaDomain(identity, domain, state.view.tree.copy(), retry_sm.responder);
+        co.ptr = connection.ConnectionCreateViaDomain(identity, domain, safe_filter(state.view.tree.copy()), retry_sm.responder);
       };
       retry_sm.go();
       co.tree.update({});
@@ -1944,7 +1955,7 @@ var RxHTML = (function () {
       retry_sm.go = function() {
         // bias to nothing new
         co.viewstate_clone = "{}";
-        co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, state.view.tree.copy(), retry_sm.responder);
+        co.ptr = connection.ConnectionCreate(identity, rxobj.space, rxobj.key, safe_filter(state.view.tree.copy()), retry_sm.responder);
       };
       retry_sm.go();
       co.tree.update({});

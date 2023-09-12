@@ -1,0 +1,3 @@
+public formula x = "123".intOf();
+public formula y = "42".longOf();
+public formula z = "3.14".doubleOf();

@@ -30,11 +30,13 @@ public class SafeRandom extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
+    sb.append("message _SafeRandom_Empty").append(" { }\n");
     sb.append("message _SafeRandom_AskStr").append(" { string pool; int count; }\n");
     sb.append("message _SafeRandom_Result").append(" { string result; }\n");
     sb.append("service saferandom {\n");
     sb.append("  class=\"saferandom\";\n");
     sb.append("  method<_SafeRandom_AskStr").append(", _SafeRandom_Result").append("> ask;\n");
+    sb.append("  method<_SafeRandom_Empty").append(", _SafeRandom_Result").append("> uuid;\n");
     sb.append("}\n");
     return sb.toString();
   }
@@ -56,6 +58,8 @@ public class SafeRandom extends SimpleService {
               sb.append(pool.charAt(j));
             }
             callback.success("{\"result\":\"" + sb + "\"}");
+          } else if ("uuid".equals(method)) {
+            callback.success("{\"result\":\"" + ProtectedUUID.generate() + "\"}");
           } else {
             callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
           }
