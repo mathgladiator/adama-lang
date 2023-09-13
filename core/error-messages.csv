@@ -429,7 +429,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Linq_NotApplicableToNonLists_failure.a,4,10,4,11,"Type check failure: expected an list, but was actually type 'int'."
 ./test_code/Linq_NotApplicableToNonLists_failure.a,5,10,5,11,"Type check failure: expected an list, but was actually type 'int'."
 ./test_code/Lookup_ByIndexNotInteger_failure.a,5,12,5,15,"Type check failure: must have a type of 'int', but the type is actually 'string'"
-./test_code/Lookup_ByIndexNotIterable_failure.a,1,2,1,12,"Type check failure: must be either an array, list, or map to use foreach; instead got 'int'."
+./test_code/Lookup_ByIndexNotIterable_failure.a,1,2,1,12,"Type check failure: must be either an array, list, or map to use foreach or index lookup; instead got 'int'."
 ./test_code/Lookup_NotFound_failure.a,1,10,1,11,"The variable 'y' was not defined"
 ./test_code/Maps_InvalidAssignments_failure.a,8,2,8,18,"The domain type 'double' is not an appropriate."
 ./test_code/Maps_InvalidAssignments_failure.a,7,2,7,19,"Type check failure: the type 'map<int,int>' is unable to store type 'map<double,int>'."

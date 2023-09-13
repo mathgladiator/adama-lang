@@ -24,7 +24,7 @@ public class RuleSetIterable {
         return true;
       }
       if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must be either an array, list, or map to use foreach; instead got '%s'.", tyTypeOriginal.getAdamaType()));
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must be either an array, list, or map to use foreach or index lookup; instead got '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;
