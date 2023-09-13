@@ -13,7 +13,7 @@
     <mj-section background-color="#eeeeee" padding-bottom="20px" padding-top="20px">
       <mj-column vertical-align="middle" width="100%">
         <mj-text align="left" color="#000000" font-size="18px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span style="color:#222222">Let's get you back into the system!</span><br /><br /> A temporary password has been generated for your account: <b>[[temporary_password]]</b> and you can simply use this password to login. This password will expire in 15 minutes, and your original password is intact. If this was a mistake, then login to remove the temporary password.</mj-text>
-       
+
         <mj-text align="left" color="#222222" font-size="18px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span style="color:#000000">Alternatively, you can reset your password via</mj-text>
         <mj-button href="[[reset_url]]" align="left" font-size="22px" font-weight="bold" background-color="#333333" border-radius="15px" color="#ffffff" font-family="open Sans Helvetica, Arial, sans-serif">Reset your password</mj-button>
 
