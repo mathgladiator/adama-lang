@@ -1,3 +1,11 @@
 public formula x = "123".intOf();
 public formula y = "42".longOf();
 public formula z = "3.14".doubleOf();
+
+public formula x2 = @maybe("123").intOf();
+public formula y2 = @maybe("42").longOf();
+public formula z2 = @maybe("3.14").doubleOf();
+
+public formula x3 = @maybe<string>.intOf();
+public formula y3 = @maybe<string>.longOf();
+public formula z3 = @maybe<string>.doubleOf();

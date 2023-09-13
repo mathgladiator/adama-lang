@@ -11,9 +11,22 @@ package org.adamalang.runtime.stdlib;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.common.template.Settings;
+import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.stdlib.intern.TemplateAccountRecoveryTemplateHtml;
 import org.adamalang.runtime.stdlib.intern.TemplateMultiLineEmailTemplateHtml;
+import org.adamalang.translator.reflect.HiddenType;
 
 public class LibTemplates {
+
+  public static String accountRecoveryDefaultEmail(String tempPassword, String resetUrl, String instantUrl) {
+    ObjectNode data = Json.newJsonObject();
+    data.put("temporary_password", tempPassword);
+    data.put("reset_url", resetUrl);
+    data.put("instant_url", instantUrl);
+    StringBuilder output = new StringBuilder();
+    TemplateAccountRecoveryTemplateHtml.TEMPLATE.render(new Settings(), data, output);
+    return output.toString();
+  }
 
   public static String multilineEmailWithButton(String title, String first_line, String second_line, String body, String button_url, String button, String final_line) {
     ObjectNode data = Json.newJsonObject();

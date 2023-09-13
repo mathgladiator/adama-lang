@@ -569,4 +569,37 @@ public class LibString {
       return new NtMaybe<>();
     }
   }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> intOf(final @HiddenType(clazz = String.class) NtMaybe<String> x) {
+    try {
+      if (x.has()) {
+        return new NtMaybe<>(Integer.parseInt(x.get()));
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Long.class) NtMaybe<Long> longOf(final @HiddenType(clazz = String.class) NtMaybe<String> x) {
+    try {
+      if (x.has()) {
+        return new NtMaybe<>(Long.parseLong(x.get()));
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Double.class) NtMaybe<Double> doubleOf(final @HiddenType(clazz = String.class) NtMaybe<String> x) {
+    try {
+      if (x.has()) {
+        return new NtMaybe<>(Double.parseDouble(x.get()));
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return new NtMaybe<>();
+  }
 }
