@@ -1,0 +1,27 @@
+<mjml>
+  <mj-body background-color="#ffffff" font-size="13px">
+    <mj-section background-color="#ffffff" padding-bottom="0px" padding-top="0">
+      <mj-column vertical-align="top" width="100%">
+        <mj-image src="http://go.mailjet.com/tplimg/mtrq/b/ox8s/mg1rw.png" alt="" align="center" border="none" width="600px" padding-left="0px" padding-right="0px" padding-bottom="0px" padding-top="0"></mj-image>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#ffffff" vertical-align="top" padding-bottom="0px" padding-top="0">
+      <mj-column vertical-align="top" width="100%">
+        <mj-text align="left" color="#222222" font-size="45px" font-weight="bold" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="30px" padding-top="50px">Account Recovery!</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section background-color="#eeeeee" padding-bottom="20px" padding-top="20px">
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text align="left" color="#000000" font-size="18px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span style="color:#222222">Let's get you back into the system!</span><br /><br /> A temporary password has been generated for your account: <b>[[temporary_password]]</b> and you can simply use this password to login. This password will expire in 15 minutes, and your original password is intact. If this was a mistake, then login to remove the temporary password.</mj-text>
+       
+        <mj-text align="left" color="#222222" font-size="18px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px"><span style="color:#000000">Alternatively, you can reset your password via</mj-text>
+        <mj-button href="[[reset_url]]" align="left" font-size="22px" font-weight="bold" background-color="#333333" border-radius="15px" color="#ffffff" font-family="open Sans Helvetica, Arial, sans-serif">Reset your password</mj-button>
+
+        <mj-text align="left" color="#000000" font-size="18px" font-family="open Sans Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px">Or, you can also login instantly via:</mj-text>
+
+        <mj-button href="[[instant_url]]" align="left" font-size="22px" font-weight="bold" background-color="#333333" border-radius="10px" color="#ffffff" font-family="open Sans Helvetica, Arial, sans-serif">Instant Login</mj-button>
+
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
