@@ -35,14 +35,9 @@ public class ContextConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isStatic() || environment.state.isConstructor() || environment.state.isDocumentEvent() || environment.state.isMessageHandler() || environment.state.isAuthorize()) {
+    if (environment.state.isStatic() || environment.state.isConstructor() || environment.state.isDocumentEvent() || environment.state.isMessageHandler() || environment.state.isAuthorize() || environment.state.isWeb()) {
       environment.mustBeComputeContext(this);
       TyType type = new TyInternalReadonlyClass(CoreRequestContext.class);
-      environment.useSpecial(type, "__context");
-      return type;
-    } else if (environment.state.isWeb()) {
-      environment.mustBeComputeContext(this);
-      TyType type = new TyInternalReadonlyClass(WebContext.class);
       environment.useSpecial(type, "__context");
       return type;
     } else {
