@@ -11,78 +11,118 @@ package org.adamalang.translator;
 import org.junit.Test;
 
 public class GeneratedCOETests extends GeneratedBase {
-  private String cached_InfiniteCrossFormula_1 = null;
-  private String get_InfiniteCrossFormula_1() {
-    if (cached_InfiniteCrossFormula_1 != null) {
-      return cached_InfiniteCrossFormula_1;
+  private String cached_InfiniteCrossFormulaRecursion_1 = null;
+  private String get_InfiniteCrossFormulaRecursion_1() {
+    if (cached_InfiniteCrossFormulaRecursion_1 != null) {
+      return cached_InfiniteCrossFormulaRecursion_1;
     }
-    cached_InfiniteCrossFormula_1 = generateTestOutput(false, "InfiniteCrossFormula_1", "./test_code/COE_InfiniteCrossFormula_failure.a");
-    return cached_InfiniteCrossFormula_1;
+    cached_InfiniteCrossFormulaRecursion_1 = generateTestOutput(false, "InfiniteCrossFormulaRecursion_1", "./test_code/COE_InfiniteCrossFormulaRecursion_failure.a");
+    return cached_InfiniteCrossFormulaRecursion_1;
   }
 
   @Test
-  public void testInfiniteCrossFormulaFailure() {
-    assertLiveFail(get_InfiniteCrossFormula_1());
+  public void testInfiniteCrossFormulaRecursionFailure() {
+    assertLiveFail(get_InfiniteCrossFormulaRecursion_1());
   }
 
   @Test
-  public void testInfiniteCrossFormulaNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteCrossFormula_1());
+  public void testInfiniteCrossFormulaRecursionNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_InfiniteCrossFormulaRecursion_1());
   }
 
   @Test
-  public void testInfiniteCrossFormulaExceptionFree() {
-    assertExceptionFree(get_InfiniteCrossFormula_1());
+  public void testInfiniteCrossFormulaRecursionExceptionFree() {
+    assertExceptionFree(get_InfiniteCrossFormulaRecursion_1());
   }
 
   @Test
-  public void testInfiniteCrossFormulaTODOFree() {
-    assertTODOFree(get_InfiniteCrossFormula_1());
+  public void testInfiniteCrossFormulaRecursionTODOFree() {
+    assertTODOFree(get_InfiniteCrossFormulaRecursion_1());
   }
 
   @Test
-  public void stable_InfiniteCrossFormula_1() {
-    String live = get_InfiniteCrossFormula_1();
+  public void stable_InfiniteCrossFormulaRecursion_1() {
+    String live = get_InfiniteCrossFormulaRecursion_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:COE_InfiniteCrossFormula_failure.a");
+    gold.append("Path:COE_InfiniteCrossFormulaRecursion_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: A, B, A\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: A, B, C, A\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The record/message 'A' has the potential to create an infinite serialization\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_InfiniteCycle_2 = null;
-  private String get_InfiniteCycle_2() {
-    if (cached_InfiniteCycle_2 != null) {
-      return cached_InfiniteCycle_2;
+  private String cached_InfiniteCrossFormula_2 = null;
+  private String get_InfiniteCrossFormula_2() {
+    if (cached_InfiniteCrossFormula_2 != null) {
+      return cached_InfiniteCrossFormula_2;
     }
-    cached_InfiniteCycle_2 = generateTestOutput(false, "InfiniteCycle_2", "./test_code/COE_InfiniteCycle_failure.a");
-    return cached_InfiniteCycle_2;
+    cached_InfiniteCrossFormula_2 = generateTestOutput(false, "InfiniteCrossFormula_2", "./test_code/COE_InfiniteCrossFormula_failure.a");
+    return cached_InfiniteCrossFormula_2;
+  }
+
+  @Test
+  public void testInfiniteCrossFormulaFailure() {
+    assertLiveFail(get_InfiniteCrossFormula_2());
+  }
+
+  @Test
+  public void testInfiniteCrossFormulaNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_InfiniteCrossFormula_2());
+  }
+
+  @Test
+  public void testInfiniteCrossFormulaExceptionFree() {
+    assertExceptionFree(get_InfiniteCrossFormula_2());
+  }
+
+  @Test
+  public void testInfiniteCrossFormulaTODOFree() {
+    assertTODOFree(get_InfiniteCrossFormula_2());
+  }
+
+  @Test
+  public void stable_InfiniteCrossFormula_2() {
+    String live = get_InfiniteCrossFormula_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:COE_InfiniteCrossFormula_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: A, B, A\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The record/message 'A' has the potential to create an infinite serialization\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_InfiniteCycle_3 = null;
+  private String get_InfiniteCycle_3() {
+    if (cached_InfiniteCycle_3 != null) {
+      return cached_InfiniteCycle_3;
+    }
+    cached_InfiniteCycle_3 = generateTestOutput(false, "InfiniteCycle_3", "./test_code/COE_InfiniteCycle_failure.a");
+    return cached_InfiniteCycle_3;
   }
 
   @Test
   public void testInfiniteCycleFailure() {
-    assertLiveFail(get_InfiniteCycle_2());
+    assertLiveFail(get_InfiniteCycle_3());
   }
 
   @Test
   public void testInfiniteCycleNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteCycle_2());
+    assertNotTerribleLineNumbers(get_InfiniteCycle_3());
   }
 
   @Test
   public void testInfiniteCycleExceptionFree() {
-    assertExceptionFree(get_InfiniteCycle_2());
+    assertExceptionFree(get_InfiniteCycle_3());
   }
 
   @Test
   public void testInfiniteCycleTODOFree() {
-    assertTODOFree(get_InfiniteCycle_2());
+    assertTODOFree(get_InfiniteCycle_3());
   }
 
   @Test
-  public void stable_InfiniteCycle_2() {
-    String live = get_InfiniteCycle_2();
+  public void stable_InfiniteCycle_3() {
+    String live = get_InfiniteCycle_3();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteCycle_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -91,123 +131,123 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_InfiniteInvalidate_3 = null;
-  private String get_InfiniteInvalidate_3() {
-    if (cached_InfiniteInvalidate_3 != null) {
-      return cached_InfiniteInvalidate_3;
+  private String cached_InfiniteInvalidate_4 = null;
+  private String get_InfiniteInvalidate_4() {
+    if (cached_InfiniteInvalidate_4 != null) {
+      return cached_InfiniteInvalidate_4;
     }
-    cached_InfiniteInvalidate_3 = generateTestOutput(false, "InfiniteInvalidate_3", "./test_code/COE_InfiniteInvalidate_failure.a");
-    return cached_InfiniteInvalidate_3;
+    cached_InfiniteInvalidate_4 = generateTestOutput(false, "InfiniteInvalidate_4", "./test_code/COE_InfiniteInvalidate_failure.a");
+    return cached_InfiniteInvalidate_4;
   }
 
   @Test
   public void testInfiniteInvalidateFailure() {
-    assertLiveFail(get_InfiniteInvalidate_3());
+    assertLiveFail(get_InfiniteInvalidate_4());
   }
 
   @Test
   public void testInfiniteInvalidateNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteInvalidate_3());
+    assertNotTerribleLineNumbers(get_InfiniteInvalidate_4());
   }
 
   @Test
   public void testInfiniteInvalidateExceptionFree() {
-    assertExceptionFree(get_InfiniteInvalidate_3());
+    assertExceptionFree(get_InfiniteInvalidate_4());
   }
 
   @Test
   public void testInfiniteInvalidateTODOFree() {
-    assertTODOFree(get_InfiniteInvalidate_3());
+    assertTODOFree(get_InfiniteInvalidate_4());
   }
 
   @Test
-  public void stable_InfiniteInvalidate_3() {
-    String live = get_InfiniteInvalidate_3();
+  public void stable_InfiniteInvalidate_4() {
+    String live = get_InfiniteInvalidate_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteInvalidate_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: X, Y, X\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: X, Y, X\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The record/message 'X' has the potential to create an infinite serialization\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_InfiniteRecord_4 = null;
-  private String get_InfiniteRecord_4() {
-    if (cached_InfiniteRecord_4 != null) {
-      return cached_InfiniteRecord_4;
+  private String cached_InfiniteRecord_5 = null;
+  private String get_InfiniteRecord_5() {
+    if (cached_InfiniteRecord_5 != null) {
+      return cached_InfiniteRecord_5;
     }
-    cached_InfiniteRecord_4 = generateTestOutput(false, "InfiniteRecord_4", "./test_code/COE_InfiniteRecord_failure.a");
-    return cached_InfiniteRecord_4;
+    cached_InfiniteRecord_5 = generateTestOutput(false, "InfiniteRecord_5", "./test_code/COE_InfiniteRecord_failure.a");
+    return cached_InfiniteRecord_5;
   }
 
   @Test
   public void testInfiniteRecordFailure() {
-    assertLiveFail(get_InfiniteRecord_4());
+    assertLiveFail(get_InfiniteRecord_5());
   }
 
   @Test
   public void testInfiniteRecordNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_InfiniteRecord_4());
+    assertNotTerribleLineNumbers(get_InfiniteRecord_5());
   }
 
   @Test
   public void testInfiniteRecordExceptionFree() {
-    assertExceptionFree(get_InfiniteRecord_4());
+    assertExceptionFree(get_InfiniteRecord_5());
   }
 
   @Test
   public void testInfiniteRecordTODOFree() {
-    assertTODOFree(get_InfiniteRecord_4());
+    assertTODOFree(get_InfiniteRecord_5());
   }
 
   @Test
-  public void stable_InfiniteRecord_4() {
-    String live = get_InfiniteRecord_4();
+  public void stable_InfiniteRecord_5() {
+    String live = get_InfiniteRecord_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_InfiniteRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: R, R\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"A cycle was detected within records: R, R\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The record/message 'R' has the potential to create an infinite serialization\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Issue20230513_5 = null;
-  private String get_Issue20230513_5() {
-    if (cached_Issue20230513_5 != null) {
-      return cached_Issue20230513_5;
+  private String cached_Issue20230513_6 = null;
+  private String get_Issue20230513_6() {
+    if (cached_Issue20230513_6 != null) {
+      return cached_Issue20230513_6;
     }
-    cached_Issue20230513_5 = generateTestOutput(true, "Issue20230513_5", "./test_code/COE_Issue20230513_success.a");
-    return cached_Issue20230513_5;
+    cached_Issue20230513_6 = generateTestOutput(true, "Issue20230513_6", "./test_code/COE_Issue20230513_success.a");
+    return cached_Issue20230513_6;
   }
 
   @Test
   public void testIssue20230513Emission() {
-    assertEmissionGood(get_Issue20230513_5());
+    assertEmissionGood(get_Issue20230513_6());
   }
 
   @Test
   public void testIssue20230513Success() {
-    assertLivePass(get_Issue20230513_5());
+    assertLivePass(get_Issue20230513_6());
   }
 
   @Test
   public void testIssue20230513GoodWillHappy() {
-    assertGoodWillHappy(get_Issue20230513_5());
+    assertGoodWillHappy(get_Issue20230513_6());
   }
 
   @Test
   public void testIssue20230513ExceptionFree() {
-    assertExceptionFree(get_Issue20230513_5());
+    assertExceptionFree(get_Issue20230513_6());
   }
 
   @Test
   public void testIssue20230513TODOFree() {
-    assertTODOFree(get_Issue20230513_5());
+    assertTODOFree(get_Issue20230513_6());
   }
 
   @Test
-  public void stable_Issue20230513_5() {
-    String live = get_Issue20230513_5();
+  public void stable_Issue20230513_6() {
+    String live = get_Issue20230513_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:COE_Issue20230513_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -240,7 +280,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Issue20230513_5 extends LivingDocument {");
+    gold.append("\npublic class Issue20230513_6 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxFamily> _families;");
     gold.append("\n  private final RxTable<RTxPerson> _people;");
     gold.append("\n  private final RxGuard ___your_family_1;");
@@ -258,7 +298,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    __sum += _people.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Issue20230513_5(DocumentMonitor __monitor) {");
+    gold.append("\n  public Issue20230513_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    _families = new RxTable<>(__self, this, \"_families\", (RxParent __parent) -> new RTxFamily(__parent).__link(), 0);");
     gold.append("\n    _people = new RxTable<>(__self, this, \"_people\", (RxParent __parent) -> new RTxPerson(__parent).__link(), 0);");
@@ -540,13 +580,13 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaIssue20230513_5 implements DeltaNode {");
+    gold.append("\n  private class DeltaIssue20230513_6 implements DeltaNode {");
     gold.append("\n    private long __gyour_family_1;");
     gold.append("\n    private DMaybe<DeltaRTxFamily> __dyour_family_1;");
     gold.append("\n    private long __gyour_family_2;");
     gold.append("\n    private DMaybe<DeltaRTxFamily> __dyour_family_2;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaIssue20230513_5() {");
+    gold.append("\n    private DeltaIssue20230513_6() {");
     gold.append("\n      __gyour_family_1 = -1;");
     gold.append("\n      __dyour_family_1 = new DMaybe<DeltaRTxFamily>();");
     gold.append("\n      __gyour_family_2 = -1;");
@@ -560,7 +600,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      __sum += __dyour_family_2.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Issue20230513_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Issue20230513_6 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 2;");
@@ -619,8 +659,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Issue20230513_5 __self = this;");
-    gold.append("\n    DeltaIssue20230513_5 __state = new DeltaIssue20230513_5();");
+    gold.append("\n    Issue20230513_6 __self = this;");
+    gold.append("\n    DeltaIssue20230513_6 __state = new DeltaIssue20230513_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

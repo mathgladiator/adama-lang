@@ -12,6 +12,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -45,6 +46,8 @@ public class DefineHandler extends Definition {
   private Token isOpen = null;
   private Token openType = null;
   private Token semicolonToken = null;
+  private Token requires = null;
+  private Guard guard = null;
 
   public DefineHandler(final Token channelToken, final Token channelNameToken) {
     this.channelToken = channelToken;
@@ -56,6 +59,12 @@ public class DefineHandler extends Definition {
     isArray = false;
     ingest(channelToken);
     ingest(channelNameToken);
+  }
+
+  public void setGuard(Token requires, Guard guard) {
+    this.requires = requires;
+    this.guard = guard;
+    ingest(guard);
   }
 
   public boolean isOpen() {
@@ -89,6 +98,10 @@ public class DefineHandler extends Definition {
       if (isOpen != null) {
         yielder.accept(isOpen);
       }
+      if (requires != null) {
+        yielder.accept(requires);
+        guard.emit(yielder);
+      }
       if (code != null) {
         code.emit(yielder);
       }
@@ -115,6 +128,13 @@ public class DefineHandler extends Definition {
       if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
         final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType)).withPosition(this);
         environment.define(channel, nativeChannel, false, nativeChannel);
+      }
+      if (guard != null) {
+        for (TokenizedItem<String> policy : guard.policies) {
+          if (environment.document.root.storage.policies.get(policy.item) == null) {
+            environment.document.createError(this, String.format("Policy '%s' was not found for handler requirement", policy.item));
+          }
+        }
       }
     });
   }

@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.types.TyType;
 
 import java.util.HashSet;
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
 
 public class BubbleDefinition extends StructureComponent {
   public final Token bubbleToken;
-  public final BubbleGuard guard;
+  public final Guard guard;
   public final Token equalsToken;
   public final Expression expression;
   public final Token nameToken;
@@ -32,7 +33,7 @@ public class BubbleDefinition extends StructureComponent {
   public TyType expressionType;
   public final HashSet<String> globalPolicies;
 
-  public BubbleDefinition(final Token bubbleToken, BubbleGuard guard, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
+  public BubbleDefinition(final Token bubbleToken, Guard guard, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
     this.bubbleToken = bubbleToken;
     this.guard = guard;
     this.nameToken = nameToken;

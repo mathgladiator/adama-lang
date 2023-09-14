@@ -774,7 +774,7 @@ public class Parser {
     return new ReplicationDefinition(op, open, service, split, method, close, name, equals, expression, end);
   }
 
-  public BubbleGuard define_guard(Token open) throws AdamaLangException {
+  public Guard define_guard(Token open) throws AdamaLangException {
     ArrayList<TokenizedItem<String>> policies = new ArrayList<>();
     boolean hasOne = true;
     Token last = null;
@@ -789,12 +789,12 @@ public class Parser {
       }
       policies.add(item);
     }
-    return new BubbleGuard(open, policies, last);
+    return new Guard(open, policies, last);
   }
 
   public BubbleDefinition define_bubble(Scope scope, final Token bubbleToken) throws AdamaLangException {
     Token guardOpen = tokens.popIf((t) -> t.isSymbolWithTextEq("<"));
-    BubbleGuard guard = null;
+    Guard guard = null;
     if (guardOpen != null) {
       guard = define_guard(guardOpen);
     }
@@ -984,6 +984,11 @@ public class Parser {
     final var messageVarToken = id();
     final var endParen = consumeExpectedSymbol(")");
     final var isOpen = tokens.popIf((t) -> t.isIdentifier("open"));
+    final var requires = tokens.popIf((t) -> t.isIdentifier("requires"));
+    if (requires != null) {
+      Token openGuard = consumeExpectedSymbol("<");
+      handler.setGuard(requires, define_guard(openGuard));
+    }
     handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, isOpen, block(rootScope.makeMessageHandler()));
     return doc -> doc.add(handler);
   }

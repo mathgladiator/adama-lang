@@ -6,7 +6,7 @@
  *
  * (c) 2021 - 2023 by Adama Platform Initiative, LLC
  */
-package org.adamalang.translator.tree.types.structures;
+package org.adamalang.translator.tree.privacy;
 
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** a way to indicate that a bubble is protected by data */
-public class BubbleGuard extends DocumentPosition {
+public class Guard extends DocumentPosition {
   public final Token open;
   public final ArrayList<TokenizedItem<String>> policies;
   public final Token close;
 
-  public BubbleGuard(Token open, ArrayList<TokenizedItem<String>> policies, Token close) {
+  public Guard(Token open, ArrayList<TokenizedItem<String>> policies, Token close) {
     this.open = open;
     this.policies = policies;
     this.close = close;

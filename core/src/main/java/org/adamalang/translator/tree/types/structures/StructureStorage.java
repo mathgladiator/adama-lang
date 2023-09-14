@@ -27,6 +27,9 @@ import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerStructure;
+import org.adamalang.translator.tree.types.traits.IsMap;
+import org.adamalang.translator.tree.types.traits.IsStructure;
+import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -348,5 +351,31 @@ public class StructureStorage extends DocumentPosition {
     }
     fieldsByOrder.clear();
     fieldsByOrder.addAll(sorter.sort());
+  }
+
+  public Set<String> getStructureDependencies(Environment environment) {
+    HashSet<String> depends = new HashSet<>();
+    for (FieldDefinition fd : fieldsByOrder) {
+      TyType type = fd.type;
+      // In the case that a field is computed, then we need to annotate all record possible record types
+      boolean again = fd.computeExpression != null;
+      while (again) { // need the loop in case you have maybe -> map -> maybe
+        again = false;
+        while (type instanceof DetailContainsAnEmbeddedType) { // maybe, list, etc...
+          type = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
+          again = true;
+        }
+        while (type instanceof IsMap) {
+          type = ((IsMap) type).getRangeType(environment);
+          again = true;
+        }
+      }
+      if (type instanceof IsStructure) { // alas, it is a structure
+        if (!((IsStructure) type).storage().anonymous) { // that isn't anonymous, and anonymous structures can't be infinite
+          depends.add(((IsStructure) type).storage().name.text); // dependency found
+        }
+      }
+    }
+    return depends;
   }
 }

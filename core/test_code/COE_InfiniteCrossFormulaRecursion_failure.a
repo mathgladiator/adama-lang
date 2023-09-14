@@ -1,0 +1,14 @@
+record A {
+  public formula b = iterate _tbl_b;
+}
+table<A> _tbl_a;
+
+record B {
+  public formula c = iterate _tbl_c;
+}
+table<B> _tbl_b;
+
+record C {
+  public formula a = iterate _tbl_a;
+}
+table<C> _tbl_c;

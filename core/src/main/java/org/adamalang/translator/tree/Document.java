@@ -14,6 +14,7 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.translator.codegen.*;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
+import org.adamalang.translator.env.topo.TopologicalSort;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.TopLevelDocumentHandler;
@@ -574,6 +575,19 @@ public class Document implements TopLevelDocumentHandler {
       dc.unifiedMessageType = constructorMessageType;
       dc.internalTyping(environment); // TODO: remove
     }
+
+    TopologicalSort<String> preventSerializationRecursion = new TopologicalSort<>();
+    for (TyType type : types.values()) {
+      if (type instanceof IsStructure) {
+        String base = ((IsStructure) type).storage().name.text;
+        preventSerializationRecursion.add(base, base, ((IsStructure) type).storage().getStructureDependencies(environment));
+      }
+    }
+    preventSerializationRecursion.sort();
+    for (String structPartOfCycle : preventSerializationRecursion.cycles()) {
+      createError(DocumentPosition.ZERO, "The record/message '" + structPartOfCycle + "' has the potential to create an infinite serialization");
+    }
+
     return !hasErrors();
   }
 

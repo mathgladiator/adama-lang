@@ -1,0 +1,5 @@
+message X {
+
+}
+channel goo(X x) requires<p2> {
+}
