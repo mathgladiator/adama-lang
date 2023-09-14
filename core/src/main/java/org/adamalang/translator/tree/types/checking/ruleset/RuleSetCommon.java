@@ -387,7 +387,7 @@ public class RuleSetCommon {
     }
     if (aActualMessage.storage.anonymous) {
       if (bActualMessage.storage.anonymous) {
-        final var newStorage = new StructureStorage(Token.WRAP("Created_" + aActualMessage.name + "_" + bActualMessage.name), StorageSpecialization.Message, true, null);
+        final var newStorage = new StructureStorage(Token.WRAP("Created_" + aActualMessage.name + "_" + bActualMessage.name), StorageSpecialization.Message, true, false, null);
         for (final Map.Entry<String, FieldDefinition> aEntry : aActualMessage.storage.fields.entrySet()) {
           final var bFd = bActualMessage.storage.fields.get(aEntry.getKey());
           final FieldDefinition toAdd;

@@ -1022,7 +1022,7 @@ public class Parser {
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(messageToken);
     final var name = id();
-    final var storage = new StructureStorage(name, StorageSpecialization.Message, false, consumeExpectedSymbol("{"));
+    final var storage = new StructureStorage(name, StorageSpecialization.Message, false, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyNativeRef(TypeBehavior.ReadOnlyNativeValue, null, name));
     var endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     while (endBrace == null) {
@@ -1119,7 +1119,7 @@ public class Parser {
   public Consumer<TopLevelDocumentHandler> define_record_trailer(final Token recordToken) throws AdamaLangException {
     Scope scope = rootScope.makeRecordType();
     final var name = id();
-    final var storage = new StructureStorage(name, StorageSpecialization.Record, false, consumeExpectedSymbol("{"));
+    final var storage = new StructureStorage(name, StorageSpecialization.Record, false, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyReactiveRef(name));
     while (true) {
       var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "replication"));

@@ -92,7 +92,7 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
   public TyType estimateType(final Environment environment) {
     Token name = Token.WRAP("_AnonObjConvert_" + environment.autoVariable());
     environment.mustBeComputeContext(this);
-    final var storage = new StructureStorage(name, StorageSpecialization.Message, true, null);
+    final var storage = new StructureStorage(name, StorageSpecialization.Message, true, false, null);
     for (final Map.Entry<String, Expression> entry : fields.entrySet()) {
       final var type = entry.getValue() instanceof SupportsTwoPhaseTyping ? ((SupportsTwoPhaseTyping) entry.getValue()).estimateType(environment) : entry.getValue().typing(environment, null);
       final var fd = FieldDefinition.invent(type, entry.getKey());

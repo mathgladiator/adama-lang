@@ -63,6 +63,10 @@ public class UseCustomPolicy extends Policy {
         if (dcp == null) {
           environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck));
         }
+      } else {
+        if (owningStructureStorage.root) {
+          globals.add(policyToCheck);
+        }
       }
     }
   }

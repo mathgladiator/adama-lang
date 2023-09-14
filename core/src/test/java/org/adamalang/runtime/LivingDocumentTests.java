@@ -1131,6 +1131,18 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
+  public void message_abort_privacy() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) requires<p> { x = 100; } policy p { return false; } ",
+            null,
+            false);
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
+    setup.document.send(ContextSupport.WRAP(NtPrincipal.NO_ONE), null, null, "foo", "{}", new RealDocumentSetup.AssertFailure(130559));
+  }
+
+  @Test
   public void message_dedupe() throws Exception {
     final var setup =
         new RealDocumentSetup(

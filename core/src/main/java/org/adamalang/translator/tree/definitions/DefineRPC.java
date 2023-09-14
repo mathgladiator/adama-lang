@@ -79,7 +79,7 @@ public class DefineRPC extends Definition {
     if (genMessageType != null) {
       return genMessageType;
     }
-    StructureStorage storage = new StructureStorage(name.cloneWithNewText("Gen" + name.text), StorageSpecialization.Message, false, openParen);
+    StructureStorage storage = new StructureStorage(name.cloneWithNewText("Gen" + name.text), StorageSpecialization.Message, false, false, openParen);
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(rpcToken);
     for (FunctionArg arg : args) {

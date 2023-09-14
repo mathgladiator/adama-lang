@@ -71,6 +71,10 @@ public class BubbleDefinition extends StructureComponent {
           } else {
             globalPolicies.add(policy.item);
           }
+        } else {
+          if (owningStructureStorage.root) {
+            globalPolicies.add(policy.item);
+          }
         }
       }
     }
@@ -98,12 +102,11 @@ public class BubbleDefinition extends StructureComponent {
       } else {
         sb.append(" && ");
       }
-      if (globalPolicies.contains(policyToCheck)) {
+      if (globalPolicies.contains(policyToCheck.item)) {
         sb.append("__policy_cache.").append(policyToCheck.item);
       } else {
         sb.append("__item.__POLICY_").append(policyToCheck.item).append("(__writer.who)");
       }
-
     }
     sb.append(") {").tabUp().writeNewline();
     return true;

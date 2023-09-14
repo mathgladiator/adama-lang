@@ -54,11 +54,13 @@ public class StructureStorage extends DocumentPosition {
   public TypeCheckerStructure checker;
   public final HashSet<String> fieldsWithDefaults;
   public Token closeBraceToken;
+  public final boolean root;
 
-  public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
+  public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final boolean root, final Token openBraceToken) {
     this.name = name;
     this.specialization = specialization;
     this.anonymous = anonymous;
+    this.root = root;
     this.openBraceToken = openBraceToken;
     this.checker = new TypeCheckerStructure();
     closeBraceToken = null;
@@ -287,7 +289,7 @@ public class StructureStorage extends DocumentPosition {
   }
 
   public StructureStorage makeAnonymousCopy() {
-    final var storage = new StructureStorage(name.cloneWithNewText("Anony_" + name.text), StorageSpecialization.Message, true, openBraceToken);
+    final var storage = new StructureStorage(name.cloneWithNewText("Anony_" + name.text), StorageSpecialization.Message, true, false, openBraceToken);
     storage.fieldsByOrder.addAll(fieldsByOrder);
     storage.fields.putAll(fields);
     return storage;

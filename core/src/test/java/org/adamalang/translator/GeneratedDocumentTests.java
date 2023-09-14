@@ -673,7 +673,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
-    gold.append("\n      if (__item.__POLICY_foo(__writer.who)) {");
+    gold.append("\n      if (__policy_cache.foo) {");
     gold.append("\n        __dz2.show(__item.z2.get(), __obj.planField(\"z2\"));");
     gold.append("\n        /* privacy check close up */");
     gold.append("\n      } else {");

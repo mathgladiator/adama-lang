@@ -1,0 +1,19 @@
+record R {
+    bubble<p,g> k = 42;
+
+    policy p {
+      return true;
+    }
+
+    bubble<p2,g> k2 = 42;
+
+    policy p2 {
+      return false;
+    }
+
+    bubble<p,p2,g> k3 = 1000;
+}
+
+policy g {
+  return true;
+}
