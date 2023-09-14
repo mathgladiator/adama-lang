@@ -1,0 +1,10 @@
+message X {
+
+}
+
+channel goo(X x) open requires<p> {
+}
+
+policy p {
+  return true;
+}

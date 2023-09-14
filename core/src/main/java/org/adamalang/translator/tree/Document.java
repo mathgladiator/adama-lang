@@ -23,10 +23,7 @@ import org.adamalang.translator.parser.exceptions.ParseException;
 import org.adamalang.translator.parser.exceptions.ScanException;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
-import org.adamalang.translator.tree.common.DocumentError;
-import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.tree.common.LatentCodeSnippet;
-import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.common.*;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.config.DocumentConfig;
@@ -145,6 +142,28 @@ public class Document implements TopLevelDocumentHandler {
     for (Map.Entry<String, String> mapping : channelToMessageType.entrySet()) {
       writer.writeObjectFieldIntro(mapping.getKey());
       writer.writeString(mapping.getValue());
+    }
+    writer.endObject();
+
+    writer.writeObjectFieldIntro("channels-privacy");
+    writer.beginObject();
+    for (DefineHandler dh : handlers) {
+      if (!channelToMessageType.containsKey(dh.channel)) {
+        continue;
+      }
+      writer.writeObjectFieldIntro(dh.channel);
+      writer.beginObject();
+      writer.writeObjectFieldIntro("open");
+      writer.writeBoolean(dh.isOpen());
+      writer.writeObjectFieldIntro("privacy");
+      writer.beginArray();
+      if (dh.guard != null) {
+        for (TokenizedItem<String> policy : dh.guard.policies) {
+          writer.writeString(policy.item);
+        }
+      }
+      writer.endArray();
+      writer.endObject();
     }
     writer.endObject();
 
