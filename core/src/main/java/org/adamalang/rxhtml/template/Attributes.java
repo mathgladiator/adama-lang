@@ -319,11 +319,11 @@ public class Attributes {
       }
       env.feedback.warn(el, "The input '" + name + "' is excessive.");
       return false;
-    }, "email", "password", "remember");
+    }, "email", "password");
   }
 
   private void check_action_document_sign_in(boolean domain) {
-    String[] checks = domain ? new String[]{"username", "password", "remember"} : new String[]{"username", "password", "space", "key", "remember"};
+    String[] checks = domain ? new String[]{"username", "password"} : new String[]{"username", "password", "space", "key"};
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
       String type = el.attr("type");
@@ -356,7 +356,7 @@ public class Attributes {
   }
 
   private void check_action_document_sign_in_reset(boolean domain) {
-    String[] checks = domain ? new String[]{"username", "password", "new_password", "remember"} : new String[]{"username", "password", "new_password", "space", "key", "remember"};
+    String[] checks = domain ? new String[]{"username", "password", "new_password"} : new String[]{"username", "password", "new_password", "space", "key"};
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
       String type = el.attr("type");
