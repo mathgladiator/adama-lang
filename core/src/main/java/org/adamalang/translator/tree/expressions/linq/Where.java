@@ -284,7 +284,17 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       sb.append("))");
       if (!writtenDependentExpressionsForClosure) {
         expression.writeJava(exprCode, environment.scopeWithComputeContext(ComputeContext.Computation));
-        final var primaryKey = findIndex(expression, aliasToken != null ? aliasToken.text : null, "id", BinaryOp.Equal);
+        var primaryKey = findIndex(expression, aliasToken != null ? aliasToken.text : null, "id", BinaryOp.Equal);
+        if (primaryKey != null) {
+          FreeEnvironment fe = FreeEnvironment.root();
+          primaryKey.free(fe);
+          for (String testField : fe.free) {
+            if (structureStorage.fields.containsKey(testField)) {
+              primaryKey = null;
+              break;
+            }
+          }
+        }
         if (primaryKey != null) {
           boolean forceId = false;
           if (primaryKey.typing(environment, null) instanceof TyNativeMaybe) {

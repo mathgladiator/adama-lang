@@ -8,7 +8,6 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
-import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;

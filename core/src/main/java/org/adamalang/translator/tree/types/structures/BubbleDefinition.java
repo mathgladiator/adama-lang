@@ -12,16 +12,17 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
 public class BubbleDefinition extends StructureComponent {
   public final Token bubbleToken;
+  public final BubbleGuard guard;
   public final Token equalsToken;
   public final Expression expression;
   public final Token nameToken;
@@ -29,9 +30,11 @@ public class BubbleDefinition extends StructureComponent {
   public final LinkedHashSet<String> servicesToWatch;
   public final LinkedHashSet<String> variablesToWatch;
   public TyType expressionType;
+  public final HashSet<String> globalPolicies;
 
-  public BubbleDefinition(final Token bubbleToken, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
+  public BubbleDefinition(final Token bubbleToken, BubbleGuard guard, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
     this.bubbleToken = bubbleToken;
+    this.guard = guard;
     this.nameToken = nameToken;
     this.equalsToken = equalsToken;
     this.expression = expression;
@@ -40,19 +43,36 @@ public class BubbleDefinition extends StructureComponent {
     ingest(semicolonToken);
     servicesToWatch = new LinkedHashSet<>();
     variablesToWatch = new LinkedHashSet<>();
+    this.globalPolicies = new HashSet<>();
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(bubbleToken);
+    if (guard != null) {
+      guard.emit(yielder);
+    }
     yielder.accept(nameToken);
     yielder.accept(equalsToken);
     expression.emit(yielder);
     yielder.accept(semicolonToken);
   }
 
-  public void typing(final Environment environment) {
+  public void typing(final Environment environment, StructureStorage owningStructureStorage) {
     expressionType = environment.rules.Resolve(expression.typing(next(environment), null), false);
+    if (guard != null) {
+      for (TokenizedItem<String> policy : guard.policies) {
+        var dcp = owningStructureStorage.policies.get(policy.item);
+        if (dcp == null) {
+          dcp = environment.document.root.storage.policies.get(policy.item);
+          if (dcp == null) {
+            environment.document.createError(this, String.format("Policy '%s' was not found for bubble guard", policy.item));
+          } else {
+            globalPolicies.add(policy.item);
+          }
+        }
+      }
+    }
   }
 
   private Environment next(Environment environment) {

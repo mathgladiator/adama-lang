@@ -1,0 +1,5 @@
+bubble<p> k = 42;
+
+policy p {
+  return true;
+}

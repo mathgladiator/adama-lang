@@ -1,0 +1,11 @@
+record R {
+  int id;
+  int r_id;
+}
+
+table<R> tbl;
+
+public formula odd = iterate tbl where id == r_id;
+
+public int id;
+public formula odd2 = iterate tbl where_as x: id == x.id;

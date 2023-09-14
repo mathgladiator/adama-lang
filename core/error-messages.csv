@@ -114,6 +114,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/BlindSendPolicy_TimeNotStatic_failure.a,2,12,2,20,"Expression is not a function"
 ./test_code/Block_DeadCode_failure.a,2,2,2,14,"This code is unreachable."
 ./test_code/Block_DuplicateVariable_failure.a,2,2,2,8,"Variable 'x' was already defined"
+./test_code/BubbleG_CantFind_failure.a,0,0,0,18,"Policy 'p2' was not found for bubble guard"
 ./test_code/BugsApril_Issues_failure.a,3,6,3,14,"Expression expected to be computed, rather than assigned to"
 ./test_code/BugsApril_Issues_failure.a,3,6,3,10,"Expression expected to be computed, rather than assigned to"
 ./test_code/BugsApril_Issues_failure.a,3,13,3,14,"Expression expected to be computed, rather than assigned to"

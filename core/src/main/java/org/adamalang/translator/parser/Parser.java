@@ -774,12 +774,35 @@ public class Parser {
     return new ReplicationDefinition(op, open, service, split, method, close, name, equals, expression, end);
   }
 
+  public BubbleGuard define_guard(Token open) throws AdamaLangException {
+    ArrayList<TokenizedItem<String>> policies = new ArrayList<>();
+    boolean hasOne = true;
+    Token last = null;
+    while (hasOne) {
+      Token policy = id();
+      TokenizedItem<String> item = new TokenizedItem<>(policy.text);
+      item.before(policy);
+      last = consumeExpectedSymbol(",", ">");
+      hasOne = last.text.equals(",");
+      if (hasOne) {
+        item.after(last);
+      }
+      policies.add(item);
+    }
+    return new BubbleGuard(open, policies, last);
+  }
+
   public BubbleDefinition define_bubble(Scope scope, final Token bubbleToken) throws AdamaLangException {
+    Token guardOpen = tokens.popIf((t) -> t.isSymbolWithTextEq("<"));
+    BubbleGuard guard = null;
+    if (guardOpen != null) {
+      guard = define_guard(guardOpen);
+    }
     final var nameToken = id();
     final var equalsToken = consumeExpectedSymbol("=");
     final var expression = expression(scope);
     final var semicolonToken = consumeExpectedSymbol(";");
-    return new BubbleDefinition(bubbleToken, nameToken, equalsToken, expression, semicolonToken);
+    return new BubbleDefinition(bubbleToken, guard, nameToken, equalsToken, expression, semicolonToken);
   }
 
   public DefineDocumentEvent define_document_event_raw(final Scope scope, final Token eventToken, final DocumentEvent which) throws AdamaLangException {
