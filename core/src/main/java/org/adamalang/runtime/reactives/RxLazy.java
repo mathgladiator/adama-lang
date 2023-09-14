@@ -70,10 +70,11 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   private void inc() {
     if (__parent instanceof RxRecordBase && generation == 0) {
       generation = ((RxRecordBase) __parent).__id();
-    } else {
-      generation *= 65521;
-      generation++;
+    } else if (generation == 0 && cached != null) {
+      generation = cached.hashCode();
     }
+    generation *= 65521;
+    generation++;
   }
 
   private void ensureCacheValid() {
