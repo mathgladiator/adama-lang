@@ -115,6 +115,8 @@ public class ErrorTable {
     descriptions.put(143407, "no description of error (yet)");
     names.put(127152, "LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT");
     descriptions.put(127152, "no description of error (yet)");
+    names.put(130559, "LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT_POLICY");
+    descriptions.put(130559, "no description of error (yet)");
     names.put(122412, "LIVING_DOCUMENT_TRANSACTION_EXPIRE_LIMIT_MUST_BE_POSITIVE");
     descriptions.put(122412, "no description of error (yet)");
     names.put(131203, "LIVING_DOCUMENT_TRANSACTION_EXPIRE_DID_NOTHING");

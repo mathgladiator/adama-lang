@@ -554,6 +554,9 @@ public class GeneratedChannelsGuardTests extends GeneratedBase {
     gold.append("\n  protected void __handle_direct(CoreRequestContext __context, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"goo\":");
+    gold.append("\n        if (!__POLICY_p(__context.who)) {");
+    gold.append("\n          throw new AbortMessageException(\"p\");");
+    gold.append("\n        }");
     gold.append("\n        handleChannelMessage_goo(__context, __context.who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");

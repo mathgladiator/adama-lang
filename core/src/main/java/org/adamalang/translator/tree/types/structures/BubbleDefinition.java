@@ -87,4 +87,25 @@ public class BubbleDefinition extends StructureComponent {
     expression.writeJava(sb, next(environment));
     sb.append(";").tabDown().writeNewline().append("}").writeNewline();
   }
+
+
+  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb) {
+    sb.append("if (");
+    var first = true;
+    for (final TokenizedItem<String> policyToCheck : guard.policies) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(" && ");
+      }
+      if (globalPolicies.contains(policyToCheck)) {
+        sb.append("__policy_cache.").append(policyToCheck.item);
+      } else {
+        sb.append("__item.__POLICY_").append(policyToCheck.item).append("(__writer.who)");
+      }
+
+    }
+    sb.append(") {").tabUp().writeNewline();
+    return true;
+  }
 }

@@ -47,7 +47,7 @@ public class DefineHandler extends Definition {
   private Token openType = null;
   private Token semicolonToken = null;
   private Token requires = null;
-  private Guard guard = null;
+  public Guard guard = null;
 
   public DefineHandler(final Token channelToken, final Token channelNameToken) {
     this.channelToken = channelToken;

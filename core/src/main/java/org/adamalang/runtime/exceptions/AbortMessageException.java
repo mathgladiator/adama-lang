@@ -10,4 +10,13 @@ package org.adamalang.runtime.exceptions;
 
 /** a message was aborted, and must be deleted */
 public class AbortMessageException extends Exception {
+  public final String policyFailure;
+
+  public AbortMessageException() {
+    this.policyFailure = null;
+  }
+
+  public AbortMessageException(String policyFailure) {
+    this.policyFailure = policyFailure;
+  }
 }

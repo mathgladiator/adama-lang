@@ -1988,7 +1988,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           __handle_direct(context, channel, message);
           change = __transaction_send_commit(request, dedupeKey, context.who, marker, channel, timestamp, message, factory);
         } catch (AbortMessageException ame) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
+          throw new ErrorCodeException(ame.policyFailure != null ? ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT_POLICY : ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
         } catch (ComputeBlockedException cbe) {
           __revert();
           change = __transaction_send_enqueue(request, viewId, dedupeKey, context, marker, channel, timestamp, message, factory);

@@ -197,6 +197,10 @@ public class CodeGenDeltaClass {
       sb.append("RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;").writeNewline();
       sb.append("long __CHECK = 0;").writeNewline();
       for (final BubbleDefinition bd : storage.bubbles.values()) {
+        boolean closeItUp = false;
+        if (bd.guard != null) {
+          closeItUp = bd.writePrivacyCheckGuard(sb);
+        }
         sb.append("__CHECK = __item.___").append(bd.nameToken.text).append(".getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;").writeNewline();
         sb.append("if (__g").append(bd.nameToken.text).append(" != __CHECK)  {").tabUp().writeNewline();
         final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
@@ -204,6 +208,13 @@ public class CodeGenDeltaClass {
         writeShowData(sb, "__d" + bd.nameToken.text, "__local_" + bd.nameToken.text, bubbleType, "__obj.planField(\"" + bd.nameToken.text + "\")", environment, false);
         sb.append("__g").append(bd.nameToken.text).append(" = __CHECK;").tabDown().writeNewline();
         sb.append("}").writeNewline();
+        if (closeItUp) {
+          sb.append("/* privacy check close up */").tabDown().writeNewline();
+          sb.append("} else {").tabUp().writeNewline();
+          sb.append("__g").append(bd.nameToken.text).append(" = -1;").writeNewline();
+          sb.append("__d").append(bd.nameToken.text).append(".hide(__obj.planField(\"").append(bd.nameToken.text).append("\"));").tabDown().writeNewline();
+          sb.append("}").writeNewline();
+        }
       }
     }
     sb.append("if (__obj.end()) {").tabUp().writeNewline();

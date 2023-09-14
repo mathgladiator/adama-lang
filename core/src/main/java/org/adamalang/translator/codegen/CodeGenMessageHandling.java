@@ -10,8 +10,10 @@ package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.DefineHandler;
 import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
+import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
@@ -28,6 +30,7 @@ public class CodeGenMessageHandling {
     final var channelsDefined = new HashSet<String>();
     final var resetFutureQueueBody = new StringBuilderWithTabs().tabUp().tabUp();
     HashMap<String, String> executeDirect = new HashMap<>();
+    HashMap<String, Guard> directGuard = new HashMap<>();
     for (final DefineHandler handler : environment.document.handlers) {
       if (channelsDefined.contains(handler.channel)) {
         environment.document.createError(handler, String.format("Channel '%s' is already handled", handler.channel));
@@ -95,6 +98,9 @@ public class CodeGenMessageHandling {
           } else {
             executeDirect.put(handler.channel, handler.typeName);
           }
+          if (handler.guard != null) {
+            directGuard.put(handler.channel, handler.guard);
+          }
           dispatch.append(")(__task.message)));").writeNewline();
           dispatch.append("return;").tabDown().writeNewline();
           final var child = handler.prepareEnv(environment, associatedRecordType);
@@ -135,6 +141,14 @@ public class CodeGenMessageHandling {
       for (Map.Entry<String, String> entry : executeDirect.entrySet()) {
         directCountDownUntilTab--;
         sb.append("case \"").append(entry.getKey()).append("\":").tabUp().writeNewline();
+        Guard guard = directGuard.get(entry.getKey());
+        if (guard != null) {
+          for (TokenizedItem<String> policy : guard.policies) {
+            sb.append("if (!__POLICY_").append(policy.item).append("(__context.who)) {").tabUp().writeNewline();
+            sb.append("throw new AbortMessageException(\"").append(policy.item).append("\");").tabDown().writeNewline();
+            sb.append("}").writeNewline();
+          }
+        }
         sb.append("handleChannelMessage_").append(entry.getKey()).append("(__context, __context.who, (RTx").append(entry.getValue()).append(") __message);").writeNewline();
         sb.append("return;").tabDown().writeNewline();
 
