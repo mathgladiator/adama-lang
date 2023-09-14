@@ -73,13 +73,16 @@ public abstract class RxBase {
   protected void __invalidateSubscribers() {
     if (__subscribers != null && !__notifying) {
       __notifying = true;
-      final var it = __subscribers.iterator();
-      while (it.hasNext()) {
-        if (!it.next().__raiseInvalid()) {
-          it.remove();
+      try {
+        final var it = __subscribers.iterator();
+        while (it.hasNext()) {
+          if (!it.next().__raiseInvalid()) {
+            it.remove();
+          }
         }
+      } finally {
+        __notifying = false;
       }
-      __notifying = false;
     }
   }
 

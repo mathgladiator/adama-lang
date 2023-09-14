@@ -992,23 +992,33 @@ var RxHTML = (function () {
     });
   };
 
+  var form_of = function(dom) {
+    var next = dom;
+    while (next != null) {
+      if (next.tagName.toUpperCase() == "FORM") {
+        return next;
+      }
+      next = next.parentElement;
+    }
+    return null;
+  }
+
   // RUNTIME: <tag .. rx:event="... reset ...">
   self.oRST = function (dom, type, state) {
     reg_event(state, dom, type, function (event) {
-      dom.reset();
+      var f = form_of(dom);
+      if (f != null) {
+        f.reset();
+      }
     });
   };
 
-  // RUNTIME: <tag .. rx:event="... reset ...">
+  // RUNTIME: <tag .. rx:event="... submit ...">
   self.oSBMT = function (dom, type, state) {
     reg_event(state, dom, type, function (event) {
-      var next = dom;
-      while (next != null) {
-        if (next.tagName.toUpperCase() == "FORM") {
-          next.onsubmit(new SubmitEvent("submit"));
-          return;
-        }
-        next = next.parentElement;
+      var f = form_of(dom);
+      if (f != null) {
+        f.onsubmit(new SubmitEvent("submit"));
       }
     });
   };
