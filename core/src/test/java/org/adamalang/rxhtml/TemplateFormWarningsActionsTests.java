@@ -27,9 +27,9 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     issues.append("\nWARNING:/:Failed to find an input for 'password'");
     issues.append("\nWARNING:/:Failed to find an input for 'code'");
     issues.append("\nWARNING:/:Emails should have type 'email'.");
-    issues.append("\nWARNING:/:Passwords should have type 'password'.");
+    issues.append("\nWARNING:/:Passwords should have type 'password' or 'hidden'.");
     issues.append("\nWARNING:/:The input 'email' is excessive.");
-    issues.append("\nWARNING:/:Passwords should have type 'password'.");
+    issues.append("\nWARNING:/:Passwords should have type 'password' or 'hidden'.");
     issues.append("\nWARNING:/:Failed to find an input for 'username'");
     issues.append("\nWARNING:/:Failed to find an input for 'space'");
     issues.append("\nWARNING:/:Failed to find an input for 'key'");

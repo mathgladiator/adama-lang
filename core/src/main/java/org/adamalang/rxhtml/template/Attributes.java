@@ -300,8 +300,8 @@ public class Attributes {
       String name = el.attr("name");
       String type = el.attr("type");
       if ("password".equals(name)) {
-        if (!("password".equals(type))) {
-          env.feedback.warn(el, "Passwords should have type 'password'.");
+        if (!("password".equals(type) || "hidden".equals(type))) {
+          env.feedback.warn(el, "Passwords should have type 'password' or 'hidden'.");
         }
         return true;
       }
@@ -328,8 +328,8 @@ public class Attributes {
       String name = el.attr("name");
       String type = el.attr("type");
       if ("password".equals(name)) {
-        if (!("password".equals(type))) {
-          env.feedback.warn(el, "Passwords should have type 'password'.");
+        if (!("password".equals(type) || "hidden".equals(type))) {
+          env.feedback.warn(el, "Passwords should have type 'password' or 'hidden'.");
         }
         return true;
       }
@@ -361,9 +361,10 @@ public class Attributes {
       String name = el.attr("name");
       String type = el.attr("type");
       if ("password".equals(name)) {
-        if (!("password".equals(type))) {
-          env.feedback.warn(el, "Passwords should have type 'password'.");
+        if (!("password".equals(type) || "hidden".equals(type))) {
+          env.feedback.warn(el, "Passwords should have type 'password' or 'hidden'.");
         }
+
         return true;
       }
       if ("new_password".equals(name)) {
