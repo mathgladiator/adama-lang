@@ -8,6 +8,7 @@
  */
 package org.adamalang.translator.codegen;
 
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineWebDelete;
@@ -37,7 +38,7 @@ public class CodeGenWeb {
   public static void writeWebHandlers(final StringBuilderWithTabs sb, Environment environment) {
     {
       sb.append("@Override").writeNewline();
-      sb.append("protected WebResponse __get_internal(WebGet __request) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webGet.ready("GET");
       CodeGenWeb get = new CodeGenWeb(environment, environment.document.webGet, "get");
@@ -50,7 +51,7 @@ public class CodeGenWeb {
     }
     {
       sb.append("@Override").writeNewline();
-      sb.append("protected WebResponse __put_internal(WebPut __request) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected WebResponse __put_internal(CoreRequestContext __context, WebPut __request) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webPut.ready("PUT");
       CodeGenWeb put = new CodeGenWeb(environment, environment.document.webPut, "put");
@@ -63,7 +64,7 @@ public class CodeGenWeb {
     }
     {
       sb.append("@Override").writeNewline();
-      sb.append("protected WebResponse __delete_internal(WebDelete __request) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected WebResponse __delete_internal(CoreRequestContext __context, WebDelete __request) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webDelete.ready("DELETE");
       CodeGenWeb delete = new CodeGenWeb(environment, environment.document.webDelete, "delete");
@@ -76,7 +77,7 @@ public class CodeGenWeb {
     }
     {
       sb.append("@Override").writeNewline();
-      sb.append("public WebResponse __options(WebGet __request) {").tabUp().writeNewline();
+      sb.append("public WebResponse __options(CoreRequestContext __context, WebGet __request) {").tabUp().writeNewline();
       sb.append("WebPath __path = new WebPath(__request.uri);").writeNewline();
       TreeMap<String, UriAction> actions = environment.document.webOptions.ready("OPTIONS");
       CodeGenWeb options = new CodeGenWeb(environment, environment.document.webOptions, "options");
@@ -123,7 +124,7 @@ public class CodeGenWeb {
     if (level.action != null) {
       if (level.tail) {
         sb.writeNewline();
-        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__request.context.who, __request");
+        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__context, __request.context.who, __request");
         String paramName = translate.get("#tail-" + (at - 1) + "-name");
         if (paramName != null) {
           String paramValue = translate.get("#tail-" + (at - 1) + "-value");
@@ -137,7 +138,7 @@ public class CodeGenWeb {
         sb.append(");").writeNewline();
       } else {
         sb.append(" else {").tabUp().writeNewline();
-        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__request.context.who, __request");
+        sb.append("return ").append("__").append(method).append("_").append(level.name).append("(__context, __request.context.who, __request");
         for (Map.Entry<String, TyType> param : level.action.parameters().entrySet()) {
           sb.append(", ").append(translate.get(param.getKey()));
         }
@@ -156,7 +157,7 @@ public class CodeGenWeb {
   }
 
   private void writeGetHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebGet get) {
-    sb.append("private WebResponse __get_").append(name).append("(NtPrincipal __who, WebGet __request");
+    sb.append("private WebResponse __get_").append(name).append("(CoreRequestContext __context, NtPrincipal __who, WebGet __request");
     for (Map.Entry<String, TyType> param : get.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
@@ -166,7 +167,7 @@ public class CodeGenWeb {
   }
 
   private void writeOptionsHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebOptions options) {
-    sb.append("private WebResponse __options_").append(name).append("(NtPrincipal __who, WebGet __request");
+    sb.append("private WebResponse __options_").append(name).append("(CoreRequestContext __context, NtPrincipal __who, WebGet __request");
     for (Map.Entry<String, TyType> param : options.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
@@ -176,7 +177,7 @@ public class CodeGenWeb {
   }
 
   private void writePutHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebPut put) {
-    sb.append("private WebResponse __put_").append(name).append("(NtPrincipal __who, WebPut __request");
+    sb.append("private WebResponse __put_").append(name).append("(CoreRequestContext __context, NtPrincipal __who, WebPut __request");
     for (Map.Entry<String, TyType> param : put.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
@@ -187,7 +188,7 @@ public class CodeGenWeb {
   }
 
   private void writeDeleteHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebDelete delete) {
-    sb.append("private WebResponse __delete_").append(name).append("(NtPrincipal __who, WebDelete __request");
+    sb.append("private WebResponse __delete_").append(name).append("(CoreRequestContext __context, NtPrincipal __who, WebDelete __request");
     for (Map.Entry<String, TyType> param : delete.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }

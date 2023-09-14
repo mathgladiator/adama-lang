@@ -115,22 +115,22 @@ public class MockLivingDocument extends LivingDocument {
   public void __password(CoreRequestContext context, String password) { }
 
   @Override
-  public WebResponse __get_internal(WebGet __get) {
+  public WebResponse __get_internal(CoreRequestContext __context, WebGet __get) {
     return null;
   }
 
   @Override
-  public WebResponse __options(WebGet __get) {
+  public WebResponse __options(CoreRequestContext __context, WebGet __get) {
     return null;
   }
 
   @Override
-  protected WebResponse __put_internal(WebPut __get) {
+  protected WebResponse __put_internal(CoreRequestContext __context, WebPut __get) {
     return null;
   }
 
   @Override
-  protected WebResponse __delete_internal(WebDelete __delete) {
+  protected WebResponse __delete_internal(CoreRequestContext __context, WebDelete __delete) {
     return null;
   }
 

@@ -19,6 +19,7 @@ import org.adamalang.runtime.async.TimeoutTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
@@ -904,7 +905,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     try {
       __currentWebCache = get.cache;
       try {
-        get.callback.success(__get_internal(get.get));
+        get.callback.success(__get_internal(get.get.context.toCoreRequestContext(new Key(__space, __key)), get.get));
       } catch (AbortMessageException ame) {
         get.callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_WEB_GET_ABORT));
       }
@@ -915,16 +916,16 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: respond to a get request */
-  protected abstract WebResponse __get_internal(WebGet __get) throws AbortMessageException;
+  protected abstract WebResponse __get_internal(CoreRequestContext __context, WebGet __get) throws AbortMessageException;
 
   /** code generated: respond to a get request */
-  public abstract WebResponse __options(WebGet __get);
+  public abstract WebResponse __options(CoreRequestContext __context, WebGet __get);
 
   /** code generated: respond to a put request */
-  protected abstract WebResponse __put_internal(WebPut __put) throws AbortMessageException;
+  protected abstract WebResponse __put_internal(CoreRequestContext __context, WebPut __put) throws AbortMessageException;
 
   /** code generated: respond to a delete request */
-  protected abstract WebResponse __delete_internal(WebDelete __delete) throws AbortMessageException;
+  protected abstract WebResponse __delete_internal(CoreRequestContext __context, WebDelete __delete) throws AbortMessageException;
 
   public boolean __isConnected(final NtPrincipal __who) {
     return __clients.containsKey(__who);
@@ -1415,7 +1416,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       RxCache cache = new RxCache(this, delay);
       try {
         __currentWebCache = cache;
-        WebResponse response = __put_internal(put);
+        WebResponse response = __put_internal(put.context.toCoreRequestContext(new Key(__space, __key)), put);
         exception = false;
         return __simple_commit(put.context.who, request, response, 0L);
       } catch (ComputeBlockedException cbe) {
@@ -1454,7 +1455,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       RxCache cache = new RxCache(this, delay);
       try {
         __currentWebCache = cache;
-        WebResponse response = __delete_internal(del);
+        WebResponse response = __delete_internal(del.context.toCoreRequestContext(new Key(__space, __key)), del);
         exception = false;
         return __simple_commit(del.context.who, request, response, 0L);
       } catch (ComputeBlockedException cbe) {
@@ -1724,7 +1725,7 @@ public abstract class LivingDocument implements RxParent, Caller {
             if (item.item instanceof WebPut) {
               __currentWebCache = item.cache;
               try {
-                WebResponse response = __put_internal((WebPut) item.item);
+                WebResponse response = __put_internal(item.context.toCoreRequestContext(new Key(__space, __key)), (WebPut) item.item);
                 if (item.future != null) {
                   item.future.send(response);
                 }
@@ -1736,7 +1737,7 @@ public abstract class LivingDocument implements RxParent, Caller {
             } else if (item.item instanceof WebDelete) {
               __currentWebCache = item.cache;
               try {
-                WebResponse response = __delete_internal((WebDelete) item.item);
+                WebResponse response = __delete_internal(item.context.toCoreRequestContext(new Key(__space, __key)), (WebDelete) item.item);
                 if (item.future != null) {
                   item.future.send(response);
                 }

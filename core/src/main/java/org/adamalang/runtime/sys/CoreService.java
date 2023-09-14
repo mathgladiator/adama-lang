@@ -677,7 +677,7 @@ public class CoreService implements Deliverer, Queryable {
       public void success(DurableLivingDocument document) {
         PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
         document.registerActivity();
-        WebResponse response = document.document().__options(options);
+        WebResponse response = document.document().__options(options.context.toCoreRequestContext(key), options);
         if (response != null) {
           response.account(inventory);
           callback.success(response);

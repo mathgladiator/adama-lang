@@ -1,0 +1,9 @@
+@web get / "gg" {
+  return {error:"Missing something..." + @context.origin};
+}
+
+message M {}
+
+@web put / "gg-put" (M m) {
+  return {error:"Missing something..." + @context.origin};
+}

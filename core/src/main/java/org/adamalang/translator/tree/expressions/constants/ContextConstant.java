@@ -9,6 +9,7 @@
 package org.adamalang.translator.tree.expressions.constants;
 
 import org.adamalang.runtime.sys.CoreRequestContext;
+import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
@@ -39,8 +40,13 @@ public class ContextConstant extends Expression {
       TyType type = new TyInternalReadonlyClass(CoreRequestContext.class);
       environment.useSpecial(type, "__context");
       return type;
+    } else if (environment.state.isWeb()) {
+      environment.mustBeComputeContext(this);
+      TyType type = new TyInternalReadonlyClass(WebContext.class);
+      environment.useSpecial(type, "__context");
+      return type;
     } else {
-      environment.document.createError(this, "@context is only available within static policies, constructors, document events, authorize handler, message handlers");
+      environment.document.createError(this, "@context is only available within static policies, constructors, document events, authorize handler, message handlers, or web handlers");
       return null;
     }
   }
