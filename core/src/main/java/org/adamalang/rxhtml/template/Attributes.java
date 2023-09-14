@@ -480,7 +480,7 @@ public class Attributes {
       }
       convertFailureVariableToEvents(env.element, "sign_in_failed");
       RxObject obj = new RxObject(env, "rx:forward");
-      env.writer.tab().append(isDomainSignIn ? "$.adDSOr(" : "$.aDSOr(").append(eVar) //
+      env.writer.tab().append(isDomainSignInAndReset ? "$.adDSOr(" : "$.aDSOr(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("',").append(obj.rxObj) //

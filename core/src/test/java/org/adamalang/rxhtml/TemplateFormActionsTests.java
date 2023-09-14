@@ -140,7 +140,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n    var c = $.E('form');");
     gold.append("\n    var p=$.RX([]);");
     gold.append("\n    p.rx_forward='/w00t';");
-    gold.append("\n    $.aDSOr(c,a,'default',p);");
+    gold.append("\n    $.adDSOr(c,a,'default',p);");
     gold.append("\n    $.onS(c,'success',$.pV(a),'docnope2',false);");
     gold.append("\n    $.onS(c,'failure',$.pV(a),'docnope2',true);");
     gold.append("\n    var s = $.E('input');");
@@ -437,7 +437,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n    var c = $.E('form');");
     gold.append("\n    var p=$.RX([]);");
     gold.append("\n    p.rx_forward='/w00t';");
-    gold.append("\n    $.aDSOr(c,a,'default',p);");
+    gold.append("\n    $.adDSOr(c,a,'default',p);");
     gold.append("\n    $.onS(c,'success',$.pV(a),'docnope2',false);");
     gold.append("\n    $.onS(c,'failure',$.pV(a),'docnope2',true);");
     gold.append("\n    var s = $.E('input');");

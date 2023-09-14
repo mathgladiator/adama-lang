@@ -162,7 +162,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n    var c = $.E('form');");
     gold.append("\n    var ab=$.RX([]);");
     gold.append("\n    ab.rx_forward='/';");
-    gold.append("\n    $.aDSOr(c,a,'default',ab);");
+    gold.append("\n    $.adDSOr(c,a,'default',ab);");
     gold.append("\n    $.onS(c,'success',$.pV(a),'sign_in_failed',false);");
     gold.append("\n    $.onS(c,'failure',$.pV(a),'sign_in_failed',true);");
     gold.append("\n    b.append(c);");
@@ -343,7 +343,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n    var c = $.E('form');");
     gold.append("\n    var ab=$.RX([]);");
     gold.append("\n    ab.rx_forward='/';");
-    gold.append("\n    $.aDSOr(c,a,'default',ab);");
+    gold.append("\n    $.adDSOr(c,a,'default',ab);");
     gold.append("\n    $.onS(c,'success',$.pV(a),'sign_in_failed',false);");
     gold.append("\n    $.onS(c,'failure',$.pV(a),'sign_in_failed',true);");
     gold.append("\n    b.append(c);");
