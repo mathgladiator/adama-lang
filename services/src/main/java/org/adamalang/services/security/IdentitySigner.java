@@ -42,7 +42,6 @@ public class IdentitySigner extends SimpleService {
     return new IdentitySigner(metrics, offload, authority, privateKey);
   }
 
-
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
     sb.append("message _IdentitySigner_Req").append(" { string agent; }\n");
