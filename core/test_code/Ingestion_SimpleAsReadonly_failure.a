@@ -6,6 +6,9 @@ record X {
 table<X> tbl;
 
 @construct {
-  tbl <- {x:1, y:2} as z1;
-  z1 = 42;
+  int z1;
+  if (true) {
+    tbl <- {x:1, y:2} as z1;
+    z1 = 42;
+  }
 }

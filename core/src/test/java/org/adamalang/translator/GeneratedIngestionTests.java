@@ -7909,7 +7909,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Ingestion_SimpleAsReadonly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":9,\"character\":2,\"byte\":89},\"end\":{\"line\":9,\"character\":4,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z1' is readonly\",\"file\":\"./test_code/Ingestion_SimpleAsReadonly_failure.a\"},{\"range\":{\"start\":{\"line\":8,\"character\":23,\"byte\":83},\"end\":{\"line\":9,\"character\":9,\"byte\":96}},\"severity\":1,\"source\":\"error\",\"message\":\"'int' is unable to accept an set of 'int'.\",\"file\":\"./test_code/Ingestion_SimpleAsReadonly_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":4,\"byte\":117},\"end\":{\"line\":11,\"character\":6,\"byte\":119}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z1' is readonly\",\"file\":\"./test_code/Ingestion_SimpleAsReadonly_failure.a\"},{\"range\":{\"start\":{\"line\":10,\"character\":25,\"byte\":109},\"end\":{\"line\":11,\"character\":11,\"byte\":124}},\"severity\":1,\"source\":\"error\",\"message\":\"'int' is unable to accept an set of 'int'.\",\"file\":\"./test_code/Ingestion_SimpleAsReadonly_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
