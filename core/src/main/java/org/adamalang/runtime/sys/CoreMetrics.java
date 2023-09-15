@@ -23,6 +23,8 @@ public class CoreMetrics {
   public final CallbackMonitor factoryFetchDeploy;
   public final CallbackMonitor documentFresh;
   public final CallbackMonitor documentLoad;
+  public final CallbackMonitor documentLoadBaseServiceGet;
+  public final CallbackMonitor documentLoadRunLoad;
   public final CallbackMonitor documentPiggyBack;
   public final CallbackMonitor implicitCreate;
   public final CallbackMonitor deploy;
@@ -65,6 +67,8 @@ public class CoreMetrics {
     factoryFetchDeploy = metricsFactory.makeCallbackMonitor("core_factory_fetch_deploy");
     documentFresh = metricsFactory.makeCallbackMonitor("core_documents_fresh");
     documentLoad = metricsFactory.makeCallbackMonitor("core_documents_load");
+    documentLoadBaseServiceGet = metricsFactory.makeCallbackMonitor("core_documents_load_base_get");
+    documentLoadRunLoad = metricsFactory.makeCallbackMonitor("core_documents_load_run_load");
     documentPiggyBack = metricsFactory.makeCallbackMonitor("core_documents_piggy_back");
     implicitCreate = metricsFactory.makeCallbackMonitor("core_implicit_create");
     deploy = metricsFactory.makeCallbackMonitor("core_deploy");

@@ -170,35 +170,39 @@ public class DurableLivingDocument implements Queryable {
         callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_NEW_DOCUMENT));
         return;
       }
-      base.service.get(key, new Callback<>() {
+      base.service.get(key, base.metrics.documentLoadBaseServiceGet.wrap(new Callback<>() {
         @Override
         public void success(LocalDocumentChange documentValue) {
           base.executor.execute(new NamedRunnable("doc-load") {
             @Override
             public void execute() throws Exception {
-              LivingDocument doc = factory.create(monitor);
-              doc.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
-              JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
-              reader.ingestDedupe(doc.__get_intern_strings());
-              doc.__insert(reader);
-              DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
-              newDocument.size.set(documentValue.reads);
-              newDocument.load(new Callback<>() {
-                @Override
-                public void success(LivingDocumentChange change) {
-                  callback.success(newDocument);
-                  newDocument.queueCompact();
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
+              try {
+                LivingDocument doc = factory.create(monitor);
+                doc.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
+                JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
+                reader.ingestDedupe(doc.__get_intern_strings());
+                doc.__insert(reader);
+                DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
+                newDocument.size.set(documentValue.reads);
+                newDocument.load(base.metrics.documentLoadRunLoad.wrap(new Callback<>() {
+                  @Override
+                  public void success(LivingDocumentChange change) {
                     callback.success(newDocument);
-                  } else {
-                    callback.failure(ex);
+                    newDocument.queueCompact();
                   }
-                }
-              }, "create");
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
+                      callback.success(newDocument);
+                    } else {
+                      callback.failure(ex);
+                    }
+                  }
+                }), "create");
+              } catch (Exception ex) {
+                callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_FAILURE_LOAD, ex, EXLOGGER));
+              }
             }
           });
         }
@@ -207,7 +211,7 @@ public class DurableLivingDocument implements Queryable {
         public void failure(ErrorCodeException ex) {
           callback.failure(ex);
         }
-      });
+      }));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
     }
