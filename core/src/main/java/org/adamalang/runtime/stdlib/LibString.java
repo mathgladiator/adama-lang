@@ -611,4 +611,72 @@ public class LibString {
     }
     return new NtMaybe<>();
   }
+
+  @Extension
+  public static String hexOf(int x) {
+    return Integer.toString(x, 16);
+  }
+
+  @Extension
+  public static String hexOf(long x) {
+    return Long.toString(x, 16);
+  }
+
+  @Extension
+  @UseName(name="hexOf")
+  public static @HiddenType(clazz=String.class) NtMaybe<String> hexOfI(@HiddenType(clazz=Integer.class) NtMaybe<Integer> x) {
+    if (x.has()) {
+      return new NtMaybe<>(Integer.toString(x.get(), 16));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  @UseName(name="hexOf")
+  public static @HiddenType(clazz=String.class) NtMaybe<String> hexOfL(@HiddenType(clazz=Long.class) NtMaybe<Long> x) {
+    if (x.has()) {
+      return new NtMaybe<>(Long.toString(x.get(), 16));
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> intFromHex(String hex) {
+    try {
+      return new NtMaybe<>(Integer.parseInt(hex, 16));
+    } catch (NumberFormatException nfe) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> longFromHex(String hex) {
+    try {
+      return new NtMaybe<>(Long.parseLong(hex, 16));
+    } catch (NumberFormatException nfe) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> intFromHex(@HiddenType(clazz=String.class) NtMaybe<String> hex) {
+    try {
+      if (hex.has()) {
+        return new NtMaybe<>(Integer.parseInt(hex.get(), 16));
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=Long.class) NtMaybe<Long> longFromHex(@HiddenType(clazz=String.class) NtMaybe<String> hex) {
+    try {
+      if (hex.has()) {
+        return new NtMaybe<>(Long.parseLong(hex.get(), 16));
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return new NtMaybe<>();
+  }
 }

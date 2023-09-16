@@ -51,21 +51,34 @@ The current story for developers is "meh", so these items help improve and moder
 | web-put              |     | talk about the web processing                                                                      |
 
 ## Standard Library
-| project | IP  | description                                     |
-|---------|-----|-------------------------------------------------|
-| stats   |     | build out a statistics package that is decent   |
+| project         | IP | description                                                                                                                        |
+|-----------------|----|------------------------------------------------------------------------------------------------------------------------------------|
+| stats           |    | build out a statistics package that is decent and correct (median isn't good right now)                                            |
+| to/from Base64  |    | convert a string to and from Base64 with maybe&lt;string&gt;                                                                       |
+| substituteFirst |    | find the needle in a haystack and replace the first instance                                                                       |
+| substituteLast  |    | find the needle in a haystack and replace the last instance                                                                        |
+| substituteAll   |    | find the needle in a haystack and replace the every instance                                                                       |
+| substituteNth   |    | find the needle in a haystack and replace the n'th instance                                                                        |
+| format          |    | need var_args (just use a string[])  support, but the idea is to allow efficient string construction from many known finite pieces |
+| split /w limit  |    | only split a certain degree                                                                                                        |
+| find            |    | find a string within a string                                                                                                      |
+| findAll         |    | find a string within a string and produce a list if indicies                                                                       |
+| proper          |    | take a string, split on spaces, normalize white space, turn every string into a camel case word, join together                     |
+| initials        |    | take a string, split on spaces, normalize white space, turn every string into a concat of just first letters capitalized           |
+
 
 ## Web management
 The [online web portal](https://ide.adama-platform.com) needs a lot of work to be useful.
-NOTE: It may make more sense to fully deprecate the IDE as it takes time and isn't that useful.
+The web portal should be upgraded to provide a manager view along with tools to get started along with steps to make progress.
 
-| project         | IP  | milestones/description                                                    |
-|-----------------|-----|---------------------------------------------------------------------------|
-| render-plan     |     | Render and explain the deployment plan                                    |
-| render-routes   |     | Render and explain the routing including both rxhtml and web instructions |
-| better-debugger |     | The debugger sucks                                                        |
-| support fbauth  |     |                                                                           |
-| metrics         |     | A metrics explorer                                                        |
+| project         | IP | milestones/description                                                    |
+|-----------------|----|---------------------------------------------------------------------------|
+| render-plan     |    | Render and explain the deployment plan                                    |
+| render-routes   |    | Render and explain the routing including both rxhtml and web instructions |
+| better-debugger | X  | The debugger sucks                                                        |
+| support fbauth  |    |                                                                           |
+| metrics         |    | A metrics explorer                                                        |
+| service calls   |    | A way to explore which documents are making which service calls and the results |
 
 ## Contributer Experience
 If your name isn't Jeff, then the current environment is not great.
@@ -82,22 +95,24 @@ If your name isn't Jeff, then the current environment is not great.
 ## Language
 The language is going to big with many features!
 
-| project                | IP  | milestones/description                                                                                                                                              |
-|------------------------|-----|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| index-tensor           |     | Tables should be indexable based on integer tuples. Beyond efficiency, language extensions can help work with tables in a more natural array style (think 2D grids) |
-| index-graph            |     | Tables should be able to become hyper graphs for efficient navigation between records using a graph where edges can be annotated (this maps)                        |
-| full-text-index        |     | introduce full indexing where records describe a rich query language                                                                                                |
-| dynamic-order          |     | introduce a special command language for runtime ordering of lists                                                                                                  |
-| dynamic-query          |     | introduce a special language for queries to be dynamic                                                                                                              |
-| math-matrix            |     | The type system and math library should come with vectors and matrices out of the box                                                                               |
-| xml support            |     | Convert messages to XML                                                                                                                                             |
-| rxhtml-dynamic         |     | Embed rxhtml as a first class language feature                                                                                                                      |
-| metrics emit id;       |     | The language should have first class support for metrics (counters, inflight, distributions)                                                                        |
-| auto-convert-msg       |     | the binding of messages can be imprecise, need to simplify and automate @convert primarily for services                                                             |
-| bubble + privacy       |     | Add a way to annotate a bubble with a privacy policy to simplify privacy logic                                                                                      |
-| privacy-policy caching |     | instead of making privacy policies executable every single time, cache them by person and invalidate on data changes                                                |
-| table-protocol         |     | introduce a way to expose a table protocol for reading and writing tables via a data-grid component                                                                 |
-| sum types              |     | a sum type is going to be a special type of message                                                                                                                 |
+| project                | IP | milestones/description                                                                                                                                              |
+|------------------------|----|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| index-tensor           |    | Tables should be indexable based on integer tuples. Beyond efficiency, language extensions can help work with tables in a more natural array style (think 2D grids) |
+| index-graph            |    | Tables should be able to become hyper graphs for efficient navigation between records using a graph where edges can be annotated (this maps)                        |
+| full-text-index        |    | introduce full indexing where records describe a rich query language                                                                                                |
+| dynamic-order          |    | introduce a special command language for runtime ordering of lists                                                                                                  |
+| dynamic-query          |    | introduce a special language for queries to be dynamic                                                                                                              |
+| math-matrix            |    | The type system and math library should come with vectors and matrices out of the box                                                                               |
+| xml support            |    | Convert messages to XML                                                                                                                                             |
+| rxhtml-dynamic         |    | Embed rxhtml as a first class language feature                                                                                                                      |
+| metrics emit id;       |    | The language should have first class support for metrics (counters, inflight, distributions)                                                                        |
+| auto-convert-msg       |    | the binding of messages can be imprecise, need to simplify and automate @convert primarily for services                                                             |
+| bubble + privacy       | X  | Add a way to annotate a bubble with a privacy policy to simplify privacy logic                                                                                      |
+| privacy-policy caching | X  | instead of making privacy policies executable every single time, cache them by person and invalidate on data changes                                                |
+| table-protocol         |    | introduce a way to expose a table protocol for reading and writing tables via a data-grid component                                                                 |
+| sum/tag types          |    | a sum type is going to be a special type of message                                                                                                                 |
+| auto-convert           |    | auto convert messages to dynamic                                                                                                                                    |
+| normalize messages     |    | messages of the same structure should auto convert                                                                                                                  |
 
 ## Infrastructure - Protocols
 For integration across different ecosystems, there are more protocols to bridge gaps.
@@ -156,18 +171,18 @@ Adama is a service.
 ## Infrastructure - Web
 Adama is a web host provider of sorts!
 
-| project                 | IP  | milestones/description                                                                     |
-|-------------------------|-----|--------------------------------------------------------------------------------------------|
-| web-async delete        | X   | allow DELETEs to contain async calls                                                       |
-| web-async get           | X   | allow GETs to contain async calls                                                          |
-| request caching         |     | respect the cache_ttl_ms                                                                   |
-| doc auth - expiry       |     | infer cache_ttl_ms as an expiry for doc auth                                               | 
-| asset transforms        |     | implement some basic asset transforms                                                      |
-| web-abort put/delete    | X   | web calls that write should support abort                                                  |
-| @context                |     | ensure web operations can access context                                                   |
-| web-metrics             |     | add an API for the client to emit metrics                                                  |
-| add auth for web        |     | the principal for web* is currently @no_one; it should be a valid user                     |
-| build delta accumulator |     | slow clients may be get overwhelmed, the edge should buffer deltas and merge them together |
+| project                 | IP | milestones/description                                                                     |
+|-------------------------|----|--------------------------------------------------------------------------------------------|
+| web-async delete        | X  | allow DELETEs to contain async calls                                                       |
+| web-async get           | X  | allow GETs to contain async calls                                                          |
+| request caching         | X  | respect the cache_ttl_ms                                                                   |
+| doc auth - expiry       |    | infer cache_ttl_ms as an expiry for doc auth                                               | 
+| asset transforms        |    | implement some basic asset transforms                                                      |
+| web-abort put/delete    | X  | web calls that write should support abort                                                  |
+| @context                | X  | ensure web operations can access context                                                   |
+| web-metrics             |    | add an API for the client to emit metrics                                                  |
+| add auth for web        |    | the principal for web* is currently @no_one; it should be a valid user                     |
+| build delta accumulator |    | slow clients may be get overwhelmed, the edge should buffer deltas and merge them together |
 
 ## Infrastructure - Overlord
 Overlord is how the fleet is managed and aggregator.
@@ -177,7 +192,7 @@ Overlord is how the fleet is managed and aggregator.
 | canary               |     | for testing the service health and correctness; overlord should maintain a constant state of various high-value API calls |
 | operationalize-super |     | the "super" service needs a secure environment                                                                            |
 | ui for query         |     | dynamic queries                                                                                                           |
-| billing-send         |     | Simplify the billing engine and remove the overlord need                                                                  |
+| billing-send         | X   | Simplify the billing engine and remove the overlord need                                                                  |
 | ntp                  |     | look into time sync                                                                                                       |
 
 ## RxHTML

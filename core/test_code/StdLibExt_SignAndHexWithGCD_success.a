@@ -1,0 +1,53 @@
+public formula s0d = Math.sign(1.2);
+public formula s1d = Math.sign(-1.2);
+public formula s2d = Math.sign(0.0);
+
+public formula s0i = Math.sign(1);
+public formula s1i = Math.sign(-1);
+public formula s2i = Math.sign(0);
+
+public formula s0l = Math.sign(1L);
+public formula s1l = Math.sign(-1L);
+public formula s2l = Math.sign(0L);
+
+public formula s0dm = Math.sign(@maybe(1.2));
+public formula s1dm = Math.sign(@maybe(-1.2));
+public formula s2dm = Math.sign(@maybe(0.0));
+
+public formula s0im = Math.sign(@maybe(1));
+public formula s1im = Math.sign(@maybe(-1));
+public formula s2im = Math.sign(@maybe(0));
+
+public formula s0lm = Math.sign(@maybe(1L));
+public formula s1lm = Math.sign(@maybe(-1L));
+public formula s2lm = Math.sign(@maybe(0L));
+
+public formula sdmn = Math.sign(@maybe<double>);
+public formula simn = Math.sign(@maybe<int>);
+public formula slmn = Math.sign(@maybe<long>);
+
+public formula gcd1 = Math.gcd(20, 50);
+public formula gcd2 = Math.gcd(10, 13);
+public formula gcd3 = Math.gcd(10, 40);
+public formula gcd4 = Math.gcd(5, 25);
+
+public formula h1 = (100).hexOf();
+public formula h2 = (100L).hexOf();
+
+public formula fh1 = "42FF".intFromHex();
+public formula fh2 = "42FF".longFromHex();
+public formula fh1b = "42FFX".intFromHex();
+public formula fh2b = "42FFX".longFromHex();
+
+public formula h1m = (@maybe(100)).hexOf();
+public formula h2m = (@maybe(100L)).hexOf();
+
+public formula fh1m = (@maybe("4269")).intFromHex();
+public formula fh2m = (@maybe("4269")).longFromHex();
+public formula fh1bm = (@maybe("4269X")).intFromHex();
+public formula fh2bm = (@maybe("4269X")).longFromHex();
+
+public formula h1mn = (@maybe<int>).hexOf();
+public formula h2mn = (@maybe<long>).hexOf();
+
+

@@ -267,6 +267,89 @@ public class LibMath {
     return mx;
   }
 
+  @Extension
+  public static int sign(final double x) {
+    if (x > 0) {
+      return 1;
+    } else if (x < 0) {
+      return -1;
+    }
+    return 0;
+  }
+
+  @Extension
+  public static int sign(final long x) {
+    if (x > 0) {
+      return 1;
+    } else if (x < 0) {
+      return -1;
+    }
+    return 0;
+  }
+
+  @Extension
+  public static int sign(final int x) {
+    if (x > 0) {
+      return 1;
+    } else if (x < 0) {
+      return -1;
+    }
+    return 0;
+  }
+
+  @Extension
+  @UseName(name = "sign")
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> signD(final @HiddenType(clazz=Double.class) NtMaybe<Double> x) {
+    if (x.has()) {
+      if (x.get() > 0) {
+        return new NtMaybe<>(1);
+      } else if (x.get() < 0) {
+        return new NtMaybe<>(-1);
+      }
+      return new NtMaybe<>(0);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  @UseName(name = "sign")
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> signL(final @HiddenType(clazz=Long.class) NtMaybe<Long> x) {
+    if (x.has()) {
+      if (x.get() > 0) {
+        return new NtMaybe<>(1);
+      } else if (x.get() < 0) {
+        return new NtMaybe<>(-1);
+      }
+      return new NtMaybe<>(0);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  @UseName(name = "sign")
+  public static @HiddenType(clazz=Integer.class) NtMaybe<Integer> signI(final @HiddenType(clazz=Integer.class) NtMaybe<Integer> x) {
+    if (x.has()) {
+      if (x.get() > 0) {
+        return new NtMaybe<>(1);
+      } else if (x.get() < 0) {
+        return new NtMaybe<>(-1);
+      }
+      return new NtMaybe<>(0);
+    }
+    return new NtMaybe<>();
+  }
+
+  public static int gcd(int x, int y) {
+    if (x < 0 || y < 0) {
+      return gcd(Math.abs(x), Math.abs(y));
+    }
+    if (y == 0) {
+      return x;
+    } else {
+      return gcd(y, x % y);
+    }
+  }
+
   /** IEEEremainder */
   @Extension
   public static double IEEEremainder(final double x, final double y) {

@@ -25,6 +25,16 @@ import org.junit.Test;
 public class LibMathTests {
 
   @Test
+  public void gcdTests() {
+    Assert.assertEquals(0, LibMath.gcd(0, 0));
+    Assert.assertEquals(1, LibMath.gcd(2, 3));
+    Assert.assertEquals(1, LibMath.gcd(2, -3));
+    Assert.assertEquals(1, LibMath.gcd(-2, 3));
+    Assert.assertEquals(1, LibMath.gcd(-2, -3));
+    Assert.assertEquals(10, LibMath.gcd(10, 30));
+  }
+
+  @Test
   public void intOf() {
     Assert.assertEquals(3, (int) LibMath.intOf(3.14).get());
     Assert.assertEquals(3, (int) LibMath.intOf(new NtMaybe<>(3.14)).get());
