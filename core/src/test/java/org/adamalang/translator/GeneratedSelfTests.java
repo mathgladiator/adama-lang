@@ -587,6 +587,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        x.__commit(\"x\", __forward, __reverse);");
+    gold.append("\n        dx2.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -598,6 +599,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
     gold.append("\n        x.__revert();");
+    gold.append("\n        dx2.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");

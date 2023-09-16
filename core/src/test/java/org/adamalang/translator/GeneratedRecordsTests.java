@@ -1985,6 +1985,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
+    gold.append("\n    even.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2004,6 +2005,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    t.__revert();");
+    gold.append("\n    even.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -3482,6 +3484,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        u.__commit(\"u\", __forward, __reverse);");
+    gold.append("\n        v.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -3493,6 +3496,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
     gold.append("\n        u.__revert();");
+    gold.append("\n        v.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -3728,6 +3732,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n        y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n        z.dropInvalid();");
     gold.append("\n        w.__commit(\"w\", __forward, __reverse);");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
@@ -3741,6 +3746,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        id.__revert();");
     gold.append("\n        x.__revert();");
     gold.append("\n        y.__revert();");
+    gold.append("\n        z.dropInvalid();");
     gold.append("\n        w.__revert();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
@@ -5742,7 +5748,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTxY __localItem_10 : ay) {");
     gold.append("\n        __localItem_10.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"b\");");
     gold.append("\n      __writer.writeBoolean(b);");
@@ -5785,7 +5790,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __writer.writeObjectFieldIntro(\"mm\");");
     gold.append("\n      if (mm.has()) {");
     gold.append("\n        mm.get().__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      } else {");
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
@@ -5801,7 +5805,6 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n      y.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTxX() { __this = this; }");
@@ -6523,6 +6526,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
+    gold.append("\n    v42.dropInvalid();");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
@@ -6544,6 +6548,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
+    gold.append("\n    v42.dropInvalid();");
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
@@ -8281,6 +8286,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    owners_money.__commit(\"owners_money\", __forward, __reverse);");
     gold.append("\n    tbl.__commit(\"tbl\", __forward, __reverse);");
+    gold.append("\n    listz.dropInvalid();");
+    gold.append("\n    listz2.dropInvalid();");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
     gold.append("\n    /* root */");
@@ -8317,6 +8324,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    owners_money.__revert();");
     gold.append("\n    tbl.__revert();");
+    gold.append("\n    listz.dropInvalid();");
+    gold.append("\n    listz2.dropInvalid();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
@@ -8768,6 +8777,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n        y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n        sum.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -8780,6 +8790,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n        id.__revert();");
     gold.append("\n        x.__revert();");
     gold.append("\n        y.__revert();");
+    gold.append("\n        sum.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");

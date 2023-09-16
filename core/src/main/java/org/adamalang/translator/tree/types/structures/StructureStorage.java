@@ -355,27 +355,36 @@ public class StructureStorage extends DocumentPosition {
     fieldsByOrder.addAll(sorter.sort());
   }
 
+  private void addStructureDependency(TyType incomingType, boolean resolve, HashSet<String> depends, Environment environment) {
+    TyType type = incomingType;
+    // In the case that a field is computed, then we need to annotate all record possible record types
+    boolean again = resolve;
+    while (again) { // need the loop in case you have maybe -> map -> maybe
+      again = false;
+      while (type instanceof DetailContainsAnEmbeddedType) { // maybe, list, etc...
+        type = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
+        again = true;
+      }
+      while (type instanceof IsMap) {
+        type = ((IsMap) type).getRangeType(environment);
+        again = true;
+      }
+    }
+    if (type instanceof IsStructure) { // alas, it is a structure
+      if (!((IsStructure) type).storage().anonymous) { // that isn't anonymous, and anonymous structures can't be infinite
+        depends.add(((IsStructure) type).storage().name.text); // dependency found
+      }
+    }
+  }
+
   public Set<String> getStructureDependencies(Environment environment) {
     HashSet<String> depends = new HashSet<>();
     for (FieldDefinition fd : fieldsByOrder) {
-      TyType type = fd.type;
-      // In the case that a field is computed, then we need to annotate all record possible record types
-      boolean again = fd.computeExpression != null;
-      while (again) { // need the loop in case you have maybe -> map -> maybe
-        again = false;
-        while (type instanceof DetailContainsAnEmbeddedType) { // maybe, list, etc...
-          type = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
-          again = true;
-        }
-        while (type instanceof IsMap) {
-          type = ((IsMap) type).getRangeType(environment);
-          again = true;
-        }
-      }
-      if (type instanceof IsStructure) { // alas, it is a structure
-        if (!((IsStructure) type).storage().anonymous) { // that isn't anonymous, and anonymous structures can't be infinite
-          depends.add(((IsStructure) type).storage().name.text); // dependency found
-        }
+      addStructureDependency(fd.type, fd.computeExpression != null, depends, environment);
+    }
+    for (BubbleDefinition bd : bubbles.values()) {
+      if (bd.expressionType != null) {
+        addStructureDependency(bd.expressionType, true, depends, environment);
       }
     }
     return depends;

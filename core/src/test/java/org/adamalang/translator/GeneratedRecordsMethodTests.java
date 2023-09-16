@@ -2252,6 +2252,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        boom.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -2262,6 +2263,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      if (__isDirty()) {");
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
+    gold.append("\n        boom.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");

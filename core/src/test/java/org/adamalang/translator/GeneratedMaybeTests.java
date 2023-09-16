@@ -2458,6 +2458,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    tbl.__commit(\"tbl\", __forward, __reverse);");
+    gold.append("\n    all.dropInvalid();");
+    gold.append("\n    v1.dropInvalid();");
+    gold.append("\n    v2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2477,6 +2480,9 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    tbl.__revert();");
+    gold.append("\n    all.dropInvalid();");
+    gold.append("\n    v1.dropInvalid();");
+    gold.append("\n    v2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -3512,6 +3518,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    r.__commit(\"r\", __forward, __reverse);");
     gold.append("\n    hey.__commit(\"hey\", __forward, __reverse);");
+    gold.append("\n    rx.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3532,6 +3539,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    r.__revert();");
     gold.append("\n    hey.__revert();");
+    gold.append("\n    rx.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

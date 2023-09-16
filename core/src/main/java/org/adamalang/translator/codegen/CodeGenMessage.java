@@ -221,7 +221,7 @@ public class CodeGenMessage {
       sb.append("__writer.writeNull();").tabDown().writeNewline();
       sb.append("}");
     } else if (type instanceof TyNativeMessage) {
-      sb.append(name).append(".__writeOut(__writer);").writeNewline();
+      sb.append(name).append(".__writeOut(__writer);");
     } else if (type instanceof TyNativeMap) {
       final var domainType = ((TyNativeMap) type).getDomainType(environment);
       final var rangeType = ((TyNativeMap) type).getRangeType(environment);

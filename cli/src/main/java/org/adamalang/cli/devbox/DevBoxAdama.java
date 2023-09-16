@@ -22,11 +22,14 @@ import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
+  private static final Logger PERF_LOG = LoggerFactory.getLogger("perf");
   private final SimpleExecutor executor;
   private final ConnectionContext context;
   private final DynamicControl control;
@@ -139,12 +142,18 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
+    long started = System.currentTimeMillis();
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
     verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       @Override
       public void onSetupComplete(CoreStream stream) {
         streams.put(requestId, new LocalStream(key, stream));
         io.info("adama|connected to " + key.space + "/" +key.key);
+        ObjectNode entry = Json.newJsonObject();
+        entry.put("type", "devbox");
+        entry.put("task", "connect");
+        entry.put("time", (System.currentTimeMillis() - started));
+        PERF_LOG.error(entry.toString());
       }
 
       @Override
@@ -178,10 +187,16 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
-  private static Callback<Integer> wrap(SeqResponder responder) {
+  private static Callback<Integer> wrap(String task, SeqResponder responder) {
+    long started = System.currentTimeMillis();
     return new Callback<>() {
       @Override
       public void success(Integer seq) {
+        ObjectNode entry = Json.newJsonObject();
+        entry.put("type", "devbox");
+        entry.put("task", task);
+        entry.put("time", (System.currentTimeMillis() - started));
+        PERF_LOG.error(entry.toString());
         responder.complete(seq);
       }
 
@@ -196,7 +211,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   public void handle_ConnectionSend(long requestId, Long connection, String channel, JsonNode message, SeqResponder responder) {
     LocalStream stream = streams.get(connection);
     if (stream != null) {
-      stream.ref.send(channel, null, message.toString(), wrap(responder));
+      stream.ref.send(channel, null, message.toString(), wrap("send", responder));
     } else {
       responder.error(new ErrorCodeException(-1));
     }
@@ -226,7 +241,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   public void handle_ConnectionSendOnce(long requestId, Long connection, String channel, String dedupe, JsonNode message, SeqResponder responder) {
     LocalStream stream = streams.get(connection);
     if (stream != null) {
-      stream.ref.send(channel, dedupe, message.toString(), wrap(responder));
+      stream.ref.send(channel, dedupe, message.toString(), wrap("send-once", responder));
     } else {
       responder.error(new ErrorCodeException(-1));
     }
@@ -256,7 +271,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   public void handle_ConnectionAttach(long requestId, Long connection, String assetId, String filename, String contentType, Long size, String digestMd5, String digestSha384, SeqResponder responder) {
     LocalStream stream = streams.get(connection);
     if (stream != null) {
-      stream.ref.attach(assetId, filename, contentType, size, digestMd5, digestSha384, wrap(responder));
+      stream.ref.attach(assetId, filename, contentType, size, digestMd5, digestSha384, wrap("attach", responder));
     } else {
       responder.error(new ErrorCodeException(-1));
     }
@@ -264,6 +279,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
   @Override
   public void handle_ConnectionUpdate(long requestId, Long connection, ObjectNode viewerState, SimpleResponder responder) {
+    long started = System.currentTimeMillis();
     LocalStream stream = streams.get(connection);
     if (stream != null) {
       if (control.slowViewerStateUpdates.get()) {
@@ -272,6 +288,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
           public void execute() throws Exception {
             stream.ref.update(viewerState.toString());
             responder.complete();
+            ObjectNode entry = Json.newJsonObject();
+            entry.put("type", "devbox");
+            entry.put("task", "update");
+            entry.put("time", (System.currentTimeMillis() - started));
+            PERF_LOG.error(entry.toString());
           }
         }, 1000);
       } else {

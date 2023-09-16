@@ -757,7 +757,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_8 __localItem_3 : events) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"has_events\");");
     gold.append("\n      __writer.writeBoolean(has_events);");
@@ -2977,7 +2976,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n      x.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
@@ -3295,7 +3293,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n      if (x.has()) {");
     gold.append("\n        x.get().__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      } else {");
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
@@ -3497,7 +3494,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_58 __localItem_3 : x) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");

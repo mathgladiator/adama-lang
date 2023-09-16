@@ -49,10 +49,9 @@ public class RxGuard extends RxBase implements RxChild {
   private void inc() {
     if (__parent instanceof RxRecordBase && generation == 0) {
       generation = ((RxRecordBase) __parent).__id();
-    } else {
-      generation *= 65521;
-      generation++;
     }
+    generation *= 65521;
+    generation++;
   }
 
   @Override

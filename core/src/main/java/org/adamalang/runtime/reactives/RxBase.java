@@ -88,6 +88,9 @@ public abstract class RxBase {
 
   /** inform the object that it is dirty, which in turn will notify the parents */
   public void __raiseDirty() {
+    if (__dirty) {
+      return;
+    }
     __dirty = true;
     if (__parent != null) {
       __parent.__raiseDirty();

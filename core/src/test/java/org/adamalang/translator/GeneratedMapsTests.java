@@ -368,6 +368,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    count.__commit(\"count\", __forward, __reverse);");
     gold.append("\n    count_after_delete.__commit(\"count_after_delete\", __forward, __reverse);");
     gold.append("\n    rv.__commit(\"rv\", __forward, __reverse);");
+    gold.append("\n    zoop.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -390,6 +391,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    count.__revert();");
     gold.append("\n    count_after_delete.__revert();");
     gold.append("\n    rv.__revert();");
+    gold.append("\n    zoop.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -2042,6 +2044,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    z_s.__commit(\"z_s\", __forward, __reverse);");
+    gold.append("\n    x.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2061,6 +2064,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    z_s.__revert();");
+    gold.append("\n    x.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -7210,6 +7214,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    goats.__commit(\"goats\", __forward, __reverse);");
+    gold.append("\n    grouped_by_breed.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7229,6 +7234,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    goats.__revert();");
+    gold.append("\n    grouped_by_breed.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

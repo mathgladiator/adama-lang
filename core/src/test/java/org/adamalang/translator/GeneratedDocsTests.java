@@ -1669,6 +1669,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        score.__commit(\"score\", __forward, __reverse);");
+    gold.append("\n        ds.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -1680,6 +1681,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
     gold.append("\n        score.__revert();");
+    gold.append("\n        ds.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");

@@ -587,6 +587,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        status.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -597,6 +598,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      if (__isDirty()) {");
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
+    gold.append("\n        status.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -1700,6 +1702,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        friday.__commit(\"friday\", __forward, __reverse);");
     gold.append("\n        saturday.__commit(\"saturday\", __forward, __reverse);");
     gold.append("\n        sunday.__commit(\"sunday\", __forward, __reverse);");
+    gold.append("\n        nice.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -1717,6 +1720,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        friday.__revert();");
     gold.append("\n        saturday.__revert();");
     gold.append("\n        sunday.__revert();");
+    gold.append("\n        nice.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -2368,6 +2372,8 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n    val_sum.dropInvalid();");
+    gold.append("\n    val_sum2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2388,6 +2394,8 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
+    gold.append("\n    val_sum.dropInvalid();");
+    gold.append("\n    val_sum2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -2646,6 +2654,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        val.__commit(\"val\", __forward, __reverse);");
+    gold.append("\n        z1.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -2657,6 +2666,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
     gold.append("\n        val.__revert();");
+    gold.append("\n        z1.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -2865,6 +2875,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        val.__commit(\"val\", __forward, __reverse);");
+    gold.append("\n        z2.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -2876,6 +2887,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
     gold.append("\n        val.__revert();");
+    gold.append("\n        z2.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -3465,6 +3477,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
+    gold.append("\n    y.dropInvalid();");
+    gold.append("\n    z.dropInvalid();");
+    gold.append("\n    w.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3484,6 +3499,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
+    gold.append("\n    y.dropInvalid();");
+    gold.append("\n    z.dropInvalid();");
+    gold.append("\n    w.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

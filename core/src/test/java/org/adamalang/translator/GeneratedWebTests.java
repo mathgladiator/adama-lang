@@ -4465,7 +4465,6 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"json\");");
     gold.append("\n      json.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
@@ -4630,7 +4629,6 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"json\");");
     gold.append("\n      json.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_2() { __this = this; }");
@@ -4795,7 +4793,6 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"json\");");
     gold.append("\n      json.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_4() { __this = this; }");
@@ -5804,7 +5801,6 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"json\");");
     gold.append("\n      json.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");

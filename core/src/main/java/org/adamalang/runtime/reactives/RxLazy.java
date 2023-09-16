@@ -54,7 +54,11 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
 
   @Override
   public boolean __raiseInvalid() {
+    if (invalid) {
+      return true;
+    }
     invalid = true;
+    cached = null;
     __invalidateSubscribers();
     if (__parent != null) {
       return __parent.__isAlive();
@@ -63,7 +67,12 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   public Ty get() {
-    ensureCacheValid();
+    if (invalid) {
+      return formula.get();
+    }
+    if (cached == null) {
+      cached = formula.get();
+    }
     return cached;
   }
 
@@ -75,6 +84,13 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     }
     generation *= 65521;
     generation++;
+  }
+
+  /** this has the impact of ensuring the value is cached after being invalidated */
+  public void dropInvalid() {
+    if (checkInvalidAndLower()) {
+      cached = null;
+    }
   }
 
   private void ensureCacheValid() {

@@ -76,6 +76,9 @@ public class CodeGenRecords {
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __forward, __reverse);").writeNewline();
       }
+      if (fieldType instanceof TyReactiveLazy) {
+        sb.append(fieldName).append(".dropInvalid();").writeNewline();
+      }
       if (isCommitCache(fdInOrder, fieldType)) {
         sb.append(fieldName).append(".get();").writeNewline();
         fieldsToKill.add("__c" + fieldName);
@@ -110,6 +113,9 @@ public class CodeGenRecords {
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__revert();").writeNewline();
+      }
+      if (fieldType instanceof TyReactiveLazy) {
+        sb.append(fieldName).append(".dropInvalid();").writeNewline();
       }
       if (isCommitCache(fdInOrder, fieldType)) {
         sb.append(fieldName).append(".get();").writeNewline();

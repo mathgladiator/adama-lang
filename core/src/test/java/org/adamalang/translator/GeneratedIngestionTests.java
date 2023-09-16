@@ -5120,7 +5120,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"z\");");
     gold.append("\n      z.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTxdY() { __this = this; }");
@@ -7571,7 +7570,6 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_3 __localItem_3 : z) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");

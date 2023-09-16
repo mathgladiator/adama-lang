@@ -464,6 +464,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    m.__commit(\"m\", __forward, __reverse);");
+    gold.append("\n    x.dropInvalid();");
     gold.append("\n    x.get();");
     gold.append("\n    __cx.__commit(\"__cx\", __forward, __reverse);");
     gold.append("\n    /* root */");
@@ -485,6 +486,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    m.__revert();");
+    gold.append("\n    x.dropInvalid();");
     gold.append("\n    x.get();");
     gold.append("\n    __cx.__revert();");
     gold.append("\n    /* root */");
@@ -1224,6 +1226,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    m.__commit(\"m\", __forward, __reverse);");
+    gold.append("\n    x.dropInvalid();");
     gold.append("\n    x.get();");
     gold.append("\n    __cx.__commit(\"__cx\", __forward, __reverse);");
     gold.append("\n    /* root */");
@@ -1245,6 +1248,7 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    m.__revert();");
+    gold.append("\n    x.dropInvalid();");
     gold.append("\n    x.get();");
     gold.append("\n    __cx.__revert();");
     gold.append("\n    /* root */");
@@ -3623,8 +3627,15 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
+    gold.append("\n    foo.dropInvalid();");
     gold.append("\n    foo.get();");
     gold.append("\n    __cfoo.__commit(\"__cfoo\", __forward, __reverse);");
+    gold.append("\n    f_has.dropInvalid();");
+    gold.append("\n    f_code.dropInvalid();");
+    gold.append("\n    f_finished.dropInvalid();");
+    gold.append("\n    f_failed.dropInvalid();");
+    gold.append("\n    f_message.dropInvalid();");
+    gold.append("\n    f_maybe.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3643,8 +3654,15 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
+    gold.append("\n    foo.dropInvalid();");
     gold.append("\n    foo.get();");
     gold.append("\n    __cfoo.__revert();");
+    gold.append("\n    f_has.dropInvalid();");
+    gold.append("\n    f_code.dropInvalid();");
+    gold.append("\n    f_finished.dropInvalid();");
+    gold.append("\n    f_failed.dropInvalid();");
+    gold.append("\n    f_message.dropInvalid();");
+    gold.append("\n    f_maybe.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

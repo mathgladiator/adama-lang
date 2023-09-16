@@ -1749,7 +1749,6 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"location\");");
     gold.append("\n      location.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");

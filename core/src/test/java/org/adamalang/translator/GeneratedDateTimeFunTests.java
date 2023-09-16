@@ -365,6 +365,12 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    eq1.__commit(\"eq1\", __forward, __reverse);");
+    gold.append("\n    x_yr.dropInvalid();");
+    gold.append("\n    x_mo.dropInvalid();");
+    gold.append("\n    x_day.dropInvalid();");
+    gold.append("\n    next_x.dropInvalid();");
+    gold.append("\n    prior_x.dropInvalid();");
+    gold.append("\n    cal.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -385,6 +391,12 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    eq1.__revert();");
+    gold.append("\n    x_yr.dropInvalid();");
+    gold.append("\n    x_mo.dropInvalid();");
+    gold.append("\n    x_day.dropInvalid();");
+    gold.append("\n    next_x.dropInvalid();");
+    gold.append("\n    prior_x.dropInvalid();");
+    gold.append("\n    cal.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -3145,6 +3157,8 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    deepnow.__commit(\"deepnow\", __forward, __reverse);");
     gold.append("\n    zone.__commit(\"zone\", __forward, __reverse);");
     gold.append("\n    nt.__commit(\"nt\", __forward, __reverse);");
+    gold.append("\n    deepnow_date.dropInvalid();");
+    gold.append("\n    deepnow_time.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3168,6 +3182,8 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    deepnow.__revert();");
     gold.append("\n    zone.__revert();");
     gold.append("\n    nt.__revert();");
+    gold.append("\n    deepnow_date.dropInvalid();");
+    gold.append("\n    deepnow_time.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -3854,6 +3870,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    eq1.__commit(\"eq1\", __forward, __reverse);");
+    gold.append("\n    x_hr.dropInvalid();");
+    gold.append("\n    x_min.dropInvalid();");
+    gold.append("\n    ov.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3874,6 +3893,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    eq1.__revert();");
+    gold.append("\n    x_hr.dropInvalid();");
+    gold.append("\n    x_min.dropInvalid();");
+    gold.append("\n    ov.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -4847,6 +4869,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    eq1.__commit(\"eq1\", __forward, __reverse);");
+    gold.append("\n    x_sec.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4867,6 +4890,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    eq1.__revert();");
+    gold.append("\n    x_sec.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

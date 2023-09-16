@@ -373,8 +373,10 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n    z.dropInvalid();");
     gold.append("\n    u.__commit(\"u\", __forward, __reverse);");
     gold.append("\n    v.__commit(\"v\", __forward, __reverse);");
+    gold.append("\n    w.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -395,8 +397,10 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
+    gold.append("\n    z.dropInvalid();");
     gold.append("\n    u.__revert();");
     gold.append("\n    v.__revert();");
+    gold.append("\n    w.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

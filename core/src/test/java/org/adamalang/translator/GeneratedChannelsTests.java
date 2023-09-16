@@ -1532,7 +1532,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __writer.writeObjectFieldIntro(\"recur\");");
     gold.append("\n      if (recur.has()) {");
     gold.append("\n        recur.get().__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      } else {");
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");

@@ -1089,6 +1089,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    _publishes.__commit(\"_publishes\", __forward, __reverse);");
+    gold.append("\n    publishes.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1108,6 +1109,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    _publishes.__revert();");
+    gold.append("\n    publishes.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -4452,6 +4454,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.__commit(\"deck\", __forward, __reverse);");
     gold.append("\n    value.__commit(\"value\", __forward, __reverse);");
     gold.append("\n    recs.__commit(\"recs\", __forward, __reverse);");
+    gold.append("\n    all.dropInvalid();");
     gold.append("\n    countdown.__commit(\"countdown\", __forward, __reverse);");
     gold.append("\n    current_player.__commit(\"current_player\", __forward, __reverse);");
     gold.append("\n    owner.__commit(\"owner\", __forward, __reverse);");
@@ -4459,6 +4462,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    finished.__commit(\"finished\", __forward, __reverse);");
     gold.append("\n    latest_profile_picture.__commit(\"latest_profile_picture\", __forward, __reverse);");
     gold.append("\n    _resources.__commit(\"_resources\", __forward, __reverse);");
+    gold.append("\n    cards_left.dropInvalid();");
+    gold.append("\n    cards_available.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4486,6 +4491,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.__revert();");
     gold.append("\n    value.__revert();");
     gold.append("\n    recs.__revert();");
+    gold.append("\n    all.dropInvalid();");
     gold.append("\n    countdown.__revert();");
     gold.append("\n    current_player.__revert();");
     gold.append("\n    owner.__revert();");
@@ -4493,6 +4499,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    finished.__revert();");
     gold.append("\n    latest_profile_picture.__revert();");
     gold.append("\n    _resources.__revert();");
+    gold.append("\n    cards_left.dropInvalid();");
+    gold.append("\n    cards_available.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -7422,6 +7430,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.__commit(\"deck\", __forward, __reverse);");
     gold.append("\n    owner.__commit(\"owner\", __forward, __reverse);");
     gold.append("\n    players.__commit(\"players\", __forward, __reverse);");
+    gold.append("\n    people.dropInvalid();");
     gold.append("\n    playing.__commit(\"playing\", __forward, __reverse);");
     gold.append("\n    passing_mode.__commit(\"passing_mode\", __forward, __reverse);");
     gold.append("\n    player1.__commit(\"player1\", __forward, __reverse);");
@@ -7434,6 +7443,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    points_played.__commit(\"points_played\", __forward, __reverse);");
     gold.append("\n    last_winner.__commit(\"last_winner\", __forward, __reverse);");
     gold.append("\n    points_awarded.__commit(\"points_awarded\", __forward, __reverse);");
+    gold.append("\n    hand.dropInvalid();");
+    gold.append("\n    players_connected.dropInvalid();");
+    gold.append("\n    observers_connected.dropInvalid();");
+    gold.append("\n    players_ordered.dropInvalid();");
+    gold.append("\n    ready.dropInvalid();");
+    gold.append("\n    in_play.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7455,6 +7470,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.__revert();");
     gold.append("\n    owner.__revert();");
     gold.append("\n    players.__revert();");
+    gold.append("\n    people.dropInvalid();");
     gold.append("\n    playing.__revert();");
     gold.append("\n    passing_mode.__revert();");
     gold.append("\n    player1.__revert();");
@@ -7467,6 +7483,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    points_played.__revert();");
     gold.append("\n    last_winner.__revert();");
     gold.append("\n    points_awarded.__revert();");
+    gold.append("\n    hand.dropInvalid();");
+    gold.append("\n    players_connected.dropInvalid();");
+    gold.append("\n    observers_connected.dropInvalid();");
+    gold.append("\n    players_ordered.dropInvalid();");
+    gold.append("\n    ready.dropInvalid();");
+    gold.append("\n    in_play.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -8035,6 +8057,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        owner.__commit(\"owner\", __forward, __reverse);");
     gold.append("\n        ordering.__commit(\"ordering\", __forward, __reverse);");
     gold.append("\n        place.__commit(\"place\", __forward, __reverse);");
+    gold.append("\n        points.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -8050,6 +8073,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        owner.__revert();");
     gold.append("\n        ordering.__revert();");
     gold.append("\n        place.__revert();");
+    gold.append("\n        points.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -11155,6 +11179,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    description.__commit(\"description\", __forward, __reverse);");
     gold.append("\n    viewers.__commit(\"viewers\", __forward, __reverse);");
     gold.append("\n    _addons.__commit(\"_addons\", __forward, __reverse);");
+    gold.append("\n    addons.dropInvalid();");
+    gold.append("\n    name_uppercase.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11178,6 +11204,8 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    description.__revert();");
     gold.append("\n    viewers.__revert();");
     gold.append("\n    _addons.__revert();");
+    gold.append("\n    addons.dropInvalid();");
+    gold.append("\n    name_uppercase.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -12478,8 +12506,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.__commit(\"deck\", __forward, __reverse);");
     gold.append("\n    tbl.__commit(\"tbl\", __forward, __reverse);");
     gold.append("\n    pointdb.__commit(\"pointdb\", __forward, __reverse);");
+    gold.append("\n    points_by_x2.dropInvalid();");
     gold.append("\n    named_points.__commit(\"named_points\", __forward, __reverse);");
     gold.append("\n    index_points.__commit(\"index_points\", __forward, __reverse);");
+    gold.append("\n    by_x.dropInvalid();");
+    gold.append("\n    points_by_x.dropInvalid();");
+    gold.append("\n    by_x_2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -12502,8 +12534,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    pointdb.__revert();");
+    gold.append("\n    points_by_x2.dropInvalid();");
     gold.append("\n    named_points.__revert();");
     gold.append("\n    index_points.__revert();");
+    gold.append("\n    by_x.dropInvalid();");
+    gold.append("\n    points_by_x.dropInvalid();");
+    gold.append("\n    by_x_2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -16022,9 +16058,16 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    d.__commit(\"d\", __forward, __reverse);");
     gold.append("\n    b.__commit(\"b\", __forward, __reverse);");
     gold.append("\n    name.__commit(\"name\", __forward, __reverse);");
+    gold.append("\n    z.dropInvalid();");
+    gold.append("\n    z2.dropInvalid();");
+    gold.append("\n    namex2.dropInvalid();");
     gold.append("\n    c1.__commit(\"c1\", __forward, __reverse);");
     gold.append("\n    c2.__commit(\"c2\", __forward, __reverse);");
     gold.append("\n    s.__commit(\"s\", __forward, __reverse);");
+    gold.append("\n    name_len.dropInvalid();");
+    gold.append("\n    bz.dropInvalid();");
+    gold.append("\n    baz.dropInvalid();");
+    gold.append("\n    baz2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -16048,9 +16091,16 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    d.__revert();");
     gold.append("\n    b.__revert();");
     gold.append("\n    name.__revert();");
+    gold.append("\n    z.dropInvalid();");
+    gold.append("\n    z2.dropInvalid();");
+    gold.append("\n    namex2.dropInvalid();");
     gold.append("\n    c1.__revert();");
     gold.append("\n    c2.__revert();");
     gold.append("\n    s.__revert();");
+    gold.append("\n    name_len.dropInvalid();");
+    gold.append("\n    bz.dropInvalid();");
+    gold.append("\n    baz.dropInvalid();");
+    gold.append("\n    baz2.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -16804,6 +16854,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    wins_O.__commit(\"wins_O\", __forward, __reverse);");
     gold.append("\n    stalemates.__commit(\"stalemates\", __forward, __reverse);");
     gold.append("\n    _squares.__commit(\"_squares\", __forward, __reverse);");
+    gold.append("\n    board.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -16829,6 +16880,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    wins_O.__revert();");
     gold.append("\n    stalemates.__revert();");
     gold.append("\n    _squares.__revert();");
+    gold.append("\n    board.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -18336,6 +18388,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    _chat.__commit(\"_chat\", __forward, __reverse);");
+    gold.append("\n    chat.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -18355,6 +18408,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    _chat.__revert();");
+    gold.append("\n    chat.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

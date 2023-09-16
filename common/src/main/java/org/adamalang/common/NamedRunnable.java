@@ -8,6 +8,7 @@
  */
 package org.adamalang.common;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +54,20 @@ public abstract class NamedRunnable implements Runnable {
       long queueTime = now - created - delay;
       long runTime = now - ran;
       this.created = now; // for periodic tasks
+      /*
       boolean skip = queueTime <= 1 && runTime <= 1;
-      if (!skip) { // TODO: this is for performance measuring (need to automate in a meaningful way)
-        // PERF_LOG.error(__runnableName + "," + runningIn + "," + (queueTime) + "," + (queueTime > 500 ? "delayed" : "quick") + "," + runTime + "," + (runTime > 25 ? "slow" : "fast"));
+      if (!skip) {
+        ObjectNode entry = Json.newJsonObject();
+        entry.put("type", "executor");
+        entry.put("name", __runnableName);
+        entry.put("executor", runningIn);
+        entry.put("queueTime", queueTime);
+        entry.put("queueStatus", (queueTime > 500 ? "delayed" : "quick"));
+        entry.put("runTime", runTime);
+        entry.put("runStatus", (runTime > 25 ? "slow" : "fast"));
+        PERF_LOG.error(entry.toString());
       }
+      */
     } catch (Exception ex) {
       boolean noise = noisy(ex);
       if (!noise) {

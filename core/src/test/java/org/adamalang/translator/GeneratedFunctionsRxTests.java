@@ -361,6 +361,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    vx.__commit(\"vx\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n    xy_HERE.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -382,6 +383,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    vx.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
+    gold.append("\n    xy_HERE.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -1222,6 +1224,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n    xy_HERE.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1242,6 +1245,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
+    gold.append("\n    xy_HERE.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -2063,6 +2067,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
+    gold.append("\n    xy.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2082,6 +2087,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    x.__revert();");
+    gold.append("\n    xy.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -2893,6 +2899,9 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
+    gold.append("\n    now.dropInvalid();");
+    gold.append("\n    datetime_val.dropInvalid();");
+    gold.append("\n    today.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2911,6 +2920,9 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
+    gold.append("\n    now.dropInvalid();");
+    gold.append("\n    datetime_val.dropInvalid();");
+    gold.append("\n    today.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

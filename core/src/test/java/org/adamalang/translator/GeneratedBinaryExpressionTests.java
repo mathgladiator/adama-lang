@@ -1349,6 +1349,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
+    gold.append("\n    special_one.dropInvalid();");
+    gold.append("\n    forty_five.dropInvalid();");
+    gold.append("\n    recip.dropInvalid();");
     gold.append("\n    final_foo.__commit(\"final_foo\", __forward, __reverse);");
     gold.append("\n    final_foo2.__commit(\"final_foo2\", __forward, __reverse);");
     gold.append("\n    final_foo3.__commit(\"final_foo3\", __forward, __reverse);");
@@ -1370,6 +1373,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
+    gold.append("\n    special_one.dropInvalid();");
+    gold.append("\n    forty_five.dropInvalid();");
+    gold.append("\n    recip.dropInvalid();");
     gold.append("\n    final_foo.__revert();");
     gold.append("\n    final_foo2.__revert();");
     gold.append("\n    final_foo3.__revert();");
@@ -3535,6 +3541,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
+    gold.append("\n    x.dropInvalid();");
+    gold.append("\n    y.dropInvalid();");
+    gold.append("\n    z.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3553,6 +3562,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
+    gold.append("\n    x.dropInvalid();");
+    gold.append("\n    y.dropInvalid();");
+    gold.append("\n    z.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

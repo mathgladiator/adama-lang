@@ -344,6 +344,15 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
+    gold.append("\n    x.dropInvalid();");
+    gold.append("\n    y.dropInvalid();");
+    gold.append("\n    z.dropInvalid();");
+    gold.append("\n    x2.dropInvalid();");
+    gold.append("\n    y2.dropInvalid();");
+    gold.append("\n    z2.dropInvalid();");
+    gold.append("\n    x3.dropInvalid();");
+    gold.append("\n    y3.dropInvalid();");
+    gold.append("\n    z3.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -362,6 +371,15 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
+    gold.append("\n    x.dropInvalid();");
+    gold.append("\n    y.dropInvalid();");
+    gold.append("\n    z.dropInvalid();");
+    gold.append("\n    x2.dropInvalid();");
+    gold.append("\n    y2.dropInvalid();");
+    gold.append("\n    z2.dropInvalid();");
+    gold.append("\n    x3.dropInvalid();");
+    gold.append("\n    y3.dropInvalid();");
+    gold.append("\n    z3.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -1126,6 +1144,12 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    _b.__commit(\"_b\", __forward, __reverse);");
+    gold.append("\n    x.dropInvalid();");
+    gold.append("\n    r_x.dropInvalid();");
+    gold.append("\n    x_skip_3.dropInvalid();");
+    gold.append("\n    x_skip_1_r.dropInvalid();");
+    gold.append("\n    x_d.dropInvalid();");
+    gold.append("\n    x_mirror.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1145,6 +1169,12 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    _b.__revert();");
+    gold.append("\n    x.dropInvalid();");
+    gold.append("\n    r_x.dropInvalid();");
+    gold.append("\n    x_skip_3.dropInvalid();");
+    gold.append("\n    x_skip_1_r.dropInvalid();");
+    gold.append("\n    x_d.dropInvalid();");
+    gold.append("\n    x_mirror.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -1692,6 +1722,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n        __reverse.beginObject();");
     gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
     gold.append("\n        _a.__commit(\"_a\", __forward, __reverse);");
+    gold.append("\n        a.dropInvalid();");
     gold.append("\n        __forward.endObject();");
     gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
@@ -1703,6 +1734,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n        __isDying = false;");
     gold.append("\n        id.__revert();");
     gold.append("\n        _a.__revert();");
+    gold.append("\n        a.dropInvalid();");
     gold.append("\n        __lowerDirtyRevert();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -1925,7 +1957,6 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_7 __localItem_3 : _a) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n");
     gold.append("\n      }__writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
@@ -5032,6 +5063,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    y4.__commit(\"y4\", __forward, __reverse);");
     gold.append("\n    join_maybe.__commit(\"join_maybe\", __forward, __reverse);");
     gold.append("\n    _s.__commit(\"_s\", __forward, __reverse);");
+    gold.append("\n    y4_cp.dropInvalid();");
+    gold.append("\n    r2023.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5069,6 +5102,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    y4.__revert();");
     gold.append("\n    join_maybe.__revert();");
     gold.append("\n    _s.__revert();");
+    gold.append("\n    y4_cp.dropInvalid();");
+    gold.append("\n    r2023.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -6287,6 +6322,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    wp.__commit(\"wp\", __forward, __reverse);");
+    gold.append("\n    nice.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -6306,6 +6342,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    wp.__revert();");
+    gold.append("\n    nice.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
