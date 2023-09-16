@@ -55,9 +55,9 @@ public class RxBooleanTests {
     rx.set(true);
     parent.assertDirtyCount(1);
     rx.set(false);
-    parent.assertDirtyCount(2);
+    parent.assertDirtyCount(1);
     rx.set(true);
-    parent.assertDirtyCount(3);
+    parent.assertDirtyCount(1);
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     rx.__commit("v", writer, reverse);

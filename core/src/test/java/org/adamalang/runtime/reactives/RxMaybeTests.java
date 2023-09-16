@@ -43,10 +43,10 @@ public class RxMaybeTests {
     commitCheck(mi, "", "");
     mi.make().set(50);
     mi.delete();
-    parent.assertDirtyCount(5);
+    parent.assertDirtyCount(3);
     commitCheck(mi, "\"v\":null", "");
     mi.make().set(50);
-    parent.assertDirtyCount(7);
+    parent.assertDirtyCount(4);
     commitCheck(mi, "\"v\":50", "\"v\":null");
     mi.make().set(5000);
     commitCheck(mi, "\"v\":5000", "\"v\":50");
@@ -224,7 +224,7 @@ public class RxMaybeTests {
     mi.__subscribe(child);
     mi.make().set(50);
     mi.__revert();
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
     commitCheck(mi, "", "");
   }
 

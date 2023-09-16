@@ -56,7 +56,7 @@ public class RxComplexTests {
     d.set(new NtComplex(3, 4));
     parent.assertDirtyCount(1);
     d.set(new NtComplex(4, 5));
-    parent.assertDirtyCount(2);
+    parent.assertDirtyCount(1);
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     d.__commit("v", writer, reverse);
@@ -107,18 +107,19 @@ public class RxComplexTests {
     final var child = new MockRxChild();
     d.__subscribe(child);
     d.set(new NtComplex(3, 4));
+    Assert.assertEquals(new NtComplex(3, 4), d.get());
     child.assertInvalidateCount(1);
     d.set(new NtComplex(4, 5));
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     d.set(new NtComplex(5, 6));
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(1);
     d.__revert();
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
     Assert.assertEquals(new NtComplex(1, 2), d.get());
     d.__revert();
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
     d.__cancelAllSubscriptions();
     d.set(new NtComplex(7, 8));
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
   }
 }

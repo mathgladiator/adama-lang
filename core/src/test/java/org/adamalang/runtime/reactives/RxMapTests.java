@@ -231,7 +231,7 @@ public class RxMapTests {
       Assert.assertEquals("\"map\":{\"42\":52}", forward.toString());
       Assert.assertEquals("\"map\":{\"42\":null}", reverse.toString());
     }
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(1);
   }
 
   @Test
@@ -309,7 +309,7 @@ public class RxMapTests {
       Assert.assertEquals("\"map\":{}", forward.toString());
       Assert.assertEquals("\"map\":{}", reverse.toString());
     }
-    child.assertInvalidateCount(5);
+    child.assertInvalidateCount(2);
     m.iterator();
   }
 

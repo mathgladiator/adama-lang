@@ -38,7 +38,7 @@ public class RxDoubleTests {
     d.set(50);
     parent.assertDirtyCount(1);
     d.set(6.28);
-    parent.assertDirtyCount(2);
+    parent.assertDirtyCount(1);
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     d.__commit("v", writer, reverse);
@@ -82,17 +82,17 @@ public class RxDoubleTests {
     child.assertInvalidateCount(1);
     final Double dFity = 50.0;
     d.set(dFity);
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     d.set(55.0);
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(1);
     d.__revert();
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
     Assert.assertEquals(42, d.get(), 0.1);
     d.__revert();
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
     d.__cancelAllSubscriptions();
     d.set(100);
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
   }
 
   @Test

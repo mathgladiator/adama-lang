@@ -55,7 +55,7 @@ public class RxStringTests {
     s.set("cake");
     parent.assertDirtyCount(1);
     s.set("cake");
-    parent.assertDirtyCount(2);
+    parent.assertDirtyCount(1);
     Assert.assertEquals("cake", s.get());
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -97,11 +97,11 @@ public class RxStringTests {
     s.set("cake");
     child.assertInvalidateCount(1);
     s.set("cake");
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     Assert.assertEquals("cake", s.get());
     s.__revert();
     Assert.assertEquals("xyz", s.get());
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
   }
 
   @Test
@@ -111,11 +111,11 @@ public class RxStringTests {
     s.opAddTo(0);
     parent.assertDirtyCount(1);
     s.opAddTo(true);
-    parent.assertDirtyCount(2);
+    parent.assertDirtyCount(1);
     s.opAddTo(0.0);
-    parent.assertDirtyCount(3);
+    parent.assertDirtyCount(1);
     s.opAddTo("b");
-    parent.assertDirtyCount(4);
+    parent.assertDirtyCount(1);
     Assert.assertEquals("a0true0.0b", s.get());
   }
 }

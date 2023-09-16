@@ -108,12 +108,12 @@ public class RxPrincipalTests {
     child.assertInvalidateCount(1);
     c.set(B);
     Assert.assertEquals(B, c.get());
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     c.__revert();
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
     Assert.assertEquals(NtPrincipal.NO_ONE, c.get());
     c.__cancelAllSubscriptions();
     c.set(B);
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
   }
 }

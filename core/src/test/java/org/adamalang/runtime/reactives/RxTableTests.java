@@ -469,6 +469,8 @@ public class RxTableTests {
         reverse.toString());
     Assert.assertEquals(3, common.__getSubscriberCount());
     common.__raiseInvalid();
+    common.getGeneration();
+    common.__raiseInvalid();
     Assert.assertEquals(0, common.__getSubscriberCount());
   }
 }

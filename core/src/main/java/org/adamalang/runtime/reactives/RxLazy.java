@@ -26,7 +26,7 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     super(parent);
     this.formula = formula;
     this.cached = null;
-    this.invalid = true;
+    this.invalid = false;
     this.generation = 0;
   }
 
@@ -55,6 +55,9 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   @Override
   public boolean __raiseInvalid() {
     if (invalid) {
+      if (__parent != null) {
+        return __parent.__isAlive();
+      }
       return true;
     }
     invalid = true;
@@ -90,6 +93,7 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   public void dropInvalid() {
     if (checkInvalidAndLower()) {
       cached = null;
+      inc();
     }
   }
 

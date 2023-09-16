@@ -40,7 +40,7 @@ public class RxInt64Tests {
     l.set(50L);
     parent.assertDirtyCount(1);
     l.set(60);
-    parent.assertDirtyCount(2);
+    parent.assertDirtyCount(1);
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     l.__commit("v", writer, reverse);
@@ -105,16 +105,16 @@ public class RxInt64Tests {
     l.set(50);
     child.assertInvalidateCount(1);
     l.set(55);
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     Assert.assertEquals(55, l.getIndexValue());
     l.__revert();
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
     Assert.assertEquals(42, (long) l.get());
     l.__revert();
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
     l.__cancelAllSubscriptions();
     l.set(100);
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
   }
 
   @Test
