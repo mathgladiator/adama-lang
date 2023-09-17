@@ -53,27 +53,28 @@ The current story for developers is "meh", so these items help improve and moder
 | document or kill rpc |    | The rpc helper is an interesting way of making channels, but it isn't used right now... kill or document      |
 
 ## Standard Library
-| project         | IP | description                                                                                                                             |
-|-----------------|----|-----------------------------------------------------------------------------------------------------------------------------------------|
-| stats           |    | build out a statistics package that is decent and correct (median isn't good right now) (sum, average, median, product, count_non_zero) |
-| to/from Base64  |    | convert a string to and from Base64 with maybe&lt;string&gt;                                                                            |
-| substituteFirst |    | find the needle in a haystack and replace the first instance                                                                            |
-| substituteLast  |    | find the needle in a haystack and replace the last instance                                                                             |
-| substituteAll   |    | find the needle in a haystack and replace the every instance                                                                            |
-| substituteNth   |    | find the needle in a haystack and replace the n'th instance                                                                             |
-| format          |    | need var_args (just use a string[])  support, but the idea is to allow efficient string construction from many known finite pieces      |
-| split /w limit  |    | only split a certain degree                                                                                                             |
-| find            |    | find a string within a string                                                                                                           |
-| findAll         |    | find a string within a string and produce a list if indicies                                                                            |
-| proper          |    | take a string, split on spaces, normalize white space, turn every string into a camel case word, join together                          |
-| initials        |    | take a string, split on spaces, normalize white space, turn every string into a concat of just first letters capitalized                |
-| convex hull     |    | a 2D version at first                                                                                                                   |                                                                                                             |
-| matrix math     |    | inverse, multiply, etc...                                                                                                               |
-| exact-math      |    | math that doesn't overflow, and if it does, empty maybe                                                                                 |
-| random+         |    | gaussian random + other statisitical random functions                                                                                   |
-| even/odd        |    | simple and fun functions                                                                                                                |
-| factorial       |    |                                                                                                                                         |
-| gamma factorial |    | https://en.wikipedia.org/wiki/Gamma_function                                                                                            |
+| project         | IP  | description                                                                                                                             |
+|-----------------|-----|-----------------------------------------------------------------------------------------------------------------------------------------|
+| stats           |     | build out a statistics package that is decent and correct (median isn't good right now) (sum, average, median, product, count_non_zero) |
+| to/from Base64  |     | convert a string to and from Base64 with maybe&lt;string&gt;                                                                            |
+| substituteFirst |     | find the needle in a haystack and replace the first instance                                                                            |
+| substituteLast  |     | find the needle in a haystack and replace the last instance                                                                             |
+| substituteAll   |     | find the needle in a haystack and replace the every instance                                                                            |
+| substituteNth   |     | find the needle in a haystack and replace the n'th instance                                                                             |
+| format          |     | need var_args (just use a string[])  support, but the idea is to allow efficient string construction from many known finite pieces      |
+| split /w limit  |     | only split a certain degree                                                                                                             |
+| find            |     | find a string within a string                                                                                                           |
+| findAll         |     | find a string within a string and produce a list if indicies                                                                            |
+| proper          |     | take a string, split on spaces, normalize white space, turn every string into a camel case word, join together                          |
+| initials        |     | take a string, split on spaces, normalize white space, turn every string into a concat of just first letters capitalized                |
+| convex hull     |     | a 2D version at first                                                                                                                   |                                                                                                             |
+| matrix math     |     | inverse, multiply, etc...                                                                                                               |
+| exact-math      |     | math that doesn't overflow, and if it does, empty maybe                                                                                 |
+| random+         |     | gaussian random + other statisitical random functions                                                                                   |
+| even/odd        |     | simple and fun functions                                                                                                                |
+| factorial       |     |                                                                                                                                         |
+| gamma factorial |     | https://en.wikipedia.org/wiki/Gamma_function                                                                                            |
+| color           |     | hsv/cmyk and a color typing library                                                                                                     |
 
 
 ## Web management
@@ -204,20 +205,30 @@ For integration across different ecosystems, there are more protocols to bridge 
 ## Infrastructure - Multi-region &amp; massive scale
 At some point, Adama is going to be at the edge with hundreds of nodes across the world.
 
-| project         | IP | milestones                                                                                                                               |
-|-----------------|----|------------------------------------------------------------------------------------------------------------------------------------------|
-| diagram         |    | diagram the usage of the database in the adama service                                                                                   |
-| billing         | X  | have billing route partial metering records to billing document ( and globalize )                                                        |
-| proxy-mode      | X  | proxy the WS API from region A to region B (or global important services )                                                               |
-| remote-finder   | X  | extend WS API to implement a Finder for region A to do core tasks (or globalize)                                                         |
-| finder in adama | X  | Turn core service into a finder cache for web tier                                                                                       |
-| region-isolate  |    | Allow regions to have storage for local documents                                                                                        |
-| capacity-global |    | globalize capacity management                                                                                                            |
-| test-heat-cap   |    | validate when an adama host heats up that traffic sheds                                                                                  | 
-| test-cold-cap   |    | validate when an adama host cools off that traffic returns for density                                                                   |
-| cap-config      |    | make high/low vectors dynamic configurable                                                                                               |
-| ro-replica      |    | (1) introduce new observe command which is a read-only version of connect, (2) have web routes go to an in-region replica                |
-| reconcile       | X  | every adama host should be lazy with unknown spaces and also reconcile capacity if it should redeploy (due to missed deployment message) | 
+| project                     | IP  | milestones                                                                                                                               |
+|-----------------------------|-----|------------------------------------------------------------------------------------------------------------------------------------------|
+| diagram                     |     | diagram the usage of the database in the adama service                                                                                   |
+| billing                     | X   | have billing route partial metering records to billing document ( and globalize )                                                        |
+| proxy-mode                  | X   | proxy the WS API from region A to region B (or global important services )                                                               |
+| remote-finder               | X   | extend WS API to implement a Finder for region A to do core tasks (or globalize)                                                         |
+| finder in adama             | X   | Turn core service into a finder cache for web tier                                                                                       |
+| region-isolate              |     | Allow regions to have storage for local documents                                                                                        |
+| capacity-global             |     | globalize capacity management                                                                                                            |
+| test-heat-cap               |     | validate when an adama host heats up that traffic sheds                                                                                  | 
+| test-cold-cap               |     | validate when an adama host cools off that traffic returns for density                                                                   |
+| cap-config                  |     | make high/low vectors dynamic configurable                                                                                               |
+| ro-replica                  |     | (1) introduce new observe command which is a read-only version of connect, (2) have web routes go to an in-region replica                |
+| reconcile                   | X   | every adama host should be lazy with unknown spaces and also reconcile capacity if it should redeploy (due to missed deployment message) | 
+| space-delete-bot            |     | make run only in the global region                                                                                                       |
+| dead-detector               |     | only run in global region                                                                                                                |
+| leader-election-overlord    |     | instead of a single host, get leader election in place and have one adama assign work to other adama instances                           |
+| all-make-target             |     | instead of overlord making targets, have every adama instance expose a targets file                                                      |
+| monitoring                  |     | instead of using a local prometheus, let's use a service                                                                                 |
+| gc-2.0                      |     | garbage collection should probably run on adama                                                                                          |
+| finish global CP            | X   | Adama is going to have a primary region with a control plane proxy to DB                                                                 |
+| write clients for global CP | X   | wrap SelfClient to talk to Adama control region                                                                                          |  
+| e2e region tests            |     | rethink the testing strategy to create a global multi-region foot print in unit tests (maybe with a customized runner)                   |
+
 
 ## Infrastructure - Core Service
 Adama is a service.
