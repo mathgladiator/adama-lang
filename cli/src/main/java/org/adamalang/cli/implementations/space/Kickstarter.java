@@ -62,6 +62,7 @@ public class Kickstarter {
     File assetDir = new File(spaceDir, "assets");
     backendDir.mkdirs();
     frontendDir.mkdirs();
+    assetDir.mkdirs();
     downloadAdama(new File(spaceDir, "backend.adama"));
     downloadRxHTML(new File(frontendDir, "initial.rx.html"));
     Files.writeString(new File(backendDir, ".gitkeep").toPath(), "");
