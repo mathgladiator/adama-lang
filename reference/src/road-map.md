@@ -207,7 +207,7 @@ At some point, Adama is going to be at the edge with hundreds of nodes across th
 
 | project                     | IP  | milestones                                                                                                                               |
 |-----------------------------|-----|------------------------------------------------------------------------------------------------------------------------------------------|
-| diagram                     |     | diagram the usage of the database in the adama service                                                                                   |
+| diagram                     | X   | diagram the usage of the database in the adama service                                                                                   |
 | billing                     | X   | have billing route partial metering records to billing document ( and globalize )                                                        |
 | proxy-mode                  | X   | proxy the WS API from region A to region B (or global important services )                                                               |
 | remote-finder               | X   | extend WS API to implement a Finder for region A to do core tasks (or globalize)                                                         |

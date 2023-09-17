@@ -3,9 +3,9 @@
         <file>logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+            <maxFileSize>5MB</maxFileSize>
             <maxHistory>60</maxHistory>
-            <totalSizeCap>4GB</totalSizeCap>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -19,12 +19,12 @@
         <file>logs/access.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/access.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+            <maxFileSize>5MB</maxFileSize>
             <maxHistory>60</maxHistory>
-            <totalSizeCap>4GB</totalSizeCap>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS}=%msg%n</pattern>
+            <pattern>%msg%n</pattern>
         </encoder>
     </appender>
     <appender name="ASYNC-ACCESS" class="ch.qos.logback.classic.AsyncAppender">
@@ -42,9 +42,9 @@
         <file>logs/perf.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/perf.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+            <maxFileSize>5MB</maxFileSize>
             <maxHistory>60</maxHistory>
-            <totalSizeCap>4GB</totalSizeCap>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%msg%n</pattern>
