@@ -20,6 +20,7 @@ package org.adamalang.net.codec;
 import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeId;
+import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.runtime.data.LocalDocumentChange;
 
 /** messages from server to client */
@@ -187,5 +188,18 @@ public class ServerMessage {
     public boolean reset;
     @FieldOrder(2)
     public String change;
+  }
+
+  @TypeId(3045)
+  @Flow("RateLimiting")
+  public static class RateLimitResult {
+    @FieldOrder(1)
+    public int tokens;
+    @FieldOrder(2)
+    public int milliseconds;
+
+    public TokenGrant toTokenGrant() {
+      return new TokenGrant(tokens, milliseconds);
+    }
   }
 }

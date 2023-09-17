@@ -118,6 +118,19 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.RateLimitTestRequest payload) {
+    // a very dumb implementation, but testable!
+    // TODO: hook up to some kind of store with configuration (and expiry policy)
+    ByteBuf buf = upstream.create(32);
+    ServerMessage.RateLimitResult response = new ServerMessage.RateLimitResult();
+    response.tokens = 5;
+    response.milliseconds = 250;
+    ServerCodec.write(buf, response);
+    upstream.next(buf);
+    upstream.completed();
+  }
+
+  @Override
   public void handle(ClientMessage.FindRequest payload) {
     nexus.finder.find(new Key(payload.space, payload.key), new Callback<DocumentLocation>() {
       @Override

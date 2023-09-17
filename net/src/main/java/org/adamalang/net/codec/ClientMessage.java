@@ -367,4 +367,17 @@ public class ClientMessage {
     @FieldOrder(7)
     public String origin;
   }
+
+  @TypeId(3044)
+  @Flow("Server")
+  public static class RateLimitTestRequest {
+    @FieldOrder(1)
+    public String ip;
+    @FieldOrder(2)
+    public String session;
+    @FieldOrder(3)
+    public String resource;
+    @FieldOrder(4)
+    public String type;
+  }
 }

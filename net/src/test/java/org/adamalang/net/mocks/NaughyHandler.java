@@ -152,6 +152,11 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.RateLimitTestRequest payload) {
+    real.failure(new ErrorCodeException(25424));
+  }
+
+  @Override
   public void handle(ClientMessage.WebGet payload) {
     real.failure(new ErrorCodeException(-1000));
   }

@@ -20,6 +20,7 @@ package org.adamalang.net.client;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.TestBed;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
@@ -445,6 +446,33 @@ public class InstanceClientTests {
         client.reflect("space", "key", new Callback<String>() {
           @Override
           public void success(String value) {
+            latchGotHappy.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
+  @Test
+  public void rate() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10019,
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+      bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        CountDownLatch latchGotHappy = new CountDownLatch(1);
+        client.rateLimit("0.0.0.0", "session", "resource", "auth", new Callback<TokenGrant>() {
+          @Override
+          public void success(TokenGrant value) {
+            Assert.assertEquals(5, value.tokens);
+            Assert.assertEquals(250, value.millseconds);
             latchGotHappy.countDown();
           }
 

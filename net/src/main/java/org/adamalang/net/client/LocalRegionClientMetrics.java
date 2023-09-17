@@ -42,6 +42,7 @@ public class LocalRegionClientMetrics {
   public final ItemActionMonitor client_scan_deployment;
   public final CallbackMonitor client_scan_deployment_cb;
   public final ItemActionMonitor client_document_exchange;
+  public final CallbackMonitor client_rate_limit;
 
   public final Runnable client_retry;
   public final Runnable client_info_start;
@@ -96,6 +97,7 @@ public class LocalRegionClientMetrics {
     client_scan_deployment = factory.makeItemActionMonitor("client_scan_deployment");
     client_scan_deployment_cb = factory.makeCallbackMonitor("client_scan_deployment");
     client_document_exchange = factory.makeItemActionMonitor("client_document_exchange");
+    client_rate_limit = factory.makeCallbackMonitor("client_rate_limit");
     client_retry = factory.counter("client_retry");
     client_info_start = factory.counter("client_info_start");
     client_info_completed = factory.counter("client_info_completed");

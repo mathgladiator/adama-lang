@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ServerMessage.RateLimitResult;
 import org.adamalang.net.codec.ServerMessage.ReplicaData;
 import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
 import org.adamalang.net.codec.ServerMessage.QueryResult;
@@ -578,6 +579,56 @@ public class ServerCodec {
   }
 
 
+  public static abstract class StreamRateLimiting implements ByteStream {
+    public abstract void handle(RateLimitResult payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 3045:
+          handle(readBody_3045(buf, new RateLimitResult()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerRateLimiting {
+    public void handle(RateLimitResult payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerRateLimiting handler) {
+    switch (buf.readIntLE()) {
+      case 3045:
+        handler.handle(readBody_3045(buf, new RateLimitResult()));
+        return;
+    }
+  }
+
+
+  public static RateLimitResult read_RateLimitResult(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 3045:
+        return readBody_3045(buf, new RateLimitResult());
+    }
+    return null;
+  }
+
+
+  private static RateLimitResult readBody_3045(ByteBuf buf, RateLimitResult o) {
+    o.tokens = buf.readIntLE();
+    o.milliseconds = buf.readIntLE();
+    return o;
+  }
+
   public static ReplicaData read_ReplicaData(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 10548:
@@ -858,6 +909,16 @@ public class ServerCodec {
 
   private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, RateLimitResult o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(3045);
+    buf.writeIntLE(o.tokens);
+    buf.writeIntLE(o.milliseconds);
   }
 
   public static void write(ByteBuf buf, ReplicaData o) {

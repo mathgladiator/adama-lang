@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.RateLimitTestRequest;
 import org.adamalang.net.codec.ClientMessage.Authorize;
 import org.adamalang.net.codec.ClientMessage.ReplicaDisconnect;
 import org.adamalang.net.codec.ClientMessage.ReplicaConnect;
@@ -51,6 +52,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(RateLimitTestRequest payload);
+
     public abstract void handle(Authorize payload);
 
     public abstract void handle(ReplicaDisconnect payload);
@@ -113,6 +116,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 3044:
+          handle(readBody_3044(buf, new RateLimitTestRequest()));
+          return;
         case 2124:
           handle(readBody_2124(buf, new Authorize()));
           return;
@@ -193,6 +199,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(RateLimitTestRequest payload);
     public void handle(Authorize payload);
     public void handle(ReplicaDisconnect payload);
     public void handle(ReplicaConnect payload);
@@ -222,6 +229,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 3044:
+        handler.handle(readBody_3044(buf, new RateLimitTestRequest()));
+        return;
       case 2124:
         handler.handle(readBody_2124(buf, new Authorize()));
         return;
@@ -335,6 +345,23 @@ public class ClientCodec {
     }
   }
 
+
+  public static RateLimitTestRequest read_RateLimitTestRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 3044:
+        return readBody_3044(buf, new RateLimitTestRequest());
+    }
+    return null;
+  }
+
+
+  private static RateLimitTestRequest readBody_3044(ByteBuf buf, RateLimitTestRequest o) {
+    o.ip = Helper.readString(buf);
+    o.session = Helper.readString(buf);
+    o.resource = Helper.readString(buf);
+    o.type = Helper.readString(buf);
+    return o;
+  }
 
   public static Authorize read_Authorize(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -774,6 +801,18 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, RateLimitTestRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(3044);
+    Helper.writeString(buf, o.ip);;
+    Helper.writeString(buf, o.session);;
+    Helper.writeString(buf, o.resource);;
+    Helper.writeString(buf, o.type);;
   }
 
   public static void write(ByteBuf buf, Authorize o) {

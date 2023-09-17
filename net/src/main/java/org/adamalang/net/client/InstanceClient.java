@@ -20,11 +20,13 @@ package org.adamalang.net.client;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
+import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
@@ -867,6 +869,52 @@ public class InstanceClient implements AutoCloseable {
           @Override
           protected void failure(int code) {
             events.error(code);
+          }
+        });
+      }
+    });
+  }
+
+  public void rateLimit(String ip, String session, String resource, String type, Callback<TokenGrant> callbackRaw) {
+    Callback<TokenGrant> callback = metrics.client_rate_limit.wrap(callbackRaw);
+    ClientMessage.RateLimitTestRequest request = new ClientMessage.RateLimitTestRequest();
+    request.ip = ip;
+    request.session = session;
+    request.resource = resource;
+    request.type = type;
+    executor.execute(new NamedRunnable("execute-scan") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_RATE_LIMIT_TIMEOUT, ErrorCodes.ADAMA_NET_RATE_LIMIT_REJECTED, metrics.client_scan_deployment.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamRateLimiting() {
+              @Override
+              public void handle(ServerMessage.RateLimitResult payload) {
+                callback.success(payload.toTokenGrant());
+              }
+
+              @Override
+              public void completed() {
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(ip.length() + session.length() + resource.length() + type.length() + 50);
+                ClientCodec.write(toWrite, request);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
           }
         });
       }

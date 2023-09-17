@@ -15,8 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.common.rate;
 
-public class Platform {
-  public static final String VERSION = "20230917161857";
+/** a grant that operations can happen */
+public class TokenGrant {
+  /** this is how many tokens you have been granted */
+  public final int tokens;
+
+  /** Don't call back until this time frame. If you try, then either reject or delay */
+  public final int millseconds;
+
+  public TokenGrant(int tokens, int millseconds) {
+    this.tokens = tokens;
+    this.millseconds = millseconds;
+  }
 }
