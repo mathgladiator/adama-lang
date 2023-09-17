@@ -90,6 +90,9 @@ public class AssembleConnectionRouter {
     router.append("      long requestId = request.id();\n");
     router.append("      String method = request.method();\n");
     router.append("      _accessLogItem.put(\"method\", method);\n");
+    router.append("      _accessLogItem.put(\"region\", nexus.region);\n");
+    router.append("      _accessLogItem.put(\"machine\", nexus.machine);\n");
+    router.append("      _accessLogItem.put(\"@timestamp\", LogTimestamp.now());\n");
     router.append("      request.dumpIntoLog(_accessLogItem);\n");
     router.append("      nexus.executor.execute(new NamedRunnable(\"handle\", method) {\n");
     router.append("        @Override\n");

@@ -50,6 +50,8 @@ public class AssembleNexus {
     }
     nexus.append("\n");
     nexus.append("public class ").append(prefix).append("ConnectionNexus {\n");
+    nexus.append("  public final String region;\n");
+    nexus.append("  public final String machine;\n");
     nexus.append("  public final JsonLogger logger;\n");
     nexus.append("  public final ").append(prefix).append("ApiMetrics metrics;\n");
     nexus.append("  public final SimpleExecutor executor;\n");
@@ -57,11 +59,13 @@ public class AssembleNexus {
       nexus.append("  public final ").append(service.shortServiceName).append(" ").append(service.fieldInputName).append(";\n");
     }
     nexus.append("\n");
-    nexus.append("  public ").append(prefix).append("ConnectionNexus(JsonLogger logger, ").append(prefix).append("ApiMetrics metrics, SimpleExecutor executor");
+    nexus.append("  public ").append(prefix).append("ConnectionNexus(String region, String machine, JsonLogger logger, ").append(prefix).append("ApiMetrics metrics, SimpleExecutor executor");
     for (Transform service : services.values()) {
       nexus.append(", ").append(service.shortServiceName).append(" ").append(service.fieldInputName);
     }
     nexus.append(") {\n");
+    nexus.append("    this.region = region;\n");
+    nexus.append("    this.machine = machine;\n");
     nexus.append("    this.logger = logger;\n");
     nexus.append("    this.metrics = metrics;\n");
     nexus.append("    this.executor = executor;\n");

@@ -64,8 +64,9 @@ public class GlobalExternNexus {
   public final PrivateKeyWithId signingKey;
   public final GlobalMetricsReporter metricsReporter;
   public final SimpleExecutor metrics;
+  public final String machine;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -79,6 +80,7 @@ public class GlobalExternNexus {
     this.assets = assets;
     this.webBase = webBase;
     this.region = region;
+    this.machine = machine;
     this.webHostKey = webHostKey;
     this.publicKeyId = publicKeyId;
     this.superPublicKeys = superPublicKeys;

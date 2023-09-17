@@ -55,6 +55,9 @@ public class GlobalConnectionRouter {
       long requestId = request.id();
       String method = request.method();
       _accessLogItem.put("method", method);
+      _accessLogItem.put("region", nexus.region);
+      _accessLogItem.put("machine", nexus.machine);
+      _accessLogItem.put("@timestamp", LogTimestamp.now());
       request.dumpIntoLog(_accessLogItem);
       nexus.executor.execute(new NamedRunnable("handle", method) {
         @Override

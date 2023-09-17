@@ -25,6 +25,8 @@ import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.web.io.JsonLogger;;
 
 public class GlobalConnectionNexus {
+  public final String region;
+  public final String machine;
   public final JsonLogger logger;
   public final GlobalApiMetrics metrics;
   public final SimpleExecutor executor;
@@ -33,7 +35,9 @@ public class GlobalConnectionNexus {
   public final PerSessionAuthenticator identityService;
   public final SpacePolicyLocator spaceService;
 
-  public GlobalConnectionNexus(JsonLogger logger, GlobalApiMetrics metrics, SimpleExecutor executor, DomainWithPolicyResolver domainService, UserIdResolver emailService, PerSessionAuthenticator identityService, SpacePolicyLocator spaceService) {
+  public GlobalConnectionNexus(String region, String machine, JsonLogger logger, GlobalApiMetrics metrics, SimpleExecutor executor, DomainWithPolicyResolver domainService, UserIdResolver emailService, PerSessionAuthenticator identityService, SpacePolicyLocator spaceService) {
+    this.region = region;
+    this.machine = machine;
     this.logger = logger;
     this.metrics = metrics;
     this.executor = executor;

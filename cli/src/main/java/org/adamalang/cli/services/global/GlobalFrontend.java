@@ -77,7 +77,7 @@ public class GlobalFrontend {
 
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, cb.ses, db.database, adama, assets, em.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, masterKey, em.webBase, em.region, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
+    }, masterKey, em.webBase, em.region, em.machine, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
     System.out.println("[GlobalFrontend:ExternNexus constructed]");
 
 

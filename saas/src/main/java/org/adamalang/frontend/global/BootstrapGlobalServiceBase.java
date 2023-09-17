@@ -53,7 +53,10 @@ public class BootstrapGlobalServiceBase {
         return new ServiceConnection() {
           final Session session = new Session(new GlobalPerSessionAuthenticator(extern.database, extern.masterKey, context, extern.superPublicKeys, extern.regionalPublicKeys));
           final GlobalConnectionNexus globalNexus =
-              new GlobalConnectionNexus(extern.accessLogger, //
+              new GlobalConnectionNexus(
+                  extern.region,
+                  extern.machine,
+                  extern.accessLogger, //
                   extern.globalApiMetrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
                   domainWithPolicyResolver, //
@@ -62,7 +65,10 @@ public class BootstrapGlobalServiceBase {
                   spacePolicyLocator); //
 
           final RegionConnectionNexus regionNexus =
-              new RegionConnectionNexus(extern.accessLogger, //
+              new RegionConnectionNexus(
+                  extern.region,
+                  extern.machine,
+                  extern.accessLogger, //
                   extern.regionApiMetrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
                   domainWithPolicyResolver, //

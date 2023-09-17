@@ -66,7 +66,7 @@ public class Frontend {
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
     GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
-    }, init.masterKey, init.webBase, init.region, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
+    }, init.masterKey, init.webBase, init.region, init.machine, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     System.err.println("ExternNexus constructed");
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
