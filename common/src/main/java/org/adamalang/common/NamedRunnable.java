@@ -67,6 +67,7 @@ public abstract class NamedRunnable implements Runnable {
       boolean skip = queueTime <= 1 && runTime <= 1;
       if (!skip) {
         ObjectNode entry = Json.newJsonObject();
+        entry.put("@timestamp", LogTimestamp.now());
         entry.put("type", "executor");
         entry.put("name", __runnableName);
         entry.put("executor", runningIn);
