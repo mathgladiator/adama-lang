@@ -19,6 +19,7 @@ package org.adamalang.caravan.data;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.util.internal.PlatformDependent;
 import org.adamalang.caravan.contracts.ByteArrayStream;
 import org.adamalang.caravan.entries.*;
 import org.adamalang.caravan.events.EventCodec;
@@ -85,7 +86,12 @@ public class DurableListStore {
     this.notifications = new ArrayList<>();
     // build the buffer
     this.walRoot = walRoot;
-    this.buffer = Unpooled.buffer(flushCutOffBytes * 5 / 4);
+    this.buffer = Unpooled.buffer(flushCutOffBytes * 8 / 7);
+    if (IS_NOISY) {
+      LOGGER.error("created buffer:" + buffer + " (ideal:" + (flushCutOffBytes * 5 / 4));
+      LOGGER.error("buffer capacity:" + buffer.capacity());
+      LOGGER.error("platform has unsafe:" + PlatformDependent.hasUnsafe());
+    }
     this.output = null;
     this.flushCutOffBytes = flushCutOffBytes;
     this.pageBuffer = new byte[flushCutOffBytes];
@@ -205,12 +211,11 @@ public class DurableListStore {
 
   /** internal: write a page to the log */
   private boolean writePage(DataOutputStream dos, ByteBuf page) throws IOException {
-    if (IS_NOISY) {
-      LOGGER.error("writePage(WI:" + page.writerIndex() + ", IR:" + page.isReadable() + ", HA:" + page.hasArray() + " WI:" + page.writerIndex() + ")");
-    }
-
     if (page.writerIndex() == 0) {
       return false;
+    }
+    if (IS_NOISY) {
+      LOGGER.error("writePage(WI:" + page.writerIndex() + ", IR:" + page.isReadable() + ", HA:" + page.hasArray() + ", CAP:" + buffer.capacity() + ")");
     }
     dos.writeInt(page.writerIndex());
     bytesWrittenToLog += page.writerIndex();
@@ -260,7 +265,7 @@ public class DurableListStore {
   /** append a byte array to the given id */
   public Integer append(Key key, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
     if (IS_NOISY) {
-      LOGGER.error("appending to " + key.space + "/" + key.key + " [batch:" + batch.size() + "]");
+      LOGGER.error("appending to " + key.space + "/" + key.key + " [batch:" + batch.size() + "] " + buffer.writerIndex());
     }
 
     // allocate the items in the batch
@@ -302,7 +307,7 @@ public class DurableListStore {
   /** flush to disk */
   public void flush(boolean forceCutOver) {
     if (IS_NOISY) {
-      LOGGER.error("flushing :" + forceCutOver);
+      LOGGER.error("flushing :" + forceCutOver + "::" + bytesWrittenToLog);
     }
 
     try {
@@ -346,7 +351,7 @@ public class DurableListStore {
 
   public Integer append(Key key, byte[] bytes, int seq, long assetBytes, Runnable notification) {
     if (IS_NOISY) {
-      LOGGER.error("appending to " + key.space + "/" + key.key + " [solo]");
+      LOGGER.error("appending to " + key.space + "/" + key.key + " [solo] size=" + bytes.length + ":before:" + buffer.writerIndex());
     }
 
     Region where = heap.ask(bytes.length);
@@ -364,6 +369,10 @@ public class DurableListStore {
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
       flush(false);
+    }
+
+    if (IS_NOISY) {
+      LOGGER.error("appended to " + key.space + "/" + key.key + " [solo] :after:" + buffer.writerIndex());
     }
     return size;
   }
