@@ -241,6 +241,15 @@ public abstract class LivingDocument implements RxParent, Caller {
     return false;
   }
 
+  protected void __disconnect(NtPrincipal who) {
+    ArrayList<PrivateView> views = __trackedViews.get(who);
+    if (views != null) {
+      for (PrivateView pv : views) {
+        pv.deliver("{\"force-disconnect\":true}");
+      }
+    }
+  }
+
   protected abstract void __debug(JsonStreamWriter __writer);
 
   /** is the given route id in-flight */

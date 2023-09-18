@@ -20,12 +20,14 @@ package org.adamalang.cli.devbox;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
+import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
+import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -154,8 +156,10 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     long started = System.currentTimeMillis();
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
     verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
+      private CoreStream got = null;
       @Override
       public void onSetupComplete(CoreStream stream) {
+        this.got = stream;
         streams.put(requestId, new LocalStream(key, stream));
         io.info("adama|connected to " + key.space + "/" +key.key);
         ObjectNode entry = Json.newJsonObject();
@@ -172,7 +176,16 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
       @Override
       public void next(String data) {
         io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
-        responder.next(Json.parseJsonObject(data));
+        ObjectNode delta = Json.parseJsonObject(data);
+        responder.next(delta);
+        JsonNode force = delta.get("force-disconnect");
+        if (force != null && force.isBoolean() && force.booleanValue()) {
+          responder.error(new ErrorCodeException(ErrorCodes.AUTH_DISCONNECTED));
+          if (got != null) {
+            io.info("adama|forced disconnect");
+            got.close();
+          }
+        }
       }
 
       @Override

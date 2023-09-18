@@ -17,6 +17,7 @@
 */
 package org.adamalang.frontend.global;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
@@ -234,7 +235,13 @@ public class GlobalDataHandler implements RootRegionHandler {
 
           @Override
           public void delta(String data) {
-            responder.next(Json.parseJsonObject(data));
+            ObjectNode delta = Json.parseJsonObject(data);
+            responder.next(delta);
+            JsonNode force = delta.get("force-disconnect");
+            if (force != null && force.isBoolean() && force.booleanValue()) {
+              responder.error(new ErrorCodeException(ErrorCodes.AUTH_DISCONNECTED));
+              connection.close();
+            }
           }
 
           @Override

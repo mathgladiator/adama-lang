@@ -1638,7 +1638,7 @@ var RxHTML = (function () {
       },
       failure: function (reason) {
         callback.failure(reason);
-        if (reason == 403403) {
+        if (reason == 403403 || reason == 403500) {
           lookup.cleanup();
         }
       }
@@ -1754,7 +1754,7 @@ var RxHTML = (function () {
         // register the failure
         co.set_connected(false);
         co.ptr = null;
-        if (reason == 403403) {
+        if (reason == 403403 || reason == 403500) {
           cleanup();
           return;
         }

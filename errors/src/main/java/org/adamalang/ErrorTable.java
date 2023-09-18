@@ -348,6 +348,8 @@ public class ErrorTable {
     descriptions.put(916531, "no description of error (yet)");
     names.put(403403, "AUTH_FORBIDDEN");
     descriptions.put(403403, "no description of error (yet)");
+    names.put(403500, "AUTH_DISCONNECTED");
+    descriptions.put(403500, "no description of error (yet)");
     names.put(995342, "AUTH_INVALID_TOKEN_LAYOUT");
     descriptions.put(995342, "no description of error (yet)");
     names.put(908303, "AUTH_INVALID_TOKEN_JSON");
@@ -366,8 +368,6 @@ public class ErrorTable {
     descriptions.put(900104, "no description of error (yet)");
     names.put(980204, "API_SPACE_CREATE_UNABLE_SET_RXHTML_EXCEPTION");
     descriptions.put(980204, "no description of error (yet)");
-    names.put(909436, "API_SPACE_CREATE_IDE_DOCUMENT_FAILED_CANT_DELETE_UNKNOWN_EXCEPTION");
-    descriptions.put(909436, "no description of error (yet)");
     names.put(998384, "API_SPACE_CREATE_FAILED_NOT_ADAMA_DEVELOPER");
     descriptions.put(998384, "no description of error (yet)");
     names.put(902399, "API_AUTH_DOMAIN_AUTH_DOMAIN_INVALID_MAPPED");
