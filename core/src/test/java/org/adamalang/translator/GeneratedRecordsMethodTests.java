@@ -4683,6 +4683,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___things.getGeneration();");
+    gold.append("\n      __CHECK = __CHECK * 1662803L + __VIEWER.__GEN_class_filter;");
     gold.append("\n      if (__gthings != __CHECK)  {");
     gold.append("\n        NtList<RTxThing> __local_things = __item.__COMPUTE_things(__writer.who, __VIEWER);");
     gold.append("\n        {");

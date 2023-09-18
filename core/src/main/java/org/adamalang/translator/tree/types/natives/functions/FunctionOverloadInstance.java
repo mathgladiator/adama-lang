@@ -22,10 +22,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -37,6 +34,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final LinkedHashSet<String> dependencies;
   public final AtomicReference<String> withinRecord;
   public final LinkedHashSet<String> recordDependencies;
+  public final TreeSet<String> viewerFields;
   public final String javaFunction;
   public final boolean pure;
   public final TyType returnType;
@@ -60,6 +58,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
     }
     this.recordDependencies = new LinkedHashSet<>();
     this.withinRecord = new AtomicReference<>("n/a");
+    this.viewerFields = new TreeSet<>();
   }
 
   public static ArrayList<FunctionOverloadInstance> WRAP(final FunctionOverloadInstance foi) {

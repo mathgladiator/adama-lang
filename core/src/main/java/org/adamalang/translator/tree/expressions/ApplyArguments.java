@@ -122,6 +122,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       for (String depend : functionInstance.dependencies) {
         environmentToUse.lookup(depend, true, this, true);
       }
+      for (String vf : functionInstance.viewerFields) {
+        environmentToUse.registerViewerField(vf);
+      }
       if (environmentToUse.state.shouldDumpRecordMethodSubscriptions(functionInstance.withinRecord.get())) {
         for (String dependR : functionInstance.recordDependencies) {
           environmentToUse.lookup(dependR, true, this, true);

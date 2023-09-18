@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 /** defines a method within a structure */
@@ -50,6 +51,7 @@ public class DefineMethod extends StructureComponent {
   private LinkedHashSet<String> methodDependencies;
   private LinkedHashSet<String> services;
   private final FunctionPaint paint;
+  public final TreeSet<String> viewerFields;
 
   /** construct the function of a type with a name */
   public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final FunctionPaint paint, final Block code) {
@@ -72,6 +74,7 @@ public class DefineMethod extends StructureComponent {
     this.depends = new LinkedHashSet<>();
     this.services = new LinkedHashSet<>();
     this.methodDependencies = new LinkedHashSet<>();
+    this.viewerFields = new TreeSet<>();
   }
 
   @Override
@@ -116,6 +119,7 @@ public class DefineMethod extends StructureComponent {
           cachedInstance.recordDependencies.add(depend);
         }
       }
+      cachedInstance.viewerFields.addAll(viewerFields);
       cachedInstance.withinRecord.set(storage.name.text);
       cachedInstance.ingest(this);
     }
@@ -130,7 +134,7 @@ public class DefineMethod extends StructureComponent {
       toUse = toUse.scopeAsAbortable();
     }
     if (paint.viewer) {
-      toUse = toUse.scopeWithViewer();
+      toUse = toUse.scopeWithViewer(viewerFields);
     }
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);

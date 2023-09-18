@@ -403,12 +403,14 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___ff.getGeneration();");
+    gold.append("\n      __CHECK = __CHECK * 1662803L + __VIEWER.__GEN_x;");
     gold.append("\n      if (__gff != __CHECK)  {");
     gold.append("\n        Integer __local_ff = __item.__COMPUTE_ff(__writer.who, __VIEWER);");
     gold.append("\n        __dff.show(__local_ff, __obj.planField(\"ff\"));");
     gold.append("\n        __gff = __CHECK;");
     gold.append("\n      }");
     gold.append("\n      __CHECK = __item.___fv.getGeneration();");
+    gold.append("\n      __CHECK = __CHECK * 1662803L + __VIEWER.__GEN_x;");
     gold.append("\n      if (__gfv != __CHECK)  {");
     gold.append("\n        Integer __local_fv = __item.__COMPUTE_fv(__writer.who, __VIEWER);");
     gold.append("\n        __dfv.show(__local_fv, __obj.planField(\"fv\"));");

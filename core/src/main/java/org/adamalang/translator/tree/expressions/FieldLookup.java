@@ -152,7 +152,7 @@ public class FieldLookup extends Expression {
         final var hrs = (IsStructure) eType;
         final var fd = hrs.storage().fields.get(fieldName);
         if (fd != null) {
-          if ("__ViewerType".equals(((IsStructure) eType).storage().name.text) && environment.state.isBubble()) {
+          if ("__ViewerType".equals(((IsStructure) eType).storage().name.text)) {
             environment.registerViewerField(fieldName);
           }
           TyType actualType = environment.rules.Resolve(fd.type, false);

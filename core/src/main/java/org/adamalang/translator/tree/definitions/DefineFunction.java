@@ -34,6 +34,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadIns
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 /** defines a function */
@@ -41,6 +42,7 @@ public class DefineFunction extends Definition {
   /** write the set of all functions in the environment */
   public final ArrayList<FunctionArg> args;
   public final HashSet<String> depends;
+  public final TreeSet<String> viewerFields;
 
   public final Token closeParen;
   public final Token functionTypeToken;
@@ -77,6 +79,7 @@ public class DefineFunction extends Definition {
     ingest(openParen);
     ingest(closeParen);
     ingest(code);
+    this.viewerFields = new TreeSet<>();
   }
 
   @Override
@@ -115,6 +118,7 @@ public class DefineFunction extends Definition {
       final var flow = code.typing(prepareEnvironment(environment));
       if (producedInstance != null) {
         producedInstance.dependencies.addAll(depends);
+        producedInstance.viewerFields.addAll(viewerFields);
       }
       if (returnType != null && flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text));
@@ -147,7 +151,7 @@ public class DefineFunction extends Definition {
       toUse = toUse.scopeAsAbortable();
     }
     if (paint.viewer) {
-      toUse = toUse.scopeWithViewer();
+      toUse = toUse.scopeWithViewer(viewerFields);
     }
     toUse = toUse.watch((escName, type) -> {
       TyType resolved = environment.rules.Resolve(type, true);
@@ -177,6 +181,8 @@ public class DefineFunction extends Definition {
       argTypes.add(arg.type);
     }
     FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, paint);
+    foi.viewerFields.addAll(viewerFields);
+    foi.dependencies.addAll(depends);
     foi.ingest(this);
     producedInstance = foi;
     return foi;

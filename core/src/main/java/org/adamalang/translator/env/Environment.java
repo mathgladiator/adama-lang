@@ -255,8 +255,10 @@ public class Environment {
   }
 
   /** create a new environment that has access to the viewer */
-  public Environment scopeWithViewer() {
-    return new Environment(document, state.scopeViewer(), this);
+  public Environment scopeWithViewer(TreeSet<String> viewerFields) {
+    Environment next = new Environment(document, state.scopeViewer(), this);
+    next.collectViewerFields = viewerFields;
+    return next;
   }
 
 
