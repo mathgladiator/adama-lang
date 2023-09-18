@@ -87,17 +87,6 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .header("Cookie", ClientCookieEncoder.STRICT.encode("skvp_key", "the-value"))
-            .get("/~get/key")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("the-value");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", SecureAssetUtil.makeAssetKeyHeader()))
             .get("/~assets/space/key/id=123")
             .execute(callback);

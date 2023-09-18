@@ -17,6 +17,7 @@
 */
 package org.adamalang.web.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -43,7 +44,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
-  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", "assetKey");
+  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", "assetKey", null);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(WebSocketHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
@@ -110,7 +111,17 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
       context = ConnectionContextFactory.of(ctx, headers);
       // tell client all is ok
-      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"version\":\"" + Platform.VERSION + "\",\"assets\":" + (context.assetKey != null ? "true" : "false") + "}"));
+      ObjectNode connected = Json.newJsonObject();
+      connected.put("status", "connected");
+      connected.put("version", Platform.VERSION);
+      connected.put("assets", context.assetKey != null);
+      if (context.identities != null) {
+        ObjectNode idents = connected.putObject("identities");
+        for (String ident : context.identities.keySet()) {
+          idents.put(ident, true);
+        }
+      }
+      ctx.writeAndFlush(new TextWebSocketFrame(connected.toString()));
       // establish the service
       connection = base.establish(context);
       metrics.websockets_active_child_connections.up();

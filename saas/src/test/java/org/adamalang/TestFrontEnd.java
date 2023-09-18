@@ -384,7 +384,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     };
     this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", "test-machine", hostKeyPair.getPrivate(), keyId, new String[] {}, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
-    this.context = new ConnectionContext("home", "ip", "agent", null);
+    this.context = new ConnectionContext("home", "ip", "agent", null, null);
     connection = this.frontend.establish(context);
     frontend.http();
     emailLatch = new ConcurrentHashMap<>();
@@ -439,7 +439,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
   public Iterator<String> execute(String requestJson) {
     System.err.println("EXECUTE:" + requestJson);
-    JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson), new ConnectionContext("ip", "origin", "agent", null));
+    JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson), new ConnectionContext("ip", "origin", "agent", null, null));
     SyncIterator iterator = new SyncIterator();
     connection.execute(request, iterator);
     return iterator;

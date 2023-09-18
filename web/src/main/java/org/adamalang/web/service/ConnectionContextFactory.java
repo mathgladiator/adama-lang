@@ -20,9 +20,13 @@ package org.adamalang.web.service;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.io.ConnectionContext;
 
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /** read headers and ip into a ConnectionContext */
@@ -34,8 +38,20 @@ public class ConnectionContextFactory {
     if (xForwardedFor != null && !("".equals(xForwardedFor))) {
       ip = xForwardedFor;
     }
+    String cookieHeader = headers.get(HttpHeaderNames.COOKIE);
+    TreeMap<String, String> identites = null;
+    if (cookieHeader != null) {
+      for (Cookie cookie : ServerCookieDecoder.STRICT.decode(cookieHeader)) {
+        if (cookie.name().startsWith("id_") && cookie.isHttpOnly() && cookie.isSecure()) {
+          if (identites == null) {
+            identites = new TreeMap<>();
+          }
+          identites.put(cookie.name().substring(3), cookie.value());
+        }
+      }
+    }
     String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
-    String assetKey = AssetRequest.extractAssetKey(headers.get(HttpHeaderNames.COOKIE));
-    return new ConnectionContext(origin, ip, userAgent, assetKey);
+    String assetKey = AssetRequest.extractAssetKey(cookieHeader);
+    return new ConnectionContext(origin, ip, userAgent, assetKey, identites);
   }
 }

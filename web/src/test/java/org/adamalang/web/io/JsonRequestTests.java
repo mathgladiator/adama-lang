@@ -23,8 +23,10 @@ import org.adamalang.common.Json;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeMap;
+
 public class JsonRequestTests {
-  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent", "assets");
+  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent", "assets", new TreeMap<>());
 
   @Test
   public void noMethod() throws Exception {

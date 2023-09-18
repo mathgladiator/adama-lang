@@ -37,7 +37,7 @@ public abstract class PerSessionAuthenticator {
   /** update the default asset key within the default context */
   @Deprecated
   public void updateAssetKey(String assetKey) {
-    this.defaultContext = new ConnectionContext(defaultContext.origin, defaultContext.remoteIp, defaultContext.userAgent, assetKey);
+    this.defaultContext = new ConnectionContext(defaultContext.origin, defaultContext.remoteIp, defaultContext.userAgent, assetKey, null);
   }
 
   /** get the asset key for the default context. If the session's connection is a user, then this is the user's asset key. */

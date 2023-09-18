@@ -31,7 +31,7 @@ public class AuthenticatedUserTests {
 
   @Test
   public void flow() throws Exception {
-    AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key"));
+    AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key", null));
     KeyPair pair = PublicKeyCodec.inventHostKey();
     String identity = user.asIdentity(42, pair.getPrivate());
     ParsedToken parsedToken = new ParsedToken(identity);

@@ -230,7 +230,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
       arg.writeObjectFieldIntro("email");
       arg.writeString(email);
       arg.endObject();
-      AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), new ConnectionContext("adama", "0.0.0.0", "adama", null));
+      AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), new ConnectionContext("adama", "0.0.0.0", "adama", null, null));
       nexus.adama.create(user, "billing", "" + userId, null, arg.toString(), new Callback<Void>() {
         @Override
         public void success(Void value) {

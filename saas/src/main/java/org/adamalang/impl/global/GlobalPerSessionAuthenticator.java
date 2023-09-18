@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.PublicKey;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /** the authenticator for the global region */
@@ -91,7 +92,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         .requireIssuer("host")
         .build()
         .parseClaimsJws(identity);
-    ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key);
+    ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key, null);
     AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
     session.identityCache.put(identity, user);
     callback.success(user);
@@ -104,7 +105,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         .requireIssuer("internal")
         .build()
         .parseClaimsJws(identity);
-    ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null);
+    ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null, null);
     AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
     session.identityCache.put(identity, user);
     callback.success(user);
@@ -191,7 +192,10 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
 
   /** authenticate */
   @Override
-  public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
+  public void execute(Session session, String identityRaw, Callback<AuthenticatedUser> callback) {
+    // check to see if there is a cookie to lookup
+    String identity = defaultContext.identityOf(identityRaw);
+
     AuthenticatedUser cacheHit = session.identityCache.get(identity);
     if (cacheHit != null) {
       // TODO: come up with a cache invalidation scheme
@@ -202,6 +206,8 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       if (FastAuth.process(identity, callback, defaultContext)) {
         return;
       }
+
+
 
       ParsedToken parsedToken = new ParsedToken(identity);
       if (parsedToken.iss.startsWith("doc/")) {

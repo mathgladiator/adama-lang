@@ -314,9 +314,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             break;
         }
       }
-      final String identity = _identity;
       final String channel = _channel;
       final ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
+      final String identity = context.identityOf(_identity);
       if (identity != null && domain != null) {
         domainFinder.find(domain, new Callback<Domain>() {
           @Override
@@ -547,33 +547,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         sendWithKeepAlive(webConfig, ctx, req, res);
       } else {
         sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
-      }
-      return true;
-    } else if (req.uri().startsWith("/~get/")) { // set a secure cookie
-      String[] fragments = req.uri().split(Pattern.quote("/"));
-      if (fragments.length == 3) {
-        String name = "skvp_" + fragments[2];
-        String found = null;
-        for (Cookie cookie : ServerCookieDecoder.STRICT.decode(req.headers().get(HttpHeaderNames.COOKIE))) {
-          if (name.equalsIgnoreCase(cookie.name())) {
-            found = cookie.value();
-          }
-        }
-        if (found == null) {
-          sendImmediate(metrics.webhandler_failed_cookie_get, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_GET_FAILURE, "text/html; charset=UTF-8", true);
-        } else {
-          final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(found.getBytes(StandardCharsets.UTF_8)));
-          String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-          if (origin != null) { // CORS support directly
-            res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-            res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
-          }
-          res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
-          res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-          sendWithKeepAlive(webConfig, ctx, req, res);
-        }
-      } else {
-        sendImmediate(metrics.webhandler_failed_cookie_get, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_GET_FAILURE, "text/html; charset=UTF-8", true);
       }
       return true;
     } else if (req.uri().startsWith("/~p")) { // set an asset key

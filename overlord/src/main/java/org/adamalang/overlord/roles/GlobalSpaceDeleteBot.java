@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,7 +48,7 @@ public class GlobalSpaceDeleteBot {
   public static AuthenticatedUser OVERLORD = new AuthenticatedUser(
       -1,
       new NtPrincipal("overlord", "overlord"),
-      new ConnectionContext("overlord", "0.0.0.0", "overlord", ""));
+      new ConnectionContext("overlord", "0.0.0.0", "overlord", "", new TreeMap<>()));
   private static Logger LOG = LoggerFactory.getLogger(GlobalSpaceDeleteBot.class);
   private final OverlordMetrics metrics;
   private final DataBase dataBase;
