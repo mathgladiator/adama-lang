@@ -46,7 +46,6 @@ public class TokenRateLimiter {
   public synchronized TokenGrant ask() {
     long now = time.nowMilliseconds();
     long delta = now - at;
-    double prior = tokens;
     if (delta >= refreshGuard) { // threshold for numerical significance
       tokens += delta * maxTokensInWindow / windowMilliseconds;
       tokens = Math.min(maxTokensInWindow, Math.ceil(tokens));

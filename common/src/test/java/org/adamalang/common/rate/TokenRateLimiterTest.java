@@ -91,10 +91,10 @@ public class TokenRateLimiterTest {
     }
     Assert.assertEquals(3029, tokens);
     Random rng = new Random();
-    for (int round = 0; round < 100; round++) {
-      int k = rng.nextInt(samples.size());
-      long start = samples.get(k).time;
-      int j = k;
+    for (int init = 0; init < samples.size(); init++) {
+      long start = samples.get(init).time;
+      int j = init;
+      int k = init;
       while (j < samples.size() && (samples.get(j).time - start) < 60000) {
         j++;
       }
@@ -103,7 +103,8 @@ public class TokenRateLimiterTest {
         window += samples.get(k).tokens;
         k++;
       }
-      Assert.assertTrue(window <= 30);
+      // the burst rate is actually 2X the max tokens, but the steady state rate is max tokens
+      Assert.assertTrue(window <= 60);
     }
   }
 }
