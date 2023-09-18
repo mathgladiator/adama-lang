@@ -88,7 +88,7 @@ public class DurableListStore {
     this.walRoot = walRoot;
     this.buffer = Unpooled.buffer(flushCutOffBytes * 8 / 7);
     if (IS_NOISY) {
-      LOGGER.error("created buffer:" + buffer + " (ideal:" + (flushCutOffBytes * 5 / 4));
+      LOGGER.error("created buffer:" + buffer.getClass() + " (ideal:" + (flushCutOffBytes * 5 / 4));
       LOGGER.error("buffer capacity:" + buffer.capacity());
       LOGGER.error("platform has unsafe:" + PlatformDependent.hasUnsafe());
     }
@@ -109,6 +109,8 @@ public class DurableListStore {
     this.maxLogSize = maxLogSize;
     this.bytesWrittenToLog = 0;
     openLogForWriting();
+    LOGGER.error("DurableListStore opened; type=" + (buffer.getClass()) + ", PlatformDependent: unsafe" + PlatformDependent.hasUnsafe() + ", prefer-direct:" + PlatformDependent.directBufferPreferred() + ", buffer-capacity:" + buffer.capacity());
+
   }
 
   /** build a report of the free disk space available; side-effect: emit metrics */

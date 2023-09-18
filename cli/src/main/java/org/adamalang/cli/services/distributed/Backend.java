@@ -137,6 +137,7 @@ public class Backend {
       }
     })));
     System.err.println("backend running");
+    LOGGER.error("Started");
     return new Backend(init, serverThread);
   }
 }
