@@ -23,7 +23,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class TokenRateLimiterTest {
   @Test
@@ -90,7 +89,6 @@ public class TokenRateLimiterTest {
       time.currentTime += 250;
     }
     Assert.assertEquals(3029, tokens);
-    Random rng = new Random();
     for (int init = 0; init < samples.size(); init++) {
       long start = samples.get(init).time;
       int j = init;
