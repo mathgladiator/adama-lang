@@ -90,6 +90,17 @@ public class TyNativeFunctional extends TyType {
     writer.endObject();
   }
 
+  /** to help typing anonymous messages to existing messages */
+  public FunctionOverloadInstance guess(int count) {
+    if (overloads.size() == 1) {
+      if (overloads.get(0).types.size() == count) {
+        return overloads.get(0);
+      }
+    }
+    return null;
+  }
+
+
   /** find the right instance basedd on the given types */
   public FunctionOverloadInstance find(final DocumentPosition position, final ArrayList<TyType> argTypes, final Environment environment) {
     var result = overloads.get(0);

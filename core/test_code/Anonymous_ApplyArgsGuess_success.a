@@ -1,0 +1,20 @@
+message X {
+  int x;
+  int y;
+}
+
+message Y {
+  int x;
+  int y;
+}
+
+function a(X x) -> int {
+  return x.x + x.y;
+}
+
+function b(Y x) -> int {
+  return x.x + x.y;
+}
+
+public formula u = a({x:1,y:2});
+public formula v = b({x:1,y:2});

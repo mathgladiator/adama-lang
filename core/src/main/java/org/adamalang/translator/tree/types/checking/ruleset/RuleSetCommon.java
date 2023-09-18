@@ -74,11 +74,11 @@ public class RuleSetCommon {
     }
     if (type != null && environment.rules.IsNativeMessage(type, true)) {
       final var msg = (TyNativeMessage) type;
-      var next = (TyType) environment.document.findPriorMessage(msg.storage, environment);
-      if (next != null) {
-        return next;
-      }
       if (msg.storage.anonymous) {
+        var next = (TyType) environment.document.findPriorMessage(msg.storage, environment);
+        if (next != null) {
+          return next;
+        }
         for (final Map.Entry<String, FieldDefinition> entry : msg.storage.fields.entrySet()) {
           entry.getValue().type = EnsureRegisteredAndDedupe(environment, entry.getValue().type, silent);
         }

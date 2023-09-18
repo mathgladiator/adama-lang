@@ -16477,7 +16477,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
-    gold.append("\n    final RTxM m = new RTxM(123);");
+    gold.append("\n    RTxM m = new RTxM(123);");
     gold.append("\n    __track(1);");
     gold.append("\n    result.set(m.x);");
     gold.append("\n  }");

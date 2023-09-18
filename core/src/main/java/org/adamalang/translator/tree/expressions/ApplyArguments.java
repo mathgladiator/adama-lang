@@ -101,8 +101,11 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         environmentToUse.document.add(this);
       }
       final var argTypes = new ArrayList<TyType>();
+      FunctionOverloadInstance guess = ((TyNativeFunctional) exprType).guess(args.size());
+      int at = 0;
       for (final TokenizedItem<Expression> arg : args) {
-        argTypes.add(arg.item.typing(environmentToUse.scopeWithComputeContext(ComputeContext.Computation), null));
+        argTypes.add(arg.item.typing(environmentToUse.scopeWithComputeContext(ComputeContext.Computation), guess != null ? guess.types.get(at) : null));
+        at++;
       }
       exprType.typing(environmentToUse);
       functionStyle = ((TyNativeFunctional) exprType).style;
