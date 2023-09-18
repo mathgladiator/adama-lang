@@ -19,6 +19,7 @@ package org.adamalang.caravan;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.util.internal.PlatformDependent;
 import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.ByteArrayStream;
 import org.adamalang.caravan.contracts.Cloud;
@@ -209,6 +210,30 @@ public class CaravanDataService implements ArchivingDataService {
       public void execute() throws Exception {
         JsonStreamWriter writer = new JsonStreamWriter();
         writer.beginObject();
+        {
+          writer.writeObjectFieldIntro("platform");
+          writer.beginObject();
+          writer.writeObjectFieldIntro("unsafe");
+          writer.writeBoolean(PlatformDependent.hasUnsafe());
+          writer.writeObjectFieldIntro("prefer-direct");
+          writer.writeBoolean(PlatformDependent.directBufferPreferred());
+          writer.writeObjectFieldIntro("no-cleaner");
+          writer.writeBoolean(PlatformDependent.useDirectBufferNoCleaner());
+          writer.writeObjectFieldIntro("windows");
+          writer.writeBoolean(PlatformDependent.isWindows());
+          writer.writeObjectFieldIntro("osx");
+          writer.writeBoolean(PlatformDependent.isOsx());
+          writer.writeObjectFieldIntro("is-j9");
+          writer.writeBoolean(PlatformDependent.isJ9Jvm());
+          ByteBuf sanity = Unpooled.buffer();
+          writer.writeObjectFieldIntro("byte-buf-class");
+          writer.writeString(sanity.getClass().getName());
+          sanity.writeIntLE(42);
+          sanity.writeLongLE(13421342L);
+          writer.writeObjectFieldIntro("sanity-size");
+          writer.writeInteger(ByteArrayHelper.convert(sanity).length);
+          writer.endObject();
+        }
         {
           writer.writeObjectFieldIntro("cache");
           writer.beginObject();
