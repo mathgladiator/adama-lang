@@ -28,6 +28,7 @@ import org.adamalang.translator.tree.types.TyType;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class BubbleDefinition extends StructureComponent {
@@ -41,6 +42,7 @@ public class BubbleDefinition extends StructureComponent {
   public final LinkedHashSet<String> variablesToWatch;
   public TyType expressionType;
   public final HashSet<String> globalPolicies;
+  public TreeSet<String> viewerFields;
 
   public BubbleDefinition(final Token bubbleToken, Guard guard, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
     this.bubbleToken = bubbleToken;
@@ -54,6 +56,7 @@ public class BubbleDefinition extends StructureComponent {
     servicesToWatch = new LinkedHashSet<>();
     variablesToWatch = new LinkedHashSet<>();
     this.globalPolicies = new HashSet<>();
+    this.viewerFields = new TreeSet<>();
   }
 
   @Override
@@ -90,7 +93,7 @@ public class BubbleDefinition extends StructureComponent {
   }
 
   private Environment next(Environment environment) {
-    final var next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeReactiveExpression().scopeAsBubble();
+    final var next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeReactiveExpression().scopeAsBubble(viewerFields);
     return next;
   }
 
@@ -100,7 +103,6 @@ public class BubbleDefinition extends StructureComponent {
     expression.writeJava(sb, next(environment));
     sb.append(";").tabDown().writeNewline().append("}").writeNewline();
   }
-
 
   public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb) {
     sb.append("if (");

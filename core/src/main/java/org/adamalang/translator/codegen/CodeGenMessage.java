@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.codegen;
 
+import org.adamalang.common.FirstPrimes;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TySimpleNative;
@@ -93,22 +94,26 @@ public class CodeGenMessage {
       sb.append("}").writeNewline();
       boolean isViewerType = name.equals("__ViewerType");
       if (isViewerType) {
-        sb.append("public int __DATA_GENERATION = 1;").writeNewline();
+        int at = 1; // skip 2
+        for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
+          sb.append("public int __GEN_").append(e.getKey()).append(" = ").append("" + FirstPrimes.PRIMES_1000[at % FirstPrimes.PRIMES_1000.length]).append(";").writeNewline();
+          at++;
+        }
       }
       sb.append("@Override").writeNewline();
       sb.append("public void __ingest(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
       if (storage.fields.size() == 0) {
         sb.append("__reader.mustSkipObject();").tabDown().writeNewline();
       } else {
-        if (isViewerType) {
-          sb.append("this.__DATA_GENERATION += 2;").writeNewline();
-        }
         sb.append("__reader.mustStartObject();").writeNewline();
         sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
         sb.append("String __fieldName = __reader.fieldName();").writeNewline();
         sb.append("switch (__fieldName) {").tabUp().writeNewline(); // UP
         for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
           sb.append("case \"").append(e.getKey()).append("\":").tabUp().writeNewline(); // UP
+          if (isViewerType) {
+            sb.append("this.__GEN_").append(e.getKey()).append(" += 2;").writeNewline();
+          }
           writeValueReader("this." + e.getKey(), environment.rules.Resolve(e.getValue().type, false), sb, environment, localVar);
           sb.append("break;").tabDown().writeNewline(); // DOWN
         }

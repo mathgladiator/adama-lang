@@ -460,7 +460,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -1211,7 +1210,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___this_day_calendar.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___this_day_calendar.getGeneration();");
     gold.append("\n      if (__gthis_day_calendar != __CHECK)  {");
     gold.append("\n        RTx_AutoMaxRecord_9[] __local_this_day_calendar = __item.__COMPUTE_this_day_calendar(__writer.who, __VIEWER);");
     gold.append("\n        {");
@@ -1294,7 +1293,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -2252,7 +2250,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -3457,7 +3454,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -4969,7 +4965,6 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");

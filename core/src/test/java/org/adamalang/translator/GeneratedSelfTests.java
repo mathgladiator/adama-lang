@@ -449,7 +449,6 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -672,7 +671,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___dx.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___dx.getGeneration();");
     gold.append("\n      if (__gdx != __CHECK)  {");
     gold.append("\n        Integer __local_dx = __item.__COMPUTE_dx(__writer.who, __VIEWER);");
     gold.append("\n        __ddx.show(__local_dx, __obj.planField(\"dx\"));");
@@ -1334,7 +1333,6 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -2286,7 +2284,6 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -2686,7 +2683,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___b.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___b.getGeneration();");
     gold.append("\n      if (__gb != __CHECK)  {");
     gold.append("\n        NtList<RTxOther> __local_b = __item.__COMPUTE_b(__writer.who, __VIEWER);");
     gold.append("\n        {");

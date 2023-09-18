@@ -443,7 +443,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -1299,7 +1298,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -2312,7 +2310,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -3085,7 +3082,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -3875,7 +3871,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -4887,7 +4882,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -5757,7 +5751,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -6773,7 +6766,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -7457,7 +7449,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___you.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___you.getGeneration();");
     gold.append("\n      if (__gyou != __CHECK)  {");
     gold.append("\n        Integer __local_you = __item.__COMPUTE_you(__writer.who, __VIEWER);");
     gold.append("\n        __dyou.show(__local_you, __obj.planField(\"you\"));");
@@ -7529,7 +7521,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -8148,7 +8139,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -8796,7 +8786,6 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");

@@ -453,7 +453,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      if (__policy_cache.p) {");
-    gold.append("\n        __CHECK = __item.___k.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n        __CHECK = __item.___k.getGeneration();");
     gold.append("\n        if (__gk != __CHECK)  {");
     gold.append("\n          Integer __local_k = __item.__COMPUTE_k(__writer.who, __VIEWER);");
     gold.append("\n          __dk.show(__local_k, __obj.planField(\"k\"));");
@@ -465,7 +465,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n        __dk.hide(__obj.planField(\"k\"));");
     gold.append("\n      }");
     gold.append("\n      if (__policy_cache.p2) {");
-    gold.append("\n        __CHECK = __item.___k2.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n        __CHECK = __item.___k2.getGeneration();");
     gold.append("\n        if (__gk2 != __CHECK)  {");
     gold.append("\n          Integer __local_k2 = __item.__COMPUTE_k2(__writer.who, __VIEWER);");
     gold.append("\n          __dk2.show(__local_k2, __obj.planField(\"k2\"));");
@@ -477,7 +477,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n        __dk2.hide(__obj.planField(\"k2\"));");
     gold.append("\n      }");
     gold.append("\n      if (__policy_cache.p && __policy_cache.p2) {");
-    gold.append("\n        __CHECK = __item.___k3.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n        __CHECK = __item.___k3.getGeneration();");
     gold.append("\n        if (__gk3 != __CHECK)  {");
     gold.append("\n          Integer __local_k3 = __item.__COMPUTE_k3(__writer.who, __VIEWER);");
     gold.append("\n          __dk3.show(__local_k3, __obj.planField(\"k3\"));");
@@ -556,7 +556,6 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -1165,7 +1164,6 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -1387,7 +1385,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      if (__item.__POLICY_p(__writer.who) && __policy_cache.g) {");
-    gold.append("\n        __CHECK = __item.___k.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n        __CHECK = __item.___k.getGeneration();");
     gold.append("\n        if (__gk != __CHECK)  {");
     gold.append("\n          Integer __local_k = __item.__COMPUTE_k(__writer.who, __VIEWER);");
     gold.append("\n          __dk.show(__local_k, __obj.planField(\"k\"));");
@@ -1399,7 +1397,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n        __dk.hide(__obj.planField(\"k\"));");
     gold.append("\n      }");
     gold.append("\n      if (__item.__POLICY_p2(__writer.who) && __policy_cache.g) {");
-    gold.append("\n        __CHECK = __item.___k2.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n        __CHECK = __item.___k2.getGeneration();");
     gold.append("\n        if (__gk2 != __CHECK)  {");
     gold.append("\n          Integer __local_k2 = __item.__COMPUTE_k2(__writer.who, __VIEWER);");
     gold.append("\n          __dk2.show(__local_k2, __obj.planField(\"k2\"));");
@@ -1411,7 +1409,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n        __dk2.hide(__obj.planField(\"k2\"));");
     gold.append("\n      }");
     gold.append("\n      if (__item.__POLICY_p(__writer.who) && __item.__POLICY_p2(__writer.who) && __policy_cache.g) {");
-    gold.append("\n        __CHECK = __item.___k3.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n        __CHECK = __item.___k3.getGeneration();");
     gold.append("\n        if (__gk3 != __CHECK)  {");
     gold.append("\n          Integer __local_k3 = __item.__COMPUTE_k3(__writer.who, __VIEWER);");
     gold.append("\n          __dk3.show(__local_k3, __obj.planField(\"k3\"));");

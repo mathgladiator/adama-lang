@@ -210,7 +210,12 @@ public class CodeGenDeltaClass {
         if (bd.guard != null) {
           closeItUp = bd.writePrivacyCheckGuard(sb);
         }
-        sb.append("__CHECK = __item.___").append(bd.nameToken.text).append(".getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;").writeNewline();
+        sb.append("__CHECK = __item.___").append(bd.nameToken.text).append(".getGeneration();").writeNewline();
+        if (bd.viewerFields.size() != 0) {
+          for (String vf : bd.viewerFields) {
+            sb.append("__CHECK = __CHECK * 1662803L + __VIEWER.__GEN_").append(vf).append(";").writeNewline();
+          }
+        }
         sb.append("if (__g").append(bd.nameToken.text).append(" != __CHECK)  {").tabUp().writeNewline();
         final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
         sb.append(bubbleType.getJavaBoxType(environment)).append(" __local_").append(bd.nameToken.text).append(" = __item.__COMPUTE_").append(bd.nameToken.text).append("(__writer.who, __VIEWER);").writeNewline();

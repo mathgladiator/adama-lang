@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -50,6 +51,7 @@ public class Environment {
   private BiConsumer<String, TyType> watch = null;
   private HashMap<String, TyType> specialConstants;
   private boolean hasDefaultCase;
+  private TreeSet<String> collectViewerFields;
 
   private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
@@ -75,6 +77,7 @@ public class Environment {
       this.interns.add("\"\"");
     }
     this.specialConstants = null;
+    this.collectViewerFields = null;
   }
 
   /** construct an environment that is fresh */
@@ -293,8 +296,20 @@ public class Environment {
   }
 
   /** create a new environment which is a bubble */
-  public Environment scopeAsBubble() {
-    return new Environment(document, state.scopeBubble(), this);
+  public Environment scopeAsBubble(TreeSet<String> fields) {
+    Environment next = new Environment(document, state.scopeBubble(), this);
+    next.collectViewerFields = fields;
+    return next;
+  }
+
+  public void registerViewerField(String field) {
+    if (collectViewerFields != null) {
+      collectViewerFields.add(field);
+      return;
+    }
+    if (parent != null) {
+      parent.registerViewerField(field);
+    }
   }
 
   /** create a new environment for web calls */

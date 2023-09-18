@@ -469,7 +469,6 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -1297,7 +1296,6 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -2128,7 +2126,6 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -2908,7 +2905,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___things.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___things.getGeneration();");
+    gold.append("\n      __CHECK = __CHECK * 1662803L + __VIEWER.__GEN_class_filter;");
     gold.append("\n      if (__gthings != __CHECK)  {");
     gold.append("\n        NtList<RTxThing> __local_things = __item.__COMPUTE_things(__writer.who, __VIEWER);");
     gold.append("\n        {");
@@ -2994,15 +2992,15 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
+    gold.append("\n    public int __GEN_class_filter = 3;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      this.__DATA_GENERATION += 2;");
     gold.append("\n      __reader.mustStartObject();");
     gold.append("\n      while (__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
     gold.append("\n          case \"class_filter\":");
+    gold.append("\n            this.__GEN_class_filter += 2;");
     gold.append("\n            this.class_filter = __reader.readString();");
     gold.append("\n            break;");
     gold.append("\n          default:");
@@ -3883,7 +3881,6 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");
@@ -4685,7 +4682,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___things.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___things.getGeneration();");
     gold.append("\n      if (__gthings != __CHECK)  {");
     gold.append("\n        NtList<RTxThing> __local_things = __item.__COMPUTE_things(__writer.who, __VIEWER);");
     gold.append("\n        {");
@@ -4771,15 +4768,15 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
+    gold.append("\n    public int __GEN_class_filter = 3;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
-    gold.append("\n      this.__DATA_GENERATION += 2;");
     gold.append("\n      __reader.mustStartObject();");
     gold.append("\n      while (__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
     gold.append("\n          case \"class_filter\":");
+    gold.append("\n            this.__GEN_class_filter += 2;");
     gold.append("\n            this.class_filter = __reader.readString();");
     gold.append("\n            break;");
     gold.append("\n          default:");

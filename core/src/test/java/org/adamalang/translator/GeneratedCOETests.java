@@ -617,7 +617,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___your_family_1.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___your_family_1.getGeneration();");
     gold.append("\n      if (__gyour_family_1 != __CHECK)  {");
     gold.append("\n        NtMaybe<RTxFamily> __local_your_family_1 = __item.__COMPUTE_your_family_1(__writer.who, __VIEWER);");
     gold.append("\n        if (__local_your_family_1.has()) {");
@@ -629,7 +629,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n        __gyour_family_1 = __CHECK;");
     gold.append("\n      }");
-    gold.append("\n      __CHECK = __item.___your_family_2.getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;");
+    gold.append("\n      __CHECK = __item.___your_family_2.getGeneration();");
     gold.append("\n      if (__gyour_family_2 != __CHECK)  {");
     gold.append("\n        NtMaybe<RTxFamily> __local_your_family_2 = __item.__COMPUTE_your_family_2(__writer.who, __VIEWER);");
     gold.append("\n        if (__local_your_family_2.has()) {");
@@ -708,7 +708,6 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      __this = this;");
     gold.append("\n      __ingest(__reader);");
     gold.append("\n    }");
-    gold.append("\n    public int __DATA_GENERATION = 1;");
     gold.append("\n    @Override");
     gold.append("\n    public void __ingest(JsonStreamReader __reader) {");
     gold.append("\n      __reader.mustSkipObject();");

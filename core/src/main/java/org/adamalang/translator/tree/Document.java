@@ -113,7 +113,7 @@ public class Document implements TopLevelDocumentHandler {
     functionTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
     configs = new HashMap<>();
-    viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(Token.WRAP("Viewer"), StorageSpecialization.Message, true, false, null));
+    viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(Token.WRAP("__ViewerType"), StorageSpecialization.Message, true, false, null));
     types.put("__ViewerType", viewerType);
     webGet = new UriTable();
     webPut = new UriTable();
