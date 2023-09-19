@@ -137,8 +137,19 @@ public class Root {
       first = false;
       if (fragment.startsWith("$")) {
         int colon = fragment.indexOf(':');
-        String type = colon > 0 ? fragment.substring(colon + 1) : "text";
-        String name = colon > 0 ? fragment.substring(1, colon) : fragment.substring(1);
+        String type = (colon > 0 ? fragment.substring(colon + 1) : "text").trim().toLowerCase();
+        String name = (colon > 0 ? fragment.substring(1, colon) : fragment.substring(1)).trim();
+        switch (type) {
+          case "text":
+          case "string":
+          case "str":
+            type = "text";
+            break;
+          case "number":
+          case "int":
+          case "double":
+            type = "number";
+        }
         depends.add(name);
         sb.append("'").append(type).append("','").append(name).append("'");
         formula.append("{").append(name).append("}");
