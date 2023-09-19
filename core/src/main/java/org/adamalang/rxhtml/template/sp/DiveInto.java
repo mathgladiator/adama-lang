@@ -15,8 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.template.sp;
 
-public class Platform {
-  public static final String VERSION = "20230919155809";
+/** dive into a child object */
+public class DiveInto implements PathInstruction{
+  public final String child;
+
+  public DiveInto(String child) {
+    this.child = child;
+  }
 }
