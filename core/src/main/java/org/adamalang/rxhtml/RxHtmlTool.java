@@ -51,7 +51,7 @@ public class RxHtmlTool {
     return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq(), env.tasks);
   }
 
-  private static String buildCustomJavaScript(Document document) {
+  public static String buildCustomJavaScript(Document document) {
     StringBuilder customjs = new StringBuilder();
     ArrayList<Element> axe = new ArrayList<>();
     for (Element element : document.getElementsByTag("script")) {
@@ -66,7 +66,7 @@ public class RxHtmlTool {
     return customjs.toString();
   }
 
-  private static String buildInternStyle(Document document) {
+  public static String buildInternStyle(Document document) {
     ArrayList<Element> axe = new ArrayList<>();
     StringBuilder style = new StringBuilder();
     for (Element element : document.getElementsByTag("style")) {
@@ -79,7 +79,7 @@ public class RxHtmlTool {
     return style.toString().trim();
   }
 
-  private static ArrayList<String> getDefaultRedirect(Document document) {
+  public static ArrayList<String> getDefaultRedirect(Document document) {
     ArrayList<String> defaults = new ArrayList<>();
     for (Element element : document.getElementsByTag("page")) {
       if (element.hasAttr("default-redirect-source")) {

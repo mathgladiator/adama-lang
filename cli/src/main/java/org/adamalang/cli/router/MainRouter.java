@@ -771,6 +771,16 @@ public class MainRouter {
                frontendHandler.make200(frontendArgs, out);
                return 0;
             }
+            case "mobile-capacitor": {
+              FrontendMobileCapacitorArgs frontendArgs = FrontendMobileCapacitorArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendMobileCapacitorArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.mobileCapacitor(frontendArgs, out);
+               return 0;
+            }
             case "rxhtml": {
               FrontendRxhtmlArgs frontendArgs = FrontendRxhtmlArgs.from(args, 2);
               if (frontendArgs == null) {

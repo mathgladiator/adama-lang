@@ -27,10 +27,7 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
-import org.adamalang.rxhtml.Bundler;
-import org.adamalang.rxhtml.RxHtmlResult;
-import org.adamalang.rxhtml.RxHtmlTool;
-import org.adamalang.rxhtml.TypeChecker;
+import org.adamalang.rxhtml.*;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
 import java.io.File;
@@ -47,6 +44,17 @@ public class FrontendHandlerImpl implements FrontendHandler {
         files.add(child);
       }
     }
+  }
+
+  @Override
+  public void mobileCapacitor(Arguments.FrontendMobileCapacitorArgs args, Output.YesOrError output) throws Exception {
+    ArrayList<File> files = new ArrayList<>();
+    aggregateFiles(new File(args.rxhtmlPath), files);
+    String result = Bundler.bundle(files);
+    String shell = CapacitorJSShell.makeMobileShell(result, (el, w) -> {
+      System.err.println("warning:" + w);
+    });
+    Files.writeString(new File(args.output).toPath(), shell);
   }
 
   @Override

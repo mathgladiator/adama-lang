@@ -781,6 +781,13 @@
             </documentation>
             <arg name="rxhtml-path" default="frontend" />
         </command>
+        <command name="mobile-capacitor">
+            <documentation>
+                Create a shell for https://capacitorjs.com/
+            </documentation>
+            <arg name="rxhtml-path" default="frontend" />
+            <arg name="output" default="mobile.html" />
+        </command>
         <command name="wrap-css">
             <documentation>
                 Wrap a CSS file in a rx.html script to be picked up during build
