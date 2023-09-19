@@ -775,6 +775,12 @@
             <arg name="rxhtml-path" default="frontend" />
             <arg name="output" default="frontend.rx.html" />
         </command>
+        <command name="validate">
+            <documentation>
+                (Temporary) Runs a deeper check on an RxHTML forest
+            </documentation>
+            <arg name="rxhtml-path" default="frontend" />
+        </command>
         <command name="wrap-css">
             <documentation>
                 Wrap a CSS file in a rx.html script to be picked up during build

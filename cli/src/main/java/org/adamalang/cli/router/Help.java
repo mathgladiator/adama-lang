@@ -193,6 +193,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("rxhtml", 15), Util.ANSI.Green) + "Compile an rxhtml template set");
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-libadama", 15), Util.ANSI.Green) + "Update your config to have a local-libadama-path-default which will be used in 'dev-server' when --local-libadama-path is not specified.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("study-css", 15), Util.ANSI.Green) + "Tool to study CSS");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("validate", 15), Util.ANSI.Green) + "(Temporary) Runs a deeper check on an RxHTML forest");
     System.out.println("    " + Util.prefix(Util.justifyLeft("wrap-css", 15), Util.ANSI.Green) + "Wrap a CSS file in a rx.html script to be picked up during build");
   }
   public static void displayServicesHelp() {

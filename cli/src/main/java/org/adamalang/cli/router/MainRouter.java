@@ -801,6 +801,16 @@ public class MainRouter {
                frontendHandler.studyCss(frontendArgs, out);
                return 0;
             }
+            case "validate": {
+              FrontendValidateArgs frontendArgs = FrontendValidateArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendValidateArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.validate(frontendArgs, out);
+               return 0;
+            }
             case "wrap-css": {
               FrontendWrapCssArgs frontendArgs = FrontendWrapCssArgs.from(args, 2);
               if (frontendArgs == null) {

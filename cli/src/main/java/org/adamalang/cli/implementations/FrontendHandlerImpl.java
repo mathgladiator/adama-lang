@@ -30,6 +30,7 @@ import org.adamalang.common.Json;
 import org.adamalang.rxhtml.Bundler;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.TypeChecker;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
 import java.io.File;
@@ -54,6 +55,17 @@ public class FrontendHandlerImpl implements FrontendHandler {
     aggregateFiles(new File(args.rxhtmlPath), files);
     String result = Bundler.bundle(files);
     Files.writeString(new File(args.output).toPath(), result);
+    output.out();
+  }
+
+  @Override
+  public void validate(Arguments.FrontendValidateArgs args, Output.YesOrError output) throws Exception {
+    ArrayList<File> files = new ArrayList<>();
+    aggregateFiles(new File(args.rxhtmlPath), files);
+    String result = Bundler.bundle(files);
+    TypeChecker.typecheck(result, (el, w) -> {
+      System.err.println("warning:" + w);
+    });
     output.out();
   }
 

@@ -24,7 +24,19 @@ import org.jsoup.nodes.Document;
 /** entry point for the type checker */
 public class TypeChecker {
   /** Given a bundled forest, produce feedback for the developer */
-  public final void typecheck(String forest, Feedback feedback) {
+  public static void typecheck(String forest, Feedback feedback) {
     Document document = Jsoup.parse(forest);
+    warnDuplicatePages(document, feedback);
+    warnDuplicateTemplates(document, feedback);
+    warnTemplateNotFound(document, feedback);
+  }
+
+  public static void warnDuplicatePages(Document document, Feedback feedback) {
+  }
+
+  public static void warnDuplicateTemplates(Document document, Feedback feedback) {
+  }
+
+  public static void warnTemplateNotFound(Document document, Feedback feedback) {
   }
 }

@@ -27,5 +27,6 @@ public interface FrontendHandler {
   void rxhtml(FrontendRxhtmlArgs args, YesOrError output) throws Exception;
   void setLibadama(FrontendSetLibadamaArgs args, YesOrError output) throws Exception;
   void studyCss(FrontendStudyCssArgs args, YesOrError output) throws Exception;
+  void validate(FrontendValidateArgs args, YesOrError output) throws Exception;
   void wrapCss(FrontendWrapCssArgs args, YesOrError output) throws Exception;
 }
