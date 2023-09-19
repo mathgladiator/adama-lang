@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class RxHtmlTool {
   public static RxHtmlResult convertStringToTemplateForest(String str, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback);
+    TypeChecker.typecheck(str, config.feedback);
     Document document = Jsoup.parse(str);
     Root.start(env, buildCustomJavaScript(document));
     String style = buildInternStyle(document);

@@ -119,18 +119,19 @@ public class Root {
   /** convert a raw uri to an instruction set */
   public static Instructions uri_to_instructions(String uriRaw) {
     HashSet<String> depends = new HashSet<>();
-    String uri = uriRaw.startsWith("/") ? uriRaw.substring(1) : uriRaw;
+    String uri = (uriRaw.startsWith("/") ? uriRaw.substring(1) : uriRaw).trim();
     StringBuilder formula = new StringBuilder();
     if (uriRaw.startsWith("/")) {
       formula.append("/");
     }
+    StringBuilder normalized = new StringBuilder();
     StringBuilder sb = new StringBuilder();
     sb.append("[");
     boolean first = true;
     do {
       int kSlash = uri.indexOf('/');
-      String fragment = kSlash >= 0 ? uri.substring(0, kSlash) : uri;
-      uri = kSlash >= 0 ? uri.substring(kSlash + 1) : "";
+      String fragment = kSlash >= 0 ? uri.substring(0, kSlash).trim() : uri;
+      uri = kSlash >= 0 ? uri.substring(kSlash + 1).trim() : "";
       if (!first) {
         sb.append(",");
       }
@@ -153,7 +154,9 @@ public class Root {
         depends.add(name);
         sb.append("'").append(type).append("','").append(name).append("'");
         formula.append("{").append(name).append("}");
+        normalized.append("/$").append(type);
       } else {
+        normalized.append("/").append(fragment);
         sb.append("'fixed','").append(fragment).append("'");
         formula.append(fragment);
       }
@@ -162,7 +165,7 @@ public class Root {
       }
     } while (uri.length() > 0);
     sb.append("]");
-    return new Instructions(sb.toString(), depends, formula.toString());
+    return new Instructions(sb.toString(), depends, formula.toString(), normalized.toString());
   }
 
   public static String finish(Environment env) {
@@ -174,11 +177,13 @@ public class Root {
     public final String javascript;
     public final HashSet<String> depends;
     public final String formula;
+    public final String normalized;
 
-    public Instructions(final String javascript, HashSet<String> depends, String formula) {
+    public Instructions(final String javascript, HashSet<String> depends, String formula, String normalized) {
       this.javascript = javascript;
       this.depends = depends;
       this.formula = formula;
+      this.normalized = normalized;
     }
   }
 }

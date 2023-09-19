@@ -17,9 +17,13 @@
 */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import java.util.TreeSet;
 
 /** entry point for the type checker */
 public class TypeChecker {
@@ -32,11 +36,27 @@ public class TypeChecker {
   }
 
   public static void warnDuplicatePages(Document document, Feedback feedback) {
+    TreeSet<String> paths = new TreeSet<>();
+    for (Element element : document.getElementsByTag("page")) {
+      if (!element.hasAttr("uri")) {
+        feedback.warn(element, "page is missing a uri");
+        continue;
+      }
+      String normalizedUri = Root.uri_to_instructions(element.attr("uri")).normalized;
+      if (paths.contains(normalizedUri)) {
+        feedback.warn(element, "page has duplicate path of '" + normalizedUri + "'");
+      }
+      paths.add(normalizedUri);
+    }
   }
 
   public static void warnDuplicateTemplates(Document document, Feedback feedback) {
+    // TODO: walk all templates
+    // TODO: ensure the template name is unique else warn
   }
 
   public static void warnTemplateNotFound(Document document, Feedback feedback) {
+    // TODO: index all the templates by name
+    // TODO: recurse the document looking for rx:template and then validate that the name exists
   }
 }
