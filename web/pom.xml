@@ -26,9 +26,9 @@
         </dependency>
     </dependencies>
     <properties>
-        <jdk.version>11</jdk.version>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+        <jdk.version>17</jdk.version>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
     </properties>
     <build>
         <plugins>
