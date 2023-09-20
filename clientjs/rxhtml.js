@@ -36,6 +36,7 @@ var RxHTML = (function () {
     return path;
   };
   if (window.location.hostname.endsWith(".adama-platform.com") && !window.location.hostname.endsWith("ide.adama-platform.com")) {
+    // this exists if someone is trying to use the global domain for their site
     var parts = window.location.pathname.split("/");
     rootReplace = [parts[0], parts[1], parts[2], ""].join("/");
     var offset = parts[0].length + parts[1].length + parts[2].length + 2;
@@ -1880,6 +1881,16 @@ var RxHTML = (function () {
   };
 
 
+  self.domain = location.hostname;
+  self.host = location.host;
+  self.protocol = location.protocol;
+
+  self.mobileInit = function(overrideDomain) {
+    self.domain = overrideDomain;
+    self.host = overrideDomain;
+    self.protocol = "https";
+  };
+
   // <connection use-domain ...>
   self.DCONNECT = function (state, rxobj) {
     var unsub = {
@@ -1895,7 +1906,7 @@ var RxHTML = (function () {
         return;
       }
       var co = get_connection_obj(rxobj.name);
-      var domain = location.host.split(":")[0];
+      var domain = self.domain;
       var desired = domain + idLookup.identity;
       var bind = setup_co(desired, unsub, co, state);
       if (bind === false) {
@@ -2028,32 +2039,6 @@ var RxHTML = (function () {
     form.action = "https://aws-us-east-2.adama-platform.com/~upload";
     form.method = "post";
     form.enctype = "multipart/form-data";
-    var identityInput = document.createElement("input");
-    identityInput.type = "hidden";
-    identityInput.name = "identity";
-    identityInput.value = idLookup.identity;
-    form.appendChild(identityInput);
-    var identityInput = document.createElement("input");
-    identityInput.type = "hidden";
-    identityInput.name = "domain";
-    identityInput.value = location.host.split(":")[0];
-    form.appendChild(identityInput);
-    var iframeTarget = document.createElement("iframe");
-    iframeTarget.name = "UPLOAD_" + Math.random();
-    iframeTarget.width = "1";
-    iframeTarget.height = "1";
-    form.appendChild(iframeTarget);
-    form.target = iframeTarget.name;
-  };
-
-  self.aDUP = function (form, state, identityName, rxobj) {
-    var idLookup = self.ID(identityName, function () { return rxobj.rx_forward; }); // TODO: make rxvar
-    if (idLookup.abort) {
-      return;
-    }
-    form.action = "https://aws-us-east-2.adama-platform.com/~upload";
-    form.method = "post";
-    form.enctype = "multipart/form-data";
     {
       var identityInput = document.createElement("input");
       identityInput.type = "hidden";
@@ -2065,7 +2050,7 @@ var RxHTML = (function () {
       var domainInput = document.createElement("input");
       domainInput.type = "hidden";
       domainInput.name = "domain";
-      domainInput.value = location.hostname;
+      domainInput.value = self.domain;
       form.appendChild(domainInput);
     }
     var iframeTarget = document.createElement("iframe");
@@ -2082,7 +2067,7 @@ var RxHTML = (function () {
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
-      connection.DocumentAuthorizeDomain(location.hostname, req.username, req.password, {
+      connection.DocumentAuthorizeDomain(self.domain, req.username, req.password, {
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
@@ -2125,7 +2110,7 @@ var RxHTML = (function () {
     form.onsubmit = function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
-      connection.DocumentAuthorizeDomainWithReset(location.hostname, req.username, req.password, req.new_password,{
+      connection.DocumentAuthorizeDomainWithReset(self.domain, req.username, req.password, req.new_password,{
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
@@ -2317,7 +2302,7 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:action=domain:put
   self.adDPUT = function (form, state, identityName, rxobj) {
-    commonPut(form, state, identityName, rxobj, function (rxobj) { return location.protocol + "//" + location.host + "/" + rxobj.path; })
+    commonPut(form, state, identityName, rxobj, function (rxobj) { return self.protocol + "//" + self.host + "/" + rxobj.path; })
   };
 
   // RUNTIME | rx:action=document:put
