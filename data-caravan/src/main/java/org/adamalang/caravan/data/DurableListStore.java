@@ -355,9 +355,9 @@ public class DurableListStore {
     if (IS_NOISY) {
       LOGGER.error("appending to " + key.space + "/" + key.key + " [solo] size=" + bytes.length + ":before:" + buffer.writerIndex());
     }
-
     Region where = heap.ask(bytes.length);
     if (where == null) {
+      LOGGER.error("store-full for " + key.space + "/" + key.key);
       metrics.failed_append.run();
       // we are out of space
       return null;
@@ -372,7 +372,6 @@ public class DurableListStore {
       // the buffer is full, so flush it
       flush(false);
     }
-
     if (IS_NOISY) {
       LOGGER.error("appended to " + key.space + "/" + key.key + " [solo] :after:" + buffer.writerIndex());
     }

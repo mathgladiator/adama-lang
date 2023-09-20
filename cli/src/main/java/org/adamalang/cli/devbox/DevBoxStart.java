@@ -287,6 +287,10 @@ public class DevBoxStart {
             }
           });
         }
+        if (command.is("flush")) {
+          verse.dataService.flush(true).await(1000, TimeUnit.MILLISECONDS);
+          terminal.info("caravan|flushed");
+        }
         if (command.is("query")) {
           if (command.requireArg(1)) {
             TreeMap<String, String> query = new TreeMap<>();

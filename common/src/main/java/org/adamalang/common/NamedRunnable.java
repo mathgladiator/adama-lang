@@ -83,12 +83,16 @@ public abstract class NamedRunnable implements Runnable {
       if (!noise) {
         RUNNABLE_LOGGER.error(__runnableName, ex);
       }
+    } catch (Error er) {
+      RUNNABLE_LOGGER.error(__runnableName, er);
+      er.printStackTrace(System.err);
+      System.exit(1);
     }
   }
 
   public abstract void execute() throws Exception;
 
-  public static boolean noisy(Exception ex) {
+  public static boolean noisy(Throwable ex) {
     return ex instanceof java.util.concurrent.RejectedExecutionException;
   }
 
