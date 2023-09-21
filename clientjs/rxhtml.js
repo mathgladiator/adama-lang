@@ -897,6 +897,91 @@ var RxHTML = (function () {
     });
   };
 
+  var reg_event = function (state, dom, type, runnable) {
+    // TODO: connected/disconnected as special events to consider
+    if (type == "load") {
+      window.setTimeout(runnable, 1);
+    } else if (type.startsWith("delay:")) {
+      // delay will run after $delayTimeMS IF the dom element is still visible to the document
+      var delayTimeMS = parseInt(type.substring(6));
+      window.setTimeout(function() {
+        if (document.body.contains(dom)) {
+          runnable();
+        }
+      }, delayTimeMS);
+    } else {
+      dom.addEventListener(type, runnable);
+    }
+  }
+
+  var form_of = function(dom) {
+    var next = dom;
+    while (next != null) {
+      if (next.tagName.toUpperCase() == "FORM") {
+        return next;
+      }
+      next = next.parentElement;
+    }
+    return null;
+  }
+
+  // RUNTIME: <tag .. rx:event="... set:name=value ...">
+  self.bS = function (dom, state, name, value) {
+    if (typeof (value) == "function") {
+      return {
+        run: function() {}, // do nothing, this is a simple merge
+        merge: function() {
+          var obj = {};
+          obj[name] = value();
+          var delta = path_to(state.view, obj);
+          return delta;
+        }
+      }
+    } else {
+      var obj = {};
+      obj[name] = value;
+      var delta = path_to(state.view, obj);
+      return {
+        run: function() {}, // do nothing, this is a simple merge
+        merge: function() { return delta; }
+      }
+    }
+  };
+
+  var merge_delta = function(a, b) {
+    if (typeof(a) == "object" && typeof(b) == "object") {
+      var result = {};
+      for (var k in a) {
+        if (k in b) {
+          result[k] = merge_delta(a[k], b[k]);
+        } else {
+          result[k] = a[k];
+        }
+      }
+      for(var k in b) {
+        if (!(k in a)) {
+          result[k] = b[k];
+        }
+      }
+      return result;
+    }
+    return a;
+  };
+  self.MD = merge_delta;
+
+  self.onB = function(dom, type, state, arr) {
+    reg_event(state, dom, type, function() {
+      var sum = {};
+      for (var k = 0; k < arr.length; k++) {
+        var cmd = arr[k];
+        cmd.run();
+        var toMerge = cmd.merge()
+        sum = merge_delta(sum, toMerge);
+      }
+      state[state.current].tree.update(sum);
+    });
+  };
+
   // choose
   self.exCH = function (dom, type, state, name, channel, key) {
     var decide = { value: null };
@@ -922,6 +1007,7 @@ var RxHTML = (function () {
     });
   };
 
+  // decide
   self.exD = function (dom, type, state, name, channel, key) {
     var decide = { value: null };
     reg_event(state, dom, type, function () {
@@ -942,23 +1028,6 @@ var RxHTML = (function () {
       decide.value = value;
     });
   };
-
-  var reg_event = function (state, dom, type, runnable) {
-    // TODO: connected/disconnected as special events to consider
-    if (type == "load") {
-      window.setTimeout(runnable, 1);
-     } else if (type.startsWith("delay:")) {
-      // delay will run after $delayTimeMS IF the dom element is still visible to the document
-      var delayTimeMS = parseInt(type.substring(6));
-      window.setTimeout(function() {
-        if (document.body.contains(dom)) {
-          runnable();
-        }
-      }, delayTimeMS);
-    } else {
-      dom.addEventListener(type, runnable);
-    }
-  }
 
   // RUNTIME: <tag .. rx:event="... fire:channel ..." ...>
   self.onFR = function (state, dom, type, channel) {
@@ -1018,17 +1087,6 @@ var RxHTML = (function () {
       state[state.current].tree.update(delta);
     });
   };
-
-  var form_of = function(dom) {
-    var next = dom;
-    while (next != null) {
-      if (next.tagName.toUpperCase() == "FORM") {
-        return next;
-      }
-      next = next.parentElement;
-    }
-    return null;
-  }
 
   // RUNTIME: <tag .. rx:event="... reset ...">
   self.oRST = function (dom, type, state) {

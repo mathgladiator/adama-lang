@@ -17,7 +17,10 @@
 */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Escaping;
+import org.adamalang.rxhtml.acl.commands.BulkCommand;
 import org.adamalang.rxhtml.acl.commands.Command;
+import org.adamalang.rxhtml.acl.commands.Set;
 import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -246,9 +249,25 @@ public class Attributes {
     try {
       ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
       env.element.removeAttr("rx:" + event);
-      env.pool.ask();
+      String arrVar = null;
+
       for (Command command : commands) {
-        command.write(env, event, eVar);
+        if (command instanceof BulkCommand) {
+          if (arrVar == null) {
+            arrVar = env.pool.ask();
+            env.writer.tab().append("var ").append(arrVar).append("=[];").newline();
+          }
+          if (env.optimizeForPageLoad && "load".equals(event) && command instanceof Set && ((Set) command).constant) {
+            env.writer.append(env.stateVar).append(".view.init['").append(((Set) command).name).append("']=").append(Escapes.constantOf(((Set) command).value)).append(";").newline();
+          } else {
+            ((BulkCommand) command).writeBulk(env, eVar, arrVar);
+          }
+        } else {
+          command.write(env, event, eVar);
+        }
+      }
+      if (arrVar != null) {
+        env.writer.tab().append("$.onB(").append(eVar).append(",'").append(event).append("',").append(env.stateVar).append(",").append(arrVar).append(");").newline();
       }
     } catch (ParseException ex) {
       env.feedback.warn(env.element, "event '" + event + "' has parser problems:" + ex.getMessage());

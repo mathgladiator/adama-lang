@@ -88,4 +88,19 @@ public class StatePath {
       return kSlash;
     }
   }
+
+  /** is this a root level constant part of the view (assuming no implicit scope) */
+  public boolean isRootLevelViewConstant() {
+    for (PathInstruction instruction : instructions) {
+      if (instruction instanceof DiveInto || instruction instanceof GoParent) {
+        return false;
+      }
+      if (instruction instanceof SwitchTo) {
+        if (!("view".equals(((SwitchTo) instruction).dest))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }

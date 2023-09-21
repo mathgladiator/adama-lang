@@ -55,6 +55,12 @@ public class ParserTests {
     Assert.assertEquals(expected, env.writer.toString());
   }
 
+  private static void assertIsBulk(BulkCommand command, String expected) {
+    Environment env = Environment.fresh(Feedback.NoOp);
+    command.writeBulk(env.stateVar("State"), "DOM", "$ARR");
+    Assert.assertEquals(expected, env.writer.toString());
+  }
+
   @Test
   public void cmd_goto2() throws Exception {
     Goto goto_ = (Goto) (Parser.parse("goto:/fixed").get(0));
@@ -146,34 +152,6 @@ public class ParserTests {
   }
 
   @Test
-  public void raise1() throws Exception {
-    Raise raise = (Raise) (Parser.parse("raise:xyz").get(0));
-    Assert.assertEquals("view:xyz", raise.path);
-    assertIs(raise, "$.onS(DOM,'type',$.pV(State),'xyz',true);\n");
-  }
-
-  @Test
-  public void raise2() throws Exception {
-    Raise raise = (Raise) (Parser.parse("raise:data:xyz").get(0));
-    Assert.assertEquals("data:xyz", raise.path);
-    assertIs(raise, "$.onS(DOM,'type',$.pD(State),'xyz',true);\n");
-  }
-
-  @Test
-  public void lower1() throws Exception {
-    Lower lower = (Lower) (Parser.parse("lower:xyz").get(0));
-    Assert.assertEquals("view:xyz", lower.path);
-    assertIs(lower, "$.onS(DOM,'type',$.pV(State),'xyz',false);\n");
-  }
-
-  @Test
-  public void lower2() throws Exception {
-    Lower lower = (Lower) (Parser.parse("lower:data:xyz").get(0));
-    Assert.assertEquals("data:xyz", lower.path);
-    assertIs(lower, "$.onS(DOM,'type',$.pD(State),'xyz',false);\n");
-  }
-
-  @Test
   public void toggle1() throws Exception {
     Toggle toggle = (Toggle) (Parser.parse("toggle:xyz").get(0));
     Assert.assertEquals("view:xyz", toggle.path);
@@ -193,6 +171,7 @@ public class ParserTests {
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("val", set.value);
     assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyz','val');\n");
+    assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyz','val'));\n");
   }
 
   @Test
@@ -201,6 +180,7 @@ public class ParserTests {
     Assert.assertEquals("data:xyz", set.path);
     Assert.assertEquals("true", set.value);
     assertIs(set, "$.onS(DOM,'type',$.pD(State),'xyz',true);\n");
+    assertIsBulk(set, "$ARR.push($.bS(DOM,$.pD(State),'xyz',true));\n");
   }
 
   @Test
@@ -209,6 +189,7 @@ public class ParserTests {
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("123", set.value);
     assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyz',123);\n");
+    assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyz',123));\n");
   }
 
   @Test
@@ -217,6 +198,24 @@ public class ParserTests {
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("{xyz}", set.value);
     assertIs(set, "var a = {};\n" + "$.YS(State,a,'xyz');\n" + "$.onS(DOM,'type',$.pV(State),'xyz',function(){ return a['xyz'];});\n");
+    assertIsBulk(set, "var a = {};\n" + "$.YS(State,a,'xyz');\n" + "$ARR.push($.bS(DOM,$.pV(State),'xyz',function(){ return a['xyz'];}));\n");
   }
 
+  @Test
+  public void set_raise() throws Exception {
+    Set set = (Set) (Parser.parse("raise:xyx").get(0));
+    Assert.assertEquals("view:xyx", set.path);
+    Assert.assertEquals("true", set.value);
+    assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyx',true);\n");
+    assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyx',true));\n");
+  }
+
+  @Test
+  public void set_lower() throws Exception {
+    Set set = (Set) (Parser.parse("lower:xyz").get(0));
+    Assert.assertEquals("view:xyz", set.path);
+    Assert.assertEquals("false", set.value);
+    assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyz',false);\n");
+    assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyz',false));\n");
+  }
 }

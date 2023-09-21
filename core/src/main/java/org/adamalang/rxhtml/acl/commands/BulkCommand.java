@@ -18,23 +18,9 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
-import org.adamalang.rxhtml.template.StatePath;
 
-/** Set a boolean value to true */
-public class Raise implements Command {
-  public final String path;
-
-  public Raise(String path) {
-    if (path.startsWith("view:") | path.startsWith("data:")) {
-      this.path = path;
-    } else {
-      this.path = "view:" + path;
-    }
-  }
-
-  @Override
-  public void write(Environment env, String type, String eVar) {
-    StatePath path = StatePath.resolve(this.path, env.stateVar);
-    env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(path.command).append(",'").append(path.name).append("',true);").newline();
-  }
+/** a bulk command happens in one atomic batch  */
+public interface BulkCommand {
+  /** write a closed form expression */
+  void writeBulk(Environment env, String eVar, String appendTo);
 }

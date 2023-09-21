@@ -51,11 +51,11 @@ public class Parser {
             break;
           }
           case "raise": {
-            commands.add(new Raise(body));
+            commands.add(new Set(body, "true"));
             break;
           }
           case "lower": {
-            commands.add(new Lower(body));
+            commands.add(new Set(body, "false"));
             break;
           }
           case "fire": {

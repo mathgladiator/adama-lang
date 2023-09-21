@@ -53,7 +53,7 @@ public class Root {
   public static void page(Environment env, ArrayList<String> defaultRedirects) {
     String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
-    Environment envToUse = env.parentVariable(rootVar).stateVar(stateVar);
+    Environment envToUse = env.parentVariable(rootVar).stateVar(stateVar).raiseOptimize();
     String uri = env.element.attr("uri");
     Instructions instructions = uri_to_instructions(uri);
     env.writer.tab().append("$.PG(").append(instructions.javascript).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();

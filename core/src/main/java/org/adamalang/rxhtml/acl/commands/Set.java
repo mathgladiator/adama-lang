@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.acl.commands;
 
+import org.adamalang.runtime.data.managed.State;
 import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -27,10 +28,12 @@ import org.adamalang.rxhtml.template.StatePath;
 import java.util.Map;
 
 /** set the string value of the path to the given value */
-public class Set implements Command {
-  public String path;
-  public String value;
-  public Tree tree;
+public class Set implements Command, BulkCommand {
+  public final String path;
+  public final String value;
+  public final Tree tree;
+  public final boolean constant;
+  public final String name;
 
   public Set(String path, String value) throws ParseException {
     if (path.startsWith("view:") | path.startsWith("data:")) {
@@ -40,6 +43,9 @@ public class Set implements Command {
     }
     this.value = value;
     this.tree = Parser.parse(value);
+    StatePath test = (StatePath.resolve(this.path, "$X"));
+    this.constant = tree.variables().size() == 0 && test.isRootLevelViewConstant();
+    this.name = test.name;
   }
 
   @Override
@@ -57,6 +63,23 @@ public class Set implements Command {
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
       }
       env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(env.contextOf("event:" + type), oVar)).append(";});").newline();
+    }
+  }
+
+  @Override
+  public void writeBulk(Environment env, String eVar, String appendTo) {
+    StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
+    Map<String, String> vars = tree.variables();
+    if (vars.size() == 0) {
+      env.writer.tab().append(appendTo).append(".push(").append("$.bS(").append(eVar).append(",").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(Escapes.constantOf(value)).append("));").newline();
+    } else {
+      var oVar = env.pool.ask();
+      env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+      for (Map.Entry<String, String> ve : vars.entrySet()) {
+        StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
+        env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
+      }
+      env.writer.tab().append(appendTo).append(".push(").append("$.bS(").append(eVar).append(",").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(env.contextOf("event:bulk"), oVar)).append(";}));").newline();
     }
   }
 }

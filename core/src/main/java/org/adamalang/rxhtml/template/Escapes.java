@@ -29,6 +29,6 @@ public class Escapes {
       return value;
     } catch (NumberFormatException nfe) {
     }
-    return "'" + new Escaping(value).switchQuotes().go() + "'";
+    return "'" + new Escaping(value).switchQuotes().removeNewLines().go() + "'";
   }
 }
