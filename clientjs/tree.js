@@ -175,7 +175,11 @@ function AdamaTree() {
   };
 
   // merge the given delta into the tree and fire subscriptions (s)
-  var merge = function (tree, delta, s, events) {
+  var merge = function (tree, delta, s, events, optimal) {
+    if (optimal && s.length == 0) {
+      // no value in merging against a faux tree without subscriptions
+      return;
+    }
     for (var key in delta) { // for each bit of data within the tree
       var eKey = "#" + key; // compute the secret data path
       var prior = tree[key]; // find the prior state within the tree
@@ -235,7 +239,7 @@ function AdamaTree() {
                     eBase[aKey].__key = aKey;
                   }
                   delay[aKey] = function (x) {
-                    merge(eBase[x], next[x], sub(eSub, x), events); // recurse: merge the difference into the secret tree and publish to all element subscriptions
+                    merge(eBase[x], next[x], sub(eSub, x), events, optimal); // recurse: merge the difference into the secret tree and publish to all element subscriptions
                     fire(sub(eSub, x), eBase[x], events);
                   };
                 } else { // otherwise, set the value into the tree
@@ -298,7 +302,7 @@ function AdamaTree() {
               tree[key] = {};
             }
             var e = sub(s, key);
-            merge(tree[key], next, e, events);
+            merge(tree[key], next, e, events, optimal);
             fire(e, tree[key], events);
           }
         } else { // not an object, so it is a value
@@ -324,7 +328,7 @@ function AdamaTree() {
       arr.push(all_subscriptions[k]);
     }
     var events = [];
-    merge(root, delta, arr, events); // execute the merge and fire events
+    merge(root, delta, arr, events, false); // execute the merge and fire events
     fire_events(events);
     while (this.subscribe_delay.length > 0) {
       var copy = this.subscribe_delay;
@@ -336,7 +340,7 @@ function AdamaTree() {
         }
       }
       events = [];
-      merge({}, make_delta(root), flat, events); // execute the merge and fire events
+      merge({}, make_delta(root), flat, events, true); // execute the merge and fire events
       fire_events(events);
     }
     this.update_in_progress = false;
@@ -421,7 +425,7 @@ function AdamaTree() {
     } else {
       var delta = make_delta(root);
       var events = [];
-      merge({}, delta, [sub], events); // execute the callback now on a callback of all data to fire events and fill the subscription object
+      merge({}, delta, [sub], events, true); // execute the callback now on a callback of all data to fire events and fill the subscription object
       fire_events(events);
       return function () { // return a method to unsubscribe
         delete all_subscriptions[S];
