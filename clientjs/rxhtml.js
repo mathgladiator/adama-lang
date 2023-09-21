@@ -347,19 +347,45 @@ var RxHTML = (function () {
     unsub.__view();
   };
 
+  var isEmptyDelta = function(delta) {
+    if (typeof(delta) == "function") {
+      return false;
+    } else if (Array.isArray(delta)) {
+      for (var j = 0; j < delta.length; j++) {
+        if (!isEmptyDelta(delta[j])) {
+          return false;
+        }
+      }
+    } else if (typeof(delta) == "object") {
+      for (var k in delta) {
+        if (!isEmptyDelta(delta[k])) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // HELPER | subscribe to state and populate unsubscribe object
   var subscribe_state = function (state, unsub) {
+    //  && !isEmptyDelta(state.data)
+    unsub.__data = function () {
+    };
+    unsub.__view = function () {
+    };
+
     if (state.data != null) {
-      unsub.__data = state.data.tree.subscribe(root_of(state.data).delta);
-    } else {
-      unsub.__data = function () {
-      };
+      var delta = root_of(state.data).delta;
+      if (!isEmptyDelta(delta)) {
+        unsub.__data = state.data.tree.subscribe(delta);
+      }
     }
+    //  && !isEmptyDelta(state.view)
     if (state.view != null) {
-      unsub.__view = state.view.tree.subscribe(root_of(state.view).delta);
-    } else {
-      unsub.__view = function () {
-      };
+      var delta = root_of(state.view).delta;
+      if (!isEmptyDelta(delta)) {
+        unsub.__view = state.view.tree.subscribe(delta);
+      }
     }
   };
 
@@ -1485,7 +1511,6 @@ var RxHTML = (function () {
   };
 
   self.goto = function (uri) {
-    console.log("going to:" + uri);
     window.setTimeout(function () {
       if (uri.startsWith("/")) {
         self.run(document.body, uri, true);
