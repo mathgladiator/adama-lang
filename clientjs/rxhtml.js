@@ -978,7 +978,7 @@ var RxHTML = (function () {
         var toMerge = cmd.merge()
         sum = merge_delta(sum, toMerge);
       }
-      state[state.current].tree.update(sum);
+      state.view.tree.update(sum);
     });
   };
 
@@ -1123,7 +1123,7 @@ var RxHTML = (function () {
       var obj = {};
       obj[name] = !captured.value;
       var delta = path_to(state.view, obj);
-      state[state.current].tree.update(delta);
+      state.view.tree.update(delta);
     });
     subscribe(state, name, function (value) {
       captured.value = value == true;

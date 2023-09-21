@@ -340,7 +340,7 @@ function AdamaTree() {
         }
       }
       events = [];
-      merge({}, make_delta(root), flat, events, true); // execute the merge and fire events
+      merge({}, make_optimal_delta(root, flat), flat, events, true); // execute the merge and fire events
       fire_events(events);
     }
     this.update_in_progress = false;
@@ -405,6 +405,32 @@ function AdamaTree() {
     return delta;
   };
 
+  var make_optimal_delta = function(st, subs) {
+    var filter = {};
+    for (var k = 0; k < subs.length; k++) {
+      var s = subs[k];
+      if (typeof(s) == "function") {
+        // fallback when the high level is a function (we need it all!)
+        return make_delta(st);
+      } else if (typeof(s) == "object") {
+        for (var j in s) {
+          filter[j] = true;
+        }
+      }
+    }
+    var new_st = {}; // the delta to construct
+    for (var k in st) { // for each key within the object
+      if (k[0] == "#" || k == "@o" || k == "__key") continue; // skip these
+      if (k in filter) {
+        new_st[k] = st[k];
+        if (("#" + k) in st) {
+          new_st["#" + k] = st["#" + k];
+        }
+      }
+    }
+    return make_delta(new_st);
+  };
+
   this.subscribe_delay = [];
 
   // `subscribe` the given structural callback
@@ -423,7 +449,7 @@ function AdamaTree() {
         delete all_subscriptions[S];
       };
     } else {
-      var delta = make_delta(root);
+      var delta = make_optimal_delta(root, [sub]);
       var events = [];
       merge({}, delta, [sub], events, true); // execute the callback now on a callback of all data to fire events and fill the subscription object
       fire_events(events);

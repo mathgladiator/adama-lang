@@ -17,7 +17,6 @@
 */
 package org.adamalang.rxhtml.template;
 
-import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.acl.commands.BulkCommand;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.acl.commands.Set;
@@ -253,13 +252,13 @@ public class Attributes {
 
       for (Command command : commands) {
         if (command instanceof BulkCommand) {
-          if (arrVar == null) {
-            arrVar = env.pool.ask();
-            env.writer.tab().append("var ").append(arrVar).append("=[];").newline();
-          }
           if (env.optimizeForPageLoad && "load".equals(event) && command instanceof Set && ((Set) command).constant) {
             env.writer.append(env.stateVar).append(".view.init['").append(((Set) command).name).append("']=").append(Escapes.constantOf(((Set) command).value)).append(";").newline();
           } else {
+            if (arrVar == null) {
+              arrVar = env.pool.ask();
+              env.writer.tab().append("var ").append(arrVar).append("=[];").newline();
+            }
             ((BulkCommand) command).writeBulk(env, eVar, arrVar);
           }
         } else {
