@@ -1131,7 +1131,6 @@ var RxHTML = (function () {
   };
 
   var order_toggle = function(prior, val) {
-
     var parts = prior.split(",");
     var prefix = '';
     var next = [""];
@@ -1606,6 +1605,7 @@ var RxHTML = (function () {
     var foo = route(parts, 0, router, init);
     nuke(where);
     if (foo != null) {
+      window.scrollTo(0, 0);
       var state = { service: connection, data: null, view: fresh(where), current: "view" };
       state.view.init = init;
       foo(where, state);
