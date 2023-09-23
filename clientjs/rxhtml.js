@@ -740,7 +740,7 @@ var RxHTML = (function () {
   };
 
   self.RP = function (parentDom, state, name, expandView, maker) {
-    var it_state = self.pIE(state, name, expandView);
+    var it_state = self.pIE(state, "$" + name, expandView);
     var sub = function (value) {
       var n = 0;
       try {
@@ -752,9 +752,12 @@ var RxHTML = (function () {
         this.track ++;
         var new_state = fork(self.pIE(it_state, this.track + "", expandView));
         var unsub = make_unsub();
-        var dom = maker(new_state);
+        var dom = maker(self.pD(new_state));
         this.items[this.at] = {unsub:unsub, dom:dom};
         parentDom.append(dom);
+        if (expandView) {
+          state.view.tree.update(path_to(new_state.view, {"$index": this.track}));
+        }
         subscribe_state(new_state, unsub);
       }
       while (this.at >= n && this.at >= 0) {
