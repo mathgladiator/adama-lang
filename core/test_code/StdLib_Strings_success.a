@@ -20,6 +20,11 @@ public string y4;
 public formula y4_cp = y4.codepoints();
 public formula r2023 = (2023).to_roman();
 public maybe<string> join_maybe;
+public formula zzz1 = "Justice of Doom".initialsOf(false);
+public formula zzz2 = "Justice of Doom".initialsOf(true);
+public formula zzz3 = @maybe("Justice of Doom").initialsOf(false);
+public formula zzz4 = @maybe("Justice of Doom").initialsOf(true);
+public formula zzz5 = @maybe<string>.initialsOf(false);
 
 record S {
   maybe<string> item;

@@ -679,4 +679,24 @@ public class LibString {
     }
     return new NtMaybe<>();
   }
+
+  @Extension
+  public static String initialsOf(String x, boolean dots) {
+    ArrayList<String> parts = new ArrayList<>();
+    for (String p : x.split(Pattern.quote(" "))) {
+      if (p.length() > 0) {
+        parts.add(p.substring(0, 1));
+      }
+    }
+    return String.join(dots ? "." : "", parts);
+  }
+
+  @Extension
+  public static @HiddenType(clazz=String.class) NtMaybe<String> initialsOf(@HiddenType(clazz=String.class) NtMaybe<String> x, boolean dots) {
+    if (x.has()) {
+      return new NtMaybe<>(initialsOf(x.get(), dots));
+    } else {
+      return x;
+    }
+  }
 }
