@@ -41,6 +41,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
+import java.util.regex.Pattern;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
@@ -89,6 +90,9 @@ public class FrontendHttpHandler implements HttpHandler {
     if (host == null) {
       callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_NO_HOST_HEADER));
       return null;
+    }
+    if (host.indexOf(':') > 0) {
+      host = host.split(Pattern.quote(":"))[0]; // throw away the port if put in
     }
     if (IsIP.test(host)) {
       callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
