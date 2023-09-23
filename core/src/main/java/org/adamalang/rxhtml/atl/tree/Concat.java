@@ -67,4 +67,14 @@ public class Concat implements Tree {
     }
     return sb.toString();
   }
+
+  @Override
+  public boolean hasAuto() {
+    for (Tree child : children) {
+      if (child.hasAuto()) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

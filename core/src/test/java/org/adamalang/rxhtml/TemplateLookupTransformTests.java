@@ -33,6 +33,7 @@ public class TemplateLookupTransformTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.LT($.pR($.pD(a)),'title',$.TR('trim')));");
     gold.append("\n    b.append($.LT(a,'person',$.TR('principal.agent')));");
     gold.append("\n    b.append($.LT(a,'person',$.TR('principal.authority')));");
@@ -48,6 +49,7 @@ public class TemplateLookupTransformTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.LT($.pR($.pD(a)),'title',$.TR('trim')));");
     gold.append("\n    b.append($.LT(a,'person',$.TR('principal.agent')));");
     gold.append("\n    b.append($.LT(a,'person',$.TR('principal.authority')));");

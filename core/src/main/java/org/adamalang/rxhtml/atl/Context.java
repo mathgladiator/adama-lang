@@ -20,21 +20,27 @@ package org.adamalang.rxhtml.atl;
 import java.util.HashMap;
 
 public class Context {
-  public static final Context DEFAULT = new Context(false);
+  public static final Context DEFAULT = new Context(false, false);
   public final boolean is_class;
   public final HashMap<String, Integer> freq;
+  public final boolean allow_auto;
 
-  private Context(boolean is_class) {
+  private Context(boolean is_class, boolean allow_auto) {
     this.is_class = is_class;
     if (is_class) {
       freq = new HashMap<>();
     } else {
       freq = null;
     }
+    this.allow_auto = allow_auto;
   }
 
   public static final Context makeClassContext() {
-    return new Context(true);
+    return new Context(true, false);
+  }
+
+  public static final Context makeAutoVariable() {
+    return new Context(false, true);
   }
 
   public void cssTrack(String fragment) {

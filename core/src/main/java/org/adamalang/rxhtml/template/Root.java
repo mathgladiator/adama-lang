@@ -42,8 +42,10 @@ public class Root {
     String fragmentFunc = env.pool.ask();
     String name = env.element.attr("name");
     env.writer.tab().append("$.TP('").append(name).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
+    String autoVar = env.pool.ask();
+    env.writer.tab().append("var ").append(autoVar).append("=$.X();").newline();
     Feedback feedback = env.feedback;
-    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback("template " + name, (e, msg) -> feedback.warn(e, "template " + name + ":" + msg)));
+    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback("template " + name, (e, msg) -> feedback.warn(e, "template " + name + ":" + msg)).autoVar(autoVar));
     env.pool.give(parentVar);
     env.pool.give(stateVar);
     env.pool.give(fragmentFunc);
@@ -77,6 +79,9 @@ public class Root {
         try {
           Tree tree = Parser.parse(redirect);
           Map<String, String> vars = tree.variables();
+          if (tree.hasAuto()) {
+            env.feedback.warn(env.element, "redirects can't use auto variable");
+          }
           if (vars.size() == 0) {
             zeroArgs = "$.aRDz('" + redirect + "');";
           } else {
@@ -90,27 +95,29 @@ public class Root {
               }
             }
             if (hasAll) {
-              pullArgs = "$.aRDp(" + stateVar + ", function(vs) { return " + tree.js(env.contextOf("initial-view-state"), "vs") + "; });";
+              pullArgs = "$.aRDp(" + stateVar + ",function(vs) { return " + tree.js(env.contextOf("initial-view-state"), "vs") + ";});";
             }
           }
         } catch (ParseException pe) {
           env.feedback.warn(env.element, "redirect '" + redirect + "' has parser problems; " + pe.getMessage());
         }
       }
-      env.writer.tab().append("var ").append(varForAuthTest).append(" = ");
+      env.writer.tab().append("var ").append(varForAuthTest).append("=");
       if (pullArgs != null) {
         env.writer.append(pullArgs).newline();
       } else {
         env.writer.append(zeroArgs).newline();
       }
-      env.writer.tab().append("if ($.ID('").append(identity).append("',").append(varForAuthTest).append(").abort) {").tabUp().newline();
+      env.writer.tab().append("if($.ID('").append(identity).append("',").append(varForAuthTest).append(").abort) {").tabUp().newline();
       env.writer.tab().append("return;").tabDown().newline();
       env.writer.tab().append("}").newline();
       env.pool.give(varForAuthTest);
 
     }
+    String autoVar = env.pool.ask();
+    env.writer.tab().append("var ").append(autoVar).append("=$.X();").newline();
     Feedback prior = env.feedback;
-    Base.children(envToUse.feedback("page:" + uri, (e, msg) -> prior.warn(e, uri + ":" + msg)));
+    Base.children(envToUse.feedback("page:" + uri, (e, msg) -> prior.warn(e, uri + ":" + msg)).autoVar(autoVar));
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(rootVar);
     env.pool.give(stateVar);

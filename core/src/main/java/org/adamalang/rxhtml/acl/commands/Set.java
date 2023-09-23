@@ -17,7 +17,6 @@
 */
 package org.adamalang.rxhtml.acl.commands;
 
-import org.adamalang.runtime.data.managed.State;
 import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
@@ -51,13 +50,15 @@ public class Set implements Command, BulkCommand {
   @Override
   public void write(Environment env, String type, String eVar) {
     StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
-
+    if (tree.hasAuto()) {
+      env.feedback.warn(env.element, "set's can't use auto variables");
+    }
     Map<String, String> vars = tree.variables();
     if (vars.size() == 0) {
       env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(Escapes.constantOf(value)).append(");").newline();
     } else {
       var oVar = env.pool.ask();
-      env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+      env.writer.tab().append("var ").append(oVar).append("={};").newline();
       for (Map.Entry<String, String> ve : vars.entrySet()) {
         StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
@@ -69,12 +70,15 @@ public class Set implements Command, BulkCommand {
   @Override
   public void writeBulk(Environment env, String eVar, String appendTo) {
     StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
+    if (tree.hasAuto()) {
+      env.feedback.warn(env.element, "set's can't use auto variables");
+    }
     Map<String, String> vars = tree.variables();
     if (vars.size() == 0) {
       env.writer.tab().append(appendTo).append(".push(").append("$.bS(").append(eVar).append(",").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(Escapes.constantOf(value)).append("));").newline();
     } else {
       var oVar = env.pool.ask();
-      env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+      env.writer.tab().append("var ").append(oVar).append("={};").newline();
       for (Map.Entry<String, String> ve : vars.entrySet()) {
         StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();

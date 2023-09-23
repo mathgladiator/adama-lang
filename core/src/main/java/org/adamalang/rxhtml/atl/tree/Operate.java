@@ -62,4 +62,9 @@ public class Operate implements Tree {
   public String js(Context context, String env) {
     return "(" + tree.js(Context.DEFAULT, env) + operator + value.js(Context.DEFAULT, env) + ")";
   }
+
+  @Override
+  public boolean hasAuto() {
+    return tree.hasAuto() || value.hasAuto();
+  }
 }

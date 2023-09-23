@@ -43,4 +43,9 @@ public class Negate implements Tree {
   public String js(Context context, String env) {
     return "!(" + value.js(context, env) + ")";
   }
+
+  @Override
+  public boolean hasAuto() {
+    return value.hasAuto();
+  }
 }

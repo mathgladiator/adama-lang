@@ -44,8 +44,12 @@ public class Parser {
     }
   }
 
+  private static boolean isAutoVar(String name) {
+    return ("%".equals(name) || "$".equals(name) || "#".equals(name));
+  }
+
   private static Tree getBaseOf(TokenStream.Token conditionStart) throws ParseException {
-    // TODO:
+    // TODO: && and ||
     for (String operator : Operate.OPERATORS) {
       if (conditionStart.base.contains(operator)) {
         String[] parts = conditionStart.base.split(Pattern.quote(operator));
@@ -78,7 +82,6 @@ public class Parser {
       }
     }
 
-
     Tree lookup = getBaseOf(conditionStart);
     Tree guard = wrapTransforms(lookup, conditionStart);
     if (conditionStart.mod == TokenStream.Modifier.Not) {
@@ -93,7 +96,11 @@ public class Parser {
         children.add(new Text(token.base));
         return;
       case Variable:
-        children.add(wrapTransforms(new Lookup(token.base), token));
+        if (isAutoVar(token.base)) {
+          children.add(new AutoVar());
+        } else {
+          children.add(wrapTransforms(new Lookup(token.base), token));
+        }
         return;
       case Condition:
         children.add(condition(it, token));

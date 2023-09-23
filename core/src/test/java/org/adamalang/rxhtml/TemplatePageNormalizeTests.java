@@ -33,10 +33,13 @@ public class TemplatePageNormalizeTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n  });");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
+    gold.append("\n    var d=$.X();");
     gold.append("\n  });");
     gold.append("\n  $.PG(['number','thing','text','x','text','y'], function(b,a) {");
+    gold.append("\n    var e=$.X();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -46,10 +49,13 @@ public class TemplatePageNormalizeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n  });");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
+    gold.append("\n    var d=$.X();");
     gold.append("\n  });");
     gold.append("\n  $.PG(['number','thing','text','x','text','y'], function(b,a) {");
+    gold.append("\n    var e=$.X();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");

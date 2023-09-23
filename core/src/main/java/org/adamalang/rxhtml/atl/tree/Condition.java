@@ -52,4 +52,9 @@ public class Condition implements Tree {
   public String js(Context context, String env) {
     return "((" + guard.js(context, env) + ") ? (" + branchTrue.js(context, env) + ") : (" + branchFalse.js(context, env) + "))";
   }
+
+  @Override
+  public boolean hasAuto() {
+    return guard.hasAuto() || branchTrue.hasAuto() || branchFalse.hasAuto();
+  }
 }

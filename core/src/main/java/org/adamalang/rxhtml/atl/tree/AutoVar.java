@@ -19,19 +19,31 @@ package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
 
+import java.util.Collections;
 import java.util.Map;
 
-/** common interface for the tree nodes */
-public interface Tree {
+public class AutoVar implements Tree {
+  @Override
+  public Map<String, String> variables() {
+    return Collections.singletonMap("%", "this.x");
+  }
 
-  /** return a set of variables within the node */
-  Map<String, String> variables();
+  @Override
+  public String debug() {
+    return "<AUTO>";
+  }
 
-  /** turn the node into an easy to debug string */
-  String debug();
+  @Override
+  public String js(Context context, String env) {
+    if (context.allow_auto) {
+      return env + ".__x";
+    } else {
+      return "'__auto_id_not_allowed__'";
+    }
+  }
 
-  /** javascript expression to build the string */
-  String js(Context context, String env);
-
-  boolean hasAuto();
+  @Override
+  public boolean hasAuto() {
+    return true;
+  }
 }

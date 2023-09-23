@@ -60,4 +60,9 @@ public class Text implements Tree {
     }
     return false;
   }
+
+  @Override
+  public boolean hasAuto() {
+    return false;
+  }
 }

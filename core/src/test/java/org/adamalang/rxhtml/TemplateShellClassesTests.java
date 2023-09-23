@@ -33,6 +33,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -42,6 +43,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");

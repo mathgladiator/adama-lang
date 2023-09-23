@@ -33,6 +33,7 @@ public class TemplateLookupDataTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.L(a,'title'));");
     gold.append("\n    b.append($.L($.pR(a),'title'));");
     gold.append("\n    b.append($.L($.pI($.pR(a),'blog'),'title'));");
@@ -46,6 +47,7 @@ public class TemplateLookupDataTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.L(a,'title'));");
     gold.append("\n    b.append($.L($.pR(a),'title'));");
     gold.append("\n    b.append($.L($.pI($.pR(a),'blog'),'title'));");

@@ -33,6 +33,7 @@ public class TemplateTodotaskTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    $.TASK(b,'rLQmQ4ErX42B71qq/sYxSw==','page:/',\"Do thing\");");
     gold.append("\n    $.TASK(b,'/tvvoWCSV4mNoOlpfVjOLA==','page:/',\"Do a different thing\");");
     gold.append("\n  });");
@@ -44,6 +45,7 @@ public class TemplateTodotaskTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    $.TASK(b,'rLQmQ4ErX42B71qq/sYxSw==','page:/',\"Do thing\");");
     gold.append("\n    $.TASK(b,'/tvvoWCSV4mNoOlpfVjOLA==','page:/',\"Do a different thing\");");
     gold.append("\n  });");

@@ -48,4 +48,9 @@ public class Lookup implements Tree {
   public String js(Context context, String env) {
     return env + "['" + name + "']";
   }
+
+  @Override
+  public boolean hasAuto() {
+    return false;
+  }
 }

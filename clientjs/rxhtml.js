@@ -661,7 +661,11 @@ var RxHTML = (function () {
   // RUNTIME | <tag rx:template=$name>
   self.UT = function (parent, state, name, child_maker) {
     var foo = templates[name];
-    foo(parent, state, child_maker);
+    if (typeof(foo) == "function") {
+      foo(parent, state, child_maker);
+    } else {
+      console.error("failed to find template: " + name);
+    }
   };
 
   // RUNTIME | <tag rx:switch=path ..>
@@ -2229,6 +2233,12 @@ var RxHTML = (function () {
     };
   };
 
+  self.autogenid = 1;
+  self.X = function() {
+    self.autogenid++;
+    return 'x' + self.autogenid;
+  };
+
   var transforms = {};
   transforms['principal.agent'] = function(x) { return x.agent; };
   transforms['principal.authority'] = function(x) { return x.authority; };
@@ -2568,7 +2578,10 @@ var RxHTML = (function () {
     };
   };
   // RUNTIME | <... class="" ...>
-  self.ACLASS = function (dom, value) {
+  self.AC = function (dom, value) {
+    dom.setAttribute("class", value);
+  };
+  self.ACLASS = function (dom, value) { // to deprecate in the future
     dom.setAttribute("class", value);
   };
   // RUNTIME | <... src="" ...>

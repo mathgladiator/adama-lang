@@ -46,4 +46,9 @@ public class Transform implements Tree {
   public String js(Context context, String env) {
     return "($.TR('" + transform + "'))(" + base.js(context, env) + ")";
   }
+
+  @Override
+  public boolean hasAuto() {
+    return base.hasAuto();
+  }
 }

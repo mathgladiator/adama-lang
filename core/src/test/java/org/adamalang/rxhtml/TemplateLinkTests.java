@@ -33,9 +33,10 @@ public class TemplateLinkTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('div');");
-    gold.append("\n    c.link(a,'obj',$);");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    var c=$.X();");
+    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    d.link(a,'obj',$);");
+    gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -45,9 +46,10 @@ public class TemplateLinkTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
-    gold.append("\n    var c = $.E('div');");
-    gold.append("\n    c.link(a,'obj',$);");
-    gold.append("\n    b.append(c);");
+    gold.append("\n    var c=$.X();");
+    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    d.link(a,'obj',$);");
+    gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");

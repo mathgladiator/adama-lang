@@ -176,14 +176,17 @@ public class Attributes {
         try {
           Tree tree = Parser.parse(attr.getValue());
           Map<String, String> vars = tree.variables();
-          if (vars.size() > 0) {
+          if (vars.size() > 0 || tree.hasAuto()) {
             var oVar = env.pool.ask();
             var computeFoo = env.pool.ask();
             env.writer.tab().append("{").tabUp().newline();
-            env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
-            env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
-            env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
-            writeDomSetter("this.__dom", attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
+            env.writer.tab().append("var ").append(oVar).append("={};").newline();
+            env.writer.tab().append(oVar).append(".__dom=").append(eVar).append(";").newline();
+            if (tree.hasAuto()) {
+              env.writer.tab().append(oVar).append(".__x=").append(env.autoVar).append(";").newline();
+            }
+            env.writer.tab().append("var ").append(computeFoo).append("=(function() {").tabUp().newline();
+            writeDomSetter("this.__dom", attr.getKey(), tree.js(env.attributeContext(attr.getKey()), "this"));
             env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
             for (Map.Entry<String, String> ve : vars.entrySet()) {
               StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);

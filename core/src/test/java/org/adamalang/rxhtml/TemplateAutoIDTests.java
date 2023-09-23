@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
+public class TemplateAutoIDTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -34,16 +34,30 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IFx(d,a,a,'obj',false,false,function(f,e) {");
-    gold.append("\n      f.append($.L(e,'key'));");
-    gold.append("\n      f.append($.T(' - '));");
-    gold.append("\n      f.append($.L(e,'value'));");
-    gold.append("\n    },function(f,e) {");
-    gold.append("\n      var g=$.E('div');");
-    gold.append("\n      g.append($.T(' Not set! '));");
-    gold.append("\n      f.append(g);");
-    gold.append("\n    });");
+    gold.append("\n    var d=$.E('label');");
+    gold.append("\n    {");
+    gold.append("\n      var e={};");
+    gold.append("\n      e.__dom=d;");
+    gold.append("\n      e.__x=c;");
+    gold.append("\n      var f=(function() {");
+    gold.append("\n        $.SA(this.__dom,'for',\"id_\" + this.__x);");
+    gold.append("\n      }).bind(e);");
+    gold.append("\n      $.Y($.pI(a,'this'),e,'x',f);");
+    gold.append("\n      f();");
+    gold.append("\n    }");
+    gold.append("\n    d.append($.T('A Label'));");
+    gold.append("\n    b.append(d);");
+    gold.append("\n    var d=$.E('input');");
+    gold.append("\n    {");
+    gold.append("\n      var e={};");
+    gold.append("\n      e.__dom=d;");
+    gold.append("\n      e.__x=c;");
+    gold.append("\n      var f=(function() {");
+    gold.append("\n        $.SA(this.__dom,'id',\"id_\" + this.__x);");
+    gold.append("\n      }).bind(e);");
+    gold.append("\n      $.Y($.pI(a,'this'),e,'x',f);");
+    gold.append("\n      f();");
+    gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -55,16 +69,30 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IFx(d,a,a,'obj',false,false,function(f,e) {");
-    gold.append("\n      f.append($.L(e,'key'));");
-    gold.append("\n      f.append($.T(' - '));");
-    gold.append("\n      f.append($.L(e,'value'));");
-    gold.append("\n    },function(f,e) {");
-    gold.append("\n      var g=$.E('div');");
-    gold.append("\n      g.append($.T(' Not set! '));");
-    gold.append("\n      f.append(g);");
-    gold.append("\n    });");
+    gold.append("\n    var d=$.E('label');");
+    gold.append("\n    {");
+    gold.append("\n      var e={};");
+    gold.append("\n      e.__dom=d;");
+    gold.append("\n      e.__x=c;");
+    gold.append("\n      var f=(function() {");
+    gold.append("\n        $.SA(this.__dom,'for',\"id_\" + this.__x);");
+    gold.append("\n      }).bind(e);");
+    gold.append("\n      $.Y($.pI(a,'this'),e,'x',f);");
+    gold.append("\n      f();");
+    gold.append("\n    }");
+    gold.append("\n    d.append($.T('A Label'));");
+    gold.append("\n    b.append(d);");
+    gold.append("\n    var d=$.E('input');");
+    gold.append("\n    {");
+    gold.append("\n      var e={};");
+    gold.append("\n      e.__dom=d;");
+    gold.append("\n      e.__x=c;");
+    gold.append("\n      var f=(function() {");
+    gold.append("\n        $.SA(this.__dom,'id',\"id_\" + this.__x);");
+    gold.append("\n      }).bind(e);");
+    gold.append("\n      $.Y($.pI(a,'this'),e,'x',f);");
+    gold.append("\n      f();");
+    gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -82,12 +110,8 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:ifnot=\"obj\">");
-    source.append("\n            <lookup path=\"key\" /> - <lookup path=\"value\" />");
-    source.append("\n            <div rx:else>");
-    source.append("\n                Not set!");
-    source.append("\n            </div>");
-    source.append("\n        </div>");
+    source.append("\n        <label for=\"id_{%}\">A Label</label>");
+    source.append("\n        <input id=\"id_{%}\" />");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

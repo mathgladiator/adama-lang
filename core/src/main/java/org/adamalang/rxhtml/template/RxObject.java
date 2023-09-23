@@ -76,6 +76,9 @@ public class RxObject {
         String value = env.element.attr(attrName);
         try {
           Tree tree = Parser.parse(value);
+          if (tree.hasAuto()) {
+            env.feedback.warn(env.element, attrName + " has an auto variance which is not allowed in this context");
+          }
           Map<String, String> vars = tree.variables();
           if (vars.size() > 0) {
             for (Map.Entry<String, String> ve : vars.entrySet()) {

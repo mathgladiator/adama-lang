@@ -39,11 +39,14 @@ public class Goto implements Command {
   @Override
   public void write(Environment env, String type, String eVar) {
     Map<String, String> vars = value.variables();
+    if (value.hasAuto()) {
+      env.feedback.warn(env.element, "goto's can't use auto variables");
+    }
     if (vars.size() == 0) {
       env.writer.tab().append("$.onGO(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",").append(Escapes.constantOf(raw)).append(");").newline();
     } else {
       var oVar = env.pool.ask();
-      env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+      env.writer.tab().append("var ").append(oVar).append("={};").newline();
       for (Map.Entry<String, String> ve : vars.entrySet()) {
         StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
         env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();

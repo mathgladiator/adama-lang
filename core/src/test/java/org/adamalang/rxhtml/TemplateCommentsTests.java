@@ -33,6 +33,7 @@ public class TemplateCommentsTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -43,6 +44,7 @@ public class TemplateCommentsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

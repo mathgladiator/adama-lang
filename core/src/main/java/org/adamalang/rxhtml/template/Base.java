@@ -67,7 +67,7 @@ public class Base {
 
   private static String writeIntro(Environment env, String xmlns) {
     String eVar = env.pool.ask();
-    env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
+    env.writer.tab().append("var ").append(eVar).append("=$.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
     Attributes rx = new Attributes(env, eVar);
     rx._base();
     if (env.element.tagName().equals("form") && env.element.hasAttr("rx:action")) {
@@ -143,9 +143,9 @@ public class Base {
       StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
       String newStateVar = env.pool.ask();
       if (env.element.hasAttr("rx:expand-view-state")) {
-        env.writer.tab().append("var ").append(newStateVar).append(" = $.pIE(").append(path.command).append(",'").append(path.name).append("', true);").newline();
+        env.writer.tab().append("var ").append(newStateVar).append("=$.pIE(").append(path.command).append(",'").append(path.name).append("', true);").newline();
       } else {
-        env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
+        env.writer.tab().append("var ").append(newStateVar).append("=$.pI(").append(path.command).append(",'").append(path.name).append("');").newline();
       }
       next = next.stateVar(newStateVar);
     }

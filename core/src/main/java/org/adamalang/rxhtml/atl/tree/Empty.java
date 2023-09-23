@@ -38,4 +38,9 @@ public class Empty implements Tree {
   public String js(Context context, String env) {
     return "\"\"";
   }
+
+  @Override
+  public boolean hasAuto() {
+    return false;
+  }
 }

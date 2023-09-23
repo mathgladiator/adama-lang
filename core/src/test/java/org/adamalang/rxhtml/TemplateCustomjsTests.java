@@ -36,6 +36,7 @@ public class TemplateCustomjsTests extends BaseRxHtmlTest {
     gold.append("\nvar foo = 123;");
     gold.append("\n/** END CUSTOM **/");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -48,6 +49,7 @@ public class TemplateCustomjsTests extends BaseRxHtmlTest {
     gold.append("\nvar foo = 123;");
     gold.append("\n/** END CUSTOM **/");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
+    gold.append("\n    var c=$.X();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
