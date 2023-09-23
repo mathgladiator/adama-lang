@@ -20,6 +20,7 @@ package org.adamalang.rxhtml.atl.tree;
 import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -66,5 +67,11 @@ public class Operate implements Tree {
   @Override
   public boolean hasAuto() {
     return tree.hasAuto() || value.hasAuto();
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+    tree.writeTypes(vs);
+    value.writeTypes(vs);
   }
 }

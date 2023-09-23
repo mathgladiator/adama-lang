@@ -34,8 +34,8 @@ public class Increment implements Command {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
-    vs.write(this.path, "int");
+  public void writeTypes(ViewScope vs) {
+    vs.write(this.path, "int", false);
   }
 
   @Override

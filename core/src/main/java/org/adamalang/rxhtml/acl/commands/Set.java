@@ -69,8 +69,12 @@ public class Set implements Command, BulkCommand {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
-    vs.write(this.path, "string-set");
+  public void writeTypes(ViewScope vs) {
+    if (tree.variables().size() == 0) {
+      vs.write(this.path, Escapes.typeOf(value), false);
+    } else {
+      vs.write(this.path, "string-formula", false);
+    }
   }
 
   @Override

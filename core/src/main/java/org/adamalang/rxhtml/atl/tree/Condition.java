@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -56,5 +57,12 @@ public class Condition implements Tree {
   @Override
   public boolean hasAuto() {
     return guard.hasAuto() || branchTrue.hasAuto() || branchFalse.hasAuto();
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+    guard.writeTypes(vs);
+    branchTrue.writeTypes(vs);
+    branchFalse.writeTypes(vs);
   }
 }

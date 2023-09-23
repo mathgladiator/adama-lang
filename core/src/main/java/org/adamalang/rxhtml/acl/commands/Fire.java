@@ -28,7 +28,7 @@ public class Fire implements Command {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
+  public void writeTypes(ViewScope vs) {
   }
 
   @Override

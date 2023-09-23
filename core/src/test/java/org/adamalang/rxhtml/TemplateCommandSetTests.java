@@ -100,4 +100,16 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     source.append("\n</forest>");
     return source.toString();
   }
+  @Override
+  public String schema() {
+    StringBuilder gold = new StringBuilder();
+    gold.append("{");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"here\" : \"value\",");
+    gold.append("\n    \"x\" : \"string-formula\",");
+    gold.append("\n    \"y\" : \"string\"");
+    gold.append("\n  }");
+    gold.append("\n}");
+    return gold.toString();
+  }
 }

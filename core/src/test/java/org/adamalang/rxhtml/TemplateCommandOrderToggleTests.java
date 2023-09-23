@@ -82,4 +82,14 @@ public class TemplateCommandOrderToggleTests extends BaseRxHtmlTest {
     source.append("\n</forest>");
     return source.toString();
   }
+  @Override
+  public String schema() {
+    StringBuilder gold = new StringBuilder();
+    gold.append("{");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"people_sort_by\" : \"order-string\"");
+    gold.append("\n  }");
+    gold.append("\n}");
+    return gold.toString();
+  }
 }

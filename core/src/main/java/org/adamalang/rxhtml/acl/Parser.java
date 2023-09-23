@@ -30,7 +30,7 @@ public class Parser {
     for (String phrase : fragmentize(command)) {
       int kColon = phrase.indexOf(':');
       if (kColon > 0) {
-        String cmd = phrase.substring(0, kColon);
+        String cmd = phrase.substring(0, kColon).trim().toLowerCase();
         String body = phrase.substring(kColon + 1).trim();
         switch (cmd) {
           case "toggle": {

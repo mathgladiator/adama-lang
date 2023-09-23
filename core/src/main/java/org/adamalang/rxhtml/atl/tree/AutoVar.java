@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Collections;
 import java.util.Map;
@@ -45,5 +46,9 @@ public class AutoVar implements Tree {
   @Override
   public boolean hasAuto() {
     return true;
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
   }
 }

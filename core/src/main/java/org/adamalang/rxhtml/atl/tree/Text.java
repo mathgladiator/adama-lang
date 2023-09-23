@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Collections;
 import java.util.Map;
@@ -64,5 +65,9 @@ public class Text implements Tree {
   @Override
   public boolean hasAuto() {
     return false;
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
   }
 }

@@ -26,5 +26,5 @@ public interface Command {
   /** write the runtime code to attach the event of $type to element by $eVar */
   void write(Environment env, String type, String eVar);
 
-  void writeType(ViewScope vs);
+  void writeTypes(ViewScope vs);
 }

@@ -19,6 +19,7 @@ package org.adamalang.support;
 
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.rxhtml.Bundler;
+import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.config.ShellConfig;
@@ -48,7 +49,8 @@ public class GenerateTemplateTests {
           System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
-        String gold = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end()).toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
+        RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
+        String gold = result.toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
         String classname = "Template" + name + "Tests";
@@ -78,6 +80,11 @@ public class GenerateTemplateTests {
         output.append("  public String source() {\n");
         TestClass.writeStringBuilder(Files.readString(file.toPath()), output, "source");
         output.append("    return source.toString();\n");
+        output.append("  }\n");
+        output.append("  @Override\n");
+        output.append("  public String schema() {\n");
+        TestClass.writeStringBuilder(result.viewSchema.toPrettyString(), output, "gold");
+        output.append("    return gold.toString();\n");
         output.append("  }\n");
         output.append("}\n");
         Files.writeString(new File(outRoot, classname + ".java").toPath(), output.toString());

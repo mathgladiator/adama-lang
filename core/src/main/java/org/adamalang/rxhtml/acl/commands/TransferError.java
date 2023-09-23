@@ -34,8 +34,8 @@ public class TransferError implements Command {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
-    vs.write(path, "error-message");
+  public void writeTypes(ViewScope vs) {
+    vs.write(path, "error-message", false);
   }
 
   @Override

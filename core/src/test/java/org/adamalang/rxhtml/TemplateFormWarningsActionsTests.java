@@ -614,4 +614,12 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     source.append("\n</forest>");
     return source.toString();
   }
+  @Override
+  public String schema() {
+    StringBuilder gold = new StringBuilder();
+    gold.append("{");
+    gold.append("\n  \"/\" : { }");
+    gold.append("\n}");
+    return gold.toString();
+  }
 }

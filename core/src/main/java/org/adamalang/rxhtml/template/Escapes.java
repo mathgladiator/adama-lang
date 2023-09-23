@@ -20,15 +20,28 @@ package org.adamalang.rxhtml.template;
 import org.adamalang.common.Escaping;
 
 public class Escapes {
-  public static String constantOf(String value) {
+  public static String typeOf(String value) {
     if (value.equals("true") || value.equals("false")) {
-      return value;
+      return "bool";
+    }
+    try {
+      Integer.parseInt(value);
+      return "int";
+    } catch (NumberFormatException nfe) {
     }
     try {
       Double.parseDouble(value);
-      return value;
+      return "number";
     } catch (NumberFormatException nfe) {
     }
-    return "'" + new Escaping(value).switchQuotes().removeNewLines().go() + "'";
+    return "string";
+  }
+
+  public static String constantOf(String value) {
+    String type = typeOf(value);
+    if ("string".equalsIgnoreCase(type)) {
+      return "'" + new Escaping(value).switchQuotes().removeNewLines().go() + "'";
+    }
+    return value;
   }
 }

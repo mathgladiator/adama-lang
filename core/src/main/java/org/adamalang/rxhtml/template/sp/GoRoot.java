@@ -28,6 +28,6 @@ public class GoRoot implements PathInstruction {
     while (result.parent != null) {
       result = result.parent;
     }
-    return result.parent;
+    return result;
   }
 }

@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 
@@ -47,5 +48,10 @@ public class Negate implements Tree {
   @Override
   public boolean hasAuto() {
     return value.hasAuto();
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+    value.writeTypes(vs);
   }
 }

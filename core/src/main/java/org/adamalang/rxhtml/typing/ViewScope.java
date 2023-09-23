@@ -20,6 +20,7 @@ package org.adamalang.rxhtml.typing;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.rxhtml.template.StatePath;
 import org.adamalang.rxhtml.template.sp.PathInstruction;
+import org.adamalang.rxhtml.template.sp.SwitchTo;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -56,17 +57,30 @@ public class ViewScope {
     return current.child(sp.name);
   }
 
-  public void write(String pathing, String type) {
+  public void write(String pathing, String type, boolean checkForViewSwitch) {
     StatePath sp = StatePath.resolve(pathing, "$");
     ViewScope current = this;
+    boolean foundView = false;
     for (PathInstruction instruction : sp.instructions) {
+      if (instruction instanceof SwitchTo) {
+        if ("view".equals(((SwitchTo) instruction).dest)) {
+          foundView = true;
+        }
+      }
       if (current != null) {
         current = instruction.next(current);
       }
     }
-    current.types.put(sp.name, type);
+    if (!foundView && checkForViewSwitch) {
+      return;
+    }
+    if (current != null) {
+      String prior = current.types.get(sp.name);
+      if (prior == null || "lookup".equals(prior)) {
+        current.types.put(sp.name, type);
+      }
+    }
   }
-
 
   public ViewScope child(String name) {
     ViewScope result = children.get(name);

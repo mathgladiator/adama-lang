@@ -39,6 +39,7 @@ public class RxHtmlTool {
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);
     Shell shell = new Shell(config);
     shell.scan(document);
+    ViewSchemaBuilder vb = new ViewSchemaBuilder(document, config.feedback);
     ArrayList<String> patterns = new ArrayList<>();
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true));
@@ -47,7 +48,6 @@ public class RxHtmlTool {
       patterns.add(element.attr("uri"));
       Root.page(env.element(element, true), defaultRedirects);
     }
-    ViewSchemaBuilder vb = new ViewSchemaBuilder(document, config.feedback);
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
     return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq(), env.tasks, vb.results);

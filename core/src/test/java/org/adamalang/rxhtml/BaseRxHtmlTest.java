@@ -17,6 +17,8 @@
 */
 package org.adamalang.rxhtml;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.translator.env2.Scope;
@@ -28,13 +30,39 @@ import org.junit.Test;
 import java.util.regex.Matcher;
 
 public abstract class BaseRxHtmlTest {
+
+  private RxHtmlResult cachedResult = null;
+  private StringBuilder issuesLive;
+
+
+  public RxHtmlResult result() {
+    if (cachedResult == null) {
+      issuesLive = new StringBuilder();
+      Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
+      cachedResult = RxHtmlTool.convertStringToTemplateForest(source().replaceAll("\r", ""), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
+    }
+    return cachedResult;
+  }
+
   @Test
-  public void stable() throws Exception {
-    StringBuilder issuesLive = new StringBuilder();
-    Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-    String live = RxHtmlTool.convertStringToTemplateForest(source(), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end()).toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
-    Assert.assertEquals(gold(), live.trim());
+  public void stable_code() throws Exception {
+    RxHtmlResult result = result();
+    String live = result.toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
+    Assert.assertEquals(gold().replaceAll("\r", ""), live.trim().replaceAll("\r", ""));
+  }
+
+  @Test
+  public void stable_issues() {
+    RxHtmlResult result = result();
     Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
+  }
+
+  @Test
+  public void stable_schema() {
+    RxHtmlResult result = result();
+    ObjectNode expected = Json.parseJsonObject(schema());
+    ObjectNode computed = Json.parseJsonObject(result.viewSchema.toPrettyString());
+    Assert.assertEquals(expected, computed);
   }
 
   /** test any developer mode settings */
@@ -49,10 +77,6 @@ public abstract class BaseRxHtmlTest {
   /** The issues the test is supposed to have */
   public abstract String issues();
 
-  @Test
-  public void codegen() throws Exception {
-    String adamaCode = RxHtmlToAdama.codegen(source());
-    Parser parser = new Parser(new TokenEngine("test", adamaCode.codePoints().iterator()), Scope.makeRootDocument());
-    parser.document();
-  }
+  /** get the schema */
+  public abstract String schema();
 }

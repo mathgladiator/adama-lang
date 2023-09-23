@@ -145,4 +145,25 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     source.append("\n</forest>");
     return source.toString();
   }
+  @Override
+  public String schema() {
+    StringBuilder gold = new StringBuilder();
+    gold.append("{");
+    gold.append("\n  \"/customeraction/$text/signin\" : {");
+    gold.append("\n    \"customer_id\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/customer/$text\" : {");
+    gold.append("\n    \"customer_id\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/adminaction/$text/signin\" : {");
+    gold.append("\n    \"admin_id\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/admin/$text\" : {");
+    gold.append("\n    \"admin_id\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/bounce\" : { },");
+    gold.append("\n  \"/logingeneric\" : { }");
+    gold.append("\n}");
+    return gold.toString();
+  }
 }

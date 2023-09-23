@@ -36,8 +36,8 @@ public class OrderToggle implements Command {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
-    vs.write(this.path, "order-string");
+  public void writeTypes(ViewScope vs) {
+    vs.write(this.path, "order-string", false);
   }
 
   @Override

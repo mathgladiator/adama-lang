@@ -253,4 +253,37 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     source.append("\n</forest>");
     return source.toString();
   }
+  @Override
+  public String schema() {
+    StringBuilder gold = new StringBuilder();
+    gold.append("{");
+    gold.append("\n  \"/\" : { },");
+    gold.append("\n  \"/$text\" : {");
+    gold.append("\n    \"usery\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/$text/profile\" : {");
+    gold.append("\n    \"user\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/$text/settings/$text\" : {");
+    gold.append("\n    \"key\" : \"text\",");
+    gold.append("\n    \"user\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/$text/sets1/$number\" : {");
+    gold.append("\n    \"key\" : \"number\",");
+    gold.append("\n    \"user\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/$text/sets2/$number\" : {");
+    gold.append("\n    \"key\" : \"number\",");
+    gold.append("\n    \"user\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/$text/sets3/$number\" : {");
+    gold.append("\n    \"key\" : \"number\",");
+    gold.append("\n    \"user\" : \"text\"");
+    gold.append("\n  },");
+    gold.append("\n  \"/yolo\" : { },");
+    gold.append("\n  \"/bounce\" : { },");
+    gold.append("\n  \"/login\" : { }");
+    gold.append("\n}");
+    return gold.toString();
+  }
 }

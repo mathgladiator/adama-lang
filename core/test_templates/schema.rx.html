@@ -1,0 +1,27 @@
+<forest>
+    <page uri="/should_be_canonical_test_for_schema_gen">
+        <div rx:scope="child" rx:expand-view-state>
+            <button rx:click="set:x=1">Button In Child</button>
+            <div rx:template="foo"> Fragment 1 </div>
+        </div>
+        <div rx:iterate="children" rx:expand-view-state>
+            <button rx:click="set:z=x">Button In Children</button>
+            <div rx:template="foo"> Fragment 2 </div>
+        </div>
+        <lookup path="should_no_be_in_view" />
+        <lookup path="view:w" />
+        <button rx:click="set:w=1">Button Root</button>
+        <div rx:template="foo"> Fragment 3 </div>
+        <div rx:template="foo_scope">
+            <button rx:click="set:v=1">Fragment Button</button>
+        </div>
+    </page>
+    <template name="foo">
+        <button rx:click="set:y=3">Set Y</button>
+    </template>
+    <template name="foo_scope">
+        <div rx:scope="fooscope">
+            <fragment />
+        </div>
+    </template>
+</forest>

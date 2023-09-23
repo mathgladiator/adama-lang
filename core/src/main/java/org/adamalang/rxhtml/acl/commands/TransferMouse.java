@@ -43,8 +43,8 @@ public class TransferMouse implements Command {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
-    vs.write(path, "mouse");
+  public void writeTypes(ViewScope vs) {
+    vs.write(path, "mouse", false);
   }
 
   public static int parseIntOrZero(String x) {

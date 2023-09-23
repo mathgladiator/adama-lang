@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Collections;
 import java.util.Map;
@@ -27,10 +28,11 @@ import java.util.Map;
 public class Lookup implements Tree {
   public final String name;
   public final String complete;
+  private final StatePath sp;
 
   public Lookup(String variable) {
-    StatePath resolve = StatePath.resolve(variable, "$");
-    this.name = resolve.name;
+    this.sp = StatePath.resolve(variable, "$");
+    this.name = sp.name;
     this.complete = variable;
   }
 
@@ -52,5 +54,10 @@ public class Lookup implements Tree {
   @Override
   public boolean hasAuto() {
     return false;
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+    vs.write(complete, "value", true);
   }
 }

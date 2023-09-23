@@ -34,8 +34,8 @@ public class Toggle implements Command {
   }
 
   @Override
-  public void writeType(ViewScope vs) {
-    vs.write(path, "bool");
+  public void writeTypes(ViewScope vs) {
+    vs.write(path, "bool", false);
   }
 
   @Override

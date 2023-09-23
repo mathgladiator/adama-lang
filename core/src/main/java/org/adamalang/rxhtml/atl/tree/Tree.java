@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 
@@ -34,4 +35,6 @@ public interface Tree {
   String js(Context context, String env);
 
   boolean hasAuto();
+
+  public void writeTypes(ViewScope vs);
 }

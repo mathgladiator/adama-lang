@@ -25,6 +25,7 @@ import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -62,32 +63,43 @@ public class ViewSchemaBuilder {
 
   public void buildSchema(Elements children, ViewScope schema) {
     for (Element child : children) {
-      if ("fragment".equals(child.tagName())) {
+      if ("fragment".equalsIgnoreCase(child.tagName())) {
         buildSchema(fragments.peek(), schema);
-        return;
+        continue;
+      }
+      if ("lookup".equalsIgnoreCase(child.tagName())) {
+        schema.write(child.attr("path"), "lookup", true);
+        continue;
       }
       boolean expand = child.hasAttr("rx:expand-view-state");
       ViewScope current = schema;
       if (expand) {
         if (child.hasAttr("rx:scope")) {
+          current.write(child.attr("rx:scope"), "object", false);
           current = current.eval(child.attr("rx:scope"));
         }
         if (child.hasAttr("rx:iterate")) {
-          current = current.eval(child.attr("rx:iterate"));
+          current.write(child.attr("rx:iterate"), "list", false);
+          current = current.eval(child.attr("rx:iterate")).child("#items");
         }
       }
+      // TODO: IF/IFNOT (kind of tricky)
       for (String event : Base.EVENTS) {
         if (child.hasAttr("rx:" + event)) {
           try {
             for (Command command : Parser.parse(child.attr("rx:" + event))) {
-              command.writeType(current);
+              command.writeTypes(current);
             }
           } catch (ParseException pe) {
           }
         }
       }
-      // IF/IFNOT (kind of tricky)
-
+      for(Attribute attr : child.attributes()) {
+        try {
+          org.adamalang.rxhtml.atl.Parser.parse(attr.getValue()).writeTypes(current);
+        } catch (ParseException pe) {
+        }
+      }
       if (child.hasAttr("rx:template")) {
         fragments.push(child.children());
         buildSchema(templates.get(child.attr("rx:template")), current);

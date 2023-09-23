@@ -105,4 +105,14 @@ public class TemplateSimpleWithAuthTests extends BaseRxHtmlTest {
     source.append("\n</forest>");
     return source.toString();
   }
+  @Override
+  public String schema() {
+    StringBuilder gold = new StringBuilder();
+    gold.append("{");
+    gold.append("\n  \"/\" : { },");
+    gold.append("\n  \"/signin\" : { },");
+    gold.append("\n  \"/page\" : { }");
+    gold.append("\n}");
+    return gold.toString();
+  }
 }

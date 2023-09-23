@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -76,5 +77,12 @@ public class Concat implements Tree {
       }
     }
     return false;
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+    for (Tree child : children) {
+      child.writeTypes(vs);
+    }
   }
 }
