@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** a way for testing users at the developer stage to inject an authentication token into the system */
 public class ForceAuth implements Command {
@@ -27,6 +28,10 @@ public class ForceAuth implements Command {
   public ForceAuth(String name, String identity) {
     this.name = name;
     this.identity = identity;
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** Flip/flop (i.e. toggle) a boolean value between false and true */
 public class Toggle implements Command {
@@ -30,6 +31,11 @@ public class Toggle implements Command {
     } else {
       this.path = "view:" + path;
     }
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
+    vs.write(path, "bool");
   }
 
   @Override

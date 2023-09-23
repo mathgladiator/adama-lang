@@ -17,6 +17,17 @@
 */
 package org.adamalang.rxhtml.template.sp;
 
+import org.adamalang.rxhtml.typing.ViewScope;
+
 /** navigate to the root object */
 public class GoRoot implements PathInstruction {
+
+  @Override
+  public ViewScope next(ViewScope vs) {
+    ViewScope result = vs;
+    while (result.parent != null) {
+      result = result.parent;
+    }
+    return result.parent;
+  }
 }

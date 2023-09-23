@@ -18,12 +18,17 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 public class Fire implements Command {
   private final String channel;
 
   public Fire(String channel) {
     this.channel = channel;
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** decide a single value from a set */
 public class Decide implements Command {
@@ -30,6 +31,10 @@ public class Decide implements Command {
     this.channel = channel;
     this.key = key;
     this.path = path;
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

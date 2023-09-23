@@ -25,6 +25,7 @@ import org.adamalang.rxhtml.template.config.Feedback;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Root {
   public static void start(Environment env, String custom) {
@@ -131,6 +132,7 @@ public class Root {
     if (uriRaw.startsWith("/")) {
       formula.append("/");
     }
+    TreeMap<String, String> types = new TreeMap<>();
     StringBuilder normalized = new StringBuilder();
     StringBuilder sb = new StringBuilder();
     sb.append("[");
@@ -160,6 +162,7 @@ public class Root {
         }
         depends.add(name);
         sb.append("'").append(type).append("','").append(name).append("'");
+        types.put(name, type);
         formula.append("{").append(name).append("}");
         normalized.append("/$").append(type);
       } else {
@@ -172,7 +175,7 @@ public class Root {
       }
     } while (uri.length() > 0);
     sb.append("]");
-    return new Instructions(sb.toString(), depends, formula.toString(), normalized.toString());
+    return new Instructions(sb.toString(), depends, formula.toString(), normalized.toString(), types);
   }
 
   public static String finish(Environment env) {
@@ -185,12 +188,14 @@ public class Root {
     public final HashSet<String> depends;
     public final String formula;
     public final String normalized;
+    public final TreeMap<String, String> types;
 
-    public Instructions(final String javascript, HashSet<String> depends, String formula, String normalized) {
+    public Instructions(final String javascript, HashSet<String> depends, String formula, String normalized, TreeMap<String, String> types) {
       this.javascript = javascript;
       this.depends = depends;
       this.formula = formula;
       this.normalized = normalized;
+      this.types = types;
     }
   }
 }

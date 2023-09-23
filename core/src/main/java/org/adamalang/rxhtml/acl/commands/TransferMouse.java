@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 public class TransferMouse implements Command {
   private final String path;
@@ -39,6 +40,11 @@ public class TransferMouse implements Command {
   public void write(Environment env, String type, String eVar) {
     StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
     env.writer.tab().append("$.onTM(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',").append("" + offX).append(",").append("" + offY).append(");").newline();
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
+    vs.write(path, "mouse");
   }
 
   public static int parseIntOrZero(String x) {

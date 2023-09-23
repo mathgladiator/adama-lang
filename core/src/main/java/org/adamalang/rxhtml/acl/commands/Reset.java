@@ -18,10 +18,15 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** Reset the form */
 public class Reset implements Command {
   public Reset() {
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

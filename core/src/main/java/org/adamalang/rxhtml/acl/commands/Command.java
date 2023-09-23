@@ -18,10 +18,13 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** a command to run from an event */
 public interface Command {
 
   /** write the runtime code to attach the event of $type to element by $eVar */
   void write(Environment env, String type, String eVar);
+
+  void writeType(ViewScope vs);
 }

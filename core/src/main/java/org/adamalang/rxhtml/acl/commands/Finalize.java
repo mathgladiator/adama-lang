@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** finalize a set of choices */
 public class Finalize implements Command {
@@ -25,6 +26,10 @@ public class Finalize implements Command {
 
   public Finalize(String channel) {
     this.channel = channel;
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** Increment a number by 1 */
 public class Increment implements Command {
@@ -30,6 +31,11 @@ public class Increment implements Command {
     } else {
       this.path = "view:" + path;
     }
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
+    vs.write(this.path, "int");
   }
 
   @Override

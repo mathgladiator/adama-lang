@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** Transfer the error message into the view state */
 public class TransferError implements Command {
@@ -30,6 +31,11 @@ public class TransferError implements Command {
     } else {
       this.path = "view:" + path;
     }
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
+    vs.write(path, "error-message");
   }
 
   @Override

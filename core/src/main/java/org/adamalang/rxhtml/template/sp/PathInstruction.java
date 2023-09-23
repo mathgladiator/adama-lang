@@ -17,6 +17,10 @@
 */
 package org.adamalang.rxhtml.template.sp;
 
+import org.adamalang.rxhtml.typing.ViewScope;
+
 /** common interface for path instructions */
 public interface PathInstruction {
+
+  public ViewScope next(ViewScope vs);
 }

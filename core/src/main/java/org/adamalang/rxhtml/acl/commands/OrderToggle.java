@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** Flip/flop (i.e. toggle) a boolean value between false and true */
 public class OrderToggle implements Command {
@@ -32,6 +33,11 @@ public class OrderToggle implements Command {
       this.path = "view:" + path;
     }
     this.value = value;
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
+    vs.write(this.path, "order-string");
   }
 
   @Override

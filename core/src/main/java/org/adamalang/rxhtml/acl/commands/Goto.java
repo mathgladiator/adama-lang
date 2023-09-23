@@ -23,6 +23,7 @@ import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public class Goto implements Command {
   public Goto(String value) throws ParseException {
     this.raw = value;
     this.value = Parser.parse(value);
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

@@ -23,6 +23,7 @@ import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.rxhtml.template.StatePath;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
 
@@ -65,6 +66,11 @@ public class Set implements Command, BulkCommand {
       }
       env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(env.contextOf("event:" + type), oVar)).append(";});").newline();
     }
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
+    vs.write(this.path, "string-set");
   }
 
   @Override

@@ -21,6 +21,7 @@ import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.config.ShellConfig;
+import org.adamalang.rxhtml.typing.ViewSchemaBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,9 +47,10 @@ public class RxHtmlTool {
       patterns.add(element.attr("uri"));
       Root.page(env.element(element, true), defaultRedirects);
     }
+    ViewSchemaBuilder vb = new ViewSchemaBuilder(document, config.feedback);
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq(), env.tasks);
+    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq(), env.tasks, vb.results);
   }
 
   public static String buildCustomJavaScript(Document document) {

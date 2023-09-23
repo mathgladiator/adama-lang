@@ -17,6 +17,15 @@
 */
 package org.adamalang.rxhtml.template.sp;
 
+import org.adamalang.rxhtml.typing.ViewScope;
+
 /** navigate to the parent */
 public class GoParent implements PathInstruction {
+  @Override
+  public ViewScope next(ViewScope vs) {
+    if (vs.parent != null) {
+      return vs.parent;
+    }
+    return vs;
+  }
 }

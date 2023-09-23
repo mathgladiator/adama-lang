@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.runtime.sys.web.WebFragment;
 import org.adamalang.runtime.sys.web.WebPath;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
@@ -34,8 +35,9 @@ public class RxHtmlResult {
   public final ArrayList<WebPath> paths;
   public final HashMap<String, Integer> cssFreq;
   public final ArrayList<Task> tasks;
+  public final ObjectNode viewSchema;
 
-  public RxHtmlResult(String javascript, String style, Shell shell, ArrayList<String> patterns, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks) {
+  public RxHtmlResult(String javascript, String style, Shell shell, ArrayList<String> patterns, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks, ObjectNode viewSchema) {
     this.javascript = javascript;
     this.style = style;
     this.shell = shell;
@@ -45,6 +47,7 @@ public class RxHtmlResult {
     }
     this.cssFreq = cssFreq;
     this.tasks = tasks;
+    this.viewSchema = viewSchema;
   }
 
   public boolean test(String rawUri) {

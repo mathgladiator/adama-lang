@@ -180,6 +180,7 @@ public class RxHTMLScanner implements AutoCloseable {
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
                 try {
                   Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
+                  Files.writeString(new File("view.schema.json").toPath(), updated.viewSchema.toPrettyString());
                   io.info("rxhtml|css.freq.json built; opportunity=" + opportunity + " bytes");
                 } catch (Exception ex) {
                   io.error("rxhtml|css.freq.json failed to be built");

@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** execute custom code */
 public class Custom implements Command {
@@ -25,6 +26,10 @@ public class Custom implements Command {
 
   public Custom(String command) {
     this.command = command;
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override

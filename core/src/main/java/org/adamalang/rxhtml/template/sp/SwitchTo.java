@@ -17,11 +17,18 @@
 */
 package org.adamalang.rxhtml.template.sp;
 
+import org.adamalang.rxhtml.typing.ViewScope;
+
 /** switch to a different tree (data or view) */
 public class SwitchTo implements PathInstruction {
   public final String dest;
 
   public SwitchTo(String dest) {
     this.dest = dest;
+  }
+
+  @Override
+  public ViewScope next(ViewScope vs) {
+    return vs;
   }
 }

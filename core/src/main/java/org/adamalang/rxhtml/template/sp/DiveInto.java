@@ -17,11 +17,18 @@
 */
 package org.adamalang.rxhtml.template.sp;
 
+import org.adamalang.rxhtml.typing.ViewScope;
+
 /** dive into a child object */
 public class DiveInto implements PathInstruction{
   public final String child;
 
   public DiveInto(String child) {
     this.child = child;
+  }
+
+  @Override
+  public ViewScope next(ViewScope vs) {
+    return vs.child(child);
   }
 }

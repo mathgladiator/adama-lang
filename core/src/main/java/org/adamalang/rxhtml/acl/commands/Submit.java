@@ -18,10 +18,15 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
 
 /** search for a parent form and then submit it */
 public class Submit implements Command {
   public Submit() {
+  }
+
+  @Override
+  public void writeType(ViewScope vs) {
   }
 
   @Override
