@@ -1,0 +1,9 @@
+<forest>
+    <page uri="/">
+        <exit-gate guard="foo" set="block-exit" />
+        <div rx:if="view:block-exit">
+            Show this if we try to exit when foo is true.
+            <button rx:click="resume">Skip Gate</button>
+        </div>
+    </page>
+</forest>

@@ -15,8 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.acl.commands;
 
-public class Platform {
-  public static final String VERSION = "20230925120841";
+import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
+
+public class Resume implements Command, BulkCommand {
+  @Override
+  public void writeBulk(Environment env, String eVar, String appendTo) {
+    env.writer.tab().append(appendTo).append(".push(").append("$.bR());").newline();
+  }
+
+  @Override
+  public void write(Environment env, String type, String eVar) {
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+  }
 }

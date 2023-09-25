@@ -25,6 +25,7 @@ import org.jsoup.nodes.Element;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Elements {
   public static void template(Environment env) { /* no-op */ }
@@ -70,6 +71,33 @@ public class Elements {
         env.writer.tab().append(env.parentVariable).append(".append($.LTdT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("'),").append("" + freq).append("));").newline();
       } else {
         env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("')));").newline();
+      }
+    }
+  }
+
+  public static String ensureInView(String attr) {
+    if (attr.startsWith("view:")) {
+      return attr;
+    } else {
+      return "view:" + attr.replaceAll(Pattern.quote("data:"), "");
+    }
+  }
+
+  public static void exit_gate(Environment env) {
+    boolean hasGuard = env.element.hasAttr("guard");
+    boolean hasSet = env.element.hasAttr("set");
+    if (hasGuard && hasSet) {
+      StatePath pathGuard = StatePath.resolve(ensureInView(env.element.attr("guard")), env.stateVar);
+      StatePath pathSet = StatePath.resolve(ensureInView(env.element.attr("set")), env.stateVar);
+      env.writer.tab().append("$.IG(") //
+          .append(pathGuard.command).append(",'").append(pathGuard.name).append("',") //
+          .append(pathSet.command).append(",'").append(pathSet.name).append("');").newline(); //
+    } else {
+      if (!hasGuard) {
+        env.feedback.warn(env.element, "needs a guard attribute");
+      }
+      if (!hasSet) {
+        env.feedback.warn(env.element, "needs a set attribute");
       }
     }
   }

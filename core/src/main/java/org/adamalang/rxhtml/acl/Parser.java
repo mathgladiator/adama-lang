@@ -118,6 +118,8 @@ public class Parser {
           commands.add(new Reset());
         } else if ("submit".equals(phrase)) {
           commands.add(new Submit());
+        } else if ("resume".equals(phrase)) {
+          commands.add(new Resume());
         }
       }
     }
