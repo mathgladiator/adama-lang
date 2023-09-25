@@ -187,6 +187,10 @@ public class DevBoxServiceBase implements ServiceBase {
           uri += "index.html";
         }
         File file = new File(staticAssetRoot, uri.substring(1));
+        if (file.exists() && file.isDirectory()) {
+          uri += "/index.html";
+          file = new File(staticAssetRoot, uri.substring(1));
+        }
         try {
           if (file.exists()) {
             byte[] bytes = Files.readAllBytes(file.toPath());
