@@ -67,7 +67,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     this.streams = new ConcurrentHashMap<>();
   }
 
-  private NtPrincipal principalOf(String identity) {
+  public static NtPrincipal principalOf(String identity) {
     if (identity.startsWith("document/")) {
       String[] parts = identity.split(Pattern.quote("/"));
       return new NtPrincipal(parts[3], "doc/" + parts[1] + "/" + parts[2]);

@@ -18,5 +18,5 @@
 package org.adamalang.common;
 
 public class Platform {
-  public static final String VERSION = "20230925122228";
+  public static final String VERSION = "20230925163143";
 }

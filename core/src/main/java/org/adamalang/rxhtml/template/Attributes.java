@@ -574,15 +574,6 @@ public class Attributes {
           .append(",'").append(env.val("rx:identity", "default")) //
           .append("',").append(obj.rxObj) //
           .append(");").newline();
-    } else if ("domain:upload-asset".equalsIgnoreCase(action)) { // upload an asset
-      convertFailureVariableToEvents(env.element, "asset_upload_failed");
-      check_action_upload(true);
-      RxObject obj = new RxObject(env, "rx:forward");
-      env.writer.tab().append("$.aDUP(").append(eVar) //
-          .append(",").append(env.stateVar) //
-          .append(",'").append(env.val("rx:identity", "default")) //
-          .append("',").append(obj.rxObj) //
-          .append(");").newline();
     } else if ("adama:sign-up".equalsIgnoreCase(action)) { // sign up as an Adama user
       convertFailureVariableToEvents(env.element, "sign_up_failed");
       check_action_sign_up();

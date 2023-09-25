@@ -31,6 +31,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.WebContext;
+import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.web.assets.AssetSystem;
@@ -62,8 +63,9 @@ public class DevBoxServiceBase implements ServiceBase {
   private final File staticAssetRoot;
   private final File localLibAdamaJS;
   private final DevBoxAdamaMicroVerse verse;
+  private final LocalAssets assets;
 
-  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, DevBoxAdamaMicroVerse verse) {
+  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -72,6 +74,7 @@ public class DevBoxServiceBase implements ServiceBase {
     this.staticAssetRoot = staticAssetRoot;
     this.localLibAdamaJS = localLibAdamaJS;
     this.verse = verse;
+    this.assets = new LocalAssets(io, assetPath, verse.service);
   }
 
   @Override
@@ -108,6 +111,16 @@ public class DevBoxServiceBase implements ServiceBase {
         if (current == null) {
           callback.failure(new ErrorCodeException(500));
           return;
+        }
+        if (uri.startsWith("/~d/")) {
+          if (verse != null && verse.domainKeyToUse != null) {
+            SpaceKeyRequest skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri.substring(3));
+            Key key = new Key(skr.space, skr.key);
+            io.info("service|getting from document: " + skr.uri);
+            WebGet webGet = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
+            verse.service.webGet(key, webGet, route(skr, callback));
+            return;
+          }
         }
         if ("/template.js".equals(uri)) {
           callback.success(new HttpResult("text/javascript", current.forestJavaScript.getBytes(), false));
@@ -238,7 +251,7 @@ public class DevBoxServiceBase implements ServiceBase {
 
   @Override
   public AssetSystem assets() {
-    return null;
+    return assets;
   }
 
   public Thread start() throws Exception {

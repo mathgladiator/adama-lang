@@ -418,7 +418,7 @@ var RxHTML = (function () {
     var next = { service: state.service, data: state.data, view: state.view, current: state.current };
     var prior = next[state.current];
     if (prior.parent != null) {
-      next[state.current] = prior;
+      next[state.current] = prior.parent;
     }
     return next;
   };
@@ -1370,7 +1370,11 @@ var RxHTML = (function () {
     }
   };
   // HELPER | extract all the inputs from the given element and build an object
-  var build_obj = function (el, objToInsertInto, allow_passwords) {
+  var build_obj = function (el, objToInsertInto, allow_passwords, isRoot) {
+    if (el.tagName.toUpperCase() == "FORM" && !isRoot) {
+      // don't care about nested forms
+      return;
+    }
     var justSet = el.tagName.toUpperCase() == "TEXTAREA" || el.tagName.toUpperCase() == "SELECT";
     var isInputBox = el.tagName.toUpperCase() == "INPUT";
     var isFieldSet = el.tagName.toUpperCase() == "FIELDSET";
@@ -1423,7 +1427,7 @@ var RxHTML = (function () {
         var n = arr.length;
         for (var k = 0; k < n; k++) {
           var ch = el.children[k];
-          build_obj(ch, nextObject, allow_passwords);
+          build_obj(ch, nextObject, allow_passwords, false);
         }
       }
       apply(nextObject);
@@ -1448,7 +1452,7 @@ var RxHTML = (function () {
         var n = arr.length;
         for (var k = 0; k < n; k++) {
           var ch = el.children[k];
-          build_obj(ch, objToInsertInto, allow_passwords);
+          build_obj(ch, objToInsertInto, allow_passwords, false);
         }
       }
     }
@@ -1456,14 +1460,14 @@ var RxHTML = (function () {
 
   self.BuildFormObject = function(form) {
     var obj = {};
-    build_obj(form, obj, false);
+    build_obj(form, obj, false, true);
     return obj;
   };
 
   // HELPER | return an object of all the inputs of the given form element
   var get_form = function (form, allow_passwords) {
     var obj = {};
-    build_obj(form, obj, allow_passwords);
+    build_obj(form, obj, allow_passwords, true);
     return obj;
   };
 
@@ -2177,7 +2181,7 @@ var RxHTML = (function () {
     if (idLookup.abort) {
       return;
     }
-    form.action = "https://aws-us-east-2.adama-platform.com/~upload";
+    form.action = self.protocol + "//" + self.host + "/~upload";
     form.method = "post";
     form.enctype = "multipart/form-data";
     {
@@ -2303,6 +2307,34 @@ var RxHTML = (function () {
   transforms['is_not_empty_str'] = function(x) { return x != ""; };
   transforms['jsonify'] = function(x) { return JSON.stringify(x); };
   transforms['time_now'] = function(x) { return Date.now() + ""; };
+  transforms['size_bytes'] = function(xraw) {
+    var x = 0.0;
+    if (typeof(xraw) == 'number') {
+      x = xraw;
+    } else {
+      try {
+        x = parseFloat(xraw);
+      } catch (ex) {
+
+      }
+    }
+    var ival = Math.floor(x);
+    if (ival < 1024) {
+      return ival + " B";
+    }
+    ival /= 1024;
+    if (ival < 1024) {
+      return Math.round(ival * 10) / 10.0 + " KB";
+    }
+    ival /= 1024;
+    if (ival < 1024) {
+      return Math.round(ival * 10) / 10.0 + " MB";
+    }
+    ival /= 1024;
+    if (ival < 1024) {
+      return Math.round(ival * 10) / 10.0 + " GB";
+    }
+  }
   transforms['vulgar_fraction'] = function(xraw) {
     var x = 0.0;
     if (typeof(xraw) == 'number') {

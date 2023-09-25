@@ -127,8 +127,14 @@ public class FrontendHttpHandler implements HttpHandler {
       @Override
       public void success(Domain domain) {
         if (domain != null) {
-          if (domain.key != null && domain.routeKey) {
-            SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uri);
+          String uriToRoute = uri;
+          boolean route = domain.routeKey;
+          if (!domain.routeKey && uriToRoute.startsWith("/~d/")) {
+            uriToRoute = uriToRoute.substring(3);
+            route = true;
+          }
+          if (domain.key != null && route) {
+            SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uriToRoute);
             get(skr, headers, parametersJson, callback);
           } else {
             getSpace(domain.space, uri, headers, parametersJson, callback);
