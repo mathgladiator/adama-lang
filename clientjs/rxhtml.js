@@ -932,8 +932,6 @@ var RxHTML = (function () {
     return null;
   }
 
-
-
   // RUNTIME: <tag .. rx:event="... set:name=value ...">
   self.bS = function (dom, state, name, value) {
     if (typeof (value) == "function") {
