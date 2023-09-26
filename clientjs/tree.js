@@ -385,8 +385,10 @@ function AdamaTree() {
           var o = [];
           for (var j = 0; j < v.length; j++) { // copy the elements from the array
             var vj = v[j];
-            d[vj.__key] = make_delta(vj); // using the __key embedded in the object
-            o.push(v[j].__key);
+            if (vj) {
+              d[vj.__key] = make_delta(vj); // using the __key embedded in the object
+              o.push(v[j].__key);
+            }
           }
           d["@o"] = o;
         } else { // otherwise; record the size as we recurse
