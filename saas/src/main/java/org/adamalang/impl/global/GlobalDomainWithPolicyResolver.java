@@ -49,6 +49,9 @@ public class GlobalDomainWithPolicyResolver implements DomainWithPolicyResolver 
     for (String suffix : webConfig.globalDomains) {
       if (domain.endsWith("." + suffix)) {
         String space = domain.substring(0, domain.length() - suffix.length() - 1);
+        if ("wildcard".equals(space)) {
+          return null;
+        }
         return new Domain(domain, 0, space, "default-document", false, null, null, System.currentTimeMillis());
       }
     }
