@@ -172,6 +172,12 @@ channel delete_resource(JustId jid) {
   if ( (iterate _resources where name == path)[0] as found) {
     return {asset:found.resource, cache_ttl_ms: 10000};
   }
+  if (path.right(1) == "/") {
+    var new_path = path + "index.html";
+    if ( (iterate _resources where name == new_path)[0] as found) {
+      return {asset:found.resource, cache_ttl_ms: 10000};
+    }
+  }
   if ( (iterate _resources where name == path + "/index.html")[0] as found) {
     return {asset:found.resource, cache_ttl_ms: 10000};
   }
