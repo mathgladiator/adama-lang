@@ -29,6 +29,7 @@ import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
+import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
@@ -81,6 +82,15 @@ public class FirstPartyServices {
         return AmazonSES.build(metrics, config, webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-amazonses", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
+      try {
+        return SendGrid.build(metrics, config, webClientBase);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-sendgrid", ex);
         return Service.FAILURE;
       }
     });

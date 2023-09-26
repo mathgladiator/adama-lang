@@ -24,10 +24,12 @@ public class FirstPartyMetrics {
   public final RequestResponseMonitor amazon_ses_send;
   public final RequestResponseMonitor stripe_invoke;
   public final RequestResponseMonitor google_validate;
+  public final RequestResponseMonitor sendgrid_sendmail;
 
   public FirstPartyMetrics(MetricsFactory factory) {
     amazon_ses_send = factory.makeRequestResponseMonitor("fpm_amazon_ses_send");
     stripe_invoke = factory.makeRequestResponseMonitor("fpm_stripe_invoke");
     google_validate = factory.makeRequestResponseMonitor("fpm_google_validate");
+    sendgrid_sendmail = factory.makeRequestResponseMonitor("fpm_sendgrid_sendmail");
   }
 }

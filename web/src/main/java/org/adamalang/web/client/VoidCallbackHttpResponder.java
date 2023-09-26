@@ -36,7 +36,7 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void start(SimpleHttpResponseHeader header) {
-    if (header.status == 200 || header.status == 204) {
+    if (header.status == 200 || header.status == 202 || header.status == 204) {
       monitor.success();
       callback.success(null);
     } else {
