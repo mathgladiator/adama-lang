@@ -29,4 +29,9 @@ public class ClientRxhtmlResponse {
     this._original = response;
     this.rxhtml = Json.readString(response, "rxhtml");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("rxhtml", rxhtml);
+    return _next.toString();
+  }
 }

@@ -29,4 +29,9 @@ public class ClientProgressResponse {
     this._original = response;
     this.chunk_request_size = Json.readInteger(response, "chunk_request_size");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("chunk_request_size", chunk_request_size);
+    return _next.toString();
+  }
 }

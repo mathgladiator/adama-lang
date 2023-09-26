@@ -29,7 +29,6 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.security.PrivateKey;
 import java.util.HashSet;
 import java.util.TreeMap;
@@ -50,50 +49,99 @@ public class Adama extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("message _AdamaCreateDocument").append(" { string space; string key; maybe<long> entropy; dynamic arg; }\n");
-    sb.append("message _AdamaMessageSendDirect").append(" { string space; string key; string channel; dynamic message; }\n");
-    sb.append("message _SimpleResponse").append(" { }\n");
-    sb.append("message _SeqResponse").append(" { int seq; }\n");
+    sb.append("message _AdamaSpaceReflectReq { string space; string key; }\n");
+    sb.append("message _AdamaReflectionRes { dynamic reflection }\n");
+    sb.append("message _AdamaDomainMapReq { string domain; string space; maybe<string> certificate; }\n");
+    sb.append("message _AdamaSimpleRes {  }\n");
+    sb.append("message _AdamaDomainMapDocumentReq { string domain; string space; string key; maybe<bool> route; maybe<string> certificate; }\n");
+    sb.append("message _AdamaDocumentCreateReq { string space; string key; maybe<string> entropy; dynamic arg; }\n");
+    sb.append("message _AdamaDocumentDeleteReq { string space; string key; }\n");
+    sb.append("message _AdamaMessageDirectSendReq { string space; string key; string channel; dynamic message; }\n");
+    sb.append("message _AdamaSeqRes { int seq }\n");
+    sb.append("message _AdamaMessageDirectSendOnceReq { string space; string key; maybe<string> dedupe; string channel; dynamic message; }\n");
     sb.append("service adama {\n");
     sb.append("  class=\"adama\";\n");
-    sb.append("  method secured<_AdamaCreateDocument").append(", _SimpleResponse").append("> documentCreate;\n");
-    sb.append("  method secured<_AdamaMessageSendDirect").append(", _SeqResponse").append("> sendDirect;\n");
+    sb.append("  method secured<_AdamaSpaceReflectReq, _AdamaReflectionRes)> spaceReflect;\n");
+    sb.append("  method secured<_AdamaDomainMapReq, _AdamaSimpleRes)> domainMap;\n");
+    sb.append("  method secured<_AdamaDomainMapDocumentReq, _AdamaSimpleRes)> domainMapDocument;\n");
+    sb.append("  method secured<_AdamaDocumentCreateReq, _AdamaSimpleRes)> documentCreate;\n");
+    sb.append("  method secured<_AdamaDocumentDeleteReq, _AdamaSimpleRes)> documentDelete;\n");
+    sb.append("  method secured<_AdamaMessageDirectSendReq, _AdamaSeqRes)> messageDirectSend;\n");
+    sb.append("  method secured<_AdamaMessageDirectSendOnceReq, _AdamaSeqRes)> messageDirectSendOnce;\n");
     sb.append("}\n");
     return sb.toString();
   }
-
-  private String toIdentity(NtPrincipal principal, int keyId, PrivateKey key) {
-    TreeMap<String, Object> claims = new TreeMap<>();
-    claims.put("kid", keyId);
-    if ("adama".equals(principal)) {
-      claims.put("ps", "Adama");
-      claims.put("puid", Long.parseLong(principal.agent));
-    } else {
-      claims.put("ps", "Internal");
-      claims.put("puid", 0L);
-    }
-    claims.put("pa", principal.authority);
-    return Jwts.builder().setClaims(claims).setIssuer("internal").setSubject(principal.agent).signWith(key).compact();
-  }
-
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     String identity = signer.toIdentity(who);
-    ObjectNode node = Json.parseJsonObject(request);
+    ObjectNode requestNode = Json.parseJsonObject(request);
     switch (method) {
+      case "spaceReflect": {
+        ClientSpaceReflectRequest req = new ClientSpaceReflectRequest();
+        req.identity = identity;
+        req.space = Json.readString(requestNode, "space");
+        req.key = Json.readString(requestNode, "key");
+        client.spaceReflect(req, new Callback<>() {
+          @Override
+          public void success(ClientReflectionResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
+      case "domainMap": {
+        ClientDomainMapRequest req = new ClientDomainMapRequest();
+        req.identity = identity;
+        req.domain = Json.readString(requestNode, "domain");
+        req.space = Json.readString(requestNode, "space");
+        req.certificate = Json.readString(requestNode, "certificate");
+        client.domainMap(req, new Callback<>() {
+          @Override
+          public void success(ClientSimpleResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
+      case "domainMapDocument": {
+        ClientDomainMapDocumentRequest req = new ClientDomainMapDocumentRequest();
+        req.identity = identity;
+        req.domain = Json.readString(requestNode, "domain");
+        req.space = Json.readString(requestNode, "space");
+        req.key = Json.readString(requestNode, "key");
+        req.route = Json.readBool(requestNode, "route");
+        req.certificate = Json.readString(requestNode, "certificate");
+        client.domainMapDocument(req, new Callback<>() {
+          @Override
+          public void success(ClientSimpleResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
       case "documentCreate": {
         ClientDocumentCreateRequest req = new ClientDocumentCreateRequest();
         req.identity = identity;
-        req.space = Json.readString(node, "space");
-        req.key = Json.readString(node, "key");
-        if (node.has("entropy")) {
-          req.entropy = "" + Json.readLong(node, "entropy");
-        }
-        req.arg = Json.readObject(node, "arg");
+        req.space = Json.readString(requestNode, "space");
+        req.key = Json.readString(requestNode, "key");
+        req.entropy = Json.readString(requestNode, "entropy");
+        req.arg = Json.readObject(requestNode, "arg");
         client.documentCreate(req, new Callback<>() {
           @Override
           public void success(ClientSimpleResponse response) {
-            callback.success("{}");
+            callback.success(response.toInternalJson());
           }
           @Override
           public void failure(ErrorCodeException ex) {
@@ -101,26 +149,63 @@ public class Adama extends SimpleService {
           }
         });
         return;
-      }
-      case "sendDirect":
+      } 
+      case "documentDelete": {
+        ClientDocumentDeleteRequest req = new ClientDocumentDeleteRequest();
+        req.identity = identity;
+        req.space = Json.readString(requestNode, "space");
+        req.key = Json.readString(requestNode, "key");
+        client.documentDelete(req, new Callback<>() {
+          @Override
+          public void success(ClientSimpleResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
+      case "messageDirectSend": {
         ClientMessageDirectSendRequest req = new ClientMessageDirectSendRequest();
         req.identity = identity;
-        req.space = Json.readString(node, "space");
-        req.key = Json.readString(node, "key");
-        req.channel = Json.readString(node, "channel");
-        req.message = Json.readObject(node, "message");
+        req.space = Json.readString(requestNode, "space");
+        req.key = Json.readString(requestNode, "key");
+        req.channel = Json.readString(requestNode, "channel");
+        req.message = Json.readJsonNode(requestNode, "message");
         client.messageDirectSend(req, new Callback<>() {
           @Override
-          public void success(ClientSeqResponse value) {
-            callback.success("{\"seq\":" + value.seq +"}");
+          public void success(ClientSeqResponse response) {
+            callback.success(response.toInternalJson());
           }
-
           @Override
           public void failure(ErrorCodeException ex) {
             callback.failure(ex);
           }
         });
         return;
+      } 
+      case "messageDirectSendOnce": {
+        ClientMessageDirectSendOnceRequest req = new ClientMessageDirectSendOnceRequest();
+        req.identity = identity;
+        req.space = Json.readString(requestNode, "space");
+        req.key = Json.readString(requestNode, "key");
+        req.dedupe = Json.readString(requestNode, "dedupe");
+        req.channel = Json.readString(requestNode, "channel");
+        req.message = Json.readJsonNode(requestNode, "message");
+        client.messageDirectSendOnce(req, new Callback<>() {
+          @Override
+          public void success(ClientSeqResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
       default:
         callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
     }

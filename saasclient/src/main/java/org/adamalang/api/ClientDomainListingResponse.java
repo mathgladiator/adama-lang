@@ -35,4 +35,12 @@ public class ClientDomainListingResponse {
     this.key = Json.readString(response, "key");
     this.route = Json.readBool(response, "route");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("domain", domain);
+    _next.put("space", space);
+    _next.put("key", key);
+    _next.put("route", route);
+    return _next.toString();
+  }
 }

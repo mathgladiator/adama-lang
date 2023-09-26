@@ -31,4 +31,10 @@ public class ClientAutomaticDomainListingResponse {
     this.domain = Json.readString(response, "domain");
     this.timestamp = Json.readLong(response, "timestamp");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("domain", domain);
+    _next.put("timestamp", timestamp);
+    return _next.toString();
+  }
 }

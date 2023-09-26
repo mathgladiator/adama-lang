@@ -39,4 +39,14 @@ public class ClientFinderResultResponse {
     this.machine = Json.readString(response, "machine");
     this.deleted = Json.readBool(response, "deleted");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("id", id);
+    _next.put("locationType", locationType);
+    _next.put("archive", archive);
+    _next.put("region", region);
+    _next.put("machine", machine);
+    _next.put("deleted", deleted);
+    return _next.toString();
+  }
 }

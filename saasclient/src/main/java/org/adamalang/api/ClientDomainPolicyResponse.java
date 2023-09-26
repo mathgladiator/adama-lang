@@ -29,4 +29,9 @@ public class ClientDomainPolicyResponse {
     this._original = response;
     this.space = Json.readString(response, "space");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("space", space);
+    return _next.toString();
+  }
 }

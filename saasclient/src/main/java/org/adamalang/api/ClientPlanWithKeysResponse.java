@@ -31,4 +31,10 @@ public class ClientPlanWithKeysResponse {
     this.plan = Json.readObject(response, "plan");
     this.privateKeyBundle = Json.readObject(response, "private-key-bundle");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("plan", plan);
+    _next.set("privateKeyBundle", privateKeyBundle);
+    return _next.toString();
+  }
 }

@@ -29,4 +29,9 @@ public class ClientInitiationResponse {
     this._original = response;
     this.identity = Json.readString(response, "identity");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("identity", identity);
+    return _next.toString();
+  }
 }

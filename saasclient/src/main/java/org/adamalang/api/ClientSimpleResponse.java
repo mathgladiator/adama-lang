@@ -27,4 +27,8 @@ public class ClientSimpleResponse {
   public ClientSimpleResponse(ObjectNode response) {
     this._original = response;
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    return _next.toString();
+  }
 }

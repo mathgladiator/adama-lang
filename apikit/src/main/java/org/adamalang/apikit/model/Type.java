@@ -73,6 +73,24 @@ public enum Type {
     throw new RuntimeException("bug");
   }
 
+  public String adamaType() {
+    switch (this) {
+      case Boolean:
+        return "bool";
+      case String:
+        return "string";
+      case Long:
+        return "long";
+      case Integer:
+        return "int";
+      case JsonObject:
+        return "dynamic";
+      case JsonObjectOrArray:
+        return "dynamic";
+    }
+    throw new RuntimeException("bug");
+  }
+
   public String readerMethod() {
     switch (this) {
       case Boolean:
@@ -87,6 +105,20 @@ public enum Type {
         return "readObject";
       case JsonObjectOrArray:
         return "readJsonNode";
+    }
+    throw new RuntimeException("bug");
+  }
+
+  public String writeMethod() {
+    switch (this) {
+      case Boolean:
+      case String:
+      case Long:
+      case Integer:
+        return "put";
+      case JsonObject:
+      case JsonObjectOrArray:
+        return "set";
     }
     throw new RuntimeException("bug");
   }

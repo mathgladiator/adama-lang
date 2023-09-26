@@ -29,4 +29,9 @@ public class ClientDataResponse {
     this._original = response;
     this.delta = Json.readObject(response, "delta");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("delta", delta);
+    return _next.toString();
+  }
 }

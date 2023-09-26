@@ -37,4 +37,13 @@ public class ClientSpaceListingResponse {
     this.enabled = Json.readBool(response, "enabled");
     this.storageBytes = Json.readLong(response, "storage-bytes");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("space", space);
+    _next.put("role", role);
+    _next.put("created", created);
+    _next.put("enabled", enabled);
+    _next.put("storageBytes", storageBytes);
+    return _next.toString();
+  }
 }

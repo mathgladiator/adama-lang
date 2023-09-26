@@ -29,4 +29,9 @@ public class ClientHostInitResponse {
     this._original = response;
     this.keyId = Json.readInteger(response, "key-id");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("keyId", keyId);
+    return _next.toString();
+  }
 }

@@ -35,4 +35,12 @@ public class ClientKeyListingResponse {
     this.updated = Json.readString(response, "updated");
     this.seq = Json.readInteger(response, "seq");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("key", key);
+    _next.put("created", created);
+    _next.put("updated", updated);
+    _next.put("seq", seq);
+    return _next.toString();
+  }
 }

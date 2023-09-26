@@ -53,6 +53,7 @@ public class Tool {
     String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
     String packageName = DocumentHelper.attribute(api, "package");
     String sessionImport = DocumentHelper.attribute(api, "session-import");
+    String outputAdamaService = DocumentHelper.attribute(api, "output-service");
     String docsFile = api.getAttribute("docs");
     String clientFileJs = api.getAttribute("clientjs");
     HashMap<String, String> apiOutput = new HashMap<>();
@@ -77,6 +78,8 @@ public class Tool {
     }
     Map<String, String> requestsFiles = AssembleRequestTypes.make(packageName, sessionImport, methods);
     Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
+    String adamaService = AssembleServiceDefn.assembleAdamaService(methods);
+
 
     File outputPath = new File(root, outputPathStr);
     File clientOutputPath = new File(clientOutputPathStr);
@@ -97,6 +100,7 @@ public class Tool {
 
     // write out the nexus
     HashMap<File, String> diskWrites = new HashMap<>();
+    diskWrites.put(new File(outputAdamaService), adamaService);
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
       diskWrites.put(new File(outputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }

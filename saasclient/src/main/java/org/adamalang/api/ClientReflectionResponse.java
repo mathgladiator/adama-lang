@@ -29,4 +29,9 @@ public class ClientReflectionResponse {
     this._original = response;
     this.reflection = Json.readObject(response, "reflection");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("reflection", reflection);
+    return _next.toString();
+  }
 }

@@ -31,4 +31,10 @@ public class ClientKeysResponse {
     this.space = Json.readString(response, "space");
     this.key = Json.readString(response, "key");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("space", space);
+    _next.put("key", key);
+    return _next.toString();
+  }
 }

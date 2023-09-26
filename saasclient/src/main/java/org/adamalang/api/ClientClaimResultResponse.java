@@ -29,4 +29,9 @@ public class ClientClaimResultResponse {
     this._original = response;
     this.authority = Json.readString(response, "authority");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("authority", authority);
+    return _next.toString();
+  }
 }

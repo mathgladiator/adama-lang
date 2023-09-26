@@ -29,4 +29,9 @@ public class ClientAssetIdResponse {
     this._original = response;
     this.assetId = Json.readString(response, "asset-id");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("assetId", assetId);
+    return _next.toString();
+  }
 }

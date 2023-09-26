@@ -29,4 +29,9 @@ public class ClientHashedPasswordResponse {
     this._original = response;
     this.passwordHash = Json.readString(response, "password-hash");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("passwordHash", passwordHash);
+    return _next.toString();
+  }
 }

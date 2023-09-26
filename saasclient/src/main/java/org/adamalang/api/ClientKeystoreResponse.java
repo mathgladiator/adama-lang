@@ -29,4 +29,9 @@ public class ClientKeystoreResponse {
     this._original = response;
     this.keystore = Json.readObject(response, "keystore");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("keystore", keystore);
+    return _next.toString();
+  }
 }

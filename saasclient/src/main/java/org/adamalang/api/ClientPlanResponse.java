@@ -29,4 +29,9 @@ public class ClientPlanResponse {
     this._original = response;
     this.plan = Json.readObject(response, "plan");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("plan", plan);
+    return _next.toString();
+  }
 }

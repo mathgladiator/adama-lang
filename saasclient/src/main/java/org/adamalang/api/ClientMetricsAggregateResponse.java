@@ -31,4 +31,10 @@ public class ClientMetricsAggregateResponse {
     this.metrics = Json.readObject(response, "metrics");
     this.count = Json.readInteger(response, "count");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("metrics", metrics);
+    _next.put("count", count);
+    return _next.toString();
+  }
 }

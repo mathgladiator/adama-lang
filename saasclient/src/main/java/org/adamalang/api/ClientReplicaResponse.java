@@ -31,4 +31,10 @@ public class ClientReplicaResponse {
     this.reset = Json.readBool(response, "reset");
     this.change = Json.readObject(response, "change");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("reset", reset);
+    _next.set("change", change);
+    return _next.toString();
+  }
 }

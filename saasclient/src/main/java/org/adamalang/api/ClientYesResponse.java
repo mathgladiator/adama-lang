@@ -29,4 +29,9 @@ public class ClientYesResponse {
     this._original = response;
     this.yes = Json.readBool(response, "yes");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("yes", yes);
+    return _next.toString();
+  }
 }

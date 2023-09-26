@@ -31,4 +31,10 @@ public class ClientKeyPairResponse {
     this.keyId = Json.readInteger(response, "key-id");
     this.publicKey = Json.readString(response, "public-key");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("keyId", keyId);
+    _next.put("publicKey", publicKey);
+    return _next.toString();
+  }
 }

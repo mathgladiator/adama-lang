@@ -29,4 +29,9 @@ public class ClientSeqResponse {
     this._original = response;
     this.seq = Json.readInteger(response, "seq");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("seq", seq);
+    return _next.toString();
+  }
 }

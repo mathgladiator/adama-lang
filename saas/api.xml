@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
-<api output-path="./saas/src/main/java/org/adamalang/api" test-output-path="./saas/src/test/java/org/adamalang/api" package="org.adamalang.api" docs="./reference/src/reference/api.md" client-output-path="./saasclient/src/main/java/org/adamalang/api" clientjs="./clientjs/connection.js" session-import="org.adamalang.frontend.Session">
+<api output-path="./saas/src/main/java/org/adamalang/api"
+     test-output-path="./saas/src/test/java/org/adamalang/api"
+     package="org.adamalang.api"
+     docs="./reference/src/reference/api.md"
+     client-output-path="./saasclient/src/main/java/org/adamalang/api"
+     clientjs="./clientjs/connection.js"
+     session-import="org.adamalang.frontend.Session"
+     output-service="./services/src/main/java/org/adamalang/services/Adama.java">
     <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
             Identity is a token to authenticate a user.
@@ -957,7 +964,7 @@
         </documentation>
     </method>
 
-    <method name="space/reflect" responder="reflection" devbox="true" scope="global" policy="true" policy-failure-code="907343" policy-default="OwnerAndDevelopers">
+    <method name="space/reflect" responder="reflection" devbox="true" scope="global" policy="true" policy-failure-code="907343" policy-default="OwnerAndDevelopers" gen-service="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -975,7 +982,7 @@
         </documentation>
     </method>
 
-    <method name="domain/map" responder="simple" scope="global" policy="true" policy-failure-code="998539">
+    <method name="domain/map" responder="simple" scope="global" policy="true" policy-failure-code="998539" gen-service="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="space"/>
@@ -993,7 +1000,7 @@
         </documentation>
     </method>
 
-    <method name="domain/map-document" responder="simple" scope="global" policy="true" policy-failure-code="924877">
+    <method name="domain/map-document" responder="simple" scope="global" policy="true" policy-failure-code="924877" gen-service="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="space"/>
@@ -1083,7 +1090,7 @@
         </documentation>
     </method>
 
-    <method name="document/create" responder="simple" scope="region" policy-via-document="true">
+    <method name="document/create" responder="simple" scope="region" policy-via-document="true" gen-service="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1096,7 +1103,7 @@
         </documentation>
     </method>
 
-    <method name="document/delete" responder="simple" scope="region" policy-via-document="true">
+    <method name="document/delete" responder="simple" scope="region" policy-via-document="true" gen-service="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1115,7 +1122,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send" responder="seq" scope="region" policy-via-document="true">
+    <method name="message/direct-send" responder="seq" scope="region" policy-via-document="true" gen-service="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1126,7 +1133,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send-once" responder="seq" scope="region" policy-via-document="true">
+    <method name="message/direct-send-once" responder="seq" scope="region" policy-via-document="true" gen-service="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>

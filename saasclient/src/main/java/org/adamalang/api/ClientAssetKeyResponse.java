@@ -29,4 +29,9 @@ public class ClientAssetKeyResponse {
     this._original = response;
     this.assetKey = Json.readString(response, "asset-key");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("assetKey", assetKey);
+    return _next.toString();
+  }
 }

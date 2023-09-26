@@ -33,4 +33,11 @@ public class ClientAuthResultResponse {
     this.agent = Json.readString(response, "agent");
     this.authority = Json.readString(response, "authority");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("id", id);
+    _next.put("agent", agent);
+    _next.put("authority", authority);
+    return _next.toString();
+  }
 }

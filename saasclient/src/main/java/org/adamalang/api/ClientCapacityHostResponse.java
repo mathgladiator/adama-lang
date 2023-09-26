@@ -29,4 +29,9 @@ public class ClientCapacityHostResponse {
     this._original = response;
     this.machine = Json.readString(response, "machine");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("machine", machine);
+    return _next.toString();
+  }
 }

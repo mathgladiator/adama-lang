@@ -18,6 +18,7 @@
 package org.adamalang.apikit.codegen;
 
 import org.adamalang.apikit.model.*;
+import org.adamalang.common.Json;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -55,6 +56,13 @@ public class AssembleJavaClient {
       for (FieldDefinition fd : responder.fields) {
         responderFile.append("    this.").append(fd.camelName).append(" = Json.").append(fd.type.readerMethod()).append("(response, \"").append(fd.name).append("\");\n");
       }
+      responderFile.append("  }\n");
+      responderFile.append("  public String toInternalJson() {\n");
+      responderFile.append("    ObjectNode _next = Json.newJsonObject();\n");
+      for (FieldDefinition fd : responder.fields) {
+        responderFile.append("    _next.").append(fd.type.writeMethod()).append("(\"").append(fd.camelName).append("\", ").append(fd.camelName).append(");\n");
+      }
+      responderFile.append("    return _next.toString();\n");
       responderFile.append("  }\n");
       responderFile.append("}\n");
       files.put("Client"+responder.camelName+"Response.java", responderFile.toString());

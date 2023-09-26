@@ -31,4 +31,10 @@ public class ClientDeveloperResponse {
     this.email = Json.readString(response, "email");
     this.role = Json.readString(response, "role");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("email", email);
+    _next.put("role", role);
+    return _next.toString();
+  }
 }

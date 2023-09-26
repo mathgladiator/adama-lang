@@ -41,4 +41,15 @@ public class ClientDomainRawResponse {
     this.certificate = Json.readString(response, "certificate");
     this.timestamp = Json.readLong(response, "timestamp");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("domain", domain);
+    _next.put("owner", owner);
+    _next.put("space", space);
+    _next.put("key", key);
+    _next.put("route", route);
+    _next.put("certificate", certificate);
+    _next.put("timestamp", timestamp);
+    return _next.toString();
+  }
 }

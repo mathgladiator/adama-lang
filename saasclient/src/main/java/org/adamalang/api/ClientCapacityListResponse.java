@@ -35,4 +35,12 @@ public class ClientCapacityListResponse {
     this.machine = Json.readString(response, "machine");
     this.override = Json.readBool(response, "override");
   }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("space", space);
+    _next.put("region", region);
+    _next.put("machine", machine);
+    _next.put("override", override);
+    return _next.toString();
+  }
 }
