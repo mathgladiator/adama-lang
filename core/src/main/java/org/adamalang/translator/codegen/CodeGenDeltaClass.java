@@ -122,7 +122,6 @@ public class CodeGenDeltaClass {
   }
 
   public static void writeRecordDeltaClass(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final String className, final boolean forceManifestBecauseRoot) {
-
     final var fds = new ArrayList<FieldDefinition>();
     sb.append("private class Delta").append(className).append(" implements DeltaNode {").tabUp().writeNewline();
     final var bubbles = new ArrayList<FieldDefinition>();
@@ -148,7 +147,7 @@ public class CodeGenDeltaClass {
       bubbles.add(fd);
     }
     writeCommonConstructorAndCost(fds, bubbles, sb, environment, className);
-    sb.append("public void show(").append(className).append(" __item, PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
+    sb.append("public boolean show(").append(className).append(" __item, PrivateLazyDeltaWriter __writer) {").tabUp().writeNewline();
     if (forceManifestBecauseRoot) {
       sb.append("DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);").writeNewline();
       sb.append("__writer.setCacheObject(__policy_cache);").writeNewline();
@@ -166,7 +165,7 @@ public class CodeGenDeltaClass {
         sb.append("if (!__policy_cache.").append(policy).append(") {").tabUp().writeNewline();
       }
       sb.append("hide(__writer);").writeNewline();
-      sb.append("return;").tabDown().writeNewline();
+      sb.append("return false;").tabDown().writeNewline();
       sb.append("}").writeNewline();
     }
     sb.append("PrivateLazyDeltaWriter __obj = __writer.planObject();").writeNewline();
@@ -233,7 +232,8 @@ public class CodeGenDeltaClass {
     }
     sb.append("if (__obj.end()) {").tabUp().writeNewline();
     sb.append("__emitted = true;").tabDown().writeNewline();
-    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("return true;").tabDown().writeNewline();
     sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public void clear() {").tabUp().writeNewline();
@@ -266,7 +266,7 @@ public class CodeGenDeltaClass {
     } else if (sourceType instanceof TyNativeList || sourceType instanceof TyNativeArray) {
       final var elementType = ((DetailContainsAnEmbeddedType) sourceType).getEmbeddedType(environment);
       if (elementType instanceof TyReactiveRecord) {
-        writeShowDListRecords(sb, deltaObject, sourceData, elementType, targetObjectWriter, environment, tabDown);
+        writeShowDListRecords(sb, deltaObject, sourceData, (TyReactiveRecord) elementType, targetObjectWriter, environment, tabDown);
       } else {
         writeShowDListNonRecord(sb, deltaObject, sourceData, elementType, targetObjectWriter, environment, tabDown);
       }
@@ -290,6 +290,14 @@ public class CodeGenDeltaClass {
     }
   }
 
+  private static void writeShowRecord(final StringBuilderWithTabs sb, final String gateVar, final String deltaObject, final String sourceData, final TyType sourceType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+    sb.append("boolean ").append(gateVar).append(" = ").append(deltaObject).append(".show(").append(sourceData).append(", ").append(targetObjectWriter).append(");");
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
+
   private static void writeShowDListNonRecord(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
     final var elementDeltaType = ((DetailHasDeltaType) elementType).getDeltaType(environment);
     sb.append("{").tabUp().writeNewline();
@@ -304,6 +312,7 @@ public class CodeGenDeltaClass {
     sb.append("int ").append(indexVar).append(" = 0;").writeNewline();
     sb.append("for (").append(childElementType).append(" ").append(childElementVar).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
     sb.append(elementDeltaType).append(" ").append(childDeltaVar).append(" = ").append(dListCache).append(".getPrior(").append(indexVar).append(", () -> new ").append(elementDeltaType).append("());").writeNewline();
+
     writeShowData(sb, childDeltaVar, childElementVar, elementType, listWriterVar + ".planField(" + indexVar + ")", environment, false);
     sb.append(indexVar).append("++;").tabDown().writeNewline();
     sb.append("}").writeNewline();
@@ -316,7 +325,7 @@ public class CodeGenDeltaClass {
     sb.writeNewline();
   }
 
-  private static void writeShowDListRecords(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+  private static void writeShowDListRecords(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyReactiveRecord elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
     final var elementDeltaType = ((DetailHasDeltaType) elementType).getDeltaType(environment);
     sb.append("{").tabUp().writeNewline();
     final var listWriterVar = "__list" + environment.autoVariable();
@@ -325,13 +334,16 @@ public class CodeGenDeltaClass {
     final var childElementType = elementType.getJavaBoxType(environment);
     final var childElementVar = "__listElement" + environment.autoVariable();
     final var childDeltaVar = "__deltaElement" + environment.autoVariable();
+    final var gateVar = "__gate" + environment.autoVariable();
     sb.append("PrivateLazyDeltaWriter ").append(listWriterVar).append(" = ").append(targetObjectWriter).append(".planObject();").writeNewline();
     sb.append("DRecordList<").append(elementDeltaType).append("> ").append(dListCache).append(" = ").append(deltaObject).append(";").writeNewline();
     sb.append("DRecordList<").append(elementDeltaType).append(">.Walk ").append(dListWalker).append(" = ").append(dListCache).append(".begin();").writeNewline();
     sb.append("for (").append(childElementType).append(" ").append(childElementVar).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
     sb.append(elementDeltaType).append(" ").append(childDeltaVar).append(" = ").append(dListCache).append(".getPrior(").append(childElementVar).append(".__id(), () -> new ").append(elementDeltaType).append("());").writeNewline();
-    writeShowData(sb, childDeltaVar, childElementVar, elementType, listWriterVar + ".planField(" + childElementVar + ".__id())", environment, false);
+    writeShowRecord(sb, gateVar, childDeltaVar, childElementVar, elementType, listWriterVar + ".planField(" + childElementVar + ".__id())", environment, false);
+    sb.append("if (").append(gateVar).append(") {").tabUp().writeNewline();
     sb.append(dListWalker).append(".next(").append(childElementVar).append(".__id());").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
     sb.append(dListWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
     sb.append(listWriterVar).append(".end();").tabDown().writeNewline();

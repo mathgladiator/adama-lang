@@ -372,7 +372,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Array_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Array_1 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -380,6 +380,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -646,12 +647,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -1446,7 +1448,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Copy_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Copy_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -1454,6 +1456,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -1705,12 +1708,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -2498,7 +2502,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(IntoMaybeRecord_9 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(IntoMaybeRecord_9 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -2506,6 +2510,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -2778,7 +2783,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __sum += __dy.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -2787,6 +2792,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -3476,7 +3482,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Lossy_10 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Lossy_10 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -3484,6 +3490,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -3750,12 +3757,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -4476,7 +4484,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __sum += __dval.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MaybeBool_11 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(MaybeBool_11 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 1;");
@@ -4486,6 +4494,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -4741,7 +4750,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __sum += __dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -4749,6 +4758,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -4943,7 +4953,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __sum += __dz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxY __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxY __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -4951,6 +4961,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -5797,7 +5808,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __sum += __dmaaaap.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RecursiveMap_14 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RecursiveMap_14 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 1;");
@@ -5817,6 +5828,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -6111,7 +6123,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      __sum += __dproperties2.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxZ __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxZ __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 3;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -6141,6 +6153,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -6890,7 +6903,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RecursiveTable_15 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RecursiveTable_15 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -6898,6 +6911,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -7149,12 +7163,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxZ __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxZ __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -7374,12 +7389,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -8305,7 +8321,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SimpleAs_18 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(SimpleAs_18 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -8313,6 +8329,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -8579,12 +8596,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -9300,7 +9318,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Simple_19 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Simple_19 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -9308,6 +9326,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -9574,12 +9593,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -10248,7 +10268,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SkipID_20 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(SkipID_20 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -10256,6 +10276,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -10492,12 +10513,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -11164,7 +11186,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(UnfoldMaybe_21 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(UnfoldMaybe_21 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -11172,6 +11194,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -11438,12 +11461,13 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");

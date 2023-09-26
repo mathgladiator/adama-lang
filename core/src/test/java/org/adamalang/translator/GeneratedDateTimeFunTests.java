@@ -454,7 +454,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dcal.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(DateParsing_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(DateParsing_1 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 7;");
@@ -499,6 +499,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -872,7 +873,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dzzz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -880,6 +881,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -1453,7 +1455,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(DateTimeParsing_2 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(DateTimeParsing_2 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 1;");
@@ -1463,6 +1465,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -1830,7 +1833,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dzzz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -1838,6 +1841,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -2502,7 +2506,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __db2.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(FutureExpiry_4 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(FutureExpiry_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 5;");
@@ -2516,6 +2520,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -3230,7 +3235,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __ddeepnow_time.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Intern_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Intern_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 7;");
@@ -3252,6 +3257,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -3934,7 +3940,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dov.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(TimeParsing_6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(TimeParsing_6 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 4;");
@@ -3956,6 +3962,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -4326,7 +4333,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dzzz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -4334,6 +4341,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -4918,7 +4926,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dx_sec.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(TimeSpanParsing_7 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(TimeSpanParsing_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 2;");
@@ -4932,6 +4940,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
@@ -5300,7 +5309,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      __sum += __dzzz.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(RTxR __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -5308,6 +5317,7 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
     gold.append("\n      }");
+    gold.append("\n      return true;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void clear() {");
