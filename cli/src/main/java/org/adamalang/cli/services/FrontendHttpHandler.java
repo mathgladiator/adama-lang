@@ -118,7 +118,11 @@ public class FrontendHttpHandler implements HttpHandler {
       for (String suffix : webConfig.globalDomains) {
         if (host.endsWith("." + suffix)) {
           String space = host.substring(0, host.length() - suffix.length() - 1);
-          getSpace(space, uri, headers, parametersJson, callback);
+          if (uri.startsWith("/~d/")) {
+            get(new SpaceKeyRequest(space, "default-document", uri.substring(3)), headers, parametersJson, callback);
+          } else {
+            getSpace(space, uri, headers, parametersJson, callback);
+          }
           return;
         }
       }

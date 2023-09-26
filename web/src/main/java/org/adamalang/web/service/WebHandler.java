@@ -23,7 +23,6 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import io.netty.handler.codec.http.cookie.*;
@@ -81,14 +80,26 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final ExecutorService jarThread;
   private final DomainFinder domainFinder;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache, DomainFinder domainFinder) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache, DomainFinder incomingDomainFinder) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
     this.assets = assets;
     this.cache = cache;
     this.jarThread = Executors.newSingleThreadExecutor();
-    this.domainFinder = domainFinder;
+    this.domainFinder = new DomainFinder() {
+      @Override
+      public void find(String domain, Callback<Domain> callback) {
+        for (String suffix : webConfig.globalDomains) {
+          if (domain.endsWith("." + suffix)) {
+            String space = domain.substring(0, domain.length() - suffix.length() - 1);
+            callback.success(new Domain(domain, -0, space, "default-document", false, null, null, 0));
+            return;
+          }
+        }
+        incomingDomainFinder.find(domain, callback);
+      }
+    };
   }
 
   private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
@@ -271,8 +282,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   }
 
   private void handleAssetUpload(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
     try {
-      HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
       ArrayList<FileUpload> files = new ArrayList<>();
       String _identity = null;
       String space = null;
@@ -308,7 +319,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             }
             break;
           case FileUpload:
-            files.add((FileUpload) data);
+            files.add(((FileUpload) data));
             break;
           default:
             break;
@@ -332,39 +343,47 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             Key uploadKey = new Key(domainValue.space, domainValue.key);
             ctx.executor().execute(() -> {
               try {
-                finishAssetUpload(context, identity, uploadKey, channel, files, message_parts, ctx, req);
+                finishAssetUpload(context, identity, uploadKey, channel, files, message_parts, ctx, req, decoder);
               } catch (Exception ex) {
+                LOG.error("failed-upload-for-domain", ex);
                 sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
-              }
+                decoder.destroy();}
             });
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
+            LOG.error("failed-upload-ex:" + ex.code);
             sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
+            decoder.destroy();
           }
         });
       } else if (identity != null && space != null && key != null) {
         Key uploadKey = new Key(space, key);
-        finishAssetUpload(context, identity, uploadKey, channel, files, message_parts, ctx, req);
+        finishAssetUpload(context, identity, uploadKey, channel, files, message_parts, ctx, req, decoder);
       } else {
         sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_UPLOAD_INCOMPLETE_FIELDS, "text/html; charset=UTF-8", true);
+        decoder.destroy();
       }
     } catch (Exception ex) {
+      LOG.error("failed-upload", ex);
       sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
+      decoder.destroy();
     }
   }
 
-  private void finishAssetUpload(ConnectionContext context, String identity, Key uploadKey, String channel, ArrayList<FileUpload> files, HashMap<String, String> message_parts, final ChannelHandlerContext ctx, final FullHttpRequest req) throws IOException {
+  private void finishAssetUpload(ConnectionContext context, String identity, Key uploadKey, String channel, ArrayList<FileUpload> files, HashMap<String, String> message_parts, final ChannelHandlerContext ctx, final FullHttpRequest req, HttpPostRequestDecoder decoder) throws IOException {
     final MultiVoidCallbackLatch latch = new MultiVoidCallbackLatch(metrics.web_asset_upload.wrap(new Callback<Void>() {
       @Override
       public void success(Void value) {
         sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.OK, EMPTY_RESPONSE, "text/html; charset=UTF-8", true);
+        decoder.destroy();
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
         sendImmediate(metrics.webhandler_upload_asset_failure, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, ASSET_UPLOAD_FAILURE, "text/html; charset=UTF-8", true);
+        decoder.destroy();
       }
     }), files.size(), ErrorCodes.WEB_FAILED_ASSET_UPLOAD_ALL);
     for (FileUpload upload : files) {
