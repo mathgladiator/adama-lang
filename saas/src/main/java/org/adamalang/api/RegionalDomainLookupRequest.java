@@ -62,6 +62,7 @@ public class RegionalDomainLookupRequest {
 
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
+    _node.put("domain", domain);
     org.adamalang.contracts.DomainWithPolicyResolver.logInto(resolvedDomain, _node);
   }
 }

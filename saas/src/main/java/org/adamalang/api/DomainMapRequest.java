@@ -75,6 +75,7 @@ public class DomainMapRequest {
 
   public void logInto(ObjectNode _node) {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
+    _node.put("domain", domain);
     org.adamalang.contracts.DomainWithPolicyResolver.logInto(resolvedDomain, _node);
     _node.put("space", space);
     org.adamalang.contracts.SpacePolicyLocator.logInto(policy, _node);

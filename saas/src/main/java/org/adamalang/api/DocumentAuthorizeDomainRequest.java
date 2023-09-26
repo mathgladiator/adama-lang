@@ -59,6 +59,7 @@ public class DocumentAuthorizeDomainRequest {
   }
 
   public void logInto(ObjectNode _node) {
+    _node.put("domain", domain);
     org.adamalang.contracts.DomainWithPolicyResolver.logInto(resolvedDomain, _node);
   }
 }
