@@ -31,6 +31,7 @@ import org.adamalang.web.contracts.CertificateFinder;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CertificateBoot {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(CertificateBoot.class);
@@ -48,7 +49,7 @@ public class CertificateBoot {
     }
   }
 
-  public static CertificateFinder make(WebConfig webConfig, DomainFinder df, SimpleExecutor executor) {
+  public static CertificateFinder make(AtomicBoolean alive, WebConfig webConfig, DomainFinder df, SimpleExecutor executor) {
     SyncCacheLRU<String, MeasuredSslContext> realCache = new SyncCacheLRU<>(TimeSource.REAL_TIME, webConfig.minDomainsToHoldTo, webConfig.maxDomainsToHoldTo, webConfig.maxDomainsToHoldTo * 2, webConfig.maxDomainAge, (domain, context) -> {});
     AsyncSharedLRUCache<String, MeasuredSslContext> cache = new AsyncSharedLRUCache<>(executor, realCache, (domain, callback) -> {
       df.find(domain, new Callback<Domain>() {
@@ -75,6 +76,7 @@ public class CertificateBoot {
         }
       });
     });
+    cache.startSweeping(alive, webConfig.maxDomainAge / 4, webConfig.maxDomainAge / 2);
     return (rawDomain, callback) -> {
       String _domainToLookup = rawDomain;
       { // hyper fast optimistic path
