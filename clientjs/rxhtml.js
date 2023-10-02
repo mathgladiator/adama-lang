@@ -612,7 +612,11 @@ var RxHTML = (function () {
   // RUNTIME | <tag>
   self.E = function (tag, ns) {
     if (ns == undefined || ns == null) {
-      return document.createElement(tag);
+      var dom = document.createElement(tag);
+      if (tag == "select") {
+        dom.addEventListener('change', function() { dom.rxvalue = dom.value; });
+      }
+      return dom;
     } else {
       var result = document.createElementNS(ns, tag);
       result.setAttribute("xmlns", ns);
@@ -726,6 +730,13 @@ var RxHTML = (function () {
         }
       },
       "~": function (ord) {
+        var valueToSet = false;
+        // the values are filling up AFTEr the value was set,
+        // so detect the absence of a value along with the existence of a value
+        if (!parentDom.value && parentDom.rxvalue != "") {
+          valueToSet = parentDom.rxvalue;
+          // this value, we want to restore once
+        }
         nuke(parentDom);
         if (ord == null) {
           kill();
@@ -733,6 +744,9 @@ var RxHTML = (function () {
         }
         for (var k = 0; k < ord.length; k++) {
           parentDom.append(domByKey[ord[k]]);
+        }
+        if (valueToSet) {
+          parentDom.value = valueToSet;
         }
       }
     };
@@ -2649,6 +2663,13 @@ var RxHTML = (function () {
   // $.SA(d,a,v);"
   self.SA = function(dom, attr, value) {
     dom.setAttribute(attr, value);
+  };
+  // for selects
+  // d.value=$value;
+  // $.SV(d,$value);
+  self.SV = function(dom, value) {
+    dom.value = value;
+    dom.rxvalue = value;
   };
   // RUNTIME | <... href="" ...>
   self.HREF = function (dom, href) {

@@ -231,7 +231,12 @@ public class Attributes {
   }
 
   private void writeDomSetter(String var, String key, String expr) {
-    boolean hasValue = env.element.tagName().equalsIgnoreCase("textarea") || env.element.tagName().equalsIgnoreCase("input") || env.element.tagName().equalsIgnoreCase("select") || env.element.tagName().equalsIgnoreCase("option");
+    String tagName = env.element.tagName();
+    boolean isSelect = tagName.equalsIgnoreCase("select");
+    boolean hasValue = tagName.equalsIgnoreCase("textarea") ||
+                       tagName.equalsIgnoreCase("input") ||
+                       isSelect ||
+                       tagName.equalsIgnoreCase("option");
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(expr).append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
@@ -239,7 +244,11 @@ public class Attributes {
     } else if (key.equalsIgnoreCase("src")) {
       env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
-      env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
+      if (isSelect) {
+        env.writer.tab().append("$.SV(").append(var).append(",").append(expr).append(");").newline();
+      } else {
+        env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
+      }
     } else if (hasValue && isBooleanInputValue(key)) {
       env.writer.tab().append(var).append(".").append(key).append("=").append(wrapBoolValue(expr)).append(";").newline();
     } else {

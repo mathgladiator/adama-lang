@@ -64,7 +64,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=this['value'];");
+    gold.append("\n        $.SV(this.__dom,this['value']);");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
@@ -118,7 +118,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=this['value'];");
+    gold.append("\n        $.SV(this.__dom,this['value']);");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
