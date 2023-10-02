@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateHrefTests extends BaseRxHtmlTest {
+public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -34,19 +34,20 @@ public class TemplateHrefTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.E('a');");
-    gold.append("\n    $.HREF(d,a,\"/here-i-am\",false);");
-    gold.append("\n    d.append($.T(' To rock you '));");
-    gold.append("\n    b.append(d);");
-    gold.append("\n    var d=$.E('a');");
-    gold.append("\n    $.HREF(d,a,\"/here-i-am/123\",true);");
-    gold.append("\n    d.append($.T(' To rock you '));");
-    gold.append("\n    b.append(d);");
-    gold.append("\n    var d=$.E('img');");
-    gold.append("\n    $.ASRC(d,\"/image.png\");");
-    gold.append("\n    b.append(d);");
-    gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.ACLASS(d,\" someclass \");");
+    gold.append("\n    var d=$.E('form');");
+    gold.append("\n    $.aSD(d,a,'blah');");
+    gold.append("\n    var e=[];");
+    gold.append("\n    e.push($.bS(d,$.pV(a),'send_failed',false));");
+    gold.append("\n    $.onB(d,'success',a,e);");
+    gold.append("\n    var f=[];");
+    gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
+    gold.append("\n    $.onB(d,'failure',a,f);");
+    gold.append("\n    var g=$.E('div');");
+    gold.append("\n    var h=[];");
+    gold.append("\n    h.push($.bS(g,$.pV(a),'x',1));");
+    gold.append("\n    $.onB(g,'rise',a,h);");
+    gold.append("\n    $.MN(g,$.pD(a),'set');");
+    gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -58,19 +59,20 @@ public class TemplateHrefTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.E('a');");
-    gold.append("\n    $.HREF(d,a,\"/here-i-am\",false);");
-    gold.append("\n    d.append($.T(' To rock you '));");
-    gold.append("\n    b.append(d);");
-    gold.append("\n    var d=$.E('a');");
-    gold.append("\n    $.HREF(d,a,\"/here-i-am/123\",true);");
-    gold.append("\n    d.append($.T(' To rock you '));");
-    gold.append("\n    b.append(d);");
-    gold.append("\n    var d=$.E('img');");
-    gold.append("\n    $.ASRC(d,\"/image.png\");");
-    gold.append("\n    b.append(d);");
-    gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.ACLASS(d,\" someclass \");");
+    gold.append("\n    var d=$.E('form');");
+    gold.append("\n    $.aSD(d,a,'blah');");
+    gold.append("\n    var e=[];");
+    gold.append("\n    e.push($.bS(d,$.pV(a),'send_failed',false));");
+    gold.append("\n    $.onB(d,'success',a,e);");
+    gold.append("\n    var f=[];");
+    gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
+    gold.append("\n    $.onB(d,'failure',a,f);");
+    gold.append("\n    var g=$.E('div');");
+    gold.append("\n    var h=[];");
+    gold.append("\n    h.push($.bS(g,$.pV(a),'x',1));");
+    gold.append("\n    $.onB(g,'rise',a,h);");
+    gold.append("\n    $.MN(g,$.pD(a),'set');");
+    gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -88,14 +90,10 @@ public class TemplateHrefTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <a href=\"/here-i-am\">");
-    source.append("\n            To rock you");
-    source.append("\n        </a>");
-    source.append("\n        <a href=\"/here-i-am/123\" merge>");
-    source.append("\n            To rock you");
-    source.append("\n        </a>");
-    source.append("\n        <img src=\"/image.png\" />");
-    source.append("\n        <div class=\"someclass\"></div>");
+    source.append("\n        <form rx:action=\"send:blah\">");
+    source.append("\n            <div rx:monitor=\"data:set\" rx:rise=\"set:x=1\" rx:rise=\"submit\">");
+    source.append("\n            </div>");
+    source.append("\n        </form>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
@@ -104,7 +102,9 @@ public class TemplateHrefTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"x\" : \"int\"");
+    gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();
   }

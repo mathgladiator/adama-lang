@@ -753,6 +753,27 @@ var RxHTML = (function () {
     subscribe(state, name, sub);
   };
 
+  // RUNTIME: <tag ... rx:monitor="state-path" rx:rise="commands..." rx:fall="commands..."
+  self.MN = function (dom, state, name) {
+    var sub = function (value) {
+      var n = 0;
+      try {
+        n = typeof (value) == 'number' ? value : parseInt(value);
+      } catch (failedParsingN) {
+      }
+      if (this.at < n) {
+        var e = new Event("rise");
+        dom.dispatchEvent(e);
+      } else if (this.at > n) {
+        var e = new Event("fall");
+        dom.dispatchEvent(e);
+      }
+      this.at = n;
+    }.bind({at:-1});
+    subscribe(state, name, sub);
+  };
+
+  // RUNTIME: <tag ... rx:repeat=$>
   self.RP = function (parentDom, state, name, expandView, maker) {
     var it_state = self.pIE(state, "$" + name, expandView);
     var sub = function (value) {
@@ -1653,8 +1674,12 @@ var RxHTML = (function () {
   };
   self.init = function () {
     self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
-    window.onpopstate = function () {
-      self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
+    window.onpopstate = function (p) {
+      if (p.state.merge) {
+        self.mergeGoto(fixPath(window.location.pathname), self.__current);
+      } else {
+        self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
+      }
     };
   };
 
@@ -1681,6 +1706,7 @@ var RxHTML = (function () {
     if (foo != null) {
       window.scrollTo(0, 0);
       var state = { service: connection, data: null, view: fresh(where), current: "view" };
+      self.__current = state;
       state.view.init = init;
       self.gates = [];
       self.resume_uri = path;
@@ -1688,7 +1714,7 @@ var RxHTML = (function () {
       state.view.tree.subscribe(state.view.delta);
       state.view.tree.update(init);
       if (push) {
-        window.history.pushState({}, "", fixHref(path));
+        window.history.pushState({merge:false}, "", fixHref(path));
       }
     } else {
       if (path != "/404") {
@@ -2671,14 +2697,27 @@ var RxHTML = (function () {
     dom.value = value;
     dom.rxvalue = value;
   };
+  self.mergeGoto = function(href, state) {
+    var parts = (href.startsWith("/") ? href.substring(1) : href).split("/");
+    var mergeInit = {};
+    if (route(parts, 0, router, mergeInit)) {
+      state.view.tree.update(mergeInit);
+    }
+  };
   // RUNTIME | <... href="" ...>
-  self.HREF = function (dom, href) {
+  self.HREF = function (dom, state, href, merge) {
     dom.setAttribute("href", fixHref(href));
     dom.onclick = function (evt) {
       var parts = (href.startsWith("/") ? href.substring(1) : href).split("/");
-      if (route(parts, 0, router, {})) {
+      var mergeInit = {};
+      if (route(parts, 0, router, mergeInit)) {
         evt.preventDefault();
-        self.goto(href, true);
+        if (merge) {
+          state.view.tree.update(mergeInit);
+          window.history.pushState({merge:true}, "", fixHref(href));
+        } else {
+          self.goto(href, true);
+        }
         return false;
       }
       return true;

@@ -26,10 +26,7 @@ import org.adamalang.rxhtml.atl.tree.Tree;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class Attributes {
@@ -91,6 +88,12 @@ public class Attributes {
 
   public void _ifnot() {
     commonBetweenIfAndIfNot("rx:ifnot");
+  }
+
+  public void _monitor() {
+    StatePath path = StatePath.resolve(env.element.attr("rx:monitor"), env.stateVar);
+    env.writer.tab().append("$.MN(").append(eVar).append(",").append(path.command).append(",'").append(path.name).append("');").newline();
+    env.element.removeAttr("rx:monitor");
   }
 
   public void _repeat() {
@@ -168,6 +171,13 @@ public class Attributes {
   }
 
   public void _base() {
+    TreeSet<String> features = new TreeSet<>();
+    if (env.element.tagName().equalsIgnoreCase("A")) {
+      if (env.element.hasAttr("merge")) {
+        features.add("merge");
+        env.element.removeAttr("merge");
+      }
+    }
     for (Attribute attr : env.element.attributes().asList()) {
       if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:")) {
         continue;
@@ -186,7 +196,7 @@ public class Attributes {
               env.writer.tab().append(oVar).append(".__x=").append(env.autoVar).append(";").newline();
             }
             env.writer.tab().append("var ").append(computeFoo).append("=(function() {").tabUp().newline();
-            writeDomSetter("this.__dom", attr.getKey(), tree.js(env.attributeContext(attr.getKey()), "this"));
+            writeDomSetter(env.stateVar,"this.__dom", attr.getKey(), tree.js(env.attributeContext(attr.getKey()), "this"), features);
             env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
             for (Map.Entry<String, String> ve : vars.entrySet()) {
               StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
@@ -197,13 +207,13 @@ public class Attributes {
             env.writer.tab().append(computeFoo).append("();").newline();
             env.writer.tabDown().tab().append("}").newline();
           } else {
-            writeDomSetter(eVar, attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"));
+            writeDomSetter(env.stateVar, eVar, attr.getKey(), tree.js(env.contextOf(attr.getKey()), "this"), features);
           }
         } catch (ParseException pe) {
           env.feedback.warn(env.element, "has parser problems, attr=" + attr.getKey() + "; problem=" + pe.getMessage());
         }
       } else {
-        writeDomSetter(eVar, attr.getKey(), "true");
+        writeDomSetter(env.stateVar, eVar, attr.getKey(), "true", features);
       }
     }
   }
@@ -230,7 +240,7 @@ public class Attributes {
     return "$.B(" + expr + ")";
   }
 
-  private void writeDomSetter(String var, String key, String expr) {
+  private void writeDomSetter(String stateVar, String var, String key, String expr, TreeSet<String> features) {
     String tagName = env.element.tagName();
     boolean isSelect = tagName.equalsIgnoreCase("select");
     boolean hasValue = tagName.equalsIgnoreCase("textarea") ||
@@ -238,7 +248,7 @@ public class Attributes {
                        isSelect ||
                        tagName.equalsIgnoreCase("option");
     if (key.equalsIgnoreCase("href")) {
-      env.writer.tab().append("$.HREF(").append(var).append(",").append(expr).append(");").newline();
+      env.writer.tab().append("$.HREF(").append(var).append(",").append(stateVar).append(",").append(expr).append(",").append(features.contains("merge") ? "true" : "false").append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
       env.writer.tab().append("$.ACLASS(").append(var).append(",").append(expr).append(");").newline();
     } else if (key.equalsIgnoreCase("src")) {
