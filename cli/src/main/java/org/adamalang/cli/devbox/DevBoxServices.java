@@ -19,6 +19,7 @@ package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -26,13 +27,18 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.remote.SimpleService;
+import org.adamalang.services.Adama;
 import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.FirstPartyServices;
+import org.adamalang.services.ServiceConfig;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.security.GoogleValidator;
+import org.adamalang.services.security.IdentitySigner;
+import org.adamalang.services.sms.Twilio;
+import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
 
 import java.util.HashSet;
@@ -62,20 +68,69 @@ public class DevBoxServices {
     }
   }
 
+  public static class DevBoxSendGrid extends SimpleService {
+    private final String space;
+    private final Consumer<String> logger;
+
+    public DevBoxSendGrid(String space, Consumer<String> logger) {
+      super("sendgrid", new NtPrincipal("sendgrid", "service"), true);
+      this.space = space;
+      this.logger = logger;
+    }
+
+    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
+      return AmazonSES.definition(uniqueId, params, names, error);
+    }
+
+    @Override
+    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+      logger.accept("devservices|service[SendGrid/ " + space+ "]::" + method + "(" + request + ")");
+      callback.success("{}");
+    }
+  }
+
+
+
   public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
-    // TODO: remove this line and just socially enforce the bindings
-    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
     logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
+    if (servicesDefn != null && servicesDefn.has("adama")) {
+      // TODO: define how to do the Adama service (it could be a loop back?)
+      ServiceRegistry.add("adama", Adama.class, (space, configRaw, keys) -> Service.FAILURE);
+    } else {
+      ServiceRegistry.add("adama", Adama.class, (space, configRaw, keys) -> Service.FAILURE);
+    }
+    if (servicesDefn != null && servicesDefn.has("twilio")) {
+      // TODO: read object and build the twilio
+      ServiceRegistry.add("twilio", Twilio.class, (space, configRaw, keys) -> Service.FAILURE);
+    } else {
+      ServiceRegistry.add("twilio", Twilio.class, (space, configRaw, keys) -> Service.FAILURE);
+    }
+    if (servicesDefn != null && servicesDefn.has("discord")) {
+      // TODO: read stuff
+      ServiceRegistry.add("discord", Discord.class, (space, configRaw, keys) -> Service.FAILURE);
+    } else {
+      ServiceRegistry.add("discord", Discord.class, (space, configRaw, keys) -> Service.FAILURE);
+    }
     if (servicesDefn != null && servicesDefn.has("stripe")) {
       String apiKeyStripe = servicesDefn.get("stripe").textValue();
       ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> new Stripe(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKeyStripe));
+    } else {
+      ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> Service.FAILURE);
     }
     if (servicesDefn != null && servicesDefn.has("sendgrid")) {
       String apiKeySendGrid = servicesDefn.get("sendgrid").textValue();
       ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new SendGrid(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKeySendGrid));
+    } else {
+      ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new DevBoxSendGrid(space, logger));
+    }
+    if (servicesDefn != null && servicesDefn.has("identitysigner")) {
+      // TODO: have an option  to pull the parameters to find out which private key should be mapped as could have multiple signers
+      ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw, keys) -> Service.FAILURE);
+    } else {
+      ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw, keys) -> Service.FAILURE);
     }
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, webClientBase));
   }

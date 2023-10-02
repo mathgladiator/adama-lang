@@ -43,6 +43,7 @@ import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** These are the first party services; please keep in sync with org.adamalang.cli.devbox.DevBoxServices */
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
