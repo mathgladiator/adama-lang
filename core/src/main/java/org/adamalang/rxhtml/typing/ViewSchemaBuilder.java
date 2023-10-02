@@ -62,6 +62,9 @@ public class ViewSchemaBuilder {
   }
 
   public void buildSchema(Elements children, ViewScope schema) {
+    if (children == null) {
+      return;
+    }
     for (Element child : children) {
       if ("fragment".equalsIgnoreCase(child.tagName())) {
         buildSchema(fragments.peek(), schema);
