@@ -23,12 +23,14 @@ import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
+import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.web.client.WebClientBase;
@@ -68,8 +70,12 @@ public class DevBoxServices {
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
     if (servicesDefn != null && servicesDefn.has("stripe")) {
-      String apiKey = servicesDefn.get("stripe").textValue();
-      ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> new Stripe(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKey));
+      String apiKeyStripe = servicesDefn.get("stripe").textValue();
+      ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> new Stripe(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKeyStripe));
+    }
+    if (servicesDefn != null && servicesDefn.has("sendgrid")) {
+      String apiKeySendGrid = servicesDefn.get("sendgrid").textValue();
+      ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new SendGrid(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKeySendGrid));
     }
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, webClientBase));
   }
