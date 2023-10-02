@@ -25,6 +25,8 @@ import org.adamalang.runtime.reactives.RxInt32;
 import org.adamalang.runtime.reactives.RxRecordBase;
 import org.adamalang.runtime.reactives.RxString;
 import org.adamalang.runtime.reactives.RxTable;
+import org.adamalang.runtime.reactives.tables.IndexInvalidate;
+import org.adamalang.runtime.reactives.tables.TablePubSub;
 
 public class MockRecord extends RxRecordBase<MockRecord> {
   public final RxString data;
@@ -175,6 +177,11 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   @Override
   public void __setId(final int __id, final boolean __useForce) {
     id = __id;
+  }
+
+  @Override
+  public void __pumpIndexEvents(TablePubSub pubsub) {
+    index.setWatcher(value -> pubsub.index(id, "index", value));
   }
 
   @Override

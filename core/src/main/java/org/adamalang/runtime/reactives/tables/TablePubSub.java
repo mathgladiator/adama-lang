@@ -15,8 +15,35 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives.tables;
 
-public class Platform {
-  public static final String VERSION = "20231002114912";
+public class TablePubSub implements TableSubscription {
+  public void subscribe(TableSubscription ts) {
+
+  }
+
+  @Override
+  public boolean alive() {
+    return true;
+  }
+
+  @Override
+  public void add(int primaryKey) {
+    // a primary key was introduced
+  }
+
+  @Override
+  public void change(int primaryKey) {
+    // an object by a primary key was changed
+  }
+
+  @Override
+  public void remove(int primaryKey) {
+    // an object was removed
+  }
+
+  @Override
+  public void index(int primaryKey, String field, int value) {
+    // a field within an element with a primary key was changed
+  }
 }

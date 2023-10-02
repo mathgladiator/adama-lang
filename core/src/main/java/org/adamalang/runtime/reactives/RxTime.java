@@ -18,14 +18,13 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
-import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtTime;
 
 /** a reactive time within a day at the precision of a minute */
-public class RxTime extends RxBase implements CanGetAndSet<NtTime>, Comparable<RxTime>, Indexable {
+public class RxTime extends RxIndexableBase implements CanGetAndSet<NtTime>, Comparable<RxTime> {
   private NtTime backup;
   private NtTime value;
 
@@ -83,7 +82,9 @@ public class RxTime extends RxBase implements CanGetAndSet<NtTime>, Comparable<R
 
   @Override
   public void set(final NtTime value) {
+    trigger();
     this.value = value;
+    trigger();
     __raiseDirty();
   }
 

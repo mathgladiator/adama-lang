@@ -18,14 +18,13 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
-import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDate;
 
 /** A single date in the typical gregorian calendar */
-public class RxDate extends RxBase implements Comparable<RxDate>, CanGetAndSet<NtDate>, Indexable {
+public class RxDate extends RxIndexableBase implements Comparable<RxDate>, CanGetAndSet<NtDate> {
   private NtDate backup;
   private NtDate value;
 
@@ -83,7 +82,9 @@ public class RxDate extends RxBase implements Comparable<RxDate>, CanGetAndSet<N
 
   @Override
   public void set(final NtDate value) {
+    trigger();
     this.value = value;
+    trigger();
     __raiseDirty();
   }
 

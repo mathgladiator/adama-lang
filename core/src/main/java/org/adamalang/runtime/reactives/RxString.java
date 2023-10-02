@@ -18,13 +18,12 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
-import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive string */
-public class RxString extends RxBase implements Comparable<RxString>, CanGetAndSet<String>, Indexable {
+public class RxString extends RxIndexableBase implements Comparable<RxString>, CanGetAndSet<String> {
   protected String backup;
   protected String value;
 
@@ -87,7 +86,9 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
 
   @Override
   public void set(final String value) {
+    trigger();
     this.value = value;
+    trigger();
     __raiseDirty();
   }
 
@@ -102,7 +103,9 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
   }
 
   public String opAddTo(final Object incoming) {
+    trigger();
     value += incoming.toString();
+    trigger();
     __raiseDirty();
     return value;
   }

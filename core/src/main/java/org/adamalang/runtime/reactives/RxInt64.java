@@ -18,13 +18,12 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
-import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive 64-bit integer (long) */
-public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet<Long>, Indexable {
+public class RxInt64 extends RxIndexableBase implements Comparable<RxInt64>, CanGetAndSet<Long> {
   private long backup;
   private long value;
 
@@ -76,26 +75,34 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
   }
 
   public long bumpDownPost() {
+    trigger();
     final var result = value--;
+    trigger();
     __raiseDirty();
     return result;
   }
 
   public long bumpDownPre() {
+    trigger();
     final var result = --value;
+    trigger();
     __raiseDirty();
     return result;
   }
 
   public long bumpUpPost() {
+    trigger();
     final var result = value++;
+    trigger();
     __raiseDirty();
     return result;
   }
 
   // these make ZERO sense
   public long bumpUpPre() {
+    trigger();
     final var result = ++value;
+    trigger();
     __raiseDirty();
     return result;
   }
@@ -113,7 +120,9 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
   @Override
   public void set(final Long value) {
     if (this.value != value) {
+      trigger();
       this.value = value;
+      trigger();
       __raiseDirty();
     }
   }
@@ -124,20 +133,28 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
   }
 
   public long opAddTo(final long incoming) {
-    value += incoming;
-    __raiseDirty();
+    if (incoming != 0) {
+      trigger();
+      value += incoming;
+      trigger();
+      __raiseDirty();
+    }
     return value;
   }
 
   public long opMultBy(final long x) {
-    value *= x;
-    __raiseDirty();
+    if (x != 1) {
+      value *= x;
+      __raiseDirty();
+    }
     return value;
   }
 
   public void set(final int value) {
     if (this.value != value) {
+      trigger();
       this.value = value;
+      trigger();
       __raiseDirty();
     }
   }

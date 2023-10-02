@@ -18,14 +18,13 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
-import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
 
 /** a reactive client */
-public class RxPrincipal extends RxBase implements Comparable<RxPrincipal>, CanGetAndSet<NtPrincipal>, Indexable {
+public class RxPrincipal extends RxIndexableBase implements Comparable<RxPrincipal>, CanGetAndSet<NtPrincipal> {
   private NtPrincipal backup;
   private NtPrincipal value;
 
@@ -89,7 +88,9 @@ public class RxPrincipal extends RxBase implements Comparable<RxPrincipal>, CanG
   @Override
   public void set(final NtPrincipal value) {
     if (!this.value.equals(value)) {
+      trigger();
       this.value = value;
+      trigger();
       __raiseDirty();
     }
   }

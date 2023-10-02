@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.reactives.tables.IndexInvalidate;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenDynCompare;
 import org.adamalang.translator.codegen.CodeGenIndexing;
@@ -122,6 +123,25 @@ public class TyReactiveRecord extends TyType implements //
     }
     sb.append("return this;").tabDown().writeNewline();
     sb.append("}").writeNewline();
+
+
+    sb.append("@Override").writeNewline();
+    sb.append("public void __pumpIndexEvents(TablePubSub __pubsub) {");
+    int countdown = storage.indices.size();
+    if (countdown > 0) {
+      sb.tabUp().writeNewline();
+    }
+    for (IndexDefinition index : storage.indices) {
+      countdown--;
+      sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(id.get(), \"").append(index.nameToken.text).append("\", __value));");
+      if (countdown == 0) {
+        sb.tabDown();
+      }
+      sb.writeNewline();
+    }
+    sb.append("}").writeNewline();
+
+
     sb.append("@Override").writeNewline();
     sb.append("public String __name() {").tabUp().writeNewline();
     sb.append("return \"").append(name).append("\";").tabDown().writeNewline();

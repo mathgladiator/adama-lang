@@ -21,24 +21,40 @@ import org.adamalang.runtime.contracts.MultiIndexable;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.reactives.tables.TablePubSub;
 
 /** the base object for generated record types */
 public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, MultiIndexable, RxParent, RxChild, RxKillable {
   protected boolean __isDying;
   private boolean __alive;
+  private TablePubSub pubsub;
 
   public RxRecordBase(final RxParent __owner) {
     super(__owner);
     this.__alive = true;
     this.__isDying = false;
+    if (__owner instanceof RxTable) {
+      this.pubsub = ((RxTable<?>) __owner).pubsub;
+    } else {
+      this.pubsub = null;
+    }
   }
 
   public abstract Ty __link();
 
   public abstract void __deindex();
 
+  private void __raiseDying() {
+    if (!__isDying) {
+      __isDying = true;
+      if (pubsub != null) {
+        pubsub.remove(__id());
+      }
+    }
+  }
+
   public void __delete() {
-    __isDying = true;
+    __raiseDying();
     __raiseDirty();
   }
 
@@ -58,7 +74,7 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
 
   @Override
   public void __kill() {
-    __isDying = true;
+    __raiseDying();
     __alive = false;
     __killFields();
   }
@@ -86,6 +102,8 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   public abstract void __reindex();
 
   public abstract void __setId(int __id, boolean __useForce);
+
+  public abstract void __pumpIndexEvents(TablePubSub pubsub);
 
   @Override
   public int compareTo(final Ty o) {

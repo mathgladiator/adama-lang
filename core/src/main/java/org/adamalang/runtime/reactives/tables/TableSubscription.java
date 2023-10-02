@@ -15,8 +15,16 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives.tables;
 
-public class Platform {
-  public static final String VERSION = "20231002114912";
+public interface TableSubscription {
+  public boolean alive();
+
+  public void add(int primaryKey);
+
+  public void change(int primaryKey);
+
+  public void index(int primaryKey, String field, int value);
+
+  public void remove(int primaryKey);
 }

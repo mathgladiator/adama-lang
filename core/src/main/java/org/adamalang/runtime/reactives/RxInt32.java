@@ -22,9 +22,10 @@ import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.reactives.tables.IndexInvalidate;
 
 /** a reactive 32-bit integer (int) */
-public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet<Integer>, Indexable {
+public class RxInt32 extends RxIndexableBase implements Comparable<RxInt32>, CanGetAndSet<Integer> {
   protected int backup;
   protected int value;
 
@@ -118,7 +119,9 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
   @Override
   public void set(final Integer value) {
     if (this.value != value) {
+      trigger();
       this.value = value;
+      trigger();
       __raiseDirty();
     }
   }
@@ -129,14 +132,22 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
   }
 
   public int opAddTo(final int incoming) {
-    value += incoming;
-    __raiseDirty();
+    if (incoming != 0) {
+      trigger();
+      value += incoming;
+      trigger();
+      __raiseDirty();
+    }
     return value;
   }
 
   public int opMultBy(final int x) {
-    value *= x;
-    __raiseDirty();
+    if (x != 1) {
+      trigger();
+      value *= x;
+      trigger();
+      __raiseDirty();
+    }
     return value;
   }
 }

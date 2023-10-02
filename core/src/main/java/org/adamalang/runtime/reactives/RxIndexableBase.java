@@ -15,8 +15,27 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives;
 
-public class Platform {
-  public static final String VERSION = "20231002114912";
+import org.adamalang.runtime.contracts.Indexable;
+import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.reactives.tables.IndexInvalidate;
+
+public abstract class RxIndexableBase extends RxBase implements Indexable {
+  protected IndexInvalidate watcher;
+
+  protected RxIndexableBase(RxParent __parent) {
+    super(__parent);
+  }
+
+  @Override
+  public void setWatcher(IndexInvalidate watcher) {
+    this.watcher = watcher;
+  }
+
+  protected void trigger() {
+    if (this.watcher != null) {
+      this.watcher.invalidate(getIndexValue());
+    }
+  }
 }

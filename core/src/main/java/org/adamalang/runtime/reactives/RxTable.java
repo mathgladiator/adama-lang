@@ -26,6 +26,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
+import org.adamalang.runtime.reactives.tables.TablePubSub;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.*;
@@ -41,6 +42,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private final ReactiveIndex<Ty>[] indices;
   private final LinkedHashMap<Integer, Ty> itemsByKey;
   private final TreeSet<Ty> unknowns;
+  public final TablePubSub pubsub;
 
   public void debug(JsonStreamWriter writer) {
     writer.beginObject();
@@ -78,6 +80,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     // check if we have rows; make sure we link into the JSON tree
     this.itemsByKey = new LinkedHashMap<>();
     this.createdObjects = new LinkedHashMap<>();
+    this.pubsub = new TablePubSub();
   }
 
   @Override
@@ -253,7 +256,10 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public Ty make(int key) {
     final var result = maker.apply(this);
     result.__setId(key, false);
-    result.__subscribe(this);
+    result.__subscribe(() -> {
+      pubsub.change(key);
+      return RxTable.this.__raiseInvalid();
+    });
     result.__raiseDirty();
     if (unknowns != null) {
       unknowns.add(result);
@@ -261,6 +267,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.createdObjects.put(key, result);
     this.itemsByKey.put(key, result);
     __raiseDirty();
+    pubsub.add(key);
     return result;
   }
 

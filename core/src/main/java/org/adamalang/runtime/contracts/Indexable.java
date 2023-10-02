@@ -17,8 +17,13 @@
 */
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.runtime.reactives.tables.IndexInvalidate;
+
 /** indicates a common way to extract the index value from a data type */
 public interface Indexable {
   /** get the value to index the item on */
   int getIndexValue();
+
+  /** set a watcher for when this value changes */
+  public void setWatcher(IndexInvalidate watcher);
 }
