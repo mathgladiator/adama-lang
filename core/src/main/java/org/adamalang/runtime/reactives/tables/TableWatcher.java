@@ -15,8 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives.tables;
 
-public class Platform {
-  public static final String VERSION = "20231003121217";
+import org.adamalang.runtime.reactives.RxTable;
+
+public interface TableWatcher extends TableSubscription {
+  public void entireTable(RxTable<?> table);
+
+  public void index(RxTable<?> table, String field, int value);
+
+  public void primaryKey(RxTable<?> table, int id);
 }

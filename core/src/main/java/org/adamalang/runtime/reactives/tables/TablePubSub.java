@@ -17,33 +17,66 @@
 */
 package org.adamalang.runtime.reactives.tables;
 
-public class TablePubSub implements TableSubscription {
-  public void subscribe(TableSubscription ts) {
+import org.adamalang.runtime.contracts.RxParent;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class TablePubSub implements TableSubscription {
+  private final RxParent owner;
+  private final ArrayList<TableSubscription> _subscriptions;
+
+  public TablePubSub(RxParent owner) {
+    this.owner = owner;
+    this._subscriptions = new ArrayList<>();
+  }
+
+  public void subscribe(TableSubscription ts) {
+    _subscriptions.add(ts);
   }
 
   @Override
   public boolean alive() {
+    if (owner != null) {
+      return owner.__isAlive();
+    }
     return true;
+  }
+
+  public void gc() {
+    Iterator<TableSubscription> it = _subscriptions.iterator();
+    while (it.hasNext()) {
+      if (!it.next().alive()) {
+        it.remove();
+      }
+    }
   }
 
   @Override
   public void add(int primaryKey) {
-    // a primary key was introduced
+    for (TableSubscription ts : _subscriptions) {
+      ts.add(primaryKey);
+    }
   }
 
   @Override
   public void change(int primaryKey) {
-    // an object by a primary key was changed
+    for (TableSubscription ts : _subscriptions) {
+      ts.change(primaryKey);
+    }
   }
 
   @Override
   public void remove(int primaryKey) {
-    // an object was removed
+    for (TableSubscription ts : _subscriptions) {
+      ts.remove(primaryKey);
+    }
   }
 
   @Override
   public void index(int primaryKey, String field, int value) {
-    // a field within an element with a primary key was changed
+    for (TableSubscription ts : _subscriptions) {
+      ts.index(primaryKey, field, value);
+    }
   }
 }

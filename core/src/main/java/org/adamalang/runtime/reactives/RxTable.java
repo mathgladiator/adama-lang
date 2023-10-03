@@ -26,7 +26,9 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
+import org.adamalang.runtime.reactives.tables.TableMonitor;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
+import org.adamalang.runtime.reactives.tables.TableSubscription;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.*;
@@ -80,7 +82,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     // check if we have rows; make sure we link into the JSON tree
     this.itemsByKey = new LinkedHashMap<>();
     this.createdObjects = new LinkedHashMap<>();
-    this.pubsub = new TablePubSub();
+    this.pubsub = new TablePubSub(owner);
   }
 
   @Override
@@ -101,6 +103,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
+      pubsub.gc();
       forwardDelta.writeObjectFieldIntro(name);
       forwardDelta.beginObject();
       reverseDelta.writeObjectFieldIntro(name);
@@ -341,4 +344,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     return new SelectorRxObjectList<>(this);
   }
 
+  public void __subscribe(final RxChild link) {
+    if (link instanceof TableMonitor) {
+      pubsub.subscribe(((TableMonitor) link).link(this));
+    } else {
+      super.__subscribe(link);
+    }
+  }
 }
