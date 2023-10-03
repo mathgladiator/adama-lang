@@ -1,8 +1,9 @@
 <forest>
     <page uri="/">
         <form rx:action="send:blah">
-            <div rx:monitor="data:set" rx:rise="set:x=1" rx:rise="submit">
+            <div rx:monitor="set" rx:fall="set:x=0" rx:rise="submit">
             </div>
+            <monitor path="set-e" rx:fall="set:x=0" rx:rise="submit"></monitor>
         </form>
     </page>
 </forest>

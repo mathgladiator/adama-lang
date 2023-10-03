@@ -48,6 +48,11 @@ public class Elements {
     env.writer.tab().append(env.fragmentFunc).append("(").append(env.parentVariable).append(",").append(env.stateVar).append(",'").append(caseToUse).append("');").newline();
   }
 
+  public static void monitor(Environment env) {
+    StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
+    env.writer.tab().append("$.MN(").append(env.parentVariable).append(",").append(path.command).append(",'").append(path.name).append("');").newline();
+  }
+
   public static void view_write(Environment env) {
     StatePath path = StatePath.resolve("view:" + env.element.attr("path"), env.stateVar);
     RxObject obj = new RxObject(env, "value");
