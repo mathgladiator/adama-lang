@@ -1636,7 +1636,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  private int __FUNC_1_goo(NtTable<RTxM> which) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
-    gold.append("\n    return LibStatistics.sumInts((which.iterate(true)).transform((item) -> item.m)).getOrDefaultTo(10000);");
+    gold.append("\n    return (Integer) (LibStatistics.sumInts((which.iterate(true)).transform((item) -> item.m)).getOrDefaultTo(10000));");
     gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
@@ -4399,13 +4399,13 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    __track(12);");
     gold.append("\n    (t.iterate(true)).map(new __CLOSURE_Apply_16(y));");
     gold.append("\n    __track(13);");
-    gold.append("\n    value.set(LibStatistics.sumInts((t.iterate(true)).transform(new __CLOSURE_Apply_17(seven))).getOrDefaultTo(-1000));");
+    gold.append("\n    value.set((Integer) (LibStatistics.sumInts((t.iterate(true)).transform(new __CLOSURE_Apply_17(seven))).getOrDefaultTo(-1000)));");
     gold.append("\n    __track(14);");
-    gold.append("\n    value5.set(LibStatistics.sumInts((t.iterate(true)).transform(new __CLOSURE_Apply_18(five, seven, three))).getOrDefaultTo(-1000));");
+    gold.append("\n    value5.set((Integer) (LibStatistics.sumInts((t.iterate(true)).transform(new __CLOSURE_Apply_18(five, seven, three))).getOrDefaultTo(-1000)));");
     gold.append("\n    __track(15);");
     gold.append("\n    y = 100;");
     gold.append("\n    __track(16);");
-    gold.append("\n    v2.set(LibStatistics.sumInts((t.iterate(true)).transform((__item) -> __item.__METH_1_goo())).getOrDefaultTo(-1000));");
+    gold.append("\n    v2.set((Integer) (LibStatistics.sumInts((t.iterate(true)).transform((__item) -> __item.__METH_1_goo())).getOrDefaultTo(-1000)));");
     gold.append("\n    __track(17);");
     gold.append("\n    (t.iterate(true)).map((__item) -> { __item.__delete(); });");
     gold.append("\n  }");
@@ -6245,9 +6245,9 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    __track(7);");
     gold.append("\n    result.set(__FUNC_0_foo((things.iterate(true)).transform((item) -> item.x.get())));");
     gold.append("\n    __track(8);");
-    gold.append("\n    result2.set(LibStatistics.sumInts((things.iterate(true)).transform((item) -> item.x.get())).getOrDefaultTo(-1000));");
+    gold.append("\n    result2.set((Integer) (LibStatistics.sumInts((things.iterate(true)).transform((item) -> item.x.get())).getOrDefaultTo(-1000)));");
     gold.append("\n    __track(9);");
-    gold.append("\n    result3.set(LibStatistics.sumDoubles((things.iterate(true)).transform((item) -> item.y.get())).getOrDefaultTo(-1000.0));");
+    gold.append("\n    result3.set((Double) (LibStatistics.sumDoubles((things.iterate(true)).transform((item) -> item.y.get())).getOrDefaultTo(-1000.0)));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");

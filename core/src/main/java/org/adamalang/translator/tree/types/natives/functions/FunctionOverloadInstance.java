@@ -40,6 +40,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final TyType returnType;
   public final ArrayList<TyType> types;
   public final boolean castArgs;
+  public final boolean castReturn;
   public final boolean aborts;
   public final boolean viewer;
 
@@ -49,6 +50,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
     this.types = types;
     this.pure = paint.pure;
     this.castArgs = paint.castArgs;
+    this.castReturn = paint.castReturn;
     this.aborts = paint.aborts;
     this.viewer = paint.viewer;
     this.hiddenSuffixArgs = new ArrayList<>();

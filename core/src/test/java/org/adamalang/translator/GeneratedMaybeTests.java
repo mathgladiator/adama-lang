@@ -601,7 +601,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    NtMaybe<Double> d = new NtMaybe<Double>(3.1);");
     gold.append("\n    __track(1);");
-    gold.append("\n    z.set(d.getOrDefaultTo((double)(2)));");
+    gold.append("\n    z.set((Double) (d.getOrDefaultTo((double)(2))));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

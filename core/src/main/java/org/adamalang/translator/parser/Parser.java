@@ -961,7 +961,7 @@ public class Parser {
     final var closeParen = consumeExpectedSymbol(")");
     final var introReturn = consumeArrow("pure functions must have return types.");
     final var returnType = native_type(true);
-    FunctionPaint paint = new FunctionPaint(true, false, false);
+    FunctionPaint paint = new FunctionPaint(true, false, false, false);
     final var code = block(rootScope.makeFunction(paint));
     final var df = new DefineFunction(functionToken, FunctionSpecialization.Pure, name, openParen, args, closeParen, introReturn, returnType, paint, code);
     return doc -> doc.add(df);

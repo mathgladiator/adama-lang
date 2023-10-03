@@ -53,6 +53,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
   private FunctionStyleJava functionStyle;
   private boolean isAggregate;
   private ArrayList<String> latentLines;
+  private TyType returnType;
 
   /** @param expression the expression that must be something that is or contains a function */
   public ApplyArguments(final Expression expression, final Token openParenToken, final ArrayList<TokenizedItem<Expression>> args, final Token closeParenToken) {
@@ -152,7 +153,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       if (environmentToUse.state.isReactiveExpression() && !functionInstance.pure) {
         environmentToUse.document.createError(expression, String.format("Reactive expressions can only invoke pure functions"));
       }
-      var returnType = functionInstance.returnType;
+      returnType = functionInstance.returnType;
       if (isAggregate) {
         aggregateInputType = ((TyNativeAggregateFunctional) exprType).typeBase;
         aggregateOutputType = returnType;
@@ -175,6 +176,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     if (functionInstance != null) {
       final var childEnv = environment.scopeWithComputeContext(ComputeContext.Computation);
+      if (functionInstance.castReturn) {
+        sb.append("(").append(returnType.getJavaBoxType(environment)).append(") (");
+      }
       switch (functionStyle) {
         case RemoteCall: {
           expression.writeJava(sb, environment);
@@ -262,6 +266,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         default:
           expression.writeJava(sb, childEnv);
           break;
+      }
+      if (functionInstance.castReturn) {
+        sb.append(")");
       }
     }
   }

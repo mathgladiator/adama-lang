@@ -97,7 +97,7 @@ public class GlobalFactory {
         newOverloads = new ArrayList<>();
         byFirstParameterType.put(key, newOverloads);
       }
-      newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, new FunctionPaint(fo.pure, false, false)));
+      newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, new FunctionPaint(fo.pure, false, false, false)));
     }
   }
 

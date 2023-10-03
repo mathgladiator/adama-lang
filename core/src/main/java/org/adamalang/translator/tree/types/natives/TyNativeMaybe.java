@@ -149,7 +149,7 @@ public class TyNativeMaybe extends TyType implements //
     if ("getOrDefaultTo".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(tokenElementType.item);
-      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, new FunctionPaint(true, true, false))), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, new FunctionPaint(true, true, true, false))), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

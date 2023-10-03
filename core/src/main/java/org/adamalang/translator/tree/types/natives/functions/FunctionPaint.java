@@ -27,13 +27,15 @@ public class FunctionPaint {
   private final Token[] tokens;
   public final boolean pure;
   public final boolean castArgs;
+  public final boolean castReturn;
   public final boolean aborts;
   public final boolean viewer;
 
-  public FunctionPaint(final boolean pure, final boolean castArgs, final boolean aborts) {
+  public FunctionPaint(final boolean pure, final boolean castArgs, final boolean castReturn, final boolean aborts) {
     this.tokens = EMPTY_TOKENS;
     this.pure = pure;
     this.castArgs = castArgs;
+    this.castReturn = castReturn;
     this.aborts = aborts;
     this.viewer = false;
   }
@@ -56,6 +58,7 @@ public class FunctionPaint {
     }
     this.pure = _pure;
     this.castArgs = false;
+    this.castReturn = false;
     this.aborts = _aborts;
     this.viewer = _viewer;
   }
@@ -66,7 +69,7 @@ public class FunctionPaint {
     }
   }
 
-  public static final FunctionPaint READONLY_NORMAL = new FunctionPaint(true, false, false);
-  public static final FunctionPaint CAST_NORMAL = new FunctionPaint(false, true, false);
-  public static final FunctionPaint NORMAL = new FunctionPaint(false, false, false);
+  public static final FunctionPaint READONLY_NORMAL = new FunctionPaint(true, false, false, false);
+  public static final FunctionPaint CAST_NORMAL = new FunctionPaint(false, true, false, false);
+  public static final FunctionPaint NORMAL = new FunctionPaint(false, false, false, false);
 }

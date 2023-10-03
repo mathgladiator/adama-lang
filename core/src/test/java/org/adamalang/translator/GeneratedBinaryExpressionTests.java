@@ -3072,13 +3072,13 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 5;");
     gold.append("\n      __track(20);");
-    gold.append("\n      __assert_truth(LibMath.near(2, (LibArithmetic.Divide.II(4, 2)).getOrDefaultTo(-100.0)), 30, 2, 30, 45);");
+    gold.append("\n      __assert_truth(LibMath.near(2, (Double) ((LibArithmetic.Divide.II(4, 2)).getOrDefaultTo(-100.0))), 30, 2, 30, 45);");
     gold.append("\n      __track(21);");
-    gold.append("\n      __assert_truth(LibMath.near(2.0, (LibArithmetic.Divide.ID(4, 2.0)).getOrDefaultTo(-100.0)), 31, 2, 31, 49);");
+    gold.append("\n      __assert_truth(LibMath.near(2.0, (Double) ((LibArithmetic.Divide.ID(4, 2.0)).getOrDefaultTo(-100.0))), 31, 2, 31, 49);");
     gold.append("\n      __track(22);");
-    gold.append("\n      __assert_truth(LibMath.near(2.0, (LibArithmetic.Divide.DD(4.0, 2.0)).getOrDefaultTo(-100.0)), 32, 2, 32, 51);");
+    gold.append("\n      __assert_truth(LibMath.near(2.0, (Double) ((LibArithmetic.Divide.DD(4.0, 2.0)).getOrDefaultTo(-100.0))), 32, 2, 32, 51);");
     gold.append("\n      __track(23);");
-    gold.append("\n      __assert_truth(LibMath.near(1.5, (LibArithmetic.Divide.DI(3.0, 2)).getOrDefaultTo(-100.0)), 33, 2, 33, 49);");
+    gold.append("\n      __assert_truth(LibMath.near(1.5, (Double) ((LibArithmetic.Divide.DI(3.0, 2)).getOrDefaultTo(-100.0))), 33, 2, 33, 49);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -3087,7 +3087,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(24);");
-    gold.append("\n      __assert_truth(((int) 2) == ((int) (LibArithmetic.Mod.II(7, 5)).getOrDefaultTo(-100)), 37, 2, 37, 43);");
+    gold.append("\n      __assert_truth(((int) 2) == ((int) (Integer) ((LibArithmetic.Mod.II(7, 5)).getOrDefaultTo(-100))), 37, 2, 37, 43);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
