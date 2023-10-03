@@ -227,6 +227,10 @@ var RxHTML = (function () {
   var subscribe = function (state, name, sub) {
     var ss = self.pI(state, name);
     var s = ss[ss.current];
+    if (s == null) {
+      console.error(ss.current + " is not available; unable to subscribe.");
+      return;
+    }
     if ("@e" in s.delta) {
       s.delta["@e"].push(sub);
     } else {
@@ -427,6 +431,10 @@ var RxHTML = (function () {
   // RUNTIME | dive one level Into path1/path2/..../pathN
   self.pI = function (state, name) {
     var prior = state[state.current];
+    if (prior == null) {
+      console.error(state.current + " is not present");
+      return state;
+    }
     if (!(name in prior.delta)) {
       prior.delta[name] = {};
     }
@@ -1586,7 +1594,6 @@ var RxHTML = (function () {
             delete view[branch];
           }
         }
-
       }
       if ("text" in head) {
         var neck = head["text"];
@@ -1616,6 +1623,7 @@ var RxHTML = (function () {
         return head["@"];
       }
     }
+    return null;
   };
 
 
@@ -1680,7 +1688,7 @@ var RxHTML = (function () {
   self.init = function () {
     self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
     window.onpopstate = function (p) {
-      if (p.state.merge) {
+      if (typeof(p.state) == 'object' && p.state.merge) {
         self.mergeGoto(fixPath(window.location.pathname), self.__current);
       } else {
         self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
