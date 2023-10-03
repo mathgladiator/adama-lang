@@ -1382,24 +1382,29 @@ var RxHTML = (function () {
     var type = ("type" in el) ? el.type.toUpperCase() : "text";
     var signal = function (value) {
       var obj = {};
-      obj[name] = el.value;
+      obj[name] = value;
       var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
     };
     if (type == "CHECKBOX") {
-      el.onchange = debounce(ms, function (evt) {
+      el.addEventListener('change', debounce(ms, function (evt) {
         signal(el.checked ? true : false);
-      });
+      }));
+      window.setTimeout(function () {
+        signal(el.checked ? true : false);
+      }, 1);
     } else if (type == "RADIO") {
-      el.onchange = debounce(ms, function (evt) {
+      el.addEventListener('change', debounce(ms, function (evt) {
         if (el.checked) {
           signal(el.value);
         }
-      });
+      }));
     } else {
-      el.onchange = debounce(ms, function (evt) {
+      var f = debounce(ms, function () {
         signal(el.value);
       });
+      el.addEventListener('change', f);
+      el.addEventListener('keyup', f)
       el.onkeyup = el.onchange;
       window.setTimeout(function () {
         signal(el.value);
