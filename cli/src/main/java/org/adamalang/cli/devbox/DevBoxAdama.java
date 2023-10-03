@@ -25,6 +25,7 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreService;
@@ -56,6 +57,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
       this.key = key;
       this.ref = ref;
     }
+  }
+
+  @Override
+  public void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder) {
+    responder.complete(SecureAssetUtil.makeAssetKeyHeader());
   }
 
   public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse) {

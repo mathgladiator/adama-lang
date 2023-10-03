@@ -173,7 +173,6 @@ class WebSocketAdamaConnection {
   /** private: send a raw message */
   _write(request, callback) {
     if (!this.connected) {
-      callback({ failure: 600, reason: 999 });
       return false;
     }
     this.callbacks.set(request.id, callback);
@@ -212,7 +211,7 @@ class WebSocketAdamaConnection {
   __execute_rr(sm) {
     var self = this;
     sm.first = true;
-    if (self._write(sm.request, function (response) {
+    if (!self._write(sm.request, function (response) {
       if (sm.first) {
         sm.first = false;
         if ("failure" in response) {
@@ -239,7 +238,7 @@ class WebSocketAdamaConnection {
   /** execute a stream request with the given state machine */
   __execute_stream(sm) {
     var self = this;
-    if (self._write(sm.request, function (response) {
+    self._write(sm.request, function (response) {
       if ("failure" in response) {
         if ('failure' in sm.responder) {
           sm.responder.failure(response.reason);
@@ -258,14 +257,12 @@ class WebSocketAdamaConnection {
         }
         self.onreconnect.delete(sm.id);
       }
-    })) {
-      self.onreconnect.set(sm.id, sm);
-      sm.__retry = function () {
-        self.__execute_stream(sm);
-      };
-      return sm;
-    }
-    return null;
+    });
+    self.onreconnect.set(sm.id, sm);
+    sm.__retry = function () {
+      self.__execute_stream(sm);
+    };
+    return sm;
   }
 
   __id() {

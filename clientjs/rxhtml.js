@@ -880,7 +880,7 @@ var RxHTML = (function () {
       } else {
         fire_failure(form, "Failed to find '" + customCommandName + "'");
       }
-    });
+    }, true);
   };
 
   var make_choice_array = function (state, channel) {
@@ -1172,7 +1172,11 @@ var RxHTML = (function () {
     reg_event(state, dom, type, function (event) {
       var f = form_of(dom);
       if (f != null) {
-        f.onsubmit(new SubmitEvent("submit"));
+        var e = new SubmitEvent('submit', {
+          'bubbles'    : true,
+          'cancelable' : true
+        });
+        f.dispatchEvent(e);
       }
     });
   };
@@ -1407,7 +1411,7 @@ var RxHTML = (function () {
       var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
       fire_success(form);
-    });
+    }, true);
   };
 
   // RUNTIME | <input ... rx:sync=path ...>
@@ -2302,8 +2306,11 @@ var RxHTML = (function () {
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
+      console.log("Trying to submit a form");
+
       var req = get_form(form, true);
-      connection.DocumentAuthorizeDomain(self.domain, req.username, req.password, {
+      var sm = {attempts:0};
+      sm.responder = {
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
@@ -2314,8 +2321,9 @@ var RxHTML = (function () {
         failure: function (reason) {
           fire_failure(form, "Failed signing into document:" + reason);
         }
-      });
-    });
+      };
+      connection.DocumentAuthorizeDomain(self.domain, req.username, req.password, sm.responder);
+    }, true);
   }
 
   // RUNTIME | rx:action=document:sign-in
@@ -2336,7 +2344,7 @@ var RxHTML = (function () {
           fire_failure(form, "Failed signing into document:" + reason);
         }
       });
-    });
+    }, true);
   };
 
 
@@ -2358,7 +2366,7 @@ var RxHTML = (function () {
           fire_failure(form, "Failed signing into document:" + reason);
         }
       });
-    });
+    }, true);
   }
 
   // RUNTIME | rx:action=document:sign-in-reset
@@ -2378,7 +2386,7 @@ var RxHTML = (function () {
         failure: function (reason) {
           fire_failure(form, "Failed signing into document:" + reason);
         }
-      });
+      }, true);
     });
   };
 
@@ -2568,7 +2576,7 @@ var RxHTML = (function () {
       } else {
         next();
       }
-    });
+    }, true);
   }
 
   // RUNTIME | rx:action=domain:put
@@ -2607,7 +2615,7 @@ var RxHTML = (function () {
           fire_failure(form, "AccountLogin Failed:" + reason);
         }
       });
-    });
+    }, true);
   };
 
   // RUNTIME | rx:action=adama:sign-up
@@ -2625,7 +2633,7 @@ var RxHTML = (function () {
           fire_failure(form, "InitSetupAccount Failed:" + reason);
         }
       });
-    });
+    }, true);
   };
 
   // RUNTIME | rx:action=adama:set-password
@@ -2654,7 +2662,7 @@ var RxHTML = (function () {
           fire_failure(form, "Failed InitCompleteAccount:" + reason);
         }
       });
-    });
+    }, true);
   };
 
 
@@ -2711,7 +2719,7 @@ var RxHTML = (function () {
       } else {
         fire_failure(form, "failed to find form by id '" + targetFormId + "'");
       }
-    });
+    }, true);
   };
 
   // RUNTIME | rx:action=send:$channel
@@ -2728,7 +2736,7 @@ var RxHTML = (function () {
           fire_failure(form, "Send failed:" + reason);
         }
       });
-    });
+    }, true);
   };
   // <todotask>description</todotask>
   self.TASK = function(pdom, id, section, description) {
