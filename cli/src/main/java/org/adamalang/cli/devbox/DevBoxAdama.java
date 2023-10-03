@@ -165,7 +165,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
         ObjectNode entry = Json.newJsonObject();
         entry.put("type", "devbox");
         entry.put("task", "connect");
-        entry.put("time", (System.currentTimeMillis() - started));
+        long delta = (System.currentTimeMillis() - started);
+        entry.put("time", delta);
+        if (delta > 10000) {
+          io.error("adama|connection; It took over " + Math.round((delta / 100.0)) / 10.0 + " seconds to establish a connection");
+        }
         PERF_LOG.error(entry.toString());
       }
 

@@ -267,6 +267,9 @@ public class Attributes {
   }
 
   public void _event(String event) {
+    if (!env.element.hasAttr("rx:" + event)) {
+      return;
+    }
     try {
       ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
       env.element.removeAttr("rx:" + event);
