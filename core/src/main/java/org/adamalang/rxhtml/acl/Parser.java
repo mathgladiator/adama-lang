@@ -120,6 +120,10 @@ public class Parser {
           commands.add(new Submit());
         } else if ("resume".equals(phrase)) {
           commands.add(new Resume());
+        } else if ("nuke".equals(phrase)) {
+          commands.add(new Nuke());
+        } else if ("uncheck".equals(phrase)) {
+          commands.add(new Uncheck());
         }
       }
     }

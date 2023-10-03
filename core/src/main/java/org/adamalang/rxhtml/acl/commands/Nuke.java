@@ -15,8 +15,21 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.acl.commands;
 
-public class Platform {
-  public static final String VERSION = "20231003152340";
+import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
+
+public class Nuke implements Command {
+  public Nuke() {
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+  }
+
+  @Override
+  public void write(Environment env, String type, String eVar) {
+    env.writer.tab().append("$.oNK(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(");").newline();
+  }
 }

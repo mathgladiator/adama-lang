@@ -848,8 +848,9 @@ var RxHTML = (function () {
   };
 
   // custom event on forms; rx:success="..."
-  var fire_success = function (dom) {
-    dom.dispatchEvent(new Event("success"));
+  var fire_success = function (form) {
+    form.dispatchEvent(new Event("success"));
+    form.dispatchEvent(new Event("submitted"));
   };
   self.fire_success = fire_success;
 
@@ -857,7 +858,7 @@ var RxHTML = (function () {
   var fire_failure = function (dom, msg) {
     var e = new Event("failure");
     e.message = msg;
-    console.log("FAILURE:" + msg);
+    console.error(msg);
     dom.dispatchEvent(e);
   };
   self.fire_failure = fire_failure;
@@ -870,7 +871,7 @@ var RxHTML = (function () {
         fire_failure(form, msg);
       }
     };
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       if (customCommandName in customs) {
         evt.preventDefault();
         var obj = get_form(form, false);
@@ -879,7 +880,7 @@ var RxHTML = (function () {
       } else {
         fire_failure(form, "Failed to find '" + customCommandName + "'");
       }
-    };
+    });
   };
 
   var make_choice_array = function (state, channel) {
@@ -952,10 +953,32 @@ var RxHTML = (function () {
     });
   };
 
+  var form_of = function(dom) {
+    var next = dom;
+    while (next != null) {
+      if (next.tagName.toUpperCase() == "FORM") {
+        return next;
+      }
+      next = next.parentElement;
+    }
+    return null;
+  }
+
   var reg_event = function (state, dom, type, runnable) {
     // TODO: connected/disconnected as special events to consider
     if (type == "load") {
       window.setTimeout(runnable, 1);
+    } else if (type=="submit" || type=="submitted") {
+      window.setTimeout(function() {
+        var form = form_of(dom);
+        if (form) {
+          form.addEventListener(type, function () {
+            if (document.body.contains(dom)) {
+              runnable();
+            }
+          });
+        }
+      }, 1);
     } else if (type.startsWith("delay:")) {
       // delay will run after $delayTimeMS IF the dom element is still visible to the document
       var delayTimeMS = parseInt(type.substring(6));
@@ -969,16 +992,7 @@ var RxHTML = (function () {
     }
   }
 
-  var form_of = function(dom) {
-    var next = dom;
-    while (next != null) {
-      if (next.tagName.toUpperCase() == "FORM") {
-        return next;
-      }
-      next = next.parentElement;
-    }
-    return null;
-  }
+
 
   // RUNTIME: <tag .. rx:event="... set:name=value ...">
   self.bS = function (dom, state, name, value) {
@@ -1160,6 +1174,25 @@ var RxHTML = (function () {
       if (f != null) {
         f.onsubmit(new SubmitEvent("submit"));
       }
+    });
+  };
+
+  self.oNK = function (dom, type, state) {
+    reg_event(state, dom, type, function (event) {
+      var cur = dom;
+      while (cur.tagName.toUpperCase() != "NUCLEAR") {
+        cur = cur.parentElement;
+      }
+      if (cur != null) {
+        nuke(cur);
+      }
+    });
+  };
+
+
+  self.oUCK = function (dom, type, state) {
+    reg_event(state, dom, type, function (event) {
+      dom.checked = false;
     });
   };
 
@@ -1363,7 +1396,7 @@ var RxHTML = (function () {
 
   /// RUNTIME | rx:action=copy:path
   self.aCP = function (form, state, name) {
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var obj = get_form(form, false);
       if (name != "." && name != "") {
@@ -1374,7 +1407,7 @@ var RxHTML = (function () {
       var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
       fire_success(form);
-    };
+    });
   };
 
   // RUNTIME | <input ... rx:sync=path ...>
@@ -2267,7 +2300,7 @@ var RxHTML = (function () {
   // RUNTIME | rx:action=domain:sign-in
   self.adDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       connection.DocumentAuthorizeDomain(self.domain, req.username, req.password, {
@@ -2282,13 +2315,13 @@ var RxHTML = (function () {
           fire_failure(form, "Failed signing into document:" + reason);
         }
       });
-    };
+    });
   }
 
   // RUNTIME | rx:action=document:sign-in
   self.aDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       connection.DocumentAuthorize(req.space, req.key, req.username, req.password, {
@@ -2303,14 +2336,14 @@ var RxHTML = (function () {
           fire_failure(form, "Failed signing into document:" + reason);
         }
       });
-    };
+    });
   };
 
 
   // RUNTIME | rx:action=domain:sign-in-reset
   self.adDSOr = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       connection.DocumentAuthorizeDomainWithReset(self.domain, req.username, req.password, req.new_password,{
@@ -2325,13 +2358,13 @@ var RxHTML = (function () {
           fire_failure(form, "Failed signing into document:" + reason);
         }
       });
-    };
+    });
   }
 
   // RUNTIME | rx:action=document:sign-in-reset
   self.aDSOr = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       connection.DocumentAuthorizeWithReset(req.space, req.key, req.username, req.password, req.new_password,{
@@ -2346,7 +2379,7 @@ var RxHTML = (function () {
           fire_failure(form, "Failed signing into document:" + reason);
         }
       });
-    };
+    });
   };
 
   self.autogenid = 1;
@@ -2486,7 +2519,7 @@ var RxHTML = (function () {
   var commonPut = function (form, state, identityName, rxobj, urlfactory) {
     // WIP
     rxobj.__ = function () { };
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, false);
       // TODO: this assumes exactly one password in the root message
@@ -2511,6 +2544,7 @@ var RxHTML = (function () {
               }
               self.goto(rxobj.rx_forward, false);
               fire_success(form);
+              form.dispatchEvent(new Event("submitted"));
             } else {
               fire_failure(form, "Failed to communicate to server");
             }
@@ -2534,7 +2568,7 @@ var RxHTML = (function () {
       } else {
         next();
       }
-    };
+    });
   }
 
   // RUNTIME | rx:action=domain:put
@@ -2554,7 +2588,7 @@ var RxHTML = (function () {
       recall_email(form);
     }, 1);
     // TODO: pull email out of thin air
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       if (req.remember) {
@@ -2573,12 +2607,12 @@ var RxHTML = (function () {
           fire_failure(form, "AccountLogin Failed:" + reason);
         }
       });
-    };
+    });
   };
 
   // RUNTIME | rx:action=adama:sign-up
   self.aSU = function (form, state, forwardTo) {
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form);
       connection.InitSetupAccount(req.email, {
@@ -2591,12 +2625,12 @@ var RxHTML = (function () {
           fire_failure(form, "InitSetupAccount Failed:" + reason);
         }
       });
-    };
+    });
   };
 
   // RUNTIME | rx:action=adama:set-password
   self.aSP = function (form, state, forwardTo) {
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var req = get_form(form, true);
       if (!("email" in req)) {
@@ -2620,7 +2654,7 @@ var RxHTML = (function () {
           fire_failure(form, "Failed InitCompleteAccount:" + reason);
         }
       });
-    };
+    });
   };
 
 
@@ -2667,7 +2701,7 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:action:copy-form:$target-id
   self.aCF = function(form, targetFormId) {
-    form.onsubmit = function(evt) {
+    form.addEventListener('submit', function(evt) {
       evt.preventDefault();
       var input = get_form(form, false);
       var target = document.getElementById(targetFormId);
@@ -2677,12 +2711,12 @@ var RxHTML = (function () {
       } else {
         fire_failure(form, "failed to find form by id '" + targetFormId + "'");
       }
-    };
+    });
   };
 
   // RUNTIME | rx:action=send:$channel
   self.aSD = function (form, state, channel) {
-    form.onsubmit = function (evt) {
+    form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var msg = get_form(form, false);
       // TODO: pass through the debugger
@@ -2694,7 +2728,7 @@ var RxHTML = (function () {
           fire_failure(form, "Send failed:" + reason);
         }
       });
-    };
+    });
   };
   // <todotask>description</todotask>
   self.TASK = function(pdom, id, section, description) {

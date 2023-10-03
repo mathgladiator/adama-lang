@@ -27,7 +27,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class Base {
-  public static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load", "success", "change", "failure", "blur", "focus", "rise", "fall"};
+  public static final String[] EVENTS = new String[]{"click", "mouseenter", "mouseleave", "load", "success", "change", "failure", "blur", "focus", "rise", "fall", "submit", "submitted"};
 
   private static String xmlnsOf(Environment env) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
@@ -120,11 +120,9 @@ public class Base {
     } else {
       children(env);
     }
-
     if (env.element.hasAttr("rx:monitor")) {
       rx._monitor();
     }
-
   }
 
   public static String write(Environment env, boolean returnVariable) {
