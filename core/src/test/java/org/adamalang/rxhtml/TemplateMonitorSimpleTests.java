@@ -49,7 +49,8 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    $.onB(g,'fall',a,h);");
     gold.append("\n    $.MN(g,a,'set');");
     gold.append("\n    d.append(g);");
-    gold.append("\n    $.MN(d,a,'set-e');");
+    gold.append("\n    $.MN(d,a,'set-e',false);");
+    gold.append("\n    $.MN(d,a,'set-skip',true);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -76,7 +77,8 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    $.onB(g,'fall',a,h);");
     gold.append("\n    $.MN(g,a,'set');");
     gold.append("\n    d.append(g);");
-    gold.append("\n    $.MN(d,a,'set-e');");
+    gold.append("\n    $.MN(d,a,'set-e',false);");
+    gold.append("\n    $.MN(d,a,'set-skip',true);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -97,7 +99,8 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     source.append("\n        <form rx:action=\"send:blah\">");
     source.append("\n            <div rx:monitor=\"set\" rx:fall=\"set:x=0\" rx:rise=\"submit\">");
     source.append("\n            </div>");
-    source.append("\n            <monitor path=\"set-e\" rx:fall=\"set:x=0\" rx:rise=\"submit\"></monitor>");
+    source.append("\n            <monitor path=\"set-e\" rx:fall=\"set:x=0\" rx:rise=\"submit\" />");
+    source.append("\n            <monitor path=\"set-skip\" rx:fall=\"set:x=0\" rx:rise=\"submit\" skip-first />");
     source.append("\n        </form>");
     source.append("\n    </page>");
     source.append("\n</forest>");

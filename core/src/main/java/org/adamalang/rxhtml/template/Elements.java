@@ -50,7 +50,7 @@ public class Elements {
 
   public static void monitor(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
-    env.writer.tab().append("$.MN(").append(env.parentVariable).append(",").append(path.command).append(",'").append(path.name).append("');").newline();
+    env.writer.tab().append("$.MN(").append(env.parentVariable).append(",").append(path.command).append(",'").append(path.name).append("',").append(env.element.hasAttr("skip-first") ? "true" : "false").append(");").newline();
   }
 
   public static void view_write(Environment env) {

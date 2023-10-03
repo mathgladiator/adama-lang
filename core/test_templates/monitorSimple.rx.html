@@ -3,7 +3,8 @@
         <form rx:action="send:blah">
             <div rx:monitor="set" rx:fall="set:x=0" rx:rise="submit">
             </div>
-            <monitor path="set-e" rx:fall="set:x=0" rx:rise="submit"></monitor>
+            <monitor path="set-e" rx:fall="set:x=0" rx:rise="submit" />
+            <monitor path="set-skip" rx:fall="set:x=0" rx:rise="submit" skip-first />
         </form>
     </page>
 </forest>

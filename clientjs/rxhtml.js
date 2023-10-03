@@ -754,12 +754,17 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: <tag ... rx:monitor="state-path" rx:rise="commands..." rx:fall="commands..."
-  self.MN = function (dom, state, name) {
+  self.MN = function (dom, state, name, skipFirst) {
     var sub = function (value) {
       var n = 0;
       try {
         n = typeof (value) == 'number' ? value : parseInt(value);
       } catch (failedParsingN) {
+      }
+      if (this.first) {
+        this.at = n;
+        this.first = false;
+        return;
       }
       if (this.at < n) {
         var e = new Event("rise");
@@ -769,7 +774,7 @@ var RxHTML = (function () {
         dom.dispatchEvent(e);
       }
       this.at = n;
-    }.bind({at:-1});
+    }.bind({at:-1, first:skipFirst});
     subscribe(state, name, sub);
   };
 
