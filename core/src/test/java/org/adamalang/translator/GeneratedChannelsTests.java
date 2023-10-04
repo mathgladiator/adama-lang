@@ -3808,6 +3808,16 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static final int [] __ALL_VALUES_E = new int[] {0, 1};");
+    gold.append("\n  private static final String __EnumString_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n        return \"A\";");
+    gold.append("\n      case 1:");
+    gold.append("\n        return \"B\";");
+    gold.append("\n      default:");
+    gold.append("\n        return \"A\";");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static final int __EnumCycleNext_E(int value) {");
     gold.append("\n    switch (value) {");
     gold.append("\n      case 1:");

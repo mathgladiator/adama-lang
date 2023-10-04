@@ -1114,6 +1114,18 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static final int [] __ALL_VALUES_X = new int[] {0, 1, 2};");
+    gold.append("\n  private static final String __EnumString_X(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n        return \"A\";");
+    gold.append("\n      case 1:");
+    gold.append("\n        return \"B\";");
+    gold.append("\n      case 2:");
+    gold.append("\n        return \"C\";");
+    gold.append("\n      default:");
+    gold.append("\n        return \"A\";");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static final int __EnumCycleNext_X(int value) {");
     gold.append("\n    switch (value) {");
     gold.append("\n      case 2:");

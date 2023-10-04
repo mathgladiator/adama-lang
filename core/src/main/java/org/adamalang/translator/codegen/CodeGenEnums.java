@@ -155,7 +155,7 @@ public class CodeGenEnums {
     sb.append("}").writeNewline();
   }
 
-  public static void writeEnumNextPrev(final StringBuilderWithTabs sb, final String name, final EnumStorage storage) {
+  public static void writeEnumNextPrevString(final StringBuilderWithTabs sb, final String name, final EnumStorage storage) {
     if (storage.options.size() > 0) {
       HashMap<Integer, Integer> next = new HashMap<>();
       HashMap<Integer, Integer> prev = new HashMap<>();
@@ -173,6 +173,20 @@ public class CodeGenEnums {
       next.put(prior, start);
       prev.put(start, prior);
 
+      // <enum>.to_string()
+      sb.append("private static final String __EnumString_").append(name).append("(int value) {").tabUp().writeNewline();
+      sb.append("switch (value) {").tabUp().writeNewline();
+      for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
+        sb.append("case ").append("" + entry.getValue()).append(":").tabUp().writeNewline();
+        sb.append("return \"").append(entry.getKey()).append("\";").tabDown().writeNewline();
+      }
+      sb.append("default:").tabUp().writeNewline();
+
+      sb.append("return \"").append(storage.getDefaultLabel()).append("\";").tabDown().tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+
+      // <enum>.next()
       sb.append("private static final int __EnumCycleNext_").append(name).append("(int value) {").tabUp().writeNewline();
       sb.append("switch (value) {").tabUp().writeNewline();
       for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
@@ -188,6 +202,7 @@ public class CodeGenEnums {
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
 
+      // <enum>.prev()
       sb.append("private static final int __EnumCyclePrev_").append(name).append("(int value) {").tabUp().writeNewline();
       sb.append("switch (value) {").tabUp().writeNewline();
       for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {

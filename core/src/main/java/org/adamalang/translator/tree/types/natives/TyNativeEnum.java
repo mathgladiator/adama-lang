@@ -85,7 +85,7 @@ public class TyNativeEnum extends TySimpleNative implements //
   @Override
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     CodeGenEnums.writeEnumArray(sb, name, "ALL_VALUES", "", storage);
-    CodeGenEnums.writeEnumNextPrev(sb, name, storage);
+    CodeGenEnums.writeEnumNextPrevString(sb, name, storage);
     CodeGenEnums.writeEnumFixer(sb, name, storage);
     for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatchers : storage.dispatchersByNameThenSignature.entrySet()) {
       CodeGenEnums.writeDispatchers(sb, storage, dispatchers.getValue(), dispatchers.getKey(), environment);
@@ -146,6 +146,9 @@ public class TyNativeEnum extends TySimpleNative implements //
     }
     if ("prev".equals(name)) {
       return new TyNativeFunctional("prev", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCyclePrev_" + this.name, this, new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    }
+    if ("to_string".equals(name)) {
+      return new TyNativeFunctional("to_string", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumString_" + this.name, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, enumToken), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     return storage.computeDispatcherType(name);
   }

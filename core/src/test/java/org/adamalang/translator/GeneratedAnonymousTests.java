@@ -5018,6 +5018,14 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static final int [] __ALL_VALUES_E = new int[] {0};");
+    gold.append("\n  private static final String __EnumString_E(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 0:");
+    gold.append("\n        return \"X\";");
+    gold.append("\n      default:");
+    gold.append("\n        return \"X\";");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static final int __EnumCycleNext_E(int value) {");
     gold.append("\n    switch (value) {");
     gold.append("\n      case 0:");

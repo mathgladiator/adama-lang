@@ -1,0 +1,9 @@
+enum E {
+  A,
+  @default B,
+  C:4
+}
+
+public formula a = E::A.to_string();
+public formula b = E::B.to_string();
+public formula c = E::C.to_string();

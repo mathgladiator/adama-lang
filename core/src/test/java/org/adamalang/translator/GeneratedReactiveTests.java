@@ -484,6 +484,16 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private static final int [] __ALL_VALUES_ClassifyResult = new int[] {1, 2};");
+    gold.append("\n  private static final String __EnumString_ClassifyResult(int value) {");
+    gold.append("\n    switch (value) {");
+    gold.append("\n      case 1:");
+    gold.append("\n        return \"Odd\";");
+    gold.append("\n      case 2:");
+    gold.append("\n        return \"Even\";");
+    gold.append("\n      default:");
+    gold.append("\n        return \"Odd\";");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  private static final int __EnumCycleNext_ClassifyResult(int value) {");
     gold.append("\n    switch (value) {");
     gold.append("\n      case 2:");
