@@ -55,7 +55,7 @@ public class GeneratedMetricsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Metrics_BadTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'string'\",\"file\":\"./test_code/Metrics_BadTypes_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":17},\"end\":{\"line\":1,\"character\":14,\"byte\":31}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'complex'\",\"file\":\"./test_code/Metrics_BadTypes_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'string'\",\"file\":\"./test_code/Metrics_BadTypes_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":16},\"end\":{\"line\":1,\"character\":14,\"byte\":30}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'complex'\",\"file\":\"./test_code/Metrics_BadTypes_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -721,7 +721,7 @@ public class GeneratedMetricsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Metrics_RequireReadOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11,\"byte\":73},\"end\":{\"line\":7,\"character\":14,\"byte\":76}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions\",\"file\":\"./test_code/Metrics_RequireReadOnly_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11,\"byte\":66},\"end\":{\"line\":7,\"character\":14,\"byte\":69}},\"severity\":1,\"source\":\"error\",\"message\":\"Read only methods can only call other read-only methods or pure functions\",\"file\":\"./test_code/Metrics_RequireReadOnly_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

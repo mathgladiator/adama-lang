@@ -55,7 +55,7 @@ public class GeneratedReplicationTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Replication_CantDefineTwice_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":167},\"end\":{\"line\":12,\"character\":33,\"byte\":189}},\"severity\":1,\"source\":\"error\",\"message\":\"The replication 'foo' has a conflicting name.\",\"file\":\"./test_code/Replication_CantDefineTwice_failure.a\"},{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":167},\"end\":{\"line\":12,\"character\":33,\"byte\":189}},\"severity\":1,\"source\":\"error\",\"message\":\"Replication 'foo' was already defined\",\"file\":\"./test_code/Replication_CantDefineTwice_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":155},\"end\":{\"line\":12,\"character\":33,\"byte\":177}},\"severity\":1,\"source\":\"error\",\"message\":\"The replication 'foo' has a conflicting name.\",\"file\":\"./test_code/Replication_CantDefineTwice_failure.a\"},{\"range\":{\"start\":{\"line\":12,\"character\":11,\"byte\":155},\"end\":{\"line\":12,\"character\":33,\"byte\":177}},\"severity\":1,\"source\":\"error\",\"message\":\"Replication 'foo' was already defined\",\"file\":\"./test_code/Replication_CantDefineTwice_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -774,7 +774,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Include_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment\",\"file\":\"./test_code/Include_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":17},\"end\":{\"line\":1,\"character\":19,\"byte\":36}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'h/o/w/d/y' as it was not bound to the deployment\",\"file\":\"./test_code/Include_NotFound_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":15,\"byte\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'howdy' as it was not bound to the deployment\",\"file\":\"./test_code/Include_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":16},\"end\":{\"line\":1,\"character\":19,\"byte\":35}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to include 'h/o/w/d/y' as it was not bound to the deployment\",\"file\":\"./test_code/Include_NotFound_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
