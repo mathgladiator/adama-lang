@@ -81,7 +81,7 @@ public class ContribHandlerImpl implements ContribHandler {
   @Override
   public void bundleJs(Arguments.ContribBundleJsArgs args, Output.YesOrError output) throws Exception {
     System.out.println(Util.prefix("Bundling JavaScript for Web", Util.ANSI.Cyan));
-    Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), BundleJavaScript.bundle("./release/libadama.js"));
+    Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), BundleJavaScript.bundle("./release/libadama.js", "./release/libadama-worker.js"));
     System.out.println(Util.prefix("Bundling JavaScript for DevBox", Util.ANSI.Cyan));
     Files.writeString(new File("cli/src/main/java/org/adamalang/cli/devbox/JavaScriptResourcesRaw.java").toPath(), BundleRawJavaScriptForDevBox.bundle(new File("./clientjs")));
     output.out();

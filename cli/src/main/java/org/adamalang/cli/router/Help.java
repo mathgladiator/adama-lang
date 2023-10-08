@@ -191,6 +191,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("dev-server", 15), Util.ANSI.Green) + "Host the working directory as a webserver");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-200", 15), Util.ANSI.Green) + "Create a 200.html");
     System.out.println("    " + Util.prefix(Util.justifyLeft("mobile-capacitor", 15), Util.ANSI.Green) + "Create a shell for https://capacitorjs.com/");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("push-lab", 15), Util.ANSI.Green) + "Tool to study Web Push");
     System.out.println("    " + Util.prefix(Util.justifyLeft("rxhtml", 15), Util.ANSI.Green) + "Compile an rxhtml template set");
     System.out.println("    " + Util.prefix(Util.justifyLeft("set-libadama", 15), Util.ANSI.Green) + "Update your config to have a local-libadama-path-default which will be used in 'dev-server' when --local-libadama-path is not specified.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("study-css", 15), Util.ANSI.Green) + "Tool to study CSS");

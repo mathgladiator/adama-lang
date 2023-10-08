@@ -439,6 +439,12 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DomainGetVapidPublicKeyRequest request, DomainVapidResponder responder) {
+    // TODO: find the VAPID key for the given domain, return the public
+    responder.error(new ErrorCodeException(0));
+  }
+
+  @Override
   public void handle(Session session, DomainListRequest request, DomainListingResponder responder) {
     try {
       if (request.who.isAdamaDeveloper) {

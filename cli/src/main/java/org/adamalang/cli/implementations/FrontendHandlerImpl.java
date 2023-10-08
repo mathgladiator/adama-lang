@@ -27,6 +27,8 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
+import org.adamalang.common.keys.VAPIDFactory;
+import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.rxhtml.*;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
@@ -44,6 +46,15 @@ public class FrontendHandlerImpl implements FrontendHandler {
         files.add(child);
       }
     }
+  }
+
+  @Override
+  public void pushLab(Arguments.FrontendPushLabArgs args, Output.YesOrError output) throws Exception {
+    VAPIDFactory factory = new VAPIDFactory();
+    VAPIDPublicPrivateKeyPair vapid = factory.generateKeyPair();
+    System.out.println("public:" + vapid.publicKeyBase64);
+    System.out.println("private:" + vapid.privateKeyBase64);
+    output.out();
   }
 
   @Override

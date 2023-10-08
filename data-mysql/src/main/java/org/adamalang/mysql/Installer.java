@@ -230,6 +230,18 @@ public class Installer {
             " DEFAULT CHARACTER SET = utf8mb4;" //
         ;
 
+    String createVapidKeys = //
+        "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`vapid` (" + //
+            "  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT," + //
+            "  `domain` VARCHAR(254) NOT NULL," + //
+            "  `public_key` LONGTEXT NOT NULL," + //
+            "  `private_key` LONGTEXT NOT NULL," + //
+            "  PRIMARY KEY (`id`)," + //
+            "  UNIQUE `d` (`domain`))" + //
+            " ENGINE = InnoDB" + //
+            " DEFAULT CHARACTER SET = utf8mb4;" //
+        ;
+
     String createSentinelTableSQL = //
         "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`sentinel` (" + //
             "  `aspect` VARCHAR(128) NOT NULL," + //
@@ -255,6 +267,7 @@ public class Installer {
       DataBase.execute(connection, createHostsTableSQL);
       DataBase.execute(connection, createSecretsTableSQL);
       DataBase.execute(connection, createDomainsTableSQL);
+      DataBase.execute(connection, createVapidKeys);
       DataBase.execute(connection, createSentinelTableSQL);
     } finally {
       connection.close();
@@ -277,6 +290,7 @@ public class Installer {
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`hosts`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`secrets`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`domains`;");
+      DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`vapid`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`sentinel`;");
       DataBase.execute(connection, "DROP DATABASE IF EXISTS `" + dataBase.databaseName + "`;");
     } finally {

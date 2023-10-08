@@ -15,8 +15,23 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231008162525";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
+
+/** generated class for the responder: domain-vapid */
+public class ClientDomainVapidResponse {
+  public final ObjectNode _original;
+  public final String publicKey;
+
+  public ClientDomainVapidResponse(ObjectNode response) {
+    this._original = response;
+    this.publicKey = Json.readString(response, "public-key");
+  }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("publicKey", publicKey);
+    return _next.toString();
+  }
 }

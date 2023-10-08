@@ -91,6 +91,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"frontend", "dev-server", "--help"});
     Main.testMain(new String[]{"frontend", "make-200", "--help"});
     Main.testMain(new String[]{"frontend", "mobile-capacitor", "--help"});
+    Main.testMain(new String[]{"frontend", "push-lab", "--help"});
     Main.testMain(new String[]{"frontend", "rxhtml", "--help"});
     Main.testMain(new String[]{"frontend", "set-libadama", "--help"});
     Main.testMain(new String[]{"frontend", "study-css", "--help"});

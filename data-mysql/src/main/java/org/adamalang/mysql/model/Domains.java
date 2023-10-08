@@ -17,6 +17,9 @@
 */
 package org.adamalang.mysql.model;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.sys.domains.Domain;
 
@@ -27,6 +30,42 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 public class Domains {
+
+  public static VAPIDPublicPrivateKeyPair getOrCreateVapidKeyPair(DataBase dataBase, String domain) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sqlGet = "SELECT `public_key`, `private_key`  FROM `" + dataBase.databaseName + "`.`vapid` WHERE `domain`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sqlGet)) {
+        statement.setString(1, domain);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return new VAPIDPublicPrivateKeyPair(rs.getString(1), rs.getString(2));
+          }
+        }
+      }
+      // TODO: generate key
+      /*
+      String sql = "INSERT INTO `" + dataBase.databaseName + "`.`vapid` (`domain`, `public_key`, `private_key`) VALUES (?,?,?)";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, domain);
+        statement.setString(2, space);
+        statement.setString(3, key);
+        statement.execute();
+      } catch (SQLIntegrityConstraintViolationException sicve) {
+      }
+      */
+
+      try (PreparedStatement statement = connection.prepareStatement(sqlGet)) {
+        statement.setString(1, domain);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return new VAPIDPublicPrivateKeyPair(rs.getString(1), rs.getString(2));
+          }
+        }
+      }
+    }
+    throw new ErrorCodeException(ErrorCodes.VAPID_NOT_FOUND_FOR_DOMAIN);
+  }
+
   public static boolean map(DataBase dataBase, int owner, String domain, String space, String key, boolean route, String certificate) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "INSERT INTO `" + dataBase.databaseName + "`.`domains` (`owner`, `space`, `key`, `route`, `domain`, `certificate`, `automatic`, `automatic_timestamp`) VALUES (?,?,?,?,?,?,?,0)";

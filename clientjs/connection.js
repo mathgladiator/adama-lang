@@ -568,6 +568,15 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/list-by-space", "id":parId, "identity": identity, "space": space}
     });
   }
+  DomainGetVapidPublicKey(identity, domain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/get-vapid-public-key", "id":parId, "identity": identity, "domain": domain}
+    });
+  }
   DomainUnmap(identity, domain, responder) {
     var self = this;
     var parId = self.__id();

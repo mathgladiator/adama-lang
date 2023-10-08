@@ -54,6 +54,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_DomainMapDocument;
   public final RequestResponseMonitor monitor_DomainList;
   public final RequestResponseMonitor monitor_DomainListBySpace;
+  public final RequestResponseMonitor monitor_DomainGetVapidPublicKey;
   public final RequestResponseMonitor monitor_DomainUnmap;
   public final RequestResponseMonitor monitor_DomainGet;
   public final RequestResponseMonitor monitor_DocumentList;
@@ -117,6 +118,7 @@ public class GlobalApiMetrics {
     this.monitor_DomainMapDocument = factory.makeRequestResponseMonitor("domain/map-document");
     this.monitor_DomainList = factory.makeRequestResponseMonitor("domain/list");
     this.monitor_DomainListBySpace = factory.makeRequestResponseMonitor("domain/list-by-space");
+    this.monitor_DomainGetVapidPublicKey = factory.makeRequestResponseMonitor("domain/get-vapid-public-key");
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
     this.monitor_DomainGet = factory.makeRequestResponseMonitor("domain/get");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");

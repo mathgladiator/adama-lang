@@ -22,6 +22,6 @@ import org.junit.Test;
 public class BundleJavaScriptTests {
   @Test
   public void execute() throws Exception {
-    BundleJavaScript.bundle("../release/libadama.js");
+    BundleJavaScript.bundle("../release/libadama.js", "../release/libadama-worker.js");
   }
 }

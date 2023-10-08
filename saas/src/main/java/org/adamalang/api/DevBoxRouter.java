@@ -29,6 +29,8 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder);
 
+  public abstract void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder);
+
   public abstract void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder);
 
   public abstract void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder);
@@ -76,6 +78,12 @@ public abstract class DevBoxRouter {
           request.getString("identity", true, 458759), //
           request.getString("domain", true, 488444), //
           new ReflectionResponder(responder));
+          return;
+        case "domain/get-vapid-public-key":
+          handle_DomainGetVapidPublicKey(requestId, //
+          request.getString("identity", true, 458759), //
+          request.getString("domain", true, 488444), //
+          new DomainVapidResponder(responder));
           return;
         case "document/authorize":
           handle_DocumentAuthorize(requestId, //

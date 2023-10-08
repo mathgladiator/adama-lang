@@ -338,6 +338,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientDomainListingResponse(obj), streamback);
   }
 
+  /** domain/get-vapid-public-key */
+  public void domainGetVapidPublicKey(ClientDomainGetVapidPublicKeyRequest request, Callback<ClientDomainVapidResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "domain/get-vapid-public-key");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
+    pool.requestResponse(node, (obj) -> new ClientDomainVapidResponse(obj), callback);
+  }
+
   /** domain/unmap */
   public void domainUnmap(ClientDomainUnmapRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

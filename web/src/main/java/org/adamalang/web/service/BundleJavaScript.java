@@ -25,22 +25,25 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 public class BundleJavaScript {
-  public static String bundle(String file) throws Exception {
-    String str = Files.readString(new File(file).toPath());
+  public static String bundle(String fileJs, String fileWorker) throws Exception {
+    String strJs = Files.readString(new File(fileJs).toPath());
+    String strWorker = Files.readString(new File(fileWorker).toPath());
     StringBuilder sb = new StringBuilder();
     sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     sb.append("package org.adamalang.web.service;\n\n");
     sb.append("import java.util.Base64;\n\n");
     sb.append("public class JavaScriptClient {\n");
     sb.append("  public static final byte[] ADAMA_JS_CLIENT_BYTES = ");
-    appendStringInChunks(sb, new String(Base64.getEncoder().encode(str.getBytes(StandardCharsets.UTF_8))));
+    appendStringInChunks(sb, "c", new String(Base64.getEncoder().encode(strJs.getBytes(StandardCharsets.UTF_8))));
+    sb.append("  public static final byte[] ADAMA_WORKER_JS_CLIENT_BYTES = ");
+    appendStringInChunks(sb, "w", new String(Base64.getEncoder().encode(strWorker.getBytes(StandardCharsets.UTF_8))));
     sb.append("}");
     return sb.toString();
   }
 
-  public static void appendStringInChunks(StringBuilder sb, String str) {
-    sb.append("Base64.getDecoder().decode(make());\n");
-    sb.append("  private static String make() {\n");
+  public static void appendStringInChunks(StringBuilder sb, String suffix, String str) {
+    sb.append("Base64.getDecoder().decode(make").append(suffix).append("());\n");
+    sb.append("  private static String make").append(suffix).append("() {\n");
     sb.append("    StringBuilder sb = new StringBuilder();\n");
     int len = str.length();
     int at = 0;

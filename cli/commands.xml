@@ -801,6 +801,11 @@
             </documentation>
             <arg name="input" default="style.css" />
         </command>
+        <command name="push-lab">
+            <documentation>
+                Tool to study Web Push
+            </documentation>
+        </command>
     </group>
 
     <command name="kickstart" interactive="true">

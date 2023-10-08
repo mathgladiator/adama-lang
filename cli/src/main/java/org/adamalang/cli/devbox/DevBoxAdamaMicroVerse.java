@@ -50,6 +50,8 @@ public class DevBoxAdamaMicroVerse {
   private final WatchService watchService;
   private final Thread scanner;
   public final Key domainKeyToUse;
+  public final String vapidPublicKey;
+  public final String vapidPrivateKey;
 
   public static class LocalSpaceDefn {
     private final WatchService watchService;
@@ -185,7 +187,7 @@ public class DevBoxAdamaMicroVerse {
       }
   }
 
-  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse) throws Exception {
+  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey) throws Exception {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
@@ -208,6 +210,8 @@ public class DevBoxAdamaMicroVerse {
       }
     });
     this.scanner.start();
+    this.vapidPublicKey = vapidPublicKey;
+    this.vapidPrivateKey = vapidPrivateKey;
   }
 
   public void shutdown() throws Exception {
@@ -291,6 +295,15 @@ public class DevBoxAdamaMicroVerse {
     if (domainKeyToUse != null) {
       io.notice("verse|mapping host to use:" + domainKeyToUse.space + "/" + domainKeyToUse.key);
     }
-    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse);
+
+    String vapidPublic = "";
+    String vapidPrivate = "";
+    JsonNode vapid = defn.get("vapid");
+    if (vapid != null && vapid.isObject()) {
+      vapidPublic = vapid.get("public").textValue();
+      vapidPrivate = vapid.get("private").textValue();
+      io.notice("verse|using public key for VAPID:" + vapidPublic);
+    }
+    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate);
   }
 }

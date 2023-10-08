@@ -101,6 +101,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   @Override
+  public void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder) {
+    responder.complete(verse.vapidPublicKey);
+  }
+
+  @Override
   public void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder) {
     verse.service.reflect(verse.domainKeyToUse, new Callback<>() {
       @Override

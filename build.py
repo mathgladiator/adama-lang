@@ -63,6 +63,7 @@ if args.client:
     if execute_cmd("./build.sh", cwd) != 0:
         fail("client", "Failed to build libadama.js")
     cmd_args = ["cp", os.path.join(cwd, "libadama.js"), os.path.join(ROOT_PATH, "release")]
+    cmd_args = ["cp", os.path.join(cwd, "libadama-worker.js"), os.path.join(ROOT_PATH, "release")]
     execute_cmd(" ".join(cmd_args))
 
 if args.jar:

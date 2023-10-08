@@ -15,8 +15,28 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231008162525";
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.io.*;
+
+public class DomainVapidResponder {
+  public final JsonResponder responder;
+
+  public DomainVapidResponder(JsonResponder responder) {
+    this.responder = responder;
+  }
+
+  public void complete(String publicKey) {
+    ObjectNode _obj = new JsonMapper().createObjectNode();
+    _obj.put("publicKey", publicKey);
+    responder.finish(_obj.toString());
+  }
+
+  public void error(ErrorCodeException ex) {
+    responder.error(ex);
+  }
 }

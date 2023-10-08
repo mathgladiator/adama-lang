@@ -20,8 +20,8 @@ package org.adamalang.web.service;
 import java.util.Base64;
 
 public class JavaScriptClient {
-  public static final byte[] ADAMA_JS_CLIENT_BYTES = Base64.getDecoder().decode(make());
-  private static String make() {
+  public static final byte[] ADAMA_JS_CLIENT_BYTES = Base64.getDecoder().decode(makec());
+  private static String makec() {
     StringBuilder sb = new StringBuilder();
     sb.append("ZnVuY3Rpb24gQWRhbWFUcmVlKCl7ZnVuY3Rpb24gaShlKXtpZihBcnJheS5pc0FycmF5KGUpKWZvcih2");
     sb.append("YXIgdD1bXSxuPTA7bjxlLmxlbmd0aDtuKyspdC5wdXNoKGkoZVtuXSkpO2Vsc2V7aWYoIm9iamVjdCIh");
@@ -900,6 +900,12 @@ public class JavaScriptClient {
     sb.append("b24oZSx0KXtlLnNldEF0dHJpYnV0ZSgiY2xhc3MiLHQpfSxBLkFDTEFTUz1mdW5jdGlvbihlLHQpe2Uu");
     sb.append("c2V0QXR0cmlidXRlKCJjbGFzcyIsdCl9LEEuQVNSQz1mdW5jdGlvbihlLHQpe2Uuc2V0QXR0cmlidXRl");
     sb.append("KCJzcmMiLHQpfSx3aW5kb3cucnhodG1sPUF9KCk7Cg==");
+    return sb.toString();
+  }
+  public static final byte[] ADAMA_WORKER_JS_CLIENT_BYTES = Base64.getDecoder().decode(makew());
+  private static String makew() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("ZnVuY3Rpb24gaGVsbG8oKXt9Cg==");
     return sb.toString();
   }
 }

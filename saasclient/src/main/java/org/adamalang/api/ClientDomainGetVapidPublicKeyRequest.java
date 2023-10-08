@@ -15,8 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231008162525";
+/** generated request type for domain/get-vapid-public-key */
+public class ClientDomainGetVapidPublicKeyRequest {
+  public String identity;
+  public String domain;
 }

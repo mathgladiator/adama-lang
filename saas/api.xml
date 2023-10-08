@@ -1034,6 +1034,18 @@
         </documentation>
     </method>
 
+    <responder name="domain-vapid" scope="global">
+        <field name="public-key" />
+    </responder>
+
+    <method name="domain/get-vapid-public-key" responder="domain-vapid" scope="global" policy-manual="true" devbox="true">
+        <parameter name="identity" />
+        <parameter name="domain" />
+        <documentation>
+            Get the public key for the VAPID
+        </documentation>
+    </method>
+
     <method name="domain/unmap" responder="simple" scope="global" policy-manual="true">
         <parameter name="identity"/>
         <parameter name="domain"/>

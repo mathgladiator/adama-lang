@@ -47,6 +47,7 @@ public class WebMetrics {
   public final Runnable webhandler_healthcheck;
   public final Runnable webhandler_deephealthcheck;
   public final Runnable webhandler_client_download;
+  public final Runnable webhandler_worker_download;
   public final Runnable webhandler_set_asset_key;
   public final Runnable webhandler_assets_no_cookie;
   public final Runnable webhandler_assets_invalid_uri;
@@ -71,6 +72,7 @@ public class WebMetrics {
     this.websockets_uncaught_exception = factory.counter("websockets_uncaught_exception");
     this.websockets_end_exception = factory.counter("websockets_end_exception");
     this.webhandler_client_download = factory.counter("webhandler_client_download");
+    this.webhandler_worker_download = factory.counter("webhandler_worker_download");
     this.webhandler_set_asset_key = factory.counter("webhandler_set_asset_key");
     this.webhandler_assets_no_cookie = factory.counter("webhandler_assets_no_cookie");
     this.webhandler_assets_invalid_uri = factory.counter("webhandler_assets_invalid_uri");
