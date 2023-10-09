@@ -17,21 +17,17 @@
 */
 package org.adamalang.common.keys;
 
-import java.io.ByteArrayOutputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECGenParameterSpec;
-import java.security.spec.ECPoint;
 import java.util.Base64;
 
 /** a simple factory for creating public/private keys for VAPID */
 public class VAPIDFactory {
   private SecureRandom random;
 
-  public VAPIDFactory() throws Exception {
-    this.random = new SecureRandom();
+  public VAPIDFactory(SecureRandom random) throws Exception {
+    this.random = random;
   }
 
   public VAPIDPublicPrivateKeyPair generateKeyPair() throws Exception {
@@ -39,13 +35,8 @@ public class VAPIDFactory {
     ECGenParameterSpec spec = new ECGenParameterSpec("secp256r1");
     generator.initialize(spec, this.random);
     KeyPair keyPair = generator.generateKeyPair();
-    ECPublicKey publicKey = (ECPublicKey)   keyPair.getPublic();
-    ECPoint ecp = publicKey.getW();
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-    outputStream.write(0x04);
-    outputStream.write(ecp.getAffineX().toByteArray());
-    outputStream.write(ecp.getAffineY().toByteArray());
-    String publicKey64 = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+    ECPublicKey publicKey = (java.security.interfaces.ECPublicKey) keyPair.getPublic();
+    String publicKey64 = Base64.getEncoder().encodeToString(ECPublicKeyCodec.encode(publicKey));
     String privateKey64 = Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
     return new VAPIDPublicPrivateKeyPair(publicKey64, privateKey64);
   }

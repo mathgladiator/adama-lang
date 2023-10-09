@@ -36,11 +36,11 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void start(SimpleHttpResponseHeader header) {
-    if (header.status == 200 || header.status == 202 || header.status == 204) {
+    if (200 <= header.status && header.status <= 204) {
       monitor.success();
       callback.success(null);
     } else {
-      logger.error("void-callback-not-200: {} -> {}", header.status, header.headers.toString());
+      logger.error("void-callback-not-20x: {} -> {}", header.status, header.headers.toString());
       monitor.failure(ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
       callback.failure(new ErrorCodeException(ErrorCodes.WEB_VOID_CALLBACK_NOT_200, header.status + ""));
     }

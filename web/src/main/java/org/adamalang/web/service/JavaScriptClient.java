@@ -905,7 +905,10 @@ public class JavaScriptClient {
   public static final byte[] ADAMA_WORKER_JS_CLIENT_BYTES = Base64.getDecoder().decode(makew());
   private static String makew() {
     StringBuilder sb = new StringBuilder();
-    sb.append("ZnVuY3Rpb24gaGVsbG8oKXt9Cg==");
+    sb.append("c2VsZi5hZGRFdmVudExpc3RlbmVyKCJwdXNoIixmdW5jdGlvbih0KXt2YXIgaSxlO3QuZGF0YSYmKGk9");
+    sb.append("dC5kYXRhLmpzb24oKSkmJihlPXtib2R5OmkuYm9keXx8IkdlbmVyaWMgUHVzaCBCb2R5In0sdC53YWl0");
+    sb.append("VW50aWwoc2VsZi5yZWdpc3RyYXRpb24uc2hvd05vdGlmaWNhdGlvbihpLnRpdGxlfHwiR2VuZXJpYyBQ");
+    sb.append("dXNoIFRpdGxlIixlKSkpfSk7Cg==");
     return sb.toString();
   }
 }

@@ -47,7 +47,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   @Override
   public void start(SimpleHttpResponseHeader header) {
     if (emissionPossible) {
-      if (header.status == 200 || header.status == 204) {
+      if (200 <= header.status && header.status <= 204) {
         invokeSuccess = true;
       } else {
         logger.error("get-callback-not-200: {}, {}", header.status + ":" + header.headers.toString());

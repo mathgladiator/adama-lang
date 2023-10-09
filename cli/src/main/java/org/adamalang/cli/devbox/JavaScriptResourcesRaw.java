@@ -2566,4 +2566,16 @@ public class JavaScriptResourcesRaw {
     sb.append("aW9uCn07Cg==");
     return sb.toString();
   }
+  public static final String WORKER = new String(Base64.getDecoder().decode(make_worker()), StandardCharsets.UTF_8);
+  private static String make_worker() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("LyogQWRhbWEgd29ya2VyOiBoYW5kbGUgc2ltcGxlIHB1c2ggbm90aWZpY2F0aW9ucyAqLw0Kc2VsZi5h");
+    sb.append("ZGRFdmVudExpc3RlbmVyKCdwdXNoJywgZnVuY3Rpb24oZXZlbnQpIHsNCiAgaWYgKGV2ZW50LmRhdGEp");
+    sb.append("IHsNCiAgICB2YXIganNvbiA9IGV2ZW50LmRhdGEuanNvbigpOw0KICAgIGlmIChqc29uKSB7DQogICAg");
+    sb.append("ICB2YXIgb3B0aW9ucyA9IHsNCiAgICAgICAgYm9keToganNvbi5ib2R5ID8ganNvbi5ib2R5IDogIkdl");
+    sb.append("bmVyaWMgUHVzaCBCb2R5IiwNCiAgICAgIH07DQogICAgICBldmVudC53YWl0VW50aWwoc2VsZi5yZWdp");
+    sb.append("c3RyYXRpb24uc2hvd05vdGlmaWNhdGlvbihqc29uLnRpdGxlID8ganNvbi50aXRsZSA6ICJHZW5lcmlj");
+    sb.append("IFB1c2ggVGl0bGUiLCBvcHRpb25zKSk7DQogICAgfQ0KICB9DQp9KTs=");
+    return sb.toString();
+  }
 }

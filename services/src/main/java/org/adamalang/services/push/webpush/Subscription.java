@@ -15,37 +15,40 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.keys;
+package org.adamalang.services.push.webpush;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.adamalang.common.Json;
 
 import java.math.BigInteger;
 import java.security.AlgorithmParameters;
 import java.security.KeyFactory;
-import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.*;
 import java.util.Base64;
 
-/** Vapid keys; https://datatracker.ietf.org/doc/html/draft-ietf-webpush-vapid-01 */
-public class VAPIDPublicPrivateKeyPair {
-  public final String publicKeyBase64;
-  public final String privateKeyBase64;
-  public final ECPrivateKey privateKey;
-  public final ECPublicKey publicKey;
+/** a subscription for web push */
+public class Subscription {
+  public final String endpoint;
+  public final byte[] user;
+  public final ECPublicKey p256dh;
 
-  public VAPIDPublicPrivateKeyPair(String publicKeyBase64, String privateKeyBase64) throws Exception {
-    this.publicKeyBase64 = publicKeyBase64;
-    this.privateKeyBase64 = privateKeyBase64;
+  public Subscription(String payload) throws Exception {
+    ObjectNode node = Json.parseJsonObject(payload);
+    this.endpoint = node.get("endpoint").textValue();
+    JsonNode keys = node.get("keys");
+    this.user = Base64.getUrlDecoder().decode(keys.get("auth").textValue());
     AlgorithmParameters parameters = AlgorithmParameters.getInstance("EC");
     parameters.init(new ECGenParameterSpec("secp256r1"));
     ECParameterSpec ecParameters = parameters.getParameterSpec(ECParameterSpec.class);
-    ECPrivateKeySpec privateSpec = new ECPrivateKeySpec(new BigInteger(Base64.getDecoder().decode(privateKeyBase64)), ecParameters);
-    byte[] publicRaw = Base64.getDecoder().decode(publicKeyBase64);
+    byte[] publicRaw = Base64.getUrlDecoder().decode(keys.get("p256dh").textValue());
     BigInteger x = new BigInteger(1, publicRaw, 1, 32);
     BigInteger y = new BigInteger(1, publicRaw, 33, 32);
     ECPoint w = new ECPoint(x, y);
     ECPublicKeySpec publicSpec = new ECPublicKeySpec(w, ecParameters);
     KeyFactory kf = KeyFactory.getInstance("EC");
-    privateKey = (ECPrivateKey) kf.generatePrivate(privateSpec);
-    publicKey = (ECPublicKey) kf.generatePublic(publicSpec);
+    this.p256dh = (ECPublicKey) kf.generatePublic(publicSpec);
   }
 }

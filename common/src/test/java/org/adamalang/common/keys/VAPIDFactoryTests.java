@@ -15,8 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.common.keys;
 
-public class Platform {
-  public static final String VERSION = "20231009161645";
+import org.junit.Test;
+
+import java.security.SecureRandom;
+
+public class VAPIDFactoryTests {
+  @Test
+  public void flow() throws Exception {
+    VAPIDFactory factory = new VAPIDFactory(new SecureRandom());
+    for (int k = 0; k < 10; k++) {
+      factory.generateKeyPair();
+    }
+  }
 }

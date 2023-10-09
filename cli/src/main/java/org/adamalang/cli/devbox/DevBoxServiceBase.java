@@ -130,6 +130,20 @@ public class DevBoxServiceBase implements ServiceBase {
           callback.success(new HttpResult("text/javascript", current.forestStyle.getBytes(), false));
           return;
         }
+        if (uri != null && uri.endsWith("/devlibadama-worker.js")) {
+          StringBuilder js = new StringBuilder();
+          try {
+            if (localLibAdamaJS != null) {
+              js.append(Files.readString(new File(localLibAdamaJS, "worker.js").toPath()));
+            } else {
+              js.append(JavaScriptResourcesRaw.WORKER);
+            }
+            callback.success(new HttpResult("text/javascript", js.toString().getBytes(), false));
+          } catch (Exception ex) {
+            callback.failure(new ErrorCodeException(500));
+          }
+          return;
+        }
         if (uri != null && uri.endsWith("/devlibadama.js")) {
           StringBuilder js = new StringBuilder();
           try {

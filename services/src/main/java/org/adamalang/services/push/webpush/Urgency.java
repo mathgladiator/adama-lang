@@ -15,8 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.services.push.webpush;
 
-public class Platform {
-  public static final String VERSION = "20231009161645";
+/** urgency of a push notification */
+public enum Urgency {
+  VERY_LOW("very-low"),
+  LOW("low"),
+  NORMAL("normal"),
+  HIGH("high");
+
+  public final String header;
+
+  private Urgency(String header) {
+    this.header = header;
+  }
 }

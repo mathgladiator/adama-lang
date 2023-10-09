@@ -31,6 +31,7 @@ public class BundleRawJavaScriptForDevBox {
     String debugger = Files.readString(new File(root, "debugger.js").toPath());
     String rxhtml = Files.readString(new File(root, "rxhtml.js").toPath());
     String connection = Files.readString(new File(root, "connection.js").toPath());
+    String worker = Files.readString(new File(root, "worker.js").toPath());
     StringBuilder sb = new StringBuilder();
     sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     sb.append("package org.adamalang.cli.devbox;\n\n");
@@ -45,6 +46,8 @@ public class BundleRawJavaScriptForDevBox {
     appendStringInChunks(sb, new String(Base64.getEncoder().encode(rxhtml.getBytes(StandardCharsets.UTF_8))), "rxhtml");
     sb.append("  public static final String CONNECTION = ");
     appendStringInChunks(sb, new String(Base64.getEncoder().encode(connection.getBytes(StandardCharsets.UTF_8))), "connection");
+    sb.append("  public static final String WORKER = ");
+    appendStringInChunks(sb, new String(Base64.getEncoder().encode(worker.getBytes(StandardCharsets.UTF_8))), "worker");
     sb.append("}");
     return sb.toString();
   }
