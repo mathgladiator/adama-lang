@@ -781,14 +781,14 @@ public class MainRouter {
                frontendHandler.mobileCapacitor(frontendArgs, out);
                return 0;
             }
-            case "push-lab": {
-              FrontendPushLabArgs frontendArgs = FrontendPushLabArgs.from(args, 2);
+            case "push-generate": {
+              FrontendPushGenerateArgs frontendArgs = FrontendPushGenerateArgs.from(args, 2);
               if (frontendArgs == null) {
-                FrontendPushLabArgs.help();
+                FrontendPushGenerateArgs.help();
                 return 1;
                }
                YesOrError out = output.makeYesOrError();
-               frontendHandler.pushLab(frontendArgs, out);
+               frontendHandler.pushGenerate(frontendArgs, out);
                return 0;
             }
             case "rxhtml": {

@@ -523,6 +523,15 @@ class WebSocketAdamaConnection {
       request: {"method":"space/list", "id":parId, "identity": identity, "marker": marker, "limit": limit}
     });
   }
+  PushRegister(identity, domain, subscription, deviceInfo, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"push/register", "id":parId, "identity": identity, "domain": domain, "subscription": subscription, "device-info": deviceInfo}
+    });
+  }
   DomainMap(identity, domain, space, certificate, responder) {
     var self = this;
     var parId = self.__id();

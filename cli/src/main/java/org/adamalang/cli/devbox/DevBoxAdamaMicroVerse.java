@@ -24,6 +24,7 @@ import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.cli.implementations.CodeHandlerImpl;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
@@ -31,6 +32,7 @@ import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.deploy.Linter;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.web.client.WebClientBase;
 
 import java.io.File;
 import java.nio.file.*;
@@ -52,6 +54,7 @@ public class DevBoxAdamaMicroVerse {
   public final Key domainKeyToUse;
   public final String vapidPublicKey;
   public final String vapidPrivateKey;
+  public final DevPush devPush;
 
   public static class LocalSpaceDefn {
     private final WatchService watchService;
@@ -187,7 +190,7 @@ public class DevBoxAdamaMicroVerse {
       }
   }
 
-  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey) throws Exception {
+  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush) throws Exception {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
@@ -212,6 +215,7 @@ public class DevBoxAdamaMicroVerse {
     this.scanner.start();
     this.vapidPublicKey = vapidPublicKey;
     this.vapidPrivateKey = vapidPrivateKey;
+    this.devPush = devPush;
   }
 
   public void shutdown() throws Exception {
@@ -239,7 +243,7 @@ public class DevBoxAdamaMicroVerse {
     Thread.sleep(1000);
   }
 
-  public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn) throws Exception {
+  public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -304,6 +308,14 @@ public class DevBoxAdamaMicroVerse {
       vapidPrivate = vapid.get("private").textValue();
       io.notice("verse|using public key for VAPID:" + vapidPublic);
     }
-    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate);
+    String pushFile = "pusher.json";
+    if (defn.has("push-file")) {
+      pushFile = defn.get("push-file").textValue();
+    }
+    String pushEmail = "";
+    if (defn.has("push-email")) {
+      pushEmail = defn.get("push-email").textValue();
+    }
+    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(new File(pushFile), pushEmail, new VAPIDPublicPrivateKeyPair(vapidPublic, vapidPrivate), webClientBase));
   }
 }

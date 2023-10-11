@@ -3766,10 +3766,10 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 		}
 	}
-	public static class FrontendPushLabArgs {
+	public static class FrontendPushGenerateArgs {
 		public Config config;
-		public static FrontendPushLabArgs from(String[] args, int start) {
-			FrontendPushLabArgs returnArgs = new FrontendPushLabArgs();
+		public static FrontendPushGenerateArgs from(String[] args, int start) {
+			FrontendPushGenerateArgs returnArgs = new FrontendPushGenerateArgs();
 			try {
 				returnArgs.config = new Config(args);
 			} catch (Exception er) {
@@ -3795,9 +3795,9 @@ public class Arguments {
 			return returnArgs;
 		}
 		public static void help() {
-			System.out.println(Util.prefix("Tool to study Web Push", Util.ANSI.Green));
+			System.out.println(Util.prefix("Generate VAPID tokens for a devbox.", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("adama frontend push-lab", Util.ANSI.Green));
+			System.out.println("    " + Util.prefix("adama frontend push-generate", Util.ANSI.Green));
 		}
 	}
 	public static class FrontendRxhtmlArgs {

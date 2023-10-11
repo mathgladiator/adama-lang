@@ -15,8 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231011181850";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+/** generated request type for push/register */
+public class ClientPushRegisterRequest {
+  public String identity;
+  public String domain;
+  public ObjectNode subscription;
+  public ObjectNode deviceInfo;
 }

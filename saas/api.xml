@@ -982,7 +982,15 @@
         </documentation>
     </method>
 
-
+    <method name="push/register" responder="simple" scope="global" policy-manual="true" devbox="true">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="subscription" />
+        <parameter name="device-info" />
+        <documentation>
+            Register a device for push notifications
+        </documentation>
+    </method>
 
     <method name="domain/map" responder="simple" scope="global" policy="true" policy-failure-code="998539" gen-service="true">
         <parameter name="identity"/>
@@ -1366,6 +1374,19 @@
             A system timestamp for actions
         </documentation>
     </field-definition>
+
+    <parameter-definition name="subscription" type="json-object" missing-error="407308">
+        <documentation>
+            A push subscription which is an abstract package for push notifications
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="device-info" type="json-object" missing-error="446218">
+        <documentation>
+            Information about a device
+        </documentation>
+    </parameter-definition>
+
 
     <responder name="automatic-domain-listing" stream="true">
         <field name="domain" />
@@ -2007,8 +2028,7 @@
 478990
 454412
 447244
-407308
-446218
+
 475915
 424723
 458512

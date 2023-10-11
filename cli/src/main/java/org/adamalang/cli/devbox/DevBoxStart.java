@@ -31,6 +31,8 @@ import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.deploy.Undeploy;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
+import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.services.push.Push;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
@@ -110,10 +112,11 @@ public class DevBoxStart {
       if (microverseDef.exists() && microverseDef.isFile()) {
         ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
         DevBoxServices.install(defn, webClientBase, offload, (line) -> terminal.info(line));
-        verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn);
+        verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn, webClientBase);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
+          verse.devPush.install();
           for (DevBoxAdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
             terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
             sync.watch(space.spaceName);

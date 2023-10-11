@@ -21,6 +21,7 @@ import org.adamalang.api.GlobalApiMetrics;
 import org.adamalang.api.RegionApiMetrics;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.keys.PrivateKeyWithId;
+import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.SignalControl;
@@ -38,6 +39,7 @@ import org.adamalang.web.io.JsonLogger;
 
 import java.io.File;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 
 public class GlobalExternNexus {
   public final FrontendConfig config;
@@ -65,6 +67,7 @@ public class GlobalExternNexus {
   public final GlobalMetricsReporter metricsReporter;
   public final SimpleExecutor metrics;
   public final String machine;
+  public final VAPIDFactory vapidFactory;
 
   public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
@@ -93,6 +96,7 @@ public class GlobalExternNexus {
     this.metrics = SimpleExecutor.create("metrics-report");
     this.metricsReporter = new GlobalMetricsReporter(database, metrics);
     attachmentRoot.mkdir();
+    this.vapidFactory = new VAPIDFactory(new SecureRandom());
   }
   public void close() throws Exception {
     database.close();

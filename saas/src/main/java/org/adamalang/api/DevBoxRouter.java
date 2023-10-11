@@ -27,6 +27,8 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder);
 
+  public abstract void handle_PushRegister(long requestId, String identity, String domain, ObjectNode subscription, ObjectNode deviceInfo, SimpleResponder responder);
+
   public abstract void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder);
 
   public abstract void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder);
@@ -72,6 +74,14 @@ public abstract class DevBoxRouter {
           request.getStringNormalize("space", true, 461828), //
           request.getString("key", true, 466947), //
           new ReflectionResponder(responder));
+          return;
+        case "push/register":
+          handle_PushRegister(requestId, //
+          request.getString("identity", true, 458759), //
+          request.getString("domain", true, 488444), //
+          request.getObject("subscription", true, 407308), //
+          request.getObject("device-info", true, 446218), //
+          new SimpleResponder(responder));
           return;
         case "domain/reflect":
           handle_DomainReflect(requestId, //

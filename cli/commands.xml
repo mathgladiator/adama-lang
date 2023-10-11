@@ -801,9 +801,9 @@
             </documentation>
             <arg name="input" default="style.css" />
         </command>
-        <command name="push-lab">
+        <command name="push-generate">
             <documentation>
-                Tool to study Web Push
+                Generate VAPID tokens for a devbox.
             </documentation>
         </command>
     </group>

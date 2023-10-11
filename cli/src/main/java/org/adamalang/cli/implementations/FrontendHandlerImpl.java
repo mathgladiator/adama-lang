@@ -50,7 +50,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
   }
 
   @Override
-  public void pushLab(Arguments.FrontendPushLabArgs args, Output.YesOrError output) throws Exception {
+  public void pushGenerate(Arguments.FrontendPushGenerateArgs args, Output.YesOrError output) throws Exception {
     VAPIDFactory factory = new VAPIDFactory(new SecureRandom());
     VAPIDPublicPrivateKeyPair vapid = factory.generateKeyPair();
     System.out.println("public:" + vapid.publicKeyBase64);

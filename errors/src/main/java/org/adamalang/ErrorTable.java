@@ -941,5 +941,7 @@ public class ErrorTable {
     descriptions.put(709617, "no description of error (yet)");
     names.put(789495, "GLOBAL_PUSHER_UNKNOWN_FAILURE");
     descriptions.put(789495, "no description of error (yet)");
+    names.put(737266, "PUSH_REGISTER_UNKNOWN_FAILURE");
+    descriptions.put(737266, "no description of error (yet)");
   }
 }

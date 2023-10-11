@@ -26,7 +26,7 @@ import java.util.Base64;
 public class VAPIDFactory {
   private SecureRandom random;
 
-  public VAPIDFactory(SecureRandom random) throws Exception {
+  public VAPIDFactory(SecureRandom random) {
     this.random = random;
   }
 

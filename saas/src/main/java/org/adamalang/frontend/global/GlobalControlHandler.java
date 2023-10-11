@@ -29,6 +29,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
+import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.contracts.data.DefaultPolicyBehavior;
 import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
@@ -429,6 +430,27 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DomainGetVapidPublicKeyRequest request, DomainVapidResponder responder) {
+    try {
+      VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(nexus.database, request.domain, nexus.vapidFactory);
+      responder.complete(pair.publicKeyBase64);
+    } catch (Exception ex) {
+      responder.error(new ErrorCodeException(ErrorCodes.VAPID_CREATE_UNKNOWN_FAILURE));
+    }
+  }
+
+  @Override
+  public void handle(Session session, PushRegisterRequest request, SimpleResponder responder) {
+    try {
+      // TODO: ask if the domain allows push notifications
+      PushSubscriptions.registerSubscription(nexus.database, request.domain, request.who.who, request.subscription.toString(), request.deviceInfo.toString(), System.currentTimeMillis() + 14 * 90000);
+      responder.complete();
+    } catch (Exception ex) {
+      responder.error(new ErrorCodeException(ErrorCodes.PUSH_REGISTER_UNKNOWN_FAILURE));
+    }
+  }
+
+  @Override
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder) {
     handleDomainMap(request.policy.owner, request.domain, request.certificate, request.space, null, false, responder);
   }
@@ -436,12 +458,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, DomainMapDocumentRequest request, SimpleResponder responder) {
     handleDomainMap(request.policy.owner, request.domain, request.certificate, request.space, request.key, false, responder);
-  }
-
-  @Override
-  public void handle(Session session, DomainGetVapidPublicKeyRequest request, DomainVapidResponder responder) {
-    // TODO: find the VAPID key for the given domain, return the public
-    responder.error(new ErrorCodeException(0));
   }
 
   @Override

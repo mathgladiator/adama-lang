@@ -76,6 +76,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder);
 
+  public void handle(Session session, PushRegisterRequest request, SimpleResponder responder);
+
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder);
 
   public void handle(Session session, DomainReflectRequest request, ReflectionResponder responder);
@@ -176,6 +178,7 @@ public interface RootGlobalHandler {
       case "space/list-developers":
       case "space/reflect":
       case "space/list":
+      case "push/register":
       case "domain/map":
       case "domain/reflect":
       case "domain/map-document":

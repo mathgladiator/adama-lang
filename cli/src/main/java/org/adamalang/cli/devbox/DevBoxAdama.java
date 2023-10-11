@@ -28,7 +28,6 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -103,6 +102,12 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   @Override
   public void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder) {
     responder.complete(verse.vapidPublicKey);
+  }
+
+  @Override
+  public void handle_PushRegister(long requestId, String identity, String domain, ObjectNode subscription, ObjectNode deviceInfo, SimpleResponder responder) {
+    verse.devPush.register(principalOf(identity), domain, subscription, deviceInfo);
+    responder.complete();
   }
 
   @Override

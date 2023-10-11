@@ -89,8 +89,6 @@ public class DevBoxServices {
     }
   }
 
-
-
   public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
     logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));

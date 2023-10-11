@@ -288,6 +288,17 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientSpaceListingResponse(obj), streamback);
   }
 
+  /** push/register */
+  public void pushRegister(ClientPushRegisterRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "push/register");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
+    node.set("subscription", request.subscription);
+    node.set("device-info", request.deviceInfo);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
   /** domain/map */
   public void domainMap(ClientDomainMapRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

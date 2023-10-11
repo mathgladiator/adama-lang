@@ -25,7 +25,7 @@ public interface FrontendHandler {
   void devServer(FrontendDevServerArgs args, YesOrError output) throws Exception;
   void make200(FrontendMake200Args args, YesOrError output) throws Exception;
   void mobileCapacitor(FrontendMobileCapacitorArgs args, YesOrError output) throws Exception;
-  void pushLab(FrontendPushLabArgs args, YesOrError output) throws Exception;
+  void pushGenerate(FrontendPushGenerateArgs args, YesOrError output) throws Exception;
   void rxhtml(FrontendRxhtmlArgs args, YesOrError output) throws Exception;
   void setLibadama(FrontendSetLibadamaArgs args, YesOrError output) throws Exception;
   void studyCss(FrontendStudyCssArgs args, YesOrError output) throws Exception;
