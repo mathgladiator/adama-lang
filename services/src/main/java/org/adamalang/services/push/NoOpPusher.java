@@ -17,5 +17,13 @@
 */
 package org.adamalang.services.push;
 
-public class WebPush {
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.natives.NtPrincipal;
+
+public class NoOpPusher implements Pusher {
+  @Override
+  public void notify(String domain, NtPrincipal who, String payload, Callback<String> callback) {
+    callback.failure(new ErrorCodeException(0));
+  }
 }

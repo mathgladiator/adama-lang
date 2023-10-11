@@ -31,6 +31,8 @@ import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.push.NoOpPusher;
+import org.adamalang.services.push.Push;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
@@ -115,5 +117,6 @@ public class FirstPartyServices {
     });
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(metrics, executor, webClientBase));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
+    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, new NoOpPusher()));
   }
 }

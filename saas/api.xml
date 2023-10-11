@@ -982,6 +982,8 @@
         </documentation>
     </method>
 
+
+
     <method name="domain/map" responder="simple" scope="global" policy="true" policy-failure-code="998539" gen-service="true">
         <parameter name="identity"/>
         <parameter name="domain"/>

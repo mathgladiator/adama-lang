@@ -939,5 +939,7 @@ public class ErrorTable {
     descriptions.put(758768, "no description of error (yet)");
     names.put(709617, "FIRST_PARTY_GOOGLE_MISSING_EMAIL");
     descriptions.put(709617, "no description of error (yet)");
+    names.put(789495, "GLOBAL_PUSHER_UNKNOWN_FAILURE");
+    descriptions.put(789495, "no description of error (yet)");
   }
 }

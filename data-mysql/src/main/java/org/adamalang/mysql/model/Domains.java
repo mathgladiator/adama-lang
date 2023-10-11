@@ -19,6 +19,7 @@ package org.adamalang.mysql.model;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.sys.domains.Domain;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 
 public class Domains {
 
-  public static VAPIDPublicPrivateKeyPair getOrCreateVapidKeyPair(DataBase dataBase, String domain) throws Exception {
+  public static VAPIDPublicPrivateKeyPair getOrCreateVapidKeyPair(DataBase dataBase, String domain, VAPIDFactory factory) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sqlGet = "SELECT `public_key`, `private_key`  FROM `" + dataBase.databaseName + "`.`vapid` WHERE `domain`=?";
       try (PreparedStatement statement = connection.prepareStatement(sqlGet)) {
@@ -42,17 +43,15 @@ public class Domains {
           }
         }
       }
-      // TODO: generate key
-      /*
+      VAPIDPublicPrivateKeyPair created = factory.generateKeyPair();
       String sql = "INSERT INTO `" + dataBase.databaseName + "`.`vapid` (`domain`, `public_key`, `private_key`) VALUES (?,?,?)";
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, domain);
-        statement.setString(2, space);
-        statement.setString(3, key);
+        statement.setString(2, created.publicKeyBase64);
+        statement.setString(3, created.privateKeyBase64);
         statement.execute();
       } catch (SQLIntegrityConstraintViolationException sicve) {
       }
-      */
 
       try (PreparedStatement statement = connection.prepareStatement(sqlGet)) {
         statement.setString(1, domain);

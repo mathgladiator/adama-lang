@@ -230,7 +230,7 @@ public class Installer {
             " DEFAULT CHARACTER SET = utf8mb4;" //
         ;
 
-    String createVapidKeys = //
+    String createVapidKeysTableSQL = //
         "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`vapid` (" + //
             "  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT," + //
             "  `domain` VARCHAR(254) NOT NULL," + //
@@ -238,6 +238,24 @@ public class Installer {
             "  `private_key` LONGTEXT NOT NULL," + //
             "  PRIMARY KEY (`id`)," + //
             "  UNIQUE `d` (`domain`))" + //
+            " ENGINE = InnoDB" + //
+            " DEFAULT CHARACTER SET = utf8mb4;" //
+        ;
+
+    String createPushSubscriptionTableSQL = //
+        "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`push` (" + //
+            "  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT," + //
+            "  `domain` VARCHAR(254) NOT NULL," + //
+            "  `agent` VARCHAR(128) NOT NULL," + //
+            "  `authority_hash` VARCHAR(32) NOT NULL," + //
+            "  `authority` TEXT NOT NULL," + //
+            "  `subscription` LONGTEXT NOT NULL," + //
+            "  `device_info` LONGTEXT NOT NULL," + //
+            "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //
+            "  `expiry` DATETIME," + //
+            "  PRIMARY KEY (`id`)," + //
+            "  INDEX `who` (`authority_hash`, `agent`)," + //
+            "  INDEX `d` (`domain`))" + //
             " ENGINE = InnoDB" + //
             " DEFAULT CHARACTER SET = utf8mb4;" //
         ;
@@ -267,7 +285,8 @@ public class Installer {
       DataBase.execute(connection, createHostsTableSQL);
       DataBase.execute(connection, createSecretsTableSQL);
       DataBase.execute(connection, createDomainsTableSQL);
-      DataBase.execute(connection, createVapidKeys);
+      DataBase.execute(connection, createVapidKeysTableSQL);
+      DataBase.execute(connection, createPushSubscriptionTableSQL);
       DataBase.execute(connection, createSentinelTableSQL);
     } finally {
       connection.close();
@@ -291,6 +310,7 @@ public class Installer {
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`secrets`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`domains`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`vapid`;");
+      DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`push`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`sentinel`;");
       DataBase.execute(connection, "DROP DATABASE IF EXISTS `" + dataBase.databaseName + "`;");
     } finally {
