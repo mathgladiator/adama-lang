@@ -62,7 +62,7 @@ public class PushSubscriptions {
 
   public static List<DeviceSubscription> list(DataBase dataBase, String domain, NtPrincipal who) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sqlGet = "SELECT `id`, subscription`, `device_info`  FROM `" + dataBase.databaseName + "`.`push` WHERE `domain`=? AND `agent`=? AND `authority`=? AND `authority_hash`=? ORDER BY `id`";
+      String sqlGet = "SELECT `id`, `subscription`, `device_info`  FROM `" + dataBase.databaseName + "`.`push` WHERE `domain`=? AND `agent`=? AND `authority`=? AND `authority_hash`=? ORDER BY `id`";
       try (PreparedStatement statement = connection.prepareStatement(sqlGet)) {
         statement.setString(1, domain);
         statement.setString(2, who.agent);
