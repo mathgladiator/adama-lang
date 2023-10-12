@@ -38,6 +38,8 @@ import org.adamalang.net.client.TargetsQuorum;
 import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.sys.capacity.MachinePicker;
+import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.services.push.GlobalPusher;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
@@ -110,7 +112,9 @@ public class CommonServiceInit {
     this.sqs = cb.sqs;
     this.ses = cb.ses;
 
-    em.installServices(publicKeyId);
+    FirstPartyMetrics metrics = em.installServices(publicKeyId);
+    // service overrides
+    new GlobalPusher(metrics, database, em.push, config.get_string("push-email", null), em.webBase).install();
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {

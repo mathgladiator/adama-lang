@@ -41,6 +41,7 @@ import org.adamalang.runtime.sys.TriggerDeployment;
 import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
+import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.FirstPartyServices;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
@@ -54,6 +55,7 @@ import org.slf4j.LoggerFactory;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** configuration for every machine */
@@ -81,6 +83,7 @@ public class EveryMachine {
   public final SelfClient adamaCurrentRegionClient;
   public final String regionalIdentity;
   public final SimpleExecutor metrics;
+  public final SimpleExecutor push;
 
   public EveryMachine(Config config, Role role) throws Exception {
     MachineHeat.install();
@@ -125,11 +128,12 @@ public class EveryMachine {
     this.system = SimpleExecutor.create("system");
     this.engine = netBase.startGossiping();
     this.metrics = SimpleExecutor.create("metrics");
+    this.push = SimpleExecutor.create("push");
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[EveryMachine-Shutdown]");
       alive.set(false);
       try {
-        system.shutdown();
+        system.shutdown().await(250, TimeUnit.MILLISECONDS);
       } catch (Exception ex) {
       }
       try {
@@ -141,11 +145,15 @@ public class EveryMachine {
       } catch (Exception ex) {
       }
       try {
-        regionClient.shutdown();
+        regionClient.shutdown().await(250, TimeUnit.MILLISECONDS);
       } catch (Exception ex) {
       }
       try {
-        metrics.shutdown();
+        metrics.shutdown().await(250, TimeUnit.MILLISECONDS);
+      } catch (Exception ex) {
+      }
+      try {
+        push.shutdown().await(250, TimeUnit.MILLISECONDS);
       } catch (Exception ex) {
       }
     })));
@@ -160,9 +168,9 @@ public class EveryMachine {
     System.out.println("[/EveryMachine-Setup]");
   }
 
-  public void installServices(int publicKeyId) {
+  public FirstPartyMetrics installServices(int publicKeyId) {
     SimpleExecutor services = SimpleExecutor.create("executor");
-    FirstPartyServices.install(services, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey));
+    FirstPartyMetrics metrics = FirstPartyServices.install(services, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey));
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[Services-Shutdown]");
       alive.set(false);
@@ -172,6 +180,7 @@ public class EveryMachine {
 
       }
     })));
+    return metrics;
   }
 
   public MeteringBatchReady makeMeteringBatchReady(BillingDocumentFinder billingDocumentFinder, int publicKeyId) {
