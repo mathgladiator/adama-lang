@@ -45,7 +45,7 @@ public class TemplatePageNormalizeTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script><script>");
+    gold.append("\n<head><script src=\"https://aws-us-east-2.adama-platform.com/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");

@@ -18,5 +18,6 @@
 package org.adamalang.common;
 
 public class Platform {
-  public static final String VERSION = "20231011194750";
+  public static final String VERSION = "20231011212347";
+  public static final String JS_VERSION = "dd9c4ba5e519845d08f00fa3342b1c82";
 }

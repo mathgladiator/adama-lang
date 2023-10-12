@@ -17,13 +17,17 @@
 */
 package org.adamalang.rxhtml.template.config;
 
+import org.adamalang.common.Platform;
+
 /** configuration for the shell */
 public class ShellConfig {
   public final Feedback feedback;
   public final boolean useLocalAdamaJavascript;
+  public final String version;
 
-  private ShellConfig(Feedback feedback, boolean useLocalAdamaJavascript) {
+  private ShellConfig(Feedback feedback, final String version, boolean useLocalAdamaJavascript) {
     this.feedback = feedback;
+    this.version = version;
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
   }
 
@@ -34,14 +38,21 @@ public class ShellConfig {
   public static class Builder {
     public Feedback feedback;
     public boolean useLocalAdamaJavascript;
+    public String version;
 
     public Builder() {
       this.feedback = Feedback.NoOp;
       this.useLocalAdamaJavascript = false;
+      this.version =  Platform.JS_VERSION;
     }
 
     public Builder withFeedback(Feedback feedback) {
       this.feedback = feedback;
+      return this;
+    }
+
+    public Builder withVersion(String version) {
+      this.version = version;
       return this;
     }
 
@@ -51,7 +62,7 @@ public class ShellConfig {
     }
 
     public ShellConfig end() {
-      return new ShellConfig(feedback, useLocalAdamaJavascript);
+      return new ShellConfig(feedback, version, useLocalAdamaJavascript);
     }
   }
 }

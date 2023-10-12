@@ -27,6 +27,7 @@ import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.DefaultCopyright;
 import org.adamalang.common.Escaping;
+import org.adamalang.common.Hashing;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.frontend.EmbedTemplates;
@@ -38,6 +39,7 @@ import org.adamalang.web.service.BundleJavaScript;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -176,8 +178,15 @@ public class ContribHandlerImpl implements ContribHandler {
   @Override
   public void version(Arguments.ContribVersionArgs args, Output.YesOrError output) throws Exception {
     String versionCode = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+    MessageDigest md5 = Hashing.md5();
+    md5.update(Files.readAllBytes(new File("release/libadama.js").toPath()));
+    String jsver = Hashing.finishAndEncodeHex(md5);
     System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
-    String versionFile = "package org.adamalang.common;\n" + "\n" + "public class Platform {\n" + "  public static final String VERSION = \"" + versionCode + "\";\n" + "}\n";
+    String versionFile = "package org.adamalang.common;\n" + //
+        "\n" + "public class Platform {\n" + //
+        "  public static final String VERSION = \"" + versionCode + "\";\n" + //
+        "  public static final String JS_VERSION = \"" + jsver + "\";\n" + //
+        "}\n";
     Files.writeString(new File("common/src/main/java/org/adamalang/common/Platform.java").toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + versionFile);
     output.out();
   }

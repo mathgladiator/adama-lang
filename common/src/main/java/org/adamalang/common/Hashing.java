@@ -46,4 +46,8 @@ public class Hashing {
   public static String finishAndEncode(MessageDigest digest) {
     return new String(Base64.getEncoder().encode(digest.digest()), StandardCharsets.UTF_8);
   }
+
+  public static String finishAndEncodeHex(MessageDigest digest) {
+    return Hex.of(digest.digest()).toLowerCase();
+  }
 }
