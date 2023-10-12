@@ -53,6 +53,9 @@ public class CodeHandlerImpl implements CodeHandler {
   @Override
   public void bundlePlan(Arguments.CodeBundlePlanArgs args, Output.YesOrError output) throws Exception {
     ObjectNode plan = Json.newJsonObject();
+    if ("true".equalsIgnoreCase(args.instrument) || "yes".equalsIgnoreCase(args.instrument)) {
+      plan.put("instrument", true);
+    }
     ObjectNode version = plan.putObject("versions").putObject("file");
     version.put("main", Files.readString(new File(args.main).toPath()));
     ObjectNode includes = version.putObject("includes");

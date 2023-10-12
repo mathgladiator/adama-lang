@@ -385,17 +385,20 @@ public class DurableLivingDocument implements Queryable {
   }
 
   private void scheduleMetricsDumpWhileInExecutor() {
-    if (metricsScheduled || disableMetrics) {
+    if (metricsScheduled) {
       return;
     }
     metricsScheduled = true;
     base.executor.schedule(new NamedRunnable("dump-document-metrics") {
       @Override
       public void execute() throws Exception {
-        String metrics = document.__metrics();
-        base.metricsReporter.emitMetrics(key, metrics);
-        metricsScheduled = false;
-        disableMetrics = "{}".equals(metrics);
+        document.__perf.dump();
+        if (!disableMetrics) {
+          String metrics = document.__metrics();
+          base.metricsReporter.emitMetrics(key, metrics);
+          metricsScheduled = false;
+          disableMetrics = "{}".equals(metrics);
+        }
       }
     }, 60000);
   }

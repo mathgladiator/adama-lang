@@ -71,7 +71,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
         }
       }
       if (factory == null) {
-        factory = compile(name, spacePrefix.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_")) + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer, keys);
+        factory = compile(name, spacePrefix.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_")) + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer, keys, plan.instrument);
       }
       _memoryUsed += factory.memoryUsage;
       factories.put(entry.getKey(), factory);
@@ -80,9 +80,13 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
     this.memoryUsed = _memoryUsed;
   }
 
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, boolean instrument) throws ErrorCodeException {
     try {
-      final var options = CompilerOptions.start().make();
+      CompilerOptions.Builder builder = CompilerOptions.start();
+      if (instrument) {
+        builder = builder.instrument();
+      }
+      final var options = builder.make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();

@@ -30,7 +30,11 @@ import java.util.regex.Pattern;
 
 public class PhaseValidate {
   public static ValidationResults go(final Path inputRoot, final Path path, final String className, final boolean emission, final StringBuilder outputFile) throws Exception {
-    final var options = CompilerOptions.start().enableCodeCoverage().make();
+    CompilerOptions.Builder optionsBuilder = CompilerOptions.start().enableCodeCoverage();
+    if (className.contains("Instrumented")) {
+      optionsBuilder = optionsBuilder.instrument();
+    }
+    final var options = optionsBuilder.make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();

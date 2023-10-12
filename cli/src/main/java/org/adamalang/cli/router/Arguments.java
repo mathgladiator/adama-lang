@@ -1774,6 +1774,7 @@ public class Arguments {
 		public Config config;
 		public String output;
 		public String main;
+		public String instrument = "false";
 		public String imports = "backend";
 		public static CodeBundlePlanArgs from(String[] args, int start) {
 			CodeBundlePlanArgs returnArgs = new CodeBundlePlanArgs();
@@ -1803,6 +1804,17 @@ public class Arguments {
 							returnArgs.main = args[k+1];
 							k++;
 							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-in":
+					case "--instrument": {
+						if (k+1 < args.length) {
+							returnArgs.instrument = args[k+1];
+							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -1852,6 +1864,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
 			System.out.println("    " + Util.prefix("-m, --main", Util.ANSI.Green) + " " + Util.prefix("<main>", Util.ANSI.White) + " : The main/primary adama file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-in, --instrument", Util.ANSI.Green) + " " + Util.prefix("<instrument>", Util.ANSI.White) + " : Instrument the plan");
 			System.out.println("    " + Util.prefix("-i, --imports", Util.ANSI.Green) + " " + Util.prefix("<imports>", Util.ANSI.White) + " : A directory containing adama files to import into the main");
 		}
 	}

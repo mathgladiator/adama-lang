@@ -1,0 +1,3 @@
+public int x = 7;
+
+bubble k = (x + 1) * (x + 1);

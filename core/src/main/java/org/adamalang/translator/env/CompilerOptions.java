@@ -30,6 +30,7 @@ public class CompilerOptions {
   public final boolean removeTests;
   public final String[] searchPaths;
   public final boolean stderrLoggingCompiler; // G2G
+  public final boolean instrumentPerf;
 
   private CompilerOptions(final Builder builder) {
     stderrLoggingCompiler = builder.stderrLoggingCompiler;
@@ -41,6 +42,7 @@ public class CompilerOptions {
     outputFile = builder.outputFile;
     searchPaths = builder.searchPaths.toArray(new String[builder.searchPaths.size()]);
     inputFiles = builder.inputFiles.toArray(new String[builder.inputFiles.size()]);
+    instrumentPerf = builder.instrumentPerf;
   }
 
   public static Builder start() {
@@ -58,6 +60,7 @@ public class CompilerOptions {
     public boolean removeTests;
     public ArrayList<String> searchPaths;
     public boolean stderrLoggingCompiler;
+    public boolean instrumentPerf;
 
     private Builder() {
       stderrLoggingCompiler = true;
@@ -70,6 +73,7 @@ public class CompilerOptions {
       outputFile = null;
       searchPaths = new ArrayList<>();
       inputFiles = new ArrayList<>();
+      instrumentPerf = false;
     }
 
     public Builder args(final int offset, final String... args) {
@@ -123,6 +127,11 @@ public class CompilerOptions {
 
     public Builder noCost() {
       disableBillingCost = true;
+      return this;
+    }
+
+    public Builder instrument() {
+      instrumentPerf = true;
       return this;
     }
   }

@@ -108,6 +108,7 @@ public class DevBoxAdamaMicroVerse {
 
     public String bundle(TerminalIO io) throws Exception {
       ObjectNode plan = Json.newJsonObject();
+      plan.put("instrument", true);
       ObjectNode version = plan.putObject("versions").putObject("file");
       String main = Files.readString(new File(mainFile).toPath());
       if (main.trim().equals("")) {

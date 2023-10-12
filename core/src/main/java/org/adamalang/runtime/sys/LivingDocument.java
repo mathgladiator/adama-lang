@@ -102,6 +102,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
+  public PerfTracker __perf;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -153,6 +154,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __currentWebCache = null;
     __gets = new ArrayList<>();
     __replication = new ReplicationEngine(this);
+    __perf = new PerfTracker(this);
   }
 
   /** exposed: get the document's timestamp as a date */

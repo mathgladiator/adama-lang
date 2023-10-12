@@ -86,6 +86,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="instrument" type="boolean" short="in">
+        <documentation>
+            Instrument the plan
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="limit" type="int" short="l">
         <documentation>
             Limit the returned items.
@@ -518,6 +524,7 @@
             </documentation>
             <arg name="output" />
             <arg name="main" />
+            <arg name="instrument" default="false" />
             <arg name="imports" default="backend" />
         </command>
 

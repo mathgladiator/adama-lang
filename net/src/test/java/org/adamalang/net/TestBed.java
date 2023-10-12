@@ -78,7 +78,7 @@ public class TestBed implements AutoCloseable {
   public final MockMetricsReporter metricsReporter;
 
   public TestBed(int port, String code) throws Exception {
-    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>());
+    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>(), true);
     this.base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");

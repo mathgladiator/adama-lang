@@ -36,6 +36,7 @@ public class DeploymentPlan {
   public final HashMap<String, DeployedVersion> versions;
   public final ArrayList<Stage> stages;
   public final String defaultVersion;
+  public final boolean instrument;
 
   public DeploymentPlan(String json, ExceptionLogger logger) throws ErrorCodeException {
     try {
@@ -46,9 +47,14 @@ public class DeploymentPlan {
       versions = new HashMap<>();
       stages = new ArrayList<>();
       String _defaultVersion = null;
+      boolean _instrument = false;
       if (reader.startObject()) {
         while (reader.notEndOfObject()) {
           switch (reader.fieldName()) {
+            case "instrument": {
+              _instrument = reader.readBoolean();
+            }
+            break;
             case "versions": {
               if (reader.startObject()) {
                 while (reader.notEndOfObject()) {
@@ -132,6 +138,7 @@ public class DeploymentPlan {
           throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_MUST_HAVE_DEFAULT);
         }
         this.defaultVersion = _defaultVersion;
+        this.instrument = _instrument;
       } else {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT);
       }

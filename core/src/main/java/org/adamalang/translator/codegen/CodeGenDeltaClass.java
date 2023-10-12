@@ -216,9 +216,15 @@ public class CodeGenDeltaClass {
           }
         }
         sb.append("if (__g").append(bd.nameToken.text).append(" != __CHECK)  {").tabUp().writeNewline();
+        if (environment.state.options.instrumentPerf) {
+          sb.append("Runnable __PTb_").append(bd.nameToken.text).append(" = __perf.measure(\"").append(storage.name.text).append("_b_" + bd.nameToken.text).append("\");").writeNewline();
+        }
         final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
         sb.append(bubbleType.getJavaBoxType(environment)).append(" __local_").append(bd.nameToken.text).append(" = __item.__COMPUTE_").append(bd.nameToken.text).append("(__writer.who, __VIEWER);").writeNewline();
         writeShowData(sb, "__d" + bd.nameToken.text, "__local_" + bd.nameToken.text, bubbleType, "__obj.planField(\"" + bd.nameToken.text + "\")", environment, false);
+        if (environment.state.options.instrumentPerf) {
+          sb.append("__PTb_").append(bd.nameToken.text).append(".run();").writeNewline();
+        }
         sb.append("__g").append(bd.nameToken.text).append(" = __CHECK;").tabDown().writeNewline();
         sb.append("}").writeNewline();
         if (closeItUp) {
@@ -253,7 +259,6 @@ public class CodeGenDeltaClass {
     sb.append("}").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
-
   }
 
   private static void writeShowData(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType sourceType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
