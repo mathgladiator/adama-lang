@@ -1727,6 +1727,74 @@ var RxHTML = (function () {
       window.location.href = fixHref(uri);
     }
   };
+
+  var urlBase64ToUint8Array = function(base64) {
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
+    for (var i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  var setupSubscription = function (vapidPublicKey, identity, identityName) {
+    navigator.serviceWorker.ready.then(function (registration) {
+      return registration.pushManager.getSubscription()
+        .then(async function (subscription) {
+          if (subscription) {
+            return subscription;
+          }
+          const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+          return registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedVapidKey
+          });
+        });
+    }).then(function (subscription) {
+      var sub = subscription.toJSON();
+      sub['@method'] = 'webpush';
+      sub['@time'] = new Date().getTime();
+      var val = localStorage.getItem("push_endpoint_" + identityName);
+      if (val) {
+        if (val == sub.endpoint) {
+          console.log("reusing endpoint:" + sub.endpoint);
+          return;
+        }
+      }
+      var device = {};
+      device.mode = 'web'
+      if (window && window.navigator && window.navigator.userAgent) {
+        device.ua = window.navigator.userAgent;
+      }
+      connection.PushRegister(identity, self.domain, sub, device, {
+        success: function() {
+          localStorage.setItem("push_endpoint_" + identityName, sub.endpoint);
+        },
+        failure: function(reason) {
+          console.error("Failed to register subscription to Adama:" + reason);
+        }
+      });
+    });
+  }
+
+  self.worker = function(identityName, path) {
+    try {
+      navigator.serviceWorker.register(path);
+      afterHaveIdentity(identityName, function(identity) {
+        connection.DomainGetVapidPublicKey(identity, self.domain, {
+          success: function(response) {
+            setupSubscription(response.publicKey, identity, identityName);
+          },
+          failure: function (reason) {
+            console.error("failed to get public-key:" + reason);
+          }
+        })
+      });
+    } catch (ex) {
+      console.error("failed to initialize worker", ex);
+    }
+  };
+
   self.init = function () {
     self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
     window.onpopstate = function (p) {
@@ -1829,6 +1897,11 @@ var RxHTML = (function () {
     }
   };
 
+  var identityEvents = {};
+  var afterHaveIdentity = function(identityName, callback) {
+    identityEvents[identityName] = callback;
+  };
+
   /** for custom elements to learn of the identity */
   self.ID = function (identityName, redirectToFunc) {
     if (identityName === true) {
@@ -1861,7 +1934,10 @@ var RxHTML = (function () {
       }, 10);
       return { abort: true };
     }
-
+    if (identityName in identityEvents) {
+      identityEvents[identityName](identity);
+      delete identityEvents[identityName];
+    }
     return { abort: false, cleanup: cleanup, identity: identity };
   };
 
@@ -2119,7 +2195,6 @@ var RxHTML = (function () {
       bind(false);
     });
   };
-
 
   self.domain = location.hostname;
   self.host = location.host;

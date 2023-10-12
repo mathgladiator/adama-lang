@@ -52,7 +52,9 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n");
     gold.append("\n");
-    gold.append("\n</style><script src=\"oh-hi.js\"></script></head><body class=\"my\"></body><script>RxHTML.init();</script></html>");
+    gold.append("\n</style><script src=\"oh-hi.js\"></script></head><body class=\"my\"></body><script>");
+    gold.append("\n  RxHTML.init();");
+    gold.append("\n</script></html>");
     return gold.toString();
   }
   @Override

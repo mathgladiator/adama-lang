@@ -3708,6 +3708,7 @@ public class Arguments {
 	public static class FrontendMobileCapacitorArgs {
 		public Config config;
 		public String rxhtmlPath = "frontend";
+		public String domain;
 		public String output = "mobile.html";
 		public static FrontendMobileCapacitorArgs from(String[] args, int start) {
 			FrontendMobileCapacitorArgs returnArgs = new FrontendMobileCapacitorArgs();
@@ -3716,6 +3717,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
+			String[] missing = new String[]{"--domain", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-r":
@@ -3723,6 +3725,18 @@ public class Arguments {
 						if (k+1 < args.length) {
 							returnArgs.rxhtmlPath = args[k+1];
 							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-d":
+					case "--domain": {
+						if (k+1 < args.length) {
+							returnArgs.domain = args[k+1];
+							k++;
+							missing[0] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -3755,12 +3769,21 @@ public class Arguments {
 							return null;
 				}
 			}
-			return returnArgs;
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
 		}
 		public static void help() {
 			System.out.println(Util.prefix("Create a shell for https://capacitorjs.com/", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama frontend mobile-capacitor", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White) + " : The domain name");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");

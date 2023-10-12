@@ -943,5 +943,7 @@ public class ErrorTable {
     descriptions.put(789495, "no description of error (yet)");
     names.put(737266, "PUSH_REGISTER_UNKNOWN_FAILURE");
     descriptions.put(737266, "no description of error (yet)");
+    names.put(774130, "VAPID_CREATE_UNKNOWN_FAILURE");
+    descriptions.put(774130, "no description of error (yet)");
   }
 }

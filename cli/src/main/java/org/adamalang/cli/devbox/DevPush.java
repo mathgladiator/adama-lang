@@ -61,9 +61,17 @@ public class DevPush implements Pusher  {
     this.webPushFactory128 = new WebPushRequestFactory128(email, new SecureRandom());
   }
 
+  public ObjectNode load() throws Exception {
+    if (path.exists()) {
+      return Json.parseJsonObject(Files.readString(path.toPath()));
+    } else {
+      return Json.newJsonObject();
+    }
+  }
+
   public void register(NtPrincipal who, String domain, ObjectNode subscription, ObjectNode deviceInfo) {
     try {
-      ObjectNode push = Json.parseJsonObject(Files.readString(path.toPath()));
+      ObjectNode push = load();
       ArrayNode subscriptions = null;
       if (push.has(domain)) {
         subscriptions = (ArrayNode) push.get(domain);
@@ -106,7 +114,7 @@ public class DevPush implements Pusher  {
   @Override
   public void notify(String domain, NtPrincipal who, String payload, Callback<String> callback) {
     try {
-      ObjectNode push = Json.parseJsonObject(Files.readString(path.toPath()));
+      ObjectNode push = load();
       ArrayNode subscriptions = (ArrayNode) push.get(domain);
       Iterator<JsonNode> it = subscriptions.iterator();
       while (it.hasNext()) {

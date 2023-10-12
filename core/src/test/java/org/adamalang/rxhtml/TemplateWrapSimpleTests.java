@@ -104,7 +104,9 @@ public class TemplateWrapSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n");
     gold.append("\n");
-    gold.append("\n</style></head><body></body><script>RxHTML.init();</script></html>");
+    gold.append("\n</style></head><body></body><script>");
+    gold.append("\n  RxHTML.init();");
+    gold.append("\n</script></html>");
     return gold.toString();
   }
   @Override

@@ -18,7 +18,6 @@
 package org.adamalang.runtime.stdlib;
 
 import com.lambdaworks.crypto.SCryptUtil;
-import org.adamalang.common.ProtectedUUID;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;

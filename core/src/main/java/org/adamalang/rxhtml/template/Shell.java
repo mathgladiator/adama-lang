@@ -45,10 +45,16 @@ public class Shell {
   public String makeShell(RxHtmlResult result) {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
+    boolean worker = false;
+    String workerIdentity = "default";
     if (shell != null) {
+      worker = "true".equalsIgnoreCase(shell.attr("worker"));
       sb.append("<!DOCTYPE html>\n<html");
       if (shell.hasAttr("html-class")) {
         sb.append(" class=\"").append(shell.attr("html-class")).append("\"");
+      }
+      if (shell.hasAttr("worker-identity-name")) {
+        workerIdentity = shell.attr("worker-identity-name");
       }
       sb.append(">\n<head>");
       String defaultTitle = null;
@@ -89,8 +95,15 @@ public class Shell {
     } else {
       sb.append("<body>");
     }
-    sb.append("</body><script>");
-    sb.append("RxHTML.init();");
+    sb.append("</body><script>\n");
+    sb.append("  RxHTML.init();\n");
+    if (worker) {
+      if (config.useLocalAdamaJavascript) {
+        sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/" + System.currentTimeMillis() + "/devlibadama-worker.js\");\n");
+      } else {
+        sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js\");\n");
+      }
+    }
     sb.append("</script></html>");
     return sb.toString();
   }

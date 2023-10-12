@@ -63,7 +63,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.rxhtmlPath), files);
     String result = Bundler.bundle(files);
-    String shell = CapacitorJSShell.makeMobileShell(result, (el, w) -> {
+    String shell = CapacitorJSShell.makeMobileShell(result, args.domain, (el, w) -> {
       System.err.println("warning:" + w);
     });
     Files.writeString(new File(args.output).toPath(), shell);

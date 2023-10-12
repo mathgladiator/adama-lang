@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateScopeViewTests extends BaseRxHtmlTest {
+public class TemplateShellWorkerTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -34,12 +34,6 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     gold.append("JavaScript:(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.E('div');");
-    gold.append("\n    var e=$.pIE(a,'obj', true);");
-    gold.append("\n    d.append($.L(e,'key'));");
-    gold.append("\n    d.append($.T(' - '));");
-    gold.append("\n    d.append($.L(e,'value'));");
-    gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -50,12 +44,6 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     gold.append("\n(function($){");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.E('div');");
-    gold.append("\n    var e=$.pIE(a,'obj', true);");
-    gold.append("\n    d.append($.L(e,'key'));");
-    gold.append("\n    d.append($.T(' - '));");
-    gold.append("\n    d.append($.L(e,'value'));");
-    gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -66,6 +54,7 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n</style></head><body></body><script>");
     gold.append("\n  RxHTML.init();");
+    gold.append("\n  RxHTML.worker(\"foo\",\"/libadama-worker.js\");");
     gold.append("\n</script></html>");
     return gold.toString();
   }
@@ -73,10 +62,9 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
   public String source() {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
+    source.append("\n    <shell worker=\"true\" worker-identity-name=\"foo\">");
+    source.append("\n    </shell>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:scope=\"obj\" rx:expand-view-state>");
-    source.append("\n            <lookup path=\"key\" /> - <lookup path=\"value\" />");
-    source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
@@ -85,9 +73,7 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : {");
-    gold.append("\n    \"obj\" : { }");
-    gold.append("\n  }");
+    gold.append("\n  \"/\" : { }");
     gold.append("\n}");
     return gold.toString();
   }

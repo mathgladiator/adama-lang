@@ -29,12 +29,13 @@ import java.util.ArrayList;
 
 public class CapacitorJSShell {
 
-  public static String makeMobileShell(String forest, Feedback feedback) throws Exception {
+  public static String makeMobileShell(String forest, String domainOverride, Feedback feedback) throws Exception {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
     Document document = Jsoup.parse(forest);
     Element mobileShell = findMobileShell(document);
-
+    boolean worker = "true".equalsIgnoreCase(mobileShell.attr("worker"));
+    String workerIdentity = mobileShell.hasAttr("worker-identity-name") ? mobileShell.attr("worker-identity-name") : "default";
     sb.append("<!DOCTYPE html>\n<html");
     if (mobileShell.hasAttr("html-class")) {
       sb.append(" class=\"").append(mobileShell.attr("html-class")).append("\"");
@@ -71,8 +72,14 @@ public class CapacitorJSShell {
     String javascript = Root.finish(env);
     sb.append("<script>\n\n").append(javascript).append("\n\n</script>\n");
     sb.append("<style>\n\n").append(RxHtmlTool.buildInternStyle(document)).append("\n\n</style>\n");
-    sb.append("</body><script>");
-    sb.append("RxHTML.init();");
+    sb.append("</body><script>\n");
+    sb.append("  RxHTML.init();\n");
+    if (domainOverride != null) {
+      sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
+    }
+    if (worker) {
+      sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js\");\n");
+    }
     sb.append("</script></html>");
     return sb.toString();
   }

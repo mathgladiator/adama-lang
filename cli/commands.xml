@@ -786,6 +786,7 @@
                 Create a shell for https://capacitorjs.com/
             </documentation>
             <arg name="rxhtml-path" default="frontend" />
+            <arg name="domain" />
             <arg name="output" default="mobile.html" />
         </command>
         <command name="wrap-css">
