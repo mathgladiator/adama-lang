@@ -70,6 +70,9 @@ public interface HttpHandler {
     public final String key;
     public final NtAsset asset;
     public final boolean cors;
+    public final boolean redirect;
+    public final String location;
+    public final int redirectStatus;
 
     public HttpResult(String contentType, byte[] body, boolean cors) {
       this.contentType = contentType;
@@ -78,6 +81,9 @@ public interface HttpHandler {
       this.key = null;
       this.asset = null;
       this.cors = cors;
+      this.redirect = false;
+      this.location = null;
+      this.redirectStatus = 0;
     }
 
     public HttpResult(String space, String key, NtAsset asset, boolean cors) {
@@ -87,6 +93,21 @@ public interface HttpHandler {
       this.key = key;
       this.asset = asset;
       this.cors = cors;
+      this.redirect = false;
+      this.location = null;
+      this.redirectStatus = 0;
+    }
+
+    public HttpResult(String location, int code) {
+      this.contentType = null;
+      this.body = null;
+      this.space = null;
+      this.key = null;
+      this.asset = null;
+      this.cors = true;
+      this.redirect = true;
+      this.location = location;
+      this.redirectStatus = code;
     }
   }
 }

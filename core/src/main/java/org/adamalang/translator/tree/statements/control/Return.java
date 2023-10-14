@@ -101,6 +101,12 @@ public class Return extends Statement {
         if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false))) {
           body++;
         }
+        if (consider("redirect", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
+        if (consider("forward", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+          body++;
+        }
         if (consider("identity", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
           body++;
         }

@@ -187,6 +187,10 @@ public class FrontendHttpHandler implements HttpHandler {
               callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
               return;
             }
+          } else if ("redirection/301".equals(response.contentType)) {
+            result = new HttpResult(response.body, 301);
+          } else if ("redirection/302".equals(response.contentType)) {
+            result = new HttpResult(response.body, 302);
           } else if ("text/identity".equals(response.contentType)) {
             ObjectNode json = Json.newJsonObject();
             json.put("identity", response.body);

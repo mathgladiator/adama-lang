@@ -227,6 +227,10 @@ public class DevBoxServiceBase implements ServiceBase {
                 ObjectNode json = Json.newJsonObject();
                 json.put("identity", identity);
                 callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
+              } else if ("redirection/301".equals(response.contentType)) {
+                callback.success(new HttpResult(response.body, 301));
+              } else if ("redirection/302".equals(response.contentType)) {
+                callback.success(new HttpResult(response.body, 302));
               } else {
                 if (response.asset != null) {
                   callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));

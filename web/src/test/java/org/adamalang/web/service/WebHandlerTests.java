@@ -67,6 +67,28 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
+            .get("/301")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("");
+        Assert.assertEquals("/loc1", callback.headers.get("location"));
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/302")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("");
+        Assert.assertEquals("/loc2", callback.headers.get("location"));
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
             .get("/~assets/space/key/id=123")
             .execute(callback);
         callback.awaitFirst();

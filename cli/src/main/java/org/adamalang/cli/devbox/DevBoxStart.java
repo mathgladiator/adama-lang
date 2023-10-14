@@ -17,6 +17,7 @@
 */
 package org.adamalang.cli.devbox;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.SelfClient;
 import org.adamalang.cli.router.Arguments;
@@ -46,6 +47,8 @@ import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -111,6 +114,16 @@ public class DevBoxStart {
       File microverseDef = new File(args.microverse);
       if (microverseDef.exists() && microverseDef.isFile()) {
         ObjectNode defn = Json.parseJsonObject(Files.readString(microverseDef.toPath()));
+        File privateVerse = new File("private.verse.json");
+        if (privateVerse.exists()) {
+          ObjectNode merge = Json.parseJsonObject(Files.readString(privateVerse.toPath()));
+          Iterator<Map.Entry<String, JsonNode>> it = merge.fields();
+          while (it.hasNext()) {
+            Map.Entry<String, JsonNode> v = it.next();
+            terminal.info("verse|merging in '" + v.getKey() + "' from private verse");
+            defn.set(v.getKey(), v.getValue());
+          }
+        }
         DevBoxServices.install(defn, webClientBase, offload, (line) -> terminal.info(line));
         verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn, webClientBase);
         if (verse == null) {

@@ -106,6 +106,18 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse redirect(String location) {
+    this.contentType = "redirection/301";
+    this.body = location;
+    return this;
+  }
+
+  public WebResponse forward(String location) {
+    this.contentType = "redirection/302";
+    this.body = location;
+    return this;
+  }
+
   public WebResponse js(String body) {
     this.contentType = "text/javascript";
     this.body = body;

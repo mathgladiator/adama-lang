@@ -133,6 +133,14 @@ public class MockServiceBase implements ServiceBase {
           callback.failure(new ErrorCodeException(-1));
           return;
         }
+        if ("/301".equals(uri)) {
+          callback.success(new HttpResult("/loc1", 301));
+          return;
+        }
+        if ("/302".equals(uri)) {
+          callback.success(new HttpResult("/loc2", 302));
+          return;
+        }
         callback.success(null);
       }
 
