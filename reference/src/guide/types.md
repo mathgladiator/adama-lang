@@ -30,6 +30,6 @@ The above built-in types are building blocks for richer types, and the below tab
 | [future](./async.md) | A future is a result that will arrive in the **future**. | no |
 | [maps](./map-reduce.md) | A **map** enables associating keys to values, but they can also be the result of a reduction. | yes |
 | [lists](./tables-linq.md) | A **list** is created by using language integrated query on a table | yes |
-| [arrays](./anonymous.md) | An array is a read-only finite collection of a adjacent items | only via a formula |
+| [arrays](./anonymous.md#arrays) | An array is a read-only finite collection of a adjacent items | only via a formula |
 | [result](./services.md) | A result is the ongoing progress of a service call made to a remote service | only via a formula |
 | [service](./services.md) | A service is a way to reach beyond the document to a remote resources | only root document |
