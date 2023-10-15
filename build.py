@@ -52,7 +52,7 @@ if execute_cmd(f"which {args.java_path}", hide=True) != 0 and not os.path.exists
 if execute_cmd(f"which {args.mvn_path}", hide=True) != 0 and not os.path.exists(args.mvn_path):
     fail("clean", f"`{args.mvn_path}` is not a valid mvn path")
 
-execute_cmd("mkdir release -p")
+execute_cmd("mkdir -p release")
 
 if args.clean:
     if execute_cmd(f"{args.mvn_path} clean") != 0:
