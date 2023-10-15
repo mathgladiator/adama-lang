@@ -93,7 +93,7 @@ For example, consider the following code snippet, which attempts to access the s
 }
 ```
 
-The result type is ```maybe&lt;int&gt;``` which requires a second inspection to determine if it exists, and this both forces the checking of range and contends with invalid ranges.
+The result type is `maybe<int>` which requires a second inspection to determine if it exists, and this both forces the checking of range and contends with invalid ranges.
 The only way to really know the value of the second index is via an if statement like so:
 
 ```adama
@@ -111,3 +111,6 @@ The only way to really know the value of the second index is via an if statement
 While this approach may seem cumbersome at first, it ultimately helps to ensure that the code is properly typed and can handle cases where the requested element does not exist or is out of range.
 By forcing the programmer to check for the existence of a value using an if statement, Adama helps to avoid unexpected runtime errors and promotes safer, more robust code.
 While this approach may require more verbose code, it ultimately helps to prevent issues that could lead to difficult-to-debug errors.
+
+### Iterating through arrays
+An array should be interated via a `foreach` loop, see [Standard Control](./control.html#foreach). The size of an array size can be accessed via `.size()` to utilize a for loop.

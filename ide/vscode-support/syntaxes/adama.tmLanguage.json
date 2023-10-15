@@ -48,7 +48,7 @@
 				"match": "\\b(iterate|where|where_as|shuffle|order|reduce|via|limit|by|asc|desc)\\b"
 			},{
 				"name": "keyword.other.adama",
-				"match": "@(construct|connected|disconnected|self|pump|convert|blocked|maybe|lambda|stable|step|pair|who|static|web|load|delete|attached|can_attach|context|timespan|time|date|parameters|headers|datetime|i|viewer|default|forward|nothing|null)"
+				"match": "@(construct|connected|disconnected|self|pump|convert|blocked|maybe|lambda|stable|step|pair|who|static|web|load|delete|attached|can_attach|context|timespan|time|date|parameters|headers|datetime|include|i|viewer|default|forward|nothing|null)"
 			},{
 				"name": "keyword.modifiers.adama",
 				"match": "\\b(readonly|aborts|viewer)\\b"
