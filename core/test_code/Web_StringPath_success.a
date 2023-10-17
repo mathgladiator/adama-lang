@@ -5,3 +5,11 @@
 @web get / "badboy" {
   return {error:"Missing something..."};
 }
+
+@web get / "redirect" /nope {
+  return {redirect:"/foop"};
+}
+
+@web get / "forward"/ yep {
+  return {forward:"/foop"};
+}

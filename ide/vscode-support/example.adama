@@ -414,3 +414,5 @@ public int points_awarded = 0;
   passing_mode = passing_mode.next();
   transition #shuffle_and_distribute;
 }
+
+@include directory/adamafile;

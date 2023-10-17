@@ -1798,11 +1798,7 @@ var RxHTML = (function () {
   self.init = function () {
     self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
     window.onpopstate = function (p) {
-      if (typeof(p.state) == 'object' && p.state.merge) {
-        self.mergeGoto(fixPath(window.location.pathname), self.__current);
-      } else {
-        self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
-      }
+      self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
     };
   };
 

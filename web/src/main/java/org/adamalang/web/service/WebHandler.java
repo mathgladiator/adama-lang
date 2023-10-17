@@ -136,6 +136,15 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
+  private void redirect(Runnable metric, FullHttpRequest req, final ChannelHandlerContext ctx, HttpResponseStatus status, String location) {
+    metric.run();
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
+    HttpUtil.setContentLength(res, 0);
+    res.headers().set(HttpHeaderNames.LOCATION, location);
+    transferCors(res, req, true);
+    sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
   private AssetStream streamOf(FullHttpRequest req, final ChannelHandlerContext ctx, boolean cors) {
     final boolean keepalive = HttpUtil.isKeepAlive(req);
 
@@ -597,6 +606,11 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     HttpHandler.HttpResult httpResult = httpResultIncoming;
     if (httpResult == null) { // no response found
       sendImmediate(metrics.webhandler_notfound, req, ctx, HttpResponseStatus.NOT_FOUND, NOT_FOUND_RESPONSE, "text/html; charset=UTF-8", true);
+      return;
+    }
+
+    if (httpResult.redirect) {
+      redirect(metrics.webhandler_redirect, req, ctx, httpResult.redirectStatus == 301 ? HttpResponseStatus.PERMANENT_REDIRECT : HttpResponseStatus.TEMPORARY_REDIRECT, httpResult.location);
       return;
     }
 

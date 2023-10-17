@@ -29,6 +29,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,10 +39,15 @@ public class GenerateTemplateTests {
     if (isValid(inputRootPath) && isValid(outputJavaPath)) {
       final var root = new File(inputRootPath);
       final var outRoot = new File(outputJavaPath);
+      ArrayList<File> files = new ArrayList<>();
       for (File file : root.listFiles()) {
         if (!file.getName().endsWith(".rx.html")) {
           continue;
         }
+        files.add(file);
+      }
+      files.sort(Comparator.comparing(File::getName));
+      for (File file : files) {
         boolean devMode = file.getName().startsWith("dev_");
         System.out.print("\u001b[36mTemplate:\u001b[0m" + file.getName() + "\n");
         StringBuilder issues = new StringBuilder();

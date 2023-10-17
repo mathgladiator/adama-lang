@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -62,8 +63,13 @@ public class GenerateLanguageTests {
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
     final var root = new File(inputRootPath);
+    ArrayList<File> files = new ArrayList<>();
+    for (File file : root.listFiles()) {
+      files.add(file);
+    }
+    files.sort(Comparator.comparing(File::getName));
     writer.print("file,start_line,start_character,end_line,end_character,message\n");
-    for (final File testFile : root.listFiles()) {
+    for (final File testFile : files) {
       final var test = TestFile.fromFilename(testFile.getName());
       if (!test.success) {
         final var document = new Document();

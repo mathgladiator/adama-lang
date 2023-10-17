@@ -27,3 +27,11 @@ Adama's strong privacy isolation guarantees ensure a clear separation between wh
 The language has [many types](./types.md) to leverage along with a [more ways to expressive privacy rules](./privacy-and-bubbles.md).
 
 Furthermore, state can be laid out with [records](./records.md), collected into [tables](./tables-linq.md), and computations exposed via [formulas](./formulas.md).
+
+
+## Include Statement
+
+In Adama's data-centric approach, simple applications often don't require additional files. However, for larger projects, managing everything in a single file can be cumbersome. Adama supports splitting files using the `@include` keyword, without the `.adama` file extension, for example:
+```adama
+@include path/to/file;
+```
