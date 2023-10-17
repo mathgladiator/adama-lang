@@ -89,6 +89,7 @@ import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.service.WebConfig;
 import org.junit.Assert;
+import org.junit.Assume;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -146,7 +147,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public TestFrontEnd() throws Exception {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
-    String config = Files.readString(new File("./test.mysql.json").toPath());
+    File configFile = new File("./test.mysql.json");
+    Assume.assumeTrue(configFile.exists());
+    String config = Files.readString(configFile.toPath());
     DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config))), new DataBaseMetrics(new NoOpMetricsFactory()));
     this.installer = new Installer(dataBase);
     this.installer.install();

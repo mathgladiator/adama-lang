@@ -30,6 +30,7 @@ import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.model.Secrets;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.File;
@@ -40,7 +41,9 @@ import java.util.TreeMap;
 
 public class ServiceConfigTests {
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
-    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("test.mysql.json").toPath()))));
+    File file = new File("test.mysql.json");
+    Assume.assumeTrue(file.exists());
+    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(file.toPath()))));
   }
 
 

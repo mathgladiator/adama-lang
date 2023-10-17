@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.File;
@@ -119,11 +120,15 @@ public class DataBaseConfigTests {
   }
 
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
-    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("test.mysql.json").toPath()))));
+    File file = new File("test.mysql.json");
+    Assume.assumeTrue(file.exists());
+    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(file.toPath()))));
   }
 
   public static DataBaseConfig getLocalIntegrationConfigWithDifferentName(String newName) throws Exception {
-    ObjectNode config = Json.parseJsonObject(Files.readString(new File("test.mysql.json").toPath()));
+    File file = new File("test.mysql.json");
+    Assume.assumeTrue(file.exists());
+    ObjectNode config = Json.parseJsonObject(Files.readString(file.toPath()));
     ((ObjectNode) config.get("any")).put("database-name", newName);
     return new DataBaseConfig(new ConfigObject(config));
   }
