@@ -59,6 +59,7 @@
     - [Math](./reference/stdlib-math.md)
     - [Statistics](./reference/stdlib-statistics.md)
     - [Principals](./reference/stdlib-principals.md)
+    - [Date &amp; Time](./reference/stdlib-datetime.md)
   - [Authentication](./reference/auth.md)
   - [Deployment Plan](./reference/deployment-plan.md)
   - [JavaScript API](./reference/api.md)
