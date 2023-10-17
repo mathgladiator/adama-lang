@@ -1,0 +1,14 @@
+message M {
+  int id;
+  int x;
+}
+
+procedure foo() -> list<M> readonly {
+  table<M> tbl;
+  tbl <- {id:1, x:4};
+  tbl <- {id:2, x:8};
+  tbl <- {id:3, x:16};
+  return iterate tbl;
+}
+
+bubble fooz = foo();

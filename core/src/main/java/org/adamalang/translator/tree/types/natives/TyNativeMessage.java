@@ -76,6 +76,14 @@ public class TyNativeMessage extends TyType implements //
     ingest(storage);
   }
 
+  public boolean hasUniqueId() {
+    FieldDefinition fd = storage.fields.get("id");
+    if (fd != null) {
+      return fd.uniqueToken != null;
+    }
+    return false;
+  }
+
   @Override
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     // a COPY of fields to preserver order

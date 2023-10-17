@@ -271,7 +271,9 @@ public class CodeGenDeltaClass {
     } else if (sourceType instanceof TyNativeList || sourceType instanceof TyNativeArray) {
       final var elementType = ((DetailContainsAnEmbeddedType) sourceType).getEmbeddedType(environment);
       if (elementType instanceof TyReactiveRecord) {
-        writeShowDListRecords(sb, deltaObject, sourceData, (TyReactiveRecord) elementType, targetObjectWriter, environment, tabDown);
+        writeShowDListRecords(sb, deltaObject, sourceData, elementType, targetObjectWriter, environment, tabDown);
+      } else if (elementType instanceof TyNativeMessage && ((TyNativeMessage) elementType).hasUniqueId()) {
+        writeShowDListMessagesWithUniqueID(sb, deltaObject, sourceData, elementType, targetObjectWriter, environment, tabDown);
       } else {
         writeShowDListNonRecord(sb, deltaObject, sourceData, elementType, targetObjectWriter, environment, tabDown);
       }
@@ -330,7 +332,7 @@ public class CodeGenDeltaClass {
     sb.writeNewline();
   }
 
-  private static void writeShowDListRecords(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyReactiveRecord elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+  private static void writeShowDListRecords(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
     final var elementDeltaType = ((DetailHasDeltaType) elementType).getDeltaType(environment);
     sb.append("{").tabUp().writeNewline();
     final var listWriterVar = "__list" + environment.autoVariable();
@@ -348,6 +350,35 @@ public class CodeGenDeltaClass {
     writeShowRecord(sb, gateVar, childDeltaVar, childElementVar, elementType, listWriterVar + ".planField(" + childElementVar + ".__id())", environment, false);
     sb.append("if (").append(gateVar).append(") {").tabUp().writeNewline();
     sb.append(dListWalker).append(".next(").append(childElementVar).append(".__id());").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append(dListWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
+    sb.append(listWriterVar).append(".end();").tabDown().writeNewline();
+    sb.append("}");
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
+
+  private static void writeShowDListMessagesWithUniqueID(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType elementType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+    final var elementDeltaType = ((DetailHasDeltaType) elementType).getDeltaType(environment);
+    sb.append("{").tabUp().writeNewline();
+    final var listWriterVar = "__list" + environment.autoVariable();
+    final var dListCache = "__deltaList" + environment.autoVariable();
+    final var dListWalker = "__deltaListWalker" + environment.autoVariable();
+    final var childElementType = elementType.getJavaBoxType(environment);
+    final var childElementVar = "__listElement" + environment.autoVariable();
+    final var childDeltaVar = "__deltaElement" + environment.autoVariable();
+    final var gateVar = "__gate" + environment.autoVariable();
+    sb.append("PrivateLazyDeltaWriter ").append(listWriterVar).append(" = ").append(targetObjectWriter).append(".planObject();").writeNewline();
+    sb.append("DRecordList<").append(elementDeltaType).append("> ").append(dListCache).append(" = ").append(deltaObject).append(";").writeNewline();
+    sb.append("DRecordList<").append(elementDeltaType).append(">.Walk ").append(dListWalker).append(" = ").append(dListCache).append(".begin();").writeNewline();
+    sb.append("for (").append(childElementType).append(" ").append(childElementVar).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
+    sb.append(elementDeltaType).append(" ").append(childDeltaVar).append(" = ").append(dListCache).append(".getPrior(").append(childElementVar).append(".id, () -> new ").append(elementDeltaType).append("());").writeNewline();
+    writeShowRecord(sb, gateVar, childDeltaVar, childElementVar, elementType, listWriterVar + ".planField(" + childElementVar + ".id)", environment, false);
+    sb.append("if (").append(gateVar).append(") {").tabUp().writeNewline();
+    sb.append(dListWalker).append(".next(").append(childElementVar).append(".id);").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
     sb.append(dListWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
