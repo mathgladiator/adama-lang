@@ -17,7 +17,6 @@
 */
 package org.adamalang.translator.env;
 
-import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.stdlib.*;
 import org.adamalang.translator.reflect.GlobalFactory;
 import org.adamalang.translator.tree.types.TyType;
