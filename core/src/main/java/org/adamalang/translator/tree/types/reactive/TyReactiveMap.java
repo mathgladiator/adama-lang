@@ -27,6 +27,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetTable;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
+import org.adamalang.translator.tree.types.natives.TyNativePair;
+import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -34,6 +36,7 @@ import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
@@ -44,6 +47,7 @@ public class TyReactiveMap extends TyType implements //
     DetailTypeHasMethods, //
     IsMap, //
     IsKillable, //
+    DetailContainsAnEmbeddedType, //
     DetailHasDeltaType {
   public final Token closeThing;
   public final Token commaToken;
@@ -136,6 +140,11 @@ public class TyReactiveMap extends TyType implements //
     if ("size".equals(name)) {
       return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
+    if ("remove".equals(name)) {
+      ArrayList<TyType> args = new ArrayList<>();
+      args.add(domainType);
+      return new TyNativeFunctional("remove", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("remove", new TyNativeVoid().withPosition(this), args, FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
+    }
     return null;
   }
 
@@ -147,5 +156,10 @@ public class TyReactiveMap extends TyType implements //
       range = ((DetailComputeRequiresGet) range).typeAfterGet(environment);
     }
     return "DMap<" + domainBox + "," + ((DetailHasDeltaType) range).getDeltaType(environment) + ">";
+  }
+
+  @Override
+  public TyType getEmbeddedType(Environment environment) {
+    return new TyNativePair(TypeBehavior.ReadOnlyNativeValue, null, null, null, environment.rules.Resolve(domainType, false), null, environment.rules.Resolve(rangeType, false), null);
   }
 }

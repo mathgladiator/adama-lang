@@ -20,6 +20,8 @@ package org.adamalang.frontend;
 import org.adamalang.common.Escaping;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.regex.Pattern;
 
 public class EmbedTemplates {
@@ -33,8 +35,12 @@ public class EmbedTemplates {
     String prefix = java.substring(0, java.indexOf(start) + start.length());
     String suffix = java.substring(java.indexOf(end));
     StringBuilder sb = new StringBuilder();
-
-    for (File file : new File("./saas/templates").listFiles((dir, name) -> name.endsWith(".adama"))) {
+    ArrayList<File> files = new ArrayList<>();
+    for(File file : new File("./saas/templates").listFiles((dir, name) -> name.endsWith(".adama"))) {
+      files.add(file);
+    }
+    files.sort(Comparator.comparing(File::getName));
+    for (File file : files) {
       String name = file.getName().replaceAll(Pattern.quote(".adama"), "");
       String adama = Files.readString(file.toPath());
       String rxhtml = "<forest></forest>";

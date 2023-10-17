@@ -57,6 +57,7 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Date", LibDate.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Map", LibMap.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Templates", LibTemplates.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Search", LibSearch.class, pool.extensions));
 

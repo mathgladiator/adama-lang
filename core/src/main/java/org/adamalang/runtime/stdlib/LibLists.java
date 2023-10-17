@@ -19,6 +19,7 @@ package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
+import org.adamalang.runtime.natives.lists.JoinNtList;
 import org.adamalang.translator.reflect.Skip;
 
 import java.util.ArrayList;
@@ -75,5 +76,9 @@ public class LibLists {
       keep--;
     }
     return new ArrayNtList<>(result);
+  }
+
+  public static <T> NtList<T> join(NtList<T> a, NtList<T> b) {
+    return new JoinNtList<>(a, b);
   }
 }

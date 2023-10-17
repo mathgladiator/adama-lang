@@ -188,11 +188,53 @@ public class LivingDocumentTests {
   public void text() throws Exception {
     try {
       RealDocumentSetup setup = new RealDocumentSetup(
-          "public text document; @construct {}",
-          "{}");
+              "public text document; @construct {}",
+              "{}");
     } catch (RuntimeException re) {
       re.printStackTrace();
     }
+  }
+
+
+  @Test
+  public void maptest() throws Exception {
+    RealDocumentSetup setup = new RealDocumentSetup("@static { create { return true; } } @connected { return true; }" + //
+            "public map<int, int> mappy; message M {}" + //
+            "channel foo(M m) { mappy[4]++; foreach(kvp in mappy) { } } " + //
+            "channel goo(M m) { mappy.remove(4); } ");
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
+    RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+    ArrayList<String> list = new ArrayList<>();
+    Perspective linked =
+            new Perspective() {
+              @Override
+              public void data(String data) {
+                list.add(data);
+              }
+
+              @Override
+              public void disconnect() {}
+            };
+
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+
+    setup.document.send(
+            ContextSupport.WRAP(NtPrincipal.NO_ONE),
+            null,
+            null,
+            "foo",
+            "{}",
+            new RealDocumentSetup.AssertInt(5));
+    setup.document.send(
+            ContextSupport.WRAP(NtPrincipal.NO_ONE),
+            null,
+            null,
+            "goo",
+            "{}",
+            new RealDocumentSetup.AssertInt(6));
+    Assert.assertEquals("{\"seq\":4}", list.get(0));
+    Assert.assertEquals("{\"data\":{\"mappy\":{\"4\":1}},\"seq\":5}", list.get(1));
+    Assert.assertEquals("{\"data\":{\"mappy\":{\"4\":null}},\"seq\":6}", list.get(2));
   }
 
   @Test
