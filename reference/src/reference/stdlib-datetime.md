@@ -8,10 +8,15 @@ Adama supports four date and time related types:
 
 ## Getting the current date/time
 
-| Method          | Description                  | Result type |
-|-----------------|-------------------------------|-------------|
-| Time.date()     | Get the current date          | date        |
-| Time.datetime() | Get the current date and time | datetime    |
+| Method                    | Description                               | Result type |
+|---------------------------|-------------------------------------------|-------------|
+| Time.today()              | Get the current date                      | date        |
+| Time.datetime()           | Get the current date and time             | datetime    |
+| Time.time()               | Get the current time of day               | time        |
+| Time.zone()               | Get the document's time zone              | string      |
+| Time.setZone(string zone) | Set the document's time zone              | bool        |
+| Time.now()                | Get the current time as a UNIX time stamp | long        |
+
 
 ## Date functions
 | Method                                                                      | Description                                                                                             | Result type      |
