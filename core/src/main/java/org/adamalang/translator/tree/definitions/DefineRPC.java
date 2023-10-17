@@ -92,7 +92,7 @@ public class DefineRPC extends Definition {
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(rpcToken);
     for (FunctionArg arg : args) {
-      storage.add(new FieldDefinition(policy, null, arg.type, arg.argNameToken, null, null, null, null, null));
+      storage.add(new FieldDefinition(policy, null, arg.type, arg.argNameToken, null, null, null, null, null, null));
     }
     genMessageType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, rpcToken, name.cloneWithNewText(genMessageTypeName()), storage);
     return genMessageType;

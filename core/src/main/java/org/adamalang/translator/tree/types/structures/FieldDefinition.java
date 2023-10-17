@@ -47,9 +47,10 @@ public class FieldDefinition extends StructureComponent {
   public final LinkedHashSet<String> servicesToWatch;
 
   public Token lossyOrRequiredToken;
+  public Token uniqueToken;
   public TyType type;
 
-  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token semicolonToken) {
+  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, final Token semicolonToken) {
     this.policy = policy;
     this.introToken = introToken;
     this.type = type;
@@ -59,6 +60,7 @@ public class FieldDefinition extends StructureComponent {
     this.equalsToken = equalsToken;
     this.defaultValueOverride = defaultValueOverride;
     this.lossyOrRequiredToken = lossyOrRequiredToken;
+    this.uniqueToken = uniqueToken;
     this.semicolonToken = semicolonToken;
     if (policy != null) {
       ingest(policy);
@@ -102,14 +104,13 @@ public class FieldDefinition extends StructureComponent {
       policy = new PublicPolicy(null);
       policy.ingest(type);
     }
-    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null, null);
     fd.ingest(type);
     return fd;
   }
 
-
   public static FieldDefinition inventId(DocumentPosition dp) {
-    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null);
     fd.ingest(dp);
     return fd;
   }
@@ -137,6 +138,9 @@ public class FieldDefinition extends StructureComponent {
     }
     if (lossyOrRequiredToken != null) {
       yielder.accept(lossyOrRequiredToken);
+    }
+    if (uniqueToken != null) {
+      yielder.accept(uniqueToken);
     }
     yielder.accept(semicolonToken);
   }

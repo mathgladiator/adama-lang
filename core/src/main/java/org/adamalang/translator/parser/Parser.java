@@ -940,7 +940,7 @@ public class Parser {
       final var id = id();
       final var equalsToken = consumeExpectedSymbol("=");
       final var compute = expression(scope);
-      return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, consumeExpectedSymbol(";"));
+      return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
     } else {
       final var type = reactive_type();
       final var id = id();
@@ -950,7 +950,7 @@ public class Parser {
         defaultValue = expression(scope.makeConstant());
       }
       Token required = tokens.popIf(t -> t.isIdentifier("required"));
-      return new FieldDefinition(policy, null, type, id, equalsToken, null, defaultValue, required, consumeExpectedSymbol(";"));
+      return new FieldDefinition(policy, null, type, id, equalsToken, null, defaultValue, required, null, consumeExpectedSymbol(";"));
     }
   }
 
@@ -1051,8 +1051,12 @@ public class Parser {
             defaultValueOverride = expression(rootScope.makeConstant());
           }
           Token lossy = tokens.popIf((t) -> t.isIdentifier("lossy"));
+          Token unique = null;
+          if ("id".equals(field.text)) {
+            unique = tokens.popIf((t) -> t.isIdentifier("unique"));
+          }
           Token end = consumeExpectedSymbol(";");
-          FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, lossy, end);
+          FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, lossy, unique, end);
           storage.add(fd);
         }
       }

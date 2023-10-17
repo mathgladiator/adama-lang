@@ -415,7 +415,7 @@ public class Document implements TopLevelDocumentHandler {
       typeChecker.issueError(avs, String.format("View field '%s' was already defined.", avs.name.text));
     }
     viewDefined.add(avs.name.text);
-    viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, null, avs.semicolon));
+    viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, null, null, avs.semicolon));
     avs.typing(typeChecker);
   }
 

@@ -403,7 +403,7 @@ public class RuleSetCommon {
           if (bFd != null) {
             PublicPolicy policy = new PublicPolicy(null);
             policy.ingest(bFd);
-            toAdd = new FieldDefinition(policy, null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null);
+            toAdd = new FieldDefinition(policy, null, GetMaxType(environment, aEntry.getValue().type, bFd.type, false), bFd.nameToken, null, null, null, null, null, null);
             toAdd.ingest(bFd);
           } else {
             toAdd = aEntry.getValue();
