@@ -99,13 +99,21 @@ public class FieldLookup extends Expression {
       }
       if (eType instanceof TyNativePair) {
         TyNativePair ePair = (TyNativePair) eType;
+        TyType resultType;
         if ("key".equals(fieldName)) {
-          return ePair.domainType;
+          resultType = ePair.domainType;
         } else if ("value".equals(fieldName)) {
-          return ePair.rangeType;
+          resultType = ePair.rangeType;
+        } else {
+          environment.document.createError(this, String.format("Pair '%s' does not have '%s' field, and only supports 'key' and 'value'", eType.getAdamaType(), fieldName));
+          return null;
         }
-        environment.document.createError(this, String.format("Pair '%s' does not have '%s' field, and only supports 'key' and 'value'", eType.getAdamaType(), fieldName));
-        return null;
+        resultType = environment.rules.Resolve(resultType, false);
+        if (resultType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
+          resultType = ((DetailComputeRequiresGet) resultType).typeAfterGet(environment);
+          addGet = true;
+        }
+        return resultType;
       }
       if (eType instanceof TyInternalReadonlyClass) {
         return ((TyInternalReadonlyClass) eType).getLookupType(environment, fieldName);

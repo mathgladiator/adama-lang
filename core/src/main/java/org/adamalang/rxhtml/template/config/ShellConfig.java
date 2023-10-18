@@ -24,11 +24,13 @@ public class ShellConfig {
   public final Feedback feedback;
   public final boolean useLocalAdamaJavascript;
   public final String version;
+  public final String environment;
 
-  private ShellConfig(Feedback feedback, final String version, boolean useLocalAdamaJavascript) {
+  private ShellConfig(Feedback feedback, final String version, String environment, boolean useLocalAdamaJavascript) {
     this.feedback = feedback;
     this.version = version;
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
+    this.environment = environment;
   }
 
   public static Builder start() {
@@ -39,11 +41,13 @@ public class ShellConfig {
     public Feedback feedback;
     public boolean useLocalAdamaJavascript;
     public String version;
+    public String environment;
 
     public Builder() {
       this.feedback = Feedback.NoOp;
       this.useLocalAdamaJavascript = false;
       this.version =  Platform.JS_VERSION;
+      this.environment = "prod";
     }
 
     public Builder withFeedback(Feedback feedback) {
@@ -56,13 +60,18 @@ public class ShellConfig {
       return this;
     }
 
+    public Builder withEnvironment(String environment) {
+      this.environment = environment;
+      return this;
+    }
+
     public Builder withUseLocalAdamaJavascript(boolean useLocalAdamaJavascript) {
       this.useLocalAdamaJavascript = useLocalAdamaJavascript;
       return this;
     }
 
     public ShellConfig end() {
-      return new ShellConfig(feedback, version, useLocalAdamaJavascript);
+      return new ShellConfig(feedback, version, environment, useLocalAdamaJavascript);
     }
   }
 }

@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.types.checking.ruleset.RuleSetEnums;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.traits.IsEnum;
+import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 import java.util.function.Consumer;
@@ -99,10 +100,11 @@ public class BinaryExpression extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
-    Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : environment;
+    Environment rightEnv = environment.scopeWithComputeContext(ComputeContext.Computation);
+    Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : rightEnv;
     TyType typeLeft = left.typing(leftEnv, null);
     typeLeft = environment.rules.Resolve(typeLeft, false);
-    TyType typeRight = right.typing(environment, null);
+    TyType typeRight = right.typing(rightEnv, null);
     typeRight = environment.rules.Resolve(typeRight, false);
 
     if (typeLeft != null && typeRight != null) {
@@ -110,7 +112,6 @@ public class BinaryExpression extends Expression {
         environment.document.createError(DocumentPosition.sum(left, right), String.format("'%s' is unable to accept an assignment of '%s'.", typeLeft.getAdamaType(), typeRight.getAdamaType()));
       }
     }
-
     if (op == BinaryOp.Equal || op == BinaryOp.NotEqual) {
       if (areBothTypesEnums(environment, typeLeft, typeRight)) {
         typeLeft = getEnumTypeToUse(environment, typeLeft);
@@ -129,9 +130,10 @@ public class BinaryExpression extends Expression {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     final var leftStr = new StringBuilder();
     final var rightStr = new StringBuilder();
-    Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : environment;
+    Environment rightEnv = environment.scopeWithComputeContext(ComputeContext.Computation);
+    Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : rightEnv;
     left.writeJava(leftStr, leftEnv);
-    right.writeJava(rightStr, environment);
+    right.writeJava(rightStr, rightEnv);
     if (operatorResult != null) {
       if (operatorResult.reverse) {
         sb.append(String.format("%s", String.format(operatorResult.javaPattern, rightStr, leftStr)));
