@@ -5954,7 +5954,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n        __INDEX_z = new ReactiveIndexInvalidator(((RxTable<RTxThree>)(__owner)).getIndex((short)0), this) {");
     gold.append("\n            @Override");
     gold.append("\n            public int pullValue() {");
-    gold.append("\n                return z.hashCode();");
+    gold.append("\n                return z.getIndexValue();");
     gold.append("\n            }");
     gold.append("\n          };");
     gold.append("\n        z.__subscribe(__INDEX_z);");
@@ -5995,7 +5995,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
-    gold.append("\n      return new int[] {x.getIndexValue(), y.getIndexValue(), z.hashCode()};");
+    gold.append("\n      return new int[] {x.getIndexValue(), y.getIndexValue(), z.getIndexValue()};");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Object __fieldOf(String __name) {");

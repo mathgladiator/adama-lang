@@ -43,7 +43,7 @@ public class CodeGenIndexing {
       boolean isReactiveIntegral = fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum;
       boolean isReactiveRequiresToInt = fieldType instanceof TyReactiveDate || fieldType instanceof TyReactiveTime || fieldType instanceof TyReactiveDateTime;
       boolean isReactiveString = fieldType instanceof TyReactiveString;
-      boolean isReactive = isReactiveIntegral || isReactiveRequiresToInt || isReactiveString || fieldType instanceof TyReactiveBoolean;
+      boolean isReactive = isReactiveIntegral || isReactiveRequiresToInt || isReactiveString || fieldType instanceof TyReactiveBoolean || fieldType instanceof TyReactivePrincipal;
       requiresToInt = isReactiveRequiresToInt || fieldType instanceof TyNativeDate || fieldType instanceof TyNativeTime || fieldType instanceof TyNativeDateTime;
       isIntegral = isReactiveIntegral || fieldType instanceof TyNativeInteger || fieldType instanceof TyNativeEnum || requiresToInt;
       isPrincipal = fieldType instanceof TyReactivePrincipal || fieldType instanceof TyNativePrincipal;
