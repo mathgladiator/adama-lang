@@ -1,0 +1,24 @@
+enum E {
+  A,
+  @default B,
+  C:4
+}
+
+maybe<E> e_rx;
+
+message M {}
+
+channel foo(M m)  {
+  maybe<E> e_ntv;
+  e_rx = e_ntv;
+  e_rx = E::A;
+  e_ntv = E::B;
+  if (e_ntv as v1) {
+
+  }
+  if (e_rx as v2) {
+
+  }
+  bool b1 = e_ntv.has();
+  bool b2 = e_rx.has();
+}
