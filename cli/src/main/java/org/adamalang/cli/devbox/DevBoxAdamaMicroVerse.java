@@ -317,6 +317,12 @@ public class DevBoxAdamaMicroVerse {
     if (defn.has("push-email")) {
       pushEmail = defn.get("push-email").textValue();
     }
-    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(new File(pushFile), pushEmail, new VAPIDPublicPrivateKeyPair(vapidPublic, vapidPrivate), webClientBase));
+    VAPIDPublicPrivateKeyPair keyPair = null;
+    try {
+      keyPair = new VAPIDPublicPrivateKeyPair(vapidPublic, vapidPrivate);
+    } catch (Exception ex) {
+      io.notice("verse|VAPID has no valid keypair, web push is disabled");
+    }
+    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(new File(pushFile), pushEmail, keyPair, webClientBase));
   }
 }

@@ -90,6 +90,10 @@ public class DevPush implements Pusher  {
   }
 
   public void push(Subscription subscription, String payload) {
+    if (keypair == null) {
+      LOGGER.error("a-push-attempt-was-made-without-valid-vapid-keys");
+      return;
+    }
     try {
       SimpleHttpRequest request = webPushFactory128.make(keypair, subscription, 14, payload.getBytes(StandardCharsets.UTF_8));
       webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, new FirstPartyMetrics(new NoOpMetricsFactory()).webpush_send.start(), new Callback<Void>() {

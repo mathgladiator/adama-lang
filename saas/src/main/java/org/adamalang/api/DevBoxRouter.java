@@ -22,8 +22,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.web.io.*;
 import org.adamalang.ErrorCodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class DevBoxRouter {
+  private static final Logger ACCESS_LOG = LoggerFactory.getLogger("access");
+  private static final JsonLogger DEV_ACCESS_LOG = (item) -> ACCESS_LOG.debug(item.toString());
 
   public abstract void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder);
 
@@ -67,139 +71,167 @@ public abstract class DevBoxRouter {
     try {
       long requestId = request.id();
       String method = request.method();
+      ObjectNode _accessLogItem = Json.newJsonObject();
+      _accessLogItem.put("method", method);
+      _accessLogItem.put("requestId", requestId);
+      _accessLogItem.put("@timestamp", LogTimestamp.now());
+      request.dumpIntoLog(_accessLogItem);
       switch (method) {
         case "space/reflect":
+          _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
+          _accessLogItem.put("key", request.getString("key", true, 466947));
           handle_SpaceReflect(requestId, //
-          request.getString("identity", true, 458759), //
-          request.getStringNormalize("space", true, 461828), //
-          request.getString("key", true, 466947), //
-          new ReflectionResponder(responder));
+            request.getString("identity", true, 458759), //
+            request.getStringNormalize("space", true, 461828), //
+            request.getString("key", true, 466947), //
+            new ReflectionResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "push/register":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
           handle_PushRegister(requestId, //
-          request.getString("identity", true, 458759), //
-          request.getString("domain", true, 488444), //
-          request.getObject("subscription", true, 407308), //
-          request.getObject("device-info", true, 446218), //
-          new SimpleResponder(responder));
+            request.getString("identity", true, 458759), //
+            request.getString("domain", true, 488444), //
+            request.getObject("subscription", true, 407308), //
+            request.getObject("device-info", true, 446218), //
+            new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "domain/reflect":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
           handle_DomainReflect(requestId, //
-          request.getString("identity", true, 458759), //
-          request.getString("domain", true, 488444), //
-          new ReflectionResponder(responder));
+            request.getString("identity", true, 458759), //
+            request.getString("domain", true, 488444), //
+            new ReflectionResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "domain/get-vapid-public-key":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
           handle_DomainGetVapidPublicKey(requestId, //
-          request.getString("identity", true, 458759), //
-          request.getString("domain", true, 488444), //
-          new DomainVapidResponder(responder));
+            request.getString("identity", true, 458759), //
+            request.getString("domain", true, 488444), //
+            new DomainVapidResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize":
+          _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
+          _accessLogItem.put("key", request.getString("key", true, 466947));
           handle_DocumentAuthorize(requestId, //
-          request.getStringNormalize("space", true, 461828), //
-          request.getString("key", true, 466947), //
-          request.getString("username", true, 458737), //
-          request.getString("password", true, 465917), //
-          new InitiationResponder(responder));
+            request.getStringNormalize("space", true, 461828), //
+            request.getString("key", true, 466947), //
+            request.getString("username", true, 458737), //
+            request.getString("password", true, 465917), //
+            new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize-domain":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
           handle_DocumentAuthorizeDomain(requestId, //
-          request.getString("domain", true, 488444), //
-          request.getString("username", true, 458737), //
-          request.getString("password", true, 465917), //
-          new InitiationResponder(responder));
+            request.getString("domain", true, 488444), //
+            request.getString("username", true, 458737), //
+            request.getString("password", true, 465917), //
+            new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize-with-reset":
+          _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
+          _accessLogItem.put("key", request.getString("key", true, 466947));
           handle_DocumentAuthorizeWithReset(requestId, //
-          request.getStringNormalize("space", true, 461828), //
-          request.getString("key", true, 466947), //
-          request.getString("username", true, 458737), //
-          request.getString("password", true, 465917), //
-          request.getString("new_password", true, 466931), //
-          new InitiationResponder(responder));
+            request.getStringNormalize("space", true, 461828), //
+            request.getString("key", true, 466947), //
+            request.getString("username", true, 458737), //
+            request.getString("password", true, 465917), //
+            request.getString("new_password", true, 466931), //
+            new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize-domain-with-reset":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
           handle_DocumentAuthorizeDomainWithReset(requestId, //
-          request.getString("domain", true, 488444), //
-          request.getString("username", true, 458737), //
-          request.getString("password", true, 465917), //
-          request.getString("new_password", true, 466931), //
-          new InitiationResponder(responder));
+            request.getString("domain", true, 488444), //
+            request.getString("username", true, 458737), //
+            request.getString("password", true, 465917), //
+            request.getString("new_password", true, 466931), //
+            new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/create":
+          _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
+          _accessLogItem.put("key", request.getString("key", true, 466947));
           handle_ConnectionCreate(requestId, //
-          request.getString("identity", true, 458759), //
-          request.getStringNormalize("space", true, 461828), //
-          request.getString("key", true, 466947), //
-          request.getObject("viewer-state", false, 0), //
-          new DataResponder(responder));
+            request.getString("identity", true, 458759), //
+            request.getStringNormalize("space", true, 461828), //
+            request.getString("key", true, 466947), //
+            request.getObject("viewer-state", false, 0), //
+            new DataResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/create-via-domain":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
           handle_ConnectionCreateViaDomain(requestId, //
-          request.getString("identity", true, 458759), //
-          request.getString("domain", true, 488444), //
-          request.getObject("viewer-state", false, 0), //
-          new DataResponder(responder));
+            request.getString("identity", true, 458759), //
+            request.getString("domain", true, 488444), //
+            request.getObject("viewer-state", false, 0), //
+            new DataResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/send":
+          _accessLogItem.put("channel", request.getString("channel", true, 454659));
           handle_ConnectionSend(requestId, //
-          request.getLong("connection", true, 405505), //
-          request.getString("channel", true, 454659), //
-          request.getJsonNode("message", true, 425987), //
-          new SeqResponder(responder));
+            request.getLong("connection", true, 405505), //
+            request.getString("channel", true, 454659), //
+            request.getJsonNode("message", true, 425987), //
+            new SeqResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/password":
           handle_ConnectionPassword(requestId, //
-          request.getLong("connection", true, 405505), //
-          request.getString("username", true, 458737), //
-          request.getString("password", true, 465917), //
-          request.getString("new_password", true, 466931), //
-          new SimpleResponder(responder));
+            request.getLong("connection", true, 405505), //
+            request.getString("username", true, 458737), //
+            request.getString("password", true, 465917), //
+            request.getString("new_password", true, 466931), //
+            new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/send-once":
+          _accessLogItem.put("channel", request.getString("channel", true, 454659));
+          _accessLogItem.put("dedupe", request.getString("dedupe", false, 0));
           handle_ConnectionSendOnce(requestId, //
-          request.getLong("connection", true, 405505), //
-          request.getString("channel", true, 454659), //
-          request.getString("dedupe", false, 0), //
-          request.getJsonNode("message", true, 425987), //
-          new SeqResponder(responder));
+            request.getLong("connection", true, 405505), //
+            request.getString("channel", true, 454659), //
+            request.getString("dedupe", false, 0), //
+            request.getJsonNode("message", true, 425987), //
+            new SeqResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/can-attach":
           handle_ConnectionCanAttach(requestId, //
-          request.getLong("connection", true, 405505), //
-          new YesResponder(responder));
+            request.getLong("connection", true, 405505), //
+            new YesResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/attach":
+          _accessLogItem.put("asset-id", request.getString("asset-id", true, 476156));
+          _accessLogItem.put("filename", request.getString("filename", true, 470028));
+          _accessLogItem.put("content-type", request.getString("content-type", true, 455691));
+          _accessLogItem.put("size", request.getLong("size", true, 477179));
+          _accessLogItem.put("digest-md5", request.getString("digest-md5", true, 445437));
+          _accessLogItem.put("digest-sha384", request.getString("digest-sha384", true, 406525));
           handle_ConnectionAttach(requestId, //
-          request.getLong("connection", true, 405505), //
-          request.getString("asset-id", true, 476156), //
-          request.getString("filename", true, 470028), //
-          request.getString("content-type", true, 455691), //
-          request.getLong("size", true, 477179), //
-          request.getString("digest-md5", true, 445437), //
-          request.getString("digest-sha384", true, 406525), //
-          new SeqResponder(responder));
+            request.getLong("connection", true, 405505), //
+            request.getString("asset-id", true, 476156), //
+            request.getString("filename", true, 470028), //
+            request.getString("content-type", true, 455691), //
+            request.getLong("size", true, 477179), //
+            request.getString("digest-md5", true, 445437), //
+            request.getString("digest-sha384", true, 406525), //
+            new SeqResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/update":
           handle_ConnectionUpdate(requestId, //
-          request.getLong("connection", true, 405505), //
-          request.getObject("viewer-state", false, 0), //
-          new SimpleResponder(responder));
+            request.getLong("connection", true, 405505), //
+            request.getObject("viewer-state", false, 0), //
+            new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/end":
           handle_ConnectionEnd(requestId, //
-          request.getLong("connection", true, 405505), //
-          new SimpleResponder(responder));
+            request.getLong("connection", true, 405505), //
+            new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "documents/hash-password":
           handle_DocumentsHashPassword(requestId, //
-          request.getString("password", true, 465917), //
-          new HashedPasswordResponder(responder));
+            request.getString("password", true, 465917), //
+            new HashedPasswordResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "configure/make-or-get-asset-key":
           handle_ConfigureMakeOrGetAssetKey(requestId, //
-          new AssetKeyResponder(responder));
+            new AssetKeyResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
       }
       responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));

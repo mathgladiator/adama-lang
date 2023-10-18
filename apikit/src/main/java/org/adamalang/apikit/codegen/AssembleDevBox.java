@@ -38,7 +38,6 @@ public class AssembleDevBox {
     }
 
     HashMap<String, ArrayList<Method>> methodsBySubHandler = AssembleHandlers.shred(methods);
-    HashSet<String> subHandlers = new HashSet<>(methodsBySubHandler.keySet());
     StringBuilder router = new StringBuilder();
     router.append("package ").append(packageName).append(";\n\n");
     router.append("import com.fasterxml.jackson.databind.JsonNode;\n");
@@ -46,8 +45,12 @@ public class AssembleDevBox {
     router.append("import org.adamalang.common.*;\n");
     router.append("import org.adamalang.web.io.*;\n");
     router.append("import org.adamalang.ErrorCodes;\n");
+    router.append("import org.slf4j.Logger;\n");
+    router.append("import org.slf4j.LoggerFactory;\n");
     router.append("\n");
     router.append("public abstract class DevBoxRouter {\n");
+    router.append("  private static final Logger ACCESS_LOG = LoggerFactory.getLogger(\"access\");\n");
+    router.append("  private static final JsonLogger DEV_ACCESS_LOG = (item) -> ACCESS_LOG.debug(item.toString());\n");
     router.append("\n");
 
     for (Method method : methods) {
@@ -62,12 +65,41 @@ public class AssembleDevBox {
     router.append("    try {\n");
     router.append("      long requestId = request.id();\n");
     router.append("      String method = request.method();\n");
+    router.append("      ObjectNode _accessLogItem = Json.newJsonObject();\n");
+    router.append("      _accessLogItem.put(\"method\", method);\n");
+    router.append("      _accessLogItem.put(\"requestId\", requestId);\n");
+    router.append("      _accessLogItem.put(\"@timestamp\", LogTimestamp.now());\n");
+    router.append("      request.dumpIntoLog(_accessLogItem);\n");
     router.append("      switch (method) {\n");
     for (Method method : methods) {
       router.append("        case \"").append(method.name).append("\":\n");
+      for (ParameterDefinition pd : method.parameters) {
+        if (pd.logged) {
+          switch (pd.type) {
+            case String:
+              if (pd.normalize) {
+                router.append("          _accessLogItem.put(\"").append(pd.name).append("\", request.getStringNormalize(\"").append(pd.name).append("\", ").append(pd.optional ? "false" : "true").append(", ").append(pd.errorCodeIfMissing).append("));\n");
+              } else {
+                router.append("          _accessLogItem.put(\"").append(pd.name).append("\", request.getString(\"").append(pd.name).append("\", ").append(pd.optional ? "false" : "true").append(", ").append(pd.errorCodeIfMissing).append("));\n");
+              }
+              break;
+            case Integer:
+              router.append("          _accessLogItem.put(\"").append(pd.name).append("\", request.getInteger(\"").append(pd.name).append("\", ").append(pd.optional ? "false" : "true").append(", ").append(pd.errorCodeIfMissing).append("));\n");
+              break;
+            case Long:
+              router.append("          _accessLogItem.put(\"").append(pd.name).append("\", request.getLong(\"").append(pd.name).append("\", ").append(pd.optional ? "false" : "true").append(", ").append(pd.errorCodeIfMissing).append("));\n");
+              break;
+            case Boolean:
+              router.append("          _accessLogItem.put(\"").append(pd.name).append("\", request.getBoolean(\"").append(pd.name).append("\", ").append(pd.optional ? "false" : "true").append(", ").append(pd.errorCodeIfMissing).append("));\n");
+              break;
+            default:
+          }
+        }
+      }
+
       router.append("          handle_").append(method.camelName).append("(requestId, //\n");
       for (ParameterDefinition pd : method.parameters) {
-        router.append("          ");
+        router.append("            ");
         switch (pd.type) {
           case String:
             if (pd.normalize) {
@@ -94,8 +126,8 @@ public class AssembleDevBox {
         }
         router.append(pd.name).append("\", ").append(pd.optional ? "false" : "true").append(", ").append(pd.errorCodeIfMissing).append("), //\n");
       }
-      router.append("          ");
-      router.append("new ").append(method.responder.camelName).append("Responder(responder));\n");
+      router.append("            ");
+      router.append("new ").append(method.responder.camelName).append("Responder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));\n");
       router.append("          return;\n");
     }
     router.append("      }\n");
