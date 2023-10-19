@@ -6,9 +6,38 @@ With RxHTML, the root element is no longer &lt;html&gt;. Instead, it is a &lt;fo
 While there are a few custom elements like &lt;connection&gt; (connect the children html to an Adama document) and &lt;lookup&gt; (pull data from the Adama document into a text node), the bulk of RxHTML rests with special attributes like *rx:if*, *rx:ifnot*, *rx:iterate*, *rx:switch*, *rx:template*, and more.
 These attributes reactively bind the HTML document to an Adama tree such that changes in the Adama tree manifest in DOM changes.
 
-### &lt;template name="$name"&gt;
+### The root elements within a &lt;forest&gt;
+
+#### &lt;page uri="$uri"&gt;
+
+A page is a full-page document that is routable via a uri.
+
+```html
+<forest>
+    <page uri="/">
+        <h1>Hello World</h1>
+    </page>
+</forest>
+```
+
+The uri is broken up into components by splitting via the '/' character and the uri must alway start with '.'. 
+For example, the uri "/foo/page/doctor" breaks down into three components
+
+| index | component |
+|-------|-----------|
+| 0     | foo       |
+| 1     | page      |
+| 2     | doctor    |
+
+These components are all fixed constants, but we can introduce both numeric and string variances by prefixing the component with the '$' character.
+
+
+Beyond the uri, a page may also require authentication.
+
+#### &lt;template name="$name"&gt;
 
 A template is fundamentally a way to wrap a shared bit of RxHTML within a name. At core, it's a function with no parameters.
+Templates are how RxHTML achieve user interface re-use, and the philosophy is akin to [duck typing](https://en.wikipedia.org/wiki/Duck_typing) where if the data behaves like a duck, then a template will make the duck pretty.
 
 ```html
 <forest>
@@ -24,19 +53,7 @@ A template is fundamentally a way to wrap a shared bit of RxHTML within a name. 
 
 However, there are parameters via the &lt;fragment&gt; element and the *rx:case* attribute. See below for more details.
 
-### &lt;page uri="$uri"&gt;
 
-A page is a full-page document that is routable via a uri.
-
-```html
-<forest>
-    <page uri="/">
-        <h1>Hello World</h1>
-    </page>
-</forest>
-```
-
-Beyond the uri, a page may also require authentication.
 
 ## Data binding with &lt;connection space="$space" key="$key" &gt;
 

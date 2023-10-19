@@ -65,6 +65,7 @@
   - [JavaScript API](./reference/api.md)
   - [JSON Delta Format](./reference/deltas.md)
 - [RxHTML](./rxhtml/ref.md)
+  - [Recipes](./rxhtml/recipes.md)
 - [History and Motivations behind Adama (i.e. Why!?!)](./history/it-began.md)
   - [Origin Story](./history/origins.md)
   - [Embracing Laziness](./history/laziness.md)
