@@ -22,6 +22,7 @@ import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.*;
 import org.adamalang.translator.parser.token.Token;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -192,7 +193,11 @@ public class JsonStreamReader {
 
   public NtDateTime readNtDateTime() {
     String val = readString();
-    return new NtDateTime(ZonedDateTime.parse(val));
+    try {
+      return new NtDateTime(ZonedDateTime.parse(val));
+    } catch (Exception ex) {
+      return new NtDateTime(ZonedDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+    }
   }
 
   public NtTime readNtTime() {

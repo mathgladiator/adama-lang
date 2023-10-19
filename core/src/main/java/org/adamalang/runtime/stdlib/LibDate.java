@@ -31,6 +31,15 @@ import java.util.Locale;
 
 /** date math for just days */
 public class LibDate {
+  public static @HiddenType(clazz = NtDateTime.class) NtMaybe<NtDateTime> construct(NtDate date, NtTime time, double seconds, String zone) {
+    try {
+      int nano = (int) ((seconds - (int) seconds) * 1E9);
+      return new NtMaybe<>(new NtDateTime(ZonedDateTime.of(date.toLocalDate(), LocalTime.of(time.hour, time.minute, (int) seconds, nano), ZoneId.of(zone))));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
   @Extension
   public static @HiddenType(clazz = NtDate.class) NtList<NtDate> calendarViewOf(NtDate day) {
     ArrayList<NtDate> dates = new ArrayList<>();

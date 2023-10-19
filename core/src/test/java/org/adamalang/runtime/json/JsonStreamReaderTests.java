@@ -634,6 +634,24 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void badDateTime1() {
+    JsonStreamReader reader = new JsonStreamReader("\"1970/1/23\"");
+    NtDateTime date = reader.readNtDateTime();
+    Assert.assertEquals(1, date.dateTime.getYear());
+    Assert.assertEquals(1, date.dateTime.getMonthValue());
+    Assert.assertEquals(1, date.dateTime.getDayOfMonth());
+  }
+
+  @Test
+  public void badDateTime2() {
+    JsonStreamReader reader = new JsonStreamReader("\"10:20\"");
+    NtDateTime date = reader.readNtDateTime();
+    Assert.assertEquals(1, date.dateTime.getYear());
+    Assert.assertEquals(1, date.dateTime.getMonthValue());
+    Assert.assertEquals(1, date.dateTime.getDayOfMonth());
+  }
+
+  @Test
   public void readDate1alt() {
     JsonStreamReader reader = new JsonStreamReader("\"1970-1-23\"");
     NtDate date = reader.readNtDate();
