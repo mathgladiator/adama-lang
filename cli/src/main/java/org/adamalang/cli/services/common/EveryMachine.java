@@ -114,7 +114,7 @@ public class EveryMachine {
     this.webBase = new WebClientBase(new WebClientBaseMetrics(metricsFactory), this.webConfig);
 
     this.regionClient = SimpleExecutor.create("region-client");
-    String selfEndpoint = "wss://aws-us-east-2.adama-platform.com/~s";
+    String selfEndpoint = config.get_string("region-endpoint", "wss://aws-us-east-2.adama-platform.com/~s");
     this.regionPool =  new MultiWebClientRetryPool(this.regionClient, webBase, new MultiWebClientRetryPoolMetrics(metricsFactory), new MultiWebClientRetryPoolConfig(new ConfigObject(config.get_or_create_child("http-web"))), ConnectionReady.TRIVIAL, selfEndpoint);
     this.adamaCurrentRegionClient = new SelfClient(regionPool);
 

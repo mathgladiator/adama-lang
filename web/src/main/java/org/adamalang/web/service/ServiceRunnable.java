@@ -114,7 +114,8 @@ public class ServiceRunnable implements Runnable {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
           }
-        } catch (final Exception ie) {
+        } catch (final Exception ex) {
+          LOGGER.error("exception-server", ex);
           shutdown();
         }
       } finally {

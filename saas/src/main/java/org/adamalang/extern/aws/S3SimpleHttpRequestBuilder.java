@@ -36,9 +36,11 @@ public class S3SimpleHttpRequestBuilder {
   private final String s3key;
   private final TreeMap<String, String> headers;
   private final TreeMap<String, String> parameters;
+  private final String bucket;
 
-  public S3SimpleHttpRequestBuilder(AWSConfig config, String method, String s3key, TreeMap<String, String> parameters) {
+  public S3SimpleHttpRequestBuilder(AWSConfig config, String bucket, String method, String s3key, TreeMap<String, String> parameters) {
     this.config = config;
+    this.bucket = bucket;
     this.host = "s3." + config.region + ".amazonaws.com";
     this.headers = new TreeMap<>();
     this.method = method;
@@ -58,7 +60,7 @@ public class S3SimpleHttpRequestBuilder {
   }
 
   private SignatureV4 startSigning() {
-    SignatureV4 v4 = new SignatureV4(config.credential, config.region, "s3", method, host, "/" + config.bucket + "/" + s3key);
+    SignatureV4 v4 = new SignatureV4(config.credential, config.region, "s3", method, host, "/" + bucket + "/" + s3key);
     for (Map.Entry<String, String> entry : headers.entrySet()) {
       v4.withHeader(entry.getKey(), entry.getValue());
     }
@@ -71,7 +73,7 @@ public class S3SimpleHttpRequestBuilder {
   }
 
   private String url() {
-    return "https://" + host + "/" + config.bucket + "/" + URL.encode(s3key, true) + URL.parameters(parameters);
+    return "https://" + host + "/" + bucket + "/" + URL.encode(s3key, true) + URL.parameters(parameters);
   }
 
   public SimpleHttpRequest buildWithEmptyBody() {

@@ -44,7 +44,6 @@ public class DataBaseBoot {
     cancel.set(system.schedule(new NamedRunnable("database-ping") {
       @Override
       public void execute() throws Exception {
-        System.out.println("[DataBaseBoot-Shutdown]");
         try {
           Health.pingDataBase(database);
         } catch (Exception ex) {
@@ -56,6 +55,7 @@ public class DataBaseBoot {
       }
     }, 5000));
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
+      System.out.println("[DataBaseBoot-Shutdown]");
       alive.set(false);
       cancel.get().run();
     })));

@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
@@ -66,7 +65,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.upload_file.start();
     String s3key = "assets/" + key.space + "/" + key.key + "/" + asset.id;
-    S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null);
+    S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "PUT", s3key, null);
     builder.withContentType(asset.contentType);
     builder.withContentMD5(asset.md5);
     final SimpleHttpRequest request;
@@ -86,7 +85,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   public void request(AssetRequest asset, AssetStream stream) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.download_file.start();
     String s3key = "assets/" + asset.space + "/" + asset.key + "/" + asset.id;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new SimpleHttpResponder() {
       private String contentType;
       private String contentMd5;
@@ -162,7 +161,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     for (File file : directory.listFiles()) {
       if (shouldConsiderForUpload(file.getName())) {
         String s3key = "logs/" + prefix + "/" + file.getName();
-        SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null).buildWithFileAsBody(new FileReaderHttpRequestBody(file));
+        SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.logBucket, "PUT", s3key, null).buildWithFileAsBody(new FileReaderHttpRequestBody(file));
         final File fileToDeleteOnSuccess = file;
         base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.upload_log_document.start(), new Callback<Void>() {
           @Override
@@ -181,7 +180,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   @Override
   public void exists(Key key, String archiveKey, Callback<Void> callback) {
     String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "HEAD", s3key, null).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "HEAD", s3key, null).buildWithEmptyBody();
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.exists_document.start();
     base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, callback));
   }
@@ -194,7 +193,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     }
     File temp = new File(root, archiveKey + ".temp");
     String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
     try {
       base.executeShared(request, new FileWriterHttpResponder(temp, metrics.alarm_file_not_found, new Callback<Void>() {
@@ -228,7 +227,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     try {
       String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveFile.getName();
       FileReaderHttpRequestBody body = new FileReaderHttpRequestBody(archiveFile);
-      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "PUT", s3key, null).buildWithFileAsBody(body);
+      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "PUT", s3key, null).buildWithFileAsBody(body);
       base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.backup_document.start(), callback));
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.BACKUP_FILE_FAILURE, ex));
@@ -238,14 +237,14 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   @Override
   public void delete(Key key, String archiveKey, Callback<Void> callback) {
     String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key, null).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "DELETE", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_document.start(), callback));
   }
 
   @Override
   public void handle(String uri, Callback<String> callback) {
     String s3key = "wellknown" + uri;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "GET", s3key, null).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.well_known_get.start(), callback));
   }
 
@@ -255,7 +254,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     final TreeMap<String, String> parameters = new TreeMap<>();
     String prefix = "assets/" + key.space + "/" + key.key + "/";
     parameters.put("prefix", prefix);
-    base.executeShared(new S3SimpleHttpRequestBuilder(config, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_assets.start(), new Callback<String>() {
+    base.executeShared(new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_assets.start(), new Callback<String>() {
       @Override
       public void success(String xml) {
         try {
@@ -265,7 +264,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
           }
           if (results.truncated) {
             parameters.put("marker", results.last());
-            base.executeShared(new S3SimpleHttpRequestBuilder(config, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_assets.start(), this));
+            base.executeShared(new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_assets.start(), this));
           } else {
             callback.success(ids);
           }
@@ -284,7 +283,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   @Override
   public void deleteAsset(Key key, String assetId, Callback<Void> callback) {
     String s3key = "assets/" + key.space + "/" + key.key + "/" + assetId;
-    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, "DELETE", s3key, null).buildWithEmptyBody();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "DELETE", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_asset.start(), callback));
   }
 
