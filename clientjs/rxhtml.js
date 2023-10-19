@@ -2325,7 +2325,7 @@ var RxHTML = (function () {
     if (idLookup.abort) {
       return;
     }
-    form.action = "https://aws-us-east-2.adama-platform.com/~upload";
+    form.action = "https://" + Adama.Production + "/~upload";
     form.method = "post";
     form.enctype = "multipart/form-data";
     var identityInput = document.createElement("input");

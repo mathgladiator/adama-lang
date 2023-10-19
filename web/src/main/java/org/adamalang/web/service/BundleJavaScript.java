@@ -23,6 +23,8 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BundleJavaScript {
   public static String bundle(String fileJs, String fileWorker) throws Exception {
@@ -31,12 +33,18 @@ public class BundleJavaScript {
     StringBuilder sb = new StringBuilder();
     sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     sb.append("package org.adamalang.web.service;\n\n");
-    sb.append("import java.util.Base64;\n\n");
+    sb.append("import java.nio.charset.StandardCharsets;\n");
+    sb.append("import java.util.Base64;\n");
+    sb.append("import java.util.regex.Matcher;\n");
+    sb.append("import java.util.regex.Pattern;\n");
+    sb.append("\n");
     sb.append("public class JavaScriptClient {\n");
     sb.append("  public static final byte[] ADAMA_JS_CLIENT_BYTES = ");
     appendStringInChunks(sb, "c", new String(Base64.getEncoder().encode(strJs.getBytes(StandardCharsets.UTF_8))));
+    sb.append("  public static final byte[] BETA_ADAMA_JS_CLIENT_BYTES = new String(ADAMA_JS_CLIENT_BYTES, StandardCharsets.UTF_8).replaceAll(Pattern.quote(\"Adama.Production\"), Matcher.quoteReplacement(\"Adama.Beta\")).getBytes(StandardCharsets.UTF_8);\n");
     sb.append("  public static final byte[] ADAMA_WORKER_JS_CLIENT_BYTES = ");
     appendStringInChunks(sb, "w", new String(Base64.getEncoder().encode(strWorker.getBytes(StandardCharsets.UTF_8))));
+    sb.append("  public static final byte[] BETA_ADAMA_WORKER_JS_CLIENT_BYTES = ADAMA_WORKER_JS_CLIENT_BYTES;\n");
     sb.append("}");
     return sb.toString();
   }

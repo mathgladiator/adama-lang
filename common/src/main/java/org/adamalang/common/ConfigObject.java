@@ -40,6 +40,15 @@ public class ConfigObject {
     }
   }
 
+  public boolean boolOf(String key, boolean defaultValue) {
+    JsonNode v = node.get(key);
+    if (v == null || v.isNull() || !v.isBoolean()) {
+      return defaultValue;
+    } else {
+      return v.booleanValue();
+    }
+  }
+
   public String strOf(String key, String defaultValue) {
     JsonNode v = node.get(key);
     if (v == null || v.isNull() || !v.isTextual()) {

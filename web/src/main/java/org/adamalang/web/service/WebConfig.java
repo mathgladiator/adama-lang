@@ -47,6 +47,7 @@ public class WebConfig {
   public final int minDomainsToHoldTo;
   public final int maxDomainsToHoldTo;
   public final int maxDomainAge;
+  public final boolean beta;
 
   public WebConfig(ConfigObject config) throws Exception {
     // HTTP properties
@@ -68,6 +69,7 @@ public class WebConfig {
     this.adamaJarDomain = config.strOf("adama-jar-domain", ".adama-platform.com");
     this.globalDomains = config.stringsOf("global-domains", new String[] { "adama.games" });
     this.specialDomains = new TreeSet<>();
+    this.beta = config.boolOf("beta", false);
     for (String sd : config.stringsOf("special-domains", new String[] { "www.adama-platform.com", "ide.adama-platform.com", "book.adama-platform.com" })) {
       specialDomains.add(sd);
     }

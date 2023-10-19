@@ -954,5 +954,6 @@ class WebSocketAdamaConnection {
 
 var Adama = {
   Production: "aws-us-east-2.adama-platform.com",
+  Beta: "beta.adama-platform.com",
   Connection: WebSocketAdamaConnection
 };

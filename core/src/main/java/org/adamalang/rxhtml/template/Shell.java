@@ -80,7 +80,7 @@ public class Shell {
     if (config.useLocalAdamaJavascript) {
       sb.append("<script src=\"/" + System.currentTimeMillis() + "/devlibadama.js\"></script>");
     } else {
-      sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js/"+ config.version +".js\"></script>");
+      sb.append("<script src=\"/libadama.js/"+ config.version +".js\"></script>");
     }
     sb.append("<script>\n\n").append(result.javascript).append("\n\n</script>");
     sb.append("<style>\n\n").append(result.style).append("\n\n</style>");
