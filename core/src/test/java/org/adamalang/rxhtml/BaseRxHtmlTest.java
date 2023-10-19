@@ -37,7 +37,7 @@ public abstract class BaseRxHtmlTest {
     if (cachedResult == null) {
       issuesLive = new StringBuilder();
       Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-      cachedResult = RxHtmlTool.convertStringToTemplateForest(source().replaceAll("\r", ""), ShellConfig.start().withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
+      cachedResult = RxHtmlTool.convertStringToTemplateForest(source().replaceAll("\r", ""), ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
     }
     return cachedResult;
   }

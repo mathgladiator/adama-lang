@@ -3661,6 +3661,7 @@ public class Arguments {
 		public Config config;
 		public String rxhtmlPath = ".";
 		public String output = "200.html";
+		public String environment = "production";
 		public static FrontendMake200Args from(String[] args, int start) {
 			FrontendMake200Args returnArgs = new FrontendMake200Args();
 			try {
@@ -3692,6 +3693,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-e":
+					case "--environment": {
+						if (k+1 < args.length) {
+							returnArgs.environment = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3716,6 +3728,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
 		}
 	}
 	public static class FrontendMobileCapacitorArgs {
@@ -3840,6 +3853,7 @@ public class Arguments {
 		public Config config;
 		public String input;
 		public String output;
+		public String environment = "production";
 		public static FrontendRxhtmlArgs from(String[] args, int start) {
 			FrontendRxhtmlArgs returnArgs = new FrontendRxhtmlArgs();
 			try {
@@ -3868,6 +3882,17 @@ public class Arguments {
 							returnArgs.output = args[k+1];
 							k++;
 							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-e":
+					case "--environment": {
+						if (k+1 < args.length) {
+							returnArgs.environment = args[k+1];
+							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -3905,6 +3930,8 @@ public class Arguments {
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
 		}
 	}
 	public static class FrontendSetLibadamaArgs {

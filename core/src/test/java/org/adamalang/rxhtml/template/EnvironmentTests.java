@@ -24,7 +24,7 @@ import org.junit.Test;
 public class EnvironmentTests {
   @Test
   public void sanity() {
-    Environment env = Environment.fresh(Feedback.NoOp);
+    Environment env = Environment.fresh(Feedback.NoOp, "test");
     env = env.parentVariable("pv");
     Assert.assertEquals("pv", env.parentVariable);
   }

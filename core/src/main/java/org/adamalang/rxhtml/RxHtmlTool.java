@@ -31,7 +31,7 @@ import java.util.ArrayList;
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
   public static RxHtmlResult convertStringToTemplateForest(String str, ShellConfig config) {
-    Environment env = Environment.fresh(config.feedback);
+    Environment env = Environment.fresh(config.feedback, config.environment);
     TypeChecker.typecheck(str, config.feedback);
     Document document = Jsoup.parse(str);
     Root.start(env, buildCustomJavaScript(document));

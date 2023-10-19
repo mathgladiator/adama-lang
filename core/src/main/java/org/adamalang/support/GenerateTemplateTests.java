@@ -55,7 +55,7 @@ public class GenerateTemplateTests {
           System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
-        RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
+        RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
         String gold = result.toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);

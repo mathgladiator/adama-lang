@@ -56,7 +56,7 @@ public class Frontend {
     this.adama = init.makeGlobalClient(client);
     CachedDomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database, init.masterKey));
     domainFinder.startSweeping(init.alive, 1000, 2000);
-    CachedRxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, init.system, new GlobalRxHtmlFetcher(init.database));
+    CachedRxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, init.system, new GlobalRxHtmlFetcher(init.database, init.em.environment));
     rxHtmlFetcher.startSweeping(init.alive, 1000, 2000);
     FrontendHttpHandler http = new FrontendHttpHandler(init.alive, init.system, init.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));

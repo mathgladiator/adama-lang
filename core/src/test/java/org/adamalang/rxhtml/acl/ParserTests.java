@@ -50,13 +50,13 @@ public class ParserTests {
   }
 
   private static void assertIs(Command command, String expected) {
-    Environment env = Environment.fresh(Feedback.NoOp);
+    Environment env = Environment.fresh(Feedback.NoOp, "test");
     command.write(env.stateVar("State"), "type", "DOM");
     Assert.assertEquals(expected, env.writer.toString());
   }
 
   private static void assertIsBulk(BulkCommand command, String expected) {
-    Environment env = Environment.fresh(Feedback.NoOp);
+    Environment env = Environment.fresh(Feedback.NoOp, "test");
     command.writeBulk(env.stateVar("State"), "DOM", "$ARR");
     Assert.assertEquals(expected, env.writer.toString());
   }

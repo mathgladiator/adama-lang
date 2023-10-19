@@ -34,9 +34,11 @@ import org.adamalang.rxhtml.template.config.ShellConfig;
 public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
   private final static ExceptionLogger EXLOGGER = ExceptionLogger.FOR(GlobalRxHtmlFetcher.class);
   private final DataBase database;
+  private final String environment;
 
-  public GlobalRxHtmlFetcher(DataBase database) {
+  public GlobalRxHtmlFetcher(DataBase database, String environment) {
     this.database = database;
+    this.environment = environment;
   }
 
   @Override
@@ -44,7 +46,7 @@ public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
     try {
       SpaceInfo spaceInfo = Spaces.getSpaceInfo(database, space);
       String rxhtml = Spaces.getRxHtml(database, spaceInfo.id);
-      RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().end());
+      RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().withEnvironment(environment).end());
       String html = rxhtmlResult.shell.makeShell(rxhtmlResult);
       callback.success(new LiveSiteRxHtmlResult(html, rxhtmlResult.paths));
     } catch (Exception ex) {

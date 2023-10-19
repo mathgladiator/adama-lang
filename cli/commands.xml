@@ -14,6 +14,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="environment" type="string" short="e">
+        <documentation>
+            The environment label for filtering things out.
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="scenario" type="string" short="sn">
         <documentation>
             A canary scenario
@@ -752,6 +758,7 @@
             </documentation>
             <arg name="input" />
             <arg name="output" />
+            <arg name="environment" default="production" />
         </command>
         <command name="dev-server">
             <documentation>
@@ -774,6 +781,7 @@
             </documentation>
             <arg name="rxhtml-path" default="." />
             <arg name="output" default="200.html" />
+            <arg name="environment" default="production" />
         </command>
         <command name="bundle">
             <documentation>

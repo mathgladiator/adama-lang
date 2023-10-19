@@ -180,7 +180,14 @@ public class Base {
       } else if (node instanceof Comment) {
         // ignore comments
       } else if (node instanceof org.jsoup.nodes.Element) {
-        filtered.add(node);
+        if (node.hasAttr("for-env")) {
+          if(env.environment.equals(node.attr("for-env"))) {
+            node.removeAttr("for-env");
+            filtered.add(node);
+          }
+        } else {
+          filtered.add(node);
+        }
       }
     }
     return filtered;

@@ -61,7 +61,7 @@ public class GlobalFrontend {
     String masterKey = config.get_string("master-key", null);
     // TODO: REGION-SYNC HERE
     DomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, em.system, new GlobalDomainFinder(db.database, masterKey));
-    RxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, em.system, new GlobalRxHtmlFetcher(db.database));
+    RxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, em.system, new GlobalRxHtmlFetcher(db.database, em.environment));
     int publicKeyId = Hosts.initializeHost(db.database, em.region, em.machine, "web", em.publicKey);
     GlobalFinder globalFinder = new GlobalFinder(db.database, em.region, em.machine);
 
@@ -79,7 +79,6 @@ public class GlobalFrontend {
       accessLog.debug(item.toString());
     }, masterKey, em.webBase, em.region, em.machine, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
     System.out.println("[GlobalFrontend:ExternNexus constructed]");
-
 
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();

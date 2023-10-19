@@ -166,7 +166,7 @@ public class RxHTMLScanner implements AutoCloseable {
               };
               try {
                 long started = System.currentTimeMillis();
-                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withEnvironment("test").withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;

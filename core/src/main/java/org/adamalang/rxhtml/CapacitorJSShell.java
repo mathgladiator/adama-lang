@@ -58,7 +58,7 @@ public class CapacitorJSShell {
       scripts.append(element.toString()).append("\n");
     }
     sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>").append("\n");
-    Environment env = Environment.fresh(feedback);
+    Environment env = Environment.fresh(feedback, "mobile");
     Root.start(env, RxHtmlTool.buildCustomJavaScript(document));
     for (Element element : document.getElementsByTag("template")) {
       // TODO: detect if this template is used by any mobile pages
