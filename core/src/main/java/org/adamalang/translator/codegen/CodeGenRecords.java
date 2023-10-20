@@ -348,6 +348,9 @@ public class CodeGenRecords {
     for (final String other : others) {
       sb.append("case \"").append(other).append("\":").tabUp().writeNewline();
       sb.append(other).append(".__insert(__reader);").writeNewline();
+      if (other.equals("__timezone")) {
+        sb.append("__timezoneCachedZoneId = ZoneId.of(__timezone.get());").writeNewline();
+      }
       sb.append("break;").tabDown().writeNewline();
     }
     if (isRoot) {

@@ -160,6 +160,7 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__timezone\":");
     gold.append("\n            __timezone.__insert(__reader);");
+    gold.append("\n            __timezoneCachedZoneId = ZoneId.of(__timezone.get());");
     gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
