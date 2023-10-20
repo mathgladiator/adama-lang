@@ -50,4 +50,38 @@ public class LibTimeTests {
       Assert.assertEquals(0, x.minute);
     }
   }
+
+  @Test
+  public void cylicAdd_Battery() {
+    {
+      NtTime x = LibTime.cyclicAdd(new NtTime(13, 00), new NtTimeSpan(70));
+      Assert.assertEquals(13 * 60 + 1, LibTime.toInt(x));
+      Assert.assertEquals(13, x.hour);
+      Assert.assertEquals(1, x.minute);
+    }
+    {
+      NtTime x = LibTime.cyclicAdd(new NtTime(13, 00), new NtTimeSpan(24 * 60 * 60 * 4));
+      Assert.assertEquals(940, LibTime.toInt(x));
+      Assert.assertEquals(15, x.hour);
+      Assert.assertEquals(40, x.minute);
+    }
+    {
+      NtTime x = LibTime.cyclicAdd(new NtTime(13, 00), new NtTimeSpan(-24 * 60 * 60 * 4));
+      Assert.assertEquals(620, LibTime.toInt(x));
+      Assert.assertEquals(10, x.hour);
+      Assert.assertEquals(20, x.minute);
+    }
+  }
+
+  @Test
+  public void make() {
+    NtTime t = LibTime.make(23, 59).get();
+    Assert.assertEquals(23, t.hour);
+    Assert.assertEquals(59, t.minute);
+
+    Assert.assertFalse(LibTime.make(42, 1).has());
+    Assert.assertFalse(LibTime.make(-42, 1).has());
+    Assert.assertFalse(LibTime.make(1, 90).has());
+    Assert.assertFalse(LibTime.make(1, -90).has());
+  }
 }

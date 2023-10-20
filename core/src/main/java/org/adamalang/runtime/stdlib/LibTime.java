@@ -17,9 +17,11 @@
 */
 package org.adamalang.runtime.stdlib;
 
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.NtTime;
 import org.adamalang.runtime.natives.NtTimeSpan;
 import org.adamalang.translator.reflect.Extension;
+import org.adamalang.translator.reflect.HiddenType;
 
 public class LibTime {
   @Extension
@@ -33,6 +35,24 @@ public class LibTime {
     if (end >= 1440) end = 1439;
     if (end < 0) end = 0;
     return new NtTime(end / 60, end % 60);
+  }
+
+  @Extension
+  public static NtTime cyclicAdd(NtTime t, NtTimeSpan s) {
+    int next = ((int) (t.toInt() * 60 + s.seconds)) / 60;
+    next %= 1400;
+    if (next < 0) {
+      next += 1400;
+    }
+    return new NtTime(next / 60, next % 60);
+  }
+
+  public static @HiddenType(clazz = NtTime.class) NtMaybe<NtTime> make(int hr, int min) {
+    if (0 <= hr && hr <= 23 && 0 <= min && min <= 59) {
+      return new NtMaybe<>(new NtTime(hr, min));
+    } else {
+      return new NtMaybe<>();
+    }
   }
 
   public static boolean overlaps(NtTime aStart, NtTime aEnd, NtTime bStart, NtTime bEnd) {

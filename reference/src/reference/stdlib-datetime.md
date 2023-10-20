@@ -17,10 +17,20 @@ Adama supports four date and time related types:
 | Time.setZone(string zone) | Set the document's time zone              | bool        |
 | Time.now()                | Get the current time as a UNIX time stamp | long        |
 
+## Time functions
+| Method                                        | Description                                                  | Result type       |
+|-----------------------------------------------|--------------------------------------------------------------|-------------------|
+| Time.make(int hr, int min)                    | make a time                                                  | maybe&lt;time&gt; |
+| Time.extendWithinDay(time t, timespan s)      | add the timespan to the time clamping the result at midnight | time              |
+| Time.cyclicAdd(time t, timespan s)            | add the timespan to the time wraping around the clock        | time              |
+| Time.toInt(time t)                            | convert the time to an integer                               | int               |
+| Time.overlaps(time a, time b, time c, time d) | do the temporal ranges [a,b] and [c,d] overlap               | bool              |
 
 ## Date functions
 | Method                                                                      | Description                                                                                             | Result type      |
 |-----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|------------------|
+| Date.make(int yr, int mo, int day)                       | make a date     | maybe&lt;date&gt;     |
+| Date.construct(date dy, time t, double sec, string zone) | make a datetime | maybe&lt;datetime&gt; |
 | Date.calendarViewOf(date&nbsp;d)                                            | Get the surrounding month for the given date                                                            | list&lt;date&gt; |
 | Date.weekViewOf(date d)                                                     | Get the surrounding week for the given date                                                             | list&lt;date&gt; |
 | Date.neighborViewOf(date d, int days)                                       | Get the neighborhood for the given date inclusively starting $days in the past to $days into the future | list&lt;date&gt; |
@@ -38,7 +48,6 @@ Adama supports four date and time related types:
 
 
 ## DateTime functions
-
 | Method                                            | Description                                                    | Result type           |
 |---------------------------------------------------|----------------------------------------------------------------|-----------------------|
 | Date.future(datetime d, timespan t)               | Get the future datetime by the given timespan                  | datetime              |

@@ -31,11 +31,22 @@ import java.util.Locale;
 
 /** date math for just days */
 public class LibDate {
+  @Extension
   public static @HiddenType(clazz = NtDateTime.class) NtMaybe<NtDateTime> construct(NtDate date, NtTime time, double seconds, String zone) {
     try {
       int nano = (int) ((seconds - (int) seconds) * 1E9);
       return new NtMaybe<>(new NtDateTime(ZonedDateTime.of(date.toLocalDate(), LocalTime.of(time.hour, time.minute, (int) seconds, nano), ZoneId.of(zone))));
     } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  public static @HiddenType(clazz = NtDate.class) NtMaybe<NtDate> make(int year, int mo, int day) {
+    try {
+      NtDate d = new NtDate(year, mo, day);
+      d.toLocalDate();
+      return new NtMaybe<>(d);
+    } catch (Exception e) {
       return new NtMaybe<>();
     }
   }

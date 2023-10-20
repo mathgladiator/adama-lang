@@ -28,6 +28,15 @@ import java.time.ZonedDateTime;
 public class LibDateTests {
 
   @Test
+  public void make() {
+    NtDate a = LibDate.make(2023, 12, 17).get();
+    Assert.assertEquals(2023, a.year);
+    Assert.assertEquals(12, a.month);
+    Assert.assertEquals(17, a.day);
+    Assert.assertFalse(LibDate.make(2023, 3, 52).has());
+  }
+
+  @Test
   public void ageFractional() {
     Assert.assertEquals(2.833333, LibDate.periodYearsFractional(new NtDate(2020, 4, 25), new NtDate(2023, 2, 25)), 0.01);
     Assert.assertEquals(5.5, LibDate.periodYearsFractional(new NtDate(2018, 4, 25), new NtDate(2023, 10, 25)), 0.01);
