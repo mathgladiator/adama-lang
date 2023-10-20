@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.tree.expressions.constants;
 
+import org.adamalang.runtime.stdlib.LibTime;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
@@ -52,6 +53,9 @@ public class TimeConstant extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
+    if (!LibTime.make(hour, minute).has()) {
+      environment.document.createError(this, "The time " + hour + ":" + minute + " is invalid");
+    }
     return new TyNativeTime(TypeBehavior.ReadOnlyNativeValue, null, tokens[0]).withPosition(this);
   }
 

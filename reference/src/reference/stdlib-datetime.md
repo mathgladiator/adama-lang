@@ -6,6 +6,14 @@ Adama supports four date and time related types:
 * datetime for storing year, month, day, hour, minute, second, ms
 * timespan for storing a duration
 
+## Constants
+| Type     | Syntax                 | Example                                                          | Notes                                                                      |
+|----------|------------------------|------------------------------------------------------------------|----------------------------------------------------------------------------|
+| time     | @time $hr:$min         | @time 4:20                                                       | Use military time for PM                                                   |
+| date     | @date $year/$mo/$day   | @date 2023/10/31                                                 | Must be valid                                                              |
+| timespan | @timespan $count $unit | @timespan 30 min                                                 | units are sec, min, hr, day, week                                          |
+| datetime | @datetime "$iso8601"   | @datetime "2023-04-24T17:57:19.802528800-05:00[America/Chicago]" | [ZonedDateTime.parse](https://www.google.com/search?q=ZonedDateTime.parse) |
+
 ## Getting the current date/time
 
 | Method                    | Description                               | Result type |

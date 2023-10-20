@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.tree.expressions.constants;
 
+import org.adamalang.runtime.stdlib.LibDate;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
@@ -55,6 +56,9 @@ public class DateConstant extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
+    if (!LibDate.make(year, month, day).has()) {
+      environment.document.createError(this, "The date " + year + "/" + month + "/" + day + " is invalid");
+    }
     return new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, tokens[0]).withPosition(this);
   }
 
