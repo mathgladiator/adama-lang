@@ -216,9 +216,10 @@ public class CodeGenRecords {
         final var lazyType = ((TyReactiveLazy) fieldType).getEmbeddedType(environment);
         String boxType = lazyType.getJavaBoxType(environment);
         classFields.append("private final RxLazy<" + boxType + "> " + fieldName + ";").writeNewline();
+
         boolean hasCache = !fdInOrder.servicesToWatch.isEmpty();
         if (hasCache) {
-          classFields.append("private final RxCache __c").append(fieldName).append(";");
+          classFields.append("private final RxCache __c").append(fieldName).append(";").writeNewline();
           classConstructorX.append("__c").append(fieldName).append(" = new RxCache(__self, this);").writeNewline();
         }
         classConstructorX.append(fieldName).append(" = new RxLazy<").append(lazyType.getJavaBoxType(environment));
@@ -231,9 +232,19 @@ public class CodeGenRecords {
           fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append("));").writeNewline();
         }
+        for (final String tableToWatch : fdInOrder.tablesToInject) {
+          classFields.append("private final RxTableGuard __").append(fieldName).append("_").append(tableToWatch).append(";").writeNewline();
+          classConstructorX.append("__").append(fieldName).append("_").append(tableToWatch).append(" = new RxTableGuard(").append(fieldName).append(");").writeNewline();
+        }
         environment.define(fieldName, new TyReactiveLazy(lazyType), false, fdInOrder);
         for (final String watched : fdInOrder.variablesToWatch) {
           classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+        }
+        for (final String watched : fdInOrder.tablesToInject) {
+          // TODO: REMOVE THIS LINE ONCE TABLE EVENTS ARE BEING PRODUCED! SUPER AWESOME MODE!
+          classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+          classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline();
+          classLinker.append(fieldName).append(".__guard(").append(watched).append(",__").append(fieldName).append("_").append(watched).append(");").writeNewline();
         }
         if (hasCache) {
           classConstructorX.append("__c").append(fieldName).append(".__subscribe(").append(fieldName).append(");").writeNewline();

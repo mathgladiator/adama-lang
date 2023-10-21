@@ -35,6 +35,13 @@ public class TablePubSub implements TableSubscription {
     _subscriptions.add(ts);
   }
 
+  public void all() {
+    Iterator<TableSubscription> it = _subscriptions.iterator();
+    while (it.hasNext()) {
+      it.next().all();
+    }
+  }
+
   @Override
   public boolean alive() {
     if (owner != null) {
@@ -74,7 +81,7 @@ public class TablePubSub implements TableSubscription {
   }
 
   @Override
-  public void index(int primaryKey, String field, int value) {
+  public void index(int primaryKey, int field, int value) {
     for (TableSubscription ts : _subscriptions) {
       ts.index(primaryKey, field, value);
     }

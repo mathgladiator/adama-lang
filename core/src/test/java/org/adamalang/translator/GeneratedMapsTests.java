@@ -7022,6 +7022,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\npublic class ReduceSample_14 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxGoat> goats;");
     gold.append("\n  private final RxLazy<NtMap<Integer,NtList<RTxGoat>>> grouped_by_breed;");
+    gold.append("\n  private final RxTableGuard __grouped_by_breed_goats;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -7033,7 +7034,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    goats = new RxTable<>(__self, this, \"goats\", (RxParent __parent) -> new RTxGoat(__parent).__link(), 0);");
     gold.append("\n    grouped_by_breed = new RxLazy<NtMap<Integer,NtList<RTxGoat>>>(this, () -> (NtMap<Integer,NtList<RTxGoat>>)(goats.iterate(false).reduce((__item) -> __item.breed.get(), (new __CLOSURE_Lambda0()))));");
+    gold.append("\n    __grouped_by_breed_goats = new RxTableGuard(grouped_by_breed);");
     gold.append("\n    goats.__subscribe(grouped_by_breed);");
+    gold.append("\n    goats.__subscribe(__grouped_by_breed_goats);");
+    gold.append("\n    grouped_by_breed.__guard(goats,__grouped_by_breed_goats);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

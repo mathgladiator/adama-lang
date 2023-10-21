@@ -50,4 +50,8 @@ public class DelayParent implements RxParent {
       this.dirty = false;
     }
   }
+
+  @Override
+  public void __cost(int cost) {
+  }
 }

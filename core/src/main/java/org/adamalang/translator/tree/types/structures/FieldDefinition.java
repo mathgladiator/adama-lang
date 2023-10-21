@@ -45,6 +45,7 @@ public class FieldDefinition extends StructureComponent {
   public final Token semicolonToken;
   public final LinkedHashSet<String> variablesToWatch;
   public final LinkedHashSet<String> servicesToWatch;
+  public final LinkedHashSet<String> tablesToInject;
 
   public Token lossyOrRequiredToken;
   public Token uniqueToken;
@@ -82,6 +83,7 @@ public class FieldDefinition extends StructureComponent {
     }
     servicesToWatch = new LinkedHashSet<>();
     variablesToWatch = new LinkedHashSet<>();
+    tablesToInject = new LinkedHashSet<>();
   }
 
   public boolean isLossy() {

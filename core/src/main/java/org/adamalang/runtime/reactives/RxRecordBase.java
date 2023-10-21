@@ -99,6 +99,13 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     return __alive;
   }
 
+  @Override
+  public void __cost(int cost) {
+    if (__parent != null) {
+      __parent.__cost(cost);
+    }
+  }
+
   public abstract void __reindex();
 
   public abstract void __setId(int __id, boolean __useForce);

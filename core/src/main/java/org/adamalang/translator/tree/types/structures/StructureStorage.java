@@ -233,7 +233,7 @@ public class StructureStorage extends DocumentPosition {
       fd.computeExpression.free(fe);
     }
     insertChecker.define(fd.nameToken, fe.free, env -> {
-      fd.typing(env.watch(Watcher.make(env, fd.variablesToWatch, fd.servicesToWatch)), this);
+      fd.typing(env.watch(Watcher.makeAuto(env, fd.variablesToWatch, fd.tablesToInject, fd.servicesToWatch)), this);
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);

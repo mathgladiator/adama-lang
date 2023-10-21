@@ -22,6 +22,7 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 /** a reactive lazy formula which is computed on demand */
@@ -30,6 +31,17 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   protected Ty cached;
   private int generation;
   private boolean invalid;
+  private ArrayList<GuardPair> guards;
+
+  private class GuardPair {
+    private final RxTable<?> table;
+    private final RxTableGuard guard;
+
+    private GuardPair(RxTable<?> table, RxTableGuard guard) {
+      this.table = table;
+      this.guard = guard;
+    }
+  }
 
   public RxLazy(final RxParent parent, final Supplier<Ty> formula) {
     super(parent);
@@ -37,6 +49,14 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     this.cached = null;
     this.invalid = false;
     this.generation = 0;
+    this.guards = null;
+  }
+
+  public boolean alive() {
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
+    return true;
   }
 
   @Override
@@ -83,7 +103,7 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
       return formula.get();
     }
     if (cached == null) {
-      cached = formula.get();
+      cached = computeWithGuard();
     }
     return cached;
   }
@@ -106,9 +126,25 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     }
   }
 
+  private Ty computeWithGuard() {
+    if (guards != null) {
+      for (GuardPair gp : guards) {
+        gp.guard.reset();
+        gp.table.setGuard(gp.guard);
+      }
+      Ty result = formula.get();
+      for (GuardPair gp : guards) {
+        gp.table.setGuard(null);
+      }
+      return result;
+    } else {
+      return formula.get();
+    }
+  }
+
   private void ensureCacheValid() {
     if (checkInvalidAndLower() || cached == null) {
-      cached = formula.get();
+      cached = computeWithGuard();
       inc();
     }
   }
@@ -127,5 +163,12 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     }
     ensureCacheValid();
     return generation;
+  }
+
+  public void __guard(RxTable<?> table, RxTableGuard guard) {
+    if (guards == null) {
+      guards = new ArrayList<>();
+      guards.add(new GuardPair(table, guard));
+    }
   }
 }

@@ -56,6 +56,13 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @Override
+  public void __cost(int cost) {
+    if (__parent != null) {
+      __parent.__cost(cost);
+    }
+  }
+
+  @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
       if (value != null) {

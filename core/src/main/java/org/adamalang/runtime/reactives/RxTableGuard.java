@@ -15,14 +15,49 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.reactives.tables;
+package org.adamalang.runtime.reactives;
 
-import org.adamalang.runtime.reactives.RxTable;
+import org.adamalang.runtime.reactives.tables.TableSubscription;
 
-public interface TableWatcher extends TableSubscription {
-  public void entireTable(RxTable<?> table);
+public class RxTableGuard implements TableSubscription {
+  private final RxLazy<?> owner;
 
-  public void index(RxTable<?> table, String field, int value);
+  public RxTableGuard(RxLazy<?> owner) {
+    this.owner = owner;
+  }
 
-  public void primaryKey(RxTable<?> table, int id);
+  @Override
+  public boolean alive() {
+    if (owner != null) {
+      return owner.alive();
+    }
+    return true;
+  }
+
+  @Override
+  public void add(int primaryKey) {
+
+  }
+
+  @Override
+  public void change(int primaryKey) {
+
+  }
+
+  @Override
+  public void index(int primaryKey, int field, int value) {
+
+  }
+
+  @Override
+  public void remove(int primaryKey) {
+
+  }
+
+  @Override
+  public void all() {
+  }
+
+  public void reset() {
+  }
 }

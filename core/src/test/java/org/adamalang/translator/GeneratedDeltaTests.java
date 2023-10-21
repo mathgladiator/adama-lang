@@ -1882,6 +1882,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\npublic class FlowMaybeComplex_4 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxLazy<NtMaybe<NtList<RTxR>>> tx;");
+    gold.append("\n  private final RxTableGuard __tx_t;");
     gold.append("\n  private final RxLazy<NtMaybe<NtList<RTxM>>> tx1;");
     gold.append("\n  private final RxLazy<NtMaybe<NtMaybe<NtList<RTxM>>>> tx2;");
     gold.append("\n  private final RxLazy<NtMap<Integer,Integer>> m1;");
@@ -1901,11 +1902,14 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    tx = new RxLazy<NtMaybe<NtList<RTxR>>>(this, () -> (NtMaybe<NtList<RTxR>>)(new NtMaybe<NtList<RTxR>>(t.iterate(true))));");
+    gold.append("\n    __tx_t = new RxTableGuard(tx);");
     gold.append("\n    tx1 = new RxLazy<NtMaybe<NtList<RTxM>>>(this, () -> (NtMaybe<NtList<RTxM>>)(new NtMaybe<NtList<RTxM>>(__FUNC_0_glist())));");
     gold.append("\n    tx2 = new RxLazy<NtMaybe<NtMaybe<NtList<RTxM>>>>(this, () -> (NtMaybe<NtMaybe<NtList<RTxM>>>)(new NtMaybe<NtMaybe<NtList<RTxM>>>(new NtMaybe<NtList<RTxM>>(__FUNC_0_glist()))));");
     gold.append("\n    m1 = new RxLazy<NtMap<Integer,Integer>>(this, () -> (NtMap<Integer,Integer>)(__FUNC_1_mp()));");
     gold.append("\n    m2 = new RxLazy<NtMaybe<NtMap<Integer,Integer>>>(this, () -> (NtMaybe<NtMap<Integer,Integer>>)(new NtMaybe<NtMap<Integer,Integer>>(__FUNC_1_mp())));");
     gold.append("\n    t.__subscribe(tx);");
+    gold.append("\n    t.__subscribe(__tx_t);");
+    gold.append("\n    tx.__guard(t,__tx_t);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -4460,6 +4464,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\npublic class FlowRecordArray_7 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxLazy<RTxR[]> tx;");
+    gold.append("\n  private final RxTableGuard __tx_t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -4471,7 +4476,10 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    tx = new RxLazy<RTxR[]>(this, () -> (RTxR[])((t.iterate(true)).toArray((Integer __n) -> (Object) (new RTxR[__n]))));");
+    gold.append("\n    __tx_t = new RxTableGuard(tx);");
     gold.append("\n    t.__subscribe(tx);");
+    gold.append("\n    t.__subscribe(__tx_t);");
+    gold.append("\n    tx.__guard(t,__tx_t);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -5492,6 +5500,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\npublic class FlowRecordList_8 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxLazy<NtList<RTxR>> tx;");
+    gold.append("\n  private final RxTableGuard __tx_t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -5503,7 +5512,10 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    tx = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(t.iterate(true)));");
+    gold.append("\n    __tx_t = new RxTableGuard(tx);");
     gold.append("\n    t.__subscribe(tx);");
+    gold.append("\n    t.__subscribe(__tx_t);");
+    gold.append("\n    tx.__guard(t,__tx_t);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

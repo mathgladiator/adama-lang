@@ -26,9 +26,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
-import org.adamalang.runtime.reactives.tables.TableMonitor;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
-import org.adamalang.runtime.reactives.tables.TableSubscription;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.*;
@@ -45,6 +43,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private final LinkedHashMap<Integer, Ty> itemsByKey;
   private final TreeSet<Ty> unknowns;
   public final TablePubSub pubsub;
+  private RxTableGuard activeGuard;
 
   public void debug(JsonStreamWriter writer) {
     writer.beginObject();
@@ -83,6 +82,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.itemsByKey = new LinkedHashMap<>();
     this.createdObjects = new LinkedHashMap<>();
     this.pubsub = new TablePubSub(owner);
+    this.activeGuard = null;
   }
 
   @Override
@@ -91,6 +91,13 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       return __parent.__isAlive();
     }
     return true;
+  }
+
+  @Override
+  public void __cost(int cost) {
+    if (__parent != null) {
+      __parent.__cost(cost);
+    }
   }
 
   @Override
@@ -333,6 +340,9 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public int size() {
+    if (activeGuard != null) {
+      pubsub.all();
+    }
     if (__isDirty()) {
       return iterate(true).size();
     } else {
@@ -344,11 +354,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     return new SelectorRxObjectList<>(this);
   }
 
-  public void __subscribe(final RxChild link) {
-    if (link instanceof TableMonitor) {
-      pubsub.subscribe(((TableMonitor) link).link(this));
-    } else {
-      super.__subscribe(link);
-    }
+  public void __subscribe(final RxTableGuard g) {
+    pubsub.subscribe(g);
+  }
+
+  public void setGuard(RxTableGuard guard) {
+    activeGuard = guard;
   }
 }

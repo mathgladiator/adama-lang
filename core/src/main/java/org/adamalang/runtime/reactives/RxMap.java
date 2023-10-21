@@ -57,6 +57,13 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   @Override
+  public void __cost(int cost) {
+    if (__parent != null) {
+      __parent.__cost(cost);
+    }
+  }
+
+  @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
       forwardDelta.writeObjectFieldIntro(name);

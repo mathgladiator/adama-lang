@@ -3373,7 +3373,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class ResultFunctions_11 extends LivingDocument {");
     gold.append("\n  private final RxLazy<NtResult<RTxSendResponse>> foo;");
-    gold.append("\n  private final RxCache __cfoo;private final RxLazy<Boolean> f_has;");
+    gold.append("\n  private final RxCache __cfoo;");
+    gold.append("\n  private final RxLazy<Boolean> f_has;");
     gold.append("\n  private final RxLazy<Integer> f_code;");
     gold.append("\n  private final RxLazy<Boolean> f_finished;");
     gold.append("\n  private final RxLazy<Boolean> f_failed;");

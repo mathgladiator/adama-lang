@@ -17,14 +17,23 @@
 */
 package org.adamalang.runtime.reactives.tables;
 
+/** a table subscription represents a virtual change log of the table at a high level (pkey, index, all) */
 public interface TableSubscription {
+  /** is the subscription still alive */
   public boolean alive();
 
+  /** a item was added with the given primary key */
   public void add(int primaryKey);
 
+  /** an item with the primary key changed */
   public void change(int primaryKey);
 
-  public void index(int primaryKey, String field, int value);
-
+  /** an item with the given primary key was removed */
   public void remove(int primaryKey);
+
+  /** an item with the index value was changed */
+  public void index(int primaryKey, int index, int value);
+
+  /** a property of the entire table changes */
+  public void all();
 }

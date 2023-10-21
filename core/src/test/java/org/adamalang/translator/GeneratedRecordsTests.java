@@ -1752,6 +1752,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\npublic class DeleteOnList_5 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  private final RxLazy<NtList<RTxR>> even;");
+    gold.append("\n  private final RxTableGuard __even_t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -1763,7 +1764,10 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    even = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(t.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
+    gold.append("\n    __even_t = new RxTableGuard(even);");
     gold.append("\n    t.__subscribe(even);");
+    gold.append("\n    t.__subscribe(__even_t);");
+    gold.append("\n    even.__guard(t,__even_t);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -7898,7 +7902,9 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  private final RxDouble owners_money;");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> listz;");
+    gold.append("\n  private final RxTableGuard __listz_tbl;");
     gold.append("\n  private final RxLazy<NtList<RTxX>> listz2;");
+    gold.append("\n  private final RxTableGuard __listz2_tbl;");
     gold.append("\n  private final RTxY y;");
     gold.append("\n  private final RTxZ z;");
     gold.append("\n  @Override");
@@ -7945,12 +7951,18 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    owners_money = new RxDouble(this, 0.0);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    listz = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(tbl.iterate(false).where(true, new __CLOSURE_WhereClause0())));");
+    gold.append("\n    __listz_tbl = new RxTableGuard(listz);");
     gold.append("\n    listz2 = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(tbl.iterate(true)));");
+    gold.append("\n    __listz2_tbl = new RxTableGuard(listz2);");
     gold.append("\n    y = new RTxY(this);");
     gold.append("\n    z = new RTxZ(this);");
     gold.append("\n    x.__link();");
     gold.append("\n    tbl.__subscribe(listz);");
+    gold.append("\n    tbl.__subscribe(__listz_tbl);");
+    gold.append("\n    listz.__guard(tbl,__listz_tbl);");
     gold.append("\n    tbl.__subscribe(listz2);");
+    gold.append("\n    tbl.__subscribe(__listz2_tbl);");
+    gold.append("\n    listz2.__guard(tbl,__listz2_tbl);");
     gold.append("\n    y.__link();");
     gold.append("\n    z.__link();");
     gold.append("\n    __goodwillBudget = 100000;");

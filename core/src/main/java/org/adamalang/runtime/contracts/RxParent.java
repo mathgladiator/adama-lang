@@ -24,4 +24,7 @@ public interface RxParent {
 
   /** is the parent alive */
   boolean __isAlive();
+
+  /** hidden costs made manifest up the parent chain */
+  void __cost(int cost);
 }

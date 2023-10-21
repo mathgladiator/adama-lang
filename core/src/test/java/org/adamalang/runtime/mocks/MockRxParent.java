@@ -42,4 +42,8 @@ public class MockRxParent implements RxParent {
   public boolean __isAlive() {
     return alive;
   }
+
+  @Override
+  public void __cost(int cost) {
+  }
 }

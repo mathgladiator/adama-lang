@@ -18,11 +18,9 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
-import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.reactives.tables.IndexInvalidate;
 
 /** a reactive 32-bit integer (int) */
 public class RxInt32 extends RxIndexableBase implements Comparable<RxInt32>, CanGetAndSet<Integer> {

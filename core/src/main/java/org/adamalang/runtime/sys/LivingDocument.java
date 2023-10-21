@@ -983,6 +983,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     __raisedDirtyCalled = true;
   }
 
+  @Override
+  public void __cost(int cost) {
+    __code_cost += cost;
+  }
+
   /** for the reactive children, the root is always alive */
   public boolean __isAlive() {
     return true;

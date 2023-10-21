@@ -18,7 +18,6 @@
 package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.reactives.tables.IndexInvalidate;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenDynCompare;
 import org.adamalang.translator.codegen.CodeGenIndexing;
@@ -131,9 +130,10 @@ public class TyReactiveRecord extends TyType implements //
     if (countdown > 0) {
       sb.tabUp().writeNewline();
     }
+    int indexVal = 0;
     for (IndexDefinition index : storage.indices) {
       countdown--;
-      sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(id.get(), \"").append(index.nameToken.text).append("\", __value));");
+      sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(id.get(), ").append(indexVal + "").append(", __value));");
       if (countdown == 0) {
         sb.tabDown();
       }

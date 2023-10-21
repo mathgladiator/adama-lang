@@ -21,12 +21,18 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
+import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
 import java.util.LinkedHashSet;
 import java.util.function.BiConsumer;
 
 public class Watcher {
+  @Deprecated
   public static BiConsumer<String, TyType> make(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> services) {
+    return makeAuto(env, variablesToWatch, null, services);
+  }
+
+  public static BiConsumer<String, TyType> makeAuto(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> rxTables, LinkedHashSet<String> services) {
     return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
@@ -39,7 +45,11 @@ public class Watcher {
         return;
       }
       if (!env.document.functionTypes.containsKey(name)) {
-        variablesToWatch.add(name);
+        if (rxTables != null && type instanceof TyReactiveTable) {
+          rxTables.add(name);
+        } else {
+          variablesToWatch.add(name);
+        }
       }
     };
   }

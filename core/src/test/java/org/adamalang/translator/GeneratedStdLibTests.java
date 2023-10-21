@@ -886,6 +886,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\npublic class Lists_2 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxB> _b;");
     gold.append("\n  private final RxLazy<NtList<Integer>> x;");
+    gold.append("\n  private final RxTableGuard __x__b;");
     gold.append("\n  private final RxLazy<NtList<Integer>> r_x;");
     gold.append("\n  private final RxLazy<NtList<Integer>> x_skip_3;");
     gold.append("\n  private final RxLazy<NtList<Integer>> x_skip_1_r;");
@@ -907,12 +908,15 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    _b = new RxTable<>(__self, this, \"_b\", (RxParent __parent) -> new RTxB(__parent).__link(), 0);");
     gold.append("\n    x = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.flatten((_b.iterate(true)).transform((item) -> item.a.get()))));");
+    gold.append("\n    __x__b = new RxTableGuard(x);");
     gold.append("\n    r_x = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.reverse(x.get())));");
     gold.append("\n    x_skip_3 = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.skip(x.get(), 3)));");
     gold.append("\n    x_skip_1_r = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.reverse(LibLists.skip(LibLists.reverse(LibLists.skip(x.get(), 1)), 1))));");
     gold.append("\n    x_d = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.drop(x.get(), 2)));");
     gold.append("\n    x_mirror = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)(LibLists.drop(LibLists.skip(x.get(), 1), 1)));");
     gold.append("\n    _b.__subscribe(x);");
+    gold.append("\n    _b.__subscribe(__x__b);");
+    gold.append("\n    x.__guard(_b,__x__b);");
     gold.append("\n    x.__subscribe(r_x);");
     gold.append("\n    x.__subscribe(x_skip_3);");
     gold.append("\n    x.__subscribe(x_skip_1_r);");
@@ -1642,12 +1646,14 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    private final RxInt32 id;");
     gold.append("\n    private final RxTable<RTxA> _a;");
     gold.append("\n    private final RxLazy<NtList<Integer>> a;");
+    gold.append("\n    private final RxTableGuard __a__a;");
     gold.append("\n    private RTxB(RxParent __owner) {");
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      _a = new RxTable<>(__self, this, \"_a\", (RxParent __parent) -> new RTxA(__parent).__link(), 0);");
     gold.append("\n      a = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)((_a.iterate(true)).transform((item) -> item.x.get())));");
+    gold.append("\n      __a__a = new RxTableGuard(a);");
     gold.append("\n      a.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -1761,6 +1767,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public RTxB __link() {");
     gold.append("\n      _a.__subscribe(a);");
+    gold.append("\n      _a.__subscribe(__a__a);");
+    gold.append("\n      a.__guard(_a,__a__a);");
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
