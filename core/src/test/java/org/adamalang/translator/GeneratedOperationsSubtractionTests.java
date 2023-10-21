@@ -5553,7 +5553,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":2,\"tbl\":{\"1\":{\"id\":1,\"r0\":0,\"r1\":\"0\",\"r2\":0.2999999999999998,\"r3\":{\"r\":-4.0,\"i\":-1.0}},\"2\":{\"id\":2,\"r0\":1,\"r1\":\"1\",\"r2\":1.4000000000000004,\"r3\":{\"r\":-4.0,\"i\":0.0}}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:21");
+    gold.append("\nCPU:41");
     gold.append("\nMEMORY:1210");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

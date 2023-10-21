@@ -17,10 +17,7 @@
 */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.runtime.contracts.RxChild;
-import org.adamalang.runtime.contracts.RxKillable;
-import org.adamalang.runtime.contracts.RxParent;
-import org.adamalang.runtime.contracts.WhereClause;
+import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.index.ReactiveIndex;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -307,10 +304,16 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
   public Iterable<Ty> scan(final WhereClause<Ty> filter) {
     if (filter == null) {
+      readAll();
       return this;
     }
     final var prior = new AtomicReference<TreeSet<Ty>>(null);
     filter.scopeByIndicies((column, value, mode) -> {
+      if (mode == IndexQuerySet.LookupMode.Equals) {
+        readIndex(column, value);
+      } else {
+        readAll();
+      }
       final var specific = indices[column].of(value, mode);
       if (specific == null) { // no index available
         prior.set(new TreeSet<>());
@@ -340,13 +343,29 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public int size() {
-    if (activeGuard != null) {
-      pubsub.all();
-    }
+    readAll();
     if (__isDirty()) {
       return iterate(true).size();
     } else {
       return itemsByKey.size();
+    }
+  }
+
+  public void readAll() {
+    if (activeGuard != null) {
+      activeGuard.readAll();
+    }
+  }
+
+  public void readPrimaryKey(int pkey) {
+    if (activeGuard != null) {
+      activeGuard.readPrimaryKey(pkey);
+    }
+  }
+
+  public void readIndex(int index, int val) {
+    if (activeGuard != null) {
+      activeGuard.readIndexValue(index, val);
     }
   }
 

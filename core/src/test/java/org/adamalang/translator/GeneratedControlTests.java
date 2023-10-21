@@ -1835,7 +1835,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1,\"__auto_table_row_id\":2,\"zzz\":{\"1\":{\"z\":2,\"id\":1},\"2\":{\"z\":3,\"id\":2}},\"out\":5} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:12");
+    gold.append("\nCPU:14");
     gold.append("\nMEMORY:858");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -3876,7 +3876,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"x\":0,\"y\":3,\"out\":224,\"tbl2\":{\"1\":{\"id\":1,\"x\":100,\"y\":3},\"2\":{\"id\":2,\"x\":2,\"y\":2},\"3\":{\"id\":3,\"x\":100,\"y\":1},\"4\":{\"id\":4,\"x\":4,\"y\":2},\"5\":{\"id\":5,\"x\":5,\"y\":2},\"6\":{\"id\":6,\"x\":1,\"y\":2}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:124");
+    gold.append("\nCPU:130");
     gold.append("\nMEMORY:1876");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

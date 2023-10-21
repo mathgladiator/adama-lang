@@ -3330,7 +3330,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":3,\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"id\":1,\"x\":1,\"y\":29.0},\"2\":{\"id\":2,\"x\":2,\"y\":6.0},\"3\":{\"id\":3,\"x\":3,\"y\":1.0}},\"d1\":6,\"d2\":12.0,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:19");
+    gold.append("\nCPU:25");
     gold.append("\nMEMORY:1606");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -4531,7 +4531,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"rows\":{\"1\":{\"id\":1,\"x\":1,\"y\":29.0},\"2\":{\"id\":2,\"x\":2,\"y\":6.0},\"3\":{\"id\":3,\"x\":3,\"y\":1.0},\"4\":{\"id\":4,\"x\":4,\"y\":100.0},\"5\":{\"id\":5,\"x\":5,\"y\":23.0},\"6\":{\"id\":6,\"x\":6,\"y\":452.45}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:33");
+    gold.append("\nCPU:117");
     gold.append("\nMEMORY:2516");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -6106,7 +6106,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"checkT\":true,\"cp\":29503,\"y1\":\"ABCABCABC\",\"y2\":\"ABCXYZABCXYZABCXYZ\",\"y3\":\"XY\",\"y4\":\"X, Y\",\"join_maybe\":\"x, y, z\",\"_s\":{\"1\":{\"id\":1,\"item\":null},\"2\":{\"id\":2,\"item\":null},\"3\":{\"id\":3,\"item\":\"x\"},\"4\":{\"id\":4,\"item\":null},\"5\":{\"id\":5,\"item\":\"y\"},\"6\":{\"id\":6,\"item\":\"z\"}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:32");
+    gold.append("\nCPU:38");
     gold.append("\nMEMORY:3636");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

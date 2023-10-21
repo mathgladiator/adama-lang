@@ -9102,7 +9102,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":16,\"tbl\":{\"1\":{\"id\":1,\"x\":1,\"y\":3},\"2\":{\"id\":2,\"x\":2,\"y\":2},\"3\":{\"id\":3,\"x\":3,\"y\":1}},\"count1\":3,\"count2\":1,\"count3\":2,\"tbl2\":{\"4\":{\"id\":4,\"x\":100,\"y\":3},\"5\":{\"id\":5,\"x\":2,\"y\":2},\"6\":{\"id\":6,\"x\":2,\"y\":2},\"7\":{\"id\":7,\"x\":100,\"y\":1},\"8\":{\"id\":8,\"x\":4,\"y\":2},\"10\":{\"id\":10,\"x\":1,\"y\":2}},\"tbl3\":{\"11\":{\"id\":11,\"x\":100,\"y\":3},\"12\":{\"id\":12,\"x\":2,\"y\":2},\"13\":{\"id\":13,\"x\":2,\"y\":2},\"14\":{\"id\":14,\"x\":100,\"y\":1},\"15\":{\"id\":15,\"x\":4,\"y\":2},\"16\":{\"id\":16,\"x\":1,\"y\":2}},\"count_tbl2\":7,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:70");
+    gold.append("\nCPU:100");
     gold.append("\nMEMORY:4628");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -12311,7 +12311,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":8,\"tbl\":{\"1\":{\"id\":1,\"i\":4,\"s\":null,\"b\":null,\"d\":null,\"i1\":123},\"2\":{\"id\":2,\"i\":null,\"s\":null,\"b\":null,\"d\":3.14,\"i1\":123},\"3\":{\"id\":3,\"i\":null,\"s\":null,\"b\":true,\"d\":null,\"i1\":123},\"4\":{\"id\":4,\"i\":null,\"s\":\"Hi\",\"b\":null,\"d\":null,\"i1\":123},\"5\":{\"id\":5,\"i\":8,\"s\":null,\"b\":null,\"d\":null,\"i1\":123},\"6\":{\"id\":6,\"i\":null,\"s\":null,\"b\":null,\"d\":2.71,\"i1\":123},\"7\":{\"id\":7,\"i\":null,\"s\":null,\"b\":false,\"d\":null,\"i1\":123},\"8\":{\"id\":8,\"i\":null,\"s\":\"Joe\",\"b\":null,\"d\":null,\"i1\":123}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:21");
+    gold.append("\nCPU:53");
     gold.append("\nMEMORY:5574");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -13286,7 +13286,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"id\":1,\"x\":2}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:7");
+    gold.append("\nCPU:8");
     gold.append("\nMEMORY:648");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -14223,7 +14223,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"id\":1,\"x\":0}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:5");
+    gold.append("\nCPU:6");
     gold.append("\nMEMORY:648");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

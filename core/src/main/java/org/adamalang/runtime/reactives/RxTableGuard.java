@@ -60,4 +60,16 @@ public class RxTableGuard implements TableSubscription {
 
   public void reset() {
   }
+
+  public void readAll() {
+
+  }
+
+  public void readPrimaryKey(int pkey) {
+
+  }
+
+  public void readIndexValue(int index, int value) {
+
+  }
 }

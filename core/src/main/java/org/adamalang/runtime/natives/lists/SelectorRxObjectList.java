@@ -53,9 +53,11 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
 
   private void ensureFinalized() {
     if (this.finalized == null) {
+      int cost = 0;
       finalized = new ArrayList<>();
       if (filter != null) {
         for (final Ty item : table.scan(filter)) {
+          cost++;
           if (item.__isDying()) {
             continue;
           }
@@ -64,13 +66,16 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
           }
         }
       } else {
+        table.readAll();
         for (final Ty item : table) {
+          cost++;
           if (item.__isDying()) {
             continue;
           }
           finalized.add(item);
         }
       }
+      table.__cost(cost);
     }
   }
 
@@ -164,14 +169,15 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   @Override
   public NtList<Ty> where(final boolean done, final WhereClause<Ty> filter) {
     if (filter.getPrimaryKey() != null) {
+      table.readPrimaryKey(filter.getPrimaryKey());
       final var primary = table.getById(filter.getPrimaryKey());
+      finalized = new ArrayList<>(0);
       if (primary != null) {
-        finalized = new ArrayList<>(0);
         if (!primary.__isDying()) {
           finalized.add(primary);
         }
-        return new ArrayNtList<>(finalized).where(true, filter);
       }
+      return new ArrayNtList<>(finalized).where(true, filter);
     }
     this.filter = filter;
     ensureFinalized();
