@@ -209,7 +209,7 @@ public class CodeGenDeltaClass {
         if (bd.guard != null) {
           closeItUp = bd.writePrivacyCheckGuard(sb);
         }
-        sb.append("__CHECK = __item.___").append(bd.nameToken.text).append(".getGeneration();").writeNewline();
+        sb.append("__CHECK = __item.___").append(bd.nameToken.text).append(".getGeneration(__writer.getViewId());").writeNewline();
         if (bd.viewerFields.size() != 0) {
           for (String vf : bd.viewerFields) {
             sb.append("__CHECK = __CHECK * 1662803L + __VIEWER.__GEN_").append(vf).append(";").writeNewline();
@@ -219,12 +219,14 @@ public class CodeGenDeltaClass {
         if (environment.state.options.instrumentPerf) {
           sb.append("Runnable __PTb_").append(bd.nameToken.text).append(" = __perf.measure(\"").append(storage.name.text).append("_b_" + bd.nameToken.text).append("\");").writeNewline();
         }
+        sb.append("__item.___").append(bd.nameToken.text).append(".startView(__writer.getViewId());").writeNewline();
         final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
         sb.append(bubbleType.getJavaBoxType(environment)).append(" __local_").append(bd.nameToken.text).append(" = __item.__COMPUTE_").append(bd.nameToken.text).append("(__writer.who, __VIEWER);").writeNewline();
         writeShowData(sb, "__d" + bd.nameToken.text, "__local_" + bd.nameToken.text, bubbleType, "__obj.planField(\"" + bd.nameToken.text + "\")", environment, false);
         if (environment.state.options.instrumentPerf) {
           sb.append("__PTb_").append(bd.nameToken.text).append(".run();").writeNewline();
         }
+        sb.append("__item.___").append(bd.nameToken.text).append(".finishView();").writeNewline();
         sb.append("__g").append(bd.nameToken.text).append(" = __CHECK;").tabDown().writeNewline();
         sb.append("}").writeNewline();
         if (closeItUp) {

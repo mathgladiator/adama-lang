@@ -34,20 +34,20 @@ public class RxGuardTests {
   @Test
   public void flow() {
     final var guard = new RxGuard(null);
-    Assert.assertEquals(1, guard.getGeneration());
+    Assert.assertEquals(1, guard.getGeneration(0));
     Assert.assertEquals(true, guard.invalid);
     guard.__commit(null, null, null);
-    Assert.assertEquals(65522, guard.getGeneration());
+    Assert.assertEquals(65522, guard.getGeneration(0));
     Assert.assertEquals(false, guard.invalid);
     final var child = new MockRxChild();
     guard.__subscribe(child);
     guard.__raiseInvalid();
     child.assertInvalidateCount(0);
-    Assert.assertEquals(-1900333, guard.getGeneration());
+    Assert.assertEquals(-1900333, guard.getGeneration(0));
     Assert.assertEquals(true, guard.invalid);
     guard.__revert();
     Assert.assertEquals(false, guard.invalid);
-    Assert.assertEquals(42333092, guard.getGeneration());
+    Assert.assertEquals(42333092, guard.getGeneration(0));
     guard.__insert(null);
     guard.__patch(null);
   }

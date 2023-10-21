@@ -28,7 +28,7 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void bunchAdoAboutNothing() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     lazy.planObject().planField("x").planArray();
     Assert.assertEquals("", writer.toString());
   }
@@ -36,7 +36,7 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void manifestAbove() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     lazy.planObject().planField("x").planArray().manifest();
     Assert.assertEquals("{\"x\":[", writer.toString());
   }
@@ -44,7 +44,7 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void manifestX() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     lazy.planObject().planField("x").planArray().writeFastString("x");
     Assert.assertEquals("{\"x\":[\"x\"", writer.toString());
   }
@@ -57,7 +57,7 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void complex() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     PrivateLazyDeltaWriter obj = lazy.planObject();
     obj.planField("x").writeNtComplex(new NtComplex(1, 2));
     obj.end();
@@ -67,7 +67,7 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void force() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     PrivateLazyDeltaWriter obj = lazy.planObject();
     obj.planField("x").force();
     obj.end();
@@ -77,7 +77,7 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void inject() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     PrivateLazyDeltaWriter obj = lazy.planObject();
     obj.planField("x").injectJson(">INJECT<");
     obj.end();
@@ -87,11 +87,10 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void simpleObject() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     PrivateLazyDeltaWriter obj = lazy.planObject();
     obj.planField("x").writeInt(123);
     obj.planField("y").writeNull();
-    ;
     obj.planField(42).writeString("hi");
     obj.planField(13).writeDouble(13.271);
     obj.planField("z").writeBool(true);
@@ -103,11 +102,10 @@ public class PrivateLazyDeltaWriterTests {
   @Test
   public void simpleArray() {
     JsonStreamWriter writer = new JsonStreamWriter();
-    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER);
+    PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, writer, null, TestKey.ENCODER, 0);
     PrivateLazyDeltaWriter obj = lazy.planArray();
     obj.writeInt(123);
     obj.writeNull();
-    ;
     obj.writeString("hi");
     obj.writeDouble(13.271);
     obj.writeBool(true);

@@ -515,7 +515,8 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n    Testing_1 __self = this;");
     gold.append("\n    DeltaTesting_1 __state = new DeltaTesting_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -530,7 +531,7 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");

@@ -65,4 +65,31 @@ public abstract class RxDependent extends RxBase implements RxChild {
       guards.add(new GuardPair(table, guard));
     }
   }
+
+  public void startView(int viewId) {
+    if (guards != null) {
+      for (GuardPair gp : guards) {
+        gp.guard.resetView(viewId);
+        gp.table.setGuard(gp.guard);
+      }
+    }
+  }
+
+  public void finishView() {
+    if (guards != null) {
+      for (GuardPair gp : guards) {
+        gp.guard.finishView();
+        gp.table.setGuard(null);
+      }
+    }
+  }
+
+  public boolean isFired(int viewId) {
+    if (guards != null) {
+      for (GuardPair gp : guards) {
+        gp.guard.isFired(viewId);
+      }
+    }
+    return false;
+  }
 }

@@ -29,7 +29,7 @@ public class DPrincipalTests {
   public void flow() {
     final var db = new DPrincipal();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     final var A = new NtPrincipal("a", "local");
     db.show(NtPrincipal.NO_ONE, writer);
     db.show(NtPrincipal.NO_ONE, writer);

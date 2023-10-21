@@ -788,9 +788,10 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___my_take.getGeneration();");
+    gold.append("\n      __CHECK = __item.___my_take.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gmy_take != __CHECK)  {");
     gold.append("\n        Runnable __PTb_my_take = __perf.measure(\"Root_b_my_take\");");
+    gold.append("\n        __item.___my_take.startView(__writer.getViewId());");
     gold.append("\n        NtList<RTxCard> __local_my_take = __item.__COMPUTE_my_take(__writer.who, __VIEWER);");
     gold.append("\n        {");
     gold.append("\n          PrivateLazyDeltaWriter __list27 = __obj.planField(\"my_take\").planObject();");
@@ -807,6 +808,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n          __list27.end();");
     gold.append("\n        }");
     gold.append("\n        __PTb_my_take.run();");
+    gold.append("\n        __item.___my_take.finishView();");
     gold.append("\n        __gmy_take = __CHECK;");
     gold.append("\n      }");
     gold.append("\n      if (__obj.end()) {");
@@ -853,7 +855,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    GameHearts_1 __self = this;");
     gold.append("\n    DeltaGameHearts_1 __state = new DeltaGameHearts_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -868,7 +871,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -4551,7 +4554,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    chat_2 __self = this;");
     gold.append("\n    Deltachat_2 __state = new Deltachat_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -4566,7 +4570,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");

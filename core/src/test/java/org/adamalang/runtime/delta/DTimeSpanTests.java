@@ -30,7 +30,7 @@ public class DTimeSpanTests {
   public void flow() {
     final var db = new DTimeSpan();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(new NtTimeSpan(37), writer);
     db.show(new NtTimeSpan(88), writer);
     db.hide(writer);

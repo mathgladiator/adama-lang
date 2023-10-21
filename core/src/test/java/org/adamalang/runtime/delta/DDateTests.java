@@ -30,7 +30,7 @@ public class DDateTests {
   public void flow() {
     final var db = new DDate();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(new NtDate(1, 2, 3), writer);
     db.show(new NtDate(3, 4, 5), writer);
     db.hide(writer);

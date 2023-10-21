@@ -29,7 +29,7 @@ public class DDoubleTests {
   public void flow() {
     final var db = new DDouble();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(1d, writer);
     db.show(1d, writer);
     db.show(2d, writer);

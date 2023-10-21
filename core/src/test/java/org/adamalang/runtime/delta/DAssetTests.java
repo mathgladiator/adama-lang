@@ -30,7 +30,7 @@ public class DAssetTests {
   public void flow() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);
@@ -49,7 +49,7 @@ public class DAssetTests {
   public void flowNoKey() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, null);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, null, 0);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);

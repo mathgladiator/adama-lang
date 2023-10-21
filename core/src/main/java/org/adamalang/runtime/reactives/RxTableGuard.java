@@ -17,8 +17,10 @@
 */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.common.template.tree.T;
 import org.adamalang.runtime.reactives.tables.TableSubscription;
 
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -29,6 +31,44 @@ public class RxTableGuard implements TableSubscription {
   private TreeSet<Integer> primaryKeys;
   private TreeMap<Integer, TreeSet<Integer>> indices;
   private boolean fired;
+  private TreeMap<Integer, ChildView> children;
+  private ChildView current;
+
+  private class ChildView {
+    private TreeSet<Integer> primaryKeys;
+    private TreeMap<Integer, TreeSet<Integer>> indices;
+    private boolean fired;
+
+    public void index(int primaryKey, int field, int value) {
+      if (fired) {
+        return;
+      }
+      if (primaryKeys != null) {
+        if (primaryKeys.contains(primaryKey)) {
+          fired = true;
+        }
+      }
+      if (indices != null) {
+        TreeSet<Integer> vals = indices.get(field);
+        if (vals != null) {
+          if (vals.contains(value)) {
+            fired = true;
+          }
+        }
+      }
+    }
+
+    public void primary(int primaryKey) {
+      if (fired) {
+        return;
+      }
+      if (primaryKeys != null) {
+        if (primaryKeys.contains(primaryKey)) {
+          fired = true;
+        }
+      }
+    }
+  }
 
   public RxTableGuard(RxDependent owner) {
     this.owner = owner;
@@ -36,6 +76,7 @@ public class RxTableGuard implements TableSubscription {
     this.primaryKeys = null;
     this.indices = null;
     this.fired = false;
+    this.children = null;
   }
 
   @Override
@@ -51,8 +92,14 @@ public class RxTableGuard implements TableSubscription {
     if (fired) {
       return;
     }
+    primary(primaryKey);
     if (all) {
       fireAndCleanup();
+    }
+    if (children != null) {
+      for (Map.Entry<Integer, ChildView> cv : children.entrySet()) {
+        cv.getValue().index(primaryKey, field, value);
+      }
     }
     if (indices != null) {
       TreeSet<Integer> vals = indices.get(field);
@@ -72,6 +119,11 @@ public class RxTableGuard implements TableSubscription {
     if (all) {
       fireAndCleanup();
       return;
+    }
+    if (children != null) {
+      for (Map.Entry<Integer, ChildView> cv : children.entrySet()) {
+        cv.getValue().primary(primaryKey);
+      }
     }
     if (primaryKeys != null) {
       if (primaryKeys.contains(primaryKey)) {
@@ -96,6 +148,7 @@ public class RxTableGuard implements TableSubscription {
     }
     all = true;
     fired = true;
+    children = null;
     owner.__raiseInvalid();
     resetState();
   }
@@ -119,10 +172,18 @@ public class RxTableGuard implements TableSubscription {
     all = true;
     primaryKeys = null;
     indices = null;
+    children = null;
   }
 
   public void readPrimaryKey(int pkey) {
     if (all) {
+      return;
+    }
+    if (current != null) {
+      if (current.primaryKeys == null) {
+        current.primaryKeys = new TreeSet<>();
+      }
+      current.primaryKeys.add(pkey);
       return;
     }
     if (primaryKeys == null) {
@@ -135,14 +196,51 @@ public class RxTableGuard implements TableSubscription {
     if (all) {
       return;
     }
-    if (indices == null) {
-      indices = new TreeMap<>();
-    }
-    TreeSet<Integer> vals = indices.get(index);
-    if (vals == null) {
-      vals = new TreeSet<>();
-      indices.put(index, vals);
+    TreeSet<Integer> vals;
+    if (current != null) {
+      if (current.indices != null) {
+        current.indices = new TreeMap<>();
+      }
+      vals = current.indices.get(index);
+      if (vals == null) {
+        vals = new TreeSet<>();
+        current.indices.put(index, vals);
+      }
+    } else {
+      if (indices == null) {
+        indices = new TreeMap<>();
+      }
+      vals = indices.get(index);
+      if (vals == null) {
+        vals = new TreeSet<>();
+        indices.put(index, vals);
+      }
     }
     vals.add(value);
+  }
+
+  public void resetView(int viewId) {
+    if (all) {
+      ChildView cv = new ChildView();
+      current = cv;
+      if (children == null) {
+        children = new TreeMap<>();
+      }
+      children.put(viewId, cv);
+    }
+  }
+
+  public void finishView() {
+    current = null;
+  }
+
+  public boolean isFired(int viewId) {
+    if (children != null) {
+      ChildView cv = children.get(viewId);
+      if (cv != null) {
+        return cv.fired;
+      }
+    }
+    return false;
   }
 }

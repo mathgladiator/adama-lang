@@ -29,7 +29,7 @@ public class DInt64Tests {
   public void flow() {
     final var db = new DInt64();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(1L, writer);
     db.show(1L, writer);
     db.show(22L, writer);

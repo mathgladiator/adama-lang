@@ -29,7 +29,7 @@ public class DPairTests {
   public void flow() {
     DPair<DInt32, DInt32> dp = new DPair<>();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     dp.hide(writer);
     dp.clear();
     dp.key(() -> new DInt32()).show(542, writer);

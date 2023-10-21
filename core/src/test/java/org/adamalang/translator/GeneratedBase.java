@@ -54,6 +54,9 @@ public class GeneratedBase {
     if (live.contains("!!EXCEPTION!!")) {
       Assert.fail("contains an exception: " + live);
     }
+    if (live.contains("FAILED PRIVATE VIEW DUE TO:180978")) {
+      Assert.fail("failed due to private view having an exception!");
+    }
   }
 
   public void assertGoodWillHappy(String live) {

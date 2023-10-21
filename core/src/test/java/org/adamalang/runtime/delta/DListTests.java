@@ -30,7 +30,7 @@ public class DListTests {
     final var list = new DList<DBoolean>();
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       list.getPrior(0, DBoolean::new).show(true, delta.planField(0));
       list.getPrior(1, DBoolean::new).show(false, delta.planField(1));
@@ -42,7 +42,7 @@ public class DListTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       delta.manifest();
       list.getPrior(0, DBoolean::new).show(true, delta.planField(0));
@@ -55,7 +55,7 @@ public class DListTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       delta.manifest();
       list.getPrior(0, DBoolean::new).show(true, delta.planField(0));
@@ -67,7 +67,7 @@ public class DListTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       list.hide(writer);
       list.hide(writer);
       Assert.assertEquals("null", stream.toString());

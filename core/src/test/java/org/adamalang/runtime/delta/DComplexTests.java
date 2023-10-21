@@ -30,7 +30,7 @@ public class DComplexTests {
   public void flow() {
     final var db = new DComplex();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(new NtComplex(1, 2), writer);
     db.show(new NtComplex(3, 4), writer);
     db.show(new NtComplex(3, 4), writer);

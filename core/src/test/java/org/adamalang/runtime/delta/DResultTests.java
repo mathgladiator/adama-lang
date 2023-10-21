@@ -30,7 +30,7 @@ public class DResultTests {
   @Test
   public void flow() {
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     DResult<DComplex> result = new DResult<>();
     DComplex cmp = result.get(() -> new DComplex());
     result.show(new NtResult<>(new NtComplex(1.0, 2.0), false, 100, "message"), writer).end();

@@ -30,7 +30,7 @@ public class DTimeTests {
   public void flow() {
     final var db = new DTime();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(new NtTime(13, 14), writer);
     db.show(new NtTime(15, 17), writer);
     db.hide(writer);

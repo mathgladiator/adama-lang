@@ -29,7 +29,7 @@ public class DBooleanTests {
   public void flow() {
     final var db = new DBoolean();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
     db.show(true, writer);
     db.show(true, writer);
     db.show(false, writer);

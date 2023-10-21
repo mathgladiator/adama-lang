@@ -435,7 +435,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    CallingMethod_2 __self = this;");
     gold.append("\n    DeltaCallingMethod_2 __state = new DeltaCallingMethod_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -450,7 +451,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -1268,7 +1269,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    Overloading_3 __self = this;");
     gold.append("\n    DeltaOverloading_3 __state = new DeltaOverloading_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1283,7 +1285,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -2104,7 +2106,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    Reactive_4 __self = this;");
     gold.append("\n    DeltaReactive_4 __state = new DeltaReactive_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2119,7 +2122,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -2929,9 +2932,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___things.getGeneration();");
+    gold.append("\n      __CHECK = __item.___things.getGeneration(__writer.getViewId());");
     gold.append("\n      __CHECK = __CHECK * 1662803L + __VIEWER.__GEN_class_filter;");
     gold.append("\n      if (__gthings != __CHECK)  {");
+    gold.append("\n        __item.___things.startView(__writer.getViewId());");
     gold.append("\n        NtList<RTxThing> __local_things = __item.__COMPUTE_things(__writer.who, __VIEWER);");
     gold.append("\n        {");
     gold.append("\n          PrivateLazyDeltaWriter __list1 = __obj.planField(\"things\").planObject();");
@@ -2947,6 +2951,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n          __deltaListWalker3.end(__list1);");
     gold.append("\n          __list1.end();");
     gold.append("\n        }");
+    gold.append("\n        __item.___things.finishView();");
     gold.append("\n        __gthings = __CHECK;");
     gold.append("\n      }");
     gold.append("\n      if (__obj.end()) {");
@@ -2979,7 +2984,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    SimpleAccess_5 __self = this;");
     gold.append("\n    DeltaSimpleAccess_5 __state = new DeltaSimpleAccess_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2994,7 +3000,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -3879,7 +3885,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    Simple_6 __self = this;");
     gold.append("\n    DeltaSimple_6 __state = new DeltaSimple_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3894,7 +3901,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -4726,9 +4733,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      __obj.manifest();");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
-    gold.append("\n      __CHECK = __item.___things.getGeneration();");
+    gold.append("\n      __CHECK = __item.___things.getGeneration(__writer.getViewId());");
     gold.append("\n      __CHECK = __CHECK * 1662803L + __VIEWER.__GEN_class_filter;");
     gold.append("\n      if (__gthings != __CHECK)  {");
+    gold.append("\n        __item.___things.startView(__writer.getViewId());");
     gold.append("\n        NtList<RTxThing> __local_things = __item.__COMPUTE_things(__writer.who, __VIEWER);");
     gold.append("\n        {");
     gold.append("\n          PrivateLazyDeltaWriter __list1 = __obj.planField(\"things\").planObject();");
@@ -4744,6 +4752,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n          __deltaListWalker3.end(__list1);");
     gold.append("\n          __list1.end();");
     gold.append("\n        }");
+    gold.append("\n        __item.___things.finishView();");
     gold.append("\n        __gthings = __CHECK;");
     gold.append("\n      }");
     gold.append("\n      if (__obj.end()) {");
@@ -4776,7 +4785,8 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    ViewerAccess_7 __self = this;");
     gold.append("\n    DeltaViewerAccess_7 __state = new DeltaViewerAccess_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__genViewId(), __who, ___perspective, __encoder) {");
+    gold.append("\n    int __viewId = __genViewId();");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -4791,7 +4801,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");

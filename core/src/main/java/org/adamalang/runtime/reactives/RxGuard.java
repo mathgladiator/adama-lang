@@ -17,7 +17,6 @@
 */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -95,10 +94,14 @@ public class RxGuard extends RxDependent {
     return true;
   }
 
-  public int getGeneration() {
+  public int getGeneration(int viewerId) {
     if (generation == 0) {
       inc();
     }
-    return generation;
+    int childGeneration = 0;
+    if (isFired(viewerId)) {
+      childGeneration = generation * 17;
+    }
+    return generation + childGeneration;
   }
 }

@@ -32,7 +32,7 @@ public class DRecordListTests {
     final var list = new DRecordList<DBoolean>();
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       final var walk = list.begin();
       walk.next(42);
@@ -45,7 +45,7 @@ public class DRecordListTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       final var walk = list.begin();
       walk.next(10);
@@ -61,7 +61,7 @@ public class DRecordListTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       final var walk = list.begin();
       walk.next(42);
@@ -74,7 +74,7 @@ public class DRecordListTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       list.hide(writer);
       list.hide(writer);
       Assert.assertEquals("null", stream.toString());
@@ -87,7 +87,7 @@ public class DRecordListTests {
     final var list = new DRecordList<DBoolean>();
     final Function<Integer[], String> process = inserts -> {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       final var walk = list.begin();
       for (final Integer insert : inserts) {
@@ -112,7 +112,7 @@ public class DRecordListTests {
     final var list = new DRecordList<DBoolean>();
     final Function<Integer[], String> process = inserts -> {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       final var walk = list.begin();
       for (final Integer insert : inserts) {
@@ -136,7 +136,7 @@ public class DRecordListTests {
     final var list = new DRecordList<DBoolean>();
     final Function<Integer[], String> process = inserts -> {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER);
+      final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
       final var delta = writer.planObject();
       final var walk = list.begin();
       for (final Integer insert : inserts) {
