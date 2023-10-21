@@ -118,7 +118,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __connection_id = new RxInt32(this, 0);
     __message_id = new RxInt32(this, 0);
     __time = new RxInt64(this, 0L);
-    __today = new RxLazy<>(this, () -> __dateOfToday()) {
+    __today = new RxLazy<>(this, () -> __dateOfToday(), null) {
       @Override
       public boolean __raiseInvalid() {
         if (this.cached == null || !__dateOfToday().equals(this.cached)) {

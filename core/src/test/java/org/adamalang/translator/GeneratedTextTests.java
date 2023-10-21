@@ -103,7 +103,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  public Append_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    document = new RxText(this,__auto_gen);");
-    gold.append("\n    document_str = new RxLazy<String>(this, () -> (String)(document.get()));");
+    gold.append("\n    document_str = new RxLazy<String>(this, () -> (String)(document.get()), null);");
     gold.append("\n    document.__subscribe(document_str);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -800,9 +800,9 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  public CompileAdama_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    document = new RxText(this,__auto_gen);");
-    gold.append("\n    document_str = new RxLazy<String>(this, () -> (String)(document.get()));");
-    gold.append("\n    issues = new RxLazy<NtDynamic>(this, () -> (NtDynamic)(LibAdama.validate(document_str.get())));");
-    gold.append("\n    reflection = new RxLazy<NtDynamic>(this, () -> (NtDynamic)(LibAdama.reflect(document_str.get())));");
+    gold.append("\n    document_str = new RxLazy<String>(this, () -> (String)(document.get()), null);");
+    gold.append("\n    issues = new RxLazy<NtDynamic>(this, () -> (NtDynamic)(LibAdama.validate(document_str.get())), null);");
+    gold.append("\n    reflection = new RxLazy<NtDynamic>(this, () -> (NtDynamic)(LibAdama.reflect(document_str.get())), null);");
     gold.append("\n    document.__subscribe(document_str);");
     gold.append("\n    document_str.__subscribe(issues);");
     gold.append("\n    document_str.__subscribe(reflection);");

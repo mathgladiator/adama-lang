@@ -2901,7 +2901,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  public MethodOnList_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
-    gold.append("\n    x = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)((tbl.iterate(true)).transform((__item) -> __item.__METH_0_foo())));");
+    gold.append("\n    x = new RxLazy<NtList<Integer>>(this, () -> (NtList<Integer>)((tbl.iterate(true)).transform((__item) -> __item.__METH_0_foo())), null);");
     gold.append("\n    __x_tbl = new RxTableGuard(x);");
     gold.append("\n    tbl.__subscribe(x);");
     gold.append("\n    tbl.__subscribe(__x_tbl);");
@@ -5577,7 +5577,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  public RecordFieldAssign_9(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxTable<>(__self, this, \"x\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
-    gold.append("\n    all = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(x.iterate(true)));");
+    gold.append("\n    all = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(x.iterate(true)), null);");
     gold.append("\n    __all_x = new RxTableGuard(all);");
     gold.append("\n    x.__subscribe(all);");
     gold.append("\n    x.__subscribe(__all_x);");

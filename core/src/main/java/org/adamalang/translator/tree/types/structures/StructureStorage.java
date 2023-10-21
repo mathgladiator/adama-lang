@@ -161,7 +161,7 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
     bd.expression.free(fe);
-    inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.make(env, bd.variablesToWatch, bd.servicesToWatch)), StructureStorage.this));
+    inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.makeAuto(env, bd.variablesToWatch, bd.tablesToWatch, bd.servicesToWatch)), StructureStorage.this));
     if (has(bd.nameToken.text)) {
       inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text));
       return;

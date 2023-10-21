@@ -2189,7 +2189,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      boom = new RxLazy<Integer>(this, () -> (Integer)(__METH_0_one()));");
+    gold.append("\n      boom = new RxLazy<Integer>(this, () -> (Integer)(__METH_0_one()), null);");
     gold.append("\n      boom.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -2625,6 +2625,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\npublic class SimpleAccess_5 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxThing> _things;");
     gold.append("\n  private final RxGuard ___things;");
+    gold.append("\n  private final RxTableGuard __things__things;");
     gold.append("\n  public NtList<RTxThing> __COMPUTE_things(NtPrincipal __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return _things.iterate(false).where(true, new __CLOSURE_WhereClause0(__viewer));");
     gold.append("\n  }");
@@ -2638,7 +2639,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    _things = new RxTable<>(__self, this, \"_things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
     gold.append("\n    ___things =  new RxGuard(this);");
+    gold.append("\n    __things__things = new RxTableGuard(___things);");
     gold.append("\n    _things.__subscribe(___things);");
+    gold.append("\n    _things.__subscribe(__things__things);");
+    gold.append("\n    ___things.__guard(_things,__things__things);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -4418,6 +4422,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\npublic class ViewerAccess_7 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxThing> _things;");
     gold.append("\n  private final RxGuard ___things;");
+    gold.append("\n  private final RxTableGuard __things__things;");
     gold.append("\n  public NtList<RTxThing> __COMPUTE_things(NtPrincipal __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return _things.iterate(false).where(true, new __CLOSURE_WhereClause0(__viewer));");
     gold.append("\n  }");
@@ -4431,7 +4436,10 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    _things = new RxTable<>(__self, this, \"_things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
     gold.append("\n    ___things =  new RxGuard(this);");
+    gold.append("\n    __things__things = new RxTableGuard(___things);");
     gold.append("\n    _things.__subscribe(___things);");
+    gold.append("\n    _things.__subscribe(__things__things);");
+    gold.append("\n    ___things.__guard(_things,__things__things);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

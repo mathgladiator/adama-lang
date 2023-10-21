@@ -112,10 +112,10 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 0);");
     gold.append("\n    y = new RxInt32(this, 0);");
-    gold.append("\n    z = new RxLazy<Integer>(this, () -> (Integer)(x.get() + y.get()));");
+    gold.append("\n    z = new RxLazy<Integer>(this, () -> (Integer)(x.get() + y.get()), null);");
     gold.append("\n    u = new RxDouble(this, 0.0);");
     gold.append("\n    v = new RxDouble(this, 0.0);");
-    gold.append("\n    w = new RxLazy<Double>(this, () -> (Double)(u.get() + v.get()));");
+    gold.append("\n    w = new RxLazy<Double>(this, () -> (Double)(u.get() + v.get()), null);");
     gold.append("\n    x.__subscribe(z);");
     gold.append("\n    y.__subscribe(z);");
     gold.append("\n    u.__subscribe(w);");

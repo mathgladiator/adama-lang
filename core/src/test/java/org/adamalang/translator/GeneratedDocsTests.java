@@ -1592,7 +1592,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      score = new RxInt32(this, 0);");
-    gold.append("\n      ds = new RxLazy<Integer>(this, () -> (Integer)(__METH_1_double_score()));");
+    gold.append("\n      ds = new RxLazy<Integer>(this, () -> (Integer)(__METH_1_double_score()), null);");
     gold.append("\n      ds.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");

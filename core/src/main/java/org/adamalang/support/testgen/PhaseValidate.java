@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 public class PhaseValidate {
   public static ValidationResults go(final Path inputRoot, final Path path, final String className, final boolean emission, final StringBuilder outputFile) throws Exception {
     CompilerOptions.Builder optionsBuilder = CompilerOptions.start().enableCodeCoverage();
-    if (className.contains("Instrumented")) {
+    if (path.getFileName().toString().contains("Instrumented")) {
       optionsBuilder = optionsBuilder.instrument();
     }
     final var options = optionsBuilder.make();

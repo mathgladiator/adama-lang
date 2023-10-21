@@ -1104,9 +1104,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public ComplexMath_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    special_one = new RxLazy<NtComplex>(this, () -> (NtComplex)(LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 0), 1)));");
-    gold.append("\n    forty_five = new RxLazy<NtComplex>(this, () -> (NtComplex)(LibArithmetic.Add.CD(LibArithmetic.Multiply.CD(new NtComplex(0.0, 1.0), 0.707), 0.707)));");
-    gold.append("\n    recip = new RxLazy<NtMaybe<NtComplex>>(this, () -> (NtMaybe<NtComplex>)(LibArithmetic.Divide.DC(1.0, forty_five.get())));");
+    gold.append("\n    special_one = new RxLazy<NtComplex>(this, () -> (NtComplex)(LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 0), 1)), null);");
+    gold.append("\n    forty_five = new RxLazy<NtComplex>(this, () -> (NtComplex)(LibArithmetic.Add.CD(LibArithmetic.Multiply.CD(new NtComplex(0.0, 1.0), 0.707), 0.707)), null);");
+    gold.append("\n    recip = new RxLazy<NtMaybe<NtComplex>>(this, () -> (NtMaybe<NtComplex>)(LibArithmetic.Divide.DC(1.0, forty_five.get())), null);");
     gold.append("\n    final_foo = new RxComplex(this, new NtComplex(0.0, 0.0));");
     gold.append("\n    final_foo2 = new RxComplex(this, new NtComplex(0.0, 0.0));");
     gold.append("\n    final_foo3 = new RxComplex(this, new NtComplex(0.0, 0.0));");
@@ -3330,9 +3330,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Search_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    x = new RxLazy<Boolean>(this, () -> (Boolean)(LibSearch.test(\"a\", \"a dog is not a pony\")));");
-    gold.append("\n    y = new RxLazy<Boolean>(this, () -> (Boolean)(LibSearch.test(\"x\", \"nope\")));");
-    gold.append("\n    z = new RxLazy<Boolean>(this, () -> (Boolean)(LibSearch.test(\"quick\", \"the quick black fox!\")));");
+    gold.append("\n    x = new RxLazy<Boolean>(this, () -> (Boolean)(LibSearch.test(\"a\", \"a dog is not a pony\")), null);");
+    gold.append("\n    y = new RxLazy<Boolean>(this, () -> (Boolean)(LibSearch.test(\"x\", \"nope\")), null);");
+    gold.append("\n    z = new RxLazy<Boolean>(this, () -> (Boolean)(LibSearch.test(\"quick\", \"the quick black fox!\")), null);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

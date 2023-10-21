@@ -529,7 +529,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      status = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_1_classify(id.get())));");
+    gold.append("\n      status = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_1_classify(id.get())), null);");
     gold.append("\n      status.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -1476,7 +1476,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      friday = new RxBoolean(this, false);");
     gold.append("\n      saturday = new RxBoolean(this, false);");
     gold.append("\n      sunday = new RxBoolean(this, false);");
-    gold.append("\n      nice = new RxLazy<String>(this, () -> (String)(__METH_0_summary()));");
+    gold.append("\n      nice = new RxLazy<String>(this, () -> (String)(__METH_0_summary()), null);");
     gold.append("\n      nice.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -2149,8 +2149,8 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    y = new RTxY(this);");
-    gold.append("\n    val_sum = new RxLazy<Integer>(this, () -> (Integer)(x.val.get() + y.val.get()));");
-    gold.append("\n    val_sum2 = new RxLazy<Integer>(this, () -> (Integer)(x.z1.get() + y.z2.get()));");
+    gold.append("\n    val_sum = new RxLazy<Integer>(this, () -> (Integer)(x.val.get() + y.val.get()), null);");
+    gold.append("\n    val_sum2 = new RxLazy<Integer>(this, () -> (Integer)(x.z1.get() + y.z2.get()), null);");
     gold.append("\n    x.__link();");
     gold.append("\n    y.__link();");
     gold.append("\n    x.__subscribe(val_sum);");
@@ -2596,7 +2596,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      val = new RxInt32(this, 0);");
-    gold.append("\n      z1 = new RxLazy<Integer>(this, () -> (Integer)(y.val.get()));");
+    gold.append("\n      z1 = new RxLazy<Integer>(this, () -> (Integer)(y.val.get()), null);");
     gold.append("\n      z1.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -2820,7 +2820,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      val = new RxInt32(this, 0);");
-    gold.append("\n      z2 = new RxLazy<Integer>(this, () -> (Integer)(x.val.get()));");
+    gold.append("\n      z2 = new RxLazy<Integer>(this, () -> (Integer)(x.val.get()), null);");
     gold.append("\n      z2.__subscribe(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
@@ -3272,9 +3272,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  public ReorderTyping_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 0);");
-    gold.append("\n    y = new RxLazy<Integer>(this, () -> (Integer)(x.get() + 1));");
-    gold.append("\n    z = new RxLazy<Integer>(this, () -> (Integer)(y.get() + 2));");
-    gold.append("\n    w = new RxLazy<Integer>(this, () -> (Integer)(z.get() + y.get()));");
+    gold.append("\n    y = new RxLazy<Integer>(this, () -> (Integer)(x.get() + 1), null);");
+    gold.append("\n    z = new RxLazy<Integer>(this, () -> (Integer)(y.get() + 2), null);");
+    gold.append("\n    w = new RxLazy<Integer>(this, () -> (Integer)(z.get() + y.get()), null);");
     gold.append("\n    x.__subscribe(y);");
     gold.append("\n    y.__subscribe(z);");
     gold.append("\n    z.__subscribe(w);");

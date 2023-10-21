@@ -3438,6 +3438,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\npublic class ViewerStateUseWhere_6 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> tbl;");
     gold.append("\n  private final RxGuard ___cake;");
+    gold.append("\n  private final RxTableGuard __cake_tbl;");
     gold.append("\n  private final RxGuard ___todo;");
     gold.append("\n  public NtList<RTxR> __COMPUTE_cake(NtPrincipal __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return tbl.iterate(false).where(true, new __CLOSURE_WhereClause0(__viewer));");
@@ -3455,8 +3456,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    ___cake =  new RxGuard(this);");
-    gold.append("\n    tbl.__subscribe(___cake);");
+    gold.append("\n    __cake_tbl = new RxTableGuard(___cake);");
     gold.append("\n    ___todo =  new RxGuard(this);");
+    gold.append("\n    tbl.__subscribe(___cake);");
+    gold.append("\n    tbl.__subscribe(__cake_tbl);");
+    gold.append("\n    ___cake.__guard(tbl,__cake_tbl);");
     gold.append("\n    __today.__subscribe(___todo);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

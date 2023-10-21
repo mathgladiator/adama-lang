@@ -112,7 +112,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    count = new RxInt32(this, 0);");
     gold.append("\n    count_after_delete = new RxInt32(this, 0);");
     gold.append("\n    rv = new RxInt32(this, 0);");
-    gold.append("\n    zoop = new RxLazy<NtMap<Integer,Integer>>(this, () -> (NtMap<Integer,Integer>)(__FUNC_0_x()));");
+    gold.append("\n    zoop = new RxLazy<NtMap<Integer,Integer>>(this, () -> (NtMap<Integer,Integer>)(__FUNC_0_x()), null);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -1831,7 +1831,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public PairUsage_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    z_s = new RxInt32(this, 0);");
-    gold.append("\n    x = new RxLazy<RTxM>(this, () -> (RTxM)(__FUNC_0_foo()));");
+    gold.append("\n    x = new RxLazy<RTxM>(this, () -> (RTxM)(__FUNC_0_foo()), null);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -7033,7 +7033,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public ReduceSample_14(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    goats = new RxTable<>(__self, this, \"goats\", (RxParent __parent) -> new RTxGoat(__parent).__link(), 0);");
-    gold.append("\n    grouped_by_breed = new RxLazy<NtMap<Integer,NtList<RTxGoat>>>(this, () -> (NtMap<Integer,NtList<RTxGoat>>)(goats.iterate(false).reduce((__item) -> __item.breed.get(), (new __CLOSURE_Lambda0()))));");
+    gold.append("\n    grouped_by_breed = new RxLazy<NtMap<Integer,NtList<RTxGoat>>>(this, () -> (NtMap<Integer,NtList<RTxGoat>>)(goats.iterate(false).reduce((__item) -> __item.breed.get(), (new __CLOSURE_Lambda0()))), null);");
     gold.append("\n    __grouped_by_breed_goats = new RxTableGuard(grouped_by_breed);");
     gold.append("\n    goats.__subscribe(grouped_by_breed);");
     gold.append("\n    goats.__subscribe(__grouped_by_breed_goats);");

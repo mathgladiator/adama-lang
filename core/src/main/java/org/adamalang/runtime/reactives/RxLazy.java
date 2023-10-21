@@ -28,16 +28,18 @@ import java.util.function.Supplier;
 /** a reactive lazy formula which is computed on demand */
 public class RxLazy<Ty> extends RxDependent {
   private final Supplier<Ty> formula;
+  private final Supplier<Runnable> perf;
   protected Ty cached;
   private int generation;
   private boolean invalid;
 
-  public RxLazy(final RxParent parent, final Supplier<Ty> formula) {
+  public RxLazy(final RxParent parent, final Supplier<Ty> formula, final Supplier<Runnable> perf) {
     super(parent);
     this.formula = formula;
     this.cached = null;
     this.invalid = false;
     this.generation = 0;
+    this.perf = perf;
   }
 
   public boolean alive() {
@@ -88,7 +90,15 @@ public class RxLazy<Ty> extends RxDependent {
 
   public Ty get() {
     if (invalid) {
-      return formula.get();
+      Runnable track = null;
+      if (perf != null) {
+        track = perf.get();
+      }
+      Ty result = formula.get();
+      if (track != null) {
+        track.run();
+      }
+      return result;
     }
     if (cached == null) {
       cached = computeWithGuard();
@@ -115,9 +125,16 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   private Ty computeWithGuard() {
+    Runnable track = null;
+    if (perf != null) {
+      track = perf.get();
+    }
     start();
     Ty result = formula.get();
     finish();
+    if (track != null) {
+      track.run();
+    }
     return result;
   }
 

@@ -226,12 +226,18 @@ public class CodeGenRecords {
         if (hasCache) {
           classConstructorX.append(">(this,__c").append(fieldName).append(".wrap(() -> (").append(boxType).append(")(");
           fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
-          classConstructorX.append(")));").writeNewline();
+          classConstructorX.append("))");
         } else {
           classConstructorX.append(">(this, () -> (").append(boxType).append(")(");
           fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
-          classConstructorX.append("));").writeNewline();
+          classConstructorX.append(")");
         }
+        if (environment.state.options.instrumentPerf) {
+          classConstructorX.append(", () -> __perf.measure(\"").append("f" + storage.name.text + "_" + fdInOrder.name).append("\")");
+        } else {
+          classConstructorX.append(", null");
+        }
+        classConstructorX.append(");").writeNewline();
         for (final String tableToWatch : fdInOrder.tablesToInject) {
           classFields.append("private final RxTableGuard __").append(fieldName).append("_").append(tableToWatch).append(";").writeNewline();
           classConstructorX.append("__").append(fieldName).append("_").append(tableToWatch).append(" = new RxTableGuard(").append(fieldName).append(");").writeNewline();
@@ -314,8 +320,18 @@ public class CodeGenRecords {
     for (final BubbleDefinition bubble : storage.bubbles.values()) {
       classFields.append("private final RxGuard ___" + bubble.nameToken.text + ";").writeNewline();
       classConstructorX.append("___").append(bubble.nameToken.text).append(" =  new RxGuard(this);").writeNewline();
+      for (final String tableToWatch : bubble.tablesToWatch) {
+        classFields.append("private final RxTableGuard __").append(bubble.nameToken.text).append("_").append(tableToWatch).append(";").writeNewline();
+        classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxTableGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
+      }
       for (final String watched : bubble.variablesToWatch) {
-        classConstructorX.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
+        classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
+      }
+      for (final String watched : bubble.tablesToWatch) {
+        // TODO: REMOVE THIS LINE ONCE TABLE EVENTS ARE BEING PRODUCED! SUPER AWESOME MODE!
+        classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
+        classLinker.append(watched).append(".__subscribe(__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
+        classLinker.append("___").append(bubble.nameToken.text).append(".__guard(").append(watched).append(",__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
       }
     }
   }

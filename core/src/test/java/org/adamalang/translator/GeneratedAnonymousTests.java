@@ -102,8 +102,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public ApplyArgsGuess_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    u = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_0_a(new RTxX(1, 2))));");
-    gold.append("\n    v = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_1_b(new RTxY(1, 2))));");
+    gold.append("\n    u = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_0_a(new RTxX(1, 2))), null);");
+    gold.append("\n    v = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_1_b(new RTxY(1, 2))), null);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

@@ -27,8 +27,8 @@ public class RxLazyTests {
   @Test
   public void flow() {
     final var val = new RxInt32(null, 42);
-    final var lz = new RxLazy<>(null, () -> val.get() * val.get());
-    final var lz2 = new RxLazy<>(null, () -> lz.get() / 2);
+    final var lz = new RxLazy<>(null, () -> val.get() * val.get(), null);
+    final var lz2 = new RxLazy<>(null, () -> lz.get() / 2, null);
     Assert.assertEquals(65522, lz.getGeneration());
     Assert.assertEquals(65522, lz2.getGeneration());
     val.__subscribe(lz);
@@ -53,8 +53,8 @@ public class RxLazyTests {
   @Test
   public void flow_with_commit() {
     final var val = new RxInt32(null, 42);
-    final var lz = new RxLazy<>(null, () -> val.get() * val.get());
-    final var lz2 = new RxLazy<>(null, () -> lz.get() / 2);
+    final var lz = new RxLazy<>(null, () -> val.get() * val.get(), null);
+    final var lz2 = new RxLazy<>(null, () -> lz.get() / 2, null);
     Assert.assertEquals(65522, lz.getGeneration());
     Assert.assertEquals(65522, lz2.getGeneration());
     val.__subscribe(lz);
@@ -88,7 +88,7 @@ public class RxLazyTests {
   @Test
   public void alive_with_parent() {
     MockRxParent parent = new MockRxParent();
-    final var val = new RxLazy(parent, () -> 123);
+    final var val = new RxLazy(parent, () -> 123, null);
     Assert.assertTrue(val.__raiseInvalid());
     parent.alive = false;
     Assert.assertFalse(val.__raiseInvalid());
@@ -96,14 +96,14 @@ public class RxLazyTests {
 
   @Test
   public void alive_without_parent() {
-    final var val = new RxLazy(null, () -> 123);
+    final var val = new RxLazy(null, () -> 123, null);
     Assert.assertTrue(val.__raiseInvalid());
   }
 
   @Test
   public void trivial() {
     final var val = new RxInt32(null, 42);
-    final var lz = new RxLazy<>(null, () -> val.get());
+    final var lz = new RxLazy<>(null, () -> val.get(), null);
     lz.__commit(null, null, null);
     lz.__revert();
   }

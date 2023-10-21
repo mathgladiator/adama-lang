@@ -40,6 +40,7 @@ public class BubbleDefinition extends StructureComponent {
   public final Token semicolonToken;
   public final LinkedHashSet<String> servicesToWatch;
   public final LinkedHashSet<String> variablesToWatch;
+  public final LinkedHashSet<String> tablesToWatch;
   public TyType expressionType;
   public final HashSet<String> globalPolicies;
   public TreeSet<String> viewerFields;
@@ -55,6 +56,7 @@ public class BubbleDefinition extends StructureComponent {
     ingest(semicolonToken);
     servicesToWatch = new LinkedHashSet<>();
     variablesToWatch = new LinkedHashSet<>();
+    tablesToWatch = new LinkedHashSet<>();
     this.globalPolicies = new HashSet<>();
     this.viewerFields = new TreeSet<>();
   }
