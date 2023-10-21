@@ -48,7 +48,6 @@ public class DefineMethod extends StructureComponent {
   private FunctionOverloadInstance cachedInstance;
   private int functionId;
   private LinkedHashSet<String> depends;
-  private LinkedHashSet<String> methodDependencies;
   private LinkedHashSet<String> services;
   private final FunctionPaint paint;
   public final TreeSet<String> viewerFields;
@@ -73,7 +72,6 @@ public class DefineMethod extends StructureComponent {
     ingest(code);
     this.depends = new LinkedHashSet<>();
     this.services = new LinkedHashSet<>();
-    this.methodDependencies = new LinkedHashSet<>();
     this.viewerFields = new TreeSet<>();
   }
 
@@ -139,7 +137,6 @@ public class DefineMethod extends StructureComponent {
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
-    toUse = toUse.watch(Watcher.make(toUse, methodDependencies, new LinkedHashSet<>())).scopeDefine();
     toUse.setReturnType(returnType);
     return toUse;
   }

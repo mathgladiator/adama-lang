@@ -72,7 +72,11 @@ public class BubbleDefinition extends StructureComponent {
   }
 
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {
-    expressionType = environment.rules.Resolve(expression.typing(next(environment), null), false);
+    Environment env = next(environment);
+    if (!owningStructureStorage.root) {
+      env = env.scopeRecord(owningStructureStorage.name.text);
+    }
+    expressionType = environment.rules.Resolve(expression.typing(env, null), false);
     if (guard != null) {
       for (TokenizedItem<String> policy : guard.policies) {
         var dcp = owningStructureStorage.policies.get(policy.item);

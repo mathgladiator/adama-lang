@@ -181,7 +181,13 @@ public class Base {
         // ignore comments
       } else if (node instanceof org.jsoup.nodes.Element) {
         if (node.hasAttr("for-env")) {
-          if(env.environment.equals(node.attr("for-env"))) {
+          boolean contains = false;
+          for (String e : node.attr("for-env").split(Pattern.quote("|"))) {
+            if(env.environment.equals(e)) {
+              contains = true;
+            }
+          }
+          if(contains) {
             node.removeAttr("for-env");
             filtered.add(node);
           }

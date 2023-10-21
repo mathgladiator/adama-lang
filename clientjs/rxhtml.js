@@ -762,27 +762,29 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: <tag ... rx:monitor="state-path" rx:rise="commands..." rx:fall="commands..."
-  self.MN = function (dom, state, name, skipFirst) {
+  self.MN = function (dom, state, name, skipFirst, delay) {
     var sub = function (value) {
-      var n = 0;
-      try {
-        n = typeof (value) == 'number' ? value : parseInt(value);
-      } catch (failedParsingN) {
-      }
-      if (this.first) {
+      window.setTimeout(function() {
+        var n = 0;
+        try {
+          n = typeof (value) == 'number' ? value : parseInt(value);
+        } catch (failedParsingN) {
+        }
+        if (this.first) {
+          this.at = n;
+          this.first = false;
+          return;
+        }
+        if (this.at < n) {
+          var e = new Event("rise");
+          dom.dispatchEvent(e);
+        } else if (this.at > n) {
+          var e = new Event("fall");
+          dom.dispatchEvent(e);
+        }
         this.at = n;
-        this.first = false;
-        return;
-      }
-      if (this.at < n) {
-        var e = new Event("rise");
-        dom.dispatchEvent(e);
-      } else if (this.at > n) {
-        var e = new Event("fall");
-        dom.dispatchEvent(e);
-      }
-      this.at = n;
-    }.bind({at:-1, first:skipFirst});
+      }.bind(this), this.delay);
+    }.bind({at:-1, first:skipFirst, delay:delay ? delay : 10});
     subscribe(state, name, sub);
   };
 
@@ -2561,6 +2563,9 @@ var RxHTML = (function () {
       delta /= 60; // now it is minutes
       if (delta < 60) {
         return Math.floor(delta) + " minutes ago";
+      }
+      if (delta > 2.628e+7) {
+        return "Never";
       }
       // it wasn't 90 minutes ago, so let's just put the time stamp up
       var dthen = new Date(d);

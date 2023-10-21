@@ -50,7 +50,14 @@ public class Elements {
 
   public static void monitor(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
-    env.writer.tab().append("$.MN(").append(env.parentVariable).append(",").append(path.command).append(",'").append(path.name).append("',").append(env.element.hasAttr("skip-first") ? "true" : "false").append(");").newline();
+    int delay = 10;
+    if (env.element.hasAttr("delay")) {
+      try {
+        delay = Integer.parseInt(env.element.attr("delay"));
+      } catch (Exception ex) {
+      }
+    }
+    env.writer.tab().append("$.MN(").append(env.parentVariable).append(",").append(path.command).append(",'").append(path.name).append("',").append(env.element.hasAttr("skip-first") ? "true" : "false").append("," + delay).append(");").newline();
     Attributes attributes = new Attributes(env, env.parentVariable);
     attributes._event("rise");
     attributes._event("fall");
