@@ -31,6 +31,7 @@ public abstract class RxIndexableBase extends RxBase implements Indexable {
   @Override
   public void setWatcher(IndexInvalidate watcher) {
     this.watcher = watcher;
+    this.watcher.invalidate(getIndexValue());
   }
 
   protected void trigger() {

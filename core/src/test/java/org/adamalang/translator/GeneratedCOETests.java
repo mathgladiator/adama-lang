@@ -1329,7 +1329,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -1352,7 +1354,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return __FUNC_0_your_family_id_or_zero(__who);");
@@ -1376,7 +1380,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return LibMath.forceId((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((item) -> ((RTxPerson) item).family_id.get()));");
@@ -1399,7 +1405,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");

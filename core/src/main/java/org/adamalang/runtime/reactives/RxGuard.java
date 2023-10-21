@@ -26,7 +26,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
  * a condition to learn if changes have occured. This is like a Lazy, but gives people the ability
  * to learn if changes have happened since the last time a commited happened
  */
-public class RxGuard extends RxBase implements RxChild {
+public class RxGuard extends RxDependent {
   protected boolean invalid;
   private int generation;
   private boolean raisingDirtyParent;
@@ -36,6 +36,14 @@ public class RxGuard extends RxBase implements RxChild {
     generation = 0;
     invalid = true;
     raisingDirtyParent = false;
+  }
+
+  @Override
+  public boolean alive() {
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
+    return true;
   }
 
   @Override

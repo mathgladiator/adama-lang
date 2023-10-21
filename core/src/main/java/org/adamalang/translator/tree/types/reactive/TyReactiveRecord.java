@@ -138,6 +138,7 @@ public class TyReactiveRecord extends TyType implements //
         sb.tabDown();
       }
       sb.writeNewline();
+      indexVal++;
     }
     sb.append("}").writeNewline();
 

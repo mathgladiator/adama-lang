@@ -3446,7 +3446,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -5239,7 +5241,9 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");

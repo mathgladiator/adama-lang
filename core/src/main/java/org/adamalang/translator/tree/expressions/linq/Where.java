@@ -335,16 +335,16 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     sb.tabDown().writeNewline().append("}").writeNewline();
     sb.append("@Override").writeNewline();
     if (applyQuerySetStatements.size() == 0) {
-      sb.append("public void scopeByIndicies(IndexQuerySet __set) {}").writeNewline();
+      sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();
+      sb.append("__set.finish();").tabDown().writeNewline();
+      sb.append("}").writeNewline();
     } else {
       sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();
       for (var k = 0; k < applyQuerySetStatements.size(); k++) {
-        sb.append(applyQuerySetStatements.get(k));
-        if (k + 1 < applyQuerySetStatements.size()) {
-          sb.writeNewline();
-        }
+        sb.append(applyQuerySetStatements.get(k)).writeNewline();
       }
-      sb.tabDown().writeNewline().append("}").writeNewline();
+      sb.append("__set.finish();").tabDown().writeNewline();
+      sb.append("}").writeNewline();
     }
     sb.append("@Override").writeNewline();
     sb.append("public Integer getPrimaryKey() {").tabUp().writeNewline();

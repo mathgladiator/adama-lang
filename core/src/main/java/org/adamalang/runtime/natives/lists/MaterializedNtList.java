@@ -157,6 +157,7 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
   public class MaterializedIndexQuerySet implements IndexQuerySet {
     private boolean all;
     private TreeSet<Integer> ids;
+
     public MaterializedIndexQuerySet() {
       this.all = true;
       this.ids = null;
@@ -182,6 +183,14 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
         }
         ids = result;
       }
+    }
+
+    public void push() {
+
+    }
+
+    @Override
+    public void finish() {
     }
   }
 }

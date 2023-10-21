@@ -25,6 +25,12 @@ public interface IndexQuerySet {
    */
   void intersect(int column, int value, LookupMode mode);
 
+  /** push the result */
+  void push();
+
+  /** finish up the result */
+  void finish();
+
   /** Method of executing the lookup */
   enum LookupMode {
     LessThan, LessThanOrEqual, Equals, GreaterThanOrEqual, GreaterThan

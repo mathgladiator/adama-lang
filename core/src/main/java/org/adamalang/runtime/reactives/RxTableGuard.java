@@ -24,13 +24,13 @@ import java.util.TreeSet;
 
 /** this filters incoming events against was read to minimize invalidations */
 public class RxTableGuard implements TableSubscription {
-  private final RxLazy<?> owner;
+  private final RxDependent owner;
   private boolean all;
   private TreeSet<Integer> primaryKeys;
   private TreeMap<Integer, TreeSet<Integer>> indices;
   private boolean fired;
 
-  public RxTableGuard(RxLazy<?> owner) {
+  public RxTableGuard(RxDependent owner) {
     this.owner = owner;
     this.all = false;
     this.primaryKeys = null;
@@ -57,7 +57,7 @@ public class RxTableGuard implements TableSubscription {
     if (indices != null) {
       TreeSet<Integer> vals = indices.get(field);
       if (vals != null) {
-        if (vals.contains(vals)) {
+        if (vals.contains(value)) {
           fireAndCleanup();
         }
       }

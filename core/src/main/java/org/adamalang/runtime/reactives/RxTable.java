@@ -273,6 +273,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
     this.createdObjects.put(key, result);
     this.itemsByKey.put(key, result);
+    result.__pumpIndexEvents(pubsub);
     __raiseDirty();
     pubsub.primary(key);
     return result;
@@ -308,30 +309,44 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       return this;
     }
     final var prior = new AtomicReference<TreeSet<Ty>>(null);
-    filter.scopeByIndicies((column, value, mode) -> {
-      if (mode == IndexQuerySet.LookupMode.Equals) {
-        readIndex(column, value);
-      } else {
-        readAll();
-      }
-      final var specific = indices[column].of(value, mode);
-      if (specific == null) { // no index available
-        prior.set(new TreeSet<>());
-        return;
-      }
-      if (prior.get() == null) {
-        // just use the index
-        prior.set(specific);
-      } else {
-        final var common = new TreeSet<Ty>();
-        if (specific != null) {
-          for (final Ty item : specific) {
-            if (prior.get().contains(item)) {
-              common.add(item);
+    filter.scopeByIndicies(new IndexQuerySet() {
+      boolean didIndexing = false;
+      @Override
+      public void intersect(int column, int value, LookupMode mode) {
+        if (mode == IndexQuerySet.LookupMode.Equals) {
+          readIndex(column, value);
+          didIndexing = true;
+        }
+        final var specific = indices[column].of(value, mode);
+        if (specific == null) { // no index available
+          prior.set(new TreeSet<>());
+          return;
+        }
+        if (prior.get() == null) {
+          // just use the index
+          prior.set(specific);
+        } else {
+          final var common = new TreeSet<Ty>();
+          if (specific != null) {
+            for (final Ty item : specific) {
+              if (prior.get().contains(item)) {
+                common.add(item);
+              }
             }
           }
+          prior.set(common);
         }
-        prior.set(common);
+      }
+
+      @Override
+      public void push() {
+      }
+
+      @Override
+      public void finish() {
+        if (!didIndexing) {
+          readAll();
+        }
       }
     });
     if (prior.get() == null) {

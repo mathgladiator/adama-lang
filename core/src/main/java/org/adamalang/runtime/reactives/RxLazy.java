@@ -26,22 +26,11 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 /** a reactive lazy formula which is computed on demand */
-public class RxLazy<Ty> extends RxBase implements RxChild {
+public class RxLazy<Ty> extends RxDependent {
   private final Supplier<Ty> formula;
   protected Ty cached;
   private int generation;
   private boolean invalid;
-  private ArrayList<GuardPair> guards;
-
-  private class GuardPair {
-    private final RxTable<?> table;
-    private final RxTableGuard guard;
-
-    private GuardPair(RxTable<?> table, RxTableGuard guard) {
-      this.table = table;
-      this.guard = guard;
-    }
-  }
 
   public RxLazy(final RxParent parent, final Supplier<Ty> formula) {
     super(parent);
@@ -49,7 +38,6 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     this.cached = null;
     this.invalid = false;
     this.generation = 0;
-    this.guards = null;
   }
 
   public boolean alive() {
@@ -127,19 +115,10 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   private Ty computeWithGuard() {
-    if (guards != null) {
-      for (GuardPair gp : guards) {
-        gp.guard.reset();
-        gp.table.setGuard(gp.guard);
-      }
-      Ty result = formula.get();
-      for (GuardPair gp : guards) {
-        gp.table.setGuard(null);
-      }
-      return result;
-    } else {
-      return formula.get();
-    }
+    start();
+    Ty result = formula.get();
+    finish();
+    return result;
   }
 
   private void ensureCacheValid() {
@@ -163,12 +142,5 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     }
     ensureCacheValid();
     return generation;
-  }
-
-  public void __guard(RxTable<?> table, RxTableGuard guard) {
-    if (guards == null) {
-      guards = new ArrayList<>();
-      guards.add(new GuardPair(table, guard));
-    }
   }
 }

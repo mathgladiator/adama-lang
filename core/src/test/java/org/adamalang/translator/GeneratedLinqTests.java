@@ -910,7 +910,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -1683,7 +1685,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
     gold.append("\n      the_date.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      the_time.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      the_time.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -1909,6 +1911,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, new NtDate(2023, 4, 29).toInt(), IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -1929,6 +1932,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(1, new NtTime(13, 30).toInt(), IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -2742,6 +2746,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 2, IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -2762,6 +2767,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 2, IndexQuerySet.LookupMode.LessThanOrEqual);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -2782,6 +2788,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 2, IndexQuerySet.LookupMode.LessThan);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -2802,6 +2809,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 2, IndexQuerySet.LookupMode.GreaterThanOrEqual);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -2822,6 +2830,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 2, IndexQuerySet.LookupMode.GreaterThan);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -3633,7 +3642,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -3651,7 +3662,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -3669,7 +3682,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -3687,7 +3702,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -3705,7 +3722,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -4567,6 +4586,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, \"hello\".hashCode(), IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -5545,7 +5565,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
     gold.append("\n      y.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -5833,7 +5853,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
     gold.append("\n      z.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      u.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      u.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -6123,8 +6143,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
     gold.append("\n      z.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      y.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      y.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
+    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 2, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -6373,7 +6393,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -6394,6 +6416,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 123, IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -6415,6 +6438,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 42, IndexQuerySet.LookupMode.Equals);");
     gold.append("\n      __set.intersect(1, 13, IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -8954,7 +8978,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -8972,7 +8998,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -8990,7 +9018,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -9008,7 +9038,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -9026,7 +9058,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -9044,7 +9078,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -10699,7 +10735,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -10721,7 +10759,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -10742,7 +10782,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -13237,7 +13279,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -13260,7 +13304,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -14201,7 +14247,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -15326,6 +15374,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 50, IndexQuerySet.LookupMode.LessThan);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -15346,6 +15395,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 50, IndexQuerySet.LookupMode.LessThanOrEqual);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -15366,6 +15416,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 50, IndexQuerySet.LookupMode.Equals);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -15386,6 +15437,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 50, IndexQuerySet.LookupMode.GreaterThanOrEqual);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -15406,6 +15458,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 50, IndexQuerySet.LookupMode.GreaterThan);");
+    gold.append("\n      __set.finish();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
@@ -16271,7 +16324,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16289,7 +16344,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16307,7 +16364,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16324,7 +16383,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16341,7 +16402,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16358,7 +16421,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return (42);");
@@ -16375,7 +16440,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16392,7 +16459,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16409,7 +16478,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16426,7 +16497,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16445,7 +16518,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -16464,7 +16539,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return 42;");
@@ -17387,7 +17464,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
@@ -17407,7 +17486,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      return new int[] {};");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {}");
+    gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __set.finish();");
+    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
     gold.append("\n      return null;");
