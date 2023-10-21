@@ -149,9 +149,14 @@ public class BinaryOperatorTable {
       insert(tyInt, "*", tyString, tyString, "LibString.multiply(%s, %s)", true);
       insert(tyMaybeString, "*", tyInt, tyMaybeString, "LibString.multiply(%s, %s)", false);
       insert(tyInt, "*", tyMaybeString, tyMaybeString, "LibString.multiply(%s, %s)", true);
+      insert(tyDouble, "*", tyTimeSpan, tyTimeSpan, "LibTimeSpan.multiply(%s, %s)", true);
+      insert(tyTimeSpan, "*", tyDouble, tyTimeSpan, "LibTimeSpan.multiply(%s, %s)", false);
+      insert(tyInt, "*", tyTimeSpan, tyTimeSpan, "LibTimeSpan.multiply(%s, %s)", true);
+      insert(tyTimeSpan, "*", tyInt, tyTimeSpan, "LibTimeSpan.multiply(%s, %s)", false);
     }
     // ADDITION
     {
+      insert(tyTimeSpan, "+", tyTimeSpan, tyTimeSpan, "LibTimeSpan.add(%s, %s)", false);
       insert(tyInt, "+", tyInt, tyInt, "%s + %s", false);
       insert(tyInt, "+", tyLong, tyLong, "%s + %s", false);
       insert(tyInt, "+", tyDouble, tyDouble, "%s + %s", false);

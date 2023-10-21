@@ -1,0 +1,5 @@
+public timespan ts = @timespan 15 min;
+public formula a = (ts + ts + 5 * ts) * 3.14;
+public formula ts_sec = ts.seconds();
+public formula ts_min = ts.minutes();
+public formula ts_hr = ts.hours();

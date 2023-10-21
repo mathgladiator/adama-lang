@@ -325,4 +325,12 @@ public class LibDateTests {
     Assert.assertEquals("04/24/2023", LibDate.format(present, "MM/dd/yyyy", "en-US").get());
     Assert.assertFalse(LibDate.format(present, "pZ", "en-US").has());
   }
+
+  @Test
+  public void between() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = new NtDateTime(ZonedDateTime.parse("2023-04-24T18:57:22.802528800-05:00[America/Chicago]"));
+    Assert.assertEquals(5721.7, LibDate.between(a, b).seconds, 0.01);
+    Assert.assertEquals(-5721.7, LibDate.between(b, a).seconds, 0.01);
+  }
 }

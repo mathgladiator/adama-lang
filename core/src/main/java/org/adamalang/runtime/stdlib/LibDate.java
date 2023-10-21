@@ -25,6 +25,7 @@ import org.adamalang.translator.reflect.HiddenType;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -256,4 +257,8 @@ public class LibDate {
     return p.getYears() * 12 + p.getMonths();
   }
 
+  @Extension
+  public static NtTimeSpan between(NtDateTime from, NtDateTime to) {
+    return new NtTimeSpan(ChronoUnit.MILLIS.between(from.dateTime, to.dateTime) / 1000.0);
+  }
 }
