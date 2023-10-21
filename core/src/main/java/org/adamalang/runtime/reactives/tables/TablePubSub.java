@@ -60,23 +60,9 @@ public class TablePubSub implements TableSubscription {
   }
 
   @Override
-  public void add(int primaryKey) {
+  public void primary(int primaryKey) {
     for (TableSubscription ts : _subscriptions) {
-      ts.add(primaryKey);
-    }
-  }
-
-  @Override
-  public void change(int primaryKey) {
-    for (TableSubscription ts : _subscriptions) {
-      ts.change(primaryKey);
-    }
-  }
-
-  @Override
-  public void remove(int primaryKey) {
-    for (TableSubscription ts : _subscriptions) {
-      ts.remove(primaryKey);
+      ts.primary(primaryKey);
     }
   }
 

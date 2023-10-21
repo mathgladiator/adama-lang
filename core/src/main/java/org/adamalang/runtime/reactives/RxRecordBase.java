@@ -48,7 +48,7 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     if (!__isDying) {
       __isDying = true;
       if (pubsub != null) {
-        pubsub.remove(__id());
+        pubsub.primary(__id());
       }
     }
   }

@@ -264,7 +264,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     final var result = maker.apply(this);
     result.__setId(key, false);
     result.__subscribe(() -> {
-      pubsub.change(key);
+      pubsub.primary(key);
       return RxTable.this.__raiseInvalid();
     });
     result.__raiseDirty();
@@ -274,7 +274,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.createdObjects.put(key, result);
     this.itemsByKey.put(key, result);
     __raiseDirty();
-    pubsub.add(key);
+    pubsub.primary(key);
     return result;
   }
 

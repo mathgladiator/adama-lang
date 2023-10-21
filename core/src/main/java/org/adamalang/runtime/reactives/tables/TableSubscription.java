@@ -23,13 +23,7 @@ public interface TableSubscription {
   public boolean alive();
 
   /** a item was added with the given primary key */
-  public void add(int primaryKey);
-
-  /** an item with the primary key changed */
-  public void change(int primaryKey);
-
-  /** an item with the given primary key was removed */
-  public void remove(int primaryKey);
+  public void primary(int primaryKey);
 
   /** an item with the index value was changed */
   public void index(int primaryKey, int index, int value);
