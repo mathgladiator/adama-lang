@@ -26,8 +26,5 @@ public interface TableSubscription {
   public void primary(int primaryKey);
 
   /** an item with the index value was changed */
-  public void index(int primaryKey, int index, int value);
-
-  /** a property of the entire table changes */
-  public void all();
+  public void index(int index, int value);
 }

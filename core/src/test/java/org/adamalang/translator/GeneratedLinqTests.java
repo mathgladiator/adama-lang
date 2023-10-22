@@ -692,7 +692,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      s.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      s.setWatcher(__value -> __pubsub.index(0, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -1686,8 +1686,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      the_date.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      the_time.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
+    gold.append("\n      the_date.setWatcher(__value -> __pubsub.index(0, __value));");
+    gold.append("\n      the_time.setWatcher(__value -> __pubsub.index(1, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -4370,7 +4370,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      s.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      s.setWatcher(__value -> __pubsub.index(0, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -5300,7 +5300,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      x.setWatcher(__value -> __pubsub.index(0, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -5570,8 +5570,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      y.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
+    gold.append("\n      y.setWatcher(__value -> __pubsub.index(0, __value));");
+    gold.append("\n      x.setWatcher(__value -> __pubsub.index(1, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -5858,8 +5858,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      z.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      u.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
+    gold.append("\n      z.setWatcher(__value -> __pubsub.index(0, __value));");
+    gold.append("\n      u.setWatcher(__value -> __pubsub.index(1, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -6148,9 +6148,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      z.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
-    gold.append("\n      y.setWatcher(__value -> __pubsub.index(id.get(), 1, __value));");
-    gold.append("\n      x.setWatcher(__value -> __pubsub.index(id.get(), 2, __value));");
+    gold.append("\n      z.setWatcher(__value -> __pubsub.index(0, __value));");
+    gold.append("\n      y.setWatcher(__value -> __pubsub.index(1, __value));");
+    gold.append("\n      x.setWatcher(__value -> __pubsub.index(2, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -15069,7 +15069,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    gold.append("\n      z.setWatcher(__value -> __pubsub.index(id.get(), 0, __value));");
+    gold.append("\n      z.setWatcher(__value -> __pubsub.index(0, __value));");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");

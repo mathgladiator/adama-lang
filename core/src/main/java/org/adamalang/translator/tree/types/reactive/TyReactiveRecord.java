@@ -133,7 +133,7 @@ public class TyReactiveRecord extends TyType implements //
     int indexVal = 0;
     for (IndexDefinition index : storage.indices) {
       countdown--;
-      sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(id.get(), ").append(indexVal + "").append(", __value));");
+      sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(").append(indexVal + "").append(", __value));");
       if (countdown == 0) {
         sb.tabDown();
       }

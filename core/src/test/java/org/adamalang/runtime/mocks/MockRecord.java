@@ -180,7 +180,7 @@ public class MockRecord extends RxRecordBase<MockRecord> {
 
   @Override
   public void __pumpIndexEvents(TablePubSub pubsub) {
-    index.setWatcher(value -> pubsub.index(id, 0, value));
+    index.setWatcher(value -> pubsub.index(0, value));
   }
 
   @Override
