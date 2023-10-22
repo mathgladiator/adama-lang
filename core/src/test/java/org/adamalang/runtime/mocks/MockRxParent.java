@@ -23,6 +23,7 @@ import org.junit.Assert;
 public class MockRxParent implements RxParent {
   public int dirtyCount;
   public boolean alive;
+  public int cost;
 
   public MockRxParent() {
     dirtyCount = 0;
@@ -45,5 +46,6 @@ public class MockRxParent implements RxParent {
 
   @Override
   public void __cost(int cost) {
+    this.cost += cost;
   }
 }

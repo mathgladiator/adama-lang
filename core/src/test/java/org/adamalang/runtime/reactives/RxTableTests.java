@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.common.Json;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -38,6 +39,15 @@ public class RxTableTests {
     table.__insert(
         new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
     Assert.assertEquals(462, table.__memory());
+  }
+
+  @Test
+  public void debug() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    JsonStreamWriter writer = new JsonStreamWriter();
+    table.debug(writer);
+    Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
   }
 
   private MockLivingDocument doc(int keyStart) {

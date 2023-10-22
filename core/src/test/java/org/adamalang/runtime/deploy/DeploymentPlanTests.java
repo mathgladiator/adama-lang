@@ -80,6 +80,14 @@ public class DeploymentPlanTests {
     Assert.assertEquals("y", plan.pickVersion("y3"));
   }
 
+  @Test
+  public void happyInstrumented() throws Exception {
+    DeploymentPlan plan = new DeploymentPlan(
+        "{\"instrument\":true,\"versions\":{\"x\":\"\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":900,\"prefix\":\"y\",\"seed\":\"a2\"}]}",
+        (t, errorCode) -> {});
+    Assert.assertTrue(plan.instrument);
+  }
+
   public void parseBadTest(String json, int expectedError) {
     try {
       new DeploymentPlan(json, (t, errorCode) -> {});

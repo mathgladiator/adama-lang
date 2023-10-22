@@ -21,6 +21,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.data.mocks.MockArchiveDataSource;
+import org.adamalang.runtime.data.mocks.MockFinderService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
@@ -182,6 +183,35 @@ public class MachineTests {
         machine.read(new Action(() -> {}, cb));
         machine.delete();
         machine.write(new Action(() -> {}, cb));
+      });
+      Assert.assertTrue(latchFailure.await(1000, TimeUnit.MILLISECONDS));
+    }, archive);
+  }
+
+  @Test
+  public void badstate() throws Exception {
+    MockInstantDataService data = new MockInstantDataService();
+    MockArchiveDataSource archive = new MockArchiveDataSource(data);
+    BaseTests.flow((base) -> {
+      MockFinderService finder = (MockFinderService) base.finder;
+      finder.bindArchive(KEY, "");
+      CountDownLatch latchFailure = new CountDownLatch(1);
+      base.on(KEY, (machine) -> {
+        Callback<String> callback = new Callback<String>() {
+          @Override
+          public void success(String value) {
+
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            ex.printStackTrace();
+            latchFailure.countDown();
+          }
+        };
+        machine.read(new Action(() -> {
+          callback.success("hi");
+        }, callback));
       });
       Assert.assertTrue(latchFailure.await(1000, TimeUnit.MILLISECONDS));
     }, archive);

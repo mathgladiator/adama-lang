@@ -49,4 +49,9 @@ public class TablePubSubTests {
     Assert.assertEquals("PKEY:123", two.publishes.get(2));
     Assert.assertEquals("IDX:13=69", two.publishes.get(3));
   }
+
+  @Test
+  public void trivial_alive() {
+    Assert.assertTrue(new TablePubSub(null).alive());
+  }
 }

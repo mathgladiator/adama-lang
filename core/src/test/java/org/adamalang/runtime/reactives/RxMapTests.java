@@ -22,6 +22,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockRxChild;
 import org.adamalang.runtime.mocks.MockRxParent;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,6 +54,26 @@ public class RxMapTests {
     Assert.assertEquals(312, m.__memory());
   }
 
+  @Test
+  public void memoryPrincipal() {
+    final var m = new RxMap<NtPrincipal, RxPrincipal>(
+        new MockRxParent(),
+        new RxMap.PrincipalCodec<RxPrincipal>() {
+          @Override
+          public RxPrincipal make(RxParent maker) {
+            return new RxPrincipal(maker, new NtPrincipal("a", "a"));
+          }
+        });
+    Assert.assertEquals(168, m.__memory());
+    m.getOrCreate(new NtPrincipal("a", "b")).set(new NtPrincipal("b", "c"));
+    Assert.assertEquals(252, m.__memory());
+    JsonStreamWriter forward = new JsonStreamWriter();
+    JsonStreamWriter reverse = new JsonStreamWriter();
+    m.__commit("name", forward, reverse);
+    Assert.assertEquals("\"name\":{\"a/b\":{\"agent\":\"b\",\"authority\":\"c\"}}", forward.toString());
+    Assert.assertEquals("\"name\":{\"a/b\":null}", reverse.toString());
+  }
+
   private RxMap<Integer, RxInt32> map() {
     return map(new MockRxParent());
   }
@@ -66,6 +87,13 @@ public class RxMapTests {
             return new RxInt32(maker, 0);
           }
         });
+  }
+
+  @Test
+  public void cost_report() {
+    MockRxParent parent = new MockRxParent();
+    map(parent).__cost(423);
+    Assert.assertEquals(423, parent.cost);
   }
 
   @Test

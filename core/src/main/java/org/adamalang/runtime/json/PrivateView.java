@@ -53,7 +53,9 @@ public abstract class PrivateView {
     if (usurper != null) {
       usurper.triggerRefresh();
     } else {
-      refresh.run();
+      if (refresh != null) {
+        refresh.run();
+      }
     }
   }
 

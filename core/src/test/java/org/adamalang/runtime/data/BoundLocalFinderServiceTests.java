@@ -153,4 +153,35 @@ public class BoundLocalFinderServiceTests {
     });
     Assert.assertTrue(latchFree.await(1000, TimeUnit.MILLISECONDS));
   }
+
+  @Test
+  public void success_bind_even_after_find_failure() throws Exception {
+    MockFinderService mock = new MockFinderService("the-machine");
+    mock.bindLocal(new Key("space", "key"));
+    BoundLocalFinderService finder = new BoundLocalFinderService(SimpleExecutor.NOW, mock, "the-region", "the-machine");
+    CountDownLatch latch = new CountDownLatch(2);
+    finder.bind(new Key("space", "cant-find"), new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    finder.find(new Key("space", "cant-find"), new Callback<DocumentLocation>() {
+      @Override
+      public void success(DocumentLocation value) {
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        latch.countDown();
+      }
+    });
+    Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+  }
 }

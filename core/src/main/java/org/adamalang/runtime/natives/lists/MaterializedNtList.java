@@ -186,7 +186,6 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
     }
 
     public void push() {
-
     }
 
     @Override

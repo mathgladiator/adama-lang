@@ -37,6 +37,14 @@ public class RxMaybeTests {
   }
 
   @Test
+  public void cost() {
+    final var parent = new MockRxParent();
+    final var mi = new RxMaybe<>(parent, p -> new RxInt32(p, 42));
+    mi.__cost(542);
+    Assert.assertEquals(542, parent.cost);
+  }
+
+  @Test
   public void commit_flow() {
     final var parent = new MockRxParent();
     final var mi = new RxMaybe<>(parent, p -> new RxInt32(p, 42));

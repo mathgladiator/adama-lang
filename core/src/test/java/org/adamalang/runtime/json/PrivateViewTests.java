@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PrivateViewTests {
   @Test
@@ -112,8 +113,13 @@ public class PrivateViewTests {
           @Override
           public void update(JsonStreamWriter writer) {}
         };
-
+    AtomicInteger iv = new AtomicInteger(0);
+    pv2.setRefresh(() -> iv.addAndGet(2));
+    pv1.setRefresh(() -> iv.addAndGet(5));
+    pv2.triggerRefresh();
     pv2.usurp(pv1);
+    pv2.triggerRefresh();
+    Assert.assertEquals(7, iv.get());
     Assert.assertTrue(pv1.isAlive());
     Assert.assertFalse(gotViewUpdate.get());
     pv2.ingestViewUpdate(new JsonStreamReader("{}"));;

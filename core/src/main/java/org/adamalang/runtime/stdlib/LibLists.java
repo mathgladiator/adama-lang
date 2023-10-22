@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class LibLists {
-
   @Skip
   public static <T> NtList<T> flatten(NtList<NtList<T>> list) {
     ArrayList<T> result = new ArrayList<>();
@@ -78,6 +77,7 @@ public class LibLists {
     return new ArrayNtList<>(result);
   }
 
+  @Skip
   public static <T> NtList<T> join(NtList<T> a, NtList<T> b) {
     return new JoinNtList<>(a, b);
   }

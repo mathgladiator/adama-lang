@@ -39,6 +39,13 @@ public class RxRecordBaseTest {
   }
 
   @Test
+  public void cost_report() {
+    MockRxParent parent = new MockRxParent();
+    new MockRecord(parent).__cost(2421);
+    Assert.assertEquals(2421, parent.cost);
+  }
+
+  @Test
   public void memory() {
     final var a = new MockRecord(null);
     Assert.assertEquals(42, a.__memory());

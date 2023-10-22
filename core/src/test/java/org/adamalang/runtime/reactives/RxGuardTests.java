@@ -17,10 +17,14 @@
 */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxChild;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class RxGuardTests {
   @Test
@@ -50,5 +54,36 @@ public class RxGuardTests {
     Assert.assertEquals(42333092, guard.getGeneration(0));
     guard.__insert(null);
     guard.__patch(null);
+  }
+
+  @Test
+  public void preventDeadlock() {
+    AtomicReference<RxGuard> self = new AtomicReference<>();
+    RxGuard g = new RxGuard(new RxParent() {
+      @Override
+      public void __raiseDirty() {
+        self.get().__raiseInvalid();
+      }
+
+      @Override
+      public boolean __isAlive() {
+        return false;
+      }
+
+      @Override
+      public void __cost(int cost) {
+
+      }
+    });
+    self.set(g);
+    g.__raiseInvalid();
+  }
+
+  @Test
+  public void inheritRecordId() {
+    MockRecord record = new MockRecord(null);
+    RxGuard g = new RxGuard(record);
+    g.__raiseInvalid();
+    Assert.assertEquals(1, g.getGeneration(0));
   }
 }
