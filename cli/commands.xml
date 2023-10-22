@@ -657,6 +657,13 @@
                 Install the tables on a monolithic database
             </documentation>
         </command>
+        <command name="make-reserved">
+            <documentation>
+                Create reserved spaces
+            </documentation>
+            <arg name="email" />
+            <arg name="space" />
+        </command>
         <command name="migrate">
             <documentation>
                 Migrate data from 'db' to 'nextdb'

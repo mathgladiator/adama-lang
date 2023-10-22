@@ -75,6 +75,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"database", "--help"});
     Main.testMain(new String[]{"database", "configure", "--help"});
     Main.testMain(new String[]{"database", "install", "--help"});
+    Main.testMain(new String[]{"database", "make-reserved", "--help"});
     Main.testMain(new String[]{"database", "migrate", "--help"});
     Main.testMain(new String[]{"document", "--help"});
     Main.testMain(new String[]{"document", "attach", "--help"});

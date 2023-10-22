@@ -148,6 +148,7 @@ public class Help {
     System.out.println(Util.prefix("DATABASESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("configure", 15), Util.ANSI.Green) + "Update the configuration");
     System.out.println("    " + Util.prefix(Util.justifyLeft("install", 15), Util.ANSI.Green) + "Install the tables on a monolithic database");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("make-reserved", 15), Util.ANSI.Green) + "Create reserved spaces");
     System.out.println("    " + Util.prefix(Util.justifyLeft("migrate", 15), Util.ANSI.Green) + "Migrate data from 'db' to 'nextdb'");
   }
   public static void displayDocumentHelp() {

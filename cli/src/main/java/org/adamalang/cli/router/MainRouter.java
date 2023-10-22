@@ -595,6 +595,16 @@ public class MainRouter {
                databaseHandler.install(databaseArgs, out);
                return 0;
             }
+            case "make-reserved": {
+              DatabaseMakeReservedArgs databaseArgs = DatabaseMakeReservedArgs.from(args, 2);
+              if (databaseArgs == null) {
+                DatabaseMakeReservedArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               databaseHandler.makeReserved(databaseArgs, out);
+               return 0;
+            }
             case "migrate": {
               DatabaseMigrateArgs databaseArgs = DatabaseMigrateArgs.from(args, 2);
               if (databaseArgs == null) {

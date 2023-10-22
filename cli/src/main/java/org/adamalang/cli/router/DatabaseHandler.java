@@ -23,5 +23,6 @@ import org.adamalang.cli.runtime.Output.*;
 public interface DatabaseHandler {
   void configure(DatabaseConfigureArgs args, YesOrError output) throws Exception;
   void install(DatabaseInstallArgs args, YesOrError output) throws Exception;
+  void makeReserved(DatabaseMakeReservedArgs args, YesOrError output) throws Exception;
   void migrate(DatabaseMigrateArgs args, YesOrError output) throws Exception;
 }
