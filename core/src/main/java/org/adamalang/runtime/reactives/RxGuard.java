@@ -21,6 +21,8 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
+import java.util.TreeMap;
+
 /**
  * a condition to learn if changes have occured. This is like a Lazy, but gives people the ability
  * to learn if changes have happened since the last time a commited happened
@@ -29,12 +31,14 @@ public class RxGuard extends RxDependent {
   protected boolean invalid;
   private int generation;
   private boolean raisingDirtyParent;
+  private TreeMap<Integer, Integer> bumps;
 
   public RxGuard(RxParent parent) {
     super(parent);
     generation = 0;
     invalid = true;
     raisingDirtyParent = false;
+    bumps = null;
   }
 
   @Override
@@ -98,10 +102,25 @@ public class RxGuard extends RxDependent {
     if (generation == 0) {
       inc();
     }
-    int childGeneration = 0;
-    if (isFired(viewerId)) {
-      childGeneration = generation * 17;
+    int bump = 0;
+    if (bumps != null) {
+      Integer bumpTest = bumps.get(viewerId);
+      if (bumpTest != null) {
+        bump = bumpTest;
+      }
     }
-    return generation + childGeneration;
+    if (isFired(viewerId)) {
+      if (bumps == null) {
+        bumps = new TreeMap<>();
+      }
+      Integer val = bumps.get(viewerId);
+      if (val == null) {
+        val = 0;
+      }
+      val += generation * 17;
+      bumps.put(viewerId, val);
+      bump = val;
+    }
+    return generation + bump;
   }
 }

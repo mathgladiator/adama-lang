@@ -22,6 +22,7 @@ import org.adamalang.runtime.contracts.RxParent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/** simple pubsub fanout for TableSubscription's under a parent  */
 public class TablePubSub implements TableSubscription {
   private final RxParent owner;
   private final ArrayList<TableSubscription> _subscriptions;

@@ -17,12 +17,9 @@
 */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.common.template.tree.T;
 import org.adamalang.runtime.reactives.tables.TableSubscription;
 
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /** this filters incoming events against was read to minimize invalidations */
 public class RxTableGuard implements TableSubscription {
@@ -31,40 +28,41 @@ public class RxTableGuard implements TableSubscription {
   private TreeSet<Integer> primaryKeys;
   private TreeMap<Integer, TreeSet<Integer>> indices;
   private boolean fired;
-  private TreeMap<Integer, ChildView> children;
-  private ChildView current;
+  private TreeMap<Integer, ChildViewGate> children;
+  private ChildViewGate current;
 
-  private class ChildView {
+  /** gate standing between invalidations and a child's view */
+  private class ChildViewGate {
     private TreeSet<Integer> primaryKeys;
     private TreeMap<Integer, TreeSet<Integer>> indices;
-    private boolean fired;
+    private boolean viewFired = false;
 
     public void index(int primaryKey, int field, int value) {
-      if (fired) {
+      if (viewFired) {
         return;
       }
-      if (primaryKeys != null) {
-        if (primaryKeys.contains(primaryKey)) {
-          fired = true;
-        }
-      }
+      primary(primaryKey);
       if (indices != null) {
         TreeSet<Integer> vals = indices.get(field);
         if (vals != null) {
           if (vals.contains(value)) {
-            fired = true;
+            viewFired = true;
+            primaryKeys = null;
+            indices = null;
           }
         }
       }
     }
 
     public void primary(int primaryKey) {
-      if (fired) {
+      if (viewFired) {
         return;
       }
       if (primaryKeys != null) {
         if (primaryKeys.contains(primaryKey)) {
-          fired = true;
+          viewFired = true;
+          primaryKeys = null;
+          indices = null;
         }
       }
     }
@@ -87,30 +85,33 @@ public class RxTableGuard implements TableSubscription {
     return true;
   }
 
+  /** there was a change in an index */
   @Override
   public void index(int primaryKey, int field, int value) {
     if (fired) {
       return;
     }
-    primary(primaryKey);
     if (all) {
       fireAndCleanup();
+      return;
     }
     if (children != null) {
-      for (Map.Entry<Integer, ChildView> cv : children.entrySet()) {
+      for (Map.Entry<Integer, ChildViewGate> cv : children.entrySet()) {
         cv.getValue().index(primaryKey, field, value);
       }
-    }
-    if (indices != null) {
-      TreeSet<Integer> vals = indices.get(field);
-      if (vals != null) {
-        if (vals.contains(value)) {
-          fireAndCleanup();
+    } else {
+      if (indices != null) {
+        TreeSet<Integer> vals = indices.get(field);
+        if (vals != null) {
+          if (vals.contains(value)) {
+            fireAndCleanup();
+          }
         }
       }
     }
   }
 
+  /** there was a change in a primary key */
   @Override
   public void primary(int primaryKey) {
     if (fired) {
@@ -121,17 +122,17 @@ public class RxTableGuard implements TableSubscription {
       return;
     }
     if (children != null) {
-      for (Map.Entry<Integer, ChildView> cv : children.entrySet()) {
+      for (Map.Entry<Integer, ChildViewGate> cv : children.entrySet()) {
         cv.getValue().primary(primaryKey);
       }
-    }
-    if (primaryKeys != null) {
+    } else if (primaryKeys != null) {
       if (primaryKeys.contains(primaryKey)) {
         fireAndCleanup();
       }
     }
   }
 
+  /** there was a change at a macro level */
   @Override
   public void all() {
     if (fired) {
@@ -142,6 +143,7 @@ public class RxTableGuard implements TableSubscription {
     }
   }
 
+  /** fire a macro change and invalidate the entire guard */
   public void fireAndCleanup() {
     if (fired) {
       return;
@@ -150,15 +152,17 @@ public class RxTableGuard implements TableSubscription {
     fired = true;
     children = null;
     owner.__raiseInvalid();
-    resetState();
+    resetInnerState();
   }
 
+  /** reset the state */
   public void reset() {
     fired = false;
-    resetState();
+    resetInnerState();
   }
 
-  public void resetState() {
+  /** clean up and reset back to an initial state */
+  private void resetInnerState() {
     all = false;
     if (primaryKeys != null) {
       primaryKeys.clear();
@@ -168,6 +172,7 @@ public class RxTableGuard implements TableSubscription {
     }
   }
 
+  /** [capture] everything was read, so optimize for just that */
   public void readAll() {
     all = true;
     primaryKeys = null;
@@ -175,29 +180,31 @@ public class RxTableGuard implements TableSubscription {
     children = null;
   }
 
+  /** [capture] a primary key was read */
   public void readPrimaryKey(int pkey) {
-    if (all) {
+    if (all) { // any change is going to fire, so don't optimize anymore
       return;
     }
-    if (current != null) {
+    if (current != null) { // route to a child view
       if (current.primaryKeys == null) {
         current.primaryKeys = new TreeSet<>();
       }
       current.primaryKeys.add(pkey);
-      return;
+    } else {
+      if (primaryKeys == null) {
+        primaryKeys = new TreeSet<>();
+      }
+      primaryKeys.add(pkey);
     }
-    if (primaryKeys == null) {
-      primaryKeys = new TreeSet<>();
-    }
-    primaryKeys.add(pkey);
   }
 
+  /** [capture] an index value was read */
   public void readIndexValue(int index, int value) {
-    if (all) {
+    if (all) { // any change is going to fire, so don't optimize anymore
       return;
     }
     TreeSet<Integer> vals;
-    if (current != null) {
+    if (current != null) { // route to a child view
       if (current.indices != null) {
         current.indices = new TreeMap<>();
       }
@@ -220,14 +227,14 @@ public class RxTableGuard implements TableSubscription {
   }
 
   public void resetView(int viewId) {
-    if (all) {
-      ChildView cv = new ChildView();
-      current = cv;
-      if (children == null) {
-        children = new TreeMap<>();
-      }
-      children.put(viewId, cv);
+    // reset the fired state
+    fired = false;
+    ChildViewGate cv = new ChildViewGate();
+    current = cv;
+    if (children == null) {
+      children = new TreeMap<>();
     }
+    children.put(viewId, cv);
   }
 
   public void finishView() {
@@ -236,11 +243,22 @@ public class RxTableGuard implements TableSubscription {
 
   public boolean isFired(int viewId) {
     if (children != null) {
-      ChildView cv = children.get(viewId);
+      ChildViewGate cv = children.get(viewId);
       if (cv != null) {
-        return cv.fired;
+        return cv.viewFired;
       }
     }
     return false;
+  }
+
+  public void cleanupChildViews(Set<Integer> views) {
+    if (children != null) {
+      Iterator<Map.Entry<Integer, ChildViewGate>> it = children.entrySet().iterator();
+      while (it.hasNext()) {
+        if (!views.contains(it.next().getKey())) {
+          it.remove();
+        }
+      }
+    }
   }
 }

@@ -40,8 +40,10 @@ public abstract class RxDependent extends RxBase implements RxChild {
     this.guards = null;
   }
 
+  /** is the thing alive */
   public abstract boolean alive();
 
+  /** [formula mode] start capturing the reads */
   public void start() {
     if (guards != null) {
       for (GuardPair gp : guards) {
@@ -51,6 +53,7 @@ public abstract class RxDependent extends RxBase implements RxChild {
     }
   }
 
+  /** [formula mode] finish up capturing reads */
   public void finish() {
     if (guards != null) {
       for (GuardPair gp : guards) {
@@ -59,6 +62,7 @@ public abstract class RxDependent extends RxBase implements RxChild {
     }
   }
 
+  /** connect a tableguard to a table */
   public void __guard(RxTable<?> table, RxTableGuard guard) {
     if (guards == null) {
       guards = new ArrayList<>();
@@ -66,6 +70,7 @@ public abstract class RxDependent extends RxBase implements RxChild {
     }
   }
 
+  /** [bubble version] start capturing reads */
   public void startView(int viewId) {
     if (guards != null) {
       for (GuardPair gp : guards) {
@@ -75,6 +80,7 @@ public abstract class RxDependent extends RxBase implements RxChild {
     }
   }
 
+  /** [bubble version] stop capturing reads */
   public void finishView() {
     if (guards != null) {
       for (GuardPair gp : guards) {
@@ -84,10 +90,13 @@ public abstract class RxDependent extends RxBase implements RxChild {
     }
   }
 
+  /** is the given view in a fired state */
   public boolean isFired(int viewId) {
     if (guards != null) {
       for (GuardPair gp : guards) {
-        gp.guard.isFired(viewId);
+        if (gp.guard.isFired(viewId)) {
+          return true;
+        }
       }
     }
     return false;
