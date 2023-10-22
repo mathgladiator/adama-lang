@@ -51,15 +51,6 @@ public class TablePubSub implements TableSubscription {
     return true;
   }
 
-  public void gc() {
-    Iterator<TableSubscription> it = _subscriptions.iterator();
-    while (it.hasNext()) {
-      if (!it.next().alive()) {
-        it.remove();
-      }
-    }
-  }
-
   @Override
   public void primary(int primaryKey) {
     for (TableSubscription ts : _subscriptions) {
@@ -71,6 +62,15 @@ public class TablePubSub implements TableSubscription {
   public void index(int primaryKey, int field, int value) {
     for (TableSubscription ts : _subscriptions) {
       ts.index(primaryKey, field, value);
+    }
+  }
+
+  public void gc() {
+    Iterator<TableSubscription> it = _subscriptions.iterator();
+    while (it.hasNext()) {
+      if (!it.next().alive()) {
+        it.remove();
+      }
     }
   }
 }
