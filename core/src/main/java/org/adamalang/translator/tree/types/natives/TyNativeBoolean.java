@@ -28,6 +28,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
+import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
@@ -41,6 +42,7 @@ public class TyNativeBoolean extends TySimpleNative implements //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //
     IsNativeValue, //
+    IsOrderable, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;

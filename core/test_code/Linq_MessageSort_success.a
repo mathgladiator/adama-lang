@@ -1,0 +1,17 @@
+message X {
+  int x;
+  datetime y;
+  long z;
+  string ss;
+  bool b;
+}
+
+@construct {
+  table<X> tbl;
+
+  var by_x = iterate tbl order x;
+  var by_y = iterate tbl order y;
+  var by_z = iterate tbl order z;
+  var by_ss = iterate tbl order ss;
+  var by_b = iterate tbl order b;
+}

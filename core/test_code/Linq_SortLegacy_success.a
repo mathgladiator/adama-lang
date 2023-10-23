@@ -6,6 +6,7 @@ record X {
   formula mi = @maybe(123);
   int i1 = 123;
   formula i2 = i1 + 42;
+  string ss;
 }
 
 table<X> tbl;
@@ -17,6 +18,7 @@ auto l4 = iterate tbl order by d;
 auto l5 = iterate tbl order by mi;
 auto l6 = iterate tbl order by i1;
 auto l7 = iterate tbl order by i2;
+auto l8 = iterate tbl order by ss;
 
 @construct {
   tbl <- {i:4};

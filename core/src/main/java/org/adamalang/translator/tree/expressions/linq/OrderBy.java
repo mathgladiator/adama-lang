@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.tree.expressions.linq;
 
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
@@ -25,8 +26,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
-import org.adamalang.translator.tree.types.natives.TyNativeRef;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -111,8 +111,22 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
 
   public static String getCompareLine(FieldDefinition fd, Environment environment, OrderPair key) {
     final var cmpLine = new StringBuilder();
-    var addLazyGet = false;
     var compareType = fd.type;
+    String nativeCompare = null;
+    if (compareType instanceof TyNativeLong) {
+      nativeCompare = "Long";
+    } else if (compareType instanceof TyNativeInteger || compareType instanceof TyNativeEnum) {
+      nativeCompare = "Integer";
+    } else if (compareType instanceof TyNativeBoolean) {
+      nativeCompare = "Boolean";
+    } else if (compareType instanceof TyNativeDouble) {
+      nativeCompare = "Double";
+    }
+    if (nativeCompare != null) {
+      cmpLine.append(key.asc ? "" : "-").append(nativeCompare).append(".compare(__a.").append(key.name).append(", __b.").append(key.name).append(")");
+      return cmpLine.toString();
+    }
+    var addLazyGet = false;
     if (compareType instanceof TyReactiveLazy || compareType instanceof TyNativeRef) {
       compareType = environment.rules.ExtractEmbeddedType(compareType, false);
       addLazyGet = true;

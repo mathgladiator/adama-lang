@@ -1903,6 +1903,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          case \"sunday\":");
     gold.append("\n            delta = __a.sunday.compareTo(__b.sunday);");
     gold.append("\n            break;");
+    gold.append("\n          case \"nice\":");
+    gold.append("\n            delta = __a.nice.get().compareTo(__b.nice.get());");
+    gold.append("\n            break;");
     gold.append("\n        }");
     gold.append("\n        if (delta != 0) {");
     gold.append("\n          return field.desc ? -delta : delta;");
