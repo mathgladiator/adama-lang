@@ -15,9 +15,29 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree.definitions;
 
-public class Platform {
-  public static final String VERSION = "20231023171332";
-  public static final String JS_VERSION = "ea022eb9e90602b5c1c65564918c3668";
+import org.adamalang.translator.parser.token.Token;
+
+import java.util.function.Consumer;
+
+public class DefineAssoc extends Definition {
+  private final Token assoc;
+  public final Token name;
+  private final Token semicolon;
+  public short id;
+
+  public DefineAssoc(Token assoc, Token name, Token semicolon) {
+    this.assoc = assoc;
+    this.name = name;
+    this.semicolon = semicolon;
+    this.id = 0;
+  }
+
+  @Override
+  public void emit(Consumer<Token> yielder) {
+    yielder.accept(assoc);
+    yielder.accept(name);
+    yielder.accept(semicolon);
+  }
 }

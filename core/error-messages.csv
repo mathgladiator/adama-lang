@@ -334,6 +334,8 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Globals_FunctionOverloadingIncorrect_failure.a,0,0,2,1,"Overloaded function has many identical calls"
 ./test_code/Globals_NotFound_failure.a,1,10,1,20,"Global 'String' lacks 'foo'"
 ./test_code/Globals_NotFound_failure.a,1,10,1,20,"Expression is not a function"
+./test_code/Graph_Dupes_failure.a,2147483647,2147483647,0,0,"Assoc 'x' was already defined."
+./test_code/Graph_Dupes_failure.a,2147483647,2147483647,0,0,"Graph 'g' was already defined."
 ./test_code/Include_Bad_failure.a,0,0,0,13,"Failed to include 'bad' as it was not bound to the deployment"
 ./test_code/Include_MainNotAllowed_failure.a,0,0,0,13,"main is a reserved word for importing"
 ./test_code/Include_MainNotAllowed_failure.a,0,0,0,13,"Failed to include 'main' as it was not bound to the deployment"

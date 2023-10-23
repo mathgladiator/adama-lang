@@ -15,9 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives;
 
-public class Platform {
-  public static final String VERSION = "20231023171332";
-  public static final String JS_VERSION = "ea022eb9e90602b5c1c65564918c3668";
+import org.adamalang.translator.tree.expressions.Expression;
+
+import java.util.function.Supplier;
+
+public class RxAssoc {
+  private final RxInt32 id;
+  private final short assoc;
+
+  public RxAssoc(RxInt32 id, short assoc) {
+    this.id = id;
+    this.assoc = assoc;
+  }
 }

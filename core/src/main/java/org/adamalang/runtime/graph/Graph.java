@@ -15,9 +15,23 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.graph;
 
-public class Platform {
-  public static final String VERSION = "20231023171332";
-  public static final String JS_VERSION = "ea022eb9e90602b5c1c65564918c3668";
+import org.adamalang.runtime.reactives.RxRecordBase;
+
+import java.util.function.Supplier;
+
+public class Graph {
+
+  public void watch(short under, RxRecordBase<?> record, short assoc, Supplier<int[]> supplier) {
+
+  }
+
+  public class Query {
+    // expess a way to build an a query that collects a bunch of ids
+  }
+
+  public Query start() {
+    return new Query();
+  }
 }

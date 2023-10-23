@@ -686,7 +686,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "graph"));
     }
     if (op != null) {
       switch (op.text) {
@@ -753,6 +753,12 @@ public class Parser {
         case "replication":
           final var replicate = define_replication(rootScope.makeReplication(), op);
           return doc -> doc.add(replicate);
+        case "graph":
+          final var graph = define_graph(op);
+          return doc -> doc.add(graph);
+        case "assoc":
+          final var assoc = define_assoc(op);
+          return doc -> doc.add(assoc);
         case "metric":
           final var metric = define_metric(rootScope, op);
           return doc -> doc.add(metric);
@@ -761,6 +767,19 @@ public class Parser {
     final var newField = define_field_record(rootScope);
     return doc -> doc.add(newField);
   }
+
+  public DefineGraph define_graph(Token op) throws AdamaLangException {
+    Token name = id();
+    Token semicolon = consumeExpectedSymbol(";");
+    return new DefineGraph(op, name, semicolon);
+  }
+
+  public DefineAssoc define_assoc(Token op) throws AdamaLangException {
+    Token name = id();
+    Token semicolon = consumeExpectedSymbol(";");
+    return new DefineAssoc(op, name, semicolon);
+  }
+
 
   public DefineMetric define_metric(Scope scope, Token op) throws AdamaLangException {
     Token name = id();
@@ -1770,7 +1789,10 @@ public class Parser {
         return new TyReactiveText(token);
       case "table": {
         final var typeParameter = type_parameter();
-        return new TyReactiveTable(token, typeParameter);
+        Token under = tokens.popIf((t) -> t.isIdentifier("within"));
+        TyReactiveTable table =  new TyReactiveTable(token, typeParameter);
+        // TODO: detect graph associations
+        return table;
       }
       case "map":
         return reactive_map(token);

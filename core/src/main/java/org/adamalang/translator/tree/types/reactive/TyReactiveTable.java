@@ -46,6 +46,7 @@ public class TyReactiveTable extends TyType implements //
   public final TokenizedItem<Token> recordNameToken;
   public final Token tableToken;
 
+
   public TyReactiveTable(final Token tableToken, final TokenizedItem<Token> recordNameToken) {
     super(TypeBehavior.ReadWriteWithSetGet);
     this.tableToken = tableToken;

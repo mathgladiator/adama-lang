@@ -83,4 +83,8 @@ public interface TopLevelDocumentHandler {
   void add(ReplicationDefinition rd);
 
   void add(DefineMetric dm);
+
+  void add(DefineAssoc da);
+
+  void add(DefineGraph dg);
 }

@@ -91,6 +91,9 @@ public class Document implements TopLevelDocumentHandler {
   private final HashSet<String> defined;
   private final HashSet<String> viewDefined;
   public final LinkedHashMap<String, DefineMetric> metrics;
+  public final LinkedHashMap<String, DefineAssoc> assocs;
+  public final LinkedHashMap<String, DefineGraph> graphs;
+  private short assocIdGen;
 
   public Document() {
     autoClassId = 0;
@@ -126,6 +129,9 @@ public class Document implements TopLevelDocumentHandler {
     auths = new ArrayList<>();
     passwords = new ArrayList<>();
     metrics = new LinkedHashMap<>();
+    assocs = new LinkedHashMap<>();
+    graphs = new LinkedHashMap<>();
+    assocIdGen = 0;
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -476,6 +482,26 @@ public class Document implements TopLevelDocumentHandler {
       metrics.put(dm.nameToken.text, dm);
     }
     dm.typing(typeChecker);
+  }
+
+  @Override
+  public void add(DefineAssoc da) {
+    if (assocs.containsKey(da.name.text)) {
+      typeChecker.issueError(da, String.format("Assoc '%s' was already defined.", da.name.text));
+      return;
+    }
+    assocs.put(da.name.text, da);
+    da.id = assocIdGen;
+    assocIdGen++;
+  }
+
+  @Override
+  public void add(DefineGraph dg) {
+    if (graphs.containsKey(dg.name.text)) {
+      typeChecker.issueError(dg, String.format("Graph '%s' was already defined.", dg.name.text));
+      return;
+    }
+    graphs.put(dg.name.text, dg);
   }
 
   /**

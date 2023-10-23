@@ -182,4 +182,12 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineMetric dm) {}
+
+  @Override
+  public void add(DefineAssoc da) {
+  }
+
+  @Override
+  public void add(DefineGraph dg) {
+  }
 }

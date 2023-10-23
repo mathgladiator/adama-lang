@@ -181,4 +181,14 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   public void add(DefineMetric dm) {
     dm.emit(this);
   }
+
+  @Override
+  public void add(DefineAssoc da) {
+    da.emit(this);
+  }
+
+  @Override
+  public void add(DefineGraph dg) {
+    dg.emit(this);
+  }
 }
