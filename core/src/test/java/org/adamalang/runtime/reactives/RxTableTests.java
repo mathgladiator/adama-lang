@@ -317,6 +317,7 @@ public class RxTableTests {
               @Override
               public void scopeByIndicies(final IndexQuerySet __set) {
                 __set.intersect(0, 10000, IndexQuerySet.LookupMode.Equals);
+                __set.finish();
               }
 
               @Override
@@ -348,6 +349,7 @@ public class RxTableTests {
               public void scopeByIndicies(final IndexQuerySet __set) {
                 __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
                 __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
+                __set.finish();
               }
 
               @Override
@@ -379,6 +381,7 @@ public class RxTableTests {
               public void scopeByIndicies(final IndexQuerySet __set) {
                 __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
                 __set.intersect(0, 12, IndexQuerySet.LookupMode.Equals);
+                __set.finish();
               }
 
               @Override
@@ -422,6 +425,7 @@ public class RxTableTests {
               @Override
               public void scopeByIndicies(final IndexQuerySet __set) {
                 __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
+                __set.finish();
               }
 
               @Override

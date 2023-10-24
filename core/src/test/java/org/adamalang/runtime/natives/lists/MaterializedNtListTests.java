@@ -129,6 +129,7 @@ public class MaterializedNtListTests {
 
       @Override
       public void scopeByIndicies(IndexQuerySet __set) {
+        __set.finish();
       }
 
       @Override
@@ -153,6 +154,7 @@ public class MaterializedNtListTests {
         @Override
         public void scopeByIndicies(IndexQuerySet __set) {
           __set.intersect(0, scopeToUse, IndexQuerySet.LookupMode.Equals);
+          __set.finish();
         }
 
         @Override
@@ -181,6 +183,7 @@ public class MaterializedNtListTests {
           public void scopeByIndicies(IndexQuerySet __set) {
             __set.intersect(0, scopeXToUse, IndexQuerySet.LookupMode.Equals);
             __set.intersect(1, scopeYToUse, IndexQuerySet.LookupMode.Equals);
+            __set.finish();
           }
 
           @Override
@@ -212,6 +215,7 @@ public class MaterializedNtListTests {
           public void scopeByIndicies(IndexQuerySet __set) {
             __set.intersect(1, scopeYToUse, IndexQuerySet.LookupMode.Equals);
             __set.intersect(0, scopeXToUse, IndexQuerySet.LookupMode.Equals);
+            __set.finish();
           }
 
           @Override

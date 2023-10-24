@@ -131,7 +131,7 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
   public NtList<Ty> where(boolean done, WhereClause<Ty> filter) {
     MaterializedIndexQuerySet miqs = new MaterializedIndexQuerySet();
     filter.scopeByIndicies(miqs);
-    if (miqs.resultAll) {
+    if (miqs.resultAll || miqs.resultComplete == null) {
       return list.where(done, filter);
     } else {
       ArrayList<Ty> results = new ArrayList<>();
