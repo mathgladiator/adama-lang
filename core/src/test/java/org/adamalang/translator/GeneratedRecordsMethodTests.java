@@ -3452,10 +3452,6 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxThing> {");
     gold.append("\n    private RTx__ViewerType __viewer;");
     gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");
     gold.append("\n    }");
@@ -5254,10 +5250,6 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxThing> {");
     gold.append("\n    private RTx__ViewerType __viewer;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");

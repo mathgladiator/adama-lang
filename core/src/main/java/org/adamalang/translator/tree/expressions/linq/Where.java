@@ -57,7 +57,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   private final TreeMap<String, TyType> closureTyTypes;
   private final Token colonToken;
   private final StringBuilder exprCode;
-  private final StringBuilder indexKeysExpr;
   private final StringBuilder primaryKeyExpr;
   private final ArrayList<String> trapBuilder;
   private int generatedClassId;
@@ -80,7 +79,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     iterType = "?";
     exprCode = new StringBuilder();
     primaryKeyExpr = new StringBuilder();
-    indexKeysExpr = new StringBuilder();
     applyQuerySetStatements = new ArrayList<>();
     closureTyTypes = new TreeMap<>();
     writtenDependentExpressionsForClosure = false;
@@ -124,12 +122,9 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     return false;
   }
 
-  private void buildIndex(final Environment environment) {
+  private void buildSoloIndex(final Environment environment, Expression expr) {
     final var intersectCodeByName = new TreeMap<String, String>();
     final var intersectModeByName = new TreeMap<String, String>();
-    indexKeysExpr.append("new int[] {");
-    var first = true;
-    var index = 0;
     for (final Map.Entry<String, FieldDefinition> entry : structureStorage.fields.entrySet()) {
       if (!structureStorage.indexSet.contains(entry.getKey())) {
         continue;
@@ -139,12 +134,12 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       if (classification.good) {
         // Here is where we wrap this to search for <, <=, ==, >=, >
         // This will let us complete #20 for integers and enums
-        var indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey(), BinaryOp.Equal);
+        var indexValue = findIndex(expr, aliasToken != null ? aliasToken.text : null, entry.getKey(), BinaryOp.Equal);
         String indexLookupMode = "IndexQuerySet.LookupMode.Equals";
 
         if (indexValue == null && classification.isIntegral) {
           for (BinaryOp mode : new BinaryOp[] {BinaryOp.LessThan, BinaryOp.LessThanOrEqual, BinaryOp.GreaterThan, BinaryOp.GreaterThanOrEqual}) {
-            indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey(), mode);
+            indexValue = findIndex(expr, aliasToken != null ? aliasToken.text : null, entry.getKey(), mode);
             if (indexValue != null) {
               indexLookupMode = "IndexQuerySet.LookupMode." + mode;
               break;
@@ -166,18 +161,10 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
               indexValueString = "((" + indexValueString + ") ? 1 : 0)";
             }
             intersectCodeByName.put(entry.getKey(), indexValueString);
-            if (first) {
-              first = false;
-            } else {
-              indexKeysExpr.append(", ");
-            }
-            indexKeysExpr.append(index).append(", ").append(indexValueString);
           }
         }
-        index++;
       }
     }
-    indexKeysExpr.append("}");
     for (var k = 0; k < structureStorage.indices.size(); k++) {
       String nameToUse = structureStorage.indices.get(k).nameToken.text;
       final var code = intersectCodeByName.get(nameToUse);
@@ -276,6 +263,22 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     return null;
   }
 
+  public void branches(Expression expression, ArrayList<Expression> results) {
+    if (expression instanceof Parentheses) {
+      branches(((Parentheses) expression).expression, results);
+    } else if (expression instanceof BinaryExpression) {
+      // if it is an &&, then search both branches
+      if (((BinaryExpression) expression).op == BinaryOp.LogicalOr) {
+        branches(((BinaryExpression) expression).left, results);
+        branches(((BinaryExpression) expression).right, results);
+      } else {
+        results.add(expression);
+      }
+    } else {
+      results.add(expression);
+    }
+  }
+
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
     if (passedTypeChecking() && structureStorage != null) {
@@ -317,7 +320,19 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         } else {
           primaryKeyExpr.append("null");
         }
-        buildIndex(environment.scopeWithComputeContext(ComputeContext.Computation));
+        buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), expression);
+        /*
+        ArrayList<Expression> foundBranches = new ArrayList<>();
+        branches(expression, foundBranches);
+        if (foundBranches.size() <= 1) {
+          buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), expression);
+        } else {
+          for(Expression branch : foundBranches) {
+            buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), branch);
+            applyQuerySetStatements.add("__set.push();");
+          }
+        }
+        */
         writtenDependentExpressionsForClosure = true;
       }
     }
@@ -329,10 +344,6 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     for (final Map.Entry<String, String> entry : closureTypes.entrySet()) {
       sb.append("private ").append(entry.getValue()).append(" ").append(entry.getKey()).append(";").writeNewline();
     }
-    sb.append("@Override").writeNewline();
-    sb.append("public int[] getIndices() {").tabUp().writeNewline();
-    sb.append("return ").append(indexKeysExpr.toString()).append(";");
-    sb.tabDown().writeNewline().append("}").writeNewline();
     sb.append("@Override").writeNewline();
     if (applyQuerySetStatements.size() == 0) {
       sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();

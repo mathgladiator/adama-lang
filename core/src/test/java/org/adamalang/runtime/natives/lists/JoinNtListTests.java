@@ -207,11 +207,6 @@ public class JoinNtListTests {
   public void where() {
     NtList<String> X = LibLists.join(make("a", "b", "c"), make("d", "e", "f")).where(true, new WhereClause<String>() {
       @Override
-      public int[] getIndices() {
-        return new int[0];
-      }
-
-      @Override
       public Integer getPrimaryKey() {
         return null;
       }

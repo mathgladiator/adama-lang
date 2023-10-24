@@ -221,11 +221,6 @@ public class SelectorRxObjectListTests {
     final WhereClause<MockRecord> where =
         new WhereClause<>() {
           @Override
-          public int[] getIndices() {
-            throw new UnsupportedOperationException();
-          }
-
-          @Override
           public Integer getPrimaryKey() {
             return null;
           }
@@ -249,11 +244,6 @@ public class SelectorRxObjectListTests {
         new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
     final WhereClause<MockRecord> where =
         new WhereClause<>() {
-          @Override
-          public int[] getIndices() {
-            throw new UnsupportedOperationException();
-          }
-
           @Override
           public Integer getPrimaryKey() {
             return 5;
@@ -282,10 +272,6 @@ public class SelectorRxObjectListTests {
     table.getById(5).__delete();
     final WhereClause<MockRecord> where =
         new WhereClause<>() {
-          @Override
-          public int[] getIndices() {
-            throw new UnsupportedOperationException();
-          }
 
           @Override
           public Integer getPrimaryKey() {
@@ -325,11 +311,6 @@ public class SelectorRxObjectListTests {
             .where(
                 false,
                 new WhereClause<MockRecord>() {
-                  @Override
-                  public int[] getIndices() {
-                    return new int[] {0, 13};
-                  }
-
                   @Override
                   public Integer getPrimaryKey() {
                     return null;

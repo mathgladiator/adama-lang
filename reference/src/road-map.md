@@ -22,7 +22,6 @@ The current story for developers is "meh", so these items help improve and moder
 
 | project              | IP | description                                                                                                   |
 |----------------------|----|---------------------------------------------------------------------------------------------------------------|
-| devbox               |    | Improve the local developer experience                                                                        |
 | kickoff demos        | X  | See [https://asciinema.org/](https://asciinema.org/) for more information                                     |
 | client-walk          |    | A detailed walkthough about how to use the client library, the expectations, and core APIs                    |
 | improve overview     |    | Make the overview easier to understand, more details, etc                                                     |

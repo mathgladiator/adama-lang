@@ -280,11 +280,6 @@ public class RxTableTests {
         table.scan(
             new WhereClause<MockRecord>() {
               @Override
-              public int[] getIndices() {
-                throw new UnsupportedOperationException();
-              }
-
-              @Override
               public Integer getPrimaryKey() {
                 throw new UnsupportedOperationException();
               }
@@ -314,11 +309,6 @@ public class RxTableTests {
     for (final MockRecord mr :
         table.scan(
             new WhereClause<MockRecord>() {
-              @Override
-              public int[] getIndices() {
-                throw new UnsupportedOperationException();
-              }
-
               @Override
               public Integer getPrimaryKey() {
                 throw new UnsupportedOperationException();
@@ -350,11 +340,6 @@ public class RxTableTests {
         table.scan(
             new WhereClause<MockRecord>() {
               @Override
-              public int[] getIndices() {
-                throw new UnsupportedOperationException();
-              }
-
-              @Override
               public Integer getPrimaryKey() {
                 throw new UnsupportedOperationException();
               }
@@ -385,11 +370,6 @@ public class RxTableTests {
     for (final MockRecord mr :
         table.scan(
             new WhereClause<MockRecord>() {
-              @Override
-              public int[] getIndices() {
-                throw new UnsupportedOperationException();
-              }
-
               @Override
               public Integer getPrimaryKey() {
                 throw new UnsupportedOperationException();
@@ -434,11 +414,6 @@ public class RxTableTests {
     for (final MockRecord mr :
         table.scan(
             new WhereClause<MockRecord>() {
-              @Override
-              public int[] getIndices() {
-                throw new UnsupportedOperationException();
-              }
-
               @Override
               public Integer getPrimaryKey() {
                 throw new UnsupportedOperationException();

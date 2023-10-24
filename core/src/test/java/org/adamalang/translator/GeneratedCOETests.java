@@ -1347,10 +1347,6 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxPerson> {");
     gold.append("\n    private NtPrincipal w;");
     gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");
     gold.append("\n    }");
@@ -1371,10 +1367,6 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxFamily> {");
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    private RxTable<RTxPerson> _people;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");
@@ -1398,10 +1390,6 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    private NtPrincipal __who;");
     gold.append("\n    private RxTable<RTxPerson> _people;");
     gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");
     gold.append("\n    }");
@@ -1422,10 +1410,6 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxPerson> {");
     gold.append("\n    private NtPrincipal __who;");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");

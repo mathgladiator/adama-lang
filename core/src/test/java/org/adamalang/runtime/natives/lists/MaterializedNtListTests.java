@@ -99,10 +99,6 @@ public class MaterializedNtListTests {
   public void noscoping_x_eq_15() {
     MaterializedNtList<SortableMessage> list = new MaterializedNtList<>(demo(), 2);
     NtList<SortableMessage> noScoping = list.where(true, new WhereClause<SortableMessage>() {
-      @Override
-      public int[] getIndices() {
-        throw new IllegalStateException();
-      }
 
       @Override
       public Integer getPrimaryKey() {
@@ -125,10 +121,6 @@ public class MaterializedNtListTests {
   public void noscoping_x_eq_15_and_y_eq_3() {
     MaterializedNtList<SortableMessage> list = new MaterializedNtList<>(demo(), 2);
     NtList<SortableMessage> noScoping = list.where(true, new WhereClause<SortableMessage>() {
-      @Override
-      public int[] getIndices() {
-        throw new IllegalStateException();
-      }
 
       @Override
       public Integer getPrimaryKey() {
@@ -153,11 +145,6 @@ public class MaterializedNtListTests {
     for (int scope = 0; scope < 17; scope++) {
       int scopeToUse = scope;
       NtList<SortableMessage> result = list.where(true, new WhereClause<SortableMessage>() {
-        @Override
-        public int[] getIndices() {
-          throw new IllegalStateException();
-        }
-
         @Override
         public Integer getPrimaryKey() {
           throw new IllegalStateException();
@@ -185,11 +172,6 @@ public class MaterializedNtListTests {
         int scopeXToUse = scopeX;
         int scopeYToUse = scopeY;
         NtList<SortableMessage> result = list.where(true, new WhereClause<SortableMessage>() {
-          @Override
-          public int[] getIndices() {
-            throw new IllegalStateException();
-          }
-
           @Override
           public Integer getPrimaryKey() {
             throw new IllegalStateException();
@@ -221,11 +203,6 @@ public class MaterializedNtListTests {
         int scopeXToUse = scopeX;
         int scopeYToUse = scopeY;
         NtList<SortableMessage> result = list.where(true, new WhereClause<SortableMessage>() {
-          @Override
-          public int[] getIndices() {
-            throw new IllegalStateException();
-          }
-
           @Override
           public Integer getPrimaryKey() {
             throw new IllegalStateException();

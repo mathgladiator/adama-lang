@@ -2898,10 +2898,6 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxOther> {");
     gold.append("\n    private RTxR __this;");
     gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");
     gold.append("\n    }");

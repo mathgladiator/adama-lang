@@ -1007,10 +1007,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxM> {");
     gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {};");
-    gold.append("\n    }");
-    gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.finish();");
     gold.append("\n    }");
@@ -2595,10 +2591,6 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    __construct_0(__context, __context.who, __object);");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxM> {");
-    gold.append("\n    @Override");
-    gold.append("\n    public int[] getIndices() {");
-    gold.append("\n      return new int[] {0, 4};");
-    gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
     gold.append("\n      __set.intersect(0, 4, IndexQuerySet.LookupMode.Equals);");

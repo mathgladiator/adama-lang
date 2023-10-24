@@ -20,12 +20,6 @@ package org.adamalang.runtime.contracts;
 /** iterate where CLAUSE; this is the interface which defines how to select items from a list */
 public interface WhereClause<T> {
   /**
-   * compute the indices of the where clauses. This array is a linear associative map of the form
-   * [col0, val0, col1, val1, ... colN, valN]
-   */
-  int[] getIndices();
-
-  /**
    * does the where clause leverage the primary key (i.e. ID == VALUE). If not null, then return
    * VALUE
    */

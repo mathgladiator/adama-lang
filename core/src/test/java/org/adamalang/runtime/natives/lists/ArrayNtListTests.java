@@ -78,11 +78,6 @@ public class ArrayNtListTests {
             true,
             new WhereClause<String>() {
               @Override
-              public int[] getIndices() {
-                return new int[0];
-              }
-
-              @Override
               public Integer getPrimaryKey() {
                 return null;
               }
