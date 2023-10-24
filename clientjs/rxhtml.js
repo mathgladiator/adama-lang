@@ -2579,6 +2579,41 @@ var RxHTML = (function () {
       return dt;
     }
   };
+  
+  transforms['time'] = function(dt) {
+        // only transform strings
+    if (typeof (dt) == "string") {
+      // let's strip out everything after the brackets
+      var s = dt;
+      var k = s.indexOf('[');
+      if (k >= 0) {
+        s = s.substring(0, k);
+      }
+
+      // Convert string to time format
+      var t = dt.indexOf(":");
+      if (t < 0) {
+        return dt;
+      }
+      var h = dt.split(":")[0];
+      var hours = h;
+      if (h.length > 2) {
+        hours = h.substring(h.length - 2, h.length); // trim left in case of datetime
+      }
+      var AmOrPm = hours >= 12 ? 'pm' : 'am';
+      hours = (hours % 12) || 12;
+      var m = dt.split(":")[1]
+      var minutes = m;
+      if (m.length > 2) {
+        minutes = m.substring(0,2); // trim right in case of datetime
+      }
+
+      return hours + ":" + minutes + " " + AmOrPm; 
+    } else {
+      // do nothing
+      return dt;
+    }
+  };
 
   self.RTR = function(name, transform) {
     transforms[name] = transform;
