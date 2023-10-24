@@ -1851,6 +1851,9 @@ var RxHTML = (function () {
 
   self.SIGNOUT = function () {
     identities = {};
+    for (var identityName in identities) {
+      localStorage.removeItem("identity_" + identityName);
+    }
     localStorage.removeItem("identity_default");
     var axe = [];
     for (var cid in connections) {
@@ -1863,8 +1866,6 @@ var RxHTML = (function () {
     for (var k = 0; k < axe.length; k++) {
       delete connections[axe[k]];
     }
-
-    self.goto("/", false);
   };
 
   self.GOOGLE_SIGN_ON = function (accessToken) {

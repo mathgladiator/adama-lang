@@ -290,6 +290,10 @@ public class Elements {
     return 100;
   }
 
+  public static void signout(Environment env) {
+    env.writer.tab().append("$.SIGNOUT();").newline();
+  }
+
   public static void select(Environment env) {
     input(env);
   }
