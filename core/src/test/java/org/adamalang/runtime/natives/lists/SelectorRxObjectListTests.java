@@ -326,4 +326,43 @@ public class SelectorRxObjectListTests {
                 });
     Assert.assertEquals(1, list.size());
   }
+
+  @Test
+  public void table_where_branches() {
+    final var document =
+        new MockLivingDocument(
+            new SilentDocumentMonitor() {
+            });
+    while (document.__genNextAutoKey() < 7) {}
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__insert(
+        new JsonStreamReader(
+            "{\"4\":{\"index\":13},\"5\":{\"index\":2},\"6\":{\"index\":5},\"7\":{\"index\":5}}}"));
+    final var list =
+        table
+            .iterate(false)
+            .where(
+                false,
+                new WhereClause<MockRecord>() {
+                  @Override
+                  public Integer getPrimaryKey() {
+                    return null;
+                  }
+
+                  @Override
+                  public void scopeByIndicies(final IndexQuerySet __set) {
+                    __set.intersect(0, 5, IndexQuerySet.LookupMode.Equals);
+                    __set.push();
+                    __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
+                    __set.finish();
+                  }
+
+                  @Override
+                  public boolean test(final MockRecord item) {
+                    return true;
+                  }
+                });
+
+    Assert.assertEquals(3, list.size());
+  }
 }

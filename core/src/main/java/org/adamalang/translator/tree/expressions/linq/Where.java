@@ -337,9 +337,13 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         if (foundBranches.size() <= 1) {
           buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), expression, false);
         } else {
+          int pushesRemain = foundBranches.size() - 1;
           for(Expression branch : foundBranches) {
             buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), branch, true);
-            applyQuerySetStatements.add("__set.push();");
+            if (pushesRemain > 0) {
+              applyQuerySetStatements.add("__set.push();");
+            }
+            pushesRemain--;
           }
         }
         writtenDependentExpressionsForClosure = true;
@@ -355,6 +359,9 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     }
     sb.append("@Override").writeNewline();
     sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();
+    if ((applyQuerySetStatements.size() > 0)) {
+      sb.append("__code_cost += ").append("" + (applyQuerySetStatements.size() * 10)).append(";").writeNewline(); // a bad estimate, but indexing isn't free
+    }
     for (var k = 0; k < applyQuerySetStatements.size(); k++) {
       sb.append(applyQuerySetStatements.get(k)).writeNewline();
     }

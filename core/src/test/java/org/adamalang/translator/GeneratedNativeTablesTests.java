@@ -2593,6 +2593,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  private class __CLOSURE_WhereClause0 implements WhereClause<RTxM> {");
     gold.append("\n    @Override");
     gold.append("\n    public void scopeByIndicies(IndexQuerySet __set) {");
+    gold.append("\n      __code_cost += 10;");
     gold.append("\n      __set.intersect(0, 4, IndexQuerySet.LookupMode.Equals);");
     gold.append("\n      __set.finish();");
     gold.append("\n    }");

@@ -21,6 +21,18 @@ public formula i0b2 = iterate t where id == 1 || x == 3;
 public formula i1b2 = iterate t where x == 1 || y == 3;
 public formula i2b2 = iterate t where y == 1 || id == 3;
 
+public formula i0as = iterate t where_as w: w.id == 1;
+public formula i1as = iterate t where_as w: w.x == 1;
+public formula i2as = iterate t where_as w: w.y == 1;
+
+public formula i0b1as = iterate t where_as w: w.id == 1 || w.id == 2;
+public formula i1b1as = iterate t where_as w: w.x == 1 || w.x == 2;
+public formula i2b1as = iterate t where_as w: w.y == 1 || w.y == 2;
+
+public formula i0b2as = iterate t where_as w: w.id == 1 || w.x == 3;
+public formula i1b2as = iterate t where_as w: w.x == 1 || w.y == 3;
+public formula i2b2as = iterate t where_as w: w.y == 1 || w.id == 3;
+
 @construct {
   t <- {x:1, y:1};
   t <- {x:2, y:2};
