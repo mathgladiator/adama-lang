@@ -145,12 +145,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
-  private AssetStream streamOf(FullHttpRequest req, final ChannelHandlerContext ctx, boolean cors) {
+  private AssetStream streamOf(FullHttpRequest req, final ChannelHandlerContext ctx, boolean cors, Integer cacheTimeSec) {
     final boolean keepalive = HttpUtil.isKeepAlive(req);
 
     return new AssetStream() {
       private boolean started = false;
       private String contentType = null;
+      private Integer cacheTimeSeconds = cacheTimeSec;
       private String contentMd5;
       private long contentLength;
 
@@ -158,7 +159,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       public void headers(long contentLength, String contentType, String md5) {
         this.contentLength = contentLength;
         this.contentType = contentType;
-        this.contentMd5 = contentMd5;
+        this.contentMd5 = md5;
       }
 
       @Override
@@ -205,6 +206,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         if (contentType != null) {
           response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
         }
+        if (cacheTimeSeconds != null && cacheTimeSeconds > 0) {
+          response.headers().set(HttpHeaderNames.CACHE_CONTROL, "max-age=" + cacheTimeSeconds);
+        }
+
         response.headers().set(HttpHeaderNames.ACCEPT_RANGES, "none");
         transferCors(response, req, cors);
       }
@@ -221,8 +226,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   }
 
   /** handle a native asset */
-  private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, boolean cors) {
-    AssetStream response = streamOf(req, ctx, cors);
+  private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, boolean cors, Integer cacheTimeSeconds) {
+    AssetStream response = streamOf(req, ctx, cors, cacheTimeSeconds);
 
     if (!WebHandlerAssetCache.canCache(asset)) {
       // we can't cache? sad face -> stream direct
@@ -271,7 +276,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   /** handle an asset request */
   @Deprecated
   private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
-    assets.request(assetRequest, streamOf(req, ctx, cors));
+    assets.request(assetRequest, streamOf(req, ctx, cors, null));
   }
 
   /** handle secret and encrypted assets */
@@ -623,7 +628,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
 
     if (httpResult.asset != null && httpResult.space != null && httpResult.key != null) {
-      handleNtAsset(req, ctx, new Key(httpResult.space, httpResult.key), httpResult.asset, httpResult.cors);
+      handleNtAsset(req, ctx, new Key(httpResult.space, httpResult.key), httpResult.asset, httpResult.cors, httpResult.cacheTimeSeconds);
       return;
     }
 

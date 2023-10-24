@@ -197,7 +197,7 @@ public class FrontendHttpHandler implements HttpHandler {
             result = new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
           } else {
             if (response.asset != null) {
-              result = new HttpResult(skr.space, skr.key, response.asset, response.cors);
+              result = new HttpResult(skr.space, skr.key, response.asset, response.cors, response.cache_ttl_seconds);
             } else {
               result = new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors);
             }

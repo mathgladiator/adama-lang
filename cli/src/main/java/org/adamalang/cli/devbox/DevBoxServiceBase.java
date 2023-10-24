@@ -233,7 +233,7 @@ public class DevBoxServiceBase implements ServiceBase {
                 callback.success(new HttpResult(response.body, 302));
               } else {
                 if (response.asset != null) {
-                  callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors));
+                  callback.success(new HttpResult(skr.space, skr.key, response.asset, response.cors, 0));
                 } else {
                   callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
                 }

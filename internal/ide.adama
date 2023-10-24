@@ -170,16 +170,16 @@ channel delete_resource(JustId jid) {
 @web get /$p* {
   var path = p == "" ? "index.html" : p;
   if ( (iterate _resources where name == path)[0] as found) {
-    return {asset:found.resource, cache_ttl_ms: 10000};
+    return {asset:found.resource, cache_ttl_seconds: 60};
   }
   if (path.right(1) == "/") {
     var new_path = path + "index.html";
     if ( (iterate _resources where name == new_path)[0] as found) {
-      return {asset:found.resource, cache_ttl_ms: 10000};
+      return {asset:found.resource, cache_ttl_seconds: 60};
     }
   }
   if ( (iterate _resources where name == path + "/index.html")[0] as found) {
-    return {asset:found.resource, cache_ttl_ms: 10000};
+    return {asset:found.resource, cache_ttl_seconds: 60};
   }
   return {html:"Not Found"};
 }
