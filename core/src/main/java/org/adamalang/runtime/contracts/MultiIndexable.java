@@ -17,7 +17,7 @@
 */
 package org.adamalang.runtime.contracts;
 
-/** allow both messages and records to be indexable */
+/** allow both messages and records to be indexable dynamically */
 public interface MultiIndexable {
 
   public String[] __getIndexColumns();

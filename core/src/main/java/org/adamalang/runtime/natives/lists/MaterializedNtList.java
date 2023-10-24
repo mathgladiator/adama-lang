@@ -131,11 +131,11 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
   public NtList<Ty> where(boolean done, WhereClause<Ty> filter) {
     MaterializedIndexQuerySet miqs = new MaterializedIndexQuerySet();
     filter.scopeByIndicies(miqs);
-    if (miqs.all) {
+    if (miqs.resultAll) {
       return list.where(done, filter);
     } else {
       ArrayList<Ty> results = new ArrayList<>();
-      for (int id : miqs.ids) {
+      for (int id : miqs.resultComplete) {
         Ty item = byIndex.get(id);
         if (filter.test(item)) {
           results.add(item);
@@ -155,41 +155,75 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
   }
 
   public class MaterializedIndexQuerySet implements IndexQuerySet {
-    private boolean all;
-    private TreeSet<Integer> ids;
+    private boolean resultAll;
+    private TreeSet<Integer> resultComplete;
+    private boolean currentAll;
+    private TreeSet<Integer> currentSet;
 
     public MaterializedIndexQuerySet() {
-      this.all = true;
-      this.ids = null;
+      this.resultAll = false;
+      this.resultComplete = null;
+      this.currentAll = true;
+      this.currentSet = null;
     }
 
     @Override
     public void intersect(int column, int value, LookupMode mode) {
-      if (all) {
-        all = false;
-        ids = of(column, value, mode);
+      if (currentAll) {
+        currentAll = false;
+        currentSet = of(column, value, mode);
       } else {
         TreeSet<Integer> result = new TreeSet<>();
-        TreeSet<Integer> a = ids;
+        TreeSet<Integer> a = currentSet;
         TreeSet<Integer> b = of(column, value, mode);
         if (b.size() < a.size()) {
           a = b;
-          b = ids;
+          b = currentSet;
         }
         for (Integer x : a) {
           if (b.contains(x)) {
             result.add(x);
           }
         }
-        ids = result;
+        currentSet = result;
+      }
+    }
+
+    @Override
+    public void primary(int value) {
+      if (currentAll) {
+        currentAll = false;
+        currentSet = new TreeSet<>();
+        currentSet.add(value);
+      } else {
+        boolean keep = currentSet.contains(value);
+        currentSet.clear();
+        if (keep) {
+          currentSet.add(value);
+        }
       }
     }
 
     public void push() {
+      if (currentAll) { // this branch has everything enabled, so the final result is turned fully on as well
+        resultAll = true;
+        resultComplete = null;
+      } else {
+        if (!resultAll) { // we haven't yet fully switched over to doing everything
+          if (resultComplete == null) { // so union the complete branch with the current branch results
+            resultComplete = currentSet;
+          } else {
+            resultComplete.addAll(currentSet);
+          }
+        }
+      }
+      this.currentAll = true;
+      this.currentSet = null;
     }
 
     @Override
     public void finish() {
+      push();
     }
   }
 }

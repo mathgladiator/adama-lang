@@ -1,0 +1,32 @@
+record R {
+  public int id;
+  public int x;
+  public int y;
+
+  index x;
+  index y;
+}
+
+table<R> t;
+
+public formula i0 = iterate t where id == 1;
+public formula i1 = iterate t where x == 1;
+public formula i2 = iterate t where y == 1;
+
+public formula i0b1 = iterate t where id == 1 || id == 2;
+public formula i1b1 = iterate t where x == 1 || x == 2;
+public formula i2b1 = iterate t where y == 1 || y == 2;
+
+public formula i0b2 = iterate t where id == 1 || x == 3;
+public formula i1b2 = iterate t where x == 1 || y == 3;
+public formula i2b2 = iterate t where y == 1 || id == 3;
+
+@construct {
+  t <- {x:1, y:1};
+  t <- {x:2, y:2};
+  t <- {x:3, y:3};
+}
+
+@connected {
+  return true;
+}

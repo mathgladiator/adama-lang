@@ -27,6 +27,7 @@ import org.adamalang.runtime.reactives.tables.TablePubSub;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
@@ -308,51 +309,91 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       readAll();
       return this;
     }
-    final var prior = new AtomicReference<TreeSet<Ty>>(null);
+    final var everything = new AtomicBoolean(false);
+    final var union = new AtomicReference<TreeSet<Ty>>(null);
     filter.scopeByIndicies(new IndexQuerySet() {
+      private TreeSet<Ty> current = null;
       boolean didIndexing = false;
       @Override
       public void intersect(int column, int value, LookupMode mode) {
+        if (everything.get()) { // a prior branch requires everythig
+          return;
+        }
         if (mode == IndexQuerySet.LookupMode.Equals) {
           readIndex(column, value);
           didIndexing = true;
         }
         final var specific = indices[column].of(value, mode);
         if (specific == null) { // no index available
-          prior.set(new TreeSet<>());
+          current = new TreeSet<>();
           return;
         }
-        if (prior.get() == null) {
-          // just use the index
-          prior.set(specific);
+        if (current == null) {
+          current = specific;
         } else {
           final var common = new TreeSet<Ty>();
           if (specific != null) {
             for (final Ty item : specific) {
-              if (prior.get().contains(item)) {
+              if (current.contains(item)) {
                 common.add(item);
               }
             }
           }
-          prior.set(common);
+          current = common;
+        }
+      }
+
+      @Override
+      public void primary(int value) {
+        if (everything.get()) {
+          // a prior branch requires everythig
+          return;
+        }
+        Ty val = itemsByKey.get(value);
+        if (val != null) {
+          if (current == null) {
+            current = new TreeSet<>();
+            current.add(val);
+          } else {
+            boolean keep = current.contains(val);
+            current.clear();
+            if (keep) {
+              current.add(val);
+            }
+          }
+        } else {
+          current = new TreeSet<>();
         }
       }
 
       @Override
       public void push() {
+        if (!everything.get()) {
+          if (current != null) {
+            if (union.get() == null) {
+              union.set(current);
+            } else {
+              union.get().addAll(current);
+            }
+          } else {
+            everything.set(true);
+          }
+        }
+        current = null;
       }
 
       @Override
       public void finish() {
+        push();
         if (!didIndexing) {
           readAll();
         }
       }
     });
-    if (prior.get() == null) {
+    if (everything.get() || union.get() == null) {
       return this;
     }
-    final var clone = new TreeSet<>(prior.get());
+    final var clone = new TreeSet<>(union.get());
     clone.addAll(unknowns);
     return clone;
   }

@@ -122,11 +122,15 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     return false;
   }
 
-  private void buildSoloIndex(final Environment environment, Expression expr) {
+  private boolean buildSoloIndex(final Environment environment, Expression expr, boolean allowPrimaryKey) {
     final var intersectCodeByName = new TreeMap<String, String>();
     final var intersectModeByName = new TreeMap<String, String>();
+    String primaryExpr = null;
+    boolean added = false;
     for (final Map.Entry<String, FieldDefinition> entry : structureStorage.fields.entrySet()) {
-      if (!structureStorage.indexSet.contains(entry.getKey())) {
+      boolean notIndex = !structureStorage.indexSet.contains(entry.getKey());
+      boolean primary = entry.getKey().equals("id");
+      if (notIndex && !primary) {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
@@ -135,33 +139,35 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         // Here is where we wrap this to search for <, <=, ==, >=, >
         // This will let us complete #20 for integers and enums
         var indexValue = findIndex(expr, aliasToken != null ? aliasToken.text : null, entry.getKey(), BinaryOp.Equal);
-        String indexLookupMode = "IndexQuerySet.LookupMode.Equals";
-
-        if (indexValue == null && classification.isIntegral) {
-          for (BinaryOp mode : new BinaryOp[] {BinaryOp.LessThan, BinaryOp.LessThanOrEqual, BinaryOp.GreaterThan, BinaryOp.GreaterThanOrEqual}) {
-            indexValue = findIndex(expr, aliasToken != null ? aliasToken.text : null, entry.getKey(), mode);
-            if (indexValue != null) {
-              indexLookupMode = "IndexQuerySet.LookupMode." + mode;
-              break;
+        if (!primary) {
+          String indexLookupMode = "IndexQuerySet.LookupMode.Equals";
+          if (indexValue == null && classification.isIntegral) {
+            for (BinaryOp mode : new BinaryOp[] {BinaryOp.LessThan, BinaryOp.LessThanOrEqual, BinaryOp.GreaterThan, BinaryOp.GreaterThanOrEqual}) {
+              indexValue = findIndex(expr, aliasToken != null ? aliasToken.text : null, entry.getKey(), mode);
+              if (indexValue != null) {
+                indexLookupMode = "IndexQuerySet.LookupMode." + mode;
+                break;
+              }
             }
           }
-        }
-
-        if (indexValue != null) {
-          intersectModeByName.put(entry.getKey(), indexLookupMode);
-          var indexValueString = compileIndexExpr(indexValue, environment);
-          if (indexValueString != null) {
-            if (classification.useHashCode) {
-              indexValueString += ".hashCode()";
+          if (indexValue != null) {
+            intersectModeByName.put(entry.getKey(), indexLookupMode);
+            var indexValueString = compileIndexExpr(indexValue, environment);
+            if (indexValueString != null) {
+              if (classification.useHashCode) {
+                indexValueString += ".hashCode()";
+              }
+              if (classification.requiresToInt) {
+                indexValueString += ".toInt()";
+              }
+              if (classification.isBoolean) {
+                indexValueString = "((" + indexValueString + ") ? 1 : 0)";
+              }
+              intersectCodeByName.put(entry.getKey(), indexValueString);
             }
-            if (classification.requiresToInt) {
-              indexValueString += ".toInt()";
-            }
-            if (classification.isBoolean) {
-              indexValueString = "((" + indexValueString + ") ? 1 : 0)";
-            }
-            intersectCodeByName.put(entry.getKey(), indexValueString);
           }
+        } else {
+          primaryExpr = compileIndexExpr(indexValue, environment);
         }
       }
     }
@@ -170,8 +176,14 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       final var code = intersectCodeByName.get(nameToUse);
       if (code != null) {
         applyQuerySetStatements.add("__set.intersect(" + k + ", " + code + ", "+intersectModeByName.get(nameToUse)+");");
+        added = true;
       }
     }
+    if (primaryExpr != null && allowPrimaryKey) {
+      applyQuerySetStatements.add("__set.primary(" + primaryExpr + ");");
+      added = true;
+    }
+    return added;
   }
 
   private String compileIndexExpr(final Expression indexValue, final Environment prior) {
@@ -320,19 +332,16 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         } else {
           primaryKeyExpr.append("null");
         }
-        buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), expression);
-        /*
         ArrayList<Expression> foundBranches = new ArrayList<>();
         branches(expression, foundBranches);
         if (foundBranches.size() <= 1) {
-          buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), expression);
+          buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), expression, false);
         } else {
           for(Expression branch : foundBranches) {
-            buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), branch);
+            buildSoloIndex(environment.scopeWithComputeContext(ComputeContext.Computation), branch, true);
             applyQuerySetStatements.add("__set.push();");
           }
         }
-        */
         writtenDependentExpressionsForClosure = true;
       }
     }
@@ -345,18 +354,12 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       sb.append("private ").append(entry.getValue()).append(" ").append(entry.getKey()).append(";").writeNewline();
     }
     sb.append("@Override").writeNewline();
-    if (applyQuerySetStatements.size() == 0) {
-      sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();
-      sb.append("__set.finish();").tabDown().writeNewline();
-      sb.append("}").writeNewline();
-    } else {
-      sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();
-      for (var k = 0; k < applyQuerySetStatements.size(); k++) {
-        sb.append(applyQuerySetStatements.get(k)).writeNewline();
-      }
-      sb.append("__set.finish();").tabDown().writeNewline();
-      sb.append("}").writeNewline();
+    sb.append("public void scopeByIndicies(IndexQuerySet __set) {").tabUp().writeNewline();
+    for (var k = 0; k < applyQuerySetStatements.size(); k++) {
+      sb.append(applyQuerySetStatements.get(k)).writeNewline();
     }
+    sb.append("__set.finish();").tabDown().writeNewline();
+    sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public Integer getPrimaryKey() {").tabUp().writeNewline();
     sb.append("return ").append(primaryKeyExpr.toString()).append(";");

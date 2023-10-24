@@ -25,6 +25,9 @@ public interface IndexQuerySet {
    */
   void intersect(int column, int value, LookupMode mode);
 
+  /** within a branch, pick a primary key as the value */
+  void primary(int value);
+
   /** push the result */
   void push();
 
