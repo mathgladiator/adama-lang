@@ -55,7 +55,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Graph_Dupes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647,\"byte\":2147483647},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Assoc 'x' was already defined.\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647,\"byte\":2147483647},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Graph 'g' was already defined.\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":9},\"end\":{\"line\":1,\"character\":8,\"byte\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"Assoc 'x' was already defined.\",\"file\":\"./test_code/Graph_Dupes_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":28},\"end\":{\"line\":4,\"character\":8,\"byte\":36}},\"severity\":1,\"source\":\"error\",\"message\":\"Graph 'g' was already defined.\",\"file\":\"./test_code/Graph_Dupes_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

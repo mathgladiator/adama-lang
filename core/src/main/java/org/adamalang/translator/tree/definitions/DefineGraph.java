@@ -30,6 +30,8 @@ public class DefineGraph extends Definition  {
     this.graph = graph;
     this.name = name;
     this.semicolon = semicolon;
+    ingest(graph);
+    ingest(semicolon);
   }
 
   @Override

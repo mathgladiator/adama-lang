@@ -32,6 +32,8 @@ public class DefineAssoc extends Definition {
     this.name = name;
     this.semicolon = semicolon;
     this.id = 0;
+    ingest(assoc);
+    ingest(semicolon);
   }
 
   @Override
