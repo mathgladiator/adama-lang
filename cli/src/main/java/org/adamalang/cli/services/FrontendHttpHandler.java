@@ -203,7 +203,7 @@ public class FrontendHttpHandler implements HttpHandler {
             }
           }
           if (writeToCache != null && response.cache_ttl_seconds > 0) {
-            writeToCache.accept(response.cache_ttl_seconds, result);
+            writeToCache.accept(response.cache_ttl_seconds * 1000, result);
           }
           callback.success(result);
         } else {

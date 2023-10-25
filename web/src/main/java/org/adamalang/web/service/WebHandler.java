@@ -640,6 +640,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     if (httpResult.contentType.length() > 0) {
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
     }
+    if (httpResult.cacheTimeSeconds != null && httpResult.cacheTimeSeconds > 0) {
+      res.headers().set(HttpHeaderNames.CACHE_CONTROL, "max-age=" + httpResult.cacheTimeSeconds);
+    }
     transferCors(res, req, httpResult.cors);
     sendWithKeepAlive(webConfig, ctx, req, res);
   }

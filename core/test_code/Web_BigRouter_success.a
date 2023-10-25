@@ -7,7 +7,7 @@
 }
 
 @web get /path0/$x:int {
-  return {html:"path integer:" + x};
+  return {html:"path integer:" + x, cache_ttl_seconds:50};
 }
 
 @web get /path1/$x:double {

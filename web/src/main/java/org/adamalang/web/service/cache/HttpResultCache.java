@@ -50,7 +50,9 @@ public class HttpResultCache {
 
   public BiConsumer<Integer, HttpHandler.HttpResult> inject(String key) {
     return (ttl, result) -> {
-      cache.put(key, new Item(time.nowMilliseconds() + ttl, result));
+      if (result != null) {
+        cache.put(key, new Item(time.nowMilliseconds() + ttl, result));
+      }
     };
   }
 
