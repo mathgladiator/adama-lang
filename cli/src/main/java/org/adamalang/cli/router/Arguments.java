@@ -3646,6 +3646,7 @@ public class Arguments {
 		public String rxhtmlPath = "frontend";
 		public String assetPath = "assets";
 		public String microverse = "local.verse.json";
+		public String debugger = "true";
 		public String localLibadamaPath = null;
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
@@ -3689,6 +3690,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-dbg":
+					case "--debugger": {
+						if (k+1 < args.length) {
+							returnArgs.debugger = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 					case "-lap":
 					case "--local-libadama-path": {
 						if (k+1 < args.length) {
@@ -3725,6 +3737,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
 			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White) + " : The path to map for static assets.");
 			System.out.println("    " + Util.prefix("-mv, --microverse", Util.ANSI.Green) + " " + Util.prefix("<microverse>", Util.ANSI.White) + " : The microverse plan which defines the local devbox solo mode.");
+			System.out.println("    " + Util.prefix("-dbg, --debugger", Util.ANSI.Green) + " " + Util.prefix("<debugger>", Util.ANSI.White) + " : Is the online debugger available");
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
 		}
 	}

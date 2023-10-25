@@ -140,13 +140,19 @@ public class DevBoxStart {
       }
     }
     terminal.info("devbox|starting up");
+    boolean debuggerAvailable = "true".equals(args.debugger);
+    if (debuggerAvailable) {
+      terminal.info("devbox|debugger available");
+    } else {
+      terminal.info("devbox|debugger disabled");
+    }
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, (b) -> bundle.set(b))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
       attachmentsPath.mkdirs();
-      DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse);
+      DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable);
       Thread webServerThread = base.start();
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());

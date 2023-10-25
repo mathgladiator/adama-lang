@@ -32,6 +32,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="debugger" type="bool" short="dbg">
+        <documentation>
+            Is the online debugger available
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="asset-path" type="string" short="a">
         <documentation>
             The path to map for static assets.
@@ -774,6 +780,7 @@
             <arg name="rxhtml-path" default="frontend" />
             <arg name="asset-path" default="assets" />
             <arg name="microverse" default="local.verse.json" />
+            <arg name="debugger" default="true" />
             <arg name="local-libadama-path" default="null" />
         </command>
         <command name="set-libadama">

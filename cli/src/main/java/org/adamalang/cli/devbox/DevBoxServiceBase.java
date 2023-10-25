@@ -64,8 +64,9 @@ public class DevBoxServiceBase implements ServiceBase {
   private final File localLibAdamaJS;
   private final DevBoxAdamaMicroVerse verse;
   private final LocalAssets assets;
+  private final boolean debuggerAvailable;
 
-  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse) throws Exception {
+  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -75,6 +76,7 @@ public class DevBoxServiceBase implements ServiceBase {
     this.localLibAdamaJS = localLibAdamaJS;
     this.verse = verse;
     this.assets = new LocalAssets(io, assetPath, verse.service);
+    this.debuggerAvailable = debuggerAvailable;
   }
 
   @Override
@@ -165,11 +167,13 @@ public class DevBoxServiceBase implements ServiceBase {
               connection = connection.replaceAll(Pattern.quote("\"wss://\""), Matcher.quoteReplacement("\"ws://\""));
             }
             js.append(connection);
-            js.append("/** debugger.js **/\n\n");
-            if (localLibAdamaJS != null) {
-              js.append(Files.readString(new File(localLibAdamaJS, "debugger.js").toPath()));
-            } else {
-              js.append(JavaScriptResourcesRaw.DEBUGGER);
+            if (debuggerAvailable) {
+              js.append("/** debugger.js **/\n\n");
+              if (localLibAdamaJS != null) {
+                js.append(Files.readString(new File(localLibAdamaJS, "debugger.js").toPath()));
+              } else {
+                js.append(JavaScriptResourcesRaw.DEBUGGER);
+              }
             }
             js.append("/** rxhtml.js **/\n\n");
             String rxhtml;
