@@ -59,12 +59,14 @@ public class RxHTMLScanner implements AutoCloseable {
   private final SimpleExecutor executor;
   private final AtomicBoolean scheduled;
   private final AtomicBoolean again;
+  private final String env;
 
-  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, Consumer<RxHTMLBundle> onBuilt) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt) throws Exception {
     this.alive = alive;
     this.io = io;
     this.scanRoot = scanRoot;
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
+    this.env = env;
     this.onBuilt = onBuilt;
     this.service = FileSystems.getDefault().newWatchService();
     this.watchKeyCache = new HashMap<>();
@@ -166,7 +168,7 @@ public class RxHTMLScanner implements AutoCloseable {
               };
               try {
                 long started = System.currentTimeMillis();
-                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withEnvironment("test").withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;

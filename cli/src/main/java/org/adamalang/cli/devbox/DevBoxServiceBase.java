@@ -49,7 +49,10 @@ import org.adamalang.web.service.WebMetrics;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,6 +68,8 @@ public class DevBoxServiceBase implements ServiceBase {
   private final DevBoxAdamaMicroVerse verse;
   private final LocalAssets assets;
   private final boolean debuggerAvailable;
+  private final ConcurrentHashMap<Integer, DevBoxAdama> inflight;
+  private final AtomicInteger inflightId;
 
   public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable) throws Exception {
     this.executor = SimpleExecutor.create("executor");
@@ -77,12 +82,29 @@ public class DevBoxServiceBase implements ServiceBase {
     this.verse = verse;
     this.assets = new LocalAssets(io, assetPath, verse.service);
     this.debuggerAvailable = debuggerAvailable;
+    this.inflight = new ConcurrentHashMap<>();
+    this.inflightId = new AtomicInteger(1);
+  }
+
+  public String diagnostics() {
+    ObjectNode diag = Json.newJsonObject();
+    diag.put("active-sockets", inflight.size());
+    ObjectNode sockets = diag.putObject("sockets");
+    for (Map.Entry<Integer, DevBoxAdama> entry : inflight.entrySet()) {
+      entry.getValue().diagnostics(sockets.putObject("" + entry.getKey()));
+    }
+    return diag.toString();
   }
 
   @Override
   public ServiceConnection establish(ConnectionContext context) {
     // if we have a service and a table, then let's use it!
-    return new DevBoxAdama(executor, context, this.control, this.io, verse);
+    int id = inflightId.incrementAndGet();
+    DevBoxAdama devbox = new DevBoxAdama(executor, context, this.control, this.io, verse, () -> {
+      inflight.remove(id);
+    });
+    inflight.put(id, devbox);
+    return devbox;
   }
 
   public void shutdown() {

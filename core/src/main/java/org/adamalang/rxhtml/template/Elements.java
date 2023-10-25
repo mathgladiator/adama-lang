@@ -297,4 +297,18 @@ public class Elements {
   public static void select(Environment env) {
     input(env);
   }
+
+  public static void inline_template(Environment env) {
+    String eVar = env.parentVariable;
+    String name = env.element.attr("name");
+    String parentVar = env.pool.ask();
+    String childStateVar = env.pool.ask();
+    String caseVar = env.pool.ask();
+    env.writer.tab().append("$.UT(").append(eVar).append(",").append(env.stateVar).append(",'").append(name).append("', function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
+    env.pool.give(parentVar);
+    env.pool.give(caseVar);
+  }
 }

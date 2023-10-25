@@ -3648,6 +3648,7 @@ public class Arguments {
 		public String microverse = "local.verse.json";
 		public String debugger = "true";
 		public String localLibadamaPath = null;
+		public String environment = "test";
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
 			try {
@@ -3712,6 +3713,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-e":
+					case "--environment": {
+						if (k+1 < args.length) {
+							returnArgs.environment = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3739,6 +3751,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-mv, --microverse", Util.ANSI.Green) + " " + Util.prefix("<microverse>", Util.ANSI.White) + " : The microverse plan which defines the local devbox solo mode.");
 			System.out.println("    " + Util.prefix("-dbg, --debugger", Util.ANSI.Green) + " " + Util.prefix("<debugger>", Util.ANSI.White) + " : Is the online debugger available");
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
+			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
 		}
 	}
 	public static class FrontendMake200Args {

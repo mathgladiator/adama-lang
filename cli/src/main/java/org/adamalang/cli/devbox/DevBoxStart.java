@@ -146,8 +146,10 @@ public class DevBoxStart {
     } else {
       terminal.info("devbox|debugger disabled");
     }
+    String env = args.environment;
+
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, (b) -> bundle.set(b))) {
+    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
@@ -166,7 +168,19 @@ public class DevBoxStart {
           base.shutdown();
         }
         if (command.is("help", "h", "?", "")) {
-          terminal.info("Wouldn't it be great if there was some like... help here?");
+          terminal.info("Help for the Adama DevBox!!");
+          terminal.info("");
+          terminal.info("Commands:");
+          terminal.info("  `exit` - turn off the devbox");
+          terminal.info("  `viewer-updates slow` - slow down viewer updates by 5 seconds");
+          terminal.info("  `viewer-updates fast` - disable the 5 second viewer update penalty");
+          terminal.info("  `delete $space $key` - delete a local document by force");
+          terminal.info("  `init $space $key $file.json` - initialize a document from the file system");
+          terminal.info("  `save $space $key $file.json` - snapshot a document to the file system");
+          terminal.info("  `dump-log $space $key $file.json` - dump a log of all deltas within caravan");
+          terminal.info("  `diagnostics` - get some useful diagnostics");
+          terminal.info("  `flush` - force flush caravan");
+          terminal.info("  `query $space $key` - execute an op query against a document");
         }
         if (command.is("viewer-updates")) {
           if (command.argIs(0, "slow")) {
@@ -249,16 +263,6 @@ public class DevBoxStart {
             terminal.notice("save $space $key $file");
           }
         }
-        if (command.is("deltas")) {
-          if (command.requireArg(2)) {
-            String space = command.argAt(0);
-            String key = command.argAt(1);
-            String count = command.argAt(2);
-            terminal.error("TODO");
-          } else {
-            terminal.notice("deltas $space $key count");
-          }
-        }
         if (command.is("dump-log")) {
           if (command.requireArg(2)) {
             String space = command.argAt(0);
@@ -302,7 +306,7 @@ public class DevBoxStart {
           verse.dataService.diagnostics(new Callback<String>() {
             @Override
             public void success(String value) {
-              terminal.info("diagnostics|" + value);
+              terminal.info("caravan-diagnostics|" + value);
             }
 
             @Override
@@ -310,6 +314,7 @@ public class DevBoxStart {
               terminal.error("failed to get diagnostics:" + ex.code);
             }
           });
+          terminal.info("base-diagnostics|" + base.diagnostics());
         }
         if (command.is("flush")) {
           verse.dataService.flush(true).await(1000, TimeUnit.MILLISECONDS);

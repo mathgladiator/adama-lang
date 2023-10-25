@@ -56,11 +56,11 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n          var n=$.E('span');");
     gold.append("\n          n.append($.T('Remove Choice'));");
     gold.append("\n          m.append(n);");
-    gold.append("\n        });");
+    gold.append("\n        },false);");
     gold.append("\n        j.append(k);");
     gold.append("\n        i.append(j);");
     gold.append("\n      },function(i,h) {");
-    gold.append("\n      });");
+    gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      $.FIN(g,f,'channel',true,false,function(i,h) {");
@@ -70,7 +70,7 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n        i.append(j);");
     gold.append("\n        i.append($.T(' Time to decide! '));");
     gold.append("\n      },function(i,h) {");
-    gold.append("\n      });");
+    gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n    },function(b,f) {");
     gold.append("\n    });");
@@ -107,11 +107,11 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n          var n=$.E('span');");
     gold.append("\n          n.append($.T('Remove Choice'));");
     gold.append("\n          m.append(n);");
-    gold.append("\n        });");
+    gold.append("\n        },false);");
     gold.append("\n        j.append(k);");
     gold.append("\n        i.append(j);");
     gold.append("\n      },function(i,h) {");
-    gold.append("\n      });");
+    gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      $.FIN(g,f,'channel',true,false,function(i,h) {");
@@ -121,7 +121,7 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n        i.append(j);");
     gold.append("\n        i.append($.T(' Time to decide! '));");
     gold.append("\n      },function(i,h) {");
-    gold.append("\n      });");
+    gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n    },function(b,f) {");
     gold.append("\n    });");

@@ -52,7 +52,7 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     gold.append("\n        var j=$.E('span');");
     gold.append("\n        j.append($.T(' Can\\'t decide... yet '));");
     gold.append("\n        i.append(j);");
-    gold.append("\n      });");
+    gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n    },function(b,f) {");
     gold.append("\n    });");
@@ -85,7 +85,7 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     gold.append("\n        var j=$.E('span');");
     gold.append("\n        j.append($.T(' Can\\'t decide... yet '));");
     gold.append("\n        i.append(j);");
-    gold.append("\n      });");
+    gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n    },function(b,f) {");
     gold.append("\n    });");

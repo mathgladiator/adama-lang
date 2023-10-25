@@ -35,7 +35,7 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IFx(d,a,a,'obj',true,false,function(f,e) {");
+    gold.append("\n    $.IF(d,a,a,'obj',true,false,function(f,e) {");
     gold.append("\n      f.append($.L(e,'key'));");
     gold.append("\n      f.append($.T(' - '));");
     gold.append("\n      f.append($.L(e,'value'));");
@@ -43,7 +43,7 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      g.append($.T(' Not set! '));");
     gold.append("\n      f.append(g);");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -56,7 +56,7 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IFx(d,a,a,'obj',true,false,function(f,e) {");
+    gold.append("\n    $.IF(d,a,a,'obj',true,false,function(f,e) {");
     gold.append("\n      f.append($.L(e,'key'));");
     gold.append("\n      f.append($.T(' - '));");
     gold.append("\n      f.append($.L(e,'value'));");
@@ -64,7 +64,7 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      g.append($.T(' Not set! '));");
     gold.append("\n      f.append(g);");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

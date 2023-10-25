@@ -36,7 +36,7 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
     gold.append("\n    var c=$.X();");
     gold.append("\n    $.IG($.pV(a),'foo',$.pV(a),'block-exit');");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IFx(d,a,$.pV(a),'block-exit',true,false,function(f,e) {");
+    gold.append("\n    $.IF(d,a,$.pV(a),'block-exit',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Show this if we try to exit when foo is true. '));");
     gold.append("\n      var g=$.E('button');");
     gold.append("\n      var h=[];");
@@ -45,7 +45,7 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
     gold.append("\n      g.append($.T('Skip Gate'));");
     gold.append("\n      f.append(g);");
     gold.append("\n    },function(f,e) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -59,7 +59,7 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
     gold.append("\n    var c=$.X();");
     gold.append("\n    $.IG($.pV(a),'foo',$.pV(a),'block-exit');");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IFx(d,a,$.pV(a),'block-exit',true,false,function(f,e) {");
+    gold.append("\n    $.IF(d,a,$.pV(a),'block-exit',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Show this if we try to exit when foo is true. '));");
     gold.append("\n      var g=$.E('button');");
     gold.append("\n      var h=[];");
@@ -68,7 +68,7 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
     gold.append("\n      g.append($.T('Skip Gate'));");
     gold.append("\n      f.append(g);");
     gold.append("\n    },function(f,e) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

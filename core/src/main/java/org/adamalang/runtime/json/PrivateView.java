@@ -65,7 +65,11 @@ public abstract class PrivateView {
    * both views.
    */
   public void usurp(PrivateView usurper) {
-    this.usurper = usurper;
+    if (alive) {
+      this.usurper = usurper;
+    } else {
+      usurper.kill();
+    }
   }
 
   public int getViewId() {

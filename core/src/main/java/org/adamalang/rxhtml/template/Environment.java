@@ -103,6 +103,14 @@ public class Environment {
         result = (Element) node;
       }
     }
+    if (result != null && result.tagName() != null) {
+      // some solo nodes are not actual nodes
+      switch (result.tagName().toLowerCase()) {
+        case "inline-template":
+        case "inline_template":
+          return null;
+      }
+    }
     return result;
   }
 

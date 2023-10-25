@@ -49,6 +49,11 @@ public class Attributes {
     String value = env.element.attr(version);
     String childStateVar = env.pool.ask();
     String parentVar = env.pool.ask();
+    boolean hide = false;
+    if (env.element.hasAttr("force-hiding")) {
+      hide = true;
+      env.element.removeAttr("force-hiding");
+    }
     if (value.startsWith("decide:") || value.startsWith("choose:") || value.startsWith("chosen:")) {
       String channel = value.substring(7);
       String key = env.element.hasAttr("key") ? env.element.attr("key") : "id";
@@ -63,7 +68,7 @@ public class Attributes {
       env.writer.append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     } else {
       StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
-      env.writer.tab().append("$.IFx(").append(eVar).append(",").append(env.stateVar).append(",").append(path.command);
+      env.writer.tab().append("$.IF(").append(eVar).append(",").append(env.stateVar).append(",").append(path.command);
       env.writer.append(",'").append(path.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     }
     Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
@@ -81,7 +86,7 @@ public class Attributes {
         return false;
       }
     });
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("}," + (hide ? "true" : "false") + ");").newline();
     env.pool.give(childStateVar);
     env.pool.give(parentVar);
   }

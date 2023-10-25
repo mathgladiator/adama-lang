@@ -1365,11 +1365,11 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:if / rx:ifnot = "path"
-  self.IF = function (parent, priorState, name, shouldBe, expandView, makerTrue, makerFalse) {
-    self.IFx(parent, priorState, priorState, name, shouldBe, expandView, makerTrue, makerFalse);
-  };
-  self.IFx = function (parent, originalState, priorState, name, shouldBe, expandView, makerTrue, makerFalse) {
+  self.IF = function (parent, originalState, priorState, name, shouldBe, expandView, makerTrue, makerFalse, forceHiding) {
     var unsub = make_unsub();
+    if (forceHiding) {
+      parent.style.display = "none";
+    }
     var set = function (value) {
       var show = (value ? true : false) === shouldBe;
       if (this.shown == show) {
@@ -1391,14 +1391,17 @@ var RxHTML = (function () {
       }
       // we default back to data in the IF case
       if (show) {
+        parent.style.display = "";
         makerTrue(parent, next);
       } else {
+        parent.style.display = "none";
         makerFalse(parent, next);
       }
       subscribe_state(next, unsub);
     }.bind({ shown: 'no' });
     subscribe(priorState, name, set);
   };
+  self.IFx = self.IF;
 
   /// RUNTIME | rx:action=copy:path
   self.aCP = function (form, state, name) {

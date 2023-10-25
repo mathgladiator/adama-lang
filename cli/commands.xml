@@ -782,6 +782,7 @@
             <arg name="microverse" default="local.verse.json" />
             <arg name="debugger" default="true" />
             <arg name="local-libadama-path" default="null" />
+            <arg name="environment" default="test" />
         </command>
         <command name="set-libadama">
             <documentation>

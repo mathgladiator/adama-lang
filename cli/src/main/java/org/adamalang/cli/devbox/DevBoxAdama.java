@@ -47,6 +47,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final TerminalIO io;
   private final ConcurrentHashMap<Long, LocalStream> streams;
   private final DevBoxAdamaMicroVerse verse;
+  private final Runnable death;
 
   private class LocalStream {
     public final Key key;
@@ -63,13 +64,14 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     responder.complete(SecureAssetUtil.makeAssetKeyHeader());
   }
 
-  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse) {
+  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death) {
     this.executor = executor;
     this.context = context;
     this.control = control;
     this.io = io;
     this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
+    this.death = death;
   }
 
   public static NtPrincipal principalOf(String identity) {
@@ -374,10 +376,16 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     return true;
   }
 
+  public void diagnostics(ObjectNode dump) {
+    dump.put("connections", streams.size());
+  }
+
   @Override
   public void kill() {
     for(LocalStream stream : streams.values()) {
       stream.ref.close();
     }
+    streams.clear();
+    death.run();
   }
 }
