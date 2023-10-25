@@ -1804,6 +1804,7 @@ var RxHTML = (function () {
     };
   };
 
+  self.currentViewerId = 0;
   // API | Run the page in the given place
   self.run = function (where, rawPath, push) {
     var path = rawPath;
@@ -1816,6 +1817,8 @@ var RxHTML = (function () {
     }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
     var init = {};
+    self.currentViewerId++;
+    init.viewer_current_page_id = self.currentViewerId;
     try {
       init.viewer_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       init.viewer_language = navigator.language;
