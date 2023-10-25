@@ -2021,7 +2021,7 @@ var RxHTML = (function () {
     });
   };
 
-  var bind_responder = function (co, state, cleanup, retry_sm) {
+  var bind_responder = function (co, cleanup, retry_sm) {
     retry_sm.unexpected_errors = 0;
     retry_sm.backoff = 1;
     return {
@@ -2037,7 +2037,7 @@ var RxHTML = (function () {
           co.ondecide(payload.delta.outstanding);
         }
         if ('viewstate' in payload.delta) {
-          state.view.tree.update(payload.delta.viewstate);
+          co.viewstatetree.update(payload.delta.viewstate);
         }
         if ('log' in payload.delta) {
           console.log(payload.delta.log);
@@ -2097,6 +2097,7 @@ var RxHTML = (function () {
   };
 
   var setup_co = function(desired, unsub, co, state) {
+    co.viewstatetree = state.view.tree;
     var sync_tree = function () {
       // let's copy out the tree from the viewstate
       var new_tree = safe_filter(state.view.tree.copy());
@@ -2183,7 +2184,7 @@ var RxHTML = (function () {
       co.via_billing = true;
       co.via_domain = false;
       var retry_sm = {};
-      retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
+      retry_sm.responder = bind_responder(co, cleanup, retry_sm);
       retry_sm.go = function() {
         // bias to nothing new
         co.viewstate_clone = "{}";
@@ -2239,7 +2240,7 @@ var RxHTML = (function () {
       co.via_billing = false;
       co.domain = domain;
       var retry_sm = {};
-      retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
+      retry_sm.responder = bind_responder(co, cleanup, retry_sm);
       retry_sm.go = function() {
         // bias to nothing new
         co.viewstate_clone = "{}";
@@ -2286,7 +2287,7 @@ var RxHTML = (function () {
       co.via_domain = false;
       co.via_billing = false;
       var retry_sm = {};
-      retry_sm.responder = bind_responder(co, state, cleanup, retry_sm);
+      retry_sm.responder = bind_responder(co, cleanup, retry_sm);
       retry_sm.go = function() {
         // bias to nothing new
         co.viewstate_clone = "{}";
