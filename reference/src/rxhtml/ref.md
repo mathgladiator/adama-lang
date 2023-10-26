@@ -215,21 +215,21 @@ You can prefix a path with "view:" or "data:" to pull either source, and in most
 
 The lookup pseudo-element has a transform attribute that runs a function to transform the input into a nicer looking output.
 
-| transform value | behavior |
-| --- | --- |
-| principal.agent | pull out the agent from a principal |
-| principal.authority | pull out the authority from a principal |
-| trim | trim the string |
-| upper | convert the string to upper case |
-| lower | convert the string to lower case |
-| is_empty_str | returns true/false if the string is empty |
-| is_not_empty_str | returns true/false if the string is not empty |
-| jsonify | convert the lookup value to a string via JSON |
-| time_now | get the current time now |
-| size_bytes | convert a number into a size with a suffix of B, KB, MB, GB |
-| vulgar_fraction | converts a double into a integer part with the closest unicode vulgar fraction (eighths) |
-| time_ago | convert a datetime into a time ago |
-| time | convert a datetime or time from military time to 
+| transform value     | behavior                                                                                 |
+|---------------------|------------------------------------------------------------------------------------------|
+| principal.agent     | pull out the agent from a principal                                                      |
+| principal.authority | pull out the authority from a principal                                                  |
+| trim                | trim the string                                                                          |
+| upper               | convert the string to upper case                                                         |
+| lower               | convert the string to lower case                                                         |
+| is_empty_str        | returns true/false if the string is empty                                                |
+| is_not_empty_str    | returns true/false if the string is not empty                                            |
+| jsonify             | convert the lookup value to a string via JSON                                            |
+| time_now            | get the current time now                                                                 |
+| size_bytes          | convert a number into a size with a suffix of B, KB, MB, GB                              |
+| vulgar_fraction     | converts a double into a integer part with the closest unicode vulgar fraction (eighths) |
+| time_ago            | convert a datetime into a time ago                                                       |
+| time                | convert a datetime or time from military time to                                         
 
 ### Using data: connecting data to attributes
 
