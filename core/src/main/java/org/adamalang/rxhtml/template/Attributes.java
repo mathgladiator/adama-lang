@@ -583,7 +583,7 @@ public class Attributes {
           .append(",").append(env.stateVar) //
           .append(",'").append(customCommandName) //
           .append("');").newline();
-    } else if ("adama:upload-asset".equalsIgnoreCase(action)) { // upload an asset
+    } else if ("adama:upload-asset".equalsIgnoreCase(action) || "document:upload-asset".equalsIgnoreCase(action)) { // upload an asset
       convertFailureVariableToEvents(env.element, "asset_upload_failed");
       check_action_upload(false);
       RxObject obj = new RxObject(env, "rx:forward");

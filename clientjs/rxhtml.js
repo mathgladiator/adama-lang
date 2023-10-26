@@ -1154,8 +1154,10 @@ var RxHTML = (function () {
     reg_event(state, dom, type, function (event) {
       var obj = {};
       obj[name] = event.message;
-      var delta = path_to(state.view, obj);
-      state[state.current].tree.update(delta);
+      if (event.message) {
+        var delta = path_to(state.view, obj);
+        state[state.current].tree.update(delta);
+      }
     });
   };
 

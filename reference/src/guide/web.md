@@ -74,10 +74,18 @@ The returned message within a ```@web``` may contain at most one body field.
 
 | field | value type | behavior |
 | --- | --- | --- |
-| xml | string | the string is sent to the client with content type 'application/xml' |
 | json | message | the message is converted to JSON and sent to the client with content type 'application/json' |
+| xml | string | the string is sent to the client with content type 'application/xml' |
+| css | string | the string is sent to the client with content type 'text/css' |
+| js | string | the string is sent to the client with content type 'text/javascript' |
+| error | string | the string is sent to the client with content type 'text/error' |
 | html | string | the string is sent to the client with the content type 'text/html' |
 | asset | asset | the asset is downloaded and sent to the client with the appropriate content type |
+| sign | string agent | the agent is is treated as a document agent and turned into a JWT token signed by Adama [(see auth)](/reference/auth.md)
+| identity | string | yield a pre-signed identity |
+| forward | url | perform a redirect using 302 (permanent) |
+| redirect | url | perform a redirect using 301 (temporary) |
+
 
 ### Cross origin resource sharing
 
@@ -86,9 +94,16 @@ This will allow the request to be visible to a browser.
 
 ```adama
 @web get / {
-  return {cors: true}
+  return {json:{}, cors: true}
 }
 ```
 
 ### Caching
-Not implemented yet
+
+Adama supports caching using both internal and browser caching. This is achieved via the 'cache_ttl_seconds' field.
+
+```adama
+@web get / {
+  return {json:{}, cache_ttl_seconds:60}
+}
+```
