@@ -3,16 +3,17 @@ record A {
 }
 
 record B {
+ private int id;
  table<A> _a;
  formula a = (iterate _a).x;
-
+ public maybe<int> v;
 }
 
 table<B> _b;
 
 @construct {
  _b <- {_a: [{x:1}, {x:2}, {x:3}]};
- _b <- {_a: [{x:4}, {x:5}, {x:6}]};
+ _b <- {_a: [{x:4}, {x:5}, {x:6}], v: 1};
 }
 
 public formula x = (iterate _b).a.flatten();
@@ -21,3 +22,9 @@ public formula x_skip_3 = x.skip(3);
 public formula x_skip_1_r = x.skip(1).reverse().skip(1).reverse();
 public formula x_d = x.drop(2);
 public formula x_mirror = x.skip(1).drop(1);
+
+public formula x_b = (iterate _b).v.manifest();
+public formula _b_1 = _b[1];
+public formula _b_2 = _b[@maybe(2)];
+public formula _b_all = _b[(iterate _b).id];
+

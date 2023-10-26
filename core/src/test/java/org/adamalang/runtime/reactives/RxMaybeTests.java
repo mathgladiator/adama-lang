@@ -79,7 +79,7 @@ public class RxMaybeTests {
   }
 
   private static void commitCheck(
-      final RxMaybe<?> mi, String expectedForward, String expectedReverse) {
+      final RxMaybe<?, ?> mi, String expectedForward, String expectedReverse) {
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     mi.__commit("v", writer, reverse);
@@ -285,7 +285,7 @@ public class RxMaybeTests {
   @Test
   @SuppressWarnings("unchecked")
   public void to_native() {
-    final var m1 = new RxMaybe<>(null, p -> new RxInt32(p, 2));
+    final var m1 = new RxMaybe<RxInt32, Integer>(null, p -> new RxInt32(p, 2));
     NtMaybe<Integer> n1 = m1.get();
     Assert.assertFalse(n1.has());
     m1.make();

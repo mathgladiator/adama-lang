@@ -5840,7 +5840,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(14);");
     gold.append("\n      NtMaybe<Integer> _AutoConditionlvvs_29;");
-    gold.append("\n      if ((_AutoConditionlvvs_29 = LibStatistics.sumInts(lv.get().transform((item) -> item.v.get()))).has()) {");
+    gold.append("\n      if ((_AutoConditionlvvs_29 = LibStatistics.sumInts(lv.get().transform((RTxR item) -> (Integer) (item.v.get())))).has()) {");
     gold.append("\n        int lvvs = _AutoConditionlvvs_29.get();");
     gold.append("\n        __code_cost += 2;");
     gold.append("\n        __track(15);");

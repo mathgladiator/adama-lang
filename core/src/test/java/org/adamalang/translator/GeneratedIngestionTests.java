@@ -2218,7 +2218,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class IntoMaybeRecord_9 extends LivingDocument {");
-    gold.append("\n  private final RxMaybe<RTxR> mr;");
+    gold.append("\n  private final RxMaybe<RTxR,RTxR> mr;");
     gold.append("\n  private final RxBoolean got;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2229,7 +2229,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public IntoMaybeRecord_9(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    mr = new RxMaybe<>(this, (RxParent __parent) -> new RTxR(__parent).__link());");
+    gold.append("\n    mr = new RxMaybe<RTxR,RTxR>(this, (RxParent __parent) -> new RTxR(__parent).__link());");
     gold.append("\n    got = new RxBoolean(this, false);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3018,7 +3018,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
-    gold.append("\n      RxMaybe<RTxR> _AutoRef1 = mr;");
+    gold.append("\n      RxMaybe<RTxR,RTxR> _AutoRef1 = mr;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr3 = new RTx_AnonObjConvert_0(1, 123);");
     gold.append("\n      RTxR _CreateRef2 = _AutoRef1.make();");
     gold.append("\n      __code_cost += 2;");

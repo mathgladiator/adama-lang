@@ -1534,7 +1534,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    final boolean x = !b.get();");
     gold.append("\n    __track(1);");
-    gold.append("\n    ((t.iterate(true)).transform((item) -> item.b.get())).transform((item) -> !item);");
+    gold.append("\n    ((t.iterate(true)).transform((RTxX item) -> (Boolean) (item.b.get()))).transform((item) -> !item);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -3367,9 +3367,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
-    gold.append("\n    ((t.iterate(true)).transform((item) -> item.x).transform((item) -> item.bumpUpPost())).transform((item) -> item++);");
+    gold.append("\n    ((t.iterate(true)).transform((RTxX item) -> (RxInt32) (item.x)).transform((item) -> item.bumpUpPost())).transform((item) -> item++);");
     gold.append("\n    __track(1);");
-    gold.append("\n    ((t.iterate(true)).transform((item) -> item.x).transform((item) -> item.bumpUpPost())).transform((item) -> ++item);");
+    gold.append("\n    ((t.iterate(true)).transform((RTxX item) -> (RxInt32) (item.x)).transform((item) -> item.bumpUpPost())).transform((item) -> ++item);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -4456,8 +4456,8 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class MaybeAssignments_13 extends LivingDocument {");
-    gold.append("\n  private final RxMaybe<RxInt32> x;");
-    gold.append("\n  private final RxMaybe<RxInt32> z;");
+    gold.append("\n  private final RxMaybe<RxInt32,Integer> x;");
+    gold.append("\n  private final RxMaybe<RxInt32,Integer> z;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -4467,8 +4467,8 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public MaybeAssignments_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    x = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
-    gold.append("\n    z = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
+    gold.append("\n    x = new RxMaybe<RxInt32,Integer>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
+    gold.append("\n    z = new RxMaybe<RxInt32,Integer>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -5779,8 +5779,8 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  private final RxDouble d3;");
     gold.append("\n  private final RxInt32 i4;");
     gold.append("\n  private final RxDouble d4;");
-    gold.append("\n  private final RxMaybe<RxDouble> md;");
-    gold.append("\n  private final RxMaybe<RxInt32> mi;");
+    gold.append("\n  private final RxMaybe<RxDouble,Double> md;");
+    gold.append("\n  private final RxMaybe<RxInt32,Integer> mi;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -5810,8 +5810,8 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    d3 = new RxDouble(this, 0.0);");
     gold.append("\n    i4 = new RxInt32(this, 0);");
     gold.append("\n    d4 = new RxDouble(this, 0.0);");
-    gold.append("\n    md = new RxMaybe<>(this, (RxParent __parent) -> new RxDouble(__parent, 0.0));");
-    gold.append("\n    mi = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
+    gold.append("\n    md = new RxMaybe<RxDouble,Double>(this, (RxParent __parent) -> new RxDouble(__parent, 0.0));");
+    gold.append("\n    mi = new RxMaybe<RxInt32,Integer>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

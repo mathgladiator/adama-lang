@@ -894,9 +894,9 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n      _CreateRef2.x.set(_AutoExpr3.x);");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
-    gold.append("\n    (t.iterate(true)).transform((item) -> item.x).transform((item) -> item.bumpUpPost());");
+    gold.append("\n    (t.iterate(true)).transform((RTxR item) -> (RxInt32) (item.x)).transform((item) -> item.bumpUpPost());");
     gold.append("\n    __track(3);");
-    gold.append("\n    ((t.iterate(true)).transform((item) -> item.x)).transform((item) -> item.bumpUpPre());");
+    gold.append("\n    ((t.iterate(true)).transform((RTxR item) -> (RxInt32) (item.x))).transform((item) -> item.bumpUpPre());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

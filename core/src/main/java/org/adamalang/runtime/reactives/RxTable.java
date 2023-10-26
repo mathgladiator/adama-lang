@@ -22,6 +22,9 @@ import org.adamalang.runtime.index.ReactiveIndex;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.natives.lists.ArrayNtList;
+import org.adamalang.runtime.natives.lists.EmptyNtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
 import org.adamalang.runtime.sys.LivingDocument;
@@ -411,6 +414,32 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     if (activeGuard != null) {
       activeGuard.readAll();
     }
+  }
+
+  public NtMaybe<Ty> lookup(int pkey) {
+    readPrimaryKey(pkey);
+    return new NtMaybe<>(itemsByKey.get(pkey));
+  }
+
+  public NtMaybe<Ty> lookup(NtMaybe<Integer> pkey) {
+    if (pkey.has()) {
+      readPrimaryKey(pkey.get());
+      return new NtMaybe<>(itemsByKey.get(pkey.get()));
+    } else {
+      return new NtMaybe<>();
+    }
+  }
+
+  public NtList<NtMaybe<Ty>> lookup(NtList<Integer> pkeys) {
+    ArrayList<NtMaybe<Ty>> result = new ArrayList<>();
+    for (int pkey : pkeys) {
+      readPrimaryKey(pkey);
+      result.add(new NtMaybe<>(itemsByKey.get(pkey)));
+    }
+    if (result.size() == 0) {
+      return new EmptyNtList<>();
+    }
+    return new ArrayNtList<>(result);
   }
 
   public void readPrimaryKey(int pkey) {

@@ -83,7 +83,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
 
   @Override
   protected TyType typingInternal(final Environment environmentX, final TyType suggestion) {
-    final var exprType = expression.typing(environmentX, null);
+    final var exprType = environmentX.rules.Resolve(expression.typing(environmentX, null), false);
     environmentX.rules.IsFunction(exprType, false);
     if (exprType != null && exprType instanceof TyNativeFunctional) {
       isAggregate = exprType instanceof TyNativeAggregateFunctional;
@@ -258,6 +258,10 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         case InjectNameThenExpressionAndArgs:
           sb.append(functionInstance.javaFunction);
           sb.append("(");
+          TyType thisType = functionInstance.getThisType();
+          if (thisType != null && functionInstance.castArgs) {
+            sb.append("(").append(thisType.getJavaBoxType(environment)).append(") ");
+          }
           expression.writeJava(sb, childEnv);
           CodeGenFunctions.writeArgsJava(sb, childEnv, false, args, functionInstance);
           sb.append(")");

@@ -25,9 +25,12 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetLists;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMap;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetTable;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
+import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.traits.IsMap;
@@ -73,7 +76,19 @@ public class IndexLookup extends Expression {
     // come up with a more specific form
     final var typeExpr = expression.typing(environment, null /* no suggestion */);
     TyType resultType = null;
-    if (environment.rules.IsMap(typeExpr)) {
+    if (RuleSetTable.IsReactiveTable(environment, typeExpr)) {
+      lookupStyle = IndexLookupStyle.ExpressionLookupMethod;
+      final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
+      final var elementType = ((DetailContainsAnEmbeddedType) typeExpr).getEmbeddedType(environment);
+      final var maybeElementType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem(elementType));
+      if (RuleSetLists.IsNativeListOfInt(environment, typeArg, true)) {
+        resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(maybeElementType));
+      } else {
+        if (RuleSetMaybe.IsMaybeIntegerOrJustInteger(environment, typeArg, false)) {
+          resultType = maybeElementType;
+        }
+      }
+    } else if (environment.rules.IsMap(typeExpr)) {
       final var mapType = (IsMap) typeExpr;
       final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), mapType.getDomainType(environment));
       if (environment.state.isContextAssignment() && RuleSetMap.IsReactiveMap(environment, typeExpr)) {

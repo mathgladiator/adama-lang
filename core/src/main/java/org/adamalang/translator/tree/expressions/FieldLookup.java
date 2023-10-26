@@ -49,6 +49,7 @@ public class FieldLookup extends Expression {
   private boolean requiresMaybeUnpack;
   private boolean doubleMaybeUnpack;
   private String maybeCastType;
+  private TyType elementTypeIfList;
 
   /**
    * @param expression the expression to evaluate
@@ -67,6 +68,7 @@ public class FieldLookup extends Expression {
     isGlobalObject = false;
     requiresMaybeUnpack = false;
     maybeCastType = null;
+    elementTypeIfList = null;
   }
 
   @Override
@@ -119,9 +121,9 @@ public class FieldLookup extends Expression {
         return ((TyInternalReadonlyClass) eType).getLookupType(environment, fieldName);
       }
       if (eType instanceof TyNativeList) {
-        final var elementType = environment.rules.ResolvePtr(((TyNativeList) eType).getEmbeddedType(environment), false);
-        if (elementType != null && elementType instanceof IsStructure) {
-          final var fd = ((IsStructure) elementType).storage().fields.get(fieldName);
+        elementTypeIfList = environment.rules.ResolvePtr(((TyNativeList) eType).getEmbeddedType(environment), false);
+        if (elementTypeIfList != null && elementTypeIfList instanceof IsStructure) {
+          final var fd = ((IsStructure) elementTypeIfList).storage().fields.get(fieldName);
           if (fd != null) {
             enforceSpecialIDReadonly(environment);
             aggregateType = fd.type;
@@ -209,11 +211,11 @@ public class FieldLookup extends Expression {
         }
         sb.append(")");
       } else if (makeList && aggregateType != null) {
-        sb.append("transform((item) -> item.").append(fieldNameToUse);
+        sb.append("transform((").append(elementTypeIfList.getJavaBoxType(environment)).append(" item) -> (").append(aggregateType.getJavaBoxType(environment)).append(") (item.").append(fieldNameToUse);
         if (addGet) {
           sb.append(".get()");
         }
-        sb.append(")");
+        sb.append("))");
       } else {
         sb.append(fieldNameToUse);
         if (addGet) {

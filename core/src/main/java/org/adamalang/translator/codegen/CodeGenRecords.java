@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
+import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 
@@ -276,7 +277,14 @@ public class CodeGenRecords {
         var doImmediateGet = false;
         boolean doSetDefaultValueOverride = false;
         final var elementType = ((DetailContainsAnEmbeddedType) fieldType).getEmbeddedType(environment);
-        classConstructorX.append(fieldName).append(" = new RxMaybe<>(this, (RxParent __parent) -> ");
+        String primary = elementType.getJavaBoxType(environment);
+        final String secondary;
+        if (elementType instanceof DetailComputeRequiresGet) {
+          secondary = environment.rules.Resolve(((DetailComputeRequiresGet) elementType).typeAfterGet(environment), false).getJavaBoxType(environment);
+        } else {
+          secondary = primary;
+        }
+        classConstructorX.append(fieldName).append(" = new RxMaybe<").append(primary).append(",").append(secondary).append(">(this, (RxParent __parent) -> ");
         if (elementType instanceof TyReactiveRecord) {
           classConstructorX.append("new ").append(elementType.getJavaConcreteType(environment)).append("(__parent).__link()");
         } else if (elementType instanceof DetailInventDefaultValueExpression && elementType instanceof IsReactiveValue) {

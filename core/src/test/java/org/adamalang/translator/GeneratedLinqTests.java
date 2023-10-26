@@ -12199,10 +12199,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  private class RTxX extends RxRecordBase<RTxX> {");
     gold.append("\n    private final RTxX __this;");
     gold.append("\n    private final RxInt32 id;");
-    gold.append("\n    private final RxMaybe<RxInt32> i;");
-    gold.append("\n    private final RxMaybe<RxString> s;");
-    gold.append("\n    private final RxMaybe<RxBoolean> b;");
-    gold.append("\n    private final RxMaybe<RxDouble> d;");
+    gold.append("\n    private final RxMaybe<RxInt32,Integer> i;");
+    gold.append("\n    private final RxMaybe<RxString,String> s;");
+    gold.append("\n    private final RxMaybe<RxBoolean,Boolean> b;");
+    gold.append("\n    private final RxMaybe<RxDouble,Double> d;");
     gold.append("\n    private final RxLazy<NtMaybe<Integer>> mi;");
     gold.append("\n    private final RxInt32 i1;");
     gold.append("\n    private final RxLazy<Integer> i2;");
@@ -12211,10 +12211,10 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      i = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
-    gold.append("\n      s = new RxMaybe<>(this, (RxParent __parent) -> new RxString(__parent, \"\"));");
-    gold.append("\n      b = new RxMaybe<>(this, (RxParent __parent) -> new RxBoolean(__parent, false));");
-    gold.append("\n      d = new RxMaybe<>(this, (RxParent __parent) -> new RxDouble(__parent, 0.0));");
+    gold.append("\n      i = new RxMaybe<RxInt32,Integer>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
+    gold.append("\n      s = new RxMaybe<RxString,String>(this, (RxParent __parent) -> new RxString(__parent, \"\"));");
+    gold.append("\n      b = new RxMaybe<RxBoolean,Boolean>(this, (RxParent __parent) -> new RxBoolean(__parent, false));");
+    gold.append("\n      d = new RxMaybe<RxDouble,Double>(this, (RxParent __parent) -> new RxDouble(__parent, 0.0));");
     gold.append("\n      mi = new RxLazy<NtMaybe<Integer>>(this, () -> (NtMaybe<Integer>)(new NtMaybe<Integer>(123)), null);");
     gold.append("\n      mi.__subscribe(this);");
     gold.append("\n      i1 = new RxInt32(this, 123);");
@@ -15948,7 +15948,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      _CreateRef4.x.set(_AutoExpr5.x);");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
-    gold.append("\n    NtList<RxInt32> _auto_6 = __FUNC_0_gotown(1).transform((item) -> item.x);");
+    gold.append("\n    NtList<RxInt32> _auto_6 = __FUNC_0_gotown(1).transform((RTxX item) -> (RxInt32) (item.x));");
     gold.append("\n    for (RxInt32 _auto_7 : _auto_6) {");
     gold.append("\n      _auto_7.set(2);");
     gold.append("\n    }");
@@ -16912,7 +16912,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      _CreateRef2.x.set(_AutoExpr3.x);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
-    gold.append("\n    NtList<RxInt32> _auto_4 = (t.iterate(false).where(true, new __CLOSURE_WhereClause0())).transform((item) -> item.x);");
+    gold.append("\n    NtList<RxInt32> _auto_4 = (t.iterate(false).where(true, new __CLOSURE_WhereClause0())).transform((RTxX item) -> (RxInt32) (item.x));");
     gold.append("\n    for (RxInt32 _auto_5 : _auto_4) {");
     gold.append("\n      _auto_5.set(0);");
     gold.append("\n    }");

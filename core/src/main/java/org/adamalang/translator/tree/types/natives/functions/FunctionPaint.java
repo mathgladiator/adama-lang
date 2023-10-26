@@ -72,4 +72,5 @@ public class FunctionPaint {
   public static final FunctionPaint READONLY_NORMAL = new FunctionPaint(true, false, false, false);
   public static final FunctionPaint CAST_NORMAL = new FunctionPaint(false, true, false, false);
   public static final FunctionPaint NORMAL = new FunctionPaint(false, false, false, false);
+  public static final FunctionPaint READONLY_CAST = new FunctionPaint(true, true, false, false);
 }

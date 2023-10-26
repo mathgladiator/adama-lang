@@ -18,6 +18,7 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,6 +54,23 @@ public class LibListsTests {
     for (int k = 0; k < 7; k++) {
       Assert.assertEquals(k + 1, (int) vals.lookup(k).get());
     }
+  }
+
+  @Test
+  public void manifest() {
+    ArrayList<NtMaybe<Integer>> x = new ArrayList<>();
+    x.add(new NtMaybe<>(123));
+    x.add(new NtMaybe<>());
+    x.add(new NtMaybe<>(42));
+    x.add(new NtMaybe<>(0));
+    x.add(new NtMaybe<>());
+    x.add(new NtMaybe<>(-13));
+    NtList<Integer> result = LibLists.manifest(new ArrayNtList<>(x));
+    Assert.assertEquals(4, result.size());
+    Assert.assertEquals(123, (int) result.lookup(0).get());
+    Assert.assertEquals(42, (int) result.lookup(1).get());
+    Assert.assertEquals(0, (int) result.lookup(2).get());
+    Assert.assertEquals(-13, (int) result.lookup(3).get());
   }
 
   @Test

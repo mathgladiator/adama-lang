@@ -35,6 +35,20 @@ public class RuleSetLists {
     return false;
   }
 
+
+  public static boolean IsNativeListOfInt(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    if (tyTypeOriginal != null) {
+      final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
+      if (IsNativeList(environment, tyType, silent)) {
+        final var elementType = RuleSetCommon.ExtractEmbeddedType(environment, tyType, silent);
+        if (elementType != null) {
+          return RuleSetCommon.IsInteger(environment, elementType, silent);
+        }
+      }
+    }
+    return false;
+  }
+
   public static boolean IsNativeList(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {

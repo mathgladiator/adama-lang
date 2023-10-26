@@ -18,6 +18,7 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.runtime.natives.lists.JoinNtList;
 import org.adamalang.translator.reflect.Skip;
@@ -32,6 +33,17 @@ public class LibLists {
     for (NtList<T> sub : list) {
       for (T item : sub) {
         result.add(item);
+      }
+    }
+    return new ArrayNtList<>(result);
+  }
+
+  @Skip
+  public static <T> NtList<T> manifest(NtList<NtMaybe<T>> list) {
+    ArrayList<T> result = new ArrayList<>();
+    for (NtMaybe<T> m : list) {
+      if (m.has()) {
+        result.add(m.get());
       }
     }
     return new ArrayNtList<>(result);

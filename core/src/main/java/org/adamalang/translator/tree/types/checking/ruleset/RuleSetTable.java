@@ -29,7 +29,7 @@ public class RuleSetTable {
     return tyType instanceof TyNativeTable;
   }
 
-  static boolean IsReactiveTable(final Environment environment, final TyType tyTypeOriginal) {
+  public static boolean IsReactiveTable(final Environment environment, final TyType tyTypeOriginal) {
     var tyType =  RuleSetCommon.Resolve(environment, tyTypeOriginal, true);
     return tyType instanceof TyReactiveTable;
   }

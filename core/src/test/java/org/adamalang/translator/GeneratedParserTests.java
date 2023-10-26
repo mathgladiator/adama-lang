@@ -24023,7 +24023,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class Maybe_86 extends LivingDocument {");
     gold.append("\n  private final RxInt32 v0;");
-    gold.append("\n  private final RxMaybe<RxString> name;");
+    gold.append("\n  private final RxMaybe<RxString,String> name;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -24034,7 +24034,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  public Maybe_86(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v0 = new RxInt32(this, 0);");
-    gold.append("\n    name = new RxMaybe<>(this, (RxParent __parent) -> new RxString(__parent, \"Jeff\"));");
+    gold.append("\n    name = new RxMaybe<RxString,String>(this, (RxParent __parent) -> new RxString(__parent, \"Jeff\"));");
     gold.append("\n    name.make();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

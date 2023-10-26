@@ -43,6 +43,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final boolean castReturn;
   public final boolean aborts;
   public final boolean viewer;
+  private TyType thisType;
 
   public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, FunctionPaint paint) {
     this.javaFunction = javaFunction;
@@ -61,6 +62,15 @@ public class FunctionOverloadInstance extends DocumentPosition {
     this.recordDependencies = new LinkedHashSet<>();
     this.withinRecord = new AtomicReference<>("n/a");
     this.viewerFields = new TreeSet<>();
+    this.thisType = thisType;
+  }
+
+  public void setThisType(TyType thisType) {
+    this.thisType = thisType;
+  }
+
+  public TyType getThisType() {
+    return thisType;
   }
 
   public static ArrayList<FunctionOverloadInstance> WRAP(final FunctionOverloadInstance foi) {

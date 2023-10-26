@@ -26,6 +26,7 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetLists;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -165,6 +166,16 @@ public class TyNativeList extends TyType implements //
         TyType resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue,  null, null, new TokenizedItem<>(itemType)).withPosition(this);
         final var foi = new FunctionOverloadInstance("LibLists.flatten", resultType, new ArrayList<>(), FunctionPaint.READONLY_NORMAL);
         return new TyNativeFunctional("LibLists.flatten", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      }
+    }
+    if ("manifest".equals(name)) {
+      TyType listElementType = getEmbeddedType(environment);
+      if (RuleSetMaybe.IsMaybe(environment, listElementType, true) && listElementType instanceof DetailContainsAnEmbeddedType) {
+        TyType typeInMaybe = ((DetailContainsAnEmbeddedType) listElementType).getEmbeddedType(environment);
+        TyType resultType = new TyNativeList(TypeBehavior.ReadOnlyNativeValue,  null, null, new TokenizedItem<>(typeInMaybe)).withPosition(this);
+        final var foi = new FunctionOverloadInstance("LibLists.manifest", resultType, new ArrayList<>(), FunctionPaint.READONLY_CAST);
+        foi.setThisType(this);
+        return new TyNativeFunctional("LibLists.manifest", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.InjectNameThenExpressionAndArgs);
       }
     }
     if ("reverse".equals(name)) {

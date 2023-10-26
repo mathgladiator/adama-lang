@@ -1629,7 +1629,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  private void __FUNC_0_foo(RxTable<RTxR> which) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
-    gold.append("\n    NtList<RxInt32> _auto_5 = (which.iterate(true)).transform((item) -> item.z);");
+    gold.append("\n    NtList<RxInt32> _auto_5 = (which.iterate(true)).transform((RTxR item) -> (RxInt32) (item.z));");
     gold.append("\n    for (RxInt32 _auto_6 : _auto_5) {");
     gold.append("\n      _auto_6.set(123);");
     gold.append("\n    }");
@@ -1640,7 +1640,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  private int __FUNC_1_goo(NtTable<RTxM> which) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
-    gold.append("\n    return (Integer) (LibStatistics.sumInts((which.iterate(true)).transform((item) -> item.m)).getOrDefaultTo(10000));");
+    gold.append("\n    return (Integer) (LibStatistics.sumInts((which.iterate(true)).transform((RTxM item) -> (Integer) (item.m))).getOrDefaultTo(10000));");
     gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
@@ -6257,11 +6257,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      _CreateRef11.y.set(_AutoExpr12.y);");
     gold.append("\n    }");
     gold.append("\n    __track(7);");
-    gold.append("\n    result.set(__FUNC_0_foo((things.iterate(true)).transform((item) -> item.x.get())));");
+    gold.append("\n    result.set(__FUNC_0_foo((things.iterate(true)).transform((RTxThing item) -> (Integer) (item.x.get()))));");
     gold.append("\n    __track(8);");
-    gold.append("\n    result2.set((Integer) (LibStatistics.sumInts((things.iterate(true)).transform((item) -> item.x.get())).getOrDefaultTo(-1000)));");
+    gold.append("\n    result2.set((Integer) (LibStatistics.sumInts((things.iterate(true)).transform((RTxThing item) -> (Integer) (item.x.get()))).getOrDefaultTo(-1000)));");
     gold.append("\n    __track(9);");
-    gold.append("\n    result3.set((Double) (LibStatistics.sumDoubles((things.iterate(true)).transform((item) -> item.y.get())).getOrDefaultTo(-1000.0)));");
+    gold.append("\n    result3.set((Double) (LibStatistics.sumDoubles((things.iterate(true)).transform((RTxThing item) -> (Double) (item.y.get()))).getOrDefaultTo(-1000.0)));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
@@ -8467,7 +8467,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class TypeBuiltIn_21 extends LivingDocument {");
     gold.append("\n  private final RxString y;");
-    gold.append("\n  private final RxMaybe<RxInt32> mi;");
+    gold.append("\n  private final RxMaybe<RxInt32,Integer> mi;");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -8480,7 +8480,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  public TypeBuiltIn_21(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    y = new RxString(this, \"\");");
-    gold.append("\n    mi = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
+    gold.append("\n    mi = new RxMaybe<RxInt32,Integer>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

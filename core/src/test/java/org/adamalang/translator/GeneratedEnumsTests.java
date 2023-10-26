@@ -2862,7 +2862,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class Maybe_17 extends LivingDocument {");
-    gold.append("\n  private final RxMaybe<RxEnumInt32> e_rx;");
+    gold.append("\n  private final RxMaybe<RxEnumInt32,Integer> e_rx;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -2871,7 +2871,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public Maybe_17(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    e_rx = new RxMaybe<>(this, (RxParent __parent) -> new RxEnumInt32(__parent, 1, (__v) -> __EnumFix_E(__v)));");
+    gold.append("\n    e_rx = new RxMaybe<RxEnumInt32,Integer>(this, (RxParent __parent) -> new RxEnumInt32(__parent, 1, (__v) -> __EnumFix_E(__v)));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

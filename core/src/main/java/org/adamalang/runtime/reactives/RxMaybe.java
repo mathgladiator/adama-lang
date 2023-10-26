@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.function.Function;
 
 /** a reactive maybe */
-public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxChild, RxKillable {
+public class RxMaybe<Ty extends RxBase, Ry> extends RxBase implements RxParent, RxChild, RxKillable {
   private final Function<RxParent, Ty> maker;
   private Ty priorValue;
   private Ty value;
@@ -171,7 +171,7 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     return true;
   }
 
-  public int compareValues(final RxMaybe<Ty> other, final Comparator<Ty> test) {
+  public int compareValues(final RxMaybe<Ty, Ry> other, final Comparator<Ty> test) {
     if (value == null) {
       if (other.value == null) {
         return 0;
@@ -188,12 +188,12 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @SuppressWarnings("unchecked")
-  public <X> NtMaybe<X> get() {
+  public NtMaybe<Ry> get() {
     if (value == null) {
       return new NtMaybe();
     } else {
       if (value instanceof CanGetAndSet) {
-        return new NtMaybe<>((X)((CanGetAndSet) value).get()).withDeleteChain(() -> delete());
+        return new NtMaybe<>((Ry)((CanGetAndSet) value).get()).withDeleteChain(() -> delete());
       } else {
         return new NtMaybe(value).withDeleteChain(() -> delete());
       }
