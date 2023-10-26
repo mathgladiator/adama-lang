@@ -1391,11 +1391,16 @@ var RxHTML = (function () {
       }
       // we default back to data in the IF case
       if (show) {
-        parent.style.display = "";
+        if (forceHiding) {
+          parent.style.display = "";
+        }
         makerTrue(parent, next);
       } else {
-        parent.style.display = "none";
-        makerFalse(parent, next);
+        if (forceHiding) {
+          parent.style.display = "none";
+        } else {
+          makerFalse(parent, next);
+        }
       }
       subscribe_state(next, unsub);
     }.bind({ shown: 'no' });
