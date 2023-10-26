@@ -2696,7 +2696,6 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    datetime_val = new RxLazy<NtDateTime>(this, () -> (NtDateTime)(__datetimeNow()), null);");
     gold.append("\n    today = new RxLazy<NtDate>(this, () -> (NtDate)(__dateOfToday()), null);");
     gold.append("\n    __time.__subscribe(now);");
-    gold.append("\n    __time.__subscribe(datetime_val);");
     gold.append("\n    __today.__subscribe(today);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3241,13 +3240,13 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\nNO_ONE|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"now\":\"75\",\"datetime_val\":\"1970-01-01T00:00:00.075Z[UTC]\"},\"seq\":4}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"now\":\"75\",\"datetime_val\":\"1970-01-01T00:00:00.075Z[UTC]\",\"today\":\"1970-01-01\"},\"seq\":4}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"now\":\"75\"},\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"now\":\"75\",\"datetime_val\":\"1970-01-01T00:00:00.050Z[UTC]\",\"today\":\"1970-01-01\"},\"seq\":4}");
     gold.append("\nRANDO|FAILURE:184333");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\nRANDO|SUCCESS:5");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"now\":\"100\",\"datetime_val\":\"1970-01-01T00:00:00.100Z[UTC]\"},\"seq\":5}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"now\":\"100\",\"datetime_val\":\"1970-01-01T00:00:00.100Z[UTC]\"},\"seq\":5}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"now\":\"100\"},\"seq\":5}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"now\":\"100\"},\"seq\":5}");
     gold.append("\nMEMORY:1006");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");

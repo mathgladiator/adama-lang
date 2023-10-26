@@ -65,10 +65,12 @@ public abstract class PrivateView {
    * both views.
    */
   public void usurp(PrivateView usurper) {
-    if (alive) {
-      this.usurper = usurper;
-    } else {
-      usurper.kill();
+    if (this.usurper != null) {
+      this.usurper.usurp(usurper);
+    }
+    this.usurper = usurper;
+    synchronized (this) {
+      alive = false;
     }
   }
 

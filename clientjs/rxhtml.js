@@ -692,7 +692,7 @@ var RxHTML = (function () {
       fire_unsub(this);
       nuke(parent);
       var state = fork(priorState);
-      childrenMaker(parent, state, "" + value);
+      childrenMaker(parent, self.pD(state), "" + value);
       subscribe_state(state, this);
 
     }.bind(swst);
@@ -1427,7 +1427,11 @@ var RxHTML = (function () {
       obj[name] = value;
       var delta = path_to(state.view, obj);
       state.view.tree.update(delta);
-    };
+      if (this.dedupe != value) {
+        this.dedupe = value;
+        el.dispatchEvent(new Event("aftersync"));
+      }
+    }.bind({dedupe:""});
     if (type == "CHECKBOX") {
       el.addEventListener('change', debounce(ms, function (evt) {
         signal(el.checked ? true : false);
@@ -1450,7 +1454,7 @@ var RxHTML = (function () {
       el.onkeyup = el.onchange;
       window.setTimeout(function () {
         signal(el.value);
-      }, 1);
+      }, 5);
     }
   };
 
