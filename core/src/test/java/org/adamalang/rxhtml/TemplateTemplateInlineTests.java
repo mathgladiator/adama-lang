@@ -111,8 +111,8 @@ public class TemplateTemplateInlineTests extends BaseRxHtmlTest {
     source.append("\n    <page uri=\"/\">");
     source.append("\n        This is a page which is going to use the template.");
     source.append("\n        <inline-template template=\"temp\">");
-    source.append("\n            <div rx:case=\"foo\">Foo</div>");
-    source.append("\n            <div rx:case=\"boo\">Boo</div>");
+    source.append("\n            <div rx:case=\"foo\"> Foo </div>");
+    source.append("\n            <div rx:case=\"boo\"> Boo </div>");
     source.append("\n        </inline-template>");
     source.append("\n    </page>");
     source.append("\n</forest>");
