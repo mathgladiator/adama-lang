@@ -423,12 +423,18 @@ public class GlobalDataHandler implements RootRegionHandler {
           output.write(chunk);
           digestMD5.update(chunk);
           digestSHA384.update(chunk);
-          MessageDigest chunkDigest = Hashing.md5();
-          chunkDigest.update(chunk);
-          if (!Hashing.finishAndEncode(chunkDigest).equals(attachChunk.chunkMd5)) {
-            chunkResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_CHUNK_BAD_DIGEST));
-            output.close();
-            disconnect(0);
+          boolean hasChunkMD5 = attachChunk.chunkMd5 != null && !("n/a".equalsIgnoreCase(attachChunk.chunkMd5) || "".equalsIgnoreCase(attachChunk.chunkMd5));
+          if (hasChunkMD5) {
+            MessageDigest chunkDigest = Hashing.md5();
+            chunkDigest.update(chunk);
+            if (!Hashing.finishAndEncode(chunkDigest).equals(attachChunk.chunkMd5)) {
+              chunkResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_CHUNK_BAD_DIGEST));
+              output.close();
+              disconnect(0);
+            } else {
+              chunkResponder.complete();
+              startResponder.next(65536);
+            }
           } else {
             chunkResponder.complete();
             startResponder.next(65536);
