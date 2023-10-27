@@ -961,7 +961,8 @@ public class Parser {
       final var compute = expression(scope);
       return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
     } else {
-      final var type = reactive_type();
+      // we allow a superfluous privacy policy as that is the same as absent
+      final var type = reactive_type(policy instanceof PrivatePolicy ? false : (policy != null));
       final var id = id();
       final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
       Expression defaultValue = null;
@@ -1731,7 +1732,7 @@ public class Parser {
 
   public TokenizedItem<TyType> reactive_parameter_type() throws AdamaLangException {
     final var before = consumeExpectedSymbol("<");
-    final var token = new TokenizedItem<>(reactive_type());
+    final var token = new TokenizedItem<>(reactive_type(false));
     token.before(before);
     token.after(consumeExpectedSymbol(">"));
     return token;
@@ -1741,16 +1742,16 @@ public class Parser {
     final var openThing = consumeExpectedSymbol("<");
     final var domainType = native_type(false);
     final var commaToken = consumeExpectedSymbol(",");
-    final var rangeType = reactive_type();
+    final var rangeType = reactive_type(false);
     final var closeThing = consumeExpectedSymbol(">");
     return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing);
   }
 
-  private TyType reactive_type() throws AdamaLangException {
-    return enrich(reactive_type_intern());
+  private TyType reactive_type(boolean has_policy) throws AdamaLangException {
+    return enrich(reactive_type_intern(has_policy));
   }
 
-  private TyType reactive_type_intern() throws AdamaLangException {
+  private TyType reactive_type_intern(boolean has_policy) throws AdamaLangException {
     final var token = tokens.pop();
     if (token == null) {
       throw new ParseException("Parser was expecting a reactive type, but got an end of stream instead.", tokens.getLastTokenIfAvailable());
@@ -1791,6 +1792,10 @@ public class Parser {
         final var typeParameter = type_parameter();
         Token under = tokens.popIf((t) -> t.isIdentifier("within"));
         TyReactiveTable table =  new TyReactiveTable(token, typeParameter);
+        if (has_policy) {
+          // the reason we do it this way is because want to let typing throw the error such that multiple errors can happen
+          table.raiseHasPolicy();
+        }
         // TODO: detect graph associations
         return table;
       }

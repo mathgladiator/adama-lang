@@ -91,7 +91,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
 
   @Override
   public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
-    DevBoxStart.start(args);
+    DevBoxStart.start(new DevBoxStart.DevBoxInputs(args));
   }
 
   @Override

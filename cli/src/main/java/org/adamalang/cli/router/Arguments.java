@@ -4579,6 +4579,119 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama deinit", Util.ANSI.Green));
 		}
 	}
+	public static class DevboxArgs {
+		public Config config;
+		public String rxhtmlPath = "frontend";
+		public String assetPath = "assets";
+		public String microverse = "local.verse.json";
+		public String debugger = "true";
+		public String localLibadamaPath = null;
+		public String environment = "test";
+		public static DevboxArgs from(String[] args, int start) {
+			DevboxArgs returnArgs = new DevboxArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-r":
+					case "--rxhtml-path": {
+						if (k+1 < args.length) {
+							returnArgs.rxhtmlPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-a":
+					case "--asset-path": {
+						if (k+1 < args.length) {
+							returnArgs.assetPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-mv":
+					case "--microverse": {
+						if (k+1 < args.length) {
+							returnArgs.microverse = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-dbg":
+					case "--debugger": {
+						if (k+1 < args.length) {
+							returnArgs.debugger = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-lap":
+					case "--local-libadama-path": {
+						if (k+1 < args.length) {
+							returnArgs.localLibadamaPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-e":
+					case "--environment": {
+						if (k+1 < args.length) {
+							returnArgs.environment = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Host the working directory as a personal localhost instance", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama devbox", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-mv, --microverse", Util.ANSI.Green) + " " + Util.prefix("<microverse>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-dbg, --debugger", Util.ANSI.Green) + " " + Util.prefix("<debugger>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White));
+		}
+	}
 	public static class DumpenvArgs {
 		public Config config;
 		public static DumpenvArgs from(String[] args, int start) {

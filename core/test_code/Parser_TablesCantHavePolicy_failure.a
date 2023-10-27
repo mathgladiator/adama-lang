@@ -1,0 +1,10 @@
+record T {
+
+}
+
+record R {
+  public table<T> more;
+}
+
+private table<R> foo;
+public table<R> foo;

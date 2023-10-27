@@ -971,6 +971,16 @@ public class MainRouter {
              handler.deinit(mainArgs , out);
              return 0;
           }
+          case "devbox": {
+            DevboxArgs mainArgs = DevboxArgs.from(args, 1);
+            if (mainArgs == null) {
+              DevboxArgs.help();
+              return 1;
+             }
+             YesOrError out = output.makeYesOrError();
+             handler.devbox(mainArgs , out);
+             return 0;
+          }
           case "dumpenv": {
             DumpenvArgs mainArgs = DumpenvArgs.from(args, 1);
             if (mainArgs == null) {

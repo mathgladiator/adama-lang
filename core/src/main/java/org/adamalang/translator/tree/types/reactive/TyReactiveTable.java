@@ -45,6 +45,7 @@ public class TyReactiveTable extends TyType implements //
   public final String recordName;
   public final TokenizedItem<Token> recordNameToken;
   public final Token tableToken;
+  private boolean hasPolicy;
 
 
   public TyReactiveTable(final Token tableToken, final TokenizedItem<Token> recordNameToken) {
@@ -54,6 +55,11 @@ public class TyReactiveTable extends TyType implements //
     recordName = recordNameToken.item.text;
     ingest(tableToken);
     ingest(recordNameToken.item);
+    this.hasPolicy = false;
+  }
+
+  public void raiseHasPolicy() {
+    this.hasPolicy = true;
   }
 
   @Override
@@ -87,6 +93,9 @@ public class TyReactiveTable extends TyType implements //
   @Override
   public void typing(final Environment environment) {
     environment.rules.Resolve(new TyReactiveRef(recordNameToken.item), false);
+    if (hasPolicy) {
+      environment.document.createError(this, "Tables are not allowed to have a privacy policy as they default to private.");
+    }
   }
 
   @Override

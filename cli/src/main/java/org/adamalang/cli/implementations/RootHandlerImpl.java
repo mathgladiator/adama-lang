@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.canary.Canary;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.devbox.DevBoxStart;
 import org.adamalang.cli.implementations.space.Kickstarter;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
@@ -209,5 +210,10 @@ public class RootHandlerImpl implements RootHandler {
     Canary.run(args.config.get_string("canary-endpoint", "wss://aws-us-east-2.adama-platform.com/~s"), args.scenario, (out) -> {
       System.out.println(out);
     });
+  }
+
+  @Override
+  public void devbox(Arguments.DevboxArgs args, Output.YesOrError output) throws Exception {
+    DevBoxStart.start(new DevBoxStart.DevBoxInputs(args));
   }
 }

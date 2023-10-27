@@ -20,6 +20,7 @@ package org.adamalang.cli.devbox;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.SelfClient;
+import org.adamalang.cli.Config;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -57,7 +58,37 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class DevBoxStart {
 
-  public static void start(Arguments.FrontendDevServerArgs args) throws Exception {
+  public static class DevBoxInputs {
+    public final Config config;
+    public final String rxhtmlPath;
+    public final String assetPath;
+    public final String microverse;
+    public final String debugger;
+    public final String localLibadamaPath;
+    public final String environment;
+
+    public DevBoxInputs(Arguments.FrontendDevServerArgs args) {
+      this.config = args.config;
+      this.rxhtmlPath = args.rxhtmlPath;
+      this.assetPath = args.assetPath;
+      this.microverse = args.microverse;
+      this.debugger = args.debugger;
+      this.localLibadamaPath = args.localLibadamaPath;
+      this.environment = args.environment;
+    }
+
+    public DevBoxInputs(Arguments.DevboxArgs args) {
+      this.config = args.config;
+      this.rxhtmlPath = args.rxhtmlPath;
+      this.assetPath = args.assetPath;
+      this.microverse = args.microverse;
+      this.debugger = args.debugger;
+      this.localLibadamaPath = args.localLibadamaPath;
+      this.environment = args.environment;
+    }
+  }
+
+  public static void start(DevBoxInputs args) throws Exception {
     TerminalIO terminal = new TerminalIO();
     String developerIdentity = args.config.get_string("identity", null);
     SimpleExecutor offload = SimpleExecutor.create("executor");

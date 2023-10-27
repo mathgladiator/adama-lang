@@ -33,6 +33,7 @@ public interface RootHandler {
   ServicesHandler makeServicesHandler();
   void canary(CanaryArgs args, YesOrError output) throws Exception;
   void deinit(DeinitArgs args, YesOrError output) throws Exception;
+  void devbox(DevboxArgs args, YesOrError output) throws Exception;
   void dumpenv(DumpenvArgs args, YesOrError output) throws Exception;
   void init(InitArgs args, YesOrError output) throws Exception;
   void kickstart(KickstartArgs args, YesOrError output) throws Exception;

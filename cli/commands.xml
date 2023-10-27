@@ -918,5 +918,17 @@
         </documentation>
     </command>
 
+    <command name="devbox">
+        <documentation>
+            Host the working directory as a personal localhost instance
+        </documentation>
+        <arg name="rxhtml-path" default="frontend" />
+        <arg name="asset-path" default="assets" />
+        <arg name="microverse" default="local.verse.json" />
+        <arg name="debugger" default="true" />
+        <arg name="local-libadama-path" default="null" />
+        <arg name="environment" default="test" />
+    </command>
+
 </cli>
 
