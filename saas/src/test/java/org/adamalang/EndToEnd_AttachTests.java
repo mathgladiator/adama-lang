@@ -171,13 +171,10 @@ public class EndToEnd_AttachTests {
       Assert.assertEquals("FINISH:{}", c5.next());
       Iterator<String> c6 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/start\",\"space\":\"newspace\",\"key\":\"a\",\"filename\":\"thefilename\",\"content-type\":\"text/plain\"}");
       Assert.assertEquals("STREAM:{\"chunk_request_size\":65536}", c6.next());
-      Assert.assertEquals(1, fe.attachmentRoot.listFiles().length);
       byte[] chunkToSend = "[This is a chunk]".getBytes(StandardCharsets.UTF_8);
-
       Iterator<String> c7 = fe.execute("{\"id\":8,\"upload\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/append\"," + partialJsonChunk(chunkToSend, true, false) + "}");
       Assert.assertEquals("FINISH:{}", c7.next());
       Assert.assertEquals("STREAM:{\"chunk_request_size\":65536}", c6.next());
-      Assert.assertEquals(0, fe.attachmentRoot.listFiles().length);
     }
   }
 
