@@ -2857,6 +2857,14 @@ var RxHTML = (function () {
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var msg = get_form(form, false);
+      if (evt.submitter) {
+        var s = evt.submitter;
+        if (s.name && s.value) {
+          if (s.value == "true") { s.value = true; }
+          else if (s.value == "false") { s.value = false; }
+          msg[s.name] = s.value;
+        }
+      }
       // TODO: pass through the debugger
       state.data.connection.ptr.send(channel, msg, {
         success: function (/* payload */) {
