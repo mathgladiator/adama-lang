@@ -23,9 +23,7 @@ import java.util.function.Supplier;
 
 public class Graph {
 
-  public void watch(short under, RxRecordBase<?> record, short assoc, Supplier<int[]> supplier) {
 
-  }
 
   public class Query {
     // expess a way to build an a query that collects a bunch of ids
