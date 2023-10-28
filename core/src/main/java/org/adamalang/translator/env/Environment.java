@@ -213,6 +213,14 @@ public class Environment {
       }
     }
 
+    // ok, maybe it is a template!
+    if (result == null) {
+      final var temp = document.templateTypes.get(name);
+      if (temp != null) {
+        return lookup_return(name, temp);
+      }
+    }
+
     // Ok, maybe it is a global object
     final var globalObject = state.globals.get(name);
     if (globalObject != null) {

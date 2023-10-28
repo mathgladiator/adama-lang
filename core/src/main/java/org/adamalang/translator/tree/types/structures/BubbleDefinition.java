@@ -25,6 +25,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -79,6 +80,9 @@ public class BubbleDefinition extends StructureComponent {
       env = env.scopeRecord(owningStructureStorage.name.text);
     }
     expressionType = environment.rules.Resolve(expression.typing(env, null), false);
+    if (expressionType instanceof DetailNeverPublic) {
+      environment.document.createError(this, String.format("Bubble has a return type that is not allowed: %s", expressionType.getAdamaType()));
+    }
     if (guard != null) {
       for (TokenizedItem<String> policy : guard.policies) {
         var dcp = owningStructureStorage.policies.get(policy.item);

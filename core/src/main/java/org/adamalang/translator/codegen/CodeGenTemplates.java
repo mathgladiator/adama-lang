@@ -15,9 +15,21 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.codegen;
 
-public class Platform {
-  public static final String VERSION = "20231028122755";
-  public static final String JS_VERSION = "127b6e850ed9056789544900d04c994d";
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineTemplate;
+
+import java.util.Map;
+
+/** generate the code to power templates */
+public class CodeGenTemplates {
+  public static void writeTemplates(final StringBuilderWithTabs sb, final Environment environment) {
+    for (Map.Entry<String, DefineTemplate> entry : environment.document.templates.entrySet()) {
+      sb.append("public static final NtTemplate ").append(entry.getKey()).append(" = ");
+      entry.getValue().value.writeJava(sb, environment);
+      sb.append(";").writeNewline();
+    }
+  }
 }

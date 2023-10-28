@@ -190,4 +190,8 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   @Override
   public void add(DefineGraph dg) {
   }
+
+  @Override
+  public void add(DefineTemplate dt) {
+  }
 }

@@ -23,4 +23,8 @@ public class Settings {
   public Settings() {
     this.html = true;
   }
+
+  public Settings(boolean html) {
+    this.html = html;
+  }
 }

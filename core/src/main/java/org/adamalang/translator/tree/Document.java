@@ -42,6 +42,7 @@ import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeTemplate;
 import org.adamalang.translator.tree.types.structures.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
@@ -65,6 +66,7 @@ public class Document implements TopLevelDocumentHandler {
   public final ArrayList<DefineConstructor> constructors;
   public final ArrayList<DefineFunction> functionDefinitions;
   public final HashMap<String, TyNativeFunctional> functionTypes;
+  public final HashMap<String, TyNativeTemplate> templateTypes;
   public final ArrayList<DefineHandler> handlers;
   public final TyReactiveRecord root;
   public final ArrayList<DefineTest> tests;
@@ -94,6 +96,7 @@ public class Document implements TopLevelDocumentHandler {
   public final LinkedHashMap<String, DefineAssoc> assocs;
   public final LinkedHashMap<String, DefineGraph> graphs;
   private short assocIdGen;
+  public final LinkedHashMap<String, DefineTemplate> templates;
 
   public Document() {
     autoClassId = 0;
@@ -114,6 +117,7 @@ public class Document implements TopLevelDocumentHandler {
     className = "DemoDocument";
     functionDefinitions = new ArrayList<>();
     functionTypes = new HashMap<>();
+    templateTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
     configs = new HashMap<>();
     viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(Token.WRAP("__ViewerType"), StorageSpecialization.Message, true, false, null));
@@ -132,6 +136,7 @@ public class Document implements TopLevelDocumentHandler {
     assocs = new LinkedHashMap<>();
     graphs = new LinkedHashMap<>();
     assocIdGen = 0;
+    templates = new LinkedHashMap<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -373,7 +378,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final FieldDefinition fd) {
     if (root.storage.has(fd.name) || defined.contains(fd.name)) {
-      typeChecker.issueError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text));
+      typeChecker.issueError(fd, String.format("Global field '%s' was already defined", fd.name));
       return;
     }
     defined.add(fd.name);
@@ -504,6 +509,16 @@ public class Document implements TopLevelDocumentHandler {
     graphs.put(dg.name.text, dg);
   }
 
+  @Override
+  public void add(DefineTemplate dt) {
+    if (defined.contains(dt.nameToken.text)) {
+      typeChecker.issueError(dt, String.format("Template '%s' was already defined; name used", dt.nameToken.text));
+      return;
+    }
+    typeChecker.define(dt.nameToken, Collections.emptySet(), (env) -> dt.value.typing(env, null));
+    templates.put(dt.nameToken.text, dt);
+  }
+
   /**
    * @param filename the filename to import
    * @param position the position within the document (can't be null, use DocumentPosition.ZERO for
@@ -584,6 +599,9 @@ public class Document implements TopLevelDocumentHandler {
           }
         }
       }
+    }
+    for (final Map.Entry<String, DefineTemplate> entry : templates.entrySet()) {
+      templateTypes.put(entry.getKey(), (TyNativeTemplate) entry.getValue().value.typing(environment, null));
     }
     for (final Map.Entry<String, ArrayList<DefineFunction>> entry : functionIndex.entrySet()) {
       final var instances = new ArrayList<FunctionOverloadInstance>();
@@ -666,6 +684,7 @@ public class Document implements TopLevelDocumentHandler {
         ((DetailTypeProducesRootLevelCode) ty).compile(sb, environment);
       }
     }
+    CodeGenTemplates.writeTemplates(sb, environment);
     CodeGenFunctions.writeFunctionsJava(sb, environment);
     CodeGenServices.writeServices(sb, environment);
     CodeGenViewStateFilter.writeViewStateFilter(sb, environment);

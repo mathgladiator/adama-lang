@@ -160,6 +160,10 @@ public class Token implements Comparable<Token> {
     return majorType == MajorTokenType.Label;
   }
 
+  public boolean isTemplate() {
+    return majorType == MajorTokenType.Template;
+  }
+
   /** helper: is a literal number of either double or integer type */
   public boolean isNumberLiteral() {
     return majorType == MajorTokenType.NumberLiteral;

@@ -1,0 +1,13 @@
+template name : `x`
+
+Hello [[name]]
+
+This is the magic of templates that are easy to use
+
+`x`
+
+public formula made = name.html({name:"World"}.to_dynamic());
+
+template l : `x`LEAN`x`
+
+public formula l2 = l.raw({}.to_dynamic());

@@ -87,4 +87,6 @@ public interface TopLevelDocumentHandler {
   void add(DefineAssoc da);
 
   void add(DefineGraph dg);
+
+  void add(DefineTemplate dt);
 }

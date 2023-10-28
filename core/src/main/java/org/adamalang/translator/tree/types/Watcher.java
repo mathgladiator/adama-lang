@@ -21,6 +21,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
+import org.adamalang.translator.tree.types.natives.TyNativeTemplate;
 import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
 import java.util.LinkedHashSet;
@@ -36,6 +37,7 @@ public class Watcher {
     return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
+      if (resolved instanceof TyNativeTemplate) return;
       if (resolved instanceof TyNativeFunctional) {
         variablesToWatch.addAll(((TyNativeFunctional) resolved).gatherDependencies());
         return;

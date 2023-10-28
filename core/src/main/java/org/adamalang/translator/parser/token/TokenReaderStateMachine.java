@@ -43,6 +43,7 @@ class TokenReaderStateMachine {
   private int startCharNo;
   private int startLineNo;
   private int startByte;
+  private String templateSuffix;
 
   TokenReaderStateMachine(final String sourceName, final Consumer<Token> output) {
     this.sourceName = sourceName;
@@ -57,6 +58,7 @@ class TokenReaderStateMachine {
     deduper = new HashMap<>();
     currentByte = 0;
     startByte = 0;
+    templateSuffix = null;
   }
 
   public void consume(final int codepoint) throws AdamaLangException {
@@ -94,6 +96,10 @@ class TokenReaderStateMachine {
               currentMajorTokenType = MajorTokenType.NumberLiteral;
               currentMinorTokenType = MinorTokenType.NumberIsInteger;
               break;
+            } else if (codepoint == '`') {
+              scanState = ScannerState.ScanTemplate;
+              currentMajorTokenType = MajorTokenType.Template;
+              templateSuffix = null;
             } else if (codepoint == '"') {
               scanState = ScannerState.ScanStringLiteral;
               currentMajorTokenType = MajorTokenType.StringLiteral;
@@ -112,6 +118,22 @@ class TokenReaderStateMachine {
         case ScanWhitespace:
           if (!codePointInTable || !Tables.WHITESPACE_SCANNER[codepoint]) {
             doCutThenRetry = true;
+          }
+          break;
+        case ScanTemplate:
+          if (templateSuffix == null) {
+            if (codepoint == '`') {
+              templateSuffix = currentTokenBuffer.toString() + "`";
+            }
+          } else {
+            int backtrack = templateSuffix.length();
+            String current = currentTokenBuffer.toString();
+            if (codepoint == '`' && current.length() > backtrack) {
+              String tail = current.substring(current.length() - backtrack + 1);
+              if (templateSuffix.equals(tail + "`")) {
+                doFinalCut = true;
+              }
+            }
           }
           break;
         case ScanUntilEndOfLine:

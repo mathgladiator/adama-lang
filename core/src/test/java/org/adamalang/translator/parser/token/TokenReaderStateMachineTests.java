@@ -34,4 +34,27 @@ public class TokenReaderStateMachineTests {
     trsm.consume('1');
     Assert.assertEquals(4, list.size());
   }
+
+  @Test
+  public void template_1() throws Exception {
+    final var list = new ArrayList<Token>();
+    final var trsm = new TokenReaderStateMachine("Source", list::add);
+    for (int cp : "`a`HI\nTHERE`a`".codePoints().toArray()) {
+      trsm.consume(cp);
+    }
+    Assert.assertEquals(1, list.size());
+    Token token = list.get(0);
+    Assert.assertEquals(MajorTokenType.Template, token.majorType);
+    Assert.assertEquals("`a`HI\nTHERE`a`", token.text);
+  }
+
+  @Test
+  public void template_not_closed() throws Exception {
+    final var list = new ArrayList<Token>();
+    final var trsm = new TokenReaderStateMachine("Source", list::add);
+    for (int cp : "`a`HI THERE`b`".codePoints().toArray()) {
+      trsm.consume(cp);
+    }
+    Assert.assertEquals(0, list.size());
+  }
 }

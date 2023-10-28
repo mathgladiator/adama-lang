@@ -37,7 +37,9 @@ public enum MajorTokenType {
   /** a single symbol: '+', '-' */
   Symbol(false),
   /** whitespace like spaces (' '), tabs ('\t'), or newlines (\'n') */
-  Whitespace(true);
+  Whitespace(true),
+  /** a string template **/
+  Template(false);
 
   /** is the token hidden from the parse tree */
   public final boolean hidden;

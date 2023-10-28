@@ -24,12 +24,14 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class TyNativeGlobalObject extends TyType implements //
+    DetailNeverPublic, //
     DetailTypeHasMethods {
   public final HashMap<String, TyNativeFunctional> functions;
   public final String globalName;

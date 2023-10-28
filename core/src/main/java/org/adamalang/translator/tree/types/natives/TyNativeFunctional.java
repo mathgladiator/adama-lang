@@ -26,13 +26,14 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class TyNativeFunctional extends TyType {
+public class TyNativeFunctional extends TyType implements DetailNeverPublic {
   public final String name;
   public final ArrayList<FunctionOverloadInstance> overloads;
   public final FunctionStyleJava style;

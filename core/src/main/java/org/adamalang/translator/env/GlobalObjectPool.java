@@ -59,6 +59,7 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("TimeSpan", LibTimeSpan.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Map", LibMap.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Templates", LibTemplates.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Template", LibTemplate.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Search", LibSearch.class, pool.extensions));
 
     final var client = new TyNativeGlobalObject("Principal", null, false);
@@ -107,7 +108,7 @@ public class GlobalObjectPool {
 
   /** common policy for watch to ignore various names and types */
   public static boolean ignoreCapture(String name, TyType ty) {
-    if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional) {
+    if (ty instanceof TyNativeGlobalObject || ty instanceof TyNativeFunctional || ty instanceof TyNativeTemplate) {
       return true;
     }
     switch (name) {

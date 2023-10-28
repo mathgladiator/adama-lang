@@ -24,10 +24,11 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 
 import java.util.function.Consumer;
 
-public class TyNativeVoid extends TyType {
+public class TyNativeVoid extends TyType implements DetailNeverPublic {
   public TyNativeVoid() {
     super(TypeBehavior.ReadOnlyNativeValue);
   }

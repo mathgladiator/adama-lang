@@ -55,6 +55,8 @@ public class TypeBridge {
       return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (NtComplex.class == x) {
       return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (NtTemplate.class == x) {
+      return new TyNativeTemplate(null);
     } else if (NtDate.class == x) {
       return new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (NtDateTime.class == x) {

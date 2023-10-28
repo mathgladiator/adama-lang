@@ -28,6 +28,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
@@ -37,6 +38,7 @@ import java.util.function.Consumer;
 
 public class TyNativeFuture extends TyType implements //
     DetailContainsAnEmbeddedType, //
+    DetailNeverPublic, //
     DetailTypeHasMethods, //
     AssignmentViaNative {
   public final Token futureToken;

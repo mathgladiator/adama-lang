@@ -18,7 +18,6 @@
 package org.adamalang.translator.tree.types.natives;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -30,12 +29,14 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class TyNativeService extends TyType implements //
+    DetailNeverPublic, //
     DetailTypeHasMethods {
   public final DefineService service;
 

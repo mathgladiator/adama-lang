@@ -39,6 +39,8 @@ enum ScannerState {
   ScanUntilEndOfLine,
   /** scanner is scanning white space */
   ScanWhitespace,
+  /** A template */
+  ScanTemplate,
   /** scanner is in an unknown state and requires input to decide next step */
   Unknown,
 }

@@ -686,7 +686,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "graph"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "graph", "template"));
     }
     if (op != null) {
       switch (op.text) {
@@ -762,10 +762,25 @@ public class Parser {
         case "metric":
           final var metric = define_metric(rootScope, op);
           return doc -> doc.add(metric);
+        case "template":
+          final var template = define_template(op);
+          return doc -> doc.add(template);
       }
     }
     final var newField = define_field_record(rootScope);
     return doc -> doc.add(newField);
+  }
+
+  public DefineTemplate define_template(Token templateToken) throws AdamaLangException {
+    Token name = id();
+    Token colon = consumeExpectedSymbol(":");
+    Token template = tokens.pop();
+    if (template == null) {
+      throw new ParseException(String.format("Expected a template, but got end of stream instead."), colon);
+    } else if (!template.isTemplate()) {
+      throw new ParseException(String.format("Expected a template, but got %s instead", template.majorType.toString()), colon);
+    }
+    return new DefineTemplate(templateToken, name, colon, new TemplateConstant(template));
   }
 
   public DefineGraph define_graph(Token op) throws AdamaLangException {

@@ -15,9 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.natives;
 
-public class Platform {
-  public static final String VERSION = "20231028122755";
-  public static final String JS_VERSION = "127b6e850ed9056789544900d04c994d";
+import org.adamalang.common.template.Parser;
+import org.adamalang.common.template.tree.T;
+
+/** holder for a static template within a document */
+public class NtTemplate {
+
+  public final T template;
+
+  public NtTemplate(String input) {
+    this.template = Parser.parse(input);
+  }
 }

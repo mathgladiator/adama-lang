@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.reactive.*;
+import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
@@ -190,6 +191,9 @@ public class FieldDefinition extends StructureComponent {
           environment.rules.CanTypeAStoreTypeB(type, defType, StorageTweak.None, false);
         }
       }
+    }
+    if (type instanceof DetailNeverPublic) {
+      environment.document.createError(this, String.format("Field has a type that is not allowed: %s", type.getAdamaType()));
     }
     if (type == null) {
       environment.document.createError(this, String.format("The field '%s' has no type", name));

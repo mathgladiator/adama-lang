@@ -19818,7 +19818,7 @@ public class GeneratedParserTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Parser_InvalidCharacterFast_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidCharacterFast_failure.a' failed to lex: Failed to understand codepoint:96('`')\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Lex): Failed to understand codepoint:96('`')\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":1,\"byte\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"File './test_code/Parser_InvalidCharacterFast_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:~ instead. {Token: `~` @ (0,0) -> (0,1): Symbol}\",\"file\":\"./test_code/Parser_InvalidCharacterFast_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":0,\"character\":0,\"byte\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Import failed (Parse): Parser was expecting an identifier, but got a Symbol:~ instead. {Token: `~` @ (0,0) -> (0,1): Symbol}\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

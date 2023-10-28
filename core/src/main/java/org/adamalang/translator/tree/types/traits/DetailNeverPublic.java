@@ -15,9 +15,8 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree.types.traits;
 
-public class Platform {
-  public static final String VERSION = "20231028122755";
-  public static final String JS_VERSION = "127b6e850ed9056789544900d04c994d";
+/** the result from bubble/auto shoulid never be emitted */
+public interface DetailNeverPublic {
 }
