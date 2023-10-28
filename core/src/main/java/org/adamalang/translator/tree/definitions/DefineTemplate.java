@@ -34,6 +34,8 @@ public class DefineTemplate extends Definition {
     this.nameToken = nameToken;
     this.colonToken = colonToken;
     this.value = value;
+    ingest(templateToken);
+    ingest(value);
   }
 
   @Override

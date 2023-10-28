@@ -55,7 +55,7 @@ public class GeneratedTemplateTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Template_DontLeak_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":28},\"end\":{\"line\":2,\"character\":16,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble has a return type that is not allowed: template\",\"file\":\"./test_code/Template_DontLeak_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":2147483647,\"character\":2147483647,\"byte\":2147483647}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `template`\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":28},\"end\":{\"line\":2,\"character\":16,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble has a return type that is not allowed: template\",\"file\":\"./test_code/Template_DontLeak_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":24,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `template`\",\"file\":\"./test_code/Template_DontLeak_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -552,7 +552,7 @@ public class GeneratedTemplateTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  public static NtTemplate name = new NtTemplate(\"\\n\\nHello World\\n\\nThis is the magic of templates that are easy to use\\n\\n\");");
+    gold.append("\n  public static final NtTemplate name = new NtTemplate(\"\\n\\nHello World\\n\\nThis is the magic of templates that are easy to use\\n\\n\");");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    return __map;");
@@ -1282,8 +1282,8 @@ public class GeneratedTemplateTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  public static NtTemplate name = new NtTemplate(\"\\n\\nHello [[name]]\\n\\nThis is the magic of templates that are easy to use\\n\\n\");");
-    gold.append("\n  public static NtTemplate l = new NtTemplate(\"LEAN\");");
+    gold.append("\n  public static final NtTemplate name = new NtTemplate(\"\\n\\nHello [[name]]\\n\\nThis is the magic of templates that are easy to use\\n\\n\");");
+    gold.append("\n  public static final NtTemplate l = new NtTemplate(\"LEAN\");");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    return __map;");

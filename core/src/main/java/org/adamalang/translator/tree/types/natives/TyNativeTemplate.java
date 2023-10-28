@@ -41,6 +41,7 @@ public class TyNativeTemplate extends TySimpleNative implements //
   public TyNativeTemplate(Token templateToken) {
     super(TypeBehavior.ReadOnlyNativeValue, "NtTemplate", "NtTemplate");
     this.templateToken = templateToken;
+    ingest(templateToken);
   }
 
   @Override

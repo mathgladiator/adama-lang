@@ -34,6 +34,7 @@ public class TemplateConstant extends Expression {
 
   public TemplateConstant(Token token) {
     this.token = token;
+    ingest(token);
   }
 
   @Override
@@ -45,7 +46,6 @@ public class TemplateConstant extends Expression {
   protected TyType typingInternal(Environment environment, TyType suggestion) {
     try {
       Parser.parse(raw());
-
     } catch (Exception ex) {
       environment.document.createError(this, "the template doesn't parse");
     }
