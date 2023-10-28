@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.types.checking.ruleset;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
@@ -57,6 +58,19 @@ public class RuleSetStructures {
         return true;
       } else if (!silent) {
         environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'record' or 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
+      }
+    }
+    return false;
+  }
+
+  public static boolean IsRxStructure(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    var tyType = tyTypeOriginal;
+    if (tyType != null) {
+      tyType = RuleSetCommon.Resolve(environment, tyType, silent);
+      if (tyType != null && (tyType instanceof TyReactiveRecord)) {
+        return true;
+      } else if (!silent) {
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'record', but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

@@ -180,6 +180,11 @@ public class Rules {
     return RuleSetStructures.IsStructure(environment, tyType, silent);
   }
 
+
+  public boolean IsRxStructure(final TyType tyType, final boolean silent) {
+    return RuleSetStructures.IsRxStructure(environment, tyType, silent);
+  }
+
   /** FROM: RuleSetTable */
   public boolean IsTable(final TyType tyType, final boolean silent) {
     return RuleSetTable.IsTable(environment, tyType, silent);

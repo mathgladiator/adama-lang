@@ -1,0 +1,7 @@
+record F {
+}
+
+message T {
+}
+
+assoc<F, T> x;

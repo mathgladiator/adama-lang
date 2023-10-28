@@ -18,17 +18,30 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class DefineAssoc extends Definition {
   private final Token assoc;
   public final Token name;
+  public final Token open;
+  public final Token fromTypeName;
+  public final Token comma;
+  public final Token toTypeName;
+  public final Token close;
   private final Token semicolon;
   public short id;
 
-  public DefineAssoc(Token assoc, Token name, Token semicolon) {
+  public DefineAssoc(Token assoc, Token open, Token fromTypeName, Token comma, Token toTypeName, Token close, Token name, Token semicolon) {
     this.assoc = assoc;
+    this.open = open;
+    this.fromTypeName = fromTypeName;
+    this.comma = comma;
+    this.toTypeName = toTypeName;
+    this.close = close;
     this.name = name;
     this.semicolon = semicolon;
     this.id = 0;
@@ -40,6 +53,29 @@ public class DefineAssoc extends Definition {
   public void emit(Consumer<Token> yielder) {
     yielder.accept(assoc);
     yielder.accept(name);
+    yielder.accept(open);
+    yielder.accept(fromTypeName);
+    yielder.accept(comma);
+    yielder.accept(toTypeName);
+    yielder.accept(close);
     yielder.accept(semicolon);
+  }
+
+  public void typing(TypeCheckerRoot checker) {
+    TreeSet<String> depends = new TreeSet<>();
+    depends.add(fromTypeName.text);
+    depends.add(toTypeName.text);
+    checker.register(depends, (env) -> {
+      TyType fromT = env.document.types.get(fromTypeName.text);
+      if (fromT == null) {
+        checker.issueError(DefineAssoc.this, "The type '" + fromTypeName.text + "' was not found");
+      }
+      TyType toT = env.document.types.get(toTypeName.text);
+      if (toT == null) {
+        checker.issueError(DefineAssoc.this, "The type '" + toTypeName.text + "' was not found");
+      }
+      env.rules.IsRxStructure(fromT, false);
+      env.rules.IsRxStructure(toT, false);
+    });
   }
 }

@@ -17,13 +17,23 @@
 */
 package org.adamalang.runtime.graph;
 
-import org.adamalang.runtime.reactives.RxRecordBase;
-
-import java.util.function.Supplier;
+import java.util.TreeMap;
 
 public class Graph {
+  private TreeMap<Short, SubGraph> assocs;
 
+  public Graph() {
+    this.assocs = new TreeMap<>();
+  }
 
+  public SubGraph getOrCreate(short assoc) {
+    SubGraph graph = assocs.get(assoc);
+    if (graph == null) {
+      graph = new SubGraph();
+      assocs.put(assoc, graph);
+    }
+    return graph;
+  }
 
   public class Query {
     // expess a way to build an a query that collects a bunch of ids

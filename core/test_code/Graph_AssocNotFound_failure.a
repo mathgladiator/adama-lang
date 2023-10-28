@@ -1,5 +1,5 @@
 record F {}
-record T {}
 
 assoc<F, T> x;
-assoc<F, T> x;
+
+assoc<T, F> y;

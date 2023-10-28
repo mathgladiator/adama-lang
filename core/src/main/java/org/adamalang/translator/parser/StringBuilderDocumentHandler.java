@@ -188,11 +188,6 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
-  public void add(DefineGraph dg) {
-    dg.emit(this);
-  }
-
-  @Override
   public void add(DefineTemplate dt) {
     dt.emit(this);
   }

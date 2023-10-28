@@ -686,7 +686,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "graph", "template"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "template"));
     }
     if (op != null) {
       switch (op.text) {
@@ -753,9 +753,6 @@ public class Parser {
         case "replication":
           final var replicate = define_replication(rootScope.makeReplication(), op);
           return doc -> doc.add(replicate);
-        case "graph":
-          final var graph = define_graph(op);
-          return doc -> doc.add(graph);
         case "assoc":
           final var assoc = define_assoc(op);
           return doc -> doc.add(assoc);
@@ -783,16 +780,15 @@ public class Parser {
     return new DefineTemplate(templateToken, name, colon, new TemplateConstant(template));
   }
 
-  public DefineGraph define_graph(Token op) throws AdamaLangException {
-    Token name = id();
-    Token semicolon = consumeExpectedSymbol(";");
-    return new DefineGraph(op, name, semicolon);
-  }
-
   public DefineAssoc define_assoc(Token op) throws AdamaLangException {
+    Token open = consumeExpectedSymbol("<");
+    Token leftType = id();
+    Token comma = consumeExpectedSymbol(",");
+    Token rightType = id();
+    Token close = consumeExpectedSymbol(">");
     Token name = id();
     Token semicolon = consumeExpectedSymbol(";");
-    return new DefineAssoc(op, name, semicolon);
+    return new DefineAssoc(op, open, leftType, comma, rightType, close, name, semicolon);
   }
 
 
