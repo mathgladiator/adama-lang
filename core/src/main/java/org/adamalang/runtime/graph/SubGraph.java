@@ -20,6 +20,7 @@ package org.adamalang.runtime.graph;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+/** within a graph, this represents all the edges for a single assoc */
 public class SubGraph {
   private final HashMap<Integer, TreeSet<Integer>> edges;
 
