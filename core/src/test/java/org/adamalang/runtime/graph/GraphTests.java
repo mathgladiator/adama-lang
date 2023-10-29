@@ -17,30 +17,18 @@
 */
 package org.adamalang.runtime.graph;
 
-import java.util.TreeMap;
+import org.junit.Assert;
+import org.junit.Test;
 
-/** a graph connects records from within a document by associations */
-public class Graph {
-  private TreeMap<Short, SubGraph> assocs;
+public class GraphTests {
+  @Test
+  public void flow() {
+    Graph g = new Graph();
+    Assert.assertEquals(0, g.memory());
+    SubGraph sg0a = g.getOrCreate((short) 0);
+    SubGraph sg0b = g.getOrCreate((short) 0);
+    Assert.assertTrue(sg0a == sg0b);
+    Assert.assertEquals(2048, g.memory());
 
-  public Graph() {
-    this.assocs = new TreeMap<>();
-  }
-
-  public SubGraph getOrCreate(short assoc) {
-    SubGraph graph = assocs.get(assoc);
-    if (graph == null) {
-      graph = new SubGraph();
-      assocs.put(assoc, graph);
-    }
-    return graph;
-  }
-
-  public long memory() {
-    long mem = 0;
-    for (SubGraph sg : assocs.values()) {
-      mem += sg.memory();
-    }
-    return mem;
   }
 }

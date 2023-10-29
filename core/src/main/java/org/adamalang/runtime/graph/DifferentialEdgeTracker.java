@@ -83,13 +83,17 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
     invalid.clear();
   }
 
-  @Override
-  public boolean __raiseInvalid() {
+  public void removeAll() {
     for (Map.Entry<Integer, EdgeCache> entry : edgeCache.entrySet()) {
       invalid.add(entry.getKey());
       graph.remove(entry.getValue().from, entry.getValue().to);
     }
     edgeCache.clear();
+  }
+
+  @Override
+  public boolean __raiseInvalid() {
+    removeAll();
     return source.__isAlive();
   }
 

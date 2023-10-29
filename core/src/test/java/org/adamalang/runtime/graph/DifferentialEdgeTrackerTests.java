@@ -17,30 +17,5 @@
 */
 package org.adamalang.runtime.graph;
 
-import java.util.TreeMap;
-
-/** a graph connects records from within a document by associations */
-public class Graph {
-  private TreeMap<Short, SubGraph> assocs;
-
-  public Graph() {
-    this.assocs = new TreeMap<>();
-  }
-
-  public SubGraph getOrCreate(short assoc) {
-    SubGraph graph = assocs.get(assoc);
-    if (graph == null) {
-      graph = new SubGraph();
-      assocs.put(assoc, graph);
-    }
-    return graph;
-  }
-
-  public long memory() {
-    long mem = 0;
-    for (SubGraph sg : assocs.values()) {
-      mem += sg.memory();
-    }
-    return mem;
-  }
+public class DifferentialEdgeTrackerTests {
 }

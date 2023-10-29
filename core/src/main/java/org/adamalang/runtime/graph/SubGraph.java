@@ -54,4 +54,15 @@ public class SubGraph {
     }
     return mem;
   }
+
+  public TreeSet<Integer> traverse(TreeSet<Integer> left) {
+    TreeSet<Integer> right = new TreeSet<>();
+    for (int l : left) {
+      TreeSet<Integer> pr = edges.get(l);
+      if (pr != null) {
+        right.addAll(right);
+      }
+    }
+    return right;
+  }
 }
