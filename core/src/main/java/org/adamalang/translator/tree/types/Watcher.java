@@ -28,11 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.function.BiConsumer;
 
 public class Watcher {
-  @Deprecated
-  public static BiConsumer<String, TyType> make(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> services) {
-    return makeAuto(env, variablesToWatch, null, services);
-  }
-
   public static BiConsumer<String, TyType> makeAuto(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> rxTables, LinkedHashSet<String> services) {
     return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);

@@ -21,15 +21,13 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 public class SubGraph {
-  private final HashMap<Integer, TreeSet<Integer>> forward;
-  private final HashMap<Integer, TreeSet<Integer>> reverse;
+  private final HashMap<Integer, TreeSet<Integer>> edges;
 
   public SubGraph() {
-    this.forward = new HashMap<>();
-    this.reverse = new HashMap<>();
+    this.edges = new HashMap<>();
   }
 
-  private static void remove1(HashMap<Integer, TreeSet<Integer>> edges, int from, int to) {
+  public void remove(int from, int to) {
     TreeSet<Integer> right = edges.get(from);
     if (right != null) {
       right.remove(to);
@@ -39,7 +37,7 @@ public class SubGraph {
     }
   }
 
-  private static void put1(HashMap<Integer, TreeSet<Integer>> edges, int from, int to) {
+  public void put(int from, int to) {
     TreeSet<Integer> dest = edges.get(from);
     if (dest == null) {
       dest = new TreeSet<>();
@@ -48,13 +46,11 @@ public class SubGraph {
     dest.add(to);
   }
 
-  public void remove(int from, int to) {
-    remove1(forward, from, to);
-    remove1(reverse, to, from);
-  }
-
-  public void put(int from, int to) {
-    put1(forward, from, to);
-    put1(reverse, to, from);
+  public long memory() {
+    int mem = 2048;
+    for (TreeSet<Integer> set : edges.values()) {
+      mem += 256 + set.size() * 64;
+    }
+    return mem;
   }
 }

@@ -500,6 +500,11 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
+  public void add(JoinAssoc ja) {
+    root.storage.addFromRoot(ja, typeChecker);
+  }
+
+  @Override
   public void add(DefineTemplate dt) {
     if (defined.contains(dt.nameToken.text)) {
       typeChecker.issueError(dt, String.format("Template '%s' was already defined; name used", dt.nameToken.text));

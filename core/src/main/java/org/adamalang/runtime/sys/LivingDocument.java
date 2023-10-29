@@ -33,6 +33,7 @@ import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.*;
+import org.adamalang.runtime.graph.Graph;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
@@ -103,6 +104,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
   public PerfTracker __perf;
+  protected final Graph __graph;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -155,6 +157,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __gets = new ArrayList<>();
     __replication = new ReplicationEngine(this);
     __perf = new PerfTracker(this);
+    __graph = new Graph();
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -1072,6 +1075,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         memory += view.memory();
       }
     }
+    memory += __graph.memory();
     return memory;
   }
 

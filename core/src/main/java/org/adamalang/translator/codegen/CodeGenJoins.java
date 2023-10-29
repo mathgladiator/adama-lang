@@ -15,39 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.graph;
+package org.adamalang.translator.codegen;
 
-import java.util.TreeMap;
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.types.structures.JoinAssoc;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
 
-public class Graph {
-  private TreeMap<Short, SubGraph> assocs;
-
-  public Graph() {
-    this.assocs = new TreeMap<>();
-  }
-
-  public SubGraph getOrCreate(short assoc) {
-    SubGraph graph = assocs.get(assoc);
-    if (graph == null) {
-      graph = new SubGraph();
-      assocs.put(assoc, graph);
+public class CodeGenJoins {
+  public static void writeJoins(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+    for (JoinAssoc ja : storage.joins) {
+      sb.append("// JOIN ").append(ja.tableName.text).writeNewline();
     }
-    return graph;
-  }
-
-  public long memory() {
-    long mem = 0;
-    for (SubGraph sg : assocs.values()) {
-      mem += sg.memory();
-    }
-    return mem;
-  }
-
-  public class Query {
-    // expess a way to build an a query that collects a bunch of ids
-  }
-
-  public Query start() {
-    return new Query();
   }
 }

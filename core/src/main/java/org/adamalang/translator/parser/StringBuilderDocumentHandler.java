@@ -25,6 +25,7 @@ import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.ReplicationDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -185,6 +186,11 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   @Override
   public void add(DefineAssoc da) {
     da.emit(this);
+  }
+
+  @Override
+  public void add(JoinAssoc ja) {
+    ja.emit(this);
   }
 
   @Override

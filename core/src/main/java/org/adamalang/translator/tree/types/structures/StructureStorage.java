@@ -62,6 +62,7 @@ public class StructureStorage extends DocumentPosition {
   public final HashSet<String> fieldsWithDefaults;
   public Token closeBraceToken;
   public final boolean root;
+  public final ArrayList<JoinAssoc> joins;
 
   public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final boolean root, final Token openBraceToken) {
     this.name = name;
@@ -84,6 +85,7 @@ public class StructureStorage extends DocumentPosition {
     internalMethods = new HashMap<>();
     fieldsWithDefaults = new HashSet<>();
     replications = new TreeMap<>();
+    this.joins = new ArrayList<>();
     ingest(openBraceToken);
   }
 
@@ -126,12 +128,30 @@ public class StructureStorage extends DocumentPosition {
     writer.endObject();
   }
 
+  private void addCommon(JoinAssoc ja, FreeEnvironment fe, TypeChecker checker) {
+    emissions.add(e -> ja.emit(e));
+    ingest(ja);
+    fe.free.add(ja.tableName.text);
+    ja.fromExpr.free(fe);
+    ja.toExpr.free(fe);
+    checker.register(fe.free, env -> ja.typing(env, StructureStorage.this));
+    joins.add(ja);
+  }
+
+  public void add(JoinAssoc ja) {
+    addCommon(ja, FreeEnvironment.root(), checker);
+  }
+
+  public void addFromRoot(JoinAssoc ja, TypeCheckerRoot rootChecker) {
+    addCommon(ja, FreeEnvironment.root(), rootChecker);
+  }
+
   private void addCommon(ReplicationDefinition rd, FreeEnvironment fe, TypeChecker checker) {
     emissions.add(e -> rd.emit(e));
     ingest(rd);
     rd.expression.free(fe);
     fe.free.add("service:" + rd.service.text);
-    checker.register(fe.free, env -> rd.typing(env.watch(Watcher.make(env, rd.variablesToWatch, rd.servicesToWatch))));
+    checker.register(fe.free, env -> rd.typing(env.watch(Watcher.makeAuto(env, rd.variablesToWatch, rd.variablesToWatch, rd.servicesToWatch))));
     if (has(rd.name.text)) {
       checker.issueError(rd, String.format("Replication '%s' was already defined", rd.name.text));
       return;

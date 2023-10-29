@@ -148,6 +148,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.delta.*;");
     gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
+    gold.append("\nimport org.adamalang.runtime.graph.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");
@@ -1074,6 +1075,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.delta.*;");
     gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
+    gold.append("\nimport org.adamalang.runtime.graph.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
     gold.append("\nimport org.adamalang.runtime.natives.*;");

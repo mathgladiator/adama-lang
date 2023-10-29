@@ -24,6 +24,7 @@ import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.ReplicationDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -85,6 +86,8 @@ public interface TopLevelDocumentHandler {
   void add(DefineMetric dm);
 
   void add(DefineAssoc da);
+
+  void add(JoinAssoc ja);
 
   void add(DefineTemplate dt);
 }

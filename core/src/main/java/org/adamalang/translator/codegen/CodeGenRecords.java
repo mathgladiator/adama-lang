@@ -27,6 +27,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsKillable;
@@ -342,6 +343,8 @@ public class CodeGenRecords {
         classLinker.append("___").append(bubble.nameToken.text).append(".__guard(").append(watched).append(",__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
       }
     }
+
+    CodeGenJoins.writeJoins(storage, classLinker, environment);
   }
 
   public static void writeFieldOf(final StructureStorage storage, final StringBuilderWithTabs sb) {

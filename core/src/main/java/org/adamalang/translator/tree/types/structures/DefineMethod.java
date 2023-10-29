@@ -127,7 +127,7 @@ public class DefineMethod extends StructureComponent {
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
     var toUse = paint.pure ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
-    toUse = toUse.watch(Watcher.make(toUse, depends, services)).scopeDefine();
+    toUse = toUse.watch(Watcher.makeAuto(toUse, depends, depends, services)).scopeDefine();
     if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
     }

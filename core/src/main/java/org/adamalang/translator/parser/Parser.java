@@ -686,7 +686,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "template"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
     }
     if (op != null) {
       switch (op.text) {
@@ -756,6 +756,9 @@ public class Parser {
         case "assoc":
           final var assoc = define_assoc(op);
           return doc -> doc.add(assoc);
+        case "join":
+          final var join = join_assoc(rootScope, op);
+          return doc -> doc.add(join);
         case "metric":
           final var metric = define_metric(rootScope, op);
           return doc -> doc.add(metric);
@@ -766,6 +769,21 @@ public class Parser {
     }
     final var newField = define_field_record(rootScope);
     return doc -> doc.add(newField);
+  }
+
+  public JoinAssoc join_assoc(Scope scope, Token join) throws AdamaLangException {
+    Token assoc = id();
+    Token via = consumeExpectedIdentifier("via");
+    Token tableName = id();
+    Token brackOpen = consumeExpectedSymbol("[");
+    Token itemVar = id();
+    Token brackClose = consumeExpectedSymbol("]");
+    Token fromLabel  = consumeExpectedIdentifier("from");
+    Expression fromExpr = expression(scope);
+    Token toLabel  = consumeExpectedIdentifier("to");
+    Expression toExpr = expression(scope);
+    Token semicolon = consumeExpectedSymbol(";");
+    return new JoinAssoc(join, assoc, via, tableName, brackOpen, itemVar, brackClose, fromLabel, fromExpr, toLabel, toExpr, semicolon);
   }
 
   public DefineTemplate define_template(Token templateToken) throws AdamaLangException {
@@ -1166,7 +1184,7 @@ public class Parser {
     final var storage = new StructureStorage(name, StorageSpecialization.Record, false, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyReactiveRef(name));
     while (true) {
-      var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "replication"));
+      var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join"));
       while (op != null) {
         switch (op.text) {
           case "require": {
@@ -1186,8 +1204,11 @@ public class Parser {
           case "method":
             storage.add(define_method_trailer(scope, op));
             break;
+          case "join":
+            storage.add(join_assoc(scope, op));
+            break;
         }
-        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
+        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join"));
       }
       op = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       if (op != null) {
