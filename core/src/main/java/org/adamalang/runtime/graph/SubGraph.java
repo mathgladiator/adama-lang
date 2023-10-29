@@ -60,7 +60,7 @@ public class SubGraph {
     for (int l : left) {
       TreeSet<Integer> pr = edges.get(l);
       if (pr != null) {
-        right.addAll(right);
+        right.addAll(pr);
       }
     }
     return right;
