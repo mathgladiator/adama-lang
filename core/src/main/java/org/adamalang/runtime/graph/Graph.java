@@ -19,6 +19,7 @@ package org.adamalang.runtime.graph;
 
 import java.util.TreeMap;
 
+/** a graph connects records from within a document by associations */
 public class Graph {
   private TreeMap<Short, SubGraph> assocs;
 

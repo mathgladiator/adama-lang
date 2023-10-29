@@ -1,0 +1,14 @@
+record F {}
+record T {}
+record X {}
+
+assoc<F, T, X> x;
+
+record E {
+  int from;
+  int to;
+}
+
+table<E> edges;
+
+join x via edges[e] from e.from to e.to;

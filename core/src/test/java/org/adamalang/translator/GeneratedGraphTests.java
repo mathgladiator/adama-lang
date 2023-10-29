@@ -95,7 +95,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Graph_AssocNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":13},\"end\":{\"line\":2,\"character\":14,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'T' was not found\",\"file\":\"./test_code/Graph_AssocNotFound_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":29},\"end\":{\"line\":4,\"character\":14,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'T' was not found\",\"file\":\"./test_code/Graph_AssocNotFound_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":13},\"end\":{\"line\":2,\"character\":14,\"byte\":27}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'T' was not found\",\"file\":\"./test_code/Graph_AssocNotFound_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":0,\"byte\":29},\"end\":{\"line\":4,\"character\":14,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'T' was not found\",\"file\":\"./test_code/Graph_AssocNotFound_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":0,\"byte\":45},\"end\":{\"line\":6,\"character\":17,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'T' was not found\",\"file\":\"./test_code/Graph_AssocNotFound_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":0,\"byte\":45},\"end\":{\"line\":6,\"character\":17,\"byte\":62}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'E' was not found\",\"file\":\"./test_code/Graph_AssocNotFound_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -949,6 +949,184 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n      return 0;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_E = new String[] {};");
+    gold.append("\n  private class RTxE extends RxRecordBase<RTxE> {");
+    gold.append("\n    private final RTxE __this;");
+    gold.append("\n    private final RxInt32 id;");
+    gold.append("\n    private RTxE(RxParent __owner) {");
+    gold.append("\n      super(__owner);");
+    gold.append("\n      this.__this = this;");
+    gold.append("\n      id = new RxInt32(this, 0);");
+    gold.append("\n      if (__owner instanceof RxTable) {");
+    gold.append("\n        /* ok */");
+    gold.append("\n      } else {");
+    gold.append("\n        /* ok */");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      __sum += id.__memory();");
+    gold.append("\n      return __sum;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS_E;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {};");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public Object __fieldOf(String __name) {");
+    gold.append("\n      switch (__name) {");
+    gold.append("\n        case \"id\":");
+    gold.append("\n          return id;");
+    gold.append("\n        default:");
+    gold.append("\n          return null;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __insert(JsonStreamReader __reader) {");
+    gold.append("\n      if (__reader.startObject()) {");
+    gold.append("\n        while(__reader.notEndOfObject()) {");
+    gold.append("\n          String __fieldName = __reader.fieldName();");
+    gold.append("\n          switch (__fieldName) {");
+    gold.append("\n            case \"id\":");
+    gold.append("\n              id.__insert(__reader);");
+    gold.append("\n              break;");
+    gold.append("\n            default:");
+    gold.append("\n              __reader.skipValue();");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __patch(JsonStreamReader __reader) {");
+    gold.append("\n      if (__reader.startObject()) {");
+    gold.append("\n        while(__reader.notEndOfObject()) {");
+    gold.append("\n          String __fieldName = __reader.fieldName();");
+    gold.append("\n          switch (__fieldName) {");
+    gold.append("\n            case \"id\":");
+    gold.append("\n              id.__patch(__reader);");
+    gold.append("\n              break;");
+    gold.append("\n            default:");
+    gold.append("\n              __reader.skipValue();");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __dump(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"id\");");
+    gold.append("\n      id.__dump(__writer);");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n      if (__isDirty()) {");
+    gold.append("\n        __forward.writeObjectFieldIntro(__name);");
+    gold.append("\n        __forward.beginObject();");
+    gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
+    gold.append("\n        __reverse.beginObject();");
+    gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        __forward.endObject();");
+    gold.append("\n        __reverse.endObject();");
+    gold.append("\n        __lowerDirtyCommit();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __revert() {");
+    gold.append("\n      if (__isDirty()) {");
+    gold.append("\n        __isDying = false;");
+    gold.append("\n        id.__revert();");
+    gold.append("\n        __lowerDirtyRevert();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public RTxE __link() {");
+    gold.append("\n      return this;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public String __name() {");
+    gold.append("\n      return \"E\";");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __deindex() {");
+    gold.append("\n      /* ok */");
+    gold.append("\n    }");
+    gold.append("\n    public void __reindex() {");
+    gold.append("\n      /* ok */");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int __id() {");
+    gold.append("\n      return id.get();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __setId(int __id, boolean __force) {");
+    gold.append("\n      if (__force) {");
+    gold.append("\n        id.forceSet(__id);");
+    gold.append("\n      } else {");
+    gold.append("\n        id.set(__id);");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTxE implements DeltaNode {");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTxE() {");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __sum = 40;");
+    gold.append("\n      return __sum;");
+    gold.append("\n    }");
+    gold.append("\n    public boolean show(RTxE __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n      return true;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void clear() {");
+    gold.append("\n      __code_cost += 0;");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        clear();");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  class DynCmp_RTxE implements Comparator<RTxE> {");
+    gold.append("\n    private final CompareField[] parsed;");
+    gold.append("\n    DynCmp_RTxE(String instructions) {");
+    gold.append("\n      this.parsed = DynCompareParser.parse(instructions);");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int compare(RTxE __a, RTxE __b) {");
+    gold.append("\n      for (CompareField field : parsed) {");
+    gold.append("\n        int delta = 0;");
+    gold.append("\n        switch (field.name) {");
+    gold.append("\n          case \"id\":");
+    gold.append("\n            delta = __a.id.compareTo(__b.id);");
+    gold.append("\n            break;");
+    gold.append("\n        }");
+    gold.append("\n        if (delta != 0) {");
+    gold.append("\n          return field.desc ? -delta : delta;");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n      return 0;");
+    gold.append("\n    }");
+    gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");
     gold.append("\n    return __map;");
@@ -1069,7 +1247,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n--=[LivingDocumentFactory COMPILING]=---");
     gold.append("\n--=[LivingDocumentFactory MADE]=---");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"F\":{\"nature\":\"reactive_record\",\"name\":\"F\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"T\":{\"nature\":\"reactive_record\",\"name\":\"T\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}}},\"channels\":{},\"channels-privacy\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"F\":{\"nature\":\"reactive_record\",\"name\":\"F\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"T\":{\"nature\":\"reactive_record\",\"name\":\"T\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"E\":{\"nature\":\"reactive_record\",\"name\":\"E\",\"fields\":{\"id\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}}},\"channels\":{},\"channels-privacy\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:-25");
@@ -1101,83 +1279,123 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_JoinIssues_5 = null;
-  private String get_JoinIssues_5() {
-    if (cached_JoinIssues_5 != null) {
-      return cached_JoinIssues_5;
+  private String cached_JoinBadEdgeType_5 = null;
+  private String get_JoinBadEdgeType_5() {
+    if (cached_JoinBadEdgeType_5 != null) {
+      return cached_JoinBadEdgeType_5;
     }
-    cached_JoinIssues_5 = generateTestOutput(false, "JoinIssues_5", "./test_code/Graph_JoinIssues_failure.a");
-    return cached_JoinIssues_5;
+    cached_JoinBadEdgeType_5 = generateTestOutput(false, "JoinBadEdgeType_5", "./test_code/Graph_JoinBadEdgeType_failure.a");
+    return cached_JoinBadEdgeType_5;
   }
 
   @Test
-  public void testJoinIssuesFailure() {
-    assertLiveFail(get_JoinIssues_5());
+  public void testJoinBadEdgeTypeFailure() {
+    assertLiveFail(get_JoinBadEdgeType_5());
   }
 
   @Test
-  public void testJoinIssuesNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_JoinIssues_5());
+  public void testJoinBadEdgeTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_JoinBadEdgeType_5());
   }
 
   @Test
-  public void testJoinIssuesExceptionFree() {
-    assertExceptionFree(get_JoinIssues_5());
+  public void testJoinBadEdgeTypeExceptionFree() {
+    assertExceptionFree(get_JoinBadEdgeType_5());
   }
 
   @Test
-  public void testJoinIssuesTODOFree() {
-    assertTODOFree(get_JoinIssues_5());
+  public void testJoinBadEdgeTypeTODOFree() {
+    assertTODOFree(get_JoinBadEdgeType_5());
   }
 
   @Test
-  public void stable_JoinIssues_5() {
-    String live = get_JoinIssues_5();
+  public void stable_JoinBadEdgeType_5() {
+    String live = get_JoinBadEdgeType_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Graph_JoinIssues_failure.a");
+    gold.append("Path:Graph_JoinBadEdgeType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":14,\"character\":0,\"byte\":136},\"end\":{\"line\":14,\"character\":51,\"byte\":187}},\"severity\":1,\"source\":\"error\",\"message\":\"The table 'nontable' was not found within the record.\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":14,\"character\":0,\"byte\":136},\"end\":{\"line\":14,\"character\":51,\"byte\":187}},\"severity\":1,\"source\":\"error\",\"message\":\"The assoc 'bad_assoc' was not found in the document.\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":17,\"character\":0,\"byte\":196},\"end\":{\"line\":17,\"character\":39,\"byte\":235}},\"severity\":1,\"source\":\"error\",\"message\":\"'z' was not a table\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":19,\"character\":0,\"byte\":237},\"end\":{\"line\":19,\"character\":8,\"byte\":245}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'table<FF>' is using a type that was not found.\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":19,\"character\":0,\"byte\":237},\"end\":{\"line\":19,\"character\":14,\"byte\":251}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'foo' has no type\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":19,\"character\":0,\"byte\":237},\"end\":{\"line\":19,\"character\":14,\"byte\":251}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'foo' has no backing type\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":20,\"character\":0,\"byte\":252},\"end\":{\"line\":20,\"character\":30,\"byte\":282}},\"severity\":1,\"source\":\"error\",\"message\":\"'foo' was not a table\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":13,\"character\":0,\"byte\":109},\"end\":{\"line\":13,\"character\":40,\"byte\":149}},\"severity\":1,\"source\":\"error\",\"message\":\"The assoc 'x' requires an edge type of 'X' while being given a table with 'E'.\",\"file\":\"./test_code/Graph_JoinBadEdgeType_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_JoinRecRx_6 = null;
-  private String get_JoinRecRx_6() {
-    if (cached_JoinRecRx_6 != null) {
-      return cached_JoinRecRx_6;
+  private String cached_JoinIssues_6 = null;
+  private String get_JoinIssues_6() {
+    if (cached_JoinIssues_6 != null) {
+      return cached_JoinIssues_6;
     }
-    cached_JoinRecRx_6 = generateTestOutput(true, "JoinRecRx_6", "./test_code/Graph_JoinRecRx_success.a");
-    return cached_JoinRecRx_6;
+    cached_JoinIssues_6 = generateTestOutput(false, "JoinIssues_6", "./test_code/Graph_JoinIssues_failure.a");
+    return cached_JoinIssues_6;
+  }
+
+  @Test
+  public void testJoinIssuesFailure() {
+    assertLiveFail(get_JoinIssues_6());
+  }
+
+  @Test
+  public void testJoinIssuesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_JoinIssues_6());
+  }
+
+  @Test
+  public void testJoinIssuesExceptionFree() {
+    assertExceptionFree(get_JoinIssues_6());
+  }
+
+  @Test
+  public void testJoinIssuesTODOFree() {
+    assertTODOFree(get_JoinIssues_6());
+  }
+
+  @Test
+  public void stable_JoinIssues_6() {
+    String live = get_JoinIssues_6();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Graph_JoinIssues_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":14,\"character\":0,\"byte\":136},\"end\":{\"line\":14,\"character\":51,\"byte\":187}},\"severity\":1,\"source\":\"error\",\"message\":\"The assoc 'bad_assoc' was not found in the document.\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":14,\"character\":0,\"byte\":136},\"end\":{\"line\":14,\"character\":51,\"byte\":187}},\"severity\":1,\"source\":\"error\",\"message\":\"The table 'nontable' was not found within the record.\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":17,\"character\":0,\"byte\":196},\"end\":{\"line\":17,\"character\":39,\"byte\":235}},\"severity\":1,\"source\":\"error\",\"message\":\"'z' was not a table\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":19,\"character\":0,\"byte\":237},\"end\":{\"line\":19,\"character\":8,\"byte\":245}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'table<FF>' is using a type that was not found.\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":19,\"character\":0,\"byte\":237},\"end\":{\"line\":19,\"character\":14,\"byte\":251}},\"severity\":1,\"source\":\"error\",\"message\":\"The field 'foo' has no type\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":19,\"character\":0,\"byte\":237},\"end\":{\"line\":19,\"character\":14,\"byte\":251}},\"severity\":1,\"source\":\"error\",\"message\":\"Variable 'foo' has no backing type\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"},{\"range\":{\"start\":{\"line\":20,\"character\":0,\"byte\":252},\"end\":{\"line\":20,\"character\":30,\"byte\":282}},\"severity\":1,\"source\":\"error\",\"message\":\"'foo' was not a table\",\"file\":\"./test_code/Graph_JoinIssues_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_JoinRecRx_7 = null;
+  private String get_JoinRecRx_7() {
+    if (cached_JoinRecRx_7 != null) {
+      return cached_JoinRecRx_7;
+    }
+    cached_JoinRecRx_7 = generateTestOutput(true, "JoinRecRx_7", "./test_code/Graph_JoinRecRx_success.a");
+    return cached_JoinRecRx_7;
   }
 
   @Test
   public void testJoinRecRxEmission() {
-    assertEmissionGood(get_JoinRecRx_6());
+    assertEmissionGood(get_JoinRecRx_7());
   }
 
   @Test
   public void testJoinRecRxSuccess() {
-    assertLivePass(get_JoinRecRx_6());
+    assertLivePass(get_JoinRecRx_7());
   }
 
   @Test
   public void testJoinRecRxGoodWillHappy() {
-    assertGoodWillHappy(get_JoinRecRx_6());
+    assertGoodWillHappy(get_JoinRecRx_7());
   }
 
   @Test
   public void testJoinRecRxExceptionFree() {
-    assertExceptionFree(get_JoinRecRx_6());
+    assertExceptionFree(get_JoinRecRx_7());
   }
 
   @Test
   public void testJoinRecRxTODOFree() {
-    assertTODOFree(get_JoinRecRx_6());
+    assertTODOFree(get_JoinRecRx_7());
   }
 
   @Test
-  public void stable_JoinRecRx_6() {
-    String live = get_JoinRecRx_6();
+  public void stable_JoinRecRx_7() {
+    String live = get_JoinRecRx_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Graph_JoinRecRx_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1212,13 +1430,13 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class JoinRecRx_6 extends LivingDocument {");
+    gold.append("\npublic class JoinRecRx_7 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public JoinRecRx_6(DocumentMonitor __monitor) {");
+    gold.append("\n  public JoinRecRx_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -1473,9 +1691,9 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaJoinRecRx_6 implements DeltaNode {");
+    gold.append("\n  private class DeltaJoinRecRx_7 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaJoinRecRx_6() {");
+    gold.append("\n    private DeltaJoinRecRx_7() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1483,7 +1701,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public boolean show(JoinRecRx_6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(JoinRecRx_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -1514,8 +1732,8 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    JoinRecRx_6 __self = this;");
-    gold.append("\n    DeltaJoinRecRx_6 __state = new DeltaJoinRecRx_6();");
+    gold.append("\n    JoinRecRx_7 __self = this;");
+    gold.append("\n    DeltaJoinRecRx_7 __state = new DeltaJoinRecRx_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
     gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
@@ -2328,43 +2546,43 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_JoinRoot_7 = null;
-  private String get_JoinRoot_7() {
-    if (cached_JoinRoot_7 != null) {
-      return cached_JoinRoot_7;
+  private String cached_JoinRoot_8 = null;
+  private String get_JoinRoot_8() {
+    if (cached_JoinRoot_8 != null) {
+      return cached_JoinRoot_8;
     }
-    cached_JoinRoot_7 = generateTestOutput(true, "JoinRoot_7", "./test_code/Graph_JoinRoot_success.a");
-    return cached_JoinRoot_7;
+    cached_JoinRoot_8 = generateTestOutput(true, "JoinRoot_8", "./test_code/Graph_JoinRoot_success.a");
+    return cached_JoinRoot_8;
   }
 
   @Test
   public void testJoinRootEmission() {
-    assertEmissionGood(get_JoinRoot_7());
+    assertEmissionGood(get_JoinRoot_8());
   }
 
   @Test
   public void testJoinRootSuccess() {
-    assertLivePass(get_JoinRoot_7());
+    assertLivePass(get_JoinRoot_8());
   }
 
   @Test
   public void testJoinRootGoodWillHappy() {
-    assertGoodWillHappy(get_JoinRoot_7());
+    assertGoodWillHappy(get_JoinRoot_8());
   }
 
   @Test
   public void testJoinRootExceptionFree() {
-    assertExceptionFree(get_JoinRoot_7());
+    assertExceptionFree(get_JoinRoot_8());
   }
 
   @Test
   public void testJoinRootTODOFree() {
-    assertTODOFree(get_JoinRoot_7());
+    assertTODOFree(get_JoinRoot_8());
   }
 
   @Test
-  public void stable_JoinRoot_7() {
-    String live = get_JoinRoot_7();
+  public void stable_JoinRoot_8() {
+    String live = get_JoinRoot_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Graph_JoinRoot_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2399,7 +2617,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class JoinRoot_7 extends LivingDocument {");
+    gold.append("\npublic class JoinRoot_8 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxE> edges;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -2407,7 +2625,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    __sum += edges.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public JoinRoot_7(DocumentMonitor __monitor) {");
+    gold.append("\n  public JoinRoot_8(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    edges = new RxTable<>(__self, this, \"edges\", (RxParent __parent) -> new RTxE(__parent).__link(), 0);");
     gold.append("\n    EdgeMaker<RTxE> __EDMK_edges_0 = new EdgeMaker<>() {");
@@ -2685,9 +2903,9 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaJoinRoot_7 implements DeltaNode {");
+    gold.append("\n  private class DeltaJoinRoot_8 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaJoinRoot_7() {");
+    gold.append("\n    private DeltaJoinRoot_8() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2695,7 +2913,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public boolean show(JoinRoot_7 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(JoinRoot_8 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -2726,8 +2944,8 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    JoinRoot_7 __self = this;");
-    gold.append("\n    DeltaJoinRoot_7 __state = new DeltaJoinRoot_7();");
+    gold.append("\n    JoinRoot_8 __self = this;");
+    gold.append("\n    DeltaJoinRoot_8 __state = new DeltaJoinRoot_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
     gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");

@@ -31,16 +31,20 @@ public class DefineAssoc extends Definition {
   public final Token fromTypeName;
   public final Token comma;
   public final Token toTypeName;
+  public final Token secondCommaOptional;
+  public final Token edgeType;
   public final Token close;
   private final Token semicolon;
   public short id;
 
-  public DefineAssoc(Token assoc, Token open, Token fromTypeName, Token comma, Token toTypeName, Token close, Token name, Token semicolon) {
+  public DefineAssoc(Token assoc, Token open, Token fromTypeName, Token comma, Token toTypeName, Token secondCommaOptional, Token edgeType,  Token close, Token name, Token semicolon) {
     this.assoc = assoc;
     this.open = open;
     this.fromTypeName = fromTypeName;
     this.comma = comma;
     this.toTypeName = toTypeName;
+    this.secondCommaOptional = secondCommaOptional;
+    this.edgeType = edgeType;
     this.close = close;
     this.name = name;
     this.semicolon = semicolon;
@@ -56,6 +60,10 @@ public class DefineAssoc extends Definition {
     yielder.accept(fromTypeName);
     yielder.accept(comma);
     yielder.accept(toTypeName);
+    if (secondCommaOptional != null) {
+      yielder.accept(secondCommaOptional);
+      yielder.accept(edgeType);
+    }
     yielder.accept(close);
     yielder.accept(name);
     yielder.accept(semicolon);
@@ -76,6 +84,13 @@ public class DefineAssoc extends Definition {
       }
       env.rules.IsRxStructure(fromT, false);
       env.rules.IsRxStructure(toT, false);
+      if (secondCommaOptional != null) {
+        TyType edType = env.document.types.get(edgeType.text);
+        if (edType == null) {
+          checker.issueError(DefineAssoc.this, "The type '" + edgeType.text + "' was not found");
+        }
+        env.rules.IsRxStructure(edType, false);
+      }
     });
   }
 }

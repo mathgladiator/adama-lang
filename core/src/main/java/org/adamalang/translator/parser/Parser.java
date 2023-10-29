@@ -800,13 +800,18 @@ public class Parser {
 
   public DefineAssoc define_assoc(Token op) throws AdamaLangException {
     Token open = consumeExpectedSymbol("<");
-    Token leftType = id();
+    Token fromType = id();
     Token comma = consumeExpectedSymbol(",");
-    Token rightType = id();
+    Token toType = id();
+    Token secondComma = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
+    Token edgeType = null;
+    if (secondComma != null) {
+      edgeType = id();
+    }
     Token close = consumeExpectedSymbol(">");
     Token name = id();
     Token semicolon = consumeExpectedSymbol(";");
-    return new DefineAssoc(op, open, leftType, comma, rightType, close, name, semicolon);
+    return new DefineAssoc(op, open, fromType, comma, toType, secondComma, edgeType, close, name, semicolon);
   }
 
 

@@ -3,3 +3,5 @@ record F {}
 assoc<F, T> x;
 
 assoc<T, F> y;
+
+assoc<T, F, E> z;

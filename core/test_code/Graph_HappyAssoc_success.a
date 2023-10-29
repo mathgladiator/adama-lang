@@ -2,3 +2,7 @@ record F {}
 record T {}
 
 assoc<F, T> x;
+
+record E {}
+
+assoc<F, T, E> y;

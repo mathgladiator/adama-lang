@@ -26,30 +26,27 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
+/** Register a differential join operation on a table */
 public class JoinAssoc extends StructureComponent {
-  public final Token joinToken;
-  public final Token assoc;
-  public final Token via;
+  private final Token joinToken;
+  private final Token assoc;
+  private final Token via;
   public final Token tableName;
-
-  public final Token brackOpen;
+  private final Token brackOpen;
   public final Token itemVar;
-  public final Token brackClose;
-
-  public final Token fromLabel;
+  private final Token brackClose;
+  private final Token fromLabel;
   public final Expression fromExpr;
-  public final Token toLabel;
+  private final Token toLabel;
   public final Expression toExpr;
-  public final Token semicolon;
-
+  private final Token semicolon;
   public final LinkedHashSet<String> variablesToWatch;
-  public final LinkedHashSet<String> servicesToWatch;
+  private final LinkedHashSet<String> servicesToWatch;
   public DefineAssoc foundAssoc;
   public String edgeRecordName;
   private TyType elementType;
@@ -97,6 +94,15 @@ public class JoinAssoc extends StructureComponent {
 
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {
     Environment next = environment.watch(Watcher.makeAuto(environment, variablesToWatch, variablesToWatch, servicesToWatch));
+    foundAssoc = environment.document.assocs.get(assoc.text);
+    String edgeType = null;
+    if (foundAssoc == null) {
+      environment.document.createError(this, "The assoc '" + assoc.text + "' was not found in the document.");
+    } else {
+      if (foundAssoc.edgeType != null) {
+        edgeType = foundAssoc.edgeType.text;
+      }
+    }
     FieldDefinition fd = owningStructureStorage.fields.get(tableName.text);
     if (fd == null) {
       environment.document.createError(this, "The table '" + tableName.text + "' was not found within the record.");
@@ -106,6 +112,9 @@ public class JoinAssoc extends StructureComponent {
         elementType = environment.document.types.get(rxTable.recordName);
         if (elementType != null) {
           edgeRecordName = rxTable.recordName;
+          if (edgeType != null && !edgeType.equals(edgeRecordName)) {
+            environment.document.createError(this, "The assoc '" + assoc.text + "' requires an edge type of '" + edgeType + "' while being given a table with '" + edgeRecordName + "'.");
+          }
           Environment itemEnv = nextItemEnv(next);
           TyType suggestion = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this);
           TyType fromType = environment.rules.Resolve(fromExpr.typing(itemEnv, suggestion), false);
@@ -116,10 +125,6 @@ public class JoinAssoc extends StructureComponent {
       } else {
         environment.document.createError(this, "'" + tableName.text + "' was not a table");
       }
-    }
-    foundAssoc = environment.document.assocs.get(assoc.text);
-    if (foundAssoc == null) {
-      environment.document.createError(this, "The assoc '" + assoc.text + "' was not found in the document.");
     }
   }
 }
