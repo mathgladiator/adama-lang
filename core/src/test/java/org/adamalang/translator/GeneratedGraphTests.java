@@ -145,18 +145,23 @@ public class GeneratedGraphTests extends GeneratedBase {
     if (cached_HappyAssoc_4 != null) {
       return cached_HappyAssoc_4;
     }
-    cached_HappyAssoc_4 = generateTestOutput(false, "HappyAssoc_4", "./test_code/Graph_HappyAssoc_failure.a");
+    cached_HappyAssoc_4 = generateTestOutput(true, "HappyAssoc_4", "./test_code/Graph_HappyAssoc_success.a");
     return cached_HappyAssoc_4;
   }
 
   @Test
-  public void testHappyAssocFailure() {
-    assertLiveFail(get_HappyAssoc_4());
+  public void testHappyAssocEmission() {
+    assertEmissionGood(get_HappyAssoc_4());
   }
 
   @Test
-  public void testHappyAssocNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_HappyAssoc_4());
+  public void testHappyAssocSuccess() {
+    assertLivePass(get_HappyAssoc_4());
+  }
+
+  @Test
+  public void testHappyAssocGoodWillHappy() {
+    assertGoodWillHappy(get_HappyAssoc_4());
   }
 
   @Test
@@ -173,7 +178,9 @@ public class GeneratedGraphTests extends GeneratedBase {
   public void stable_HappyAssoc_4() {
     String live = get_HappyAssoc_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Graph_HappyAssoc_failure.a");
+    gold.append("Path:Graph_HappyAssoc_success.a");
+    gold.append("\n--EMISSION-----------------------------------------");
+    gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -52,12 +52,12 @@ public class DefineAssoc extends Definition {
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(assoc);
-    yielder.accept(name);
     yielder.accept(open);
     yielder.accept(fromTypeName);
     yielder.accept(comma);
     yielder.accept(toTypeName);
     yielder.accept(close);
+    yielder.accept(name);
     yielder.accept(semicolon);
   }
 
