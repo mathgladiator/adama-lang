@@ -1,0 +1,17 @@
+record User {
+  int id;
+}
+
+record GroupMember {
+  int id;
+  int user_id;
+}
+
+assoc<Group, User> part_of_group;
+
+record Group {
+  int id;
+  table<GroupMember> _members;
+
+  join part_of_group via _members[item] from item.user_id to id;
+}

@@ -50,7 +50,9 @@ public class JoinAssoc extends StructureComponent {
 
   public final LinkedHashSet<String> variablesToWatch;
   public final LinkedHashSet<String> servicesToWatch;
-  private DefineAssoc foundAssoc;
+  public DefineAssoc foundAssoc;
+  public String edgeRecordName;
+  private TyType elementType;
 
   public JoinAssoc(Token joinToken, Token assoc, Token via, Token tableName, Token brackOpen, Token itemVar, Token brackClose, Token fromLabel, Expression fromExpr, Token toLabel, Expression toExpr, Token semicolon) {
     this.joinToken = joinToken;
@@ -87,6 +89,12 @@ public class JoinAssoc extends StructureComponent {
     yielder.accept(semicolon);
   }
 
+  public Environment nextItemEnv(Environment env) {
+    Environment itemEnv = env.scopeAsReadOnlyBoundary().scopeWithComputeContext(ComputeContext.Computation);
+    itemEnv.define(itemVar.text, elementType, true, this);
+    return itemEnv;
+  }
+
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {
     Environment next = environment.watch(Watcher.makeAuto(environment, variablesToWatch, variablesToWatch, servicesToWatch));
     FieldDefinition fd = owningStructureStorage.fields.get(tableName.text);
@@ -95,11 +103,11 @@ public class JoinAssoc extends StructureComponent {
     } else {
       if (fd.type instanceof TyReactiveTable) {
         TyReactiveTable rxTable = (TyReactiveTable) fd.type;
-        TyType elementType = environment.document.types.get(rxTable.recordName);
+        elementType = environment.document.types.get(rxTable.recordName);
         if (elementType != null) {
+          edgeRecordName = rxTable.recordName;
+          Environment itemEnv = nextItemEnv(next);
           TyType suggestion = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this);
-          Environment itemEnv = next.scopeAsReadOnlyBoundary().scopeWithComputeContext(ComputeContext.Computation);
-          itemEnv.define(itemVar.text, elementType, true, this);
           TyType fromType = environment.rules.Resolve(fromExpr.typing(itemEnv, suggestion), false);
           TyType toType = environment.rules.Resolve(toExpr.typing(itemEnv, suggestion), false);
           environment.rules.IsInteger(fromType, false);

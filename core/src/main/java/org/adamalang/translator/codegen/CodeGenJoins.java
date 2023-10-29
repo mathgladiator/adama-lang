@@ -23,9 +23,34 @@ import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 
 public class CodeGenJoins {
+
   public static void writeJoins(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     for (JoinAssoc ja : storage.joins) {
-      sb.append("// JOIN ").append(ja.tableName.text).writeNewline();
+      // make the edge maker
+      String edgeMaker = "__EDMK_" + ja.tableName.text + "_" + environment.autoVariable();
+      sb.append("EdgeMaker<RTx").append(ja.edgeRecordName).append("> ").append(edgeMaker).append(" = new EdgeMaker<>() {").tabUp().writeNewline();
+      Environment next = ja.nextItemEnv(environment);
+      sb.append("@Override").writeNewline();
+      sb.append("public Integer from(RTx").append(ja.edgeRecordName).append(" ").append(ja.itemVar.text).append(") {").tabUp().writeNewline();
+      sb.append("return ");
+      ja.fromExpr.writeJava(sb, next);
+      // TODO: resolve if maybe
+      sb.append(";").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+      sb.append("@Override").writeNewline();
+      sb.append("public Integer to(RTx").append(ja.edgeRecordName).append(" ").append(ja.itemVar.text).append(") {").tabUp().writeNewline();
+      sb.append("return ");
+      ja.toExpr.writeJava(sb, next);
+      // TODO: resolve if maybe
+      sb.append(";").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("};").writeNewline();
+      String tracker = "__DET_" + environment.autoVariable();
+      sb.append("DifferentialEdgeTracker<RTx").append(ja.edgeRecordName).append("> ").append(tracker).append(" = new DifferentialEdgeTracker<>(").append(ja.tableName.text).append(",__graph.getOrCreate((short)").append("" + ja.foundAssoc.id).append("),").append(edgeMaker).append(");").writeNewline();
+      for(String depend : ja.variablesToWatch) {
+        sb.append(depend).append(".__subscribe(").append(tracker).append(");").writeNewline();
+      }
+      sb.append(ja.tableName.text).append(".pump(").append(tracker).append(");").writeNewline();
     }
   }
 }

@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.graph;
 
-public class Platform {
-  public static final String VERSION = "20231029104835";
-  public static final String JS_VERSION = "127b6e850ed9056789544900d04c994d";
+import org.adamalang.runtime.reactives.RxRecordBase;
+
+/** make edges */
+public interface EdgeMaker<R extends RxRecordBase<R>> {
+  Integer from(R row);
+
+  Integer to(R row);
 }

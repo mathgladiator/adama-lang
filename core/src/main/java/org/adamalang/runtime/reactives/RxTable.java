@@ -18,6 +18,7 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.*;
+import org.adamalang.runtime.graph.DifferentialEdgeTracker;
 import org.adamalang.runtime.index.ReactiveIndex;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -27,6 +28,7 @@ import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.runtime.natives.lists.EmptyNtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
+import org.adamalang.runtime.reactives.tables.TableSubscription;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.*;
@@ -45,6 +47,8 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private final TreeSet<Ty> unknowns;
   public final TablePubSub pubsub;
   private RxTableGuard activeGuard;
+  private ArrayList<DifferentialEdgeTracker<Ty>> trackers;
+  private TableSubscription trackerSub;
 
   public void debug(JsonStreamWriter writer) {
     writer.beginObject();
@@ -84,6 +88,41 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.createdObjects = new LinkedHashMap<>();
     this.pubsub = new TablePubSub(owner);
     this.activeGuard = null;
+    this.trackers = null;
+    this.trackerSub = null;
+  }
+
+  public void pump(DifferentialEdgeTracker<Ty> tracker) {
+    if (this.trackers == null) {
+      this.trackers = new ArrayList<>();
+      trackerSub = new TableSubscription() {
+        @Override
+        public boolean alive() {
+          return true;
+        }
+
+        @Override
+        public void primary(int primaryKey) {
+          for (DifferentialEdgeTracker<Ty> child : trackers) {
+            child.change(primaryKey);
+          }
+        }
+
+        @Override
+        public void index(int index, int value) {
+        }
+      };
+      pubsub.subscribe(trackerSub);
+    }
+    trackers.add(tracker);
+  }
+
+  private void computeTrackers() {
+    if (trackers != null) {
+      for (DifferentialEdgeTracker<Ty> tracker : trackers) {
+        tracker.compute();
+      }
+    }
   }
 
   @Override
@@ -157,7 +196,10 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       }
       unknowns.clear();
     }
+    computeTrackers();
   }
+
+
 
   @Override
   public void __dump(final JsonStreamWriter writer) {
@@ -177,6 +219,9 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         if (reader.testLackOfNull()) {
           final var key = Integer.parseInt(f2);
           final var tyPrior = itemsByKey.get(key);
+          if (trackerSub != null) {
+            trackerSub.primary(key);
+          }
           if (tyPrior == null) {
             final var tyObj = maker.apply(this);
             tyObj.__setId(key, true);
@@ -204,6 +249,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         }
       }
     }
+    computeTrackers();
   }
 
   @Override
@@ -212,6 +258,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       while (reader.notEndOfObject()) {
         final var f2 = reader.fieldName();
         final var key = Integer.parseInt(f2);
+        pubsub.primary(key);
         if (reader.testLackOfNull()) {
           var tyPrior = itemsByKey.get(key);
           if (tyPrior == null) {
@@ -245,6 +292,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       }
       __lowerDirtyRevert();
     }
+    computeTrackers();
   }
 
   @Override
@@ -260,6 +308,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
     if (unknowns != null) {
       sum += unknowns.size() * 8L;
+    }
+    if (trackers != null) {
+      for (DifferentialEdgeTracker<Ty> tracker : trackers) {
+        sum += tracker.memory();
+      }
     }
     return sum;
   }

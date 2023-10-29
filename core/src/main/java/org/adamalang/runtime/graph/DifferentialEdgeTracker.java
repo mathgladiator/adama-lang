@@ -17,21 +17,18 @@
 */
 package org.adamalang.runtime.graph;
 
-import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.reactives.RxRecordBase;
 import org.adamalang.runtime.reactives.RxTable;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeSet;
-import java.util.function.Function;
 
 /** an assoc table is a container of edges between two tables drive by a source */
-public class AssocTable<B extends RxRecordBase<B>, F extends RxRecordBase<F>, T extends RxRecordBase<T>> {
+public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChild {
   private final RxTable<B> source;
-  private final Function<B, Integer> computeFromId;
-  private final Function<B, Integer> computeToId;
+  private final EdgeMaker<B> maker;
 
   private class EdgeCache {
     private final int from;
@@ -48,11 +45,10 @@ public class AssocTable<B extends RxRecordBase<B>, F extends RxRecordBase<F>, T 
   private boolean linked;
   private final SubGraph graph;
 
-  public AssocTable(RxTable<B> source, SubGraph graph, Function<B, Integer> computeFromId, Function<B, Integer> computeToId) {
+  public DifferentialEdgeTracker(RxTable<B> source, SubGraph graph, EdgeMaker<B> maker) {
     this.source = source;
     this.graph = graph;
-    this.computeFromId = computeFromId;
-    this.computeToId = computeToId;
+    this.maker = maker;
     this.edgeCache = new HashMap<>();
     this.invalid = new HashSet<>();
     this.linked = false;
@@ -70,13 +66,13 @@ public class AssocTable<B extends RxRecordBase<B>, F extends RxRecordBase<F>, T 
     }
   }
 
-  public void commit() {
+  public void compute() {
     for (Integer id : invalid) {
       B row = source.getById(id);
-      if (row != null) {
-        Integer from = computeFromId.apply(row);
+      if (row != null && row.__isAlive()) {
+        Integer from = maker.from(row);
         if (from != null) {
-          Integer to = computeToId.apply(row);
+          Integer to = maker.to(row);
           if (to != null) {
             edgeCache.put(id, new EdgeCache(from, to));
             graph.put(from, to);
@@ -84,5 +80,20 @@ public class AssocTable<B extends RxRecordBase<B>, F extends RxRecordBase<F>, T 
         }
       }
     }
+    invalid.clear();
+  }
+
+  @Override
+  public boolean __raiseInvalid() {
+    for (Map.Entry<Integer, EdgeCache> entry : edgeCache.entrySet()) {
+      invalid.add(entry.getKey());
+      graph.remove(entry.getValue().from, entry.getValue().to);
+    }
+    edgeCache.clear();
+    return source.__isAlive();
+  }
+
+  public long memory() {
+    return 256 + edgeCache.size() * 64 + invalid.size() * 32;
   }
 }
