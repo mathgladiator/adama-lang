@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
+import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
@@ -45,7 +46,7 @@ public abstract class BaseRxHtmlTest {
   @Test
   public void stable_code() throws Exception {
     RxHtmlResult result = result();
-    String live = result.toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
+    String live = GenerateTemplateTests.fixTestGold(result.toString());
     Assert.assertEquals(gold().replaceAll("\r", ""), live.trim().replaceAll("\r", ""));
   }
 

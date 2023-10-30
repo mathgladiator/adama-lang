@@ -2039,9 +2039,13 @@ var RxHTML = (function () {
 
   // <title value="..." />
   self.ST = function (rxobj) {
-    document.title = rxobj.value;
-    rxobj.__ = debounce(1, function () {
+    if (rxobj.value) {
       document.title = rxobj.value;
+    }
+    rxobj.__ = debounce(5, function () {
+      if (rxobj.value) {
+        document.title = rxobj.value;
+      }
     });
   };
 

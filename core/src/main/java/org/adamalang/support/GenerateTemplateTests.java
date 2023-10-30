@@ -35,6 +35,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GenerateTemplateTests {
+
+  public static String fixTestGold(String gold) {
+    return gold.replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js")).replaceAll("/libadama-worker\\.js/[a-z0-9.\"',]*", Matcher.quoteReplacement("/WORKER.js\",'VERSION'"));
+  }
+
   public static void generate(String inputRootPath, String outputJavaPath) throws Exception {
     if (isValid(inputRootPath) && isValid(outputJavaPath)) {
       final var root = new File(inputRootPath);
@@ -56,7 +61,7 @@ public class GenerateTemplateTests {
           issues.append("WARNING:").append(warning).append("\n");
         };
         RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
-        String gold = result.toString().replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js"));
+        String gold = fixTestGold(result.toString());
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
         String classname = "Template" + name + "Tests";

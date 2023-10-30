@@ -54,7 +54,7 @@ public class TemplateShellWorkerTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n</style></head><body></body><script>");
     gold.append("\n  RxHTML.init();");
-    gold.append("\n  RxHTML.worker(\"foo\",\"/libadama-worker.js/bed9f56d3abc2f78c81b9f99e1716b10.js\",'bed9f56d3abc2f78c81b9f99e1716b10');");
+    gold.append("\n  RxHTML.worker(\"foo\",\"/WORKER.js\",'VERSION');");
     gold.append("\n</script></html>");
     return gold.toString();
   }
