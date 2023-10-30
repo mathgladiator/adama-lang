@@ -413,7 +413,7 @@ public class DurableLivingDocument implements Queryable {
           public void execute() throws Exception {
             invalidate(Callback.DONT_CARE_INTEGER);
           }
-        }, Math.max(10, Math.min(requiresInvalidateMilliseconds, 300000)));
+        }, Math.max(0, Math.min(requiresInvalidateMilliseconds, 300000)));
       }
     } else {
       IngestRequest[] remaining = new IngestRequest[pending.size()];
@@ -553,7 +553,7 @@ public class DurableLivingDocument implements Queryable {
             last = request.change;
             if (last.update.requiresFutureInvalidation) {
               requireInvalidate = true;
-              invalidateWaitTime = Math.max(10, Math.min(invalidateWaitTime, last.update.whenToInvalidateMilliseconds));
+              invalidateWaitTime = Math.max(0, Math.min(invalidateWaitTime, last.update.whenToInvalidateMilliseconds));
             }
           } else {
             request.callback.failure(new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE));
