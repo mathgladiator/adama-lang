@@ -162,10 +162,12 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         returnType = new TyNativeVoid();
       }
       returnType = environmentToUse.rules.Resolve(returnType, false);
-      if (isAggregate) {
-        return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(returnType)).withPosition(this);
-      } else {
-        return returnType.makeCopyWithNewPosition(this, returnType.behavior);
+      if (returnType != null) {
+        if (isAggregate) {
+          return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(returnType)).withPosition(this);
+        } else {
+          return returnType.makeCopyWithNewPosition(this, returnType.behavior);
+        }
       }
     }
     environmentX.document.createError(expression, String.format("Expression is not a function"));
