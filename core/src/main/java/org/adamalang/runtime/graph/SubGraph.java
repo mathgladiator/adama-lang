@@ -17,15 +17,18 @@
 */
 package org.adamalang.runtime.graph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 
 /** within a graph, this represents all the edges for a single assoc */
 public class SubGraph {
   private final HashMap<Integer, TreeSet<Integer>> edges;
+  private final ArrayList<HasPartialGraph> partials;
 
   public SubGraph() {
     this.edges = new HashMap<>();
+    this.partials = new ArrayList<>();
   }
 
   public void remove(int from, int to) {
@@ -63,6 +66,24 @@ public class SubGraph {
         right.addAll(pr);
       }
     }
+    if (partials.size() > 0) {
+      SubGraph partial = new SubGraph();
+      for (HasPartialGraph p : partials) {
+        p.populate(partial);
+      }
+      right.addAll(partial.traverse(left));
+    }
     return right;
+  }
+
+  public void compute() {
+    for(HasPartialGraph partial : partials) {
+      partial.compute();
+    }
+    partials.clear();
+  }
+
+  public void link(HasPartialGraph partial) {
+    partials.add(partial);
   }
 }

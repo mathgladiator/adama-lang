@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /** an assoc table is a container of edges between two tables drive by a source */
-public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChild {
+public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChild, HasPartialGraph {
   private final RxTable<B> source;
   private final EdgeMaker<B> maker;
 
@@ -62,11 +62,10 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
     invalid.add(id);
     if (!linked) {
       linked = true;
-      // graph.link(this);
+      graph.link(this);
     }
   }
-
-  public void compute() {
+  private void fill(SubGraph partial, boolean cache) {
     for (Integer id : invalid) {
       B row = source.getById(id);
       if (row != null && row.__isAlive()) {
@@ -74,13 +73,26 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
         if (from != null) {
           Integer to = maker.to(row);
           if (to != null) {
-            edgeCache.put(id, new EdgeCache(from, to));
-            graph.put(from, to);
+            if (cache) {
+              edgeCache.put(id, new EdgeCache(from, to));
+            }
+            partial.put(from, to);
           }
         }
       }
     }
+  }
+
+  @Override
+  public void compute() {
+    fill(graph, true);
     invalid.clear();
+    linked = false;
+  }
+
+  @Override
+  public void populate(SubGraph partial) {
+    fill(partial, false);
   }
 
   public void removeAll() {
@@ -89,6 +101,10 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
       graph.remove(entry.getValue().from, entry.getValue().to);
     }
     edgeCache.clear();
+    if (!linked) {
+      linked = true;
+      graph.link(this);
+    }
   }
 
   @Override

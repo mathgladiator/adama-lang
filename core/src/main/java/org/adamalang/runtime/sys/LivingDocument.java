@@ -333,6 +333,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __timeouts.commit(forward, reverse);
     __webQueue.commit(forward, reverse);
     __replication.commit(forward, reverse);
+    __graph.compute();
   }
 
   private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again) {
@@ -356,6 +357,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
+    __graph.compute();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
     RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null);
@@ -1060,6 +1062,15 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: run the test for the given test name */
   public abstract void __test(TestReportBuilder report, String testName);
 
+
+  private void __proxy_commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse) {
+    __seq.bumpUpPre();
+    __commit(name, forward, reverse);
+    __timeouts.commit(forward, reverse);
+    __replication.commit(forward, reverse);
+    __graph.compute();
+  }
+
   /** code generated: commit the tree, and push data into the given delta */
   public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
@@ -1565,14 +1576,11 @@ public abstract class LivingDocument implements RxParent, Caller {
         // associate the client to the connection id
         __clients.put(context.who, cId);
         // commit the tree to the delta
-        __seq.bumpUpPre();
         final var forward = new JsonStreamWriter();
         final var reverse = new JsonStreamWriter();
         forward.beginObject();
         reverse.beginObject();
-        __commit(null, forward, reverse);
-        __timeouts.commit(forward, reverse);
-        __replication.commit(forward, reverse);
+        __proxy_commit(null, forward, reverse);
         forward.writeObjectFieldIntro("__clients");
         forward.beginObject();
         forward.writeObjectFieldIntro(cId);
@@ -1646,6 +1654,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       reverse.beginObject();
       __commit(null, forward, reverse);
       __replication.commit(forward, reverse);
+      __graph.compute();
       forward.endObject();
       reverse.endObject();
       final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
@@ -1681,6 +1690,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       reverse.beginObject();
       __commit(null, forward, reverse);
       __replication.commit(forward, reverse);
+      __graph.compute();
       forward.writeObjectFieldIntro("__clients");
       forward.beginObject();
       forward.writeObjectFieldIntro(id);
@@ -1904,7 +1914,6 @@ public abstract class LivingDocument implements RxParent, Caller {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-
       final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), NtPrincipal.NO_ONE, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.Internal);
       exception = false;
       return new LivingDocumentChange(result, null, null);
@@ -1928,10 +1937,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.endObject();
     }
     __randomizeOutOfBand();
-    __seq.bumpUpPre();
-    __timeouts.commit(forward, reverse);
-    __replication.commit(forward, reverse);
-    __commit(null, forward, reverse);
+    __proxy_commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
@@ -1975,11 +1981,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     reverse.writeNull();
     reverse.endObject();
     __queue.add(task);
-    // commit changes (i.e. the message id)
-    __seq.bumpUpPre();
-    __timeouts.commit(forward, reverse);
-    __replication.commit(forward, reverse);
-    __commit(null, forward, reverse);
+    __proxy_commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
     final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);

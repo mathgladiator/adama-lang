@@ -117,14 +117,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     trackers.add(tracker);
   }
 
-  private void computeTrackers() {
-    if (trackers != null) {
-      for (DifferentialEdgeTracker<Ty> tracker : trackers) {
-        tracker.compute();
-      }
-    }
-  }
-
   @Override
   public boolean __isAlive() {
     if (__parent != null) {
@@ -144,6 +136,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public void __kill() {
     for (Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
       entry.getValue().__kill();
+    }
+    if (trackers != null) {
+      for (DifferentialEdgeTracker<Ty> tracker : trackers) {
+        tracker.removeAll();
+      }
     }
   }
 
@@ -196,7 +193,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       }
       unknowns.clear();
     }
-    computeTrackers();
   }
 
 
@@ -249,7 +245,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         }
       }
     }
-    computeTrackers();
   }
 
   @Override
@@ -292,7 +287,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       }
       __lowerDirtyRevert();
     }
-    computeTrackers();
   }
 
   @Override
