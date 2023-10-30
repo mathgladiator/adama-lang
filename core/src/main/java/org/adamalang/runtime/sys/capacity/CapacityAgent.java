@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Sketch of the capacity agent */
-public class CapacityAgent implements HeatMonitor  {
+public class CapacityAgent implements HeatMonitor {
   private final Logger LOG = LoggerFactory.getLogger(CapacityAgent.class);
   private final CapacityMetrics metrics;
   private final CapacityOverseer overseer;
@@ -168,7 +168,8 @@ public class CapacityAgent implements HeatMonitor  {
           ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
           if (heat.hot) {
             overseer.pickNewHostForSpace(instance.space, region, new Callback<String>() {
-              String space = instance.space;
+              final String space = instance.space;
+
               @Override
               public void success(String newHost) {
                 overseer.add(instance.space, region, newHost, Callback.DONT_CARE_VOID);
@@ -190,13 +191,6 @@ public class CapacityAgent implements HeatMonitor  {
     });
   }
 
-  private String hash(Key key, String machine) { // This is a fairly dumb approach, we should sync this up with how to pick a new host
-    MessageDigest digest = Hashing.md5();
-    digest.update(key.key.getBytes(StandardCharsets.UTF_8));
-    digest.update(machine.getBytes(StandardCharsets.UTF_8));
-    return Hashing.finishAndEncode(digest);
-  }
-
   public void rebalance() {
     overseer.listAllOnMachine(region, machine, new Callback<List<CapacityInstance>>() {
       @Override
@@ -205,7 +199,8 @@ public class CapacityAgent implements HeatMonitor  {
           ServiceHeatEstimator.Heat heat = estimator.of(instance.space);
           if (heat.hot) {
             overseer.listWithinRegion(instance.space, instance.region, new Callback<List<CapacityInstance>>() {
-              String space = instance.space;
+              final String space = instance.space;
+
               @Override
               public void success(List<CapacityInstance> instances) {
                 service.shed((key) -> {
@@ -240,6 +235,13 @@ public class CapacityAgent implements HeatMonitor  {
         LOG.error("failed-rebalance-capacity", ex);
       }
     });
+  }
+
+  private String hash(Key key, String machine) { // This is a fairly dumb approach, we should sync this up with how to pick a new host
+    MessageDigest digest = Hashing.md5();
+    digest.update(key.key.getBytes(StandardCharsets.UTF_8));
+    digest.update(machine.getBytes(StandardCharsets.UTF_8));
+    return Hashing.finishAndEncode(digest);
   }
 
   @Override

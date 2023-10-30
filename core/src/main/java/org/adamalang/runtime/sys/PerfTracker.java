@@ -29,19 +29,8 @@ import java.util.Map;
 /** track specific events */
 public class PerfTracker {
   private static final Logger LOG = LoggerFactory.getLogger("tracked");
-
-  public class Sample {
-    private final int cost;
-    private final double ms;
-
-    public Sample(int cost, double ms) {
-      this.cost = cost;
-      this.ms = ms;
-    }
-  }
   private final HashMap<String, ArrayList<Sample>> samples;
   private final LivingDocument owner;
-
   public PerfTracker(LivingDocument owner) {
     this.owner = owner;
     this.samples = new HashMap<>();
@@ -102,5 +91,15 @@ public class PerfTracker {
     String result = writer.toString();
     LOG.error(result);
     return result;
+  }
+
+  public class Sample {
+    private final int cost;
+    private final double ms;
+
+    public Sample(int cost, double ms) {
+      this.cost = cost;
+      this.ms = ms;
+    }
   }
 }

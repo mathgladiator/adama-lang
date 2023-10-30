@@ -1,1 +1,1 @@
-self.addEventListener("push",function(t){var i,e;t.data&&(i=t.data.json())&&(e={body:i.body||"Generic Push Body"},t.waitUntil(self.registration.showNotification(i.title||"Generic Push Title",e)))});
+self.addEventListener("push",function(i){var t,n;i.data&&(t=i.data.json())&&(n={body:t.body||"Generic Push Body"},t.icon&&(n.icon=t.icon),i.waitUntil(self.registration.showNotification(t.title||"Generic Push Title",n)))});

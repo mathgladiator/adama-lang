@@ -56,6 +56,6 @@ public class WebPath implements Measurable {
 
   @Override
   public long measure() {
-    return uri.length() * 3 + 32 * fragments.length + 64;
+    return uri.length() * 3L + 32L * fragments.length + 64;
   }
 }

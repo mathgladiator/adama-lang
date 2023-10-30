@@ -24,5 +24,5 @@ import org.adamalang.runtime.data.Key;
 public interface MachinePicker {
 
   /** pick a host for the given key */
-  public void pickHost(Key key, Callback<String> callback);
+  void pickHost(Key key, Callback<String> callback);
 }

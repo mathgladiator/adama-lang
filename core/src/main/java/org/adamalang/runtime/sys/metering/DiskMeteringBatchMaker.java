@@ -42,9 +42,9 @@ public class DiskMeteringBatchMaker {
   private final File root;
   private final long cutOffMilliseconds;
   private final File current;
+  private final MeteringBatchReady ready;
   private FileOutputStream output;
   private long oldestTime;
-  private final MeteringBatchReady ready;
 
   public DiskMeteringBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds, MeteringBatchReady ready) throws Exception {
     this.time = time;

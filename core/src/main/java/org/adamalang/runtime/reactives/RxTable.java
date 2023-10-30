@@ -195,8 +195,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
   }
 
-
-
   @Override
   public void __dump(final JsonStreamWriter writer) {
     writer.beginObject();

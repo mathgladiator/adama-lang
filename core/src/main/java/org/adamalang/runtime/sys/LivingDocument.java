@@ -82,11 +82,13 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxInt32 __webTaskId;
   protected final WebQueue __webQueue;
   protected final ArrayList<EphemeralWebGet> __gets;
+  protected final Graph __graph;
   private final TreeMap<NtPrincipal, Integer> __clients;
   private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<Integer, PrivateView> __viewsById;
   private final HashMap<String, Long> __dedupe;
   private final TreeMap<Integer, RxCache> __routing;
+  public PerfTracker __perf;
   protected int __assertionFailures = 0;
   protected int __assertionTotal = 0;
   protected int __code_cost;
@@ -103,8 +105,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
-  public PerfTracker __perf;
-  protected final Graph __graph;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -166,12 +166,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new NtDate(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth());
   }
 
-  /** exposed: get the document's timestamp as a time */
-  protected NtTime __timeOfToday() {
-    ZonedDateTime dt = __datetimeNow().dateTime;
-    return new NtTime(dt.getHour(), dt.getMinute());
-  }
-
   /** exposed: get the document's timestamp as a datetime */
   protected NtDateTime __datetimeNow() {
     if (__timezoneCachedZoneId == null) {
@@ -190,6 +184,12 @@ public abstract class LivingDocument implements RxParent, Caller {
       return "UTC";
     }
     return __timezone.get();
+  }
+
+  /** exposed: get the document's timestamp as a time */
+  protected NtTime __timeOfToday() {
+    ZonedDateTime dt = __datetimeNow().dateTime;
+    return new NtTime(dt.getHour(), dt.getMinute());
   }
 
   public void __removed() {
@@ -406,26 +406,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     usurpingDocument.__code_cost = __code_cost;
   }
 
-  private String __makeRefreshJustData(PrivateView pv) {
-    JsonStreamWriter data = new JsonStreamWriter();
-    pv.update(data);
-    String dataStr = data.toString();
-    if (!"{}".equals(dataStr)) {
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      writer.writeObjectFieldIntro("data");
-      writer.inline(dataStr);
-      writer.force_comma_introduction();
-      writer.endObject();
-      return writer.toString();
-    }
-    return null;
-  }
-
-  public boolean __hasInflightAsyncWork() {
-    return __queue.size() > 0 || __webQueue.size() > 0;
-  }
-
   public PrivateView __createView(final NtPrincipal __who, final Perspective perspective, AssetIdEncoder __encoder) {
     final var view = __createPrivateView(__who, perspective, __encoder);
     view.setRefresh(() -> {
@@ -446,6 +426,26 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** code generated: create a private view for the given person */
   public abstract PrivateView __createPrivateView(NtPrincipal __who, Perspective __perspective, AssetIdEncoder __encoder);
+
+  private String __makeRefreshJustData(PrivateView pv) {
+    JsonStreamWriter data = new JsonStreamWriter();
+    pv.update(data);
+    String dataStr = data.toString();
+    if (!"{}".equals(dataStr)) {
+      final var writer = new JsonStreamWriter();
+      writer.beginObject();
+      writer.writeObjectFieldIntro("data");
+      writer.inline(dataStr);
+      writer.force_comma_introduction();
+      writer.endObject();
+      return writer.toString();
+    }
+    return null;
+  }
+
+  public boolean __hasInflightAsyncWork() {
+    return __queue.size() > 0 || __webQueue.size() > 0;
+  }
 
   /** build broadcast for a viewer */
   public LivingDocumentChange.Broadcast __buildBroadcast(NtPrincipal who, PrivateView pv) {
@@ -546,20 +546,6 @@ public abstract class LivingDocument implements RxParent, Caller {
       }
     }
     return false;
-  }
-
-  private class BroadcastTask {
-    public NtPrincipal who;
-    private PrivateView pv;
-
-    public BroadcastTask(NtPrincipal who, PrivateView pv) {
-      this.who = who;
-      this.pv = pv;
-    }
-
-    public LivingDocumentChange.Broadcast convert() {
-      return __buildBroadcast(who, pv);
-    }
   }
 
   /** internal: we compute per client */
@@ -988,14 +974,14 @@ public abstract class LivingDocument implements RxParent, Caller {
     __raisedDirtyCalled = true;
   }
 
-  @Override
-  public void __cost(int cost) {
-    __code_cost += cost;
-  }
-
   /** for the reactive children, the root is always alive */
   public boolean __isAlive() {
     return true;
+  }
+
+  @Override
+  public void __cost(int cost) {
+    __code_cost += cost;
   }
 
   /** the code will vomit up a signal to destroy itself. This must be caught at a higher level. */
@@ -1062,6 +1048,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** code generated: run the test for the given test name */
   public abstract void __test(TestReportBuilder report, String testName);
 
+  /** code generated: commit the tree, and push data into the given delta */
+  public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
   private void __proxy_commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse) {
     __seq.bumpUpPre();
@@ -1070,9 +1058,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     __replication.commit(forward, reverse);
     __graph.compute();
   }
-
-  /** code generated: commit the tree, and push data into the given delta */
-  public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
   /** estimate the memory of the document */
   public long __memory() {
@@ -2074,6 +2059,20 @@ public abstract class LivingDocument implements RxParent, Caller {
         }
       }
       return true;
+    }
+  }
+
+  private class BroadcastTask {
+    public NtPrincipal who;
+    private final PrivateView pv;
+
+    public BroadcastTask(NtPrincipal who, PrivateView pv) {
+      this.who = who;
+      this.pv = pv;
+    }
+
+    public LivingDocumentChange.Broadcast convert() {
+      return __buildBroadcast(who, pv);
     }
   }
 }

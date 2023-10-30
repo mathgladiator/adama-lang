@@ -34,16 +34,16 @@ public class CapacityInstance implements Comparable<CapacityInstance> {
   }
 
   @Override
+  public int hashCode() {
+    return Objects.hash(space, region, machine, override);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     CapacityInstance instance = (CapacityInstance) o;
     return override == instance.override && Objects.equals(space, instance.space) && Objects.equals(region, instance.region) && Objects.equals(machine, instance.machine);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(space, region, machine, override);
   }
 
   @Override

@@ -6,6 +6,9 @@ self.addEventListener('push', function(event) {
       var options = {
         body: json.body ? json.body : "Generic Push Body",
       };
+      if (json.icon) {
+        options.icon = json.icon;
+      }
       event.waitUntil(self.registration.showNotification(json.title ? json.title : "Generic Push Title", options));
     }
   }

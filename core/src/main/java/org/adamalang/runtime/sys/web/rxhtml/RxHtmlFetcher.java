@@ -21,5 +21,5 @@ import org.adamalang.common.Callback;
 
 public interface RxHtmlFetcher {
 
-  public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback);
+  void fetch(String space, Callback<LiveSiteRxHtmlResult> callback);
 }

@@ -20,7 +20,6 @@ package org.adamalang.runtime.sys;
 import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.RequestResponseMonitor;
 
 /** metrics for the core adama service */
 public class CoreMetrics {

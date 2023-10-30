@@ -25,26 +25,26 @@ import java.util.List;
 public interface CapacityOverseer {
 
   /** list all the capacity for a space in the world */
-  public void listAllSpace(String space, Callback<List<CapacityInstance>> callback);
+  void listAllSpace(String space, Callback<List<CapacityInstance>> callback);
 
   /** list all the capacity for a space within a region */
-  public void listWithinRegion(String space, String region, Callback<List<CapacityInstance>> callback);
+  void listWithinRegion(String space, String region, Callback<List<CapacityInstance>> callback);
 
   /** list all the spaces bound to a machine within a region */
-  public void listAllOnMachine(String region, String machine, Callback<List<CapacityInstance>> callback);
+  void listAllOnMachine(String region, String machine, Callback<List<CapacityInstance>> callback);
 
   /** add capacity for a space to a host within a region */
-  public void add(String space, String region, String machine, Callback<Void> callback);
+  void add(String space, String region, String machine, Callback<Void> callback);
 
   /** remove capacity for a space from a host and region */
-  public void remove(String space, String region, String machine, Callback<Void> callback);
+  void remove(String space, String region, String machine, Callback<Void> callback);
 
   /** nuke all capacity for a space */
-  public void nuke(String space, Callback<Void> callback);
+  void nuke(String space, Callback<Void> callback);
 
   /** pick a new host for a space within a region (that is stable) */
-  public void pickStableHostForSpace(String space, String region, Callback<String> callback);
+  void pickStableHostForSpace(String space, String region, Callback<String> callback);
 
   /** pick a new host for a space that hasn't been allocated */
-  public void pickNewHostForSpace(String space, String region, Callback<String> callback);
+  void pickNewHostForSpace(String space, String region, Callback<String> callback);
 }

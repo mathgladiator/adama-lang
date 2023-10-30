@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /** encode the callback to trigger a deployment */
 public class TriggerDeployment implements Callback<Void>, DeploymentMonitor {
-  private static Logger LOG = LoggerFactory.getLogger(TriggerDeployment.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TriggerDeployment.class);
   private final CoreService service;
   private final Callback<Void> other;
 

@@ -31,7 +31,7 @@ public class CachedDomainFinder implements DomainFinder {
   private final AsyncSharedLRUCache<String, Domain> cache;
 
   public CachedDomainFinder(TimeSource timeSource, int maxDomains, long maxAge, SimpleExecutor executor, DomainFinder finder) {
-    this.storage = new SyncCacheLRU<>(timeSource, 0, maxDomains, 1024 * maxDomains, maxAge, (name, record) -> {
+    this.storage = new SyncCacheLRU<>(timeSource, 0, maxDomains, 1024L * maxDomains, maxAge, (name, record) -> {
     });
     this.cache = new AsyncSharedLRUCache<>(executor, storage, finder::find);
   }

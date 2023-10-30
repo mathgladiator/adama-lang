@@ -18,11 +18,10 @@
 package org.adamalang.runtime.sys.domains;
 
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.sys.domains.Domain;
 
 /** find a domain */
 public interface DomainFinder {
 
   /** just find the domain */
-  public void find(String domain, Callback<Domain> callback);
+  void find(String domain, Callback<Domain> callback);
 }

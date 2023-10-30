@@ -40,6 +40,7 @@ public class DocumentThreadBase {
   public final HashMap<Key, DurableLivingDocument> map;
   public final HashMap<Key, ArrayList<Runnable>> pending;
   public final TimeSource time;
+  public final MetricsReporter metricsReporter;
   private final HashMap<String, PredictiveInventory> inventoryBySpace;
   private final Random rng;
   private int millisecondsForCleanupCheck;
@@ -47,7 +48,6 @@ public class DocumentThreadBase {
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
   private int millisecondsInactivityBeforeCleanup;
-  public final MetricsReporter metricsReporter;
 
   public DocumentThreadBase(ServiceShield shield, MetricsReporter metricsReporter, DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.shield = shield;

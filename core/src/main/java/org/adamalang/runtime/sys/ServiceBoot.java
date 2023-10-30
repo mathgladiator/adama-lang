@@ -45,6 +45,7 @@ public class ServiceBoot {
         for (CapacityInstance instance : instances) {
           deploy.deploy(instance.space, new Callback<Void>() {
             private final String space = instance.space;
+
             @Override
             public void success(Void value) {
               deployed.countDown();

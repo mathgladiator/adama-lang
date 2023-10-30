@@ -35,10 +35,6 @@ public class WebContext {
     this.ip = ip;
   }
 
-  public CoreRequestContext toCoreRequestContext(Key key) {
-    return new CoreRequestContext(who, origin, ip, key.key);
-  }
-
   public static WebContext readFromObject(JsonStreamReader reader) {
     if (reader.startObject()) {
       NtPrincipal _who = null;
@@ -64,6 +60,10 @@ public class WebContext {
       reader.skipValue();
     }
     return null;
+  }
+
+  public CoreRequestContext toCoreRequestContext(Key key) {
+    return new CoreRequestContext(who, origin, ip, key.key);
   }
 
   public void writeAsObject(JsonStreamWriter writer) {
