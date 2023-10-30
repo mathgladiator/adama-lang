@@ -336,6 +336,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     __graph.compute();
   }
 
+  private int __deltaTime() {
+    return Math.max(0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
+  }
+
   private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -359,8 +363,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     reverse.endObject();
     __graph.compute();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    int timeDelta = (int) Math.min((long) (Integer.MAX_VALUE / 2), __next_time.get() - __time.get());
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, timeDelta, 0L, UpdateType.Invalidate);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, __deltaTime(), 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
@@ -375,7 +378,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, (int) (__next_time.get() - __time.get()), assetBytes, UpdateType.AddUserData);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, __deltaTime(), assetBytes, UpdateType.AddUserData);
     return new LivingDocumentChange(update, broadcasts, response);
   }
 
@@ -1810,8 +1813,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         __commit(null, forward, reverse);
         forward.endObject();
         reverse.endObject();
-        return new LivingDocumentChange(new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), false, 0, 0L, UpdateType.Internal), broadcasts, null);
-      }
+        return new LivingDocumentChange(new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), false, 0, 0L, UpdateType.Internal), broadcasts, null);      }
     } catch (final RetryProgressException rpe) {
       __futures.restore();
       __reset_future_queues();
@@ -1927,7 +1929,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) Math.max(0, __next_time.get() - __time.get()), 0L, UpdateType.DirectMessageExecute);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), __deltaTime(), 0L, UpdateType.DirectMessageExecute);
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
