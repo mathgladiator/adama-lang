@@ -113,4 +113,8 @@ public class NtMap<TIn, TOut> implements Iterable<NtPair<TIn, TOut>> {
       return new NtMaybe<>();
     }
   }
+
+  public void clear() {
+    storage.clear();
+  }
 }

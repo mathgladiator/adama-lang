@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
+import org.adamalang.common.Platform;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -78,7 +79,7 @@ public class CapacitorJSShell {
       sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
     }
     if (worker) {
-      sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js\");\n");
+      sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js\",'").append(Platform.JS_VERSION).append("');\n");
     }
     sb.append("</script></html>");
     return sb.toString();

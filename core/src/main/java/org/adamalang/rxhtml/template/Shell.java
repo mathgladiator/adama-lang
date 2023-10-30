@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Platform;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.nodes.Document;
@@ -99,10 +100,9 @@ public class Shell {
     sb.append("  RxHTML.init();\n");
     if (worker) {
       if (config.useLocalAdamaJavascript) {
-        sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/" + System.currentTimeMillis() + "/devlibadama-worker.js\");\n");
+        sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/" + Platform.JS_VERSION + "/devlibadama-worker.js\",'").append(Platform.JS_VERSION).append("');\n");
       } else {
-        // TODO: inject the Platform.VERSION here (validate this will override the old worker registration)
-        sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js\");\n");
+        sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js/" + Platform.JS_VERSION + ".js\",'").append(Platform.JS_VERSION).append("');\n");
       }
     }
     sb.append("</script></html>");

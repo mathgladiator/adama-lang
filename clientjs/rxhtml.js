@@ -1753,24 +1753,28 @@ var RxHTML = (function () {
     return outputArray;
   }
 
-  var setupSubscription = function (vapidPublicKey, identity, identityName) {
-    navigator.serviceWorker.ready.then(function (registration) {
-      return registration.pushManager.getSubscription()
-        .then(async function (subscription) {
-          if (subscription) {
-            return subscription;
-          }
-          const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-          return registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: convertedVapidKey
-          });
+  var setupSubscription = function (registration, vapidPublicKey, identity, identityName, version) {
+    registration.pushManager
+    .getSubscription().then(async function (subscription) {
+        if (subscription) {
+          return subscription;
+        }
+        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+        return registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey
         });
     }).then(function (subscription) {
+      // make sure we have an endpoint saved related to the right version
+      var pushKeyLocal = "push_endpoint_" + identityName;
+      if (localStorage.getItem("push_worker_version") != version) {
+        localStorage.removeItem(pushKeyLocal);
+        localStorage.setItem("push_worker_version", version);
+      }
       var sub = subscription.toJSON();
       sub['@method'] = 'webpush';
       sub['@time'] = new Date().getTime();
-      var val = localStorage.getItem("push_endpoint_" + identityName);
+      var val = localStorage.getItem(pushKeyLocal);
       if (val) {
         if (val == sub.endpoint) {
           console.log("reusing endpoint:" + sub.endpoint);
@@ -1784,7 +1788,7 @@ var RxHTML = (function () {
       }
       connection.PushRegister(identity, self.domain, sub, device, {
         success: function() {
-          localStorage.setItem("push_endpoint_" + identityName, sub.endpoint);
+          localStorage.setItem(pushKeyLocal, sub.endpoint);
         },
         failure: function(reason) {
           console.error("Failed to register subscription to Adama:" + reason);
@@ -1793,13 +1797,34 @@ var RxHTML = (function () {
     });
   }
 
-  self.worker = function(identityName, path) {
+  var setupPush = function(path, vapidPublicKey, identity, identityName, version) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      var found = false;
+      for(let registration of registrations) {
+        if (registration.active) {
+          if (!registration.active.scriptURL.endsWith(path)) {
+            registration.unregister();
+          } else {
+            found = true;
+            setupSubscription(registration, vapidPublicKey, identity, identityName, version);
+          }
+        }
+      }
+      if (!found) {
+        navigator.serviceWorker.register(path);
+        navigator.serviceWorker.ready.then(function (registration) {
+          setupSubscription(registration, vapidPublicKey, identity, identityName, version);
+        });
+      }
+    });
+  }
+
+  self.worker = function(identityName, path, version) {
     try {
-      navigator.serviceWorker.register(path);
       afterHaveIdentity(identityName, function(identity) {
         connection.DomainGetVapidPublicKey(identity, self.domain, {
           success: function(response) {
-            setupSubscription(response.publicKey, identity, identityName);
+            setupPush(path, response.publicKey, identity, identityName, version);
           },
           failure: function (reason) {
             console.error("failed to get public-key:" + reason);

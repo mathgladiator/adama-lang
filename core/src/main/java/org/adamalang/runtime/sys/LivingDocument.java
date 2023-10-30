@@ -359,7 +359,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     reverse.endObject();
     __graph.compute();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
+    int timeDelta = (int) Math.min((long) (Integer.MAX_VALUE / 2), __next_time.get() - __time.get());
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, timeDelta, 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null);
   }
 
@@ -2028,7 +2029,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** exposed: transition the current state machine label */
   protected void __transitionStateMachine(final String next, final double timeToTransitionSeconds) {
     __state.set(next);
-    __next_time.set((long) (__time.get() + timeToTransitionSeconds * 1000.0));
+    __next_time.set((long) (__time.get() + Math.max(0, timeToTransitionSeconds * 1000.0)));
   }
 
   /**

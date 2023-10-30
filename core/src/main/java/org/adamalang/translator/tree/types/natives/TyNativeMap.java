@@ -169,6 +169,9 @@ public class TyNativeMap extends TyType implements //
       TyType returnType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(rangeType)).withPosition(this);
       return new TyNativeFunctional("remove", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("remove", returnType, args, FunctionPaint.CAST_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
+    if ("clear".equals(name)) {
+      return new TyNativeFunctional("clear", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("clear", new TyNativeVoid().withPosition(this), new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);
+    }
     if ("size".equals(name)) {
       return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }

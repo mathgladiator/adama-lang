@@ -200,6 +200,14 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
   }
 
+  public void clear() {
+    for (Map.Entry<DomainTy, RangeTy> entry : objects.storage.entrySet()) {
+      deleted.put(entry.getKey(), entry.getValue());
+    }
+    __raiseDirty();
+    objects.storage.clear();
+  }
+
   @Override
   public void __kill() {
     for (final Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
