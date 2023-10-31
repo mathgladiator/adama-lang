@@ -57,6 +57,8 @@ public class DurableLivingDocument implements Queryable {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final Logger LOG = LoggerFactory.getLogger(DurableLivingDocument.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOG);
+  private static final int INTERNAL_INVALIDATION_LIMIT = 32;
+
   private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<>() {
     @Override
     public void success(LivingDocumentChange value) {
@@ -413,7 +415,7 @@ public class DurableLivingDocument implements Queryable {
           public void execute() throws Exception {
             invalidate(Callback.DONT_CARE_INTEGER);
           }
-        }, Math.max(0, Math.min(requiresInvalidateMilliseconds, 300000)));
+        }, Math.max(10, Math.min(requiresInvalidateMilliseconds, 300000)));
       }
     } else {
       IngestRequest[] remaining = new IngestRequest[pending.size()];
@@ -582,8 +584,9 @@ public class DurableLivingDocument implements Queryable {
           }
         });
       };
-      while (requireInvalidate && invalidateWaitTime == 0) {
-        // inject an invalidation
+      int limit = INTERNAL_INVALIDATION_LIMIT;
+      while (requireInvalidate && invalidateWaitTime == 0 && limit > 0) {
+        limit--;
         try {
           last = document.__transact(forgeInvalidate(), currentFactory);
           requireInvalidate = last.update.requiresFutureInvalidation;
@@ -593,6 +596,9 @@ public class DurableLivingDocument implements Queryable {
           triggerFailure.accept(ex);
           return;
         }
+      }
+      if (limit == 0) {
+        LOG.error("Reached internal invalidation limit:" + document.__getSpace() + "/" + document.__getKey());
       }
       requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
       RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[changes.size()];
