@@ -33,8 +33,11 @@ import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.push.NoOpPusher;
 import org.adamalang.services.push.Push;
+import org.adamalang.services.security.FacebookValidator;
+import org.adamalang.services.security.GithubValidator;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
+import org.adamalang.services.security.TwitterValidator;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
@@ -46,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** These are the first party services; please keep in sync with org.adamalang.cli.devbox.DevBoxServices */
+
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
@@ -115,6 +119,9 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
+    ServiceRegistry.add("facebookvalidator", FacebookValidator.class, (space, configRaw, keys) -> FacebookValidator.build(metrics, webClientBase));
+    ServiceRegistry.add("twittervalidator", TwitterValidator.class, (space, configRaw, keys) -> TwitterValidator.build(metrics, webClientBase));
+    ServiceRegistry.add("githubvalidator", GithubValidator.class, (space, configRaw, keys) -> GithubValidator.build(metrics, webClientBase));
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(metrics, executor, webClientBase));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, new NoOpPusher()));
