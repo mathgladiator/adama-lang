@@ -1,11 +1,20 @@
 /*
- * This file is subject to the terms and conditions outlined in the
- * file 'LICENSE' (it's dual licensed) located in the root directory
- * near the README.md which you should also read. For more information
- * about the project which owns this file, see https://www.adama-platform.com/ .
- *
- * (c) 2021 - 2023 by Adama Platform Initiative, LLC
- */
+* Adama Platform and Language
+* Copyright (C) 2021 - 2023 by Adama Platform Initiative, LLC
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as published
+* by the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+* 
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 package org.adamalang.services;
 
 import org.adamalang.api.SelfClient;
@@ -21,8 +30,11 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.security.FacebookValidator;
+import org.adamalang.services.security.GithubValidator;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
+import org.adamalang.services.security.TwitterValidator;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
@@ -32,6 +44,7 @@ import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
@@ -93,6 +106,9 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
+    ServiceRegistry.add("facebookvalidator", FacebookValidator.class, (space, configRaw, keys) -> FacebookValidator.build(metrics, webClientBase));
+    ServiceRegistry.add("twittervalidator", TwitterValidator.class, (space, configRaw, keys) -> TwitterValidator.build(metrics, webClientBase));
+    ServiceRegistry.add("githubvalidator", GithubValidator.class, (space, configRaw, keys) -> GithubValidator.build(metrics, webClientBase));
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(metrics, executor, webClientBase));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
   }
