@@ -116,6 +116,9 @@ public class ErrorCodes {
   public static final int SHIELD_REJECT_SEND_MESSAGE = 199883;
 
   public static final int DOCUMENT_SHEDDING_LOAD = 146115;
+
+  @User
+  @Description("The web get handler was not found.")
   public static final int DOCUMENT_WEB_GET_NOT_FOUND = 133308;
   public static final int DOCUMENT_WEB_GET_CANCEL = 128208;
 
@@ -123,11 +126,17 @@ public class ErrorCodes {
   @Description("The web get was aborted.")
   public static final int DOCUMENT_WEB_GET_ABORT = 145659;
   public static final int DOCUMENT_WEB_OPTIONS_NOT_FOUND = 127692;
+
+  @User
+  @Description("The web put handler was not found.")
   public static final int DOCUMENT_WEB_PUT_NOT_FOUND = 114881;
 
   @User
   @Description("The web put was aborted.")
   public static final int DOCUMENT_WEB_PUT_ABORT = 134399;
+
+  @User
+  @Description("The web delete handler was not found.")
   public static final int DOCUMENT_WEB_DELETE_NOT_FOUND = 110832;
   public static final int DOCUMENT_WEB_DELETE_ABORT = 120060;
   public static final int DOCUMENT_AUTHORIIZE_FAILURE = 191713;

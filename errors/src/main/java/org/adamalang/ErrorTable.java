@@ -169,7 +169,8 @@ public class ErrorTable {
     names.put(146115, "DOCUMENT_SHEDDING_LOAD");
     descriptions.put(146115, "no description of error (yet)");
     names.put(133308, "DOCUMENT_WEB_GET_NOT_FOUND");
-    descriptions.put(133308, "no description of error (yet)");
+    descriptions.put(133308, "The web get handler was not found.");
+    userspace.add(133308);
     names.put(128208, "DOCUMENT_WEB_GET_CANCEL");
     descriptions.put(128208, "no description of error (yet)");
     names.put(145659, "DOCUMENT_WEB_GET_ABORT");
@@ -178,12 +179,14 @@ public class ErrorTable {
     names.put(127692, "DOCUMENT_WEB_OPTIONS_NOT_FOUND");
     descriptions.put(127692, "no description of error (yet)");
     names.put(114881, "DOCUMENT_WEB_PUT_NOT_FOUND");
-    descriptions.put(114881, "no description of error (yet)");
+    descriptions.put(114881, "The web put handler was not found.");
+    userspace.add(114881);
     names.put(134399, "DOCUMENT_WEB_PUT_ABORT");
     descriptions.put(134399, "The web put was aborted.");
     userspace.add(134399);
     names.put(110832, "DOCUMENT_WEB_DELETE_NOT_FOUND");
-    descriptions.put(110832, "no description of error (yet)");
+    descriptions.put(110832, "The web delete handler was not found.");
+    userspace.add(110832);
     names.put(120060, "DOCUMENT_WEB_DELETE_ABORT");
     descriptions.put(120060, "no description of error (yet)");
     names.put(191713, "DOCUMENT_AUTHORIIZE_FAILURE");
