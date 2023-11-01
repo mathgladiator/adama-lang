@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231101091111";
-  public static final String JS_VERSION = "c784c85a7e98495b2e3e98c926dec3b5";
+/** generated request type for identity/stash */
+public class ClientIdentityStashRequest {
+  public String identity;
+  public String name;
 }

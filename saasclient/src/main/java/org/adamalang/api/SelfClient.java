@@ -99,6 +99,30 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
+  /** stats */
+  public void stats(ClientStatsRequest request, Stream<ClientStatsResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "stats");
+    pool.requestStream(node, (obj) -> new ClientStatsResponse(obj), streamback);
+  }
+
+  /** identity/hash */
+  public void identityHash(ClientIdentityHashRequest request, Callback<ClientIdentityHashResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "identity/hash");
+    node.put("identity", request.identity);
+    pool.requestResponse(node, (obj) -> new ClientIdentityHashResponse(obj), callback);
+  }
+
+  /** identity/stash */
+  public void identityStash(ClientIdentityStashRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "identity/stash");
+    node.put("identity", request.identity);
+    node.put("name", request.name);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
   /** authority/create */
   public void authorityCreate(ClientAuthorityCreateRequest request, Callback<ClientClaimResultResponse> callback) {
     ObjectNode node = Json.newJsonObject();

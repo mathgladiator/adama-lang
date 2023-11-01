@@ -76,6 +76,60 @@ public class RegionConnectionRouter {
         public void execute() throws Exception {
           session.activity();
           switch (method) {
+            case "stats": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_Stats.start();
+              StatsRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(StatsRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new StatsResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "identity/hash": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_IdentityHash.start();
+              IdentityHashRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(IdentityHashRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new IdentityHashResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "identity/stash": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_IdentityStash.start();
+              IdentityStashRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(IdentityStashRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "document/authorize": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentAuthorize.start();
               DocumentAuthorizeRequest.resolve(session, nexus, request, new Callback<>() {

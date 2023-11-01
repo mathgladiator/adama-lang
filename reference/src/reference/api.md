@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [Deinit](#method-deinit), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [PushRegister](#method-pushregister), [DomainMap](#method-domainmap), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [BillingConnectionCreate](#method-billingconnectioncreate), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentStartByDomain](#method-attachmentstartbydomain), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [Deinit](#method-deinit), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [Stats](#method-stats), [IdentityHash](#method-identityhash), [IdentityStash](#method-identitystash), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [PushRegister](#method-pushregister), [DomainMap](#method-domainmap), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [BillingConnectionCreate](#method-billingconnectioncreate), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentStartByDomain](#method-attachmentstartbydomain), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
@@ -194,6 +194,81 @@ This is useful to validate an identity without executing anything.
 ### Template
 ```js
 connection.Probe(identity, {
+  success: function() {
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+This method simply returns void.
+
+## Method: Stats
+Get stats for the current connection
+This method has no parameters.
+
+### Template
+```js
+connection.Stats({
+  next: function(payload) {
+    // payload.statKey
+    // payload.statValue
+    // payload.statType
+  },
+  complete: function() {
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Streaming payload fields
+| name | type | documentation |
+| --- | --- | --- |
+| stat-key | String | A key for the stats |
+| stat-value | String | The value for a stat |
+| stat-type | String | The type of the stat. |
+
+## Method: IdentityHash
+Validate an identity and convert to a public and opaque base64 crypto hash.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+
+
+### Template
+```js
+connection.IdentityHash(identity, {
+  success: function(response) {
+    // response.identityHash
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| identity-hash | String | A hash of an identity |
+
+## Method: IdentityStash
+Stash an identity locally in the connection as if it was a cookie
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| name | yes | String | An identifier to name the resource. |
+
+
+### Template
+```js
+connection.IdentityStash(identity, name, {
   success: function() {
   },
   failure: function(reason) {

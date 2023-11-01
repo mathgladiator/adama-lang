@@ -29,6 +29,12 @@ public abstract class DevBoxRouter {
   private static final Logger ACCESS_LOG = LoggerFactory.getLogger("access");
   private static final JsonLogger DEV_ACCESS_LOG = (item) -> ACCESS_LOG.debug(item.toString());
 
+  public abstract void handle_Stats(long requestId, StatsResponder responder);
+
+  public abstract void handle_IdentityHash(long requestId, String identity, IdentityHashResponder responder);
+
+  public abstract void handle_IdentityStash(long requestId, String identity, String name, SimpleResponder responder);
+
   public abstract void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder);
 
   public abstract void handle_PushRegister(long requestId, String identity, String domain, ObjectNode subscription, ObjectNode deviceInfo, SimpleResponder responder);
@@ -77,6 +83,22 @@ public abstract class DevBoxRouter {
       _accessLogItem.put("@timestamp", LogTimestamp.now());
       request.dumpIntoLog(_accessLogItem);
       switch (method) {
+        case "stats":
+          handle_Stats(requestId, //
+            new StatsResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "identity/hash":
+          handle_IdentityHash(requestId, //
+            request.getString("identity", true, 458759), //
+            new IdentityHashResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "identity/stash":
+          _accessLogItem.put("name", request.getString("name", true, 453647));
+          handle_IdentityStash(requestId, //
+            request.getString("identity", true, 458759), //
+            request.getString("name", true, 453647), //
+            new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
         case "space/reflect":
           _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
           _accessLogItem.put("key", request.getString("key", true, 466947));

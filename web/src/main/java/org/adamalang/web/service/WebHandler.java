@@ -593,6 +593,35 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
       }
       return true;
+    } else if (req.uri().startsWith("/~stash/") && (req.method() == HttpMethod.PUT)) {
+      try {
+        byte[] memory = new byte[req.content().readableBytes()];
+        req.content().readBytes(memory);
+        ObjectNode body = Json.parseJsonObject(new String(memory, StandardCharsets.UTF_8));
+        String name = body.get("name").textValue();
+        String value = body.get("identity").textValue();
+        int maxAge = body.get("max-age").intValue();
+        final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
+        String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+        if (origin == null) { // CORS support directly
+          sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
+          return true;
+        }
+        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+        res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
+        DefaultCookie cookie = new DefaultCookie("id_" + name, value);
+        cookie.setSameSite(CookieHeaderNames.SameSite.Strict);
+        cookie.setMaxAge(maxAge);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+        res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
+        sendWithKeepAlive(webConfig, ctx, req, res);
+      } catch (Exception ex) {
+        sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
+        return true;
+      }
     } else if (req.uri().startsWith("/~p")) { // set an asset key
       final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
       String value = req.uri().substring(3);

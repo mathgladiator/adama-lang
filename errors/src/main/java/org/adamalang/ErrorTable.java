@@ -679,6 +679,8 @@ public class ErrorTable {
     descriptions.put(970995, "no description of error (yet)");
     names.put(989427, "FAILED_DEINIT_UNKONWN_EXCEPTION");
     descriptions.put(989427, "no description of error (yet)");
+    names.put(909436, "AUTH_COOKIE_CANT_STASH_COOKIE");
+    descriptions.put(909436, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");

@@ -36,11 +36,16 @@ import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private static final Logger PERF_LOG = LoggerFactory.getLogger("perf");
+  private final static ConcurrentHashMap<String, String> LOCALHOST_COOKIES = new ConcurrentHashMap<>();
   private final SimpleExecutor executor;
   private final ConnectionContext context;
   private final DynamicControl control;
@@ -59,11 +64,6 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
-  @Override
-  public void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder) {
-    responder.complete(SecureAssetUtil.makeAssetKeyHeader());
-  }
-
   public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death) {
     this.executor = executor;
     this.context = context;
@@ -72,9 +72,19 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
     this.death = death;
+    for (Map.Entry<String, String> entry : context.identities.entrySet()) {
+      LOCALHOST_COOKIES.put(entry.getKey(), entry.getValue());
+    }
   }
 
   public static NtPrincipal principalOf(String identity) {
+    if (identity.startsWith("cookie:")) {
+      String name = identity.substring(7);
+      String value = LOCALHOST_COOKIES.get(name);
+      if (value != null) {
+        return principalOf(value);
+      }
+    }
     if (identity.startsWith("document/")) {
       String[] parts = identity.split(Pattern.quote("/"));
       return new NtPrincipal(parts[3], "doc/" + parts[1] + "/" + parts[2]);
@@ -84,6 +94,39 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
     // TODO: parse identity and then resolve against a table
     return NtPrincipal.NO_ONE;
+  }
+
+  @Override
+  public void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder) {
+    responder.complete(SecureAssetUtil.makeAssetKeyHeader());
+  }
+
+  @Override
+  public void handle_IdentityHash(long requestId, String identity, IdentityHashResponder responder) {
+    NtPrincipal p = principalOf(identity);
+    String stringToHash = p.agent + ":" + p.authority + "/" + p.agent;
+    MessageDigest digest = Hashing.sha384();
+    digest.update(stringToHash.getBytes(StandardCharsets.UTF_8));
+    responder.complete(Hashing.finishAndEncode(digest));
+  }
+
+  @Override
+  public void handle_IdentityStash(long requestId, String identity, String name, SimpleResponder responder) {
+    if (identity.startsWith("cookie:")) {
+      responder.error(new ErrorCodeException(ErrorCodes.AUTH_COOKIE_CANT_STASH_COOKIE));
+      return;
+    }
+    LOCALHOST_COOKIES.put(name, identity);
+    responder.complete();
+  }
+
+  @Override
+  public void handle_Stats(long requestId, StatsResponder responder) {
+    responder.next("stream-count", streams.size() + "", "int");
+    for (Map.Entry<String, String> entry : LOCALHOST_COOKIES.entrySet()) {
+      responder.next("identity-" + entry.getKey(), entry.getValue(), "string");
+    }
+    responder.finish();
   }
 
   @Override

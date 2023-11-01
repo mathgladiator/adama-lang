@@ -23,23 +23,22 @@ import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
-import org.adamalang.contracts.data.AuthenticatedUser;
 import org.adamalang.contracts.data.DomainWithPolicy;
-import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -57,7 +56,7 @@ public class GlobalDataHandler implements RootRegionHandler {
   }
 
   private void commonAuthorize(Session session, Key key, String username, String password, String new_password, InitiationResponder responder) {
-    nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, key.space, key.key, username, password, new_password, new Callback<String>() {
+    nexus.adama.authorize(session.authenticator.getContext().remoteIp, session.authenticator.getContext().origin, key.space, key.key, username, password, new_password, new Callback<String>() {
       @Override
       public void success(String agent) {
         responder.complete(nexus.signingKey.signDocumentIdentity(agent, key.space, key.key, 0));
@@ -85,10 +84,38 @@ public class GlobalDataHandler implements RootRegionHandler {
   }
 
   @Override
+  public void handle(Session session, IdentityStashRequest request, SimpleResponder responder) {
+    if (request.identity.startsWith("cookie:")) {
+      responder.error(new ErrorCodeException(ErrorCodes.AUTH_COOKIE_CANT_STASH_COOKIE));
+      return;
+    }
+    session.authenticator.getContext().identities.put(request.name, request.identity);
+    responder.complete();
+  }
+
+  @Override
+  public void handle(Session session, IdentityHashRequest request, IdentityHashResponder responder) {
+    String stringToHash = request.who.who.agent + ":" + request.who.who.authority + "/" + request.who.who.agent;
+    MessageDigest digest = Hashing.sha384();
+    digest.update(stringToHash.getBytes(StandardCharsets.UTF_8));
+    responder.complete(Hashing.finishAndEncode(digest));
+  }
+
+  @Override
+  public void handle(Session session, StatsRequest request, StatsResponder responder) {
+    responder.next("created", session.created + "", "timestamp");
+    responder.next("cached-identities-count", session.identityCache.size() + "", "int");
+    ConnectionContext context = session.authenticator.getContext();
+    responder.next("origin", context.origin, "string");
+    responder.next("remote-ip", context.remoteIp, "string");
+    responder.next("cookie-identities-count", context.identities.size() + "", "int");
+    responder.finish();
+  }
+
+  @Override
   public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder) {
     commonAuthorize(session, new Key(request.space, request.key), request.username, request.password, null, responder);
   }
-
 
   @Override
   public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder) {
@@ -294,7 +321,7 @@ public class GlobalDataHandler implements RootRegionHandler {
 
       @Override
       public void handle(ConnectionPasswordRequest request, SimpleResponder responder) {
-        nexus.adama.authorize(session.authenticator.getDefaultContext().remoteIp, session.authenticator.getDefaultContext().origin, connect.space, connect.key, request.username, request.password, request.new_password, new Callback<String>() {
+        nexus.adama.authorize(session.authenticator.getContext().remoteIp, session.authenticator.getContext().origin, connect.space, connect.key, request.username, request.password, request.new_password, new Callback<String>() {
           @Override
           public void success(String identity) {
             responder.complete();

@@ -15,9 +15,23 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231101091111";
-  public static final String JS_VERSION = "c784c85a7e98495b2e3e98c926dec3b5";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
+
+/** generated class for the responder: identity-hash */
+public class ClientIdentityHashResponse {
+  public final ObjectNode _original;
+  public final String identityHash;
+
+  public ClientIdentityHashResponse(ObjectNode response) {
+    this._original = response;
+    this.identityHash = Json.readString(response, "identity-hash");
+  }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("identityHash", identityHash);
+    return _next.toString();
+  }
 }

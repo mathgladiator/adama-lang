@@ -20,6 +20,12 @@ package org.adamalang.api;
 import org.adamalang.frontend.Session;
 
 public interface RootRegionHandler {
+  public void handle(Session session, StatsRequest request, StatsResponder responder);
+
+  public void handle(Session session, IdentityHashRequest request, IdentityHashResponder responder);
+
+  public void handle(Session session, IdentityStashRequest request, SimpleResponder responder);
+
   public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder);
 
   public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder);
@@ -52,6 +58,9 @@ public interface RootRegionHandler {
 
   public static boolean test(String method) {
     switch (method) {
+      case "stats":
+      case "identity/hash":
+      case "identity/stash":
       case "document/authorize":
       case "document/authorize-domain":
       case "document/authorize-with-reset":

@@ -343,6 +343,33 @@ class WebSocketAdamaConnection {
       request: {"method":"probe", "id":parId, "identity": identity}
     });
   }
+  Stats(responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"stats", "id":parId}
+    });
+  }
+  IdentityHash(identity, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"identity/hash", "id":parId, "identity": identity}
+    });
+  }
+  IdentityStash(identity, name, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"identity/stash", "id":parId, "identity": identity, "name": name}
+    });
+  }
   AuthorityCreate(identity, responder) {
     var self = this;
     var parId = self.__id();

@@ -21,6 +21,9 @@ package org.adamalang.api;
 import org.adamalang.common.metrics.*;
 
 public class RegionApiMetrics {
+  public final RequestResponseMonitor monitor_Stats;
+  public final RequestResponseMonitor monitor_IdentityHash;
+  public final RequestResponseMonitor monitor_IdentityStash;
   public final RequestResponseMonitor monitor_DocumentAuthorize;
   public final RequestResponseMonitor monitor_DocumentAuthorizeDomain;
   public final RequestResponseMonitor monitor_DocumentAuthorizeWithReset;
@@ -46,6 +49,9 @@ public class RegionApiMetrics {
   public final RequestResponseMonitor monitor_AttachmentFinish;
 
   public RegionApiMetrics(MetricsFactory factory) {
+    this.monitor_Stats = factory.makeRequestResponseMonitor("stats");
+    this.monitor_IdentityHash = factory.makeRequestResponseMonitor("identity/hash");
+    this.monitor_IdentityStash = factory.makeRequestResponseMonitor("identity/stash");
     this.monitor_DocumentAuthorize = factory.makeRequestResponseMonitor("document/authorize");
     this.monitor_DocumentAuthorizeDomain = factory.makeRequestResponseMonitor("document/authorize-domain");
     this.monitor_DocumentAuthorizeWithReset = factory.makeRequestResponseMonitor("document/authorize-with-reset");

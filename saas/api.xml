@@ -386,6 +386,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="identity-hash" type="string">
+        <documentation>
+            A hash of an identity
+        </documentation>
+    </field-definition>
+
     <field-definition name="delta" type="json-object">
         <documentation>
             A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information.
@@ -792,6 +798,53 @@
         <parameter name="identity"/>
         <documentation>
             This is useful to validate an identity without executing anything.
+        </documentation>
+    </method>
+
+    <responder name="identity-hash">
+        <field name="identity-hash" />
+    </responder>
+
+    <field-definition name="stat-key" type="string">
+        <documentation>
+            A key for the stats
+        </documentation>
+    </field-definition>
+
+    <field-definition name="stat-value" type="string">
+        <documentation>
+            The value for a stat
+        </documentation>
+    </field-definition>
+
+    <field-definition name="stat-type" type="string">
+        <documentation>
+            The type of the stat.
+        </documentation>
+    </field-definition>
+
+    <responder name="stats" stream="true">
+        <field name="stat-key" />
+        <field name="stat-value" />
+        <field name="stat-type" />
+    </responder>
+
+    <method name="stats" responder="stats" scope="region" devbox="true">
+        <documentation>Get stats for the current connection</documentation>
+    </method>
+
+    <method name="identity/hash" responder="identity-hash" scope="region" devbox="true">
+        <parameter name="identity"/>
+        <documentation>
+            Validate an identity and convert to a public and opaque base64 crypto hash.
+        </documentation>
+    </method>
+
+    <method name="identity/stash" responder="simple" scope="region" devbox="true">
+        <parameter name="identity"/>
+        <parameter name="name"/>
+        <documentation>
+            Stash an identity locally in the connection as if it was a cookie
         </documentation>
     </method>
 
