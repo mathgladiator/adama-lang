@@ -42,6 +42,9 @@ public class ErrorCodes {
   public static final int LIVING_DOCUMENT_TRANSACTION_UNKNOWN_EXCEPTION = 180978;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND = 194575;
   public static final int LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT = 184335;
+
+  @User
+  @Description("The message given to the channel was not parsable")
   public static final int LIVING_DOCUMENT_TRANSACTION_FAILED_PARSE_MESSAGE = 145627;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED = 115724;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_CHANGE = 109775;
@@ -51,12 +54,22 @@ public class ErrorCodes {
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL = 160268;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE = 184332;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT = 127155;
+
+  @User
+  @Description("The user was not connected nor was the message handler not open.")
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED = 143373;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED = 125966;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_CONTEXT = 197852;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_PASSWORD = 199907;
+
+  @User
+  @Description("The document rejected the connection due to the @connected handler returning false.")
   public static final int LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED = 184333;
+
+  @User
+  @Description("The document refused to be deleted due to the document's @delete handler")
   public static final int LIVING_DOCUMENT_TRANSACTION_DELETE_REJECTED = 147186;
+
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO = 122896;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_PUT = 129727;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_DELETE = 121027;
@@ -71,8 +84,15 @@ public class ErrorCodes {
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_ASSET = 143380;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_PATCH = 193055;
   public static final int LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT = 143407;
+
+  @User
+  @Description("The message handler was aborted")
   public static final int LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT = 127152;
+
+  @User
+  @Description("The message handler was aborted due to a privacy policy")
   public static final int LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT_POLICY = 130559;
+
   public static final int LIVING_DOCUMENT_TRANSACTION_EXPIRE_LIMIT_MUST_BE_POSITIVE = 122412;
   public static final int LIVING_DOCUMENT_TRANSACTION_EXPIRE_DID_NOTHING = 131203;
   public static final int FACTORY_CANT_BIND_JAVA_CODE = 198174;
@@ -98,16 +118,22 @@ public class ErrorCodes {
   public static final int DOCUMENT_SHEDDING_LOAD = 146115;
   public static final int DOCUMENT_WEB_GET_NOT_FOUND = 133308;
   public static final int DOCUMENT_WEB_GET_CANCEL = 128208;
+
+  @User
+  @Description("The web get was aborted.")
   public static final int DOCUMENT_WEB_GET_ABORT = 145659;
   public static final int DOCUMENT_WEB_OPTIONS_NOT_FOUND = 127692;
   public static final int DOCUMENT_WEB_PUT_NOT_FOUND = 114881;
+
+  @User
+  @Description("The web put was aborted.")
   public static final int DOCUMENT_WEB_PUT_ABORT = 134399;
   public static final int DOCUMENT_WEB_DELETE_NOT_FOUND = 110832;
   public static final int DOCUMENT_WEB_DELETE_ABORT = 120060;
   public static final int DOCUMENT_AUTHORIIZE_FAILURE = 191713;
 
   @User
-  @Description("The document is already created, so please try connecting instead. This happens when two create calls are executed")
+  @Description("The document is already created, so please try connecting instead. This happens when two create calls are executed.")
   public static final int SERVICE_DOCUMENT_ALREADY_CREATED = 130092;
 
   @User
