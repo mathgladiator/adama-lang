@@ -28,6 +28,7 @@ import org.adamalang.frontend.Session;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.web.assets.AssetUploadBody;
@@ -56,7 +57,7 @@ public class GlobalDataHandler implements RootRegionHandler {
   }
 
   private void commonAuthorize(Session session, Key key, String username, String password, String new_password, InitiationResponder responder) {
-    nexus.adama.authorize(session.authenticator.getContext().remoteIp, session.authenticator.getContext().origin, key.space, key.key, username, password, new_password, new Callback<String>() {
+    nexus.adama.authorize(session.authenticator.getTransportContext().remoteIp, session.authenticator.getTransportContext().origin, key.space, key.key, username, password, new_password, new Callback<String>() {
       @Override
       public void success(String agent) {
         responder.complete(nexus.signingKey.signDocumentIdentity(agent, key.space, key.key, 0));
@@ -89,7 +90,7 @@ public class GlobalDataHandler implements RootRegionHandler {
       responder.error(new ErrorCodeException(ErrorCodes.AUTH_COOKIE_CANT_STASH_COOKIE));
       return;
     }
-    session.authenticator.getContext().identities.put(request.name, request.identity);
+    request.who.context.identities.put(request.name, request.identity);
     responder.complete();
   }
 
@@ -105,7 +106,7 @@ public class GlobalDataHandler implements RootRegionHandler {
   public void handle(Session session, StatsRequest request, StatsResponder responder) {
     responder.next("created", session.created + "", "timestamp");
     responder.next("cached-identities-count", session.identityCache.size() + "", "int");
-    ConnectionContext context = session.authenticator.getContext();
+    ConnectionContext context = session.authenticator.getTransportContext();
     responder.next("origin", context.origin, "string");
     responder.next("remote-ip", context.remoteIp, "string");
     responder.next("cookie-identities-count", context.identities.size() + "", "int");
@@ -249,6 +250,14 @@ public class GlobalDataHandler implements RootRegionHandler {
   }
 
   @Override
+  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder) {
+    if (session.authenticator.getTransportAssetKey() == null) {
+      session.authenticator.updateTransportAssetKey(SecureAssetUtil.makeAssetKeyHeader());
+    }
+    responder.complete(session.authenticator.getTransportAssetKey());
+  }
+
+  @Override
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest connect, DataResponder responder) {
     return new DocumentStreamHandler() {
       private AdamaStream connection;
@@ -321,7 +330,7 @@ public class GlobalDataHandler implements RootRegionHandler {
 
       @Override
       public void handle(ConnectionPasswordRequest request, SimpleResponder responder) {
-        nexus.adama.authorize(session.authenticator.getContext().remoteIp, session.authenticator.getContext().origin, connect.space, connect.key, request.username, request.password, request.new_password, new Callback<String>() {
+        nexus.adama.authorize(session.authenticator.getTransportContext().remoteIp, session.authenticator.getTransportContext().origin, connect.space, connect.key, request.username, request.password, request.new_password, new Callback<String>() {
           @Override
           public void success(String identity) {
             responder.complete();

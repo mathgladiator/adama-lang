@@ -816,24 +816,6 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
-            case "configure/make-or-get-asset-key": {
-              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConfigureMakeOrGetAssetKey.start();
-              ConfigureMakeOrGetAssetKeyRequest.resolve(session, nexus, request, new Callback<>() {
-                @Override
-                public void success(ConfigureMakeOrGetAssetKeyRequest resolved) {
-                  resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new AssetKeyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
-                }
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  mInstance.failure(ex.code);
-                  _accessLogItem.put("success", false);
-                  _accessLogItem.put("failure-code", ex.code);
-                  nexus.logger.log(_accessLogItem);
-                  responder.error(ex);
-                }
-              });
-            } return;
             case "super/check-in": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SuperCheckIn.start();
               SuperCheckInRequest.resolve(session, nexus, request, new Callback<>() {

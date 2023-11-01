@@ -76,14 +76,6 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
-  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder) {
-    if (session.authenticator.assetKey() == null) {
-      session.authenticator.updateAssetKey(SecureAssetUtil.makeAssetKeyHeader());
-    }
-    responder.complete(session.authenticator.assetKey());
-  }
-
-  @Override
   public void handle(Session session, DeinitRequest request, SimpleResponder responder) {
     try {
       if (!Spaces.list(nexus.database, request.who.id, "", 10).isEmpty()) {

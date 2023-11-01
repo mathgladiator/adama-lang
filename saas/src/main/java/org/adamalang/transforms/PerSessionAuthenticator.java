@@ -25,22 +25,22 @@ import org.adamalang.web.io.ConnectionContext;
 
 /** This is a per session Authenticator. This is in 1:1 correspondence to a session/connection */
 public abstract class PerSessionAuthenticator {
-  protected ConnectionContext context;
+  protected ConnectionContext transportContext;
 
-  public PerSessionAuthenticator(ConnectionContext context) {
-    this.context = context;
+  public PerSessionAuthenticator(ConnectionContext transportContext) {
+    this.transportContext = transportContext;
   }
 
-  public abstract ConnectionContext getContext();
+  public abstract ConnectionContext getTransportContext();
 
   /** update the default asset key within the default context */
-  public void updateAssetKey(String assetKey) {
-    this.context = new ConnectionContext(context.origin, context.remoteIp, context.userAgent, assetKey, null);
+  public void updateTransportAssetKey(String assetKey) {
+    this.transportContext = new ConnectionContext(transportContext.origin, transportContext.remoteIp, transportContext.userAgent, assetKey, transportContext.identities);
   }
 
-  /** get the asset key for the context. If the session's connection is a user, then this is the user's asset key. */
-  public String assetKey() {
-    return context.assetKey;
+  /** get the asset key for the default context. If the session's connection is a user, then this is the user's asset key. */
+  public String getTransportAssetKey() {
+    return transportContext.assetKey;
   }
 
   /** log the user details into */

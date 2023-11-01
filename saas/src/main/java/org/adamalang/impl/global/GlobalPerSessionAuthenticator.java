@@ -59,8 +59,8 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
   }
 
   @Override
-  public ConnectionContext getContext() {
-    return context;
+  public ConnectionContext getTransportContext() {
+    return transportContext;
   }
 
   private void authDocument(String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) {
@@ -80,7 +80,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     }
     auth.run();
     NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
-    AuthenticatedUser user = new AuthenticatedUser(-1, who, context);
+    AuthenticatedUser user = new AuthenticatedUser(-1, who, transportContext);
     callback.success(user);
   }
 
@@ -119,7 +119,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
             .requireIssuer("super")
             .build()
             .parseClaimsJws(identity);
-        AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("super", "super"), context);
+        AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("super", "super"), transportContext);
         session.identityCache.put(identity, user);
         callback.success(user);
         return true;
@@ -139,7 +139,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
             .requireIssuer("region")
             .build()
             .parseClaimsJws(identity);
-        AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal(parsedToken.sub, "region"), context);
+        AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal(parsedToken.sub, "region"), transportContext);
         session.identityCache.put(identity, user);
         callback.success(user);
         return true;
@@ -160,7 +160,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
             .requireIssuer("adama")
             .build()
             .parseClaimsJws(identity);
-        AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), context);
+        AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), transportContext);
         session.identityCache.put(identity, user);
         callback.success(user);
         return true;
@@ -182,18 +182,16 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       return;
     }
     NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-    AuthenticatedUser user = new AuthenticatedUser(-1, who, context);
+    AuthenticatedUser user = new AuthenticatedUser(-1, who, transportContext);
     session.identityCache.put(identity, user);
     callback.success(user);
   }
-
-
 
   /** authenticate */
   @Override
   public void execute(Session session, String identityRaw, Callback<AuthenticatedUser> callback) {
     // check to see if there is a cookie to lookup
-    String identity = context.identityOf(identityRaw);
+    String identity = transportContext.identityOf(identityRaw);
 
     AuthenticatedUser cacheHit = session.identityCache.get(identity);
     if (cacheHit != null) {
@@ -202,11 +200,9 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       return;
     }
     try {
-      if (FastAuth.process(identity, callback, context)) {
+      if (FastAuth.process(identity, callback, transportContext)) {
         return;
       }
-
-
 
       ParsedToken parsedToken = new ParsedToken(identity);
       if (parsedToken.iss.startsWith("doc/")) {

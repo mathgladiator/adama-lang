@@ -59,7 +59,6 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_DomainUnmap;
   public final RequestResponseMonitor monitor_DomainGet;
   public final RequestResponseMonitor monitor_DocumentList;
-  public final RequestResponseMonitor monitor_ConfigureMakeOrGetAssetKey;
   public final RequestResponseMonitor monitor_SuperCheckIn;
   public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
   public final RequestResponseMonitor monitor_SuperSetDomainCertificate;
@@ -124,7 +123,6 @@ public class GlobalApiMetrics {
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
     this.monitor_DomainGet = factory.makeRequestResponseMonitor("domain/get");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");
-    this.monitor_ConfigureMakeOrGetAssetKey = factory.makeRequestResponseMonitor("configure/make-or-get-asset-key");
     this.monitor_SuperCheckIn = factory.makeRequestResponseMonitor("super/check-in");
     this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");
     this.monitor_SuperSetDomainCertificate = factory.makeRequestResponseMonitor("super/set-domain-certificate");

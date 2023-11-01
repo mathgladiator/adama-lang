@@ -50,6 +50,8 @@ public interface RootRegionHandler {
 
   public DocumentStreamHandler handle(Session session, BillingConnectionCreateRequest request, DataResponder responder);
 
+  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder);
+
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
   public AttachmentUploadHandler handle(Session session, AttachmentStartByDomainRequest request, ProgressResponder responder);
@@ -80,6 +82,7 @@ public interface RootRegionHandler {
       case "connection/end":
       case "documents/hash-password":
       case "billing-connection/create":
+      case "configure/make-or-get-asset-key":
       case "attachment/start":
       case "attachment/start-by-domain":
       case "attachment/append":

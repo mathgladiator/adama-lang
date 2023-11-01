@@ -96,8 +96,6 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder);
 
-  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder);
-
   public void handle(Session session, SuperCheckInRequest request, SimpleResponder responder);
 
   public void handle(Session session, SuperListAutomaticDomainsRequest request, AutomaticDomainListingResponder responder);
@@ -188,7 +186,6 @@ public interface RootGlobalHandler {
       case "domain/unmap":
       case "domain/get":
       case "document/list":
-      case "configure/make-or-get-asset-key":
       case "super/check-in":
       case "super/list-automatic-domains":
       case "super/set-domain-certificate":

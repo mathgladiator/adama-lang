@@ -1369,7 +1369,7 @@
     </method>
     -->
 
-    <method name="configure/make-or-get-asset-key" responder="asset-key" scope="global" devbox="true">
+    <method name="configure/make-or-get-asset-key" responder="asset-key" scope="region" devbox="true">
         <documentation>
             Here, we ask if the connection if it has an asset key already.
             If not, then it will generate one and send it along.

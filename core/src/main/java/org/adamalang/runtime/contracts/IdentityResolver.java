@@ -15,9 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.contracts;
 
-public class Platform {
-  public static final String VERSION = "20231101092706";
-  public static final String JS_VERSION = "c784c85a7e98495b2e3e98c926dec3b5";
+import org.adamalang.common.Callback;
+import org.adamalang.runtime.natives.NtPrincipal;
+
+/** simple interface for resolving an identity to an NtPrincipal */
+public interface IdentityResolver {
+  public void resolve(String identity, Callback<NtPrincipal> callback);
 }

@@ -34,7 +34,7 @@ public class ConfigureMakeOrGetAssetKeyRequest {
   public ConfigureMakeOrGetAssetKeyRequest() {
   }
 
-  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<ConfigureMakeOrGetAssetKeyRequest> callback) {
+  public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<ConfigureMakeOrGetAssetKeyRequest> callback) {
     nexus.executor.execute(new NamedRunnable("configuremakeorgetassetkey-error") {
       @Override
         public void execute() throws Exception {

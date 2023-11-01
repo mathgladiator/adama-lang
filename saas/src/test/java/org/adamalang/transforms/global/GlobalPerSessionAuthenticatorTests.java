@@ -62,9 +62,9 @@ public class GlobalPerSessionAuthenticatorTests {
   @Test
   public void anonymous() throws Exception {
     GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D", null), new String[] {}, new String[] {});
-    Assert.assertEquals("D", authenticator.assetKey());
-    authenticator.updateAssetKey("E");
-    Assert.assertEquals("E", authenticator.assetKey());
+    Assert.assertEquals("D", authenticator.getTransportAssetKey());
+    authenticator.updateTransportAssetKey("E");
+    Assert.assertEquals("E", authenticator.getTransportAssetKey());
     Session session = new Session(authenticator);
     CountDownLatch success = new CountDownLatch(1);
     authenticator.execute(session, "anonymous:jeffrey", new Callback<AuthenticatedUser>() {
