@@ -1682,6 +1682,11 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "@connected { return @who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
     setup.document.invalidate(Callback.DONT_CARE_INTEGER);
+    for (int k = 0; k < 10; k++) {
+      setup.document.invalidate(Callback.DONT_CARE_INTEGER);
+      setup.time.time += 50;
+    }
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(13));
     String t =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("t")
@@ -1698,11 +1703,16 @@ public class LivingDocumentTests {
             null,
             false);
     setup.document.invalidate(Callback.DONT_CARE_INTEGER);
+
+    for (int k = 0; k < 10; k++) {
+      setup.document.invalidate(Callback.DONT_CARE_INTEGER);
+      setup.time.time += 50;
+    }
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(13));
     String t =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("t")
             .toString();
-    setup.document.invalidate(new RealDocumentSetup.AssertInt(12));
     Assert.assertEquals("10", t);
   }
 
@@ -1745,7 +1755,7 @@ public class LivingDocumentTests {
       setup.document.invalidate(new RealDocumentSetup.AssertInt(k));
       k++;
     }
-    Assert.assertEquals(13, k);
+    Assert.assertEquals(14, k);
   }
 
   @Test

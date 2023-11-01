@@ -337,7 +337,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   private int __deltaTime() {
-    return Math.max(0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
+    return Math.max(__state.has() ? 25 : 0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
   }
 
   private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again) {
@@ -697,7 +697,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** reset the cost */
   public void __zeroOutCodeCost() {
     __code_cost = 0;
-    __goodwillBudget = __goodwillLimitOfBudget;
+    if (!__state.has()) {
+      __goodwillBudget = __goodwillLimitOfBudget;
+    }
   }
 
   /** get the number of connected clients */
