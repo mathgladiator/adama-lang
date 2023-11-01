@@ -47,6 +47,7 @@ public class TwitterValidator extends SimpleService {
 
     @Override
     public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+        /*
         try {
             ObjectNode requestNode = Json.parseJsonObject(request);
             String token = Json.readString(requestNode, "token");
@@ -92,6 +93,7 @@ public class TwitterValidator extends SimpleService {
         } catch (Exception ex) {
             callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FIRST_PARTY_TWITTER_UNKNOWN_FAILURE, ex, EXLOGGER));
         }
+        */
     }
 
 }

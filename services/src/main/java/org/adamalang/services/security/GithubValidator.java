@@ -49,6 +49,7 @@ public class GithubValidator extends SimpleService {
 
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+    /*
     try {
       ObjectNode requestNode = Json.parseJsonObject(request);
       String token = Json.readString(requestNode, "token");
@@ -94,5 +95,6 @@ public class GithubValidator extends SimpleService {
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FIRST_PARTY_GITHUB_UNKNOWN_FAILURE, ex, EXLOGGER));
     }
+    */
   }
 }

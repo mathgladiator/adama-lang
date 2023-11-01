@@ -119,9 +119,11 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
+    /*
     ServiceRegistry.add("facebookvalidator", FacebookValidator.class, (space, configRaw, keys) -> FacebookValidator.build(metrics, webClientBase));
     ServiceRegistry.add("twittervalidator", TwitterValidator.class, (space, configRaw, keys) -> TwitterValidator.build(metrics, webClientBase));
     ServiceRegistry.add("githubvalidator", GithubValidator.class, (space, configRaw, keys) -> GithubValidator.build(metrics, webClientBase));
+     */
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(metrics, executor, webClientBase));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, new NoOpPusher()));
