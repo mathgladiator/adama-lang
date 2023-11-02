@@ -125,6 +125,9 @@ public class ErrorCodes {
   @User
   @Description("The web get was aborted.")
   public static final int DOCUMENT_WEB_GET_ABORT = 145659;
+
+  @User
+  @Description("The web options handler was not found")
   public static final int DOCUMENT_WEB_OPTIONS_NOT_FOUND = 127692;
 
   @User
@@ -138,7 +141,13 @@ public class ErrorCodes {
   @User
   @Description("The web delete handler was not found.")
   public static final int DOCUMENT_WEB_DELETE_NOT_FOUND = 110832;
+
+  @User
+  @Description("The web delete was aborted by the handler")
   public static final int DOCUMENT_WEB_DELETE_ABORT = 120060;
+
+  @User
+  @Description("The authorization to the document failed")
   public static final int DOCUMENT_AUTHORIIZE_FAILURE = 191713;
 
   @User
