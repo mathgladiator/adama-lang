@@ -95,6 +95,10 @@ public class TimeoutTracker {
     return timeouts.size() > 0;
   }
 
+  public int size() {
+    return timeouts.size();
+  }
+
   public void revert() {
     for (Integer keyCreated : created) {
       timeouts.remove(keyCreated);

@@ -57,7 +57,7 @@ public class DurableLivingDocument implements Queryable {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final Logger LOG = LoggerFactory.getLogger(DurableLivingDocument.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOG);
-  private static final int INTERNAL_INVALIDATION_LIMIT = 32;
+  private static final int INTERNAL_INVALIDATION_LIMIT = 8;
 
   private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<>() {
     @Override
@@ -282,6 +282,12 @@ public class DurableLivingDocument implements Queryable {
         writer.writeInteger(document.__getSeq());
         writer.writeObjectFieldIntro("cost");
         writer.writeInteger(document.__getCodeCost());
+        writer.writeObjectFieldIntro("has_state");
+        writer.writeBoolean(document.__state.has());
+        writer.writeObjectFieldIntro("timeouts");
+        writer.writeInteger(document.__timeouts.size());
+        writer.writeObjectFieldIntro("queue_size");
+        writer.writeInteger(document.__queue.size());
         document.__debug(writer);
         writer.endObject();
         callback.success(writer.toString());
@@ -398,9 +404,9 @@ public class DurableLivingDocument implements Queryable {
         if (!disableMetrics) {
           String metrics = document.__metrics();
           base.metricsReporter.emitMetrics(key, metrics);
-          metricsScheduled = false;
           disableMetrics = "{}".equals(metrics);
         }
+        metricsScheduled = false;
       }
     }, 60000);
   }
