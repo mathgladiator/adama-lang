@@ -121,4 +121,9 @@ public class EmptyNtList<T> implements NtList<T> {
       }
     };
   }
+
+  @Override
+  public <KeyT> NtList<T> unique(ListUniqueMode mode, Function<T, KeyT> extract) {
+    return this;
+  }
 }

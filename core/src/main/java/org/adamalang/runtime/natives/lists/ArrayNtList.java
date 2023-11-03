@@ -179,4 +179,30 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   public Iterator<Ty> iterator() {
     return list.iterator();
   }
+
+  @Override
+  public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
+    switch (mode) {
+      case First: {
+        TreeSet<KeyT> seen = new TreeSet<>();
+        ArrayList<Ty> results = new ArrayList<>();
+        for (Ty item : list) {
+          KeyT key = extract.apply(item);
+          if (!seen.contains(key)) {
+            seen.add(key);
+            results.add(item);
+          }
+        }
+        return new ArrayNtList<>(results);
+      }
+      case Last: {
+        HashMap<KeyT, Ty> last = new HashMap<>();
+        for (Ty item : list) {
+          last.put(extract.apply(item), item);
+        }
+        return new ArrayNtList<>(new ArrayList<>(last.values()));
+      }
+    }
+    return this;
+  }
 }

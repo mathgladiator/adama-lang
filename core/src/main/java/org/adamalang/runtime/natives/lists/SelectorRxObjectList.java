@@ -189,4 +189,10 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
     ensureFinalized();
     return finalized.iterator();
   }
+
+  @Override
+  public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
+    ensureFinalized();
+    return new ArrayNtList<>(finalized).unique(mode, extract);
+  }
 }

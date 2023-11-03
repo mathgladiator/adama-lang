@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.natives.lists;
 
-public class Platform {
-  public static final String VERSION = "20231103090748";
-  public static final String JS_VERSION = "13d1f1edb0b6809e4f0e5b8bf24344f7";
+/** controls how unique works */
+public enum ListUniqueMode {
+  First,
+  Last
 }

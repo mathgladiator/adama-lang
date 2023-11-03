@@ -229,4 +229,22 @@ public class MaterializedNtListTests {
       }
     }
   }
+
+  @Test
+  public void unique_last() {
+    MaterializedNtList<ArrayNtListTests.UniqueSample> s = new MaterializedNtList<>(new ArrayNtList<>(ArrayNtListTests.samples(1, 2, 1, 3, 4, 5, 4, 6)), 0);
+    NtList<ArrayNtListTests.UniqueSample> result = s.unique(ListUniqueMode.Last, (x) -> x.a).orderBy(true, Comparator.comparingInt(a -> a.b));
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(3, result.lookup(0).get().b);
+    Assert.assertEquals(6, result.lookup(1).get().b);
+  }
+
+  @Test
+  public void unique_first() {
+    MaterializedNtList<ArrayNtListTests.UniqueSample> s = new MaterializedNtList<>(new ArrayNtList<>(ArrayNtListTests.samples(1, 2, 1, 3, 4, 5, 4, 6)), 0);
+    NtList<ArrayNtListTests.UniqueSample> result = s.unique(ListUniqueMode.First, (x) -> x.a).orderBy(true, Comparator.comparingInt(a -> a.b));
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(2, result.lookup(0).get().b);
+    Assert.assertEquals(5, result.lookup(1).get().b);
+  }
 }

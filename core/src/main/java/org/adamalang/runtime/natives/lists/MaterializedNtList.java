@@ -226,4 +226,9 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
       push();
     }
   }
+
+  @Override
+  public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
+    return list.unique(mode, extract);
+  }
 }

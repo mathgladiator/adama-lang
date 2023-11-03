@@ -18,9 +18,11 @@
 package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.contracts.WhereClause;
+import org.adamalang.runtime.natives.lists.ListUniqueMode;
 
 import java.util.Comparator;
 import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -55,4 +57,6 @@ public interface NtList<Ty> extends Iterable<Ty> {
   <Out> NtList<Out> transform(Function<Ty, Out> t);
 
   NtList<Ty> where(boolean done, WhereClause<Ty> filter);
+
+  <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract);
 }

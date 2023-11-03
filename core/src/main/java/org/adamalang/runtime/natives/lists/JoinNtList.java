@@ -181,4 +181,9 @@ public class JoinNtList<Ty> implements NtList<Ty> {
       }
     };
   }
+
+  @Override
+  public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
+    return materialize().unique(mode, extract);
+  }
 }

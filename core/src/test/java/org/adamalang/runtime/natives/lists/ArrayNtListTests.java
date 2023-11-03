@@ -18,6 +18,7 @@
 package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
+import org.adamalang.runtime.contracts.MultiIndexable;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.natives.NtList;
@@ -26,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -134,5 +136,51 @@ public class ArrayNtListTests {
     final var list = new ArrayNtList<>(M);
     list.__delete();
     Assert.assertTrue(m.__isDying());
+  }
+
+  public static class UniqueSample implements MultiIndexable {
+    int a;
+    int b;
+
+    public UniqueSample(int a, int b) {
+      this.a = a;
+      this.b = b;
+    }
+
+    @Override
+    public String[] __getIndexColumns() {
+      return new String[] {};
+    }
+
+    @Override
+    public int[] __getIndexValues() {
+      return new int[] {};
+    }
+  }
+
+  public static ArrayList<UniqueSample> samples(int... x) {
+    ArrayList<UniqueSample> s = new ArrayList<>();
+    for (int k = 0; k + 1 < x.length; k+= 2) {
+      s.add(new UniqueSample(x[k], x[k+1]));
+    }
+    return s;
+  }
+
+  @Test
+  public void unique_last() {
+    ArrayNtList<UniqueSample> s = new ArrayNtList<>(samples(1, 2, 1, 3, 4, 5, 4, 6));
+    NtList<UniqueSample> result = s.unique(ListUniqueMode.Last, (x) -> x.a).orderBy(true, Comparator.comparingInt(a -> a.b));
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(3, result.lookup(0).get().b);
+    Assert.assertEquals(6, result.lookup(1).get().b);
+  }
+
+  @Test
+  public void unique_first() {
+    ArrayNtList<UniqueSample> s = new ArrayNtList<>(samples(1, 2, 1, 3, 4, 5, 4, 6));
+    NtList<UniqueSample> result = s.unique(ListUniqueMode.First, (x) -> x.a).orderBy(true, Comparator.comparingInt(a -> a.b));
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(2, result.lookup(0).get().b);
+    Assert.assertEquals(5, result.lookup(1).get().b);
   }
 }

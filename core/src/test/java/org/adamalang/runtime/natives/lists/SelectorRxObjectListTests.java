@@ -365,4 +365,25 @@ public class SelectorRxObjectListTests {
 
     Assert.assertEquals(3, list.size());
   }
+
+  @Test
+  public void unique_pass_through() {
+    final var document =
+        new MockLivingDocument(
+            new SilentDocumentMonitor() {
+            });
+    while (document.__genNextAutoKey() < 7) {}
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__insert(
+        new JsonStreamReader(
+            "{\"4\":{\"index\":13},\"5\":{\"index\":2},\"6\":{\"index\":5},\"7\":{\"index\":5}}}"));
+    final var list =
+        table
+            .iterate(false)
+            .unique(ListUniqueMode.First, (x) -> x.index.get());
+    Assert.assertEquals(3, list.size());
+    Assert.assertEquals(13, list.lookup(0).get().index.get().intValue());
+    Assert.assertEquals(2, list.lookup(1).get().index.get().intValue());
+    Assert.assertEquals(5, list.lookup(2).get().index.get().intValue());
+  }
 }

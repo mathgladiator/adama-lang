@@ -27,6 +27,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class JoinNtListTests {
@@ -234,5 +235,23 @@ public class JoinNtListTests {
     Assert.assertEquals(1, (int) result.storage.get("d"));
     Assert.assertEquals(1, (int) result.storage.get("e"));
     Assert.assertEquals(1, (int) result.storage.get("f"));
+  }
+
+  @Test
+  public void unique_last() {
+    JoinNtList<ArrayNtListTests.UniqueSample> s = new JoinNtList<>(new ArrayNtList<>(ArrayNtListTests.samples(1, 2, 4, 5)),new ArrayNtList<>(ArrayNtListTests.samples(1, 3, 4, 6)));
+    NtList<ArrayNtListTests.UniqueSample> result = s.unique(ListUniqueMode.Last, (x) -> x.a).orderBy(true, Comparator.comparingInt(a -> a.b));
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(3, result.lookup(0).get().b);
+    Assert.assertEquals(6, result.lookup(1).get().b);
+  }
+
+  @Test
+  public void unique_first() {
+    JoinNtList<ArrayNtListTests.UniqueSample> s = new JoinNtList<>(new ArrayNtList<>(ArrayNtListTests.samples(1, 2, 4, 5)),new ArrayNtList<>(ArrayNtListTests.samples(1, 3, 4, 6)));
+    NtList<ArrayNtListTests.UniqueSample> result = s.unique(ListUniqueMode.First, (x) -> x.a).orderBy(true, Comparator.comparingInt(a -> a.b));
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(2, result.lookup(0).get().b);
+    Assert.assertEquals(5, result.lookup(1).get().b);
   }
 }

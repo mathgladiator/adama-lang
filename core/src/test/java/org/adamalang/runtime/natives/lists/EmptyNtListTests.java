@@ -44,5 +44,7 @@ public class EmptyNtListTests {
     Assert.assertFalse(list.lookup(new NtMaybe<>()).has());
     Assert.assertFalse(list.lookup(new NtMaybe<>(42)).has());
     list.mapFunction((x) -> x.length());
+    Assert.assertEquals(0, list.unique(ListUniqueMode.Last, (x) -> x).size());
+    Assert.assertEquals(0, list.unique(ListUniqueMode.First, (x) -> x).size());
   }
 }
