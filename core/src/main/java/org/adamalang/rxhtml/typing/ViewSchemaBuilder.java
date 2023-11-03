@@ -86,6 +86,20 @@ public class ViewSchemaBuilder {
           current = current.eval(child.attr("rx:iterate")).child("#items");
         }
       }
+      for (String ifvariant : new String[] { "rx:if", "rx:ifnot" }) {
+        if (child.hasAttr(ifvariant)) {
+          String path = child.attr(ifvariant);
+          int kEq = path.indexOf('=');
+          if (kEq > 0) {
+            String pathL = path.substring(0, kEq);
+            String pathR = path.substring(kEq + 1);
+            current.write(pathL, "cmpval", false);
+            current.write(pathR, "cmpval", false);
+          } else {
+            current.write(path, "bool", false);
+          }
+        }
+      }
       // TODO: IF/IFNOT (kind of tricky)
       for (String event : Base.EVENTS) {
         if (child.hasAttr("rx:" + event)) {

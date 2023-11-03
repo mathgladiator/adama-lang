@@ -1366,13 +1366,12 @@ var RxHTML = (function () {
     });
   };
 
-  // RUNTIME | rx:if / rx:ifnot = "path"
-  self.IF = function (parent, originalState, priorState, name, shouldBe, expandView, makerTrue, makerFalse, forceHiding) {
+  var commonIf = function(parent, originalState, shouldBe, expandView, makerTrue, makerFalse, forceHiding) {
     var unsub = make_unsub();
     if (forceHiding) {
       parent.style.display = "none";
     }
-    var set = function (value) {
+    return function (value) {
       var show = (value ? true : false) === shouldBe;
       if (this.shown == show) {
         return;
@@ -1380,18 +1379,7 @@ var RxHTML = (function () {
       this.shown = show;
       nuke(parent);
       fire_unsub(unsub);
-      var next = null;
-      if (typeof (value) == "object") {
-        next = fork(priorState);
-        next = self.pI(next, name);
-        if (expandView) {
-          next = self.pEV(next, name);
-        }
-        next.current = 'data';
-      } else {
-        next = fork(originalState);
-      }
-      // we default back to data in the IF case
+      var next = self.pD(fork(originalState));
       if (show) {
         if (forceHiding) {
           parent.style.display = "";
@@ -1406,9 +1394,31 @@ var RxHTML = (function () {
       }
       subscribe_state(next, unsub);
     }.bind({ shown: 'no' });
-    subscribe(priorState, name, set);
+  }
+
+  // RUNTIME | rx:if / rx:ifnot = "path1=path2"
+  self.IFeq = function (parent, originalState, queryStateLeft, nameLeft, queryStateRight, nameRight, shouldBe, expandView, makerTrue, makerFalse, forceHiding) {
+    var common = {left:false, right:true};
+    common.s = commonIf(parent, originalState, shouldBe, expandView, makerTrue, makerFalse, forceHiding);
+    common.k = debounce(5, function() {
+      this.s(this.left == this.right);
+    }.bind(common));
+    subscribe(queryStateLeft, nameLeft, function (left) {
+      this.left = left;
+      this.k();
+    }.bind(common))
+    subscribe(queryStateRight, nameRight, function (right) {
+      this.right = right;
+      this.k();
+    }.bind(common));
   };
-  self.IFx = self.IF;
+
+  /** the above speaks to a deep pattern. We could take any expression and then linearize it into reactive parts, and then assemble a statement statement on the fly. We should look into using the condition language for this */
+
+  // RUNTIME | rx:if / rx:ifnot = "path"
+  self.IF = function (parent, originalState, queryState, name, shouldBe, expandView, makerTrue, makerFalse, forceHiding) {
+    subscribe(queryState, name, commonIf(parent, originalState, shouldBe, expandView, makerTrue, makerFalse, forceHiding));
+  };
 
   /// RUNTIME | rx:action=copy:path
   self.aCP = function (form, state, name) {

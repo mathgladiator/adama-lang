@@ -98,7 +98,9 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"obj\" : \"bool\"");
+    gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();
   }

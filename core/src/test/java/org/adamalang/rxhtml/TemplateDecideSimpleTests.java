@@ -124,7 +124,9 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"decide:channel\" : \"bool\"");
+    gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();
   }

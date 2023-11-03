@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
+public class TemplateIfEqualsTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -35,14 +35,15 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IF(d,a,a,'obj',false,false,function(f,e) {");
-    gold.append("\n      f.append($.L(e,'key'));");
-    gold.append("\n      f.append($.T(' - '));");
-    gold.append("\n      f.append($.L(e,'value'));");
+    gold.append("\n    $.IFeq(d,a,a,'left',a,'right',true,false,function(f,e) {");
+    gold.append("\n      f.append($.T(' Yaz '));");
     gold.append("\n    },function(f,e) {");
-    gold.append("\n      var g=$.E('div');");
-    gold.append("\n      g.append($.T(' Not set! '));");
-    gold.append("\n      f.append(g);");
+    gold.append("\n    },false);");
+    gold.append("\n    b.append(d);");
+    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    $.IFeq(d,a,$.pV(a),'a',$.pV(a),'b',true,false,function(f,e) {");
+    gold.append("\n      f.append($.T(' Yaz '));");
+    gold.append("\n    },function(f,e) {");
     gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -56,14 +57,15 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IF(d,a,a,'obj',false,false,function(f,e) {");
-    gold.append("\n      f.append($.L(e,'key'));");
-    gold.append("\n      f.append($.T(' - '));");
-    gold.append("\n      f.append($.L(e,'value'));");
+    gold.append("\n    $.IFeq(d,a,a,'left',a,'right',true,false,function(f,e) {");
+    gold.append("\n      f.append($.T(' Yaz '));");
     gold.append("\n    },function(f,e) {");
-    gold.append("\n      var g=$.E('div');");
-    gold.append("\n      g.append($.T(' Not set! '));");
-    gold.append("\n      f.append(g);");
+    gold.append("\n    },false);");
+    gold.append("\n    b.append(d);");
+    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    $.IFeq(d,a,$.pV(a),'a',$.pV(a),'b',true,false,function(f,e) {");
+    gold.append("\n      f.append($.T(' Yaz '));");
+    gold.append("\n    },function(f,e) {");
     gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -84,11 +86,11 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:ifnot=\"obj\">");
-    source.append("\n            <lookup path=\"key\" /> - <lookup path=\"value\" />");
-    source.append("\n            <div rx:else>");
-    source.append("\n                Not set!");
-    source.append("\n            </div>");
+    source.append("\n        <div rx:if=\"left=right\">");
+    source.append("\n            Yaz");
+    source.append("\n        </div>");
+    source.append("\n        <div rx:if=\"view:a=view:b\">");
+    source.append("\n            Yaz");
     source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");
@@ -99,7 +101,10 @@ public class TemplateIfnotSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
     gold.append("\n  \"/\" : {");
-    gold.append("\n    \"obj\" : \"bool\"");
+    gold.append("\n    \"a\" : \"cmpval\",");
+    gold.append("\n    \"b\" : \"cmpval\",");
+    gold.append("\n    \"left\" : \"cmpval\",");
+    gold.append("\n    \"right\" : \"cmpval\"");
     gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();

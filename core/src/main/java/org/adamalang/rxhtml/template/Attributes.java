@@ -67,9 +67,22 @@ public class Attributes {
       env.writer.tab().append("$.FIN(").append(eVar).append(",").append(env.stateVar).append(",'").append(channel).append("',");
       env.writer.append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     } else {
-      StatePath path = StatePath.resolve(env.element.attr(version), env.stateVar);
-      env.writer.tab().append("$.IF(").append(eVar).append(",").append(env.stateVar).append(",").append(path.command);
-      env.writer.append(",'").append(path.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      int kEq = value.indexOf('=');
+      if (kEq > 0) {
+        String left = value.substring(0, kEq);
+        String right = value.substring(kEq + 1);
+        StatePath pathLeft = StatePath.resolve(left, env.stateVar);
+        StatePath pathRight = StatePath.resolve(right, env.stateVar);
+        // TODO, we should really re-use the attribute language here to some degree
+        env.writer.tab().append("$.IFeq(").append(eVar).append(",").append(env.stateVar).append(",");
+        env.writer.append(pathLeft.command).append(",'").append(pathLeft.name).append("',");
+        env.writer.append(pathRight.command).append(",'").append(pathRight.name).append("',");
+        env.writer.append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      } else {
+        StatePath path = StatePath.resolve(value, env.stateVar);
+        env.writer.tab().append("$.IF(").append(eVar).append(",").append(env.stateVar).append(",").append(path.command);
+        env.writer.append(",'").append(path.name).append("',").append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+      }
     }
     Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
       if (node instanceof Element) {
