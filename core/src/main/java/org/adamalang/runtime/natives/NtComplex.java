@@ -19,8 +19,10 @@ package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.stdlib.LibMath;
 
+import java.util.Objects;
+
 /** a complex number */
-public class NtComplex {
+public class NtComplex implements Comparable<NtComplex> {
   public final double real;
   public final double imaginary;
 
@@ -40,6 +42,20 @@ public class NtComplex {
   @Override
   public String toString() {
     return real + " " + imaginary + "i";
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(real, imaginary);
+  }
+
+  @Override
+  public int compareTo(NtComplex o) {
+    int delta = Double.compare(real, o.real);
+    if (delta == 0) {
+      return Double.compare(imaginary, o.imaginary);
+    }
+    return delta;
   }
 
   public boolean zero() {

@@ -27,6 +27,7 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -40,6 +41,7 @@ import java.util.function.Consumer;
 public class TyNativeStateMachineRef extends TySimpleNative implements //
     IsNativeValue, //
     DetailHasDeltaType, //
+    DetailCanExtractForUnique, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;

@@ -28,6 +28,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
+import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
@@ -43,6 +44,7 @@ public class TyNativeInteger extends TySimpleNative implements //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //
     IsOrderable, //
+    DetailCanExtractForUnique, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;

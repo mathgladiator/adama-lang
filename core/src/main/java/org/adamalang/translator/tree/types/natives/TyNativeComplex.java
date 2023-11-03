@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadIns
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
+import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -47,6 +48,7 @@ public class TyNativeComplex extends TySimpleNative implements //
     IsNativeValue, //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //
+    DetailCanExtractForUnique, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
