@@ -20,7 +20,6 @@ package org.adamalang.rxhtml.template;
 import org.adamalang.common.Escaping;
 import org.jsoup.nodes.*;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -136,6 +135,8 @@ public class Base {
 
     // does the element have an rx:case
     boolean hasCase = testRxCaseIfSoThenOpen(env);
+
+    env.writeElementDebugIfTest();
 
     // introduce the element
     String eVar = writeIntro(env, xmlns);

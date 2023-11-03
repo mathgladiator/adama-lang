@@ -296,7 +296,7 @@ public class Attributes {
       for (Command command : commands) {
         if (command instanceof BulkCommand) {
           if (env.optimizeForPageLoad && "load".equals(event) && command instanceof Set && ((Set) command).constant) {
-            env.writer.append(env.stateVar).append(".view.init['").append(((Set) command).name).append("']=").append(Escapes.constantOf(((Set) command).value)).append(";").newline();
+            env.writer.tab().append(env.stateVar).append(".view.init['").append(((Set) command).name).append("']=").append(Escapes.constantOf(((Set) command).value)).append(";").newline();
           } else {
             if (arrVar == null) {
               arrVar = env.pool.ask();
