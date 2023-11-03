@@ -106,9 +106,9 @@ public class CapacityAgent implements HeatMonitor {
     {
       resources.cpu(new LoadEvent(0.75, add_capacity::a));
       resources.cpu(new LoadEvent(0.85, rebalance::a));
-      resources.cpu(new LoadEvent(0.90, rejectNew::a));
-      resources.cpu(new LoadEvent(0.95, rejectExisting::a));
-      resources.cpu(new LoadEvent(0.98, rejectMessages::a));
+      resources.cpu(new LoadEvent(0.97, rejectNew::a));
+      resources.cpu(new LoadEvent(0.98, rejectExisting::a));
+      resources.cpu(new LoadEvent(0.99, rejectMessages::a));
     }
     {
       resources.memory(new LoadEvent(0.80, add_capacity::b));

@@ -18,6 +18,7 @@
 package org.adamalang.services.entropy;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -42,10 +43,13 @@ public class SafeRandom extends SimpleService {
     sb.append("message _SafeRandom_Empty").append(" { }\n");
     sb.append("message _SafeRandom_AskStr").append(" { string pool; int count; }\n");
     sb.append("message _SafeRandom_Result").append(" { string result; }\n");
+    sb.append("message _SafeRandom_ResultWithHash").append(" { string result; string hash; }\n");
     sb.append("service saferandom {\n");
     sb.append("  class=\"saferandom\";\n");
     sb.append("  method<_SafeRandom_AskStr").append(", _SafeRandom_Result").append("> ask;\n");
+    sb.append("  method<_SafeRandom_AskStr").append(", _SafeRandom_ResultWithHash").append("> askWithHash;\n");
     sb.append("  method<_SafeRandom_Empty").append(", _SafeRandom_Result").append("> uuid;\n");
+    sb.append("  method<_SafeRandom_Empty").append(", _SafeRandom_ResultWithHash").append("> uuidWithHash;\n");
     sb.append("}\n");
     return sb.toString();
   }
@@ -57,7 +61,9 @@ public class SafeRandom extends SimpleService {
       public void execute() throws Exception {
         try {
           // NOTE: this is not a "secure" random.
-          if ("ask".equals(method)) {
+          boolean askWithHash = "askWithHash".equals(method);
+          boolean uuidWithHash = "uuidWithHash".equals(method);
+          if ("ask".equals(method) || askWithHash) {
             ObjectNode parsed = Json.parseJsonObject(request);
             String pool = parsed.get("pool").textValue();
             int count = parsed.get("count").intValue();
@@ -66,9 +72,21 @@ public class SafeRandom extends SimpleService {
               int j = rng.nextInt(pool.length());
               sb.append(pool.charAt(j));
             }
-            callback.success("{\"result\":\"" + sb + "\"}");
-          } else if ("uuid".equals(method)) {
-            callback.success("{\"result\":\"" + ProtectedUUID.generate() + "\"}");
+            String gen = sb.toString();
+            ObjectNode result = Json.newJsonObject();
+            result.put("result", gen);
+            if (askWithHash) {
+              result.put("hash", SCryptUtil.scrypt(gen, 16384, 8, 1));
+            }
+            callback.success(result.toString());
+          } else if ("uuid".equals(method) || uuidWithHash) {
+            ObjectNode result = Json.newJsonObject();
+            String gen = ProtectedUUID.generate();
+            result.put("result", gen);
+            if (uuidWithHash) {
+              result.put("hash", SCryptUtil.scrypt(gen, 16384, 8, 1));
+            }
+            callback.success(result.toString());
           } else {
             callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
           }

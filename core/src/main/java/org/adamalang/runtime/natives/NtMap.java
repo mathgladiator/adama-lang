@@ -114,6 +114,10 @@ public class NtMap<TIn, TOut> implements Iterable<NtPair<TIn, TOut>> {
     }
   }
 
+  public boolean has(TIn key) {
+    return this.storage.containsKey(key);
+  }
+
   public void clear() {
     storage.clear();
   }

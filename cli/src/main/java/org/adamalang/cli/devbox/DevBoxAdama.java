@@ -72,8 +72,10 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
     this.death = death;
-    for (Map.Entry<String, String> entry : context.identities.entrySet()) {
-      LOCALHOST_COOKIES.put(entry.getKey(), entry.getValue());
+    if (context.identities != null) {
+      for (Map.Entry<String, String> entry : context.identities.entrySet()) {
+        LOCALHOST_COOKIES.put(entry.getKey(), entry.getValue());
+      }
     }
   }
 

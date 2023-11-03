@@ -37,6 +37,8 @@ import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +47,8 @@ import java.util.regex.Pattern;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
   private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", "assetKey", null);
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(WebSocketHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WebSocketHandler.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final ServiceBase base;
@@ -146,6 +149,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
     super.exceptionCaught(ctx, cause);
     metrics.websockets_uncaught_exception.run();
+    LOG.error("exception", cause);
     end(ctx);
   }
 

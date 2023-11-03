@@ -78,6 +78,7 @@ public class ViewScope {
       String prior = current.types.get(sp.name);
       if (prior == null || "lookup".equals(prior)) {
         current.types.put(sp.name, type);
+        // TODO: convert the map to a set such that we can see all the type interactions? consider it
       }
     }
   }

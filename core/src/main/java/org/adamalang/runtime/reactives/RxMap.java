@@ -190,6 +190,10 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     return value;
   }
 
+  public boolean has(DomainTy key) {
+    return objects.storage.containsKey(key);
+  }
+
   public void remove(DomainTy key) {
     RangeTy value = objects.removeDirect(key);
     if (value != null) {

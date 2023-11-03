@@ -101,7 +101,9 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"block-exit\" : \"bool\"");
+    gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();
   }

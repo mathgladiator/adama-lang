@@ -177,7 +177,8 @@ public class ErrorTable {
     descriptions.put(145659, "The web get was aborted.");
     userspace.add(145659);
     names.put(127692, "DOCUMENT_WEB_OPTIONS_NOT_FOUND");
-    descriptions.put(127692, "no description of error (yet)");
+    descriptions.put(127692, "The web options handler was not found");
+    userspace.add(127692);
     names.put(114881, "DOCUMENT_WEB_PUT_NOT_FOUND");
     descriptions.put(114881, "The web put handler was not found.");
     userspace.add(114881);
@@ -188,9 +189,11 @@ public class ErrorTable {
     descriptions.put(110832, "The web delete handler was not found.");
     userspace.add(110832);
     names.put(120060, "DOCUMENT_WEB_DELETE_ABORT");
-    descriptions.put(120060, "no description of error (yet)");
+    descriptions.put(120060, "The web delete was aborted by the handler");
+    userspace.add(120060);
     names.put(191713, "DOCUMENT_AUTHORIIZE_FAILURE");
-    descriptions.put(191713, "no description of error (yet)");
+    descriptions.put(191713, "The authorization to the document failed");
+    userspace.add(191713);
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
     descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed.");
     userspace.add(130092);

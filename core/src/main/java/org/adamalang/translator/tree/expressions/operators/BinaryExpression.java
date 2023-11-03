@@ -27,11 +27,14 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetAssignment;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetEnums;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.traits.IsEnum;
-import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 import java.util.function.Consumer;
@@ -108,6 +111,28 @@ public class BinaryExpression extends Expression {
     typeRight = environment.rules.Resolve(typeRight, false);
 
     if (typeLeft != null && typeRight != null) {
+      if (op == BinaryOp.NotInside || op == BinaryOp.Inside) {
+        TyType tyBool = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken);
+        if (environment.rules.IsMap(typeRight)) {
+          IsMap imap = (IsMap) typeRight;
+          TyType domainType = environment.rules.Resolve(imap.getDomainType(environment), false);
+          // just make sure the right side types
+          TyType rangeType = environment.rules.Resolve(imap.getRangeType(environment), false);
+          rangeType.typing(environment);
+          // let the table do the magic
+          boolean fromYes = RuleSetAssignment.CanTypeAStoreTypeB(environment, typeLeft, domainType, StorageTweak.None, false);
+          boolean toYes = RuleSetAssignment.CanTypeAStoreTypeB(environment, domainType, typeLeft, StorageTweak.None, false);
+          if (fromYes && toYes) {
+            this.operatorResult = new BinaryOperatorResult(tyBool, "%s.has(%s)", true);
+            return tyBool;
+          } else {
+            return null;
+          }
+        } else {
+          environment.document.createError(DocumentPosition.sum(left, right), String.format("'%s' is unable to accept an containment check with '%s' as the domain.", typeRight.getAdamaType(), typeLeft.getAdamaType()));
+
+        }
+      }
       if (op.leftAssignment && typeLeft.behavior.isReadOnly) {
         environment.document.createError(DocumentPosition.sum(left, right), String.format("'%s' is unable to accept an assignment of '%s'.", typeLeft.getAdamaType(), typeRight.getAdamaType()));
       }

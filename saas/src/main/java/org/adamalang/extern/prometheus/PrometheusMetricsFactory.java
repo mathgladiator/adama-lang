@@ -17,11 +17,13 @@
 */
 package org.adamalang.extern.prometheus;
 
+import com.helger.commons.state.ESuccess;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.*;
+import org.adamalang.ErrorTable;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.*;
@@ -60,6 +62,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter extra = Counter.build().name("rr_" + name + "_progress").help("Extra request data for " + name).register();
     Counter success = Counter.build().name("rr_" + name + "_success").help("Request success for " + name).register();
     Counter failure = Counter.build().name("rr_" + name + "_failure").help("Request failure for " + name).register();
+    Counter user_issue = Counter.build().name("rr_" + name + "_user_issue").help("Callback user failure for " + name).register();
     Gauge inflight = Gauge.build().name("rr_" + name + "_inflight").help("Inprogress streams for " + name).register();
     Histogram firstLatency = Histogram.build().name("rr_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency for the first bit of progress for " + name).register();
     return () -> {
@@ -91,7 +94,13 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         @Override
         public void failure(int code) {
           time();
-          failure.inc();
+          if (ErrorTable.INSTANCE.isUserProblem(code)) {
+            /** this is not actionable by the platform and we consider it a success */
+            success.inc();
+            user_issue.inc();
+          } else {
+            failure.inc();
+          }
         }
       };
     };
@@ -110,6 +119,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter start = Counter.build().name("stream_" + name + "_start").help("Stream requests started for " + name).register();
     Counter progress = Counter.build().name("stream_" + name + "_progress").help("Stream progress made for " + name).register();
     Counter finish = Counter.build().name("stream_" + name + "_finish").help("Stream finished for " + name).register();
+    Counter user_issue = Counter.build().name("stream_" + name + "_user_issue").help("Stream user failure for " + name).register();
     Gauge timeout = Gauge.build().name("stream_" + name + "_timeout").help("Timeouts streams for " + name).register();
     Counter failure = Counter.build().name("stream_" + name + "_failure").help("Stream filure for " + name).register();
     Gauge inflight = Gauge.build().name("stream_" + name + "_inflight").help("Inprogress streams for " + name).register();
@@ -154,8 +164,14 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         @Override
         public void failure(int code) {
           time();
-          failure.inc();
           dec();
+          if (ErrorTable.INSTANCE.isUserProblem(code)) {
+            /** this is not actionable by the platform and we consider it a success */
+            finish.inc();
+            user_issue.inc();
+          } else {
+            failure.inc();
+          }
         }
       };
     };
@@ -166,6 +182,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter start = Counter.build().name("cb_" + name + "_start").help("Callback started for " + name).register();
     Counter success = Counter.build().name("cb_" + name + "_success").help("Callback success for " + name).register();
     Counter failure = Counter.build().name("cb_" + name + "_failure").help("Callback failure for " + name).register();
+    Counter user_issue = Counter.build().name("cb_" + name + "_user_issue").help("Callback user failure for " + name).register();
     Gauge timeout = Gauge.build().name("cb_" + name + "_timeout").help("Internal timeout for " + name).register();
     Gauge inflight = Gauge.build().name("cb_" + name + "_inflight").help("Inprogress callbacks for " + name).register();
     Histogram latency = Histogram.build().name("cb_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency callback to complete " + name).register();
@@ -196,7 +213,13 @@ public class PrometheusMetricsFactory implements MetricsFactory {
 
           @Override
           public void failure(int code) {
-            failure.inc();
+            if (ErrorTable.INSTANCE.isUserProblem(code)) {
+              /** this is not actionable by the platform and we consider it a success */
+              success.inc();
+              user_issue.inc();
+            } else {
+              failure.inc();
+            }
             time();
           }
         };

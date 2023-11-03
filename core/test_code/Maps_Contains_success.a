@@ -1,0 +1,41 @@
+public map<int, int> simple;
+
+public bool b0;
+public bool b1;
+public bool b2;
+public bool b3;
+
+public bool x0;
+public bool x1;
+public bool x2;
+public bool x3;
+
+public bool a0;
+public bool a1;
+
+public bool y0;
+public bool y1;
+
+@construct {
+  // write two values
+  simple[42] = 24;
+
+  b0 = simple.has(42);
+  b1 = 42 inside simple;
+  b2 = simple.has(1000);
+  b3 = 500 inside simple;
+
+  map<string, string> smap;
+  smap["hi"] = "world";
+
+  x0 = smap.has("hi");
+  x1 = "hi" inside smap;
+  x2 = smap.has("nope");
+  x3 = "nope" inside smap;
+
+  a0 = 42 outside simple;
+  a1 = 500 outside simple;
+
+  y0 = "hi" outside smap;
+  y1 = "nope" outside smap;
+}

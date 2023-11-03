@@ -37,6 +37,8 @@ public enum BinaryOp {
   AssignmentAdd("+=", true), //
   AssignmentSubtract("-=", true), //
   AssignmentMultiply("*=", true), //
+  Inside("inside", false), //
+  NotInside("outside", false), //
   ; //
 
   public final String javaOp;
