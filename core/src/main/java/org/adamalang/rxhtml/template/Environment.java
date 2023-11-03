@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.common.Escaping;
 import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.codegen.VariablePool;
 import org.adamalang.rxhtml.codegen.Writer;
@@ -166,5 +167,15 @@ public class Environment {
       return classContext;
     }
     return attrContext;
+  }
+
+  public void writeElementDebugIfTest() {
+    if (this.environment != null && this.environment.equals("test")) {
+      this.writer.newline().tab().append("// <").append(this.element.tagName());
+      this.element.attributes().asList().forEach((attr) -> {
+        this.writer.append(" ").append(attr.getKey()).append("=\"").append(new Escaping(attr.getValue()).switchQuotes().go()).append("\"");
+      });
+      this.writer.append(">").newline();
+    }
   }
 }
