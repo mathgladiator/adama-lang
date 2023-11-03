@@ -1,0 +1,19 @@
+record X {
+  int id;
+  int z;
+  map<int, int> x;
+}
+
+table<X> t;
+
+@construct {
+  t <- {z:0};
+  t <- {z:1};
+  t <- {z:2};
+  t <- {z:5};
+  t <- {z:0};
+  t <- {z:0};
+}
+
+public formula sad = (iterate t).x unique;
+

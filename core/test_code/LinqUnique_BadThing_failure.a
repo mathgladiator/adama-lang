@@ -1,0 +1,9 @@
+record X {
+  int id;
+  int z;
+}
+
+X x;
+
+public formula sad1 = x unique;
+public formula sad2 = x unique first z;

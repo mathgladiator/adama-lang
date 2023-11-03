@@ -50,6 +50,11 @@ public class Unique extends LinqExpression {
       }
     }
     this.key = key;
+    ingest(sql);
+    ingest(unique);
+    if (key != null) {
+      ingest(key);
+    }
   }
 
   @Override
@@ -71,15 +76,19 @@ public class Unique extends LinqExpression {
         elementType = RuleSetCommon.ResolvePtr(environment, elementType, false);
         if (elementType != null && elementType instanceof IsStructure) {
           FieldDefinition fd = ((IsStructure) elementType).storage().fields.get(key.text);
-          TyType fieldType = environment.rules.Resolve(fd.type, false);
-          if (fieldType != null) {
-            addGet = fieldType instanceof DetailComputeRequiresGet;
-            if (addGet) {
-              fieldType = ((DetailComputeRequiresGet) fieldType).typeAfterGet(environment);
+          if (fd != null) {
+            TyType fieldType = environment.rules.Resolve(fd.type, false);
+            if (fieldType != null) {
+              addGet = fieldType instanceof DetailComputeRequiresGet;
+              if (addGet) {
+                fieldType = ((DetailComputeRequiresGet) fieldType).typeAfterGet(environment);
+              }
             }
-          }
-          if (!(fieldType instanceof DetailCanExtractForUnique)) {
-            environment.document.createError(this, "the key '" + key.text + "' must be capable of being compared, hashed, and equality tested for uniqueness");
+            if (!(fieldType instanceof DetailCanExtractForUnique)) {
+              environment.document.createError(this, "the key '" + key.text + "' must be capable of being compared, hashed, and equality tested for uniqueness");
+            }
+          } else {
+            environment.document.createError(this, "the key '" + key.text + "' is not a field of '" + elementType.getAdamaType() + "'");
           }
         }
       } else {

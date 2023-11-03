@@ -1,0 +1,20 @@
+record X {
+  int id;
+  int z;
+  int x;
+}
+
+table<X> t;
+
+@construct {
+  t <- {z:0};
+  t <- {z:1};
+  t <- {z:2};
+  t <- {z:5};
+  t <- {z:0};
+  t <- {z:0};
+  t <- {z:5};
+}
+
+public formula z_first = iterate t unique first z;
+public formula z_last = iterate t unique last z;

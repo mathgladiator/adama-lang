@@ -1293,7 +1293,7 @@ public class Parser {
       base = assignment(scope);
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset", "unique"))) != null) {
       base = wrap_linq(scope, base, op);
     }
     return base;
@@ -2099,6 +2099,14 @@ public class Parser {
     switch (op.text) {
       case "materialize":
         return new Materialize(base, op);
+      case "unique": {
+        Token mode = tokens.popIf((t) -> t.isIdentifier("first", "last"));
+        Token key = null;
+        if (mode != null) {
+          key = id();
+        }
+        return new Unique(base, op, mode, key);
+      }
       case "where":
         return new Where(base, op, null, null, assignment(scope));
       case "where_as": {
