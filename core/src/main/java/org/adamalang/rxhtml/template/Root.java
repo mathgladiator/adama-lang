@@ -42,6 +42,7 @@ public class Root {
     String stateVar = env.pool.ask();
     String fragmentFunc = env.pool.ask();
     String name = env.element.attr("name");
+    env.writeElementDebugIfTest();
     env.writer.tab().append("$.TP('").append(name).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
     String autoVar = env.pool.ask();
     env.writer.tab().append("var ").append(autoVar).append("=$.X();").newline();
@@ -59,6 +60,7 @@ public class Root {
     Environment envToUse = env.parentVariable(rootVar).stateVar(stateVar).raiseOptimize();
     String uri = env.element.attr("uri");
     Instructions instructions = uri_to_instructions(uri);
+    env.writeElementDebugIfTest();
     env.writer.tab().append("$.PG(").append(instructions.javascript).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
     if (env.element.hasAttr("authenticate")) {
       String identity = env.element.attr("authenticate");
