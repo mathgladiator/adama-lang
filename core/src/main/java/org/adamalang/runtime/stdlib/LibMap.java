@@ -17,8 +17,6 @@
 */
 package org.adamalang.runtime.stdlib;
 
-import org.adamalang.runtime.natives.NtMap;
-
 public class LibMap {
   // TODO
 }

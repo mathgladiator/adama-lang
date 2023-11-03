@@ -779,8 +779,22 @@ public class Parser {
     Token itemVar = id();
     Token brackClose = consumeExpectedSymbol("]");
     Token fromLabel  = consumeExpectedIdentifier("from");
+
+    /*
+    Token brackOpenF = consumeExpectedSymbol("[");
+    Token fromTable = id();
+    Token brackCloseF = consumeExpectedSymbol("]");
+    */
+
     Expression fromExpr = expression(scope);
     Token toLabel  = consumeExpectedIdentifier("to");
+
+    /*
+    Token brackOpenT = consumeExpectedSymbol("[");
+    Token toTable = id();
+    Token brackCloseT = consumeExpectedSymbol("]");
+    */
+
     Expression toExpr = expression(scope);
     Token semicolon = consumeExpectedSymbol(";");
     return new JoinAssoc(join, assoc, via, tableName, brackOpen, itemVar, brackClose, fromLabel, fromExpr, toLabel, toExpr, semicolon);
@@ -1974,8 +1988,18 @@ public class Parser {
     return condition;
   }
 
+  public Expression containment(Scope scope) throws AdamaLangException {
+    final var key = ternary(scope);
+    final var containToken = tokens.popIf(t -> t.isIdentifier("inside", "outside"));
+    if (containToken != null) {
+      final var container = ternary(scope);
+      return new BinaryExpression(key, containToken, container);
+    }
+    return key;
+  }
+
   public Expression assignment(Scope scope) throws AdamaLangException {
-    final var left = ternary(scope);
+    final var left = containment(scope);
     var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+=", "-=", "*="));
     if (hasAssignment != null) {
       final var right = assignment(scope);

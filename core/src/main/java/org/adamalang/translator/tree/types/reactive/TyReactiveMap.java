@@ -25,10 +25,7 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetTable;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativePair;
-import org.adamalang.translator.tree.types.natives.TyNativeVoid;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -144,6 +141,11 @@ public class TyReactiveMap extends TyType implements //
       ArrayList<TyType> args = new ArrayList<>();
       args.add(domainType);
       return new TyNativeFunctional("remove", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("remove", new TyNativeVoid().withPosition(this), args, FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("has".equals(name)) {
+      ArrayList<TyType> args = new ArrayList<>();
+      args.add(domainType);
+      return new TyNativeFunctional("remove", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("remove", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), args, FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("clear".equals(name)) {
       return new TyNativeFunctional("clear", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("clear", new TyNativeVoid().withPosition(this), new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);
