@@ -17,8 +17,15 @@
 */
 package org.adamalang.web.assets.transforms;
 
-public class ImageResizeTransform {
-  // TODO: (1) Download Image Data to Transform Cache
-  // TODO: (2) Resize the image
-  // TODO: (3) Serve image
+/** a very simple way of going from content type and trannsform args to a Transform */
+public class TransformFactory {
+  public static Transform make(String contentType, String args) {
+    switch (contentType) {
+      case "image/png":
+        return new ImageTransform("png", args);
+      case "image/jpeg":
+        return new ImageTransform("jpg", args);
+    }
+    return null;
+  }
 }

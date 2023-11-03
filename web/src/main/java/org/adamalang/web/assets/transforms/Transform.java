@@ -15,9 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.web.assets.transforms;
 
-public class Platform {
-  public static final String VERSION = "20231103162646";
-  public static final String JS_VERSION = "13d1f1edb0b6809e4f0e5b8bf24344f7";
+public interface Transform {
 }
