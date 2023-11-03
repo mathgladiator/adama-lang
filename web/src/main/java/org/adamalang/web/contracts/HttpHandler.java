@@ -69,6 +69,7 @@ public interface HttpHandler {
     public final String space;
     public final String key;
     public final NtAsset asset;
+    public final String transform;
     public final boolean cors;
     public final boolean redirect;
     public final String location;
@@ -81,6 +82,7 @@ public interface HttpHandler {
       this.space = null;
       this.key = null;
       this.asset = null;
+      this.transform = null;
       this.cors = cors;
       this.redirect = false;
       this.location = null;
@@ -88,12 +90,13 @@ public interface HttpHandler {
       this.cacheTimeSeconds = null;
     }
 
-    public HttpResult(String space, String key, NtAsset asset, boolean cors, int cts) {
+    public HttpResult(String space, String key, NtAsset asset, String transform, boolean cors, int cts) {
       this.contentType = asset.contentType;
       this.body = null;
       this.space = space;
       this.key = key;
       this.asset = asset;
+      this.transform = transform;
       this.cors = cors;
       this.redirect = false;
       this.location = null;
@@ -107,6 +110,7 @@ public interface HttpHandler {
       this.space = null;
       this.key = null;
       this.asset = null;
+      this.transform = null;
       this.cors = true;
       this.redirect = true;
       this.location = location;

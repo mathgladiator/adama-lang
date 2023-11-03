@@ -39,6 +39,8 @@ import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.web.assets.*;
 import org.adamalang.web.assets.cache.CachedAsset;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
+import org.adamalang.web.assets.transforms.Transform;
+import org.adamalang.web.assets.transforms.TransformFactory;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.firewall.WebRequestShield;
 import org.adamalang.web.io.ConnectionContext;
@@ -226,7 +228,16 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   }
 
   /** handle a native asset */
-  private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, boolean cors, Integer cacheTimeSeconds) {
+  private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, String transform, boolean cors, Integer cacheTimeSeconds) {
+    if (transform != null) {
+      Transform how = TransformFactory.make(asset.contentType, transform);
+      if (how == null) {
+        // error out, it's a very sad day
+
+      } else {
+        // OK, we need to stream the asset out of S3 and onto the disk and gate on the output
+      }
+    }
     AssetStream response = streamOf(req, ctx, cors, cacheTimeSeconds);
 
     if (!WebHandlerAssetCache.canCache(asset)) {
@@ -657,7 +668,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
 
     if (httpResult.asset != null && httpResult.space != null && httpResult.key != null) {
-      handleNtAsset(req, ctx, new Key(httpResult.space, httpResult.key), httpResult.asset, httpResult.cors, httpResult.cacheTimeSeconds);
+      handleNtAsset(req, ctx, new Key(httpResult.space, httpResult.key), httpResult.asset, httpResult.transform, httpResult.cors, httpResult.cacheTimeSeconds);
       return;
     }
 
