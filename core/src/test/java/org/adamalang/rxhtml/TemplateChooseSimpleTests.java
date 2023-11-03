@@ -32,6 +32,8 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.RX([]);");
@@ -45,8 +47,12 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    $.P(b,a,e,function(b,f) {");
+    gold.append("\n");
+    gold.append("\n      // <div rx:if=\"choose:channel\">");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      $.DE(g,f,f,'channel','id','id',true,false,function(i,h) {");
+    gold.append("\n");
+    gold.append("\n        // <button rx:click=\"choose:channel\">");
     gold.append("\n        var j=$.E('button');");
     gold.append("\n        $.exCH(j,'click',h,'id','channel','id');");
     gold.append("\n        j.append($.T('Add Choice'));");
@@ -54,8 +60,12 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      },function(i,h) {");
     gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
+    gold.append("\n");
+    gold.append("\n      // <div rx:if=\"finalize:channel\">");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      $.FIN(g,f,'channel',true,false,function(i,h) {");
+    gold.append("\n");
+    gold.append("\n        // <button rx:click=\"finalize:channel\">");
     gold.append("\n        var j=$.E('button');");
     gold.append("\n        $.exFIN(j,'click',h,'channel');");
     gold.append("\n        j.append($.T('Send choices'));");
@@ -75,6 +85,8 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.RX([]);");
@@ -88,8 +100,12 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    $.P(b,a,e,function(b,f) {");
+    gold.append("\n");
+    gold.append("\n      // <div rx:if=\"choose:channel\">");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      $.DE(g,f,f,'channel','id','id',true,false,function(i,h) {");
+    gold.append("\n");
+    gold.append("\n        // <button rx:click=\"choose:channel\">");
     gold.append("\n        var j=$.E('button');");
     gold.append("\n        $.exCH(j,'click',h,'id','channel','id');");
     gold.append("\n        j.append($.T('Add Choice'));");
@@ -97,8 +113,12 @@ public class TemplateChooseSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      },function(i,h) {");
     gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
+    gold.append("\n");
+    gold.append("\n      // <div rx:if=\"finalize:channel\">");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      $.FIN(g,f,'channel',true,false,function(i,h) {");
+    gold.append("\n");
+    gold.append("\n        // <button rx:click=\"finalize:channel\">");
     gold.append("\n        var j=$.E('button');");
     gold.append("\n        $.exFIN(j,'click',h,'channel');");
     gold.append("\n        j.append($.T('Send choices'));");

@@ -32,8 +32,12 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/nest\">");
     gold.append("\n  $.PG(['fixed','nest'], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"[x|is_empty]X is empty[#]X is not empty[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -54,8 +58,12 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/nest\">");
     gold.append("\n  $.PG(['fixed','nest'], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"[x|is_empty]X is empty[#]X is not empty[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");

@@ -32,8 +32,12 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"set:x={view:here}\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var e=[];");
     gold.append("\n    var f={};");
@@ -42,6 +46,8 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    $.onB(d,'click',a,e);");
     gold.append("\n    d.append($.T('Set View'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"set:x={data:there} set:y=\\'The Big Long Title\\'\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var g=[];");
     gold.append("\n    var h={};");
@@ -59,8 +65,12 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"set:x={view:here}\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var e=[];");
     gold.append("\n    var f={};");
@@ -69,6 +79,8 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    $.onB(d,'click',a,e);");
     gold.append("\n    d.append($.T('Set View'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"set:x={data:there} set:y=\\'The Big Long Title\\'\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var g=[];");
     gold.append("\n    var h={};");

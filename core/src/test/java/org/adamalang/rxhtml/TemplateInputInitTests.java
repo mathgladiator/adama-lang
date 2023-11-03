@@ -32,8 +32,12 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <input name=\"email\" value=\"{value}\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    {");
@@ -46,6 +50,8 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <textarea name=\"email\" value=\"{value}\">");
     gold.append("\n    var d=$.E('textarea');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    {");
@@ -58,6 +64,8 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <select name=\"email\" value=\"{value}\">");
     gold.append("\n    var d=$.E('select');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    {");
@@ -69,11 +77,15 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
+    gold.append("\n");
+    gold.append("\n    // <option value=\"foo\">");
     gold.append("\n    var e=$.E('option');");
     gold.append("\n    e.value=\"foo\";");
     gold.append("\n    e.append($.T('FOOO'));");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <input type=\"checkbox\" checked=\"\" rx:debounce=\"nope\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'type',\"checkbox\");");
     gold.append("\n    d.checked=true;");
@@ -86,8 +98,12 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <input name=\"email\" value=\"{value}\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    {");
@@ -100,6 +116,8 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <textarea name=\"email\" value=\"{value}\">");
     gold.append("\n    var d=$.E('textarea');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    {");
@@ -112,6 +130,8 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <select name=\"email\" value=\"{value}\">");
     gold.append("\n    var d=$.E('select');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    {");
@@ -123,11 +143,15 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
+    gold.append("\n");
+    gold.append("\n    // <option value=\"foo\">");
     gold.append("\n    var e=$.E('option');");
     gold.append("\n    e.value=\"foo\";");
     gold.append("\n    e.append($.T('FOOO'));");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <input type=\"checkbox\" checked=\"\" rx:debounce=\"nope\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'type',\"checkbox\");");
     gold.append("\n    d.checked=true;");

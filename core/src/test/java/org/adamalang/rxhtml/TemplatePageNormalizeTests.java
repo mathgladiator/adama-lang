@@ -32,12 +32,18 @@ public class TemplatePageNormalizeTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/$thing:int/$x   :   string/\">");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/$thing:double/$x   :   text/\">");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
     gold.append("\n    var d=$.X();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/$thing:number/$x   :   str/ $y : string\">");
     gold.append("\n  $.PG(['number','thing','text','x','text','y'], function(b,a) {");
     gold.append("\n    var e=$.X();");
     gold.append("\n  });");
@@ -48,12 +54,18 @@ public class TemplatePageNormalizeTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/$thing:int/$x   :   string/\">");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/$thing:double/$x   :   text/\">");
     gold.append("\n  $.PG(['number','thing','text','x'], function(b,a) {");
     gold.append("\n    var d=$.X();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/$thing:number/$x   :   str/ $y : string\">");
     gold.append("\n  $.PG(['number','thing','text','x','text','y'], function(b,a) {");
     gold.append("\n    var e=$.X();");
     gold.append("\n  });");

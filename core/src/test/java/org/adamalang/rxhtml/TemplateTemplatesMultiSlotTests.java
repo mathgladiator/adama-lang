@@ -32,6 +32,8 @@ public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <template name=\"temp\">");
     gold.append("\n  $.TP('temp', function(a,b,c) {");
     gold.append("\n    var d=$.X();");
     gold.append("\n    a.append($.T(' This is a template with a fragment: '));");
@@ -39,13 +41,19 @@ public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
     gold.append("\n    a.append($.T(' And this is a slot '));");
     gold.append("\n    c(a,b,'foo');");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
+    gold.append("\n");
+    gold.append("\n    // <div rx:template=\"temp\">");
     gold.append("\n    var e=$.E('div');");
     gold.append("\n    $.UT(e,a,'temp', function(f,g,h) {");
     gold.append("\n      f.append($.T(' This is data within the template, and this is shown always. '));");
     gold.append("\n      if (h == 'foo') {");
+    gold.append("\n");
+    gold.append("\n        // <div rx:case=\"foo\">");
     gold.append("\n        var i=$.E('div');");
     gold.append("\n        i.append($.T(' This only shows up when the case is foo. '));");
     gold.append("\n        f.append(i);");
@@ -60,6 +68,8 @@ public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <template name=\"temp\">");
     gold.append("\n  $.TP('temp', function(a,b,c) {");
     gold.append("\n    var d=$.X();");
     gold.append("\n    a.append($.T(' This is a template with a fragment: '));");
@@ -67,13 +77,19 @@ public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
     gold.append("\n    a.append($.T(' And this is a slot '));");
     gold.append("\n    c(a,b,'foo');");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
+    gold.append("\n");
+    gold.append("\n    // <div rx:template=\"temp\">");
     gold.append("\n    var e=$.E('div');");
     gold.append("\n    $.UT(e,a,'temp', function(f,g,h) {");
     gold.append("\n      f.append($.T(' This is data within the template, and this is shown always. '));");
     gold.append("\n      if (h == 'foo') {");
+    gold.append("\n");
+    gold.append("\n        // <div rx:case=\"foo\">");
     gold.append("\n        var i=$.E('div');");
     gold.append("\n        i.append($.T(' This only shows up when the case is foo. '));");
     gold.append("\n        f.append(i);");

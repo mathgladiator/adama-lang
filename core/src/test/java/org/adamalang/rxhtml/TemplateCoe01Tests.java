@@ -32,8 +32,12 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/huh\">");
     gold.append("\n  $.PG(['fixed','huh'], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <fieldset name=\"color\" class=\"blad [view:c=\\'{id}\\'] block [#view:c=\\'{id}\\'] hidden [/view:c=\\'{id}\\']\">");
     gold.append("\n    var d=$.E('fieldset');");
     gold.append("\n    $.SA(d,'name',\"color\");");
     gold.append("\n    {");
@@ -55,8 +59,12 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/huh\">");
     gold.append("\n  $.PG(['fixed','huh'], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <fieldset name=\"color\" class=\"blad [view:c=\\'{id}\\'] block [#view:c=\\'{id}\\'] hidden [/view:c=\\'{id}\\']\">");
     gold.append("\n    var d=$.E('fieldset');");
     gold.append("\n    $.SA(d,'name',\"color\");");
     gold.append("\n    {");

@@ -32,8 +32,12 @@ public class TemplateScopeSimpleTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <div rx:scope=\"obj\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    var e=$.pI(a,'obj');");
     gold.append("\n    d.append($.L(e,'key'));");
@@ -48,8 +52,12 @@ public class TemplateScopeSimpleTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <div rx:scope=\"obj\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    var e=$.pI(a,'obj');");
     gold.append("\n    d.append($.L(e,'key'));");

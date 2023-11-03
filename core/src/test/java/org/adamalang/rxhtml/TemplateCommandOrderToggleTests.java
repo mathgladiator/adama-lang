@@ -32,12 +32,18 @@ public class TemplateCommandOrderToggleTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"ot:people_sort_by=age\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onOT(d,'click',$.pV(a),'people_sort_by','age');");
     gold.append("\n    d.append($.T('By Age'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"ot:people_sort_by=name\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onOT(d,'click',$.pV(a),'people_sort_by','name');");
     gold.append("\n    d.append($.T('By Name'));");
@@ -50,12 +56,18 @@ public class TemplateCommandOrderToggleTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"ot:people_sort_by=age\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onOT(d,'click',$.pV(a),'people_sort_by','age');");
     gold.append("\n    d.append($.T('By Age'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"ot:people_sort_by=name\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onOT(d,'click',$.pV(a),'people_sort_by','name');");
     gold.append("\n    d.append($.T('By Name'));");

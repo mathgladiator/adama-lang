@@ -32,8 +32,12 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <input type=\"checkbox\" checked=\"{is_thing}\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'type',\"checkbox\");");
     gold.append("\n    {");
@@ -54,8 +58,12 @@ public class TemplateCheckboxTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <input type=\"checkbox\" checked=\"{is_thing}\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'type',\"checkbox\");");
     gold.append("\n    {");

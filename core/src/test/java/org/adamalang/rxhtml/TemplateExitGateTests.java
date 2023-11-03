@@ -32,12 +32,18 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    $.IG($.pV(a),'foo',$.pV(a),'block-exit');");
+    gold.append("\n");
+    gold.append("\n    // <div rx:if=\"view:block-exit\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IF(d,a,$.pV(a),'block-exit',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Show this if we try to exit when foo is true. '));");
+    gold.append("\n");
+    gold.append("\n      // <button rx:click=\"resume\">");
     gold.append("\n      var g=$.E('button');");
     gold.append("\n      var h=[];");
     gold.append("\n      h.push($.bR());");
@@ -55,12 +61,18 @@ public class TemplateExitGateTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    $.IG($.pV(a),'foo',$.pV(a),'block-exit');");
+    gold.append("\n");
+    gold.append("\n    // <div rx:if=\"view:block-exit\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IF(d,a,$.pV(a),'block-exit',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Show this if we try to exit when foo is true. '));");
+    gold.append("\n");
+    gold.append("\n      // <button rx:click=\"resume\">");
     gold.append("\n      var g=$.E('button');");
     gold.append("\n      var h=[];");
     gold.append("\n      h.push($.bR());");

@@ -32,6 +32,8 @@ public class TemplateViewsyncTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.RX([]);");
@@ -46,6 +48,8 @@ public class TemplateViewsyncTests extends BaseRxHtmlTest {
     gold.append("\n      $.VSy(b,f,function(b,g) {");
     gold.append("\n        b.append($.T(' Show '));");
     gold.append("\n      },function(b,g) {");
+    gold.append("\n");
+    gold.append("\n        // <div rx:disconnected=\"\">");
     gold.append("\n        var h=$.E('div');");
     gold.append("\n        h.append($.T(' Not yet... '));");
     gold.append("\n        b.append(h);");
@@ -61,6 +65,8 @@ public class TemplateViewsyncTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.RX([]);");
@@ -75,6 +81,8 @@ public class TemplateViewsyncTests extends BaseRxHtmlTest {
     gold.append("\n      $.VSy(b,f,function(b,g) {");
     gold.append("\n        b.append($.T(' Show '));");
     gold.append("\n      },function(b,g) {");
+    gold.append("\n");
+    gold.append("\n        // <div rx:disconnected=\"\">");
     gold.append("\n        var h=$.E('div');");
     gold.append("\n        h.append($.T(' Not yet... '));");
     gold.append("\n        b.append(h);");

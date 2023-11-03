@@ -32,9 +32,13 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{data:lookup} \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -46,6 +50,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{data:lookup/value} \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -57,6 +63,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{view:/root} \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -68,6 +76,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{   data : lookup } \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -79,6 +89,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{   data : lookup / value  } \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -90,6 +102,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{   view :  / root   } \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -109,9 +123,13 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{data:lookup} \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -123,6 +141,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{data:lookup/value} \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -134,6 +154,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{view:/root} \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -145,6 +167,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{   data : lookup } \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -156,6 +180,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{   data : lookup / value  } \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -167,6 +193,8 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      f();");
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <div class=\"{   view :  / root   } \">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");

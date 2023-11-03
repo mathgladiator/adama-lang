@@ -33,8 +33,12 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"send:foo\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'foo');");
     gold.append("\n    var e=[];");
@@ -43,10 +47,14 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n    var f=[];");
     gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,f);");
+    gold.append("\n");
+    gold.append("\n    // <div rx:delayx=\"submit\">");
     gold.append("\n    var g=$.E('div');");
     gold.append("\n    $.oSBMT(g,'delayx',a);");
     gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"send:foo\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'foo');");
     gold.append("\n    var g=[];");
@@ -55,6 +63,8 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n    var i=[];");
     gold.append("\n    i.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,i);");
+    gold.append("\n");
+    gold.append("\n    // <div rx:delay:x=\"submit\">");
     gold.append("\n    var j=$.E('div');");
     gold.append("\n    $.oSBMT(j,'delay:x',a);");
     gold.append("\n    d.append(j);");
@@ -67,8 +77,12 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"send:foo\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'foo');");
     gold.append("\n    var e=[];");
@@ -77,10 +91,14 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n    var f=[];");
     gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,f);");
+    gold.append("\n");
+    gold.append("\n    // <div rx:delayx=\"submit\">");
     gold.append("\n    var g=$.E('div');");
     gold.append("\n    $.oSBMT(g,'delayx',a);");
     gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"send:foo\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'foo');");
     gold.append("\n    var g=[];");
@@ -89,6 +107,8 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n    var i=[];");
     gold.append("\n    i.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,i);");
+    gold.append("\n");
+    gold.append("\n    // <div rx:delay:x=\"submit\">");
     gold.append("\n    var j=$.E('div');");
     gold.append("\n    $.oSBMT(j,'delay:x',a);");
     gold.append("\n    d.append(j);");

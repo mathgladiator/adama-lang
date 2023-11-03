@@ -32,11 +32,17 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <svg height=\"210\" width=\"400\">");
     gold.append("\n    var d=$.E('svg', 'http://www.w3.org/2000/svg');");
     gold.append("\n    $.SA(d,'height',\"210\");");
     gold.append("\n    $.SA(d,'width',\"400\");");
+    gold.append("\n");
+    gold.append("\n    // <path d=\"M150 0 L75 200 L225 200 Z\">");
     gold.append("\n    var e=$.E('path', 'http://www.w3.org/2000/svg');");
     gold.append("\n    $.SA(e,'d',\"M150 0 L75 200 L225 200 Z\");");
     gold.append("\n    d.append(e);");
@@ -50,11 +56,17 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <svg height=\"210\" width=\"400\">");
     gold.append("\n    var d=$.E('svg', 'http://www.w3.org/2000/svg');");
     gold.append("\n    $.SA(d,'height',\"210\");");
     gold.append("\n    $.SA(d,'width',\"400\");");
+    gold.append("\n");
+    gold.append("\n    // <path d=\"M150 0 L75 200 L225 200 Z\">");
     gold.append("\n    var e=$.E('path', 'http://www.w3.org/2000/svg');");
     gold.append("\n    $.SA(e,'d',\"M150 0 L75 200 L225 200 Z\");");
     gold.append("\n    d.append(e);");

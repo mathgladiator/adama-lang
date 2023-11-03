@@ -32,8 +32,12 @@ public class TemplateLinkTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <div rx:link=\"obj\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    d.link(a,'obj',$);");
     gold.append("\n    b.append(d);");
@@ -45,8 +49,12 @@ public class TemplateLinkTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <div rx:link=\"obj\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    d.link(a,'obj',$);");
     gold.append("\n    b.append(d);");

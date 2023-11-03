@@ -32,12 +32,18 @@ public class TemplateStyleAggrTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"toggle:open\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onT(d,'click',$.pV(a),'open');");
     gold.append("\n    d.append($.T('Toggle'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <button rx:mouseenter=\"toggle:enter\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onT(d,'mouseenter',$.pV(a),'enter');");
     gold.append("\n    d.append($.T('Toggle'));");
@@ -50,12 +56,18 @@ public class TemplateStyleAggrTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"toggle:open\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onT(d,'click',$.pV(a),'open');");
     gold.append("\n    d.append($.T('Toggle'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <button rx:mouseenter=\"toggle:enter\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onT(d,'mouseenter',$.pV(a),'enter');");
     gold.append("\n    d.append($.T('Toggle'));");

@@ -32,10 +32,14 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/customeraction/$customer_id:text/signin\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','customeraction','text','customer_id','fixed','signin'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Sign in for customers '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/customer/$customer_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','customer','text','customer_id'], function(b,a) {");
     gold.append("\n    var d=$.aRDp(a,function(vs) { return \"/customeraction/\" + vs['customer_id'] + \"/signin\";});");
     gold.append("\n    if($.ID('default',d).abort) {");
@@ -44,10 +48,14 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.X();");
     gold.append("\n    b.append($.T(' Simple Page for customers '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/adminaction/$admin_id:text/signin\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','adminaction','text','admin_id','fixed','signin'], function(b,a) {");
     gold.append("\n    var e=$.X();");
     gold.append("\n    b.append($.T(' Sign in for admins '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/admin/$admin_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','admin','text','admin_id'], function(b,a) {");
     gold.append("\n    var f=$.aRDp(a,function(vs) { return \"/adminaction/\" + vs['admin_id'] + \"/signin\";});");
     gold.append("\n    if($.ID('default',f).abort) {");
@@ -56,6 +64,8 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    var f=$.X();");
     gold.append("\n    b.append($.T(' Simple Page for admins '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/bounce\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','bounce'], function(b,a) {");
     gold.append("\n    var g=$.aRDz('/logingeneric');");
     gold.append("\n    if($.ID('default',g).abort) {");
@@ -63,6 +73,8 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    var g=$.X();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/logingeneric\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','logingeneric'], function(b,a) {");
     gold.append("\n    var h=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
@@ -74,10 +86,14 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/customeraction/$customer_id:text/signin\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','customeraction','text','customer_id','fixed','signin'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Sign in for customers '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/customer/$customer_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','customer','text','customer_id'], function(b,a) {");
     gold.append("\n    var d=$.aRDp(a,function(vs) { return \"/customeraction/\" + vs['customer_id'] + \"/signin\";});");
     gold.append("\n    if($.ID('default',d).abort) {");
@@ -86,10 +102,14 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.X();");
     gold.append("\n    b.append($.T(' Simple Page for customers '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/adminaction/$admin_id:text/signin\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','adminaction','text','admin_id','fixed','signin'], function(b,a) {");
     gold.append("\n    var e=$.X();");
     gold.append("\n    b.append($.T(' Sign in for admins '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/admin/$admin_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','admin','text','admin_id'], function(b,a) {");
     gold.append("\n    var f=$.aRDp(a,function(vs) { return \"/adminaction/\" + vs['admin_id'] + \"/signin\";});");
     gold.append("\n    if($.ID('default',f).abort) {");
@@ -98,6 +118,8 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    var f=$.X();");
     gold.append("\n    b.append($.T(' Simple Page for admins '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/bounce\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','bounce'], function(b,a) {");
     gold.append("\n    var g=$.aRDz('/logingeneric');");
     gold.append("\n    if($.ID('default',g).abort) {");
@@ -105,6 +127,8 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    var g=$.X();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/logingeneric\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','logingeneric'], function(b,a) {");
     gold.append("\n    var h=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");

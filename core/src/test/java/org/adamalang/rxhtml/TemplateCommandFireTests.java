@@ -32,12 +32,18 @@ public class TemplateCommandFireTests extends BaseRxHtmlTest {
   public String gold() {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"fire:foo\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onFR(a,d,'click','foo');");
     gold.append("\n    d.append($.T('Fire Foo'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <span rx:load=\"fire:init_token\">");
     gold.append("\n    var d=$.E('span');");
     gold.append("\n    $.onFR(a,d,'load','init_token');");
     gold.append("\n    d.append($.T('Init a token'));");
@@ -50,12 +56,18 @@ public class TemplateCommandFireTests extends BaseRxHtmlTest {
     gold.append("\n<head><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"fire:foo\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    $.onFR(a,d,'click','foo');");
     gold.append("\n    d.append($.T('Fire Foo'));");
     gold.append("\n    b.append(d);");
+    gold.append("\n");
+    gold.append("\n    // <span rx:load=\"fire:init_token\">");
     gold.append("\n    var d=$.E('span');");
     gold.append("\n    $.onFR(a,d,'load','init_token');");
     gold.append("\n    d.append($.T('Init a token'));");
