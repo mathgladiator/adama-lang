@@ -62,7 +62,6 @@ public class DefineMetric extends Definition {
   @Override
   public void format(Formatter formatter) {
     expression.format(formatter);
-    metricType.format(formatter);
   }
 
   public void typing(TypeCheckerRoot checker) {

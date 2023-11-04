@@ -67,7 +67,6 @@ public class GeneratedOperationsDivisionTests extends GeneratedBase {
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n=FORMAT===================================================");
-    gold.append("\n// TODO: investigate if this is worth sorting out");
     gold.append("\n// public maybe<double> x1 = 1 / 0;");
     gold.append("\n// https://github.com/mathgladiator/adama-lang/issues/100");
     gold.append("\npublic formula f0 = 1 / 1;");
