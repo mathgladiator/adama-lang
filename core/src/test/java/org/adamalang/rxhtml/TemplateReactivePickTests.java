@@ -50,7 +50,7 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(g);");
     gold.append("\n    $.P(g,a,e,function(g,f) {");
     gold.append("\n    },function(g,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n    var f=$.RX([]);");
     gold.append("\n    f.name='default';");
@@ -58,7 +58,7 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(i);");
     gold.append("\n    $.P(i,a,f,function(i,h) {");
     gold.append("\n    },function(i,h) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    f.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -86,7 +86,7 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(g);");
     gold.append("\n    $.P(g,a,e,function(g,f) {");
     gold.append("\n    },function(g,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n    var f=$.RX([]);");
     gold.append("\n    f.name='default';");
@@ -94,7 +94,7 @@ public class TemplateReactivePickTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(i);");
     gold.append("\n    $.P(i,a,f,function(i,h) {");
     gold.append("\n    },function(i,h) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    f.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

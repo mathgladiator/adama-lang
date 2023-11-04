@@ -73,6 +73,10 @@ public class Elements {
   public static void lookup(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     String transform = env.element.attr("transform");
+    if ("html".equals(transform)) { // TOTAL HACK FOR A DEPLOYMENT
+      env.writer.tab().append(env.parentVariable).append(".append($.Lh(").append(path.command).append(",'").append(path.name).append("'));").newline();
+      return;
+    }
     if (transform == null || "".equals(transform)) {
       env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(",'").append(path.name).append("'));").newline();
     } else {
@@ -88,6 +92,11 @@ public class Elements {
         env.writer.tab().append(env.parentVariable).append(".append($.LT(").append(path.command).append(",'").append(path.name).append("',$.TR('").append(transform).append("')));").newline();
       }
     }
+  }
+
+  public static void trusted_html(Environment env) {
+    StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
+    env.writer.tab().append(env.parentVariable).append(".append($.Lh(").append(path.command).append(",'").append(path.name).append("'));").newline();
   }
 
   public static String ensureInView(String attr) {
@@ -234,7 +243,7 @@ public class Elements {
         return false;
       }
     });
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("}").append(env.element.hasAttr("keep-open") ? ",true" : ",false").append(");").newline();
     obj.finish();
     env.pool.give(childStateVar);
   }

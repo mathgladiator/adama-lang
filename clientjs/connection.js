@@ -57,6 +57,9 @@ class WebSocketAdamaConnection {
     if (this.connected) {
       this.connected = false;
       this.onstatuschange(false);
+      this.callbacks.forEach(function (cb, id) {
+        cb({failure:999});
+      });
     }
     this.callbacks.clear();
     // if we are dead, then don't actually retry

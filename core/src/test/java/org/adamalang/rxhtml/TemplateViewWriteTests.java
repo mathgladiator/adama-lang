@@ -117,7 +117,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n      });");
     gold.append("\n      $.VW($.pV(f),'',g);");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -212,7 +212,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n      });");
     gold.append("\n      $.VW($.pV(f),'',g);");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

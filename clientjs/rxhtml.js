@@ -583,6 +583,17 @@ var RxHTML = (function () {
     return dom;
   };
 
+  self.Lh = function (state, name) {
+    var dom = document.createElement("span");
+    var sub = function (value) {
+      if (value != null) {
+        dom.innerHTML = value;
+      }
+    };
+    subscribe(state, name, sub);
+    return dom;
+  };
+
   // RUNTIME | <lookup path=... transform="$transform" />
   self.LTdT = function (state, name, transform, freq) {
     var dom = document.createTextNode("");
@@ -633,7 +644,7 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | <pick name=...>
-  self.P = function (parent, priorState, rxObj, childMakerConnected, childMakerDisconnected) {
+  self.P = function (parent, priorState, rxObj, childMakerConnected, childMakerDisconnected, keepOpen) {
     var unsub = make_unsub();
     rxObj.__ = function () {
       if (!('name' in rxObj)) {
@@ -645,6 +656,9 @@ var RxHTML = (function () {
       var co = get_connection_obj(rxObj.name);
       this.name = rxObj.name;
       co.connected(function (cs) {
+        if (this.rendered && keepOpen) {
+          return;
+        }
         nuke(parent);
         fire_unsub(unsub);
         var state = {
@@ -654,6 +668,7 @@ var RxHTML = (function () {
           current: "data"
         };
         if (cs) {
+          this.rendered = true;
           childMakerConnected(parent, state);
         } else {
           childMakerDisconnected(parent, state);
@@ -661,8 +676,8 @@ var RxHTML = (function () {
         subscribe_state(state, unsub);
         // TODO: return false to unsub
         return true;
-      });
-    }.bind({ name: "" });
+      }.bind(this));
+    }.bind({ name: "", rendered:false });
   };
 
   // RUNTIME | <template name="...">
@@ -1491,15 +1506,17 @@ var RxHTML = (function () {
       // don't care about nested forms
       return;
     }
-    var justSet = el.tagName.toUpperCase() == "TEXTAREA" || el.tagName.toUpperCase() == "SELECT";
-    var isInputBox = el.tagName.toUpperCase() == "INPUT";
-    var isFieldSet = el.tagName.toUpperCase() == "FIELDSET";
+    var upperTag = el.tagName.toUpperCase();
+    var justSet = upperTag == "TEXTAREA" || upperTag == "SELECT";
+    var isInputBox = upperTag == "INPUT";
+    var isFieldSet = upperTag == "FIELDSET";
+    var isPull = upperTag == "PULLVALUE";
     var hasName = "name" in el;
     var insertAt = objToInsertInto;
     // the apply function is how we inject the value into the object
     var apply = function (val) { };
 
-    if (hasName && (justSet || isInputBox || isFieldSet)) {
+    if (hasName && (justSet || isInputBox || isFieldSet || isPull)) {
       var name = "";
       name = el.name;
       if (name == "") { // this is a special name for things that don't get picked up
@@ -1532,6 +1549,11 @@ var RxHTML = (function () {
           insertAt[name] = v;
         };
       }
+    }
+
+    if (isPull) {
+      apply(el.pull());
+      return;
     }
 
     if (justSet) {
@@ -2133,14 +2155,22 @@ var RxHTML = (function () {
         // is it an expected error that will happen a bunch?
         var expected_error = reason == 999;
         // do we not know about an error that happens a bunch? if so, then let's at least try again a number of finite times.
-        var blind_retry = retry_sm.unexpected_errors < 10;
+        var blind_retry = retry_sm.unexpected_errors < 16;
         if (blind_retry) {
           retry_sm.unexpected_errors++;
         }
         // retry on either case
         if (expected_error || blind_retry) {
-          retry_sm.backoff = Math.ceil(Math.min(retry_sm.backoff + Math.random() * retry_sm.backoff + (blind_retry ? 100 : 1), 1000));
-          console.log("connect-failure|retrying... (" + retry_sm.backoff + "); reason=" + reason + (blind_retry ? " [blind]" : ""));
+          retry_sm.backoff = Math.ceil(Math.min(retry_sm.backoff + Math.random() * retry_sm.backoff + (blind_retry ? 125 : 1), 2500));
+          if (expected_error) {
+            // the expected error is a connection event, so we protect the service and jump back-off right to near max over a nice spread
+            retry_sm.backoff = Math.min(1250, retry_sm.backoff) + Math.random() * 1250;
+          }
+          if (expected_error) {
+            console.log("connect-loss|retrying... (" + retry_sm.backoff + "); reason=" + reason + (blind_retry ? " [blind]" : ""));
+          } else {
+            console.log("connect-failure|retrying... (" + retry_sm.backoff + "); reason=" + reason + (blind_retry ? " [blind]" : ""));
+          }
           // TODO: need a different feedback mechanism (maybe a number under the wifi icon?)
           window.setTimeout(function() {
             retry_sm.go();

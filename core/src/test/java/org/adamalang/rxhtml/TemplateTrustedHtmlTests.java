@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateBillingConnectionTests extends BaseRxHtmlTest {
+public class TemplateTrustedHtmlTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -36,19 +36,8 @@ public class TemplateBillingConnectionTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.RX([]);");
-    gold.append("\n    d.name='myname';");
-    gold.append("\n    d.identity=true;");
-    gold.append("\n    d.redirect='/sign-in';");
-    gold.append("\n    $.BCONNECT(a,d);");
-    gold.append("\n    d.__();");
-    gold.append("\n    var e=$.RX([]);");
-    gold.append("\n    e.name='myname';");
-    gold.append("\n    $.P(b,a,e,function(b,f) {");
-    gold.append("\n      b.append($.T(' A billing connection '));");
-    gold.append("\n    },function(b,f) {");
-    gold.append("\n    },false);");
-    gold.append("\n    e.__();");
+    gold.append("\n    b.append($.Lh($.pR($.pD(a)),'body'));");
+    gold.append("\n    b.append($.Lh($.pD(a),'foo'));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -61,19 +50,8 @@ public class TemplateBillingConnectionTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    var d=$.RX([]);");
-    gold.append("\n    d.name='myname';");
-    gold.append("\n    d.identity=true;");
-    gold.append("\n    d.redirect='/sign-in';");
-    gold.append("\n    $.BCONNECT(a,d);");
-    gold.append("\n    d.__();");
-    gold.append("\n    var e=$.RX([]);");
-    gold.append("\n    e.name='myname';");
-    gold.append("\n    $.P(b,a,e,function(b,f) {");
-    gold.append("\n      b.append($.T(' A billing connection '));");
-    gold.append("\n    },function(b,f) {");
-    gold.append("\n    },false);");
-    gold.append("\n    e.__();");
+    gold.append("\n    b.append($.Lh($.pR($.pD(a)),'body'));");
+    gold.append("\n    b.append($.Lh($.pD(a),'foo'));");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -92,9 +70,8 @@ public class TemplateBillingConnectionTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <connection name=\"myname\" billing>");
-    source.append("\n            A billing connection");
-    source.append("\n        </connection>");
+    source.append("\n        <trusted-html path=\"data:/body\" />");
+    source.append("\n        <lookup path=\"data:foo\" transform=\"html\" />");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

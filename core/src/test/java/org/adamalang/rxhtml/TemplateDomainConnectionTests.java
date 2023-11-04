@@ -47,7 +47,7 @@ public class TemplateDomainConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    $.P(b,a,e,function(b,f) {");
     gold.append("\n      b.append($.T(' NEAT '));");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -72,7 +72,7 @@ public class TemplateDomainConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    $.P(b,a,e,function(b,f) {");
     gold.append("\n      b.append($.T(' NEAT '));");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

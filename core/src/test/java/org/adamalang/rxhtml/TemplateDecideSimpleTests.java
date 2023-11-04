@@ -61,7 +61,7 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -100,7 +100,7 @@ public class TemplateDecideSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      },false);");
     gold.append("\n      b.append(g);");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

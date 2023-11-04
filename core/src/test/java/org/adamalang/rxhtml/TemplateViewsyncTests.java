@@ -55,7 +55,7 @@ public class TemplateViewsyncTests extends BaseRxHtmlTest {
     gold.append("\n        b.append(h);");
     gold.append("\n      });");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -88,7 +88,7 @@ public class TemplateViewsyncTests extends BaseRxHtmlTest {
     gold.append("\n        b.append(h);");
     gold.append("\n      });");
     gold.append("\n    },function(b,f) {");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
