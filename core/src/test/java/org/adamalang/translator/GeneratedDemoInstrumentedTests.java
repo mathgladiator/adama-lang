@@ -205,7 +205,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n// the players by their ordering");
     gold.append("\npublic auto players_ordered = iterate players where playing order by play_order;");
     gold.append("\n");
-    gold.append("\n// TODO: the client logic for who is what is going to be... interesting");
+    gold.append("\n// the client logic for who is what is going to be... interesting");
     gold.append("\n");
     gold.append("\n// whether or not the game is ready to begin");
     gold.append("\npublic auto ready = players_connected == 4;");

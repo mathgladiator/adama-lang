@@ -136,7 +136,7 @@ public auto people = iterate players order by play_order;
 // the players by their ordering
 public auto players_ordered = iterate players where playing order by play_order;
 
-// TODO: the client logic for who is what is going to be... interesting
+// the client logic for who is what is going to be... interesting
 
 // whether or not the game is ready to begin
 public auto ready = players_connected == 4;
