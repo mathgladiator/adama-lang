@@ -80,6 +80,11 @@ public class GeneratedMetricsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHasReadOnlyNoFormatException() {
+    assertNoFormatException(get_HasReadOnly_2());
+  }
+
+  @Test
   public void testHasReadOnlyGoodWillHappy() {
     assertGoodWillHappy(get_HasReadOnly_2());
   }
@@ -101,7 +106,22 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("Path:Metrics_HasReadOnly_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
-    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n-------------------------------------!! FORMAT-EXCEPTION !!java.lang.NullPointerException: Cannot invoke \"org.adamalang.translator.tree.types.TyType.format(org.adamalang.translator.parser.Formatter)\" because \"this.metricType\" is null");
+    gold.append("\n	at org.adamalang.translator.tree.definitions.DefineMetric.format(DefineMetric.java:65)");
+    gold.append("\n	at org.adamalang.translator.parser.FormatDocumentHandler.add(FormatDocumentHandler.java:173)");
+    gold.append("\n	at org.adamalang.translator.parser.Parser.lambda$define$47(Parser.java:768)");
+    gold.append("\n	at org.adamalang.translator.parser.Parser.lambda$document$94(Parser.java:1277)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseEmission.go(PhaseEmission.java:42)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseValidate.go(PhaseValidate.java:55)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.forge(TestForge.java:39)");
+    gold.append("\n	at org.adamalang.support.testgen.TestClass.addTest(TestClass.java:94)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:110)");
+    gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:45)");
+    gold.append("\n	at org.adamalang.cli.implementations.ContribHandlerImpl.testsAdama(ContribHandlerImpl.java:167)");
+    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:537)");
+    gold.append("\n	at org.adamalang.cli.Main.main(Main.java:33)");
+    gold.append("\n");
+    gold.append("\n---------------------------------------ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
@@ -749,6 +769,11 @@ public class GeneratedMetricsTests extends GeneratedBase {
   }
 
   @Test
+  public void testRxNoFormatException() {
+    assertNoFormatException(get_Rx_4());
+  }
+
+  @Test
   public void testRxGoodWillHappy() {
     assertGoodWillHappy(get_Rx_4());
   }
@@ -770,7 +795,22 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("Path:Metrics_Rx_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
-    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n-------------------------------------!! FORMAT-EXCEPTION !!java.lang.NullPointerException: Cannot invoke \"org.adamalang.translator.tree.types.TyType.format(org.adamalang.translator.parser.Formatter)\" because \"this.metricType\" is null");
+    gold.append("\n	at org.adamalang.translator.tree.definitions.DefineMetric.format(DefineMetric.java:65)");
+    gold.append("\n	at org.adamalang.translator.parser.FormatDocumentHandler.add(FormatDocumentHandler.java:173)");
+    gold.append("\n	at org.adamalang.translator.parser.Parser.lambda$define$47(Parser.java:768)");
+    gold.append("\n	at org.adamalang.translator.parser.Parser.lambda$document$94(Parser.java:1277)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseEmission.go(PhaseEmission.java:42)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseValidate.go(PhaseValidate.java:55)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.forge(TestForge.java:39)");
+    gold.append("\n	at org.adamalang.support.testgen.TestClass.addTest(TestClass.java:94)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:110)");
+    gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:45)");
+    gold.append("\n	at org.adamalang.cli.implementations.ContribHandlerImpl.testsAdama(ContribHandlerImpl.java:167)");
+    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:537)");
+    gold.append("\n	at org.adamalang.cli.Main.main(Main.java:33)");
+    gold.append("\n");
+    gold.append("\n---------------------------------------ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
@@ -1387,6 +1427,11 @@ public class GeneratedMetricsTests extends GeneratedBase {
   }
 
   @Test
+  public void testTypesNoFormatException() {
+    assertNoFormatException(get_Types_5());
+  }
+
+  @Test
   public void testTypesGoodWillHappy() {
     assertGoodWillHappy(get_Types_5());
   }
@@ -1408,7 +1453,22 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("Path:Metrics_Types_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
-    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n-------------------------------------!! FORMAT-EXCEPTION !!java.lang.NullPointerException: Cannot invoke \"org.adamalang.translator.tree.types.TyType.format(org.adamalang.translator.parser.Formatter)\" because \"this.metricType\" is null");
+    gold.append("\n	at org.adamalang.translator.tree.definitions.DefineMetric.format(DefineMetric.java:65)");
+    gold.append("\n	at org.adamalang.translator.parser.FormatDocumentHandler.add(FormatDocumentHandler.java:173)");
+    gold.append("\n	at org.adamalang.translator.parser.Parser.lambda$define$47(Parser.java:768)");
+    gold.append("\n	at org.adamalang.translator.parser.Parser.lambda$document$94(Parser.java:1277)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseEmission.go(PhaseEmission.java:42)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseValidate.go(PhaseValidate.java:55)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.forge(TestForge.java:39)");
+    gold.append("\n	at org.adamalang.support.testgen.TestClass.addTest(TestClass.java:94)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:110)");
+    gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:45)");
+    gold.append("\n	at org.adamalang.cli.implementations.ContribHandlerImpl.testsAdama(ContribHandlerImpl.java:167)");
+    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:537)");
+    gold.append("\n	at org.adamalang.cli.Main.main(Main.java:33)");
+    gold.append("\n");
+    gold.append("\n---------------------------------------ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");

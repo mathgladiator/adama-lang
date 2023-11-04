@@ -40,6 +40,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testBasicNoFormatException() {
+    assertNoFormatException(get_Basic_1());
+  }
+
+  @Test
   public void testBasicGoodWillHappy() {
     assertGoodWillHappy(get_Basic_1());
   }
@@ -61,6 +66,52 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_Basic_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum Z { A, B, C }");
+    gold.append("\nfunction x() -> map<int, int> {");
+    gold.append("\n  map<int, int> m;");
+    gold.append("\n  m[1] = 2;");
+    gold.append("\n  m[2] = 3;");
+    gold.append("\n  return m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction goo(readonly map<int, int> m) -> int {");
+    gold.append("\n  return m.size();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula zoop = x();");
+    gold.append("\n");
+    gold.append("\nint z = 100;");
+    gold.append("\nint count = 0;");
+    gold.append("\nint count_after_delete;");
+    gold.append("\npublic int rv;");
+    gold.append("\n@construct {");
+    gold.append("\n  map<int, int> foo;");
+    gold.append("\n  foo[123] = 42;");
+    gold.append("\n  z = 0;");
+    gold.append("\n  if (foo[123] as x) {");
+    gold.append("\n    z = x;");
+    gold.append("\n  }");
+    gold.append("\n  map<int, int> g1 = foo;");
+    gold.append("\n  map<int, int> g2;");
+    gold.append("\n  g2 = foo;");
+    gold.append("\n  transition #nice;");
+    gold.append("\n  foo[42] = 13;");
+    gold.append("\n  g2[500] = 100;");
+    gold.append("\n  foo.insert(g2).insert(g1);");
+    gold.append("\n  count = foo.size();");
+    gold.append("\n  foo[123].delete();");
+    gold.append("\n  count_after_delete = foo.size();");
+    gold.append("\n  if (g2.remove(500) as vvv) {");
+    gold.append("\n    rv = vvv;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#nice {");
+    gold.append("\n  map<Z, int> g;");
+    gold.append("\n  g[Z::A] = 123;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -843,6 +894,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testClearNoFormatException() {
+    assertNoFormatException(get_Clear_2());
+  }
+
+  @Test
   public void testClearGoodWillHappy() {
     assertGoodWillHappy(get_Clear_2());
   }
@@ -864,6 +920,42 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_Clear_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  maybe<pair<int, int>> p;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction foo() -> M {");
+    gold.append("\n  map<int, int> foo;");
+    gold.append("\n  return {p: foo.min()};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula x = foo();");
+    gold.append("\npublic int z_s;");
+    gold.append("\n");
+    gold.append("\npublic map<int, R> rrrrs;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  int s = 0;");
+    gold.append("\n  map<int, int> m;");
+    gold.append("\n  m[1] = 23;");
+    gold.append("\n  m.clear();");
+    gold.append("\n  foreach (item in m) {");
+    gold.append("\n    s += item.key + item.value;");
+    gold.append("\n  }");
+    gold.append("\n  z_s = s;");
+    gold.append("\n  rrrrs[42] <- {};");
+    gold.append("\n  rrrrs.clear();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#makeit {");
+    gold.append("\n  pair<int, int> p1 = @pair 2 -> 3;");
+    gold.append("\n  pair<int, int> p2;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1868,6 +1960,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testContainsNoFormatException() {
+    assertNoFormatException(get_Contains_3());
+  }
+
+  @Test
   public void testContainsGoodWillHappy() {
     assertGoodWillHappy(get_Contains_3());
   }
@@ -1889,6 +1986,49 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_Contains_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic map<int, int> simple;");
+    gold.append("\n");
+    gold.append("\npublic bool b0;");
+    gold.append("\npublic bool b1;");
+    gold.append("\npublic bool b2;");
+    gold.append("\npublic bool b3;");
+    gold.append("\n");
+    gold.append("\npublic bool x0;");
+    gold.append("\npublic bool x1;");
+    gold.append("\npublic bool x2;");
+    gold.append("\npublic bool x3;");
+    gold.append("\n");
+    gold.append("\npublic bool a0;");
+    gold.append("\npublic bool a1;");
+    gold.append("\n");
+    gold.append("\npublic bool y0;");
+    gold.append("\npublic bool y1;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  // write two values");
+    gold.append("\n  simple[42] = 24;");
+    gold.append("\n");
+    gold.append("\n  b0 = simple.has(42);");
+    gold.append("\n  b1 = 42 inside simple;");
+    gold.append("\n  b2 = simple.has(1000);");
+    gold.append("\n  b3 = 500 inside simple;");
+    gold.append("\n");
+    gold.append("\n  map<string, string> smap;");
+    gold.append("\n  smap[\"hi\"] = \"world\";");
+    gold.append("\n");
+    gold.append("\n  x0 = smap.has(\"hi\");");
+    gold.append("\n  x1 = \"hi\" inside smap;");
+    gold.append("\n  x2 = smap.has(\"nope\");");
+    gold.append("\n  x3 = \"nope\" inside smap;");
+    gold.append("\n");
+    gold.append("\n  a0 = 42 outside simple;");
+    gold.append("\n  a1 = 500 outside simple;");
+    gold.append("\n");
+    gold.append("\n  y0 = \"hi\" outside smap;");
+    gold.append("\n  y1 = \"nope\" outside smap;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2913,6 +3053,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPairTypeNoFormatException() {
+    assertNoFormatException(get_PairType_8());
+  }
+
+  @Test
   public void testPairTypeGoodWillHappy() {
     assertGoodWillHappy(get_PairType_8());
   }
@@ -2934,6 +3079,28 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_PairType_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction foox(pair<int, int> p) -> int {");
+    gold.append("\n  return p.key * p.value;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int result;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  map<int, int> foo;");
+    gold.append("\n  foo[123] = 42;");
+    gold.append("\n  if (foo.min() as m) {");
+    gold.append("\n    result = foox(m);");
+    gold.append("\n  }");
+    gold.append("\n  if (foo.max() as m) {");
+    gold.append("\n    result += m.key;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  pair<int, int> pp;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3682,6 +3849,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPairUsageNoFormatException() {
+    assertNoFormatException(get_PairUsage_9());
+  }
+
+  @Test
   public void testPairUsageGoodWillHappy() {
     assertGoodWillHappy(get_PairUsage_9());
   }
@@ -3703,6 +3875,34 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_PairUsage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  maybe<pair<int, int>> p;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction foo() -> M {");
+    gold.append("\n  map<int, int> foo;");
+    gold.append("\n  return {p: foo.min()};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula x = foo();");
+    gold.append("\npublic int z_s;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  int s = 0;");
+    gold.append("\n  map<int, int> m;");
+    gold.append("\n  m[1] = 23;");
+    gold.append("\n  foreach (item in m) {");
+    gold.append("\n    s += item.key + item.value;");
+    gold.append("\n  }");
+    gold.append("\n  z_s = s;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#makeit {");
+    gold.append("\n  pair<int, int> p1 = @pair 2 -> 3;");
+    gold.append("\n  pair<int, int> p2;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4491,6 +4691,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPrincipalDomainNoFormatException() {
+    assertNoFormatException(get_PrincipalDomain_10());
+  }
+
+  @Test
   public void testPrincipalDomainGoodWillHappy() {
     assertGoodWillHappy(get_PrincipalDomain_10());
   }
@@ -4512,6 +4717,23 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_PrincipalDomain_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic map<principal, R> themap;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  themap[@no_one] <- {x:1,y:2};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#sm {");
+    gold.append("\n  map<principal, string> m2s;");
+    gold.append("\n  m2s[@no_one] = \"42\";");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5501,6 +5723,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReactiveNoFormatException() {
+    assertNoFormatException(get_Reactive_12());
+  }
+
+  @Test
   public void testReactiveGoodWillHappy() {
     assertGoodWillHappy(get_Reactive_12());
   }
@@ -5522,6 +5749,63 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_Reactive_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic map<int, int> my_map1;");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  public int u;");
+    gold.append("\n  public int v;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic map<string, X> my_map2;");
+    gold.append("\nint v;");
+    gold.append("\nint w;");
+    gold.append("\nint sz;");
+    gold.append("\n");
+    gold.append("\nenum E { A, B };");
+    gold.append("\n");
+    gold.append("\npublic map<long, E> my_map3;");
+    gold.append("\n");
+    gold.append("\npublic map<long, map<int, int>> crazy;");
+    gold.append("\n");
+    gold.append("\npublic map<int, int> simple;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  // write two values");
+    gold.append("\n  my_map1[42] = 24;");
+    gold.append("\n  my_map1[500] = 100500;");
+    gold.append("\n  crazy[100][100] = 42;");
+    gold.append("\n");
+    gold.append("\n  // test a non-exist values");
+    gold.append("\n  if (my_map1[4] as x) {");
+    gold.append("\n    my_map1[5000] = 123;");
+    gold.append("\n  } else {");
+    gold.append("\n    my_map1[1000] = 9999;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  // overwrite an existing value (super neat)");
+    gold.append("\n  if (my_map1[500] as x) {");
+    gold.append("\n    v = x;");
+    gold.append("\n    x = 424242;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  my_map2[\"hi\"] <- {u:42, v:50};");
+    gold.append("\n  if (my_map2[\"hi\"] as uv) {");
+    gold.append("\n    w = uv.u + uv.v;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  simple[1] = 23;");
+    gold.append("\n  map<int, int> ins;");
+    gold.append("\n  ins[1] = 2;");
+    gold.append("\n  ins[2] = 3;");
+    gold.append("\n  simple <- ins;");
+    gold.append("\n  sz = my_map1.size();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6733,6 +7017,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReduceHappyNoFormatException() {
+    assertNoFormatException(get_ReduceHappy_13());
+  }
+
+  @Test
   public void testReduceHappyGoodWillHappy() {
     assertGoodWillHappy(get_ReduceHappy_13());
   }
@@ -6754,6 +7043,51 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_ReduceHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  int v;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\nfunction foo(list<R> z) -> int {");
+    gold.append("\n  int sv = 0;");
+    gold.append("\n  foreach(e in z) {");
+    gold.append("\n    sv += e.v;");
+    gold.append("\n  }");
+    gold.append("\n  return sv;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint x1 = 0;");
+    gold.append("\nint x2 = 0;");
+    gold.append("\nint x3 = 0;");
+    gold.append("\nint x4 = 0;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1, v:1};");
+    gold.append("\n  t <- {x:2, v:5};");
+    gold.append("\n  t <- {x:3, v:10};");
+    gold.append("\n  t <- {x:2, v:10};");
+    gold.append("\n  t <- {x:3, v:100};");
+    gold.append("\n  t <- {x:3, v:1000};");
+    gold.append("\n  let mp = (iterate t) reduce on x via foo;");
+    gold.append("\n  if (mp[1] as v) {");
+    gold.append("\n    x1 = v;");
+    gold.append("\n  }");
+    gold.append("\n  if (mp[2] as v) {");
+    gold.append("\n    x2 = v;");
+    gold.append("\n  }");
+    gold.append("\n  if (mp[3] as v) {");
+    gold.append("\n    x3 = v;");
+    gold.append("\n  }");
+    gold.append("\n  if ((iterate t reduce on x)[3] as lv) {");
+    gold.append("\n    if (lv.v.sum() as lvvs) {");
+    gold.append("\n      x4 = lvvs;");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7831,6 +8165,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReduceLambdaNoFormatException() {
+    assertNoFormatException(get_ReduceLambda_14());
+  }
+
+  @Test
   public void testReduceLambdaGoodWillHappy() {
     assertGoodWillHappy(get_ReduceLambda_14());
   }
@@ -7852,6 +8191,26 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_ReduceLambda_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  int v;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\nmap<int, int> result;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1, v:1};");
+    gold.append("\n  t <- {x:2, v:5};");
+    gold.append("\n  t <- {x:3, v:10};");
+    gold.append("\n  t <- {x:2, v:10};");
+    gold.append("\n  t <- {x:3, v:100};");
+    gold.append("\n  t <- {x:3, v:1000};");
+    gold.append("\n  result <- (iterate t) reduce x via @lambda z: z.size();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -8893,6 +9252,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReduceSampleNoFormatException() {
+    assertNoFormatException(get_ReduceSample_16());
+  }
+
+  @Test
   public void testReduceSampleGoodWillHappy() {
     assertGoodWillHappy(get_ReduceSample_16());
   }
@@ -8914,6 +9278,14 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("Path:Maps_ReduceSample_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum Breed { Lamancha:1, Boer:2, Numbian:3, Pygmy:4, Alpine:5 }");
+    gold.append("\nrecord Goat {");
+    gold.append("\n  Breed breed;");
+    gold.append("\n}");
+    gold.append("\ntable<Goat> goats;");
+    gold.append("\npublic formula grouped_by_breed = iterate goats reduce breed via (@lambda x: x);");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

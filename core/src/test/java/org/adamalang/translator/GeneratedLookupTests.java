@@ -120,6 +120,11 @@ public class GeneratedLookupTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyMaybeNoFormatException() {
+    assertNoFormatException(get_HappyMaybe_3());
+  }
+
+  @Test
   public void testHappyMaybeGoodWillHappy() {
     assertGoodWillHappy(get_HappyMaybe_3());
   }
@@ -141,6 +146,28 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("Path:Lookup_HappyMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  M[] m = [{x:1}];");
+    gold.append("\n  int k = 4;");
+    gold.append("\n  if (m[k % 2] as mm) {");
+    gold.append("\n    mm.x = 2 + k;");
+    gold.append("\n  }");
+    gold.append("\n  if ((iterate t)[k % 2] as r) {");
+    gold.append("\n    r.y = 1 + k;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1047,6 +1074,11 @@ public class GeneratedLookupTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_4());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_4());
   }
@@ -1068,6 +1100,27 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("Path:Lookup_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  M[] m = [{x:1}];");
+    gold.append("\n  if (m[0] as mm) {");
+    gold.append("\n    mm.x = 2;");
+    gold.append("\n  }");
+    gold.append("\n  if ((iterate t)[0] as r) {");
+    gold.append("\n    r.y = 1;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

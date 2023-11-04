@@ -40,6 +40,11 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   }
 
   @Test
+  public void testApplyArgsGuessNoFormatException() {
+    assertNoFormatException(get_ApplyArgsGuess_1());
+  }
+
+  @Test
   public void testApplyArgsGuessGoodWillHappy() {
     assertGoodWillHappy(get_ApplyArgsGuess_1());
   }
@@ -61,6 +66,28 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("Path:Anonymous_ApplyArgsGuess_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage Y {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction a(X x) -> int {");
+    gold.append("\n  return x.x + x.y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction b(Y x) -> int {");
+    gold.append("\n  return x.x + x.y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula u = a({x:1,y:2});");
+    gold.append("\npublic formula v = b({x:1,y:2});");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -878,6 +905,11 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   }
 
   @Test
+  public void testBubbleDataFakeNoFormatException() {
+    assertNoFormatException(get_BubbleDataFake_2());
+  }
+
+  @Test
   public void testBubbleDataFakeGoodWillHappy() {
     assertGoodWillHappy(get_BubbleDataFake_2());
   }
@@ -899,6 +931,18 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("Path:Anonymous_BubbleDataFake_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nbubble this_day_calendar = [");
+    gold.append("\n    {");
+    gold.append("\n      room_name: \"Purple Palace\",");
+    gold.append("\n      room_color: \"#f0f\",");
+    gold.append("\n      has_events: true,");
+    gold.append("\n      events: [");
+    gold.append("\n        {id: 1000, name: \"Some Name\", start: \"9:00am\", end: \"10:00am\", class_type: \"Some Thing\",  instructor_name: \"Person\", class_type: \"Boom\", row_start: 540, duration_span: 60,  overlap_count: 1 }");
+    gold.append("\n      ]");
+    gold.append("\n    }");
+    gold.append("\n  ];");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1860,6 +1904,11 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_3());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_3());
   }
@@ -1881,6 +1930,29 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("Path:Anonymous_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Thing {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int y;");
+    gold.append("\n  public double z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Thing> things;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  things <- {x:1, y:2};");
+    gold.append("\n  things <- [{x:2, y:3}];");
+    gold.append("\n  things <- [{z:4}];");
+    gold.append("\n  things <- [{x:3, y:4}, {x:4, y:5}];");
+    gold.append("\n  things <- [{x:3, y:4, z:1}, {x:4, y:5, z:3.14}];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3085,6 +3157,11 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   }
 
   @Test
+  public void testMegaTypeConstructionNoFormatException() {
+    assertNoFormatException(get_MegaTypeConstruction_4());
+  }
+
+  @Test
   public void testMegaTypeConstructionGoodWillHappy() {
     assertGoodWillHappy(get_MegaTypeConstruction_4());
   }
@@ -3106,6 +3183,18 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("Path:Anonymous_MegaTypeConstruction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  let a = [{},{x:1}];");
+    gold.append("\n  let b = [{x:1},{x:@maybe(1)}];");
+    gold.append("\n  let c = [{x:{}},{x:{x:1}},{y:2},{x:{y:3}}];");
+    gold.append("\n  let d = [{x:@maybe(1)}, {x:2}, {y:[1,2,3]}, {}];");
+    gold.append("\n  let e = [{x:@maybe({z1:1})},{x:{z1:1}}];");
+    gold.append("\n  let f = [{x:[{z1:1}]},{x:[{z2:1}]}];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4601,6 +4690,11 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   }
 
   @Test
+  public void testTypeConstructionNoFormatException() {
+    assertNoFormatException(get_TypeConstruction_5());
+  }
+
+  @Test
   public void testTypeConstructionGoodWillHappy() {
     assertGoodWillHappy(get_TypeConstruction_5());
   }
@@ -4622,6 +4716,17 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("Path:Anonymous_TypeConstruction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E { X };");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  let x = [{x:1}, ({y:2})];");
+    gold.append("\n  let y = [{x:1}, (false ? {y:2} : {x:3})];");
+    gold.append("\n  let z = {x:3, y:4};");
+    gold.append("\n  let u = [{u:123L, b:false, v:42, d:42.0, e:E::X, s:\"Hello World\"},{}];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

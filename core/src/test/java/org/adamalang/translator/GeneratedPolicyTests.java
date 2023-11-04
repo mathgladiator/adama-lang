@@ -120,6 +120,11 @@ public class GeneratedPolicyTests extends GeneratedBase {
   }
 
   @Test
+  public void testContextVariablesNoFormatException() {
+    assertNoFormatException(get_ContextVariables_3());
+  }
+
+  @Test
   public void testContextVariablesGoodWillHappy() {
     assertGoodWillHappy(get_ContextVariables_3());
   }
@@ -141,6 +146,18 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("Path:Policy_ContextVariables_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  create {");
+    gold.append("\n    return @context.ip == \"127.0.0.1\" && @context.origin == \"internal://\" || @context.who == @who;");
+    gold.append("\n  }");
+    gold.append("\n  invent {");
+    gold.append("\n    return @who == @context.who;");
+    gold.append("\n  }");
+    gold.append("\n  maximum_history = 1 + 1;");
+    gold.append("\n  delete_on_close = false;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -787,6 +804,11 @@ public class GeneratedPolicyTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_5());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_5());
   }
@@ -808,6 +830,12 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("Path:Policy_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  maximum_history = 1 + 1;");
+    gold.append("\n  delete_on_close = true;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

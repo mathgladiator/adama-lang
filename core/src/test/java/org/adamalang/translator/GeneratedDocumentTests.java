@@ -320,6 +320,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   }
 
   @Test
+  public void testGlobalPolicyNoFormatException() {
+    assertNoFormatException(get_GlobalPolicy_8());
+  }
+
+  @Test
   public void testGlobalPolicyGoodWillHappy() {
     assertGoodWillHappy(get_GlobalPolicy_8());
   }
@@ -341,6 +346,29 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("Path:Document_GlobalPolicy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npolicy foo {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  use_policy<foo> int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> r;");
+    gold.append("\n");
+    gold.append("\nuse_policy<foo> int z2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  r <- {x:1};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

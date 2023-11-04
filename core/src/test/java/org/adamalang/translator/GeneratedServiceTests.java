@@ -160,6 +160,11 @@ public class GeneratedServiceTests extends GeneratedBase {
   }
 
   @Test
+  public void testInvokeDynamicNoFormatException() {
+    assertNoFormatException(get_InvokeDynamic_4());
+  }
+
+  @Test
   public void testInvokeDynamicGoodWillHappy() {
     assertGoodWillHappy(get_InvokeDynamic_4());
   }
@@ -181,6 +186,15 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("Path:Service_InvokeDynamic_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nservice sms {");
+    gold.append("\n  internal = \"twilio.com\";");
+    gold.append("\n  method<dynamic, dynamic> send;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic string m = \"Hello World\";");
+    gold.append("\npublic formula x = sms.send(@no_one, {phone:\"123\", message:m}.to_dynamic());");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -926,6 +940,11 @@ public class GeneratedServiceTests extends GeneratedBase {
   }
 
   @Test
+  public void testInvokeNoFormatException() {
+    assertNoFormatException(get_Invoke_5());
+  }
+
+  @Test
   public void testInvokeGoodWillHappy() {
     assertGoodWillHappy(get_Invoke_5());
   }
@@ -947,6 +966,24 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("Path:Service_Invoke_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage SendRequest {");
+    gold.append("\n  string phone;");
+    gold.append("\n  string message;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage SendResponse {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nservice sms {");
+    gold.append("\n  internal = \"twilio.com\";");
+    gold.append("\n");
+    gold.append("\n  method<SendRequest, SendResponse> send;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic string m = \"Hello World\";");
+    gold.append("\npublic formula x = sms.send(@no_one, {phone:\"123\", message:m});");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1749,6 +1786,11 @@ public class GeneratedServiceTests extends GeneratedBase {
   }
 
   @Test
+  public void testLinkSampleFoundNoFormatException() {
+    assertNoFormatException(get_LinkSampleFound_6());
+  }
+
+  @Test
   public void testLinkSampleFoundGoodWillHappy() {
     assertGoodWillHappy(get_LinkSampleFound_6());
   }
@@ -1770,6 +1812,11 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("Path:Service_LinkSampleFound_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@link sample{");
+    gold.append("\n  demo=\"here we are\";");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2564,6 +2611,11 @@ public class GeneratedServiceTests extends GeneratedBase {
   }
 
   @Test
+  public void testPlayNoFormatException() {
+    assertNoFormatException(get_Play_10());
+  }
+
+  @Test
   public void testPlayGoodWillHappy() {
     assertGoodWillHappy(get_Play_10());
   }
@@ -2585,6 +2637,21 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("Path:Service_Play_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage SendRequest {");
+    gold.append("\n  string phone;");
+    gold.append("\n  string message;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage SendResponse {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nservice sms {");
+    gold.append("\n  internal = \"twilio.com\";");
+    gold.append("\n");
+    gold.append("\n  method<SendRequest, SendResponse> send;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3329,6 +3396,11 @@ public class GeneratedServiceTests extends GeneratedBase {
   }
 
   @Test
+  public void testResultFunctionsNoFormatException() {
+    assertNoFormatException(get_ResultFunctions_11());
+  }
+
+  @Test
   public void testResultFunctionsGoodWillHappy() {
     assertGoodWillHappy(get_ResultFunctions_11());
   }
@@ -3350,6 +3422,30 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("Path:Service_ResultFunctions_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage SendRequest {");
+    gold.append("\n  string phone;");
+    gold.append("\n  string message;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage SendResponse {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nservice sms {");
+    gold.append("\n  internal = \"twilio.com\";");
+    gold.append("\n");
+    gold.append("\n  method<SendRequest, SendResponse> send;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula foo = sms.send(@no_one, {phone:\"913\",message:\"M\"});");
+    gold.append("\npublic formula f_has = foo.has();");
+    gold.append("\npublic formula f_code = foo.code();");
+    gold.append("\npublic formula f_finished = foo.finished();");
+    gold.append("\npublic formula f_failed = foo.failed();");
+    gold.append("\npublic formula f_message = foo.message();");
+    gold.append("\npublic formula f_maybe = foo.as_maybe();");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

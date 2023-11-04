@@ -200,6 +200,11 @@ public class GeneratedLinqUniqueTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_5());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_5());
   }
@@ -221,6 +226,28 @@ public class GeneratedLinqUniqueTests extends GeneratedBase {
     gold.append("Path:LinqUnique_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int id;");
+    gold.append("\n  int z;");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {z:0};");
+    gold.append("\n  t <- {z:1};");
+    gold.append("\n  t <- {z:2};");
+    gold.append("\n  t <- {z:5};");
+    gold.append("\n  t <- {z:0};");
+    gold.append("\n  t <- {z:0};");
+    gold.append("\n  t <- {z:5};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula z_first = iterate t unique first z;");
+    gold.append("\npublic formula z_last = iterate t unique last z;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

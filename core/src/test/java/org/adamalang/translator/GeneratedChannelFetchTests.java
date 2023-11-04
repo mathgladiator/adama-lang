@@ -40,6 +40,11 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
   }
 
   @Test
+  public void testTimeoutArrayHappyNoFormatException() {
+    assertNoFormatException(get_TimeoutArrayHappy_1());
+  }
+
+  @Test
   public void testTimeoutArrayHappyGoodWillHappy() {
     assertGoodWillHappy(get_TimeoutArrayHappy_1());
   }
@@ -61,6 +66,34 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("Path:ChannelFetch_TimeoutArrayHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel<X[]> chan;");
+    gold.append("\n");
+    gold.append("\nprincipal person;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  person = @who;");
+    gold.append("\n  transition #ask;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int z;");
+    gold.append("\n");
+    gold.append("\n#ask {");
+    gold.append("\n  let r = chan.fetchTimed(person, 0.25).await();");
+    gold.append("\n  if (r as pp) {");
+    gold.append("\n    if (pp[0] as v) {");
+    gold.append("\n      z  = v.x + v.y;");
+    gold.append("\n    }");
+    gold.append("\n  } else {");
+    gold.append("\n    z = -1;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -836,6 +869,11 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
   }
 
   @Test
+  public void testTimeoutHappyNoFormatException() {
+    assertNoFormatException(get_TimeoutHappy_2());
+  }
+
+  @Test
   public void testTimeoutHappyGoodWillHappy() {
     assertGoodWillHappy(get_TimeoutHappy_2());
   }
@@ -857,6 +895,43 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("Path:ChannelFetch_TimeoutHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel<X> chan;");
+    gold.append("\n");
+    gold.append("\nprincipal person;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  person = @who;");
+    gold.append("\n  transition #ask;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int z;");
+    gold.append("\n");
+    gold.append("\n#ask {");
+    gold.append("\n  let r = chan.fetchTimed(person, 0.25).await();");
+    gold.append("\n  if (r as v) {");
+    gold.append("\n    z  = v.x + v.y;");
+    gold.append("\n  } else {");
+    gold.append("\n    z = -1;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest drive_it {");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  @step;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  @step;");
+    gold.append("\n  @pump {x:4, y:8} into chan;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  assert z == 12;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1645,6 +1720,11 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
   }
 
   @Test
+  public void testTimeoutTimesOutNoFormatException() {
+    assertNoFormatException(get_TimeoutTimesOut_3());
+  }
+
+  @Test
   public void testTimeoutTimesOutGoodWillHappy() {
     assertGoodWillHappy(get_TimeoutTimesOut_3());
   }
@@ -1666,6 +1746,45 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("Path:ChannelFetch_TimeoutTimesOut_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel<X> chan;");
+    gold.append("\n");
+    gold.append("\nprincipal person;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  person = @who;");
+    gold.append("\n  transition #ask;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int z;");
+    gold.append("\n");
+    gold.append("\n#ask {");
+    gold.append("\n  let r = chan.fetchTimed(person, 0.25).await();");
+    gold.append("\n  if (r as v) {");
+    gold.append("\n    z  = v.x + v.y;");
+    gold.append("\n  } else {");
+    gold.append("\n    z = -1;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest drive_it {");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  @step;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  @forward 0.150;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  @forward 0.150;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  assert z == -1;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

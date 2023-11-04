@@ -40,6 +40,11 @@ public class GeneratedOperationalTests extends GeneratedBase {
   }
 
   @Test
+  public void testGoodwillNoFormatException() {
+    assertNoFormatException(get_Goodwill_1());
+  }
+
+  @Test
   public void testGoodwillGoodWillHappy() {
     assertGoodWillHappy(get_Goodwill_1());
   }
@@ -61,6 +66,20 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("Path:Operational_Goodwill_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup in 0.01;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  z = 0;");
+    gold.append("\n  while(true) {");
+    gold.append("\n    z++;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

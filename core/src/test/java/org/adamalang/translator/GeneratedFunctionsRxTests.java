@@ -40,6 +40,11 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
   }
 
   @Test
+  public void testChainMethodNoFormatException() {
+    assertNoFormatException(get_ChainMethod_1());
+  }
+
+  @Test
   public void testChainMethodGoodWillHappy() {
     assertGoodWillHappy(get_ChainMethod_1());
   }
@@ -61,6 +66,34 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("Path:FunctionsRx_ChainMethod_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint vx;");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int z;");
+    gold.append("\n  method fooz() -> int readonly {");
+    gold.append("\n    return vx + z;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR x;");
+    gold.append("\nR y;");
+    gold.append("\n");
+    gold.append("\nprocedure foo_y() -> int readonly {");
+    gold.append("\n  return y.fooz();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure foo() -> int readonly {");
+    gold.append("\n  return x.z + foo_y();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula xy_HERE = foo();");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x.z = 10203040;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -923,6 +956,11 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
   }
 
   @Test
+  public void testChainNoFormatException() {
+    assertNoFormatException(get_Chain_2());
+  }
+
+  @Test
   public void testChainGoodWillHappy() {
     assertGoodWillHappy(get_Chain_2());
   }
@@ -944,6 +982,29 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("Path:FunctionsRx_Chain_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR x;");
+    gold.append("\nR y;");
+    gold.append("\n");
+    gold.append("\nprocedure foo_y() -> int readonly {");
+    gold.append("\n  return y.z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure foo() -> int readonly {");
+    gold.append("\n  return x.z + foo_y();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula xy_HERE = foo();");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x.z = 10203040;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1787,6 +1848,11 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
   }
 
   @Test
+  public void testDecoupleNoFormatException() {
+    assertNoFormatException(get_Decouple_3());
+  }
+
+  @Test
   public void testDecoupleGoodWillHappy() {
     assertGoodWillHappy(get_Decouple_3());
   }
@@ -1808,6 +1874,24 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("Path:FunctionsRx_Decouple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR x;");
+    gold.append("\n");
+    gold.append("\nprocedure foo() -> int readonly {");
+    gold.append("\n  return x.z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula xy = foo();");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x.z = 10203040;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2631,6 +2715,11 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
   }
 
   @Test
+  public void testTimeNoFormatException() {
+    assertNoFormatException(get_Time_4());
+  }
+
+  @Test
   public void testTimeGoodWillHappy() {
     assertGoodWillHappy(get_Time_4());
   }
@@ -2652,6 +2741,12 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("Path:FunctionsRx_Time_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula now = Time.now();");
+    gold.append("\npublic formula datetime_val = Time.datetime();");
+    gold.append("\npublic formula today = Time.today();");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

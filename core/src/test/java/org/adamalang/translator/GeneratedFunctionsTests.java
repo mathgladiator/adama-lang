@@ -40,6 +40,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAcceptRecordNoFormatException() {
+    assertNoFormatException(get_AcceptRecord_1());
+  }
+
+  @Test
   public void testAcceptRecordGoodWillHappy() {
     assertGoodWillHappy(get_AcceptRecord_1());
   }
@@ -61,6 +66,22 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_AcceptRecord_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR x;");
+    gold.append("\n");
+    gold.append("\nprocedure foo(R r) {");
+    gold.append("\n  r.z = 123;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  foo(x);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -867,6 +888,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAcceptTablesNoFormatException() {
+    assertNoFormatException(get_AcceptTables_2());
+  }
+
+  @Test
   public void testAcceptTablesGoodWillHappy() {
     assertGoodWillHappy(get_AcceptTables_2());
   }
@@ -888,6 +914,39 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_AcceptTables_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> tblR;");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int foo_ran;");
+    gold.append("\nprocedure foo(table<R> which) {");
+    gold.append("\n  (iterate which).z = 123;");
+    gold.append("\n  foo_ran = 1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure goo(table<M> which) -> int {");
+    gold.append("\n  return (iterate which).m.sum().getOrDefaultTo(10000);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int sum;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  foo(tblR);");
+    gold.append("\n  table<M> t;");
+    gold.append("\n  t <- {m:1};");
+    gold.append("\n  t <- {m:2};");
+    gold.append("\n  t <- {m:3};");
+    gold.append("\n  sum = goo(t);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1937,6 +1996,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAutoConvertAnonymousOnReturnNoFormatException() {
+    assertNoFormatException(get_AutoConvertAnonymousOnReturn_5());
+  }
+
+  @Test
   public void testAutoConvertAnonymousOnReturnGoodWillHappy() {
     assertGoodWillHappy(get_AutoConvertAnonymousOnReturn_5());
   }
@@ -1958,6 +2022,30 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_AutoConvertAnonymousOnReturn_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction foo1() -> M {");
+    gold.append("\n  // this works");
+    gold.append("\n  return {x:1};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\nfunction foo2(bool b) -> M {");
+    gold.append("\n  // this works");
+    gold.append("\n  return b ? {x:1} : {y:2};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n// this does not work, should we make it work? it makes sense");
+    gold.append("\n// function foo2() -> M {");
+    gold.append("\n//  let v = {x:1};");
+    gold.append("\n//  return v;");
+    gold.append("\n// }");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2688,6 +2776,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_7());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_7());
   }
@@ -2709,6 +2802,39 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nprocedure square_proc(int x) -> int {");
+    gold.append("\n  return x * x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction square_func(int x) -> int {");
+    gold.append("\n  return x * x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction mult_func(int x, int y) -> int {");
+    gold.append("\n  return x * y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction pos_cube_func(int x) -> int {");
+    gold.append("\n  if (x > 0) {");
+    gold.append("\n    return x * x * x;");
+    gold.append("\n  } else {");
+    gold.append("\n    return - x * x * x;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint z;");
+    gold.append("\nint cc;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  z = square_proc(42);");
+    gold.append("\n  int x = square_func(z);");
+    gold.append("\n  int cube = pos_cube_func(x);");
+    gold.append("\n  cc = mult_func(x, cube);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3440,6 +3566,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMethodsOnListsNoFormatException() {
+    assertNoFormatException(get_MethodsOnLists_10());
+  }
+
+  @Test
   public void testMethodsOnListsGoodWillHappy() {
     assertGoodWillHappy(get_MethodsOnLists_10());
   }
@@ -3461,6 +3592,52 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_MethodsOnLists_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int zzzz;");
+    gold.append("\n");
+    gold.append("\n  method foo(int z) {");
+    gold.append("\n    x *= 10;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  method goo() -> int {");
+    gold.append("\n    return x;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  method square_plus(int z) -> int {");
+    gold.append("\n    return x*x + z;");
+    gold.append("\n  }");
+    gold.append("\n  method square_plus_plus(int z, int u, int w) -> int {");
+    gold.append("\n    return x*x + z * (u + w);");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\npublic int value;");
+    gold.append("\npublic int value5;");
+    gold.append("\npublic int v2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  t <- {x:2};");
+    gold.append("\n  t <- {x:3};");
+    gold.append("\n  int y = 42;");
+    gold.append("\n  int seven = 7;");
+    gold.append("\n  int five = 5;");
+    gold.append("\n  int three = 3;");
+    gold.append("\n  (iterate t).foo(y);");
+    gold.append("\n  value = Statistics.sum((iterate t).square_plus(seven)).getOrDefaultTo(-1000);");
+    gold.append("\n  value5 = Statistics.sum((iterate t).square_plus_plus(seven, five, three)).getOrDefaultTo(-1000);");
+    gold.append("\n  y = 100;");
+    gold.append("\n  v2 = Statistics.sum((iterate t).goo()).getOrDefaultTo(-1000); // no closure, has return type");
+    gold.append("\n  (iterate t).delete(); // no closure, no return type");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4527,6 +4704,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMultiArgsNoFormatException() {
+    assertNoFormatException(get_MultiArgs_11());
+  }
+
+  @Test
   public void testMultiArgsGoodWillHappy() {
     assertGoodWillHappy(get_MultiArgs_11());
   }
@@ -4548,6 +4730,15 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_MultiArgs_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprocedure x(int a, int b) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  method y(int a, int b) {");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5352,6 +5543,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPrepWorkReducersNoFormatException() {
+    assertNoFormatException(get_PrepWorkReducers_13());
+  }
+
+  @Test
   public void testPrepWorkReducersGoodWillHappy() {
     assertGoodWillHappy(get_PrepWorkReducers_13());
   }
@@ -5373,6 +5569,40 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_PrepWorkReducers_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Thing {");
+    gold.append("\n  private int x;");
+    gold.append("\n  private double y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Thing> things;");
+    gold.append("\n");
+    gold.append("\nprocedure foo(list<int> things) -> int {");
+    gold.append("\n  int sum = 0;");
+    gold.append("\n  foreach(x in things) {");
+    gold.append("\n    sum += x;");
+    gold.append("\n  }");
+    gold.append("\n  return sum;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint result;");
+    gold.append("\nint result2;");
+    gold.append("\ndouble result3;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  things <- {x:1, y:3.14};");
+    gold.append("\n  things <- {x:2, y:10.0};");
+    gold.append("\n  things <- {x:3, y:1000.0};");
+    gold.append("\n  result = foo((iterate things).x);");
+    gold.append("\n  result2 = Statistics.sum((iterate things).x).getOrDefaultTo(-1000);");
+    gold.append("\n  result3 = Statistics.sum((iterate things).y).getOrDefaultTo(-1000.0); // NOTE: -1000 causes an issue because int can't go into Double, so that's tricky and may require a cast of sorts");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6427,6 +6657,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPureInvokePureNoFormatException() {
+    assertNoFormatException(get_PureInvokePure_15());
+  }
+
+  @Test
   public void testPureInvokePureGoodWillHappy() {
     assertGoodWillHappy(get_PureInvokePure_15());
   }
@@ -6448,6 +6683,15 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_PureInvokePure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction foo() -> int {");
+    gold.append("\n  return 4;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction goo() -> int {");
+    gold.append("\n  return foo() * foo();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7162,6 +7406,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReactiveInvokePureNoFormatException() {
+    assertNoFormatException(get_ReactiveInvokePure_19());
+  }
+
+  @Test
   public void testReactiveInvokePureGoodWillHappy() {
     assertGoodWillHappy(get_ReactiveInvokePure_19());
   }
@@ -7183,6 +7432,14 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_ReactiveInvokePure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction foo() -> int {");
+    gold.append("\n  return 4;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nformula goo = foo();");
+    gold.append("\nbubble you = foo();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7799,6 +8056,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReadOnlyNoFormatException() {
+    assertNoFormatException(get_ReadOnly_20());
+  }
+
+  @Test
   public void testReadOnlyGoodWillHappy() {
     assertGoodWillHappy(get_ReadOnly_20());
   }
@@ -7820,6 +8082,17 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_ReadOnly_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprocedure foo1() readonly {}");
+    gold.append("\nprocedure foo2(int x) readonly {}");
+    gold.append("\nprocedure foo3(int x, int y) readonly {}");
+    gold.append("\n");
+    gold.append("\nint z = 0;");
+    gold.append("\nprocedure foo4(int x, int y) -> int readonly {");
+    gold.append("\n  return z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -8425,6 +8698,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testTypeBuiltInNoFormatException() {
+    assertNoFormatException(get_TypeBuiltIn_21());
+  }
+
+  @Test
   public void testTypeBuiltInGoodWillHappy() {
     assertGoodWillHappy(get_TypeBuiltIn_21());
   }
@@ -8446,6 +8724,35 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("Path:Functions_TypeBuiltIn_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  string x = \"xyz\";");
+    gold.append("\n  let y = x.reverse();");
+    gold.append("\n  assert x.length() == 3;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nstring y;");
+    gold.append("\nmaybe<int> mi;");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\ntest SecondTest {");
+    gold.append("\n  y = \"xyz\";");
+    gold.append("\n  let z = y.reverse();");
+    gold.append("\n  assert y.length() == 3;");
+    gold.append("\n  mi = 123;");
+    gold.append("\n  mi.delete();");
+    gold.append("\n  assert t.size() == 0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -40,6 +40,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testCanOnlyCallPureNoFormatException() {
+    assertNoFormatException(get_CanOnlyCallPure_1());
+  }
+
+  @Test
   public void testCanOnlyCallPureGoodWillHappy() {
     assertGoodWillHappy(get_CanOnlyCallPure_1());
   }
@@ -61,6 +66,15 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_CanOnlyCallPure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction square(int x) -> int {");
+    gold.append("\n  return x* x;");
+    gold.append("\n}");
+    gold.append("\npublic int x = 7;");
+    gold.append("\n");
+    gold.append("\nbubble k = square((x + 1) * (x + 1));");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -691,6 +705,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testDefineNoFormatException() {
+    assertNoFormatException(get_Define_2());
+  }
+
+  @Test
   public void testDefineGoodWillHappy() {
     assertGoodWillHappy(get_Define_2());
   }
@@ -712,6 +731,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_Define_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int x = 7;");
+    gold.append("\n");
+    gold.append("\nbubble k = (x + 1) * (x + 1);");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1337,6 +1361,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testInstrumentedNoFormatException() {
+    assertNoFormatException(get_Instrumented_3());
+  }
+
+  @Test
   public void testInstrumentedGoodWillHappy() {
     assertGoodWillHappy(get_Instrumented_3());
   }
@@ -1358,6 +1387,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_Instrumented_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int x = 7;");
+    gold.append("\n");
+    gold.append("\nbubble k = (x + 1) * (x + 1);");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1985,6 +2019,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testViewerStateDefineMessageNoFormatException() {
+    assertNoFormatException(get_ViewerStateDefineMessage_4());
+  }
+
+  @Test
   public void testViewerStateDefineMessageGoodWillHappy() {
     assertGoodWillHappy(get_ViewerStateDefineMessage_4());
   }
@@ -2006,6 +2045,15 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_ViewerStateDefineMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage Coord {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\nview Coord location;");
+    gold.append("\n");
+    gold.append("\nbubble cake = @viewer.location.x + @viewer.location.y;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2736,6 +2784,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testViewerStateDefineNoFormatException() {
+    assertNoFormatException(get_ViewerStateDefine_5());
+  }
+
+  @Test
   public void testViewerStateDefineGoodWillHappy() {
     assertGoodWillHappy(get_ViewerStateDefine_5());
   }
@@ -2757,6 +2810,12 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_ViewerStateDefine_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nview string name;");
+    gold.append("\nstring str;");
+    gold.append("\n");
+    gold.append("\nbubble cake = @viewer.name + str;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3405,6 +3464,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testViewerStateUseWhereNoFormatException() {
+    assertNoFormatException(get_ViewerStateUseWhere_6());
+  }
+
+  @Test
   public void testViewerStateUseWhereGoodWillHappy() {
     assertGoodWillHappy(get_ViewerStateUseWhere_6());
   }
@@ -3426,6 +3490,31 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_ViewerStateUseWhere_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nview string name;");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  string name;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> tbl;");
+    gold.append("\n");
+    gold.append("\nbubble cake = iterate tbl where name == @viewer.name;");
+    gold.append("\n");
+    gold.append("\nview int offset_month;");
+    gold.append("\n");
+    gold.append("\nmessage DayReport {");
+    gold.append("\n  bool current;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure show_day(date the_day, date c) -> DayReport readonly {");
+    gold.append("\n  return {current: c == the_day};");
+    gold.append("\n};");
+    gold.append("\n");
+    gold.append("\nbubble todo = (Time.today().offsetMonth(@viewer.offset_month)).calendarViewOf() map @lambda x: show_day(x, Time.today().offsetMonth(@viewer.offset_month));");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4477,6 +4566,11 @@ public class GeneratedBubbleTests extends GeneratedBase {
   }
 
   @Test
+  public void testViewerStateUseNoFormatException() {
+    assertNoFormatException(get_ViewerStateUse_7());
+  }
+
+  @Test
   public void testViewerStateUseGoodWillHappy() {
     assertGoodWillHappy(get_ViewerStateUse_7());
   }
@@ -4498,6 +4592,13 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("Path:Bubble_ViewerStateUse_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nview int scroll_x;");
+    gold.append("\nview string name;");
+    gold.append("\nview int[] offsets_z;");
+    gold.append("\n");
+    gold.append("\nbubble v = @viewer.scroll_x + @viewer.name + \"/\" + @viewer.offsets_z.size();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

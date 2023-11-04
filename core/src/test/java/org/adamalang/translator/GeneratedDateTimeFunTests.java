@@ -40,6 +40,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testConstructNoFormatException() {
+    assertNoFormatException(get_Construct_1());
+  }
+
+  @Test
   public void testConstructGoodWillHappy() {
     assertGoodWillHappy(get_Construct_1());
   }
@@ -61,6 +66,9 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_Construct_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula theday = Date.construct(@date 2021/12/2, @time 4:00, 30, \"UTC\");");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -667,6 +675,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testDateParsingNoFormatException() {
+    assertNoFormatException(get_DateParsing_2());
+  }
+
+  @Test
   public void testDateParsingGoodWillHappy() {
     assertGoodWillHappy(get_DateParsing_2());
   }
@@ -688,6 +701,35 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_DateParsing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic date x = @date 2021/12/2;");
+    gold.append("\n");
+    gold.append("\nbool eq1;");
+    gold.append("\n");
+    gold.append("\npublic formula x_yr = x.year();");
+    gold.append("\npublic formula x_mo = x.month();");
+    gold.append("\npublic formula x_day = x.day();");
+    gold.append("\n");
+    gold.append("\npublic formula next_x = x.offsetMonth(1);");
+    gold.append("\npublic formula prior_x = x.offsetMonth(-1);");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  date a;");
+    gold.append("\n  maybe<date> b;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula cal = x.calendarViewOf();");
+    gold.append("\n");
+    gold.append("\n#sm {");
+    gold.append("\n  date y = x;");
+    gold.append("\n  date z = @date 2000/7/3;");
+    gold.append("\n  eq1 = z == x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n   public date zzz;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1740,6 +1782,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testDateTimeParsingNoFormatException() {
+    assertNoFormatException(get_DateTimeParsing_3());
+  }
+
+  @Test
   public void testDateTimeParsingGoodWillHappy() {
     assertGoodWillHappy(get_DateTimeParsing_3());
   }
@@ -1761,6 +1808,28 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_DateTimeParsing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic datetime x = @datetime \"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\";");
+    gold.append("\n");
+    gold.append("\nbool eq1;");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  datetime a;");
+    gold.append("\n  maybe<datetime> b;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic timespan t;");
+    gold.append("\n#sm {");
+    gold.append("\n  datetime y = x;");
+    gold.append("\n  datetime z =  @datetime \"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\";");
+    gold.append("\n  eq1 = z == x;");
+    gold.append("\n  t = x.between(z);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n   public datetime zzz;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2766,6 +2835,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testFutureExpiryNoFormatException() {
+    assertNoFormatException(get_FutureExpiry_5());
+  }
+
+  @Test
   public void testFutureExpiryGoodWillHappy() {
     assertGoodWillHappy(get_FutureExpiry_5());
   }
@@ -2787,6 +2861,21 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_FutureExpiry_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic datetime deepnow;");
+    gold.append("\npublic datetime expiry;");
+    gold.append("\npublic datetime thepast;");
+    gold.append("\npublic bool b1;");
+    gold.append("\npublic bool b2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  deepnow = Time.datetime();");
+    gold.append("\n  expiry = deepnow.future(@timespan 10 min);");
+    gold.append("\n  thepast = deepnow.past(@timespan 10 min);");
+    gold.append("\n  b1 = expiry > deepnow;");
+    gold.append("\n  b2 = expiry < deepnow;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3477,6 +3566,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testInternNoFormatException() {
+    assertNoFormatException(get_Intern_6());
+  }
+
+  @Test
   public void testInternGoodWillHappy() {
     assertGoodWillHappy(get_Intern_6());
   }
@@ -3498,6 +3592,24 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_Intern_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic long now;");
+    gold.append("\npublic date today;");
+    gold.append("\npublic datetime deepnow;");
+    gold.append("\npublic string zone;");
+    gold.append("\npublic time nt;");
+    gold.append("\npublic formula deepnow_date = deepnow.date();");
+    gold.append("\npublic formula deepnow_time = deepnow.time();");
+    gold.append("\n");
+    gold.append("\n#sm {");
+    gold.append("\n  now = Time.now();");
+    gold.append("\n  nt = Time.time();");
+    gold.append("\n  today = Time.today();");
+    gold.append("\n  deepnow = Time.datetime();");
+    gold.append("\n  zone = Time.zone();");
+    gold.append("\n  Time.setZone(\"America/Chicago\");");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4226,6 +4338,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testMathAndMoreNoFormatException() {
+    assertNoFormatException(get_MathAndMore_7());
+  }
+
+  @Test
   public void testMathAndMoreGoodWillHappy() {
     assertGoodWillHappy(get_MathAndMore_7());
   }
@@ -4247,6 +4364,13 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_MathAndMore_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic timespan ts = @timespan 15 min;");
+    gold.append("\npublic formula a = (ts + ts + 5 * ts) * 3.14;");
+    gold.append("\npublic formula ts_sec = ts.seconds();");
+    gold.append("\npublic formula ts_min = ts.minutes();");
+    gold.append("\npublic formula ts_hr = ts.hours();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4914,6 +5038,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testTimeParsingNoFormatException() {
+    assertNoFormatException(get_TimeParsing_8());
+  }
+
+  @Test
   public void testTimeParsingGoodWillHappy() {
     assertGoodWillHappy(get_TimeParsing_8());
   }
@@ -4935,6 +5064,31 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_TimeParsing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic time x = @time 14:23;");
+    gold.append("\n");
+    gold.append("\nbool eq1;");
+    gold.append("\n");
+    gold.append("\npublic formula x_hr = x.hour();");
+    gold.append("\npublic formula x_min = x.minute();");
+    gold.append("\n");
+    gold.append("\npublic formula ov = Time.overlaps(x,x,x,x);");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  time a;");
+    gold.append("\n  maybe<time> b;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#sm {");
+    gold.append("\n  time y = x;");
+    gold.append("\n  time z = @time 15:40;");
+    gold.append("\n  eq1 = z == x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n   public time zzz;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5928,6 +6082,11 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
   }
 
   @Test
+  public void testTimeSpanParsingNoFormatException() {
+    assertNoFormatException(get_TimeSpanParsing_9());
+  }
+
+  @Test
   public void testTimeSpanParsingGoodWillHappy() {
     assertGoodWillHappy(get_TimeSpanParsing_9());
   }
@@ -5949,6 +6108,33 @@ public class GeneratedDateTimeFunTests extends GeneratedBase {
     gold.append("Path:DateTimeFun_TimeSpanParsing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic timespan x = @timespan 14 sec;");
+    gold.append("\n");
+    gold.append("\nbool eq1;");
+    gold.append("\n");
+    gold.append("\npublic formula x_sec = x.seconds();");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  timespan a;");
+    gold.append("\n  maybe<timespan> b;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#sm {");
+    gold.append("\n  timespan y = x;");
+    gold.append("\n  timespan z = @timespan 15 hr;");
+    gold.append("\n  var p1 = @timespan 1 sec;");
+    gold.append("\n  var p2 = @timespan 1 min;");
+    gold.append("\n  var p3 = @timespan 1 hr;");
+    gold.append("\n  var p4 = @timespan 1 day;");
+    gold.append("\n  var p5 = @timespan 1 week;");
+    gold.append("\n  eq1 = z == x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n   public timespan zzz;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

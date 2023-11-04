@@ -40,6 +40,11 @@ public class GeneratedStdLibTests extends GeneratedBase {
   }
 
   @Test
+  public void testConvertNoFormatException() {
+    assertNoFormatException(get_Convert_1());
+  }
+
+  @Test
   public void testConvertGoodWillHappy() {
     assertGoodWillHappy(get_Convert_1());
   }
@@ -61,6 +66,19 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("Path:StdLib_Convert_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula x = \"123\".intOf();");
+    gold.append("\npublic formula y = \"42\".longOf();");
+    gold.append("\npublic formula z = \"3.14\".doubleOf();");
+    gold.append("\n");
+    gold.append("\npublic formula x2 = @maybe(\"123\").intOf();");
+    gold.append("\npublic formula y2 = @maybe(\"42\").longOf();");
+    gold.append("\npublic formula z2 = @maybe(\"3.14\").doubleOf();");
+    gold.append("\n");
+    gold.append("\npublic formula x3 = @maybe<string>.intOf();");
+    gold.append("\npublic formula y3 = @maybe<string>.longOf();");
+    gold.append("\npublic formula z3 = @maybe<string>.doubleOf();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -835,6 +853,11 @@ public class GeneratedStdLibTests extends GeneratedBase {
   }
 
   @Test
+  public void testListsNoFormatException() {
+    assertNoFormatException(get_Lists_2());
+  }
+
+  @Test
   public void testListsGoodWillHappy() {
     assertGoodWillHappy(get_Lists_2());
   }
@@ -856,6 +879,39 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("Path:StdLib_Lists_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord A {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord B {");
+    gold.append("\n private int id;");
+    gold.append("\n table<A> _a;");
+    gold.append("\n formula a = (iterate _a).x;");
+    gold.append("\n public maybe<int> v;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<B> _b;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n _b <- {_a: [{x:1}, {x:2}, {x:3}]};");
+    gold.append("\n _b <- {_a: [{x:4}, {x:5}, {x:6}], v: 1};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula x = (iterate _b).a.flatten();");
+    gold.append("\npublic formula r_x = x.reverse();");
+    gold.append("\npublic formula x_skip_3 = x.skip(3);");
+    gold.append("\npublic formula x_skip_1_r = x.skip(1).reverse().skip(1).reverse();");
+    gold.append("\npublic formula x_d = x.drop(2);");
+    gold.append("\npublic formula x_mirror = x.skip(1).drop(1);");
+    gold.append("\n");
+    gold.append("\npublic formula x_b = (iterate _b).v.manifest();");
+    gold.append("\npublic formula _b_1 = _b[1];");
+    gold.append("\npublic formula _b_2 = _b[@maybe(2)];");
+    gold.append("\npublic formula _b_all = _b[(iterate _b).id];");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2529,6 +2585,11 @@ public class GeneratedStdLibTests extends GeneratedBase {
   }
 
   @Test
+  public void testNumericalExtensionsNoFormatException() {
+    assertNoFormatException(get_NumericalExtensions_3());
+  }
+
+  @Test
   public void testNumericalExtensionsGoodWillHappy() {
     assertGoodWillHappy(get_NumericalExtensions_3());
   }
@@ -2550,6 +2611,44 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("Path:StdLib_NumericalExtensions_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic string x1;");
+    gold.append("\npublic string x2;");
+    gold.append("\npublic string x3;");
+    gold.append("\npublic string x4;");
+    gold.append("\n");
+    gold.append("\npublic double z1;");
+    gold.append("\n");
+    gold.append("\npublic long z2;");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  double y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> rows;");
+    gold.append("\n");
+    gold.append("\npublic int d1;");
+    gold.append("\npublic double d2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x1 = (34).charOf();");
+    gold.append("\n  x2 = (32).charOf();");
+    gold.append("\n  x3 = @maybe(65).charOf().getOrDefaultTo(\"huh\");");
+    gold.append("\n  x4 = @maybe<int>.charOf().getOrDefaultTo(\"nope\");");
+    gold.append("\n  z1 = (3.14).sin();");
+    gold.append("\n  z2 = -123;");
+    gold.append("\n  z2 = z2.abs();");
+    gold.append("\n");
+    gold.append("\n  rows <- {x:1,y:29.0};");
+    gold.append("\n  rows <- {x:2,y:6.0};");
+    gold.append("\n  rows <- {x:3,y:1.0};");
+    gold.append("\n");
+    gold.append("\n  d1 = (iterate rows).x.sum().getOrDefaultTo(-1000);");
+    gold.append("\n  d2 = (iterate rows).y.average().getOrDefaultTo(-1000.0);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3658,6 +3757,11 @@ public class GeneratedStdLibTests extends GeneratedBase {
   }
 
   @Test
+  public void testStatsNoFormatException() {
+    assertNoFormatException(get_Stats_4());
+  }
+
+  @Test
   public void testStatsGoodWillHappy() {
     assertGoodWillHappy(get_Stats_4());
   }
@@ -3679,6 +3783,55 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("Path:StdLib_Stats_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  double y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> rows;");
+    gold.append("\n");
+    gold.append("\ndouble y1;");
+    gold.append("\ndouble y2;");
+    gold.append("\ndouble y3;");
+    gold.append("\ndouble y4;");
+    gold.append("\ndouble y5;");
+    gold.append("\ndouble y6;");
+    gold.append("\ndouble y7;");
+    gold.append("\n");
+    gold.append("\nint x1;");
+    gold.append("\nint x2;");
+    gold.append("\nint x3;");
+    gold.append("\nint x4;");
+    gold.append("\nint x5;");
+    gold.append("\nint x6;");
+    gold.append("\ndouble x7;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  rows <- {x:1,y:29.0};");
+    gold.append("\n  rows <- {x:2,y:6.0};");
+    gold.append("\n  rows <- {x:3,y:1.0};");
+    gold.append("\n  rows <- {x:4,y:100.0};");
+    gold.append("\n  rows <- {x:5,y:23.0};");
+    gold.append("\n  rows <- {x:6,y:452.45};");
+    gold.append("\n");
+    gold.append("\n  y1 = (iterate rows).y.sum().getOrDefaultTo(-1000.0);");
+    gold.append("\n  y2 = (iterate rows).y.median().getOrDefaultTo(-1000.0);");
+    gold.append("\n  y3 = (iterate rows).y.maximum().getOrDefaultTo(-1000.0);");
+    gold.append("\n  y4 = (iterate rows).y.minimum().getOrDefaultTo(-1000.0);");
+    gold.append("\n  y5 = (iterate rows).y.percentile(0.0).getOrDefaultTo(-1000.0);");
+    gold.append("\n  y6 = (iterate rows).y.percentile(0.95).getOrDefaultTo(-1000.0);");
+    gold.append("\n  y7 = (iterate rows).y.average().getOrDefaultTo(-1000.0);");
+    gold.append("\n");
+    gold.append("\n  x1 = (iterate rows).x.sum().getOrDefaultTo(-1000);");
+    gold.append("\n  x2 = (iterate rows).x.median().getOrDefaultTo(-1000);");
+    gold.append("\n  x3 = (iterate rows).x.maximum().getOrDefaultTo(-1000);");
+    gold.append("\n  x4 = (iterate rows).x.minimum().getOrDefaultTo(-1000);");
+    gold.append("\n  x5 = (iterate rows).x.percentile(0.0).getOrDefaultTo(-1000);");
+    gold.append("\n  x6 = (iterate rows).x.percentile(0.95).getOrDefaultTo(-1000);");
+    gold.append("\n  x7 = (iterate rows).x.average().getOrDefaultTo(-1000.0);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4861,6 +5014,11 @@ public class GeneratedStdLibTests extends GeneratedBase {
   }
 
   @Test
+  public void testStringsNoFormatException() {
+    assertNoFormatException(get_Strings_5());
+  }
+
+  @Test
   public void testStringsGoodWillHappy() {
     assertGoodWillHappy(get_Strings_5());
   }
@@ -4882,6 +5040,68 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("Path:StdLib_Strings_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic string x1;");
+    gold.append("\npublic string x2;");
+    gold.append("\npublic string x3;");
+    gold.append("\npublic string x4;");
+    gold.append("\npublic string x5;");
+    gold.append("\npublic string x6;");
+    gold.append("\npublic string x7;");
+    gold.append("\npublic string x8;");
+    gold.append("\npublic string x9;");
+    gold.append("\npublic string x10;");
+    gold.append("\n");
+    gold.append("\npublic bool checkF;");
+    gold.append("\npublic bool checkT;");
+    gold.append("\npublic int cp;");
+    gold.append("\n");
+    gold.append("\npublic string y1;");
+    gold.append("\npublic string y2;");
+    gold.append("\npublic string y3;");
+    gold.append("\npublic string y4;");
+    gold.append("\npublic formula y4_cp = y4.codepoints();");
+    gold.append("\npublic formula r2023 = (2023).to_roman();");
+    gold.append("\npublic maybe<string> join_maybe;");
+    gold.append("\npublic formula zzz1 = \"Justice of Doom\".initialsOf(false);");
+    gold.append("\npublic formula zzz2 = \"Justice of Doom\".initialsOf(true);");
+    gold.append("\npublic formula zzz3 = @maybe(\"Justice of Doom\").initialsOf(false);");
+    gold.append("\npublic formula zzz4 = @maybe(\"Justice of Doom\").initialsOf(true);");
+    gold.append("\npublic formula zzz5 = @maybe<string>.initialsOf(false);");
+    gold.append("\n");
+    gold.append("\nrecord S {");
+    gold.append("\n  maybe<string> item;");
+    gold.append("\n}");
+    gold.append("\ntable<S> _s;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x1 = \"123\".reverse();");
+    gold.append("\n  x2 = \"m\".multiply(4);");
+    gold.append("\n  x3 = (x2 + \"z\").multiply(2);");
+    gold.append("\n  x4 = x3.left(2).getOrDefaultTo(\"\");");
+    gold.append("\n  x5 = \"54321\".left(1000).right(2).reverse().multiply(3).right(4).multiply(3).reverse().getOrDefaultTo(\"NOPE\");");
+    gold.append("\n  x6 = \"OK\".left(-1).reverse().right(1).getOrDefaultTo(\"NOPE\");");
+    gold.append("\n  x7 = \"OK\".right(-1).multiply(3).left(1).getOrDefaultTo(\"NOPE\");");
+    gold.append("\n  x8 = \"OKOK\".right(3).left(2).getOrDefaultTo(\"Noooooo\");");
+    gold.append("\n  x9 = \" abc \".trim().mid(2, 1).getOrDefaultTo(\"Noooooo\");");
+    gold.append("\n  x10 = \"abcdefg\".substr(1, 4).getOrDefaultTo(\"Noooooo\").upper();");
+    gold.append("\n  string x11 = \"secret\".passwordHash();");
+    gold.append("\n  checkF = x11.passwordCheck(\"nope\");");
+    gold.append("\n  checkT = x11.passwordCheck(\"secret\");");
+    gold.append("\n  cp = \"猿も木から落ちる\".codepointAt(0).getOrDefaultTo(-1);");
+    gold.append("\n  y1 = \"ABCDEFABCDEFABCDEF\".removeAll(\"DEF\");");
+    gold.append("\n  y2 = \"ABCDEFABCDEFABCDEF\".replaceAll(\"DEF\", \"XYZ\");");
+    gold.append("\n  y3 = [\"X\", \"Y\"].concat();");
+    gold.append("\n  y4 = [\"X\", \"Y\"].join(\", \");");
+    gold.append("\n  _s <- {item:@maybe<string>};");
+    gold.append("\n  _s <- {item:@maybe<string>};");
+    gold.append("\n  _s <- {item:\"x\"};");
+    gold.append("\n  _s <- {item:@maybe<string>};");
+    gold.append("\n  _s <- {item:\"y\"};");
+    gold.append("\n  _s <- {item:\"z\"};");
+    gold.append("\n  join_maybe = (iterate _s).item.join(\", \");");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6438,6 +6658,11 @@ public class GeneratedStdLibTests extends GeneratedBase {
   }
 
   @Test
+  public void testTablesJoinNoFormatException() {
+    assertNoFormatException(get_TablesJoin_6());
+  }
+
+  @Test
   public void testTablesJoinGoodWillHappy() {
     assertGoodWillHappy(get_TablesJoin_6());
   }
@@ -6459,6 +6684,42 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("Path:StdLib_TablesJoin_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage JustStr {");
+    gold.append("\n  string str;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord WeekPattern {");
+    gold.append("\n  public bool monday;");
+    gold.append("\n  public bool tuesday;");
+    gold.append("\n  public bool wednesday;");
+    gold.append("\n  public bool thursday;");
+    gold.append("\n  public bool friday;");
+    gold.append("\n  public bool saturday;");
+    gold.append("\n  public bool sunday;");
+    gold.append("\n");
+    gold.append("\n  method summary() -> string readonly {");
+    gold.append("\n    table<JustStr> tbl;");
+    gold.append("\n    if (monday) { tbl <- {str:\"Mo\"};  }");
+    gold.append("\n    if (tuesday) { tbl <- {str:\"Tu\"}; }");
+    gold.append("\n    if (wednesday) {tbl <- {str:\"Wed\"}; }");
+    gold.append("\n    if (thursday) { tbl <- {str:\"Th\"}; }");
+    gold.append("\n    if (friday) { tbl <- {str:\"Fr\"}; }");
+    gold.append("\n    if (saturday) { tbl <- {str:\"Sa\"}; }");
+    gold.append("\n    if (sunday) { tbl <- {str:\"Su\"}; }");
+    gold.append("\n    return (iterate tbl).str.join(\", \");");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic WeekPattern wp;");
+    gold.append("\npublic formula nice = wp.summary();");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  wp.monday = true;");
+    gold.append("\n  wp.wednesday = true;");
+    gold.append("\n  wp.friday = true;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

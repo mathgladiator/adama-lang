@@ -63,6 +63,10 @@ public class TestClass {
       outputFile.append("    assertLivePass(get_" + varName + "());\n");
       outputFile.append("  }\n\n");
       outputFile.append("  @Test\n");
+      outputFile.append("  public void test" + test.name + "NoFormatException() {\n");
+      outputFile.append("    assertNoFormatException(get_" + varName + "());\n");
+      outputFile.append("  }\n\n");
+      outputFile.append("  @Test\n");
       outputFile.append("  public void test" + test.name + "GoodWillHappy() {\n");
       outputFile.append("    assertGoodWillHappy(get_" + varName + "());\n");
       outputFile.append("  }\n\n");

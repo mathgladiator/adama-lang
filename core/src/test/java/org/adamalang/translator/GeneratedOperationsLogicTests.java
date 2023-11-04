@@ -40,6 +40,11 @@ public class GeneratedOperationsLogicTests extends GeneratedBase {
   }
 
   @Test
+  public void testFormulasNoFormatException() {
+    assertNoFormatException(get_Formulas_1());
+  }
+
+  @Test
   public void testFormulasGoodWillHappy() {
     assertGoodWillHappy(get_Formulas_1());
   }
@@ -61,6 +66,87 @@ public class GeneratedOperationsLogicTests extends GeneratedBase {
     gold.append("Path:OperationsLogic_Formulas_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula f0 = true || true;");
+    gold.append("\npublic formula f1 = true && true;");
+    gold.append("\npublic formula f2 = true ^^ true;");
+    gold.append("\npublic formula f3 = true || false;");
+    gold.append("\npublic formula f4 = true && false;");
+    gold.append("\npublic formula f5 = true ^^ false;");
+    gold.append("\npublic formula f6 = false || true;");
+    gold.append("\npublic formula f7 = false && true;");
+    gold.append("\npublic formula f8 = false ^^ true;");
+    gold.append("\npublic formula f9 = false || false;");
+    gold.append("\npublic formula f10 = false && false;");
+    gold.append("\npublic formula f11 = false ^^ false;");
+    gold.append("\n");
+    gold.append("\npublic formula f0_a = @maybe(true) || true;");
+    gold.append("\npublic formula f1_a = @maybe(true) && true;");
+    gold.append("\npublic formula f2_a = @maybe(true) ^^ true;");
+    gold.append("\npublic formula f3_a = @maybe(true) || false;");
+    gold.append("\npublic formula f4_a = @maybe(true) && false;");
+    gold.append("\npublic formula f5_a = @maybe(true) ^^ false;");
+    gold.append("\npublic formula f6_a = @maybe(false) || true;");
+    gold.append("\npublic formula f7_a = @maybe(false) && true;");
+    gold.append("\npublic formula f8_a = @maybe(false) ^^ true;");
+    gold.append("\npublic formula f9_a = @maybe(false) || false;");
+    gold.append("\npublic formula f10_a = @maybe(false) && false;");
+    gold.append("\npublic formula f11_a = @maybe(false) ^^ false;");
+    gold.append("\n");
+    gold.append("\npublic formula f0_b = true || @maybe(true);");
+    gold.append("\npublic formula f1_b = true && @maybe(true);");
+    gold.append("\npublic formula f2_b = true ^^ @maybe(true);");
+    gold.append("\npublic formula f3_b = true || @maybe(false);");
+    gold.append("\npublic formula f4_b = true && @maybe(false);");
+    gold.append("\npublic formula f5_b = true ^^ @maybe(false);");
+    gold.append("\npublic formula f6_b = false || @maybe(true);");
+    gold.append("\npublic formula f7_b = false && @maybe(true);");
+    gold.append("\npublic formula f8_b = false ^^ @maybe(true);");
+    gold.append("\npublic formula f9_b = false || @maybe(false);");
+    gold.append("\npublic formula f10_b = false && @maybe(false);");
+    gold.append("\npublic formula f11_b = false ^^ @maybe(false);");
+    gold.append("\n");
+    gold.append("\npublic formula f0_ab = @maybe(true) || @maybe(true);");
+    gold.append("\npublic formula f1_ab = @maybe(true) && @maybe(true);");
+    gold.append("\npublic formula f2_ab = @maybe(true) ^^ @maybe(true);");
+    gold.append("\npublic formula f3_ab = @maybe(true) || @maybe(false);");
+    gold.append("\npublic formula f4_ab = @maybe(true) && @maybe(false);");
+    gold.append("\npublic formula f5_ab = @maybe(true) ^^ @maybe(false);");
+    gold.append("\npublic formula f6_ab = @maybe(false) || @maybe(true);");
+    gold.append("\npublic formula f7_ab = @maybe(false) && @maybe(true);");
+    gold.append("\npublic formula f8_ab = @maybe(false) ^^ @maybe(true);");
+    gold.append("\npublic formula f9_ab = @maybe(false) || @maybe(false);");
+    gold.append("\npublic formula f10_ab = @maybe(false) && @maybe(false);");
+    gold.append("\npublic formula f11_ab = @maybe(false) ^^ @maybe(false);");
+    gold.append("\n");
+    gold.append("\npublic formula f0_ax = @maybe<bool> || true;");
+    gold.append("\npublic formula f1_ax = @maybe<bool> && true;");
+    gold.append("\npublic formula f2_ax = @maybe<bool> ^^ true;");
+    gold.append("\npublic formula f3_ax = @maybe<bool> || false;");
+    gold.append("\npublic formula f4_ax = @maybe<bool> && false;");
+    gold.append("\npublic formula f5_ax = @maybe<bool> ^^ false;");
+    gold.append("\n");
+    gold.append("\npublic formula f0_bx = true || @maybe<bool>;");
+    gold.append("\npublic formula f1_bx = true && @maybe<bool>;");
+    gold.append("\npublic formula f2_bx = true ^^ @maybe<bool>;");
+    gold.append("\npublic formula f6_bx = false || @maybe<bool>;");
+    gold.append("\npublic formula f7_bx = false && @maybe<bool>;");
+    gold.append("\npublic formula f8_bx = false ^^ @maybe<bool>;");
+    gold.append("\n");
+    gold.append("\npublic formula f0_xx = @maybe<bool> || @maybe<bool>;");
+    gold.append("\npublic formula f1_xx = @maybe<bool> && @maybe<bool>;");
+    gold.append("\npublic formula f2_xx = @maybe<bool> ^^ @maybe<bool>;");
+    gold.append("\npublic formula f3_xx = @maybe(true) || @maybe<bool>;");
+    gold.append("\npublic formula f4_xx = @maybe(true) && @maybe<bool>;");
+    gold.append("\npublic formula f5_xx = @maybe(true) ^^ @maybe<bool>;");
+    gold.append("\npublic formula f6_xx = @maybe<bool> || @maybe(true);");
+    gold.append("\npublic formula f7_xx = @maybe<bool> && @maybe(true);");
+    gold.append("\npublic formula f8_xx = @maybe<bool> ^^ @maybe(true);");
+    gold.append("\npublic formula f9_xx = @maybe(true) || @maybe(true);");
+    gold.append("\npublic formula fa_xx = @maybe(true) && @maybe(true);");
+    gold.append("\npublic formula fb_xx = @maybe(true) ^^ @maybe(true);");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

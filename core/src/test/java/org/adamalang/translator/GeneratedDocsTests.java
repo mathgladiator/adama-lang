@@ -40,6 +40,11 @@ public class GeneratedDocsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAssignmentLocalVarsNoFormatException() {
+    assertNoFormatException(get_AssignmentLocalVars_1());
+  }
+
+  @Test
   public void testAssignmentLocalVarsGoodWillHappy() {
     assertGoodWillHappy(get_AssignmentLocalVars_1());
   }
@@ -61,6 +66,51 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("Path:Docs_AssignmentLocalVars_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprivate int score;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  int temp = 123;");
+    gold.append("\n  temp = 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#transition1 {");
+    gold.append("\n  int local;");
+    gold.append("\n  local = 42;");
+    gold.append("\n  string str = \"hello\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#transition2 {");
+    gold.append("\n  readonly int local = 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#transition3 {");
+    gold.append("\n  let local = 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#transition4 {");
+    gold.append("\n  int x = 3; // 3");
+    gold.append("\n  x *= 4; // 12");
+    gold.append("\n  x--; // 11");
+    gold.append("\n  x += 10; // 21");
+    gold.append("\n  x *= 2; // 42, the cosmos are revealed");
+    gold.append("\n  x++;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> _records;");
+    gold.append("\n");
+    gold.append("\nprocedure reset() {");
+    gold.append("\n  (iterate _records).x = 0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure bump() {");
+    gold.append("\n  (iterate _records).x++;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -945,6 +995,11 @@ public class GeneratedDocsTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecordsNoFormatException() {
+    assertNoFormatException(get_Records_2());
+  }
+
+  @Test
   public void testRecordsGoodWillHappy() {
     assertGoodWillHappy(get_Records_2());
   }
@@ -966,6 +1021,55 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("Path:Docs_Records_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int score;");
+    gold.append("\n");
+    gold.append("\n  method zero() {");
+    gold.append("\n    score = 0;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R2 {");
+    gold.append("\n  public int score;");
+    gold.append("\n");
+    gold.append("\n  method double_score() -> int readonly {");
+    gold.append("\n    return score * 2;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  public formula ds = double_score();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R3 {");
+    gold.append("\n  private principal owner;");
+    gold.append("\n");
+    gold.append("\n  policy is_owner {");
+    gold.append("\n    return owner == @who;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R4 {");
+    gold.append("\n  private principal owner;");
+    gold.append("\n");
+    gold.append("\n  use_policy<is_owner> int balance;");
+    gold.append("\n");
+    gold.append("\n  policy is_owner {");
+    gold.append("\n    return owner == @who;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R5 {");
+    gold.append("\n  private principal owner;");
+    gold.append("\n");
+    gold.append("\n  public int balance;");
+    gold.append("\n");
+    gold.append("\n  policy is_owner {");
+    gold.append("\n    return owner == @who;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  require is_owner;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

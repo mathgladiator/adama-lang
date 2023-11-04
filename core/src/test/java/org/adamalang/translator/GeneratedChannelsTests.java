@@ -40,6 +40,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAsyncLegacyNoFormatException() {
+    assertNoFormatException(get_AsyncLegacy_1());
+  }
+
+  @Test
   public void testAsyncLegacyGoodWillHappy() {
     assertGoodWillHappy(get_AsyncLegacy_1());
   }
@@ -61,6 +66,55 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_AsyncLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nstring status;");
+    gold.append("\n");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel<X> chan;");
+    gold.append("\nchannel<X[]> bigchan;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n   transition #begin;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#begin {");
+    gold.append("\n  status = \"Blocked\";");
+    gold.append("\n  future<X> fut1 = chan.fetch(@no_one);");
+    gold.append("\n  future<X> fut2 = chan.fetch(@no_one);");
+    gold.append("\n  X val1 = fut1.await();");
+    gold.append("\n  X val2 = fut2.await();");
+    gold.append("\n  status = \"Value:\" + val1.x + \"/\" + val1.y + \":\" + val2.x + \"/\" + val2.y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest drive_it {");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @step;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @pump {x:4, y:8} into chan;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @step;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @pump {x:5, y:10} into chan;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @step;");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  assert status == \"Value:4/8:5/10\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#wut {");
+    gold.append("\n  future<X[]> f = bigchan.fetch(@no_one);");
+    gold.append("\n  X[] x = f.await();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -913,6 +967,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testEsotericMessagesNoFormatException() {
+    assertNoFormatException(get_EsotericMessages_3());
+  }
+
+  @Test
   public void testEsotericMessagesGoodWillHappy() {
     assertGoodWillHappy(get_EsotericMessages_3());
   }
@@ -934,6 +993,25 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_EsotericMessages_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nmessage Strange {");
+    gold.append("\n  maybe<int[]> miarr;");
+    gold.append("\n  list<int> li;");
+    gold.append("\n  map<int, int> mii;");
+    gold.append("\n  map<int, int[]> miiarr;");
+    gold.append("\n  map<long, string> mls;");
+    gold.append("\n  map<string, string> mss;");
+    gold.append("\n  maybe<Strange> recur;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#wut {");
+    gold.append("\n  int[] x;");
+    gold.append("\n  Strange s;");
+    gold.append("\n  list<Strange> lsts;");
+    gold.append("\n  Strange[] sarr;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1904,6 +1982,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHandlerLegacyNoFormatException() {
+    assertNoFormatException(get_HandlerLegacy_4());
+  }
+
+  @Test
   public void testHandlerLegacyGoodWillHappy() {
     assertGoodWillHappy(get_HandlerLegacy_4());
   }
@@ -1925,6 +2008,28 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_HandlerLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel chan1(M m) {");
+    gold.append("\n  return;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel chan2(M m) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2660,6 +2765,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHasContextNoFormatException() {
+    assertNoFormatException(get_HasContext_5());
+  }
+
+  @Test
   public void testHasContextGoodWillHappy() {
     assertGoodWillHappy(get_HasContext_5());
   }
@@ -2681,6 +2791,17 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_HasContext_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\npublic string last_origin;");
+    gold.append("\npublic string last_ip;");
+    gold.append("\n");
+    gold.append("\nchannel foo(M m) {");
+    gold.append("\n  last_origin = @context.origin;");
+    gold.append("\n  last_ip = @context.ip;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3389,6 +3510,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageHasEnumNoFormatException() {
+    assertNoFormatException(get_MessageHasEnum_6());
+  }
+
+  @Test
   public void testMessageHasEnumGoodWillHappy() {
     assertGoodWillHappy(get_MessageHasEnum_6());
   }
@@ -3410,6 +3536,25 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_MessageHasEnum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E { A, B }");
+    gold.append("\n");
+    gold.append("\nmessage X {");
+    gold.append("\n  E e;");
+    gold.append("\n}(X=\"This is a X\")");
+    gold.append("\n");
+    gold.append("\nmessage Y {");
+    gold.append("\n  E e;");
+    gold.append("\n}(X=\"This is a Y\")");
+    gold.append("\n");
+    gold.append("\nchannel<X> foo;");
+    gold.append("\nchannel<X> goo;");
+    gold.append("\nchannel<X> zoo;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4227,6 +4372,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageHasMethodNoFormatException() {
+    assertNoFormatException(get_MessageHasMethod_7());
+  }
+
+  @Test
   public void testMessageHasMethodGoodWillHappy() {
     assertGoodWillHappy(get_MessageHasMethod_7());
   }
@@ -4248,6 +4398,21 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_MessageHasMethod_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int val;");
+    gold.append("\n  method succ() -> int {");
+    gold.append("\n    return val + 1;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic dynamic z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  z = @convert<X>({val:32}).to_dynamic();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5023,6 +5188,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testOpen1NoFormatException() {
+    assertNoFormatException(get_Open1_10());
+  }
+
+  @Test
   public void testOpen1GoodWillHappy() {
     assertGoodWillHappy(get_Open1_10());
   }
@@ -5044,6 +5214,21 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_Open1_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\nchannel chan(M m) open {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5725,6 +5910,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testOpen2NoFormatException() {
+    assertNoFormatException(get_Open2_11());
+  }
+
+  @Test
   public void testOpen2GoodWillHappy() {
     assertGoodWillHappy(get_Open2_11());
   }
@@ -5746,6 +5936,27 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_Open2_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\nchannel chan1(M m) open {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel chan2(M m) open {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel chan3(M m) open {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

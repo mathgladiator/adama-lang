@@ -40,6 +40,11 @@ public class GeneratedViewerSendTests extends GeneratedBase {
   }
 
   @Test
+  public void testValidNoFormatException() {
+    assertNoFormatException(get_Valid_1());
+  }
+
+  @Test
   public void testValidGoodWillHappy() {
     assertGoodWillHappy(get_Valid_1());
   }
@@ -61,6 +66,30 @@ public class GeneratedViewerSendTests extends GeneratedBase {
     gold.append("Path:ViewerSend_Valid_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic bool sent;");
+    gold.append("\npublic bool went;");
+    gold.append("\npublic bool wrote;");
+    gold.append("\n");
+    gold.append("\nchannel foo(M m) {");
+    gold.append("\n  sent = ViewState.merge({error:true, invalid_x:true}.to_dynamic());");
+    gold.append("\n  ViewState.log(\"Here1\");");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel go(M m) {");
+    gold.append("\n  went = ViewState.goto(\"/\");");
+    gold.append("\n  ViewState.log(\"Here2\");");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel chatter(M m) {");
+    gold.append("\n  wrote = ViewState.send(\"token\", {token:1234}.to_dynamic());");
+    gold.append("\n  ViewState.log(\"Here3\");");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

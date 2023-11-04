@@ -40,6 +40,11 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_1());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_1());
   }
@@ -61,6 +66,34 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("Path:FunctionsViewer_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nview int x;");
+    gold.append("\n");
+    gold.append("\nprocedure fake_viewer() -> int readonly viewer {");
+    gold.append("\n  return @viewer.x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure fake_viewer2(int zz) -> int readonly viewer {");
+    gold.append("\n  return @viewer.x + zz;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nbubble fv = fake_viewer() + fake_viewer2(1000);");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int z;");
+    gold.append("\n  method foo(int y) -> int readonly viewer {");
+    gold.append("\n    return @viewer.x + z + y;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  method goo() -> int readonly viewer {");
+    gold.append("\n    return @viewer.x + z;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR r;");
+    gold.append("\n");
+    gold.append("\nbubble ff = r.foo(10) + r.goo();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

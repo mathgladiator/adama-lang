@@ -73,6 +73,10 @@ public class GeneratedBase {
     }
   }
 
+  public void assertNoFormatException(String live) {
+    Assert.assertFalse(live.contains("FORMAT-EXCEPTION"));
+  }
+
   public void assertLiveFail(String live) {
     Assert.assertTrue(!live.endsWith("Success"));
   }

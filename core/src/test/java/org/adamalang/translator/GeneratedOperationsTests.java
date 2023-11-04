@@ -40,6 +40,11 @@ public class GeneratedOperationsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAdditionBulkNoFormatException() {
+    assertNoFormatException(get_AdditionBulk_1());
+  }
+
+  @Test
   public void testAdditionBulkGoodWillHappy() {
     assertGoodWillHappy(get_AdditionBulk_1());
   }
@@ -61,6 +66,28 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("Path:Operations_AdditionBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x;");
+    gold.append("\nint y;");
+    gold.append("\nauto z = x + y;");
+    gold.append("\n");
+    gold.append("\ndouble u;");
+    gold.append("\ndouble v;");
+    gold.append("\nauto w = u + v;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n x = 1 + 2;");
+    gold.append("\n y = x + 3;");
+    gold.append("\n u = 4.0 + 5.0;");
+    gold.append("\n v = u + 6.0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert x == 3;");
+    gold.append("\n  assert y == 6;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

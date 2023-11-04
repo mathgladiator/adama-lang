@@ -40,6 +40,11 @@ public class GeneratedReactiveTests extends GeneratedBase {
   }
 
   @Test
+  public void testFormulaUsingOtherFormulaNoFormatException() {
+    assertNoFormatException(get_FormulaUsingOtherFormula_1());
+  }
+
+  @Test
   public void testFormulaUsingOtherFormulaGoodWillHappy() {
     assertGoodWillHappy(get_FormulaUsingOtherFormula_1());
   }
@@ -61,6 +66,29 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("Path:Reactive_FormulaUsingOtherFormula_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum ClassifyResult {");
+    gold.append("\n  Odd:1, Even:2");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Item {");
+    gold.append("\n  public int id;");
+    gold.append("\n  public formula status = classify(id);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Item> _items;");
+    gold.append("\n");
+    gold.append("\nprocedure dump() {");
+    gold.append("\n  iterate _items where status == ClassifyResult::Even;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction classify(int id) -> ClassifyResult {");
+    gold.append("\n  if (id % 2 == 0) {");
+    gold.append("\n    return ClassifyResult::Even;");
+    gold.append("\n  }");
+    gold.append("\n  return ClassifyResult::Odd;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -938,6 +966,11 @@ public class GeneratedReactiveTests extends GeneratedBase {
   }
 
   @Test
+  public void testMethodSubscriptionsNoFormatException() {
+    assertNoFormatException(get_MethodSubscriptions_2());
+  }
+
+  @Test
   public void testMethodSubscriptionsGoodWillHappy() {
     assertGoodWillHappy(get_MethodSubscriptions_2());
   }
@@ -959,6 +992,35 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("Path:Reactive_MethodSubscriptions_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage JustStr {");
+    gold.append("\n  string str;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord WeekPattern {");
+    gold.append("\n  public bool monday;");
+    gold.append("\n  public bool tuesday;");
+    gold.append("\n  public bool wednesday;");
+    gold.append("\n  public bool thursday;");
+    gold.append("\n  public bool friday;");
+    gold.append("\n  public bool saturday;");
+    gold.append("\n  public bool sunday;");
+    gold.append("\n");
+    gold.append("\n  method summary() -> string readonly {");
+    gold.append("\n    table<JustStr> tbl;");
+    gold.append("\n    if (monday) { tbl <- {str:\"Mo\"};  }");
+    gold.append("\n    if (tuesday) { tbl <- {str:\"Tu\"}; }");
+    gold.append("\n    if (wednesday) {tbl <- {str:\"Wed\"}; }");
+    gold.append("\n    if (thursday) { tbl <- {str:\"Th\"}; }");
+    gold.append("\n    if (friday) { tbl <- {str:\"Fr\"}; }");
+    gold.append("\n    if (saturday) { tbl <- {str:\"Sa\"}; }");
+    gold.append("\n    if (sunday) { tbl <- {str:\"Su\"}; }");
+    gold.append("\n    return (iterate tbl).str.join(\", \");");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  public formula nice = summary();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2084,6 +2146,11 @@ public class GeneratedReactiveTests extends GeneratedBase {
   }
 
   @Test
+  public void testReorderBetweenRecordsNoFormatException() {
+    assertNoFormatException(get_ReorderBetweenRecords_3());
+  }
+
+  @Test
   public void testReorderBetweenRecordsGoodWillHappy() {
     assertGoodWillHappy(get_ReorderBetweenRecords_3());
   }
@@ -2105,6 +2172,23 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("Path:Reactive_ReorderBetweenRecords_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula val_sum = x.val + y.val;");
+    gold.append("\npublic X x;");
+    gold.append("\npublic Y y;");
+    gold.append("\npublic formula val_sum2 = x.z1 + y.z2;");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  public int val;");
+    gold.append("\n  public formula z1 = y.val;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Y {");
+    gold.append("\n  public int val;");
+    gold.append("\n  public formula z2 = x.val;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3210,6 +3294,11 @@ public class GeneratedReactiveTests extends GeneratedBase {
   }
 
   @Test
+  public void testReorderTypingNoFormatException() {
+    assertNoFormatException(get_ReorderTyping_4());
+  }
+
+  @Test
   public void testReorderTypingGoodWillHappy() {
     assertGoodWillHappy(get_ReorderTyping_4());
   }
@@ -3231,6 +3320,16 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("Path:Reactive_ReorderTyping_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula w = z  + y;");
+    gold.append("\n");
+    gold.append("\npublic formula y = x + 1;");
+    gold.append("\n");
+    gold.append("\npublic int x;");
+    gold.append("\n");
+    gold.append("\npublic formula z = y + 2;");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

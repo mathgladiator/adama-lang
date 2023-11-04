@@ -200,6 +200,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testCycleNoFormatException() {
+    assertNoFormatException(get_Cycle_5());
+  }
+
+  @Test
   public void testCycleGoodWillHappy() {
     assertGoodWillHappy(get_Cycle_5());
   }
@@ -221,6 +226,27 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("Path:Enums_Cycle_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E {");
+    gold.append("\n  A,");
+    gold.append("\n  @default B,");
+    gold.append("\n  C:4");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic E head = E::A;");
+    gold.append("\npublic formula n1 = head.next();");
+    gold.append("\npublic formula n2 = n1.next();");
+    gold.append("\npublic formula n3 = n2.next();");
+    gold.append("\npublic formula n4 = n3.next();");
+    gold.append("\n");
+    gold.append("\npublic formula p3 = n4.prev();");
+    gold.append("\npublic formula p2 = p3.prev();");
+    gold.append("\npublic formula p1 = p2.prev();");
+    gold.append("\npublic formula p0 = p1.prev();");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1075,6 +1101,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDispatchInvokeNoFormatException() {
+    assertNoFormatException(get_DispatchInvoke_8());
+  }
+
+  @Test
   public void testDispatchInvokeGoodWillHappy() {
     assertGoodWillHappy(get_DispatchInvoke_8());
   }
@@ -1096,6 +1127,31 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("Path:Enums_DispatchInvoke_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E {");
+    gold.append("\n  X, Y");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ndispatch E::X foo(int z) -> int {");
+    gold.append("\n  return 13;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ndispatch E::Y foo(int z) -> int {");
+    gold.append("\n  return 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int x;");
+    gold.append("\npublic int y;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = E::X.foo(1);");
+    gold.append("\n  y = E::Y.foo(1);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1830,6 +1886,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDispatchOverloadingNoFormatException() {
+    assertNoFormatException(get_DispatchOverloading_10());
+  }
+
+  @Test
   public void testDispatchOverloadingGoodWillHappy() {
     assertGoodWillHappy(get_DispatchOverloading_10());
   }
@@ -1851,6 +1912,39 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("Path:Enums_DispatchOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E {");
+    gold.append("\n  X, Y");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ndispatch E::X foo(int z) -> int {");
+    gold.append("\n  return 13;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ndispatch E::Y foo(int z) -> int {");
+    gold.append("\n  return 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ndispatch E::X foo(double z) -> double {");
+    gold.append("\n  return 13.5 + z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ndispatch E::Y foo(double z) -> double {");
+    gold.append("\n  return 42.5 + z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint x;");
+    gold.append("\nint y;");
+    gold.append("\ndouble u;");
+    gold.append("\ndouble v;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = E::X.foo(1);");
+    gold.append("\n  y = E::Y.foo(1);");
+    gold.append("\n  u = E::X.foo(1.5);");
+    gold.append("\n  v = E::Y.foo(1.5);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2814,6 +2908,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybeNoFormatException() {
+    assertNoFormatException(get_Maybe_17());
+  }
+
+  @Test
   public void testMaybeGoodWillHappy() {
     assertGoodWillHappy(get_Maybe_17());
   }
@@ -2835,6 +2934,32 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("Path:Enums_Maybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E {");
+    gold.append("\n  A,");
+    gold.append("\n  @default B,");
+    gold.append("\n  C:4");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmaybe<E> e_rx;");
+    gold.append("\n");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\nchannel foo(M m)  {");
+    gold.append("\n  maybe<E> e_ntv;");
+    gold.append("\n  e_rx = e_ntv;");
+    gold.append("\n  e_rx = E::A;");
+    gold.append("\n  e_ntv = E::B;");
+    gold.append("\n  if (e_ntv as v1) {");
+    gold.append("\n");
+    gold.append("\n  }");
+    gold.append("\n  if (e_rx as v2) {");
+    gold.append("\n");
+    gold.append("\n  }");
+    gold.append("\n  bool b1 = e_ntv.has();");
+    gold.append("\n  bool b2 = e_rx.has();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3582,6 +3707,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testStrNoFormatException() {
+    assertNoFormatException(get_Str_18());
+  }
+
+  @Test
   public void testStrGoodWillHappy() {
     assertGoodWillHappy(get_Str_18());
   }
@@ -3603,6 +3733,18 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("Path:Enums_Str_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E {");
+    gold.append("\n  A,");
+    gold.append("\n  @default B,");
+    gold.append("\n  C:4");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula a = E::A.to_string();");
+    gold.append("\npublic formula b = E::B.to_string();");
+    gold.append("\npublic formula c = E::C.to_string();");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

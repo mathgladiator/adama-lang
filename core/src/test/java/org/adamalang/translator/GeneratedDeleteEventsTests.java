@@ -80,6 +80,11 @@ public class GeneratedDeleteEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_2());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_2());
   }
@@ -101,6 +106,15 @@ public class GeneratedDeleteEventsTests extends GeneratedBase {
     gold.append("Path:DeleteEvents_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@delete {");
+    gold.append("\n  return false;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@delete {");
+    gold.append("\n  return @who.isAdamaDeveloper();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

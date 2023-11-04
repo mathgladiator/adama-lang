@@ -40,6 +40,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testAggregateMathNoFormatException() {
+    assertNoFormatException(get_AggregateMath_1());
+  }
+
+  @Test
   public void testAggregateMathGoodWillHappy() {
     assertGoodWillHappy(get_AggregateMath_1());
   }
@@ -61,6 +66,27 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("Path:BinaryExpression_AggregateMath_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  public int i = 1;");
+    gold.append("\n  public double d = 1;");
+    gold.append("\n  public string s = \"x\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {i:1, d:3};");
+    gold.append("\n  (iterate t).i += 2;");
+    gold.append("\n  (iterate t).i *= 5;");
+    gold.append("\n  (iterate t).i -= 3;");
+    gold.append("\n  (iterate t).d += 2;");
+    gold.append("\n  (iterate t).d *= 5;");
+    gold.append("\n  (iterate t).d -= 3;");
+    gold.append("\n  (iterate t).s += \"yz\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1036,6 +1062,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testComplexMathNoFormatException() {
+    assertNoFormatException(get_ComplexMath_2());
+  }
+
+  @Test
   public void testComplexMathGoodWillHappy() {
     assertGoodWillHappy(get_ComplexMath_2());
   }
@@ -1057,6 +1088,33 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("Path:BinaryExpression_ComplexMath_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula special_one = 1 + 0 * @i;");
+    gold.append("\npublic formula forty_five = 0.707 + 0.707 * @i;");
+    gold.append("\npublic formula recip = 1.0 / forty_five;");
+    gold.append("\npublic complex final_foo;");
+    gold.append("\npublic complex final_foo2;");
+    gold.append("\npublic complex final_foo3;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  complex foo = 1 + 1 * @i;");
+    gold.append("\n  complex foofoo = foo + foo;");
+    gold.append("\n  complex goo_is_foo_copy = foo;");
+    gold.append("\n  complex gen = foo * goo_is_foo_copy;");
+    gold.append("\n  if (gen / foo as xyz) {");
+    gold.append("\n    final_foo = xyz;");
+    gold.append("\n  }");
+    gold.append("\n  complex z;");
+    gold.append("\n  z = foo;");
+    gold.append("\n  final_foo2 = z * z;");
+    gold.append("\n  final_foo3 = 42;");
+    gold.append("\n  let b0 = foo == 1;");
+    gold.append("\n  let b1 = foo == 2L;");
+    gold.append("\n  let b2 = foo == 3.3;");
+    gold.append("\n  let b3 = foo == gen;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1785,6 +1843,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testNumberCompareNoFormatException() {
+    assertNoFormatException(get_NumberCompare_3());
+  }
+
+  @Test
   public void testNumberCompareGoodWillHappy() {
     assertGoodWillHappy(get_NumberCompare_3());
   }
@@ -1806,6 +1869,38 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("Path:BinaryExpression_NumberCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert 1 == 1;");
+    gold.append("\n  assert (1 != 2);");
+    gold.append("\n  assert !(1 == 2);");
+    gold.append("\n  assert 1 < 2;");
+    gold.append("\n  assert 1 <= 2;");
+    gold.append("\n  assert !(1 > 2);");
+    gold.append("\n  assert !(1 >= 2);");
+    gold.append("\n  assert 2 > 1;");
+    gold.append("\n  assert 2 >= 1;");
+    gold.append("\n  assert !(2 < 1);");
+    gold.append("\n  assert !(2 <= 1);");
+    gold.append("\n  assert 1 < 3.14;");
+    gold.append("\n  assert 1 <= 3.14;");
+    gold.append("\n  assert !(1 > 3.14);");
+    gold.append("\n  assert !(1 >= 3.14);");
+    gold.append("\n  assert 3.14 > 1;");
+    gold.append("\n  assert 3.14 >= 1;");
+    gold.append("\n  assert !(3.14 < 1);");
+    gold.append("\n  assert !(3.14 <= 1);");
+    gold.append("\n  assert 2.71 < 3.14;");
+    gold.append("\n  assert 2.71 <= 3.14;");
+    gold.append("\n  assert !(2.71 > 3.14);");
+    gold.append("\n  assert !(2.71 >= 3.14);");
+    gold.append("\n  assert 3.14 > 2.71;");
+    gold.append("\n  assert 3.14 >= 2.71;");
+    gold.append("\n  assert !(3.14 < 2.71);");
+    gold.append("\n  assert !(3.14 <= 2.71);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2458,6 +2553,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testOperationsHappyNoFormatException() {
+    assertNoFormatException(get_OperationsHappy_4());
+  }
+
+  @Test
   public void testOperationsHappyGoodWillHappy() {
     assertGoodWillHappy(get_OperationsHappy_4());
   }
@@ -2479,6 +2579,81 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("Path:BinaryExpression_OperationsHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\ntest Addition {");
+    gold.append("\n  assert \"xy\" == \"x\" + \"y\";");
+    gold.append("\n  assert \"xtrue\" == \"x\" + true;");
+    gold.append("\n  assert \"falsex\" == false + \"x\";");
+    gold.append("\n  assert \"x1\" == \"x\" + 1;");
+    gold.append("\n  assert \"1x\" == 1 + \"x\";");
+    gold.append("\n  assert \"x3.14\" == \"x\" + 3.14;");
+    gold.append("\n  assert \"3.14x\" == 3.14 + \"x\";");
+    gold.append("\n  assert 3 == 1 + 2;");
+    gold.append("\n  assert 3 == 2.0 + 1;");
+    gold.append("\n  assert 3 == 1 + 2.0;");
+    gold.append("\n  assert 3.0 == 2.0 + 1.0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Subtraction {");
+    gold.append("\n  assert 5 == 10 - 5;");
+    gold.append("\n  assert 3.0 == 6 - 3;");
+    gold.append("\n  assert 3.0 == 6.0 - 3.0;");
+    gold.append("\n  assert 3.0 == 6.0 - 3;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Multiply {");
+    gold.append("\n  assert \"xxx\" == \"x\" * 3;");
+    gold.append("\n  assert 6 == 2 * 3;");
+    gold.append("\n  assert 10 == 2.0 * 5.0;");
+    gold.append("\n  assert 10 == 2.0 * 5;");
+    gold.append("\n  assert 10 == 2 * 5.0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Divide {");
+    gold.append("\n  assert 2 == (4 / 2).getOrDefaultTo(-100.0);");
+    gold.append("\n  assert 2.0 == (4 / 2.0).getOrDefaultTo(-100.0);");
+    gold.append("\n  assert 2.0 == (4.0 / 2.0).getOrDefaultTo(-100.0);");
+    gold.append("\n  assert 1.5 == (3.0 / 2).getOrDefaultTo(-100.0);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Mod {");
+    gold.append("\n  assert 2 == (7 % 5).getOrDefaultTo(-100);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Relate {");
+    gold.append("\n  assert 1 < 2;");
+    gold.append("\n  assert 1.5 < 4.3;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Logic {");
+    gold.append("\n  assert true == true;");
+    gold.append("\n  assert false != true;");
+    gold.append("\n  assert true && true;");
+    gold.append("\n  assert !(true && false);");
+    gold.append("\n  assert !(false && true);");
+    gold.append("\n  assert !(false && false);");
+    gold.append("\n  assert true || true;");
+    gold.append("\n  assert true || false;");
+    gold.append("\n  assert false || true;");
+    gold.append("\n  assert !(false || false);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprincipal other;");
+    gold.append("\nstring s;");
+    gold.append("\n");
+    gold.append("\ntest Equals {");
+    gold.append("\n  assert @no_one == @no_one;");
+    gold.append("\n  assert @no_one == other;");
+    gold.append("\n  assert other == @no_one;");
+    gold.append("\n  assert !(@no_one != @no_one);");
+    gold.append("\n  assert s == \"\";");
+    gold.append("\n  assert \"\" == s;");
+    gold.append("\n  assert s == s;");
+    gold.append("\n  int x = 123;");
+    gold.append("\n  long y = 123;");
+    gold.append("\n  assert x == y;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3274,6 +3449,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testSearchNoFormatException() {
+    assertNoFormatException(get_Search_5());
+  }
+
+  @Test
   public void testSearchGoodWillHappy() {
     assertGoodWillHappy(get_Search_5());
   }
@@ -3295,6 +3475,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("Path:BinaryExpression_Search_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula x = \"a\" =? \"a dog is not a pony\";");
+    gold.append("\npublic formula y = \"x\" =? \"nope\";");
+    gold.append("\npublic formula z = \"quick\" =? \"the quick black fox!\";");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3925,6 +4111,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testStringCompareNoFormatException() {
+    assertNoFormatException(get_StringCompare_6());
+  }
+
+  @Test
   public void testStringCompareGoodWillHappy() {
     assertGoodWillHappy(get_StringCompare_6());
   }
@@ -3946,6 +4137,22 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("Path:BinaryExpression_StringCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert \"x\" == \"x\";");
+    gold.append("\n  assert (\"x\" != \"y\");");
+    gold.append("\n  assert !(\"x\" == \"y\");");
+    gold.append("\n  assert \"x\" < \"y\";");
+    gold.append("\n  assert \"x\" <= \"y\";");
+    gold.append("\n  assert !(\"x\" > \"y\");");
+    gold.append("\n  assert !(\"x\" >= \"y\");");
+    gold.append("\n  assert \"y\" > \"x\";");
+    gold.append("\n  assert \"y\" >= \"x\";");
+    gold.append("\n  assert !(\"y\" < \"x\");");
+    gold.append("\n  assert !(\"y\" <= \"x\");");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -40,6 +40,11 @@ public class GeneratedDynamicTests extends GeneratedBase {
   }
 
   @Test
+  public void testNativeNoFormatException() {
+    assertNoFormatException(get_Native_1());
+  }
+
+  @Test
   public void testNativeGoodWillHappy() {
     assertGoodWillHappy(get_Native_1());
   }
@@ -61,6 +66,18 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("Path:Dynamic_Native_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nbool t;");
+    gold.append("\nbool t2;");
+    gold.append("\n@construct {");
+    gold.append("\n  readonly dynamic cake1;");
+    gold.append("\n  dynamic cake2;");
+    gold.append("\n  dynamic cake3 = cake1;");
+    gold.append("\n  t = cake1 == cake2;");
+    gold.append("\n  cake3 = @null;");
+    gold.append("\n  t2 = cake1 == @null;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -728,6 +745,11 @@ public class GeneratedDynamicTests extends GeneratedBase {
   }
 
   @Test
+  public void testReactiveNoFormatException() {
+    assertNoFormatException(get_Reactive_3());
+  }
+
+  @Test
   public void testReactiveGoodWillHappy() {
     assertGoodWillHappy(get_Reactive_3());
   }
@@ -749,6 +771,26 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("Path:Dynamic_Reactive_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic dynamic food;");
+    gold.append("\nmessage X {");
+    gold.append("\n  dynamic ninja;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel assoc(X x) {");
+    gold.append("\n  food = x.ninja;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrpc assoc2(who, dynamic v) {");
+    gold.append("\n  food = v;");
+    gold.append("\n  dynamic z = food;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  dynamic d;");
+    gold.append("\n  food = d;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1553,6 +1595,11 @@ public class GeneratedDynamicTests extends GeneratedBase {
   }
 
   @Test
+  public void testUsageEasyNoFormatException() {
+    assertNoFormatException(get_UsageEasy_4());
+  }
+
+  @Test
   public void testUsageEasyGoodWillHappy() {
     assertGoodWillHappy(get_UsageEasy_4());
   }
@@ -1574,6 +1621,36 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("Path:Dynamic_UsageEasy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic dynamic food;");
+    gold.append("\nmessage X {");
+    gold.append("\n  dynamic ninja;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel assoc(X x) {");
+    gold.append("\n  food = x.ninja;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrpc assoc2(who, dynamic v) {");
+    gold.append("\n  food = v;");
+    gold.append("\n  dynamic z = food;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int x;");
+    gold.append("\n@construct {");
+    gold.append("\n  dynamic d = (123).dyn();");
+    gold.append("\n  food = d;");
+    gold.append("\n  if (d.i() as vv) {");
+    gold.append("\n    x = vv;");
+    gold.append("\n  }");
+    gold.append("\n  map<string, dynamic> properties;");
+    gold.append("\n  properties[\"x\"] = (42).dyn();");
+    gold.append("\n  if (properties[\"x\"].i() as vvv) {");
+    gold.append("\n    x *= 1000;");
+    gold.append("\n    x += vvv;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

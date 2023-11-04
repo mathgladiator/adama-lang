@@ -40,6 +40,11 @@ public class GeneratedAssetsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAttachmentNoFormatException() {
+    assertNoFormatException(get_Attachment_1());
+  }
+
+  @Test
   public void testAttachmentGoodWillHappy() {
     assertGoodWillHappy(get_Attachment_1());
   }
@@ -61,6 +66,25 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("Path:Assets_Attachment_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic asset latest;");
+    gold.append("\n");
+    gold.append("\npublic formula my_file = latest;");
+    gold.append("\n");
+    gold.append("\npublic formula my_name = latest.name();");
+    gold.append("\npublic formula my_id = latest.id();");
+    gold.append("\npublic formula my_size = latest.size();");
+    gold.append("\npublic formula my_type = latest.type();");
+    gold.append("\npublic formula my_valid = latest.valid();");
+    gold.append("\n");
+    gold.append("\n@can_attach {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@attached (file) {");
+    gold.append("\n  latest = file;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -854,6 +878,11 @@ public class GeneratedAssetsTests extends GeneratedBase {
   }
 
   @Test
+  public void testSanityNoFormatException() {
+    assertNoFormatException(get_Sanity_4());
+  }
+
+  @Test
   public void testSanityGoodWillHappy() {
     assertGoodWillHappy(get_Sanity_4());
   }
@@ -875,6 +904,24 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("Path:Assets_Sanity_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic asset latest;");
+    gold.append("\npublic formula latest_size = latest.size();");
+    gold.append("\npublic formula latest_md5 = latest.md5();");
+    gold.append("\npublic formula latest_sha384 = latest.sha384();");
+    gold.append("\npublic formula latest_type = latest.type();");
+    gold.append("\npublic formula latest_name = latest.name();");
+    gold.append("\n");
+    gold.append("\npublic bool te;");
+    gold.append("\n@construct {");
+    gold.append("\n  asset x;");
+    gold.append("\n  latest = x;");
+    gold.append("\n  latest = @nothing;");
+    gold.append("\n  asset y = x;");
+    gold.append("\n  readonly asset z = y;");
+    gold.append("\n  te = y == z;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

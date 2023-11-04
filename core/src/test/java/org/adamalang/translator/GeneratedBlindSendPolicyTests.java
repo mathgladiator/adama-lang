@@ -80,6 +80,11 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
   }
 
   @Test
+  public void testSimpleNoFormatException() {
+    assertNoFormatException(get_Simple_2());
+  }
+
+  @Test
   public void testSimpleGoodWillHappy() {
     assertGoodWillHappy(get_Simple_2());
   }
@@ -101,6 +106,13 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     gold.append("Path:BlindSendPolicy_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  send {");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

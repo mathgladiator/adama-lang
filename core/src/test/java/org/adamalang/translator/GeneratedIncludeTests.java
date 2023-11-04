@@ -80,6 +80,11 @@ public class GeneratedIncludeTests extends GeneratedBase {
   }
 
   @Test
+  public void testFoundNoFormatException() {
+    assertNoFormatException(get_Found_2());
+  }
+
+  @Test
   public void testFoundGoodWillHappy() {
     assertGoodWillHappy(get_Found_2());
   }
@@ -101,6 +106,10 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("Path:Include_Found_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@include std;");
+    gold.append("\n@include std/foo;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

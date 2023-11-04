@@ -480,6 +480,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   }
 
   @Test
+  public void testSimplesNoFormatException() {
+    assertNoFormatException(get_Simples_12());
+  }
+
+  @Test
   public void testSimplesGoodWillHappy() {
     assertGoodWillHappy(get_Simples_12());
   }
@@ -501,6 +506,33 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("Path:ReadOnly_Simples_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int xyz = 123;");
+    gold.append("\n}");
+    gold.append("\nchannel<M> foo;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  readonly int r0 = 1;");
+    gold.append("\n  readonly bool r1 = true;");
+    gold.append("\n  readonly long r2 = 3L;");
+    gold.append("\n  readonly double r3 = 4.42;");
+    gold.append("\n  readonly string r4 = \"\";");
+    gold.append("\n  readonly list<int> r5;");
+    gold.append("\n  readonly list<principal> r6;");
+    gold.append("\n  readonly principal r7 = @no_one;");
+    gold.append("\n  readonly maybe<int> r8 = 100;");
+    gold.append("\n  table<M> p;");
+    gold.append("\n  readonly table<M> r9 = p;");
+    gold.append("\n  readonly channel<M> r10 = foo;");
+    gold.append("\n  readonly table<M> r11;");
+    gold.append("\n  readonly label r12;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#fooz {");
+    gold.append("\n  readonly future<M> fut = foo.fetch(@no_one);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

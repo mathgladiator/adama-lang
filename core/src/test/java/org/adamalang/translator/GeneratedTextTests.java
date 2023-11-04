@@ -40,6 +40,11 @@ public class GeneratedTextTests extends GeneratedBase {
   }
 
   @Test
+  public void testAppendNoFormatException() {
+    assertNoFormatException(get_Append_1());
+  }
+
+  @Test
   public void testAppendGoodWillHappy() {
     assertGoodWillHappy(get_Append_1());
   }
@@ -61,6 +66,34 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("Path:Text_Append_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  create {");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic text document;");
+    gold.append("\npublic formula document_str = document.get();");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  if ((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"/* adama */\\\"]]}]\").to_dyn() as a) {");
+    gold.append("\n    document.append(0, a);");
+    gold.append("\n  }");
+    gold.append("\n  if ((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[11,[0,\\\"x\\\"]]}]\").to_dyn() as a) {");
+    gold.append("\n    document.append(1, a);");
+    gold.append("\n  }");
+    gold.append("\n  if ((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[[0,\\\"z\\\"],12]}]\").to_dyn() as a) {");
+    gold.append("\n    document.append(2, a);");
+    gold.append("\n  }");
+    gold.append("\n  if ((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[9,[0,\\\" adama\\\"],4]}]\").to_dyn() as a) {");
+    gold.append("\n    document.append(3, a);");
+    gold.append("\n  }");
+    gold.append("\n  if ((\"[{\\\"clientID\\\":\\\"dzg02a\\\",\\\"changes\\\":[4,[11],4]}]\").to_dyn() as a) {");
+    gold.append("\n    document.append(4, a);");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -735,6 +768,11 @@ public class GeneratedTextTests extends GeneratedBase {
   }
 
   @Test
+  public void testCompileAdamaNoFormatException() {
+    assertNoFormatException(get_CompileAdama_2());
+  }
+
+  @Test
   public void testCompileAdamaGoodWillHappy() {
     assertGoodWillHappy(get_CompileAdama_2());
   }
@@ -756,6 +794,24 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("Path:Text_CompileAdama_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  create {");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic text document;");
+    gold.append("\npublic formula document_str = document.get();");
+    gold.append("\npublic formula issues = Adama.validate(document_str);");
+    gold.append("\npublic formula reflection = Adama.reflect(document_str);");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  if ((\"[{\\\"clientID\\\":\\\"zzztop\\\",\\\"changes\\\":[[0,\\\"public string x = 123;\\\"]]}]\").to_dyn() as a) {");
+    gold.append("\n    document.append(0, a);");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1430,6 +1486,11 @@ public class GeneratedTextTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowNoFormatException() {
+    assertNoFormatException(get_Flow_3());
+  }
+
+  @Test
   public void testFlowGoodWillHappy() {
     assertGoodWillHappy(get_Flow_3());
   }
@@ -1451,6 +1512,24 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("Path:Text_Flow_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  create {");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic text document;");
+    gold.append("\n");
+    gold.append("\nmessage Append {");
+    gold.append("\n  int seq;");
+    gold.append("\n  dynamic change;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel write(Append a) {");
+    gold.append("\n  document.append(a.seq, a.change);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2188,6 +2267,11 @@ public class GeneratedTextTests extends GeneratedBase {
   }
 
   @Test
+  public void testIngestionNoFormatException() {
+    assertNoFormatException(get_Ingestion_4());
+  }
+
+  @Test
   public void testIngestionGoodWillHappy() {
     assertGoodWillHappy(get_Ingestion_4());
   }
@@ -2209,6 +2293,26 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("Path:Text_Ingestion_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@static {");
+    gold.append("\n  create {");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic text document;");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  public text doc;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic R r;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  document = \"123\";");
+    gold.append("\n  r <- {doc:\"42\"};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

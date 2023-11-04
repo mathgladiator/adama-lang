@@ -40,6 +40,11 @@ public class GeneratedTransitionTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyInstantNoFormatException() {
+    assertNoFormatException(get_HappyInstant_1());
+  }
+
+  @Test
   public void testHappyInstantGoodWillHappy() {
     assertGoodWillHappy(get_HappyInstant_1());
   }
@@ -61,6 +66,19 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("Path:Transition_HappyInstant_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #start;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#start {");
+    gold.append("\n  transition #next;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#next {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -667,6 +685,11 @@ public class GeneratedTransitionTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyTimeTravelNoFormatException() {
+    assertNoFormatException(get_HappyTimeTravel_2());
+  }
+
+  @Test
   public void testHappyTimeTravelGoodWillHappy() {
     assertGoodWillHappy(get_HappyTimeTravel_2());
   }
@@ -688,6 +711,19 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("Path:Transition_HappyTimeTravel_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #start in 0.01;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#start {");
+    gold.append("\n  transition #next in 0.01;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#next {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1294,6 +1330,11 @@ public class GeneratedTransitionTests extends GeneratedBase {
   }
 
   @Test
+  public void testInvokeLegacyNoFormatException() {
+    assertNoFormatException(get_InvokeLegacy_3());
+  }
+
+  @Test
   public void testInvokeLegacyGoodWillHappy() {
     assertGoodWillHappy(get_InvokeLegacy_3());
   }
@@ -1315,6 +1356,25 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("Path:Transition_InvokeLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nint x;");
+    gold.append("\n");
+    gold.append("\n#init {");
+    gold.append("\n  invoke #change_x;");
+    gold.append("\n  assert x==42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n x = 10;");
+    gold.append("\n transition #init;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#change_x {");
+    gold.append("\n  x = 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

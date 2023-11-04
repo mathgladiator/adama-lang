@@ -40,6 +40,11 @@ public class GeneratedChannelsGuardTests extends GeneratedBase {
   }
 
   @Test
+  public void testFoundOpenNoFormatException() {
+    assertNoFormatException(get_FoundOpen_1());
+  }
+
+  @Test
   public void testFoundOpenGoodWillHappy() {
     assertGoodWillHappy(get_FoundOpen_1());
   }
@@ -61,6 +66,18 @@ public class GeneratedChannelsGuardTests extends GeneratedBase {
     gold.append("Path:ChannelsGuard_FoundOpen_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel goo(X x) open requires<p> {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npolicy p {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -739,6 +756,11 @@ public class GeneratedChannelsGuardTests extends GeneratedBase {
   }
 
   @Test
+  public void testFoundNoFormatException() {
+    assertNoFormatException(get_Found_2());
+  }
+
+  @Test
   public void testFoundGoodWillHappy() {
     assertGoodWillHappy(get_Found_2());
   }
@@ -760,6 +782,18 @@ public class GeneratedChannelsGuardTests extends GeneratedBase {
     gold.append("Path:ChannelsGuard_Found_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel goo(X x) requires<p> {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npolicy p {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

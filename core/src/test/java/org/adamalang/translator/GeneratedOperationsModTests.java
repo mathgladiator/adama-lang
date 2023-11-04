@@ -40,6 +40,11 @@ public class GeneratedOperationsModTests extends GeneratedBase {
   }
 
   @Test
+  public void testFormulasNoFormatException() {
+    assertNoFormatException(get_Formulas_1());
+  }
+
+  @Test
   public void testFormulasGoodWillHappy() {
     assertGoodWillHappy(get_Formulas_1());
   }
@@ -61,6 +66,17 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("Path:OperationsMod_Formulas_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula f0 = 1 % 1;");
+    gold.append("\npublic formula f1 = 1 % 0;");
+    gold.append("\npublic formula f2 = 1L % 1;");
+    gold.append("\npublic formula f3 = 1L % 0;");
+    gold.append("\npublic formula f4 = 1L % 1L;");
+    gold.append("\npublic formula f5 = 1L % 1L;");
+    gold.append("\npublic formula f6 = 1L % 0L;");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

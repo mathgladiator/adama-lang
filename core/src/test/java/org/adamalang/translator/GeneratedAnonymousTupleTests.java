@@ -40,6 +40,11 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
   }
 
   @Test
+  public void testValuesNoFormatException() {
+    assertNoFormatException(get_Values_1());
+  }
+
+  @Test
   public void testValuesGoodWillHappy() {
     assertGoodWillHappy(get_Values_1());
   }
@@ -61,6 +66,15 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("Path:AnonymousTuple_Values_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@construct {");
+    gold.append("\n  let x = (1, 2, 3);");
+    gold.append("\n  let y = (\"true\", false, 3.14);");
+    gold.append("\n  let z = ([1,2], true);");
+    gold.append("\n  let k = x.first;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

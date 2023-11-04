@@ -80,6 +80,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testConstructClientAndMessageNoFormatException() {
+    assertNoFormatException(get_ConstructClientAndMessage_2());
+  }
+
+  @Test
   public void testConstructClientAndMessageGoodWillHappy() {
     assertGoodWillHappy(get_ConstructClientAndMessage_2());
   }
@@ -101,6 +106,19 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_ConstructClientAndMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprincipal owner;");
+    gold.append("\nint v;");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct (M m3) {");
+    gold.append("\n  owner = @who;");
+    gold.append("\n  v = m3.x;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -802,6 +820,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testConstructJustClientNoFormatException() {
+    assertNoFormatException(get_ConstructJustClient_3());
+  }
+
+  @Test
   public void testConstructJustClientGoodWillHappy() {
     assertGoodWillHappy(get_ConstructJustClient_3());
   }
@@ -823,6 +846,14 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_ConstructJustClient_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprincipal owner;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  owner = @who;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1427,6 +1458,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testConstructJustMessageNoFormatException() {
+    assertNoFormatException(get_ConstructJustMessage_4());
+  }
+
+  @Test
   public void testConstructJustMessageGoodWillHappy() {
     assertGoodWillHappy(get_ConstructJustMessage_4());
   }
@@ -1448,6 +1484,17 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_ConstructJustMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint v;");
+    gold.append("\n");
+    gold.append("\n@construct (M m1) {");
+    gold.append("\n  v = m1.x;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2134,6 +2181,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testConstructNoArgsNoFormatException() {
+    assertNoFormatException(get_ConstructNoArgs_5());
+  }
+
+  @Test
   public void testConstructNoArgsGoodWillHappy() {
     assertGoodWillHappy(get_ConstructNoArgs_5());
   }
@@ -2155,6 +2207,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_ConstructNoArgs_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2742,6 +2799,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testHasContextNoFormatException() {
+    assertNoFormatException(get_HasContext_6());
+  }
+
+  @Test
   public void testHasContextGoodWillHappy() {
     assertGoodWillHappy(get_HasContext_6());
   }
@@ -2763,6 +2825,16 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_HasContext_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic string ip;");
+    gold.append("\npublic string origin;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  ip = @context.ip;");
+    gold.append("\n  origin = @context.origin;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3393,6 +3465,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_7());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_7());
   }
@@ -3414,6 +3491,27 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprincipal owner;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  owner = @who;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint v;");
+    gold.append("\n");
+    gold.append("\n@construct (M m1) {");
+    gold.append("\n  v += m1.x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct (M m3) {");
+    gold.append("\n  v += m3.x;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4125,6 +4223,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testUnionTypesNoFormatException() {
+    assertNoFormatException(get_UnionTypes_8());
+  }
+
+  @Test
   public void testUnionTypesGoodWillHappy() {
     assertGoodWillHappy(get_UnionTypes_8());
   }
@@ -4146,6 +4249,25 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("Path:Constructor_UnionTypes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage MA {");
+    gold.append("\n  int x;");
+    gold.append("\n  string z;");
+    gold.append("\n  bool u;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage MB {");
+    gold.append("\n  int y;");
+    gold.append("\n  string v;");
+    gold.append("\n  bool u;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct (MA a) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct (MB b) {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

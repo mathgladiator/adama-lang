@@ -80,6 +80,11 @@ public class GeneratedAuthTests extends GeneratedBase {
   }
 
   @Test
+  public void testPrimaryNoFormatException() {
+    assertNoFormatException(get_Primary_2());
+  }
+
+  @Test
   public void testPrimaryGoodWillHappy() {
     assertGoodWillHappy(get_Primary_2());
   }
@@ -101,6 +106,22 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("Path:Auth_Primary_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@authorize (username, password) {");
+    gold.append("\n  if (username == \"goodguy\") {");
+    gold.append("\n    return \"agent\";");
+    gold.append("\n  }");
+    gold.append("\n  abort;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic string password_last;");
+    gold.append("\n");
+    gold.append("\n@password (password) {");
+    gold.append("\n  if (@who == @no_one) {");
+    gold.append("\n    password_last = password;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -40,6 +40,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testArrayNoFormatException() {
+    assertNoFormatException(get_Array_1());
+  }
+
+  @Test
   public void testArrayGoodWillHappy() {
     assertGoodWillHappy(get_Array_1());
   }
@@ -61,6 +66,20 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_Array_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- [{x:1, y:2}, {x:3, y:4}];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1109,6 +1128,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testCopyNoFormatException() {
+    assertNoFormatException(get_Copy_5());
+  }
+
+  @Test
   public void testCopyGoodWillHappy() {
     assertGoodWillHappy(get_Copy_5());
   }
@@ -1130,6 +1154,19 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_Copy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> x1;");
+    gold.append("\ntable<X> x2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x1 <- {x:123};");
+    gold.append("\n  x2 <- iterate x1;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2169,6 +2206,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testIntoMaybeRecordNoFormatException() {
+    assertNoFormatException(get_IntoMaybeRecord_9());
+  }
+
+  @Test
   public void testIntoMaybeRecordGoodWillHappy() {
     assertGoodWillHappy(get_IntoMaybeRecord_9());
   }
@@ -2190,6 +2232,26 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_IntoMaybeRecord_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmaybe<R> mr;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #putdata;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nbool got = false;");
+    gold.append("\n#putdata {");
+    gold.append("\n  mr <- {x:1, y:123};");
+    gold.append("\n  if (mr as r) {");
+    gold.append("\n    got = true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3154,6 +3216,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testLossyNoFormatException() {
+    assertNoFormatException(get_Lossy_10());
+  }
+
+  @Test
   public void testLossyGoodWillHappy() {
     assertGoodWillHappy(get_Lossy_10());
   }
@@ -3175,6 +3242,30 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_Lossy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n  int z lossy;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\nX x;");
+    gold.append("\n");
+    gold.append("\nchannel foo(M m) {");
+    gold.append("\n  tbl <- m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel goo(M m) {");
+    gold.append("\n  x <- m;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4172,6 +4263,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybeBoolNoFormatException() {
+    assertNoFormatException(get_MaybeBool_11());
+  }
+
+  @Test
   public void testMaybeBoolGoodWillHappy() {
     assertGoodWillHappy(get_MaybeBool_11());
   }
@@ -4193,6 +4289,29 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_MaybeBool_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  public bool x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Y {");
+    gold.append("\n  public X z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage dX {");
+    gold.append("\n  maybe<bool> x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage dY {");
+    gold.append("\n  dX z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic Y val;");
+    gold.append("\n");
+    gold.append("\nchannel foo(dY dV) {");
+    gold.append("\n  val <- dV;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5505,6 +5624,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecursiveMapNoFormatException() {
+    assertNoFormatException(get_RecursiveMap_14());
+  }
+
+  @Test
   public void testRecursiveMapGoodWillHappy() {
     assertGoodWillHappy(get_RecursiveMap_14());
   }
@@ -5526,6 +5650,27 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_RecursiveMap_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Z {");
+    gold.append("\n  public int z;");
+    gold.append("\n  public map<int, int> properties;");
+    gold.append("\n  public map<string, dynamic> properties2;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic map<string, Z> maaaap;");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int z;");
+    gold.append("\n  map<int, int> properties;");
+    gold.append("\n  map<string, dynamic> properties2;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  map<string, M> here;");
+    gold.append("\n  maaaap <- here;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6595,6 +6740,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecursiveTableNoFormatException() {
+    assertNoFormatException(get_RecursiveTable_15());
+  }
+
+  @Test
   public void testRecursiveTableGoodWillHappy() {
     assertGoodWillHappy(get_RecursiveTable_15());
   }
@@ -6616,6 +6766,26 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_RecursiveTable_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Z {");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n  table<Z> z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nX v;");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  v <- {x:1, y:2, z:[{z:1}]};");
+    gold.append("\n  tbl <- {x:1, y:2, z:[{z:1}]};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7996,6 +8166,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testSimpleAsNoFormatException() {
+    assertNoFormatException(get_SimpleAs_18());
+  }
+
+  @Test
   public void testSimpleAsGoodWillHappy() {
     assertGoodWillHappy(get_SimpleAs_18());
   }
@@ -8017,6 +8192,30 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_SimpleAs_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\nint last_id1;");
+    gold.append("\nint last_id2;");
+    gold.append("\nint last_id3;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {x:1, y:2} as z1;");
+    gold.append("\n  tbl <- {x:3, y:4} as z2;");
+    gold.append("\n  last_id1 = z1;");
+    gold.append("\n  last_id2 = z2;");
+    gold.append("\n  tbl <- [{x:5, y:6}, {x:7, y:8}] as l;");
+    gold.append("\n  last_id3 = 0;");
+    gold.append("\n  foreach(i in l) {");
+    gold.append("\n    last_id3 += i;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -9024,6 +9223,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testSimpleNoFormatException() {
+    assertNoFormatException(get_Simple_19());
+  }
+
+  @Test
   public void testSimpleGoodWillHappy() {
     assertGoodWillHappy(get_Simple_19());
   }
@@ -9045,6 +9249,21 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nX v;");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  v <- {x:1, y:2};");
+    gold.append("\n  tbl <- {x:1, y:2};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -9994,6 +10213,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testSkipIDNoFormatException() {
+    assertNoFormatException(get_SkipID_20());
+  }
+
+  @Test
   public void testSkipIDGoodWillHappy() {
     assertGoodWillHappy(get_SkipID_20());
   }
@@ -10015,6 +10239,18 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_SkipID_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int id;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {id:500};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -10891,6 +11127,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testUnfoldMaybeNoFormatException() {
+    assertNoFormatException(get_UnfoldMaybe_21());
+  }
+
+  @Test
   public void testUnfoldMaybeGoodWillHappy() {
     assertGoodWillHappy(get_UnfoldMaybe_21());
   }
@@ -10912,6 +11153,29 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("Path:Ingestion_UnfoldMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nX v;");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  maybe<int> x;");
+    gold.append("\n  maybe<int> y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\nmap<int, X> pairing;");
+    gold.append("\n");
+    gold.append("\nchannel foo(M m) {");
+    gold.append("\n  v <- m;");
+    gold.append("\n  tbl <- m;");
+    gold.append("\n  pairing[0] <- m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

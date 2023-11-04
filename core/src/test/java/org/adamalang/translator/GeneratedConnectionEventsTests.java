@@ -80,6 +80,11 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_2());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_2());
   }
@@ -101,6 +106,20 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("Path:ConnectionEvents_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@connected {");
+    gold.append("\n  // can inspect, but does not deny");
+    gold.append("\n  return false;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@disconnected {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -708,6 +727,11 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_3());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_3());
   }
@@ -729,6 +753,22 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("Path:ConnectionEvents_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n// by default, documents dont allow connections; this opens them up");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  // can inspect, but does not deny");
+    gold.append("\n  return false;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@disconnected {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

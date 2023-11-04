@@ -40,6 +40,11 @@ public class GeneratedFunctionsAbortableTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_1());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_1());
   }
@@ -61,6 +66,29 @@ public class GeneratedFunctionsAbortableTests extends GeneratedBase {
     gold.append("Path:FunctionsAbortable_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprocedure fake_abort() aborts {");
+    gold.append("\n  abort;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\nchannel foo(M m) {");
+    gold.append("\n  fake_abort();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  method a() -> int aborts {");
+    gold.append("\n    abort;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR r;");
+    gold.append("\n");
+    gold.append("\nchannel foo2(M m) {");
+    gold.append("\n  r.a();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

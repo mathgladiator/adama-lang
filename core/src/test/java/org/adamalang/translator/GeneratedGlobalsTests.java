@@ -40,6 +40,11 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   }
 
   @Test
+  public void testClientNoFormatException() {
+    assertNoFormatException(get_Client_1());
+  }
+
+  @Test
   public void testClientGoodWillHappy() {
     assertGoodWillHappy(get_Client_1());
   }
@@ -61,6 +66,18 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("Path:Globals_Client_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic principal p0;");
+    gold.append("\npublic bool b0;");
+    gold.append("\n");
+    gold.append("\npublic principal p1;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  p0 = Principal.principalOf(\"mooo\");");
+    gold.append("\n  b0 = p0.isFromDocument();");
+    gold.append("\n  p1 = \"mopey\".principalOf();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -751,6 +768,11 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   }
 
   @Test
+  public void testFunctionOverloadingNoFormatException() {
+    assertNoFormatException(get_FunctionOverloading_3());
+  }
+
+  @Test
   public void testFunctionOverloadingGoodWillHappy() {
     assertGoodWillHappy(get_FunctionOverloading_3());
   }
@@ -772,6 +794,34 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("Path:Globals_FunctionOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction poo() -> int {");
+    gold.append("\n  return 1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction poo(int x) -> int {");
+    gold.append("\n  return x + 1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint z1;");
+    gold.append("\nint z2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  z1 = poo();");
+    gold.append("\n  z2 = poo(122);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure dope() {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure dope(int z) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#z {");
+    gold.append("\n  dope();");
+    gold.append("\n  dope(42);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1416,6 +1466,11 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMathLibNoFormatException() {
+    assertNoFormatException(get_MathLib_4());
+  }
+
+  @Test
   public void testMathLibGoodWillHappy() {
     assertGoodWillHappy(get_MathLib_4());
   }
@@ -1437,6 +1492,30 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("Path:Globals_MathLib_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic double x;");
+    gold.append("\npublic int y;");
+    gold.append("\ndouble zzz;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = 12.7;");
+    gold.append("\n  double d1 = Math.abs(x);");
+    gold.append("\n  double d2 = Math.sin(x);");
+    gold.append("\n  double d3 = Math.cos(x);");
+    gold.append("\n  double d4 = Math.tan(x);");
+    gold.append("\n  double d5 = (d1 + (d2 + d3) + d4);");
+    gold.append("\n  zzz = Math.PI();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#next {");
+    gold.append("\n  y = 3;");
+    gold.append("\n  int i1 = Math.abs(y);");
+    gold.append("\n  double i2 = Math.floor(x);");
+    gold.append("\n  double i3 = Math.ceil(x);");
+    gold.append("\n  double i4 = Math.round(x);");
+    gold.append("\n  double i5 = (i3 * 13.5).round();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2151,6 +2230,11 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   }
 
   @Test
+  public void testRandomNoFormatException() {
+    assertNoFormatException(get_Random_6());
+  }
+
+  @Test
   public void testRandomGoodWillHappy() {
     assertGoodWillHappy(get_Random_6());
   }
@@ -2172,6 +2256,23 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("Path:Globals_Random_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint v0;");
+    gold.append("\nint v1;");
+    gold.append("\nint v2;");
+    gold.append("\ndouble d0;");
+    gold.append("\ndouble d1;");
+    gold.append("\nlong l;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  v0 = Random.genInt();");
+    gold.append("\n  v1 = Random.genBoundInt(100);");
+    gold.append("\n  v2 = Random.genBoundInt(-1);");
+    gold.append("\n  d0 = Random.genDouble();");
+    gold.append("\n  d1 = Random.getDoubleGaussian();");
+    gold.append("\n  l = Random.genLong();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

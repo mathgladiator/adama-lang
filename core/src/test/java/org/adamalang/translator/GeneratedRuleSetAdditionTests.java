@@ -40,6 +40,11 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyCasesNoFormatException() {
+    assertNoFormatException(get_HappyCases_1());
+  }
+
+  @Test
   public void testHappyCasesGoodWillHappy() {
     assertGoodWillHappy(get_HappyCases_1());
   }
@@ -61,6 +66,29 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
     gold.append("Path:RuleSetAddition_HappyCases_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint i = 1;");
+    gold.append("\ndouble d = 3.14;");
+    gold.append("\nstring s = \"x\";");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  int r0 = i + i;");
+    gold.append("\n  int r1 = r0 + i;");
+    gold.append("\n  int r2 = 1 + r0;");
+    gold.append("\n  int r3 = 4 + 4 + r0 + r1 + r2;");
+    gold.append("\n  double r4 = i + d;");
+    gold.append("\n  double r5 = 2.71 + d;");
+    gold.append("\n  double r6 = d + r4 + r5;");
+    gold.append("\n  string r7 = s + \"yz\";");
+    gold.append("\n  string r8 = s + true;");
+    gold.append("\n  string r9 = s + 123;");
+    gold.append("\n  string r10 = r7 + r8 + r9;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -40,6 +40,11 @@ public class GeneratedLinqDynTests extends GeneratedBase {
   }
 
   @Test
+  public void testOrderDynHappyNoFormatException() {
+    assertNoFormatException(get_OrderDynHappy_1());
+  }
+
+  @Test
   public void testOrderDynHappyGoodWillHappy() {
     assertGoodWillHappy(get_OrderDynHappy_1());
   }
@@ -61,6 +66,27 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("Path:LinqDyn_OrderDynHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  public int id;");
+    gold.append("\n  public int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {z:0};");
+    gold.append("\n  t <- {z:1};");
+    gold.append("\n  t <- {z:2};");
+    gold.append("\n  t <- {z:5};");
+    gold.append("\n  t <- {z:0};");
+    gold.append("\n  t <- {z:0};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula happy = iterate t order_dyn \"z\";");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

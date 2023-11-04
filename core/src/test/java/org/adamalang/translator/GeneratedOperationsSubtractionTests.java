@@ -40,6 +40,11 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
   }
 
   @Test
+  public void testAssignmentNoFormatException() {
+    assertNoFormatException(get_Assignment_1());
+  }
+
+  @Test
   public void testAssignmentGoodWillHappy() {
     assertGoodWillHappy(get_Assignment_1());
   }
@@ -61,6 +66,40 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("Path:OperationsSubtraction_Assignment_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int r0;");
+    gold.append("\npublic long r1;");
+    gold.append("\npublic double r2;");
+    gold.append("\npublic complex r3;");
+    gold.append("\n@construct {");
+    gold.append("\n  int l0;");
+    gold.append("\n  r0 -= 1;");
+    gold.append("\n  l0 -= 1;");
+    gold.append("\n  r0 -= l0;");
+    gold.append("\n  long l1;");
+    gold.append("\n  r1 -= 1;");
+    gold.append("\n  l1 -= 1;");
+    gold.append("\n  r1 -= l1;");
+    gold.append("\n  r1 -= 2L;");
+    gold.append("\n  l1 -= 2L;");
+    gold.append("\n  r1 -= l1;");
+    gold.append("\n  double l2;");
+    gold.append("\n  r2 -= 1;");
+    gold.append("\n  l2 -= 1;");
+    gold.append("\n  r2 -= l2;");
+    gold.append("\n  r2 -= 2L;");
+    gold.append("\n  l2 -= 2L;");
+    gold.append("\n  r2 -= l2;");
+    gold.append("\n  r2 -= 3.5;");
+    gold.append("\n  l2 -= 3.5;");
+    gold.append("\n  r2 -= l2;");
+    gold.append("\n  r3 -= 1;");
+    gold.append("\n  r3 -= 2L;");
+    gold.append("\n  r3 -= 3.5;");
+    gold.append("\n  r3 -= 1 + 2 * @i;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -773,6 +812,11 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
   }
 
   @Test
+  public void testFormulasNoFormatException() {
+    assertNoFormatException(get_Formulas_2());
+  }
+
+  @Test
   public void testFormulasGoodWillHappy() {
     assertGoodWillHappy(get_Formulas_2());
   }
@@ -794,6 +838,178 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("Path:OperationsSubtraction_Formulas_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula f0 = 1 - 1;");
+    gold.append("\npublic formula f1 = 1 - 1L;");
+    gold.append("\npublic formula f2 = 1 - 0.5;");
+    gold.append("\npublic formula f3 = 1 - (1 / 2);");
+    gold.append("\npublic formula f4 = 1 - (1 / 0);");
+    gold.append("\npublic formula f5 = 1 - @i;");
+    gold.append("\npublic formula f6 = 1 - (1 / @i);");
+    gold.append("\npublic formula f7 = 1 - (@i / 0);");
+    gold.append("\npublic formula f8 = 1 - 0;");
+    gold.append("\npublic formula f9 = 1 - 0L;");
+    gold.append("\npublic formula f10 = 1 - 0.0;");
+    gold.append("\npublic formula f11 = 1 - (@i * 0);");
+    gold.append("\npublic formula f12 = 1 - (@i / 0.0);");
+    gold.append("\npublic formula f13 = 1L - 1;");
+    gold.append("\npublic formula f14 = 1L - 1L;");
+    gold.append("\npublic formula f15 = 1L - 0.5;");
+    gold.append("\npublic formula f16 = 1L - (1 / 2);");
+    gold.append("\npublic formula f17 = 1L - (1 / 0);");
+    gold.append("\npublic formula f18 = 1L - @i;");
+    gold.append("\npublic formula f19 = 1L - (1 / @i);");
+    gold.append("\npublic formula f20 = 1L - (@i / 0);");
+    gold.append("\npublic formula f21 = 1L - 0;");
+    gold.append("\npublic formula f22 = 1L - 0L;");
+    gold.append("\npublic formula f23 = 1L - 0.0;");
+    gold.append("\npublic formula f24 = 1L - (@i * 0);");
+    gold.append("\npublic formula f25 = 1L - (@i / 0.0);");
+    gold.append("\npublic formula f26 = 0.5 - 1;");
+    gold.append("\npublic formula f27 = 0.5 - 1L;");
+    gold.append("\npublic formula f28 = 0.5 - 0.5;");
+    gold.append("\npublic formula f29 = 0.5 - (1 / 2);");
+    gold.append("\npublic formula f30 = 0.5 - (1 / 0);");
+    gold.append("\npublic formula f31 = 0.5 - @i;");
+    gold.append("\npublic formula f32 = 0.5 - (1 / @i);");
+    gold.append("\npublic formula f33 = 0.5 - (@i / 0);");
+    gold.append("\npublic formula f34 = 0.5 - 0;");
+    gold.append("\npublic formula f35 = 0.5 - 0L;");
+    gold.append("\npublic formula f36 = 0.5 - 0.0;");
+    gold.append("\npublic formula f37 = 0.5 - (@i * 0);");
+    gold.append("\npublic formula f38 = 0.5 - (@i / 0.0);");
+    gold.append("\npublic formula f39 = (1 / 2) - 1;");
+    gold.append("\npublic formula f40 = (1 / 2) - 1L;");
+    gold.append("\npublic formula f41 = (1 / 2) - 0.5;");
+    gold.append("\npublic formula f42 = (1 / 2) - (1 / 2);");
+    gold.append("\npublic formula f43 = (1 / 2) - (1 / 0);");
+    gold.append("\npublic formula f44 = (1 / 2) - @i;");
+    gold.append("\npublic formula f45 = (1 / 2) - (1 / @i);");
+    gold.append("\npublic formula f46 = (1 / 2) - (@i / 0);");
+    gold.append("\npublic formula f47 = (1 / 2) - 0;");
+    gold.append("\npublic formula f48 = (1 / 2) - 0L;");
+    gold.append("\npublic formula f49 = (1 / 2) - 0.0;");
+    gold.append("\npublic formula f50 = (1 / 2) - (@i * 0);");
+    gold.append("\npublic formula f51 = (1 / 2) - (@i / 0.0);");
+    gold.append("\npublic formula f52 = (1 / 0) - 1;");
+    gold.append("\npublic formula f53 = (1 / 0) - 1L;");
+    gold.append("\npublic formula f54 = (1 / 0) - 0.5;");
+    gold.append("\npublic formula f55 = (1 / 0) - (1 / 2);");
+    gold.append("\npublic formula f56 = (1 / 0) - (1 / 0);");
+    gold.append("\npublic formula f57 = (1 / 0) - @i;");
+    gold.append("\npublic formula f58 = (1 / 0) - (1 / @i);");
+    gold.append("\npublic formula f59 = (1 / 0) - (@i / 0);");
+    gold.append("\npublic formula f60 = (1 / 0) - 0;");
+    gold.append("\npublic formula f61 = (1 / 0) - 0L;");
+    gold.append("\npublic formula f62 = (1 / 0) - 0.0;");
+    gold.append("\npublic formula f63 = (1 / 0) - (@i * 0);");
+    gold.append("\npublic formula f64 = (1 / 0) - (@i / 0.0);");
+    gold.append("\npublic formula f65 = @i - 1;");
+    gold.append("\npublic formula f66 = @i - 1L;");
+    gold.append("\npublic formula f67 = @i - 0.5;");
+    gold.append("\npublic formula f68 = @i - (1 / 2);");
+    gold.append("\npublic formula f69 = @i - (1 / 0);");
+    gold.append("\npublic formula f70 = @i - @i;");
+    gold.append("\npublic formula f71 = @i - (1 / @i);");
+    gold.append("\npublic formula f72 = @i - (@i / 0);");
+    gold.append("\npublic formula f73 = @i - 0;");
+    gold.append("\npublic formula f74 = @i - 0L;");
+    gold.append("\npublic formula f75 = @i - 0.0;");
+    gold.append("\npublic formula f76 = @i - (@i * 0);");
+    gold.append("\npublic formula f77 = @i - (@i / 0.0);");
+    gold.append("\npublic formula f78 = (1 / @i) - 1;");
+    gold.append("\npublic formula f79 = (1 / @i) - 1L;");
+    gold.append("\npublic formula f80 = (1 / @i) - 0.5;");
+    gold.append("\npublic formula f81 = (1 / @i) - (1 / 2);");
+    gold.append("\npublic formula f82 = (1 / @i) - (1 / 0);");
+    gold.append("\npublic formula f83 = (1 / @i) - @i;");
+    gold.append("\npublic formula f84 = (1 / @i) - (1 / @i);");
+    gold.append("\npublic formula f85 = (1 / @i) - (@i / 0);");
+    gold.append("\npublic formula f86 = (1 / @i) - 0;");
+    gold.append("\npublic formula f87 = (1 / @i) - 0L;");
+    gold.append("\npublic formula f88 = (1 / @i) - 0.0;");
+    gold.append("\npublic formula f89 = (1 / @i) - (@i * 0);");
+    gold.append("\npublic formula f90 = (1 / @i) - (@i / 0.0);");
+    gold.append("\npublic formula f91 = (@i / 0) - 1;");
+    gold.append("\npublic formula f92 = (@i / 0) - 1L;");
+    gold.append("\npublic formula f93 = (@i / 0) - 0.5;");
+    gold.append("\npublic formula f94 = (@i / 0) - (1 / 2);");
+    gold.append("\npublic formula f95 = (@i / 0) - (1 / 0);");
+    gold.append("\npublic formula f96 = (@i / 0) - @i;");
+    gold.append("\npublic formula f97 = (@i / 0) - (1 / @i);");
+    gold.append("\npublic formula f98 = (@i / 0) - (@i / 0);");
+    gold.append("\npublic formula f99 = (@i / 0) - 0;");
+    gold.append("\npublic formula f100 = (@i / 0) - 0L;");
+    gold.append("\npublic formula f101 = (@i / 0) - 0.0;");
+    gold.append("\npublic formula f102 = (@i / 0) - (@i * 0);");
+    gold.append("\npublic formula f103 = (@i / 0) - (@i / 0.0);");
+    gold.append("\npublic formula f104 = 0 - 1;");
+    gold.append("\npublic formula f105 = 0 - 1L;");
+    gold.append("\npublic formula f106 = 0 - 0.5;");
+    gold.append("\npublic formula f107 = 0 - (1 / 2);");
+    gold.append("\npublic formula f108 = 0 - (1 / 0);");
+    gold.append("\npublic formula f109 = 0 - @i;");
+    gold.append("\npublic formula f110 = 0 - (1 / @i);");
+    gold.append("\npublic formula f111 = 0 - (@i / 0);");
+    gold.append("\npublic formula f112 = 0 - 0;");
+    gold.append("\npublic formula f113 = 0 - 0L;");
+    gold.append("\npublic formula f114 = 0 - 0.0;");
+    gold.append("\npublic formula f115 = 0 - (@i * 0);");
+    gold.append("\npublic formula f116 = 0 - (@i / 0.0);");
+    gold.append("\npublic formula f117 = 0L - 1;");
+    gold.append("\npublic formula f118 = 0L - 1L;");
+    gold.append("\npublic formula f119 = 0L - 0.5;");
+    gold.append("\npublic formula f120 = 0L - (1 / 2);");
+    gold.append("\npublic formula f121 = 0L - (1 / 0);");
+    gold.append("\npublic formula f122 = 0L - @i;");
+    gold.append("\npublic formula f123 = 0L - (1 / @i);");
+    gold.append("\npublic formula f124 = 0L - (@i / 0);");
+    gold.append("\npublic formula f125 = 0L - 0;");
+    gold.append("\npublic formula f126 = 0L - 0L;");
+    gold.append("\npublic formula f127 = 0L - 0.0;");
+    gold.append("\npublic formula f128 = 0L - (@i * 0);");
+    gold.append("\npublic formula f129 = 0L - (@i / 0.0);");
+    gold.append("\npublic formula f130 = 0.0 - 1;");
+    gold.append("\npublic formula f131 = 0.0 - 1L;");
+    gold.append("\npublic formula f132 = 0.0 - 0.5;");
+    gold.append("\npublic formula f133 = 0.0 - (1 / 2);");
+    gold.append("\npublic formula f134 = 0.0 - (1 / 0);");
+    gold.append("\npublic formula f135 = 0.0 - @i;");
+    gold.append("\npublic formula f136 = 0.0 - (1 / @i);");
+    gold.append("\npublic formula f137 = 0.0 - (@i / 0);");
+    gold.append("\npublic formula f138 = 0.0 - 0;");
+    gold.append("\npublic formula f139 = 0.0 - 0L;");
+    gold.append("\npublic formula f140 = 0.0 - 0.0;");
+    gold.append("\npublic formula f141 = 0.0 - (@i * 0);");
+    gold.append("\npublic formula f142 = 0.0 - (@i / 0.0);");
+    gold.append("\npublic formula f143 = (@i * 0) - 1;");
+    gold.append("\npublic formula f144 = (@i * 0) - 1L;");
+    gold.append("\npublic formula f145 = (@i * 0) - 0.5;");
+    gold.append("\npublic formula f146 = (@i * 0) - (1 / 2);");
+    gold.append("\npublic formula f147 = (@i * 0) - (1 / 0);");
+    gold.append("\npublic formula f148 = (@i * 0) - @i;");
+    gold.append("\npublic formula f149 = (@i * 0) - (1 / @i);");
+    gold.append("\npublic formula f150 = (@i * 0) - (@i / 0);");
+    gold.append("\npublic formula f151 = (@i * 0) - 0;");
+    gold.append("\npublic formula f152 = (@i * 0) - 0L;");
+    gold.append("\npublic formula f153 = (@i * 0) - 0.0;");
+    gold.append("\npublic formula f154 = (@i * 0) - (@i * 0);");
+    gold.append("\npublic formula f155 = (@i * 0) - (@i / 0.0);");
+    gold.append("\npublic formula f156 = (@i / 0.0) - 1;");
+    gold.append("\npublic formula f157 = (@i / 0.0) - 1L;");
+    gold.append("\npublic formula f158 = (@i / 0.0) - 0.5;");
+    gold.append("\npublic formula f159 = (@i / 0.0) - (1 / 2);");
+    gold.append("\npublic formula f160 = (@i / 0.0) - (1 / 0);");
+    gold.append("\npublic formula f161 = (@i / 0.0) - @i;");
+    gold.append("\npublic formula f162 = (@i / 0.0) - (1 / @i);");
+    gold.append("\npublic formula f163 = (@i / 0.0) - (@i / 0);");
+    gold.append("\npublic formula f164 = (@i / 0.0) - 0;");
+    gold.append("\npublic formula f165 = (@i / 0.0) - 0L;");
+    gold.append("\npublic formula f166 = (@i / 0.0) - 0.0;");
+    gold.append("\npublic formula f167 = (@i / 0.0) - (@i * 0);");
+    gold.append("\npublic formula f168 = (@i / 0.0) - (@i / 0.0);");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4544,6 +4760,11 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
   }
 
   @Test
+  public void testListAssignmentNoFormatException() {
+    assertNoFormatException(get_ListAssignment_3());
+  }
+
+  @Test
   public void testListAssignmentGoodWillHappy() {
     assertGoodWillHappy(get_ListAssignment_3());
   }
@@ -4565,6 +4786,35 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("Path:OperationsSubtraction_ListAssignment_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int r0;");
+    gold.append("\n  public long r1;");
+    gold.append("\n  public double r2;");
+    gold.append("\n  public complex r3;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> tbl;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {r0:1, r1:2L, r2: 3.3,r3: @i};");
+    gold.append("\n  tbl <- {r0:2, r1:3L, r2: 4.4,r3: 2 * @i};");
+    gold.append("\n");
+    gold.append("\n  (iterate tbl).r0 -= 1;");
+    gold.append("\n");
+    gold.append("\n  (iterate tbl).r1 -= 1;");
+    gold.append("\n  (iterate tbl).r1 -= 1L;");
+    gold.append("\n");
+    gold.append("\n  (iterate tbl).r2 -= 1;");
+    gold.append("\n  (iterate tbl).r2 -= 1L;");
+    gold.append("\n  (iterate tbl).r2 -= 1.0;");
+    gold.append("\n");
+    gold.append("\n  (iterate tbl).r3 -= 1;");
+    gold.append("\n  (iterate tbl).r3 -= 1L;");
+    gold.append("\n  (iterate tbl).r3 -= 1.0;");
+    gold.append("\n  (iterate tbl).r3 -= 1.0 + 2 * @i;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

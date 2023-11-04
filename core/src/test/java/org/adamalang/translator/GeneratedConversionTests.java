@@ -200,6 +200,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_5());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_5());
   }
@@ -221,6 +226,41 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("Path:Conversion_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int a;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage Y {");
+    gold.append("\n  int a;");
+    gold.append("\n  int b;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Z {");
+    gold.append("\n  int a;");
+    gold.append("\n  int b;");
+    gold.append("\n  int c;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Z> tbl;");
+    gold.append("\n");
+    gold.append("\nZ cake;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  X[] x1 = @convert<X>( @convert<Y>( [{a:1, b:2, c:3}] ) );");
+    gold.append("\n  X[] x2 = @convert<X>(iterate tbl);");
+    gold.append("\n  X[] x3 = @convert<X>((iterate tbl).toArray());");
+    gold.append("\n");
+    gold.append("\n  Y[] y1 = @convert<Y>(iterate tbl);");
+    gold.append("\n  Y[] y2 = @convert<Y>((iterate tbl).toArray());");
+    gold.append("\n");
+    gold.append("\n  Y y = @convert<Y>(cake);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1386,6 +1426,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecordToMessageNoFormatException() {
+    assertNoFormatException(get_RecordToMessage_6());
+  }
+
+  @Test
   public void testRecordToMessageGoodWillHappy() {
     assertGoodWillHappy(get_RecordToMessage_6());
   }
@@ -1407,6 +1452,32 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("Path:Conversion_RecordToMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M2 {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR x;");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  M m = @convert<M>(x);");
+    gold.append("\n  M[] arr = @convert<M>(iterate t);");
+    gold.append("\n  maybe<M> mm = @convert<M>(@maybe(x));");
+    gold.append("\n  M2 m2 = @convert<M2>(x);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

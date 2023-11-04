@@ -160,6 +160,11 @@ public class GeneratedReplicationTests extends GeneratedBase {
   }
 
   @Test
+  public void testDynamicNoFormatException() {
+    assertNoFormatException(get_Dynamic_4());
+  }
+
+  @Test
   public void testDynamicGoodWillHappy() {
     assertGoodWillHappy(get_Dynamic_4());
   }
@@ -181,6 +186,16 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("Path:Replication_Dynamic_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nservice sms {");
+    gold.append("\n  internal = \"twilio.com\";");
+    gold.append("\n");
+    gold.append("\n  replication<dynamic> m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\nreplication<sms:m> foo = {x:123}.to_dynamic();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -856,6 +871,11 @@ public class GeneratedReplicationTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_5());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_5());
   }
@@ -877,6 +897,23 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("Path:Replication_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage SyncRequest {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nservice sms {");
+    gold.append("\n  internal = \"twilio.com\";");
+    gold.append("\n");
+    gold.append("\n  replication<SyncRequest> m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\nreplication<sms:m> foo = {x:123};");
+    gold.append("\n");
+    gold.append("\npublic int z = 123;");
+    gold.append("\nreplication<sms:m> foo_z = {x:z};");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

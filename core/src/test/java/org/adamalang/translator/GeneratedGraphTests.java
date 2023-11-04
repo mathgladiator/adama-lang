@@ -160,6 +160,11 @@ public class GeneratedGraphTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyAssocNoFormatException() {
+    assertNoFormatException(get_HappyAssoc_4());
+  }
+
+  @Test
   public void testHappyAssocGoodWillHappy() {
     assertGoodWillHappy(get_HappyAssoc_4());
   }
@@ -181,6 +186,16 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("Path:Graph_HappyAssoc_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord F {}");
+    gold.append("\nrecord T {}");
+    gold.append("\n");
+    gold.append("\nassoc<F, T> x;");
+    gold.append("\n");
+    gold.append("\nrecord E {}");
+    gold.append("\n");
+    gold.append("\nassoc<F, T, E> y;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1379,6 +1394,11 @@ public class GeneratedGraphTests extends GeneratedBase {
   }
 
   @Test
+  public void testJoinRecRxNoFormatException() {
+    assertNoFormatException(get_JoinRecRx_7());
+  }
+
+  @Test
   public void testJoinRecRxGoodWillHappy() {
     assertGoodWillHappy(get_JoinRecRx_7());
   }
@@ -1400,6 +1420,25 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("Path:Graph_JoinRecRx_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord User {");
+    gold.append("\n  int id;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord GroupMember {");
+    gold.append("\n  int id;");
+    gold.append("\n  int user_id;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nassoc<Group, User> part_of_group;");
+    gold.append("\n");
+    gold.append("\nrecord Group {");
+    gold.append("\n  int id;");
+    gold.append("\n  table<GroupMember> _members;");
+    gold.append("\n");
+    gold.append("\n  join part_of_group via _members[item] from item.user_id to id;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2566,6 +2605,11 @@ public class GeneratedGraphTests extends GeneratedBase {
   }
 
   @Test
+  public void testJoinRootNoFormatException() {
+    assertNoFormatException(get_JoinRoot_8());
+  }
+
+  @Test
   public void testJoinRootGoodWillHappy() {
     assertGoodWillHappy(get_JoinRoot_8());
   }
@@ -2587,6 +2631,21 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("Path:Graph_JoinRoot_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord F {}");
+    gold.append("\nrecord T {}");
+    gold.append("\n");
+    gold.append("\nassoc<F, T> x;");
+    gold.append("\n");
+    gold.append("\nrecord E {");
+    gold.append("\n  int from;");
+    gold.append("\n  int to;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<E> edges;");
+    gold.append("\n");
+    gold.append("\njoin x via edges[x] from x.from to x.to;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

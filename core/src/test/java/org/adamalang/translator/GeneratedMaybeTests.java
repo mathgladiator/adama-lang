@@ -40,6 +40,11 @@ public class GeneratedMaybeTests extends GeneratedBase {
   }
 
   @Test
+  public void testCastIntToDefaultNoFormatException() {
+    assertNoFormatException(get_CastIntToDefault_1());
+  }
+
+  @Test
   public void testCastIntToDefaultGoodWillHappy() {
     assertGoodWillHappy(get_CastIntToDefault_1());
   }
@@ -61,6 +66,15 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("Path:Maybe_CastIntToDefault_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic double z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  maybe<double> d = 3.1;");
+    gold.append("\n  z = d.getOrDefaultTo(2);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -673,6 +687,11 @@ public class GeneratedMaybeTests extends GeneratedBase {
   }
 
   @Test
+  public void testEnumNoFormatException() {
+    assertNoFormatException(get_Enum_2());
+  }
+
+  @Test
   public void testEnumGoodWillHappy() {
     assertGoodWillHappy(get_Enum_2());
   }
@@ -694,6 +713,15 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("Path:Maybe_Enum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum X { A, B, C };");
+    gold.append("\n");
+    gold.append("\nmaybe<X> x;");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  maybe<X> y;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1528,6 +1556,11 @@ public class GeneratedMaybeTests extends GeneratedBase {
   }
 
   @Test
+  public void testInitRxMaybeWithMaybeNoFormatException() {
+    assertNoFormatException(get_InitRxMaybeWithMaybe_3());
+  }
+
+  @Test
   public void testInitRxMaybeWithMaybeGoodWillHappy() {
     assertGoodWillHappy(get_InitRxMaybeWithMaybe_3());
   }
@@ -1549,6 +1582,10 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("Path:Maybe_InitRxMaybeWithMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic maybe<double> xyz = 1 / 0;");
+    gold.append("\npublic maybe<double> abc = 1 / 2;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2184,6 +2221,11 @@ public class GeneratedMaybeTests extends GeneratedBase {
   }
 
   @Test
+  public void testIntEqualityRegressionNoFormatException() {
+    assertNoFormatException(get_IntEqualityRegression_4());
+  }
+
+  @Test
   public void testIntEqualityRegressionGoodWillHappy() {
     assertGoodWillHappy(get_IntEqualityRegression_4());
   }
@@ -2205,6 +2247,24 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("Path:Maybe_IntEqualityRegression_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public maybe<int> val;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> tbl;");
+    gold.append("\n");
+    gold.append("\npublic formula all = iterate tbl;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {val:0};");
+    gold.append("\n  tbl <- {val:42};");
+    gold.append("\n  tbl <- {val:42};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula v1 = iterate tbl where val == 42;");
+    gold.append("\npublic formula v2 = iterate tbl where 42 == val;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3261,6 +3321,11 @@ public class GeneratedMaybeTests extends GeneratedBase {
   }
 
   @Test
+  public void testUnpackNoFormatException() {
+    assertNoFormatException(get_Unpack_5());
+  }
+
+  @Test
   public void testUnpackGoodWillHappy() {
     assertGoodWillHappy(get_Unpack_5());
   }
@@ -3282,6 +3347,38 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("Path:Maybe_Unpack_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int z;");
+    gold.append("\n  maybe<int> k;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  maybe<int> zzzz;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic maybe<R> r;");
+    gold.append("\npublic formula rx = r.x;");
+    gold.append("\npublic int hey;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  maybe<M> m0 = @maybe({z:123,k:@maybe(1)});");
+    gold.append("\n  let z0 = m0.z;");
+    gold.append("\n  let m1 = @maybe<M>;");
+    gold.append("\n  let z1 = m1.z;");
+    gold.append("\n  let z2 = r.zzzz;");
+    gold.append("\n  if (z2 as unwrap) {");
+    gold.append("\n   hey = unwrap;");
+    gold.append("\n  }");
+    gold.append("\n  let x2 = r.x;");
+    gold.append("\n  r <- {x:1};");
+    gold.append("\n  let k0 = m0.k;");
+    gold.append("\n  let k2 = @maybe({z:@maybe<bool>}).z;");
+    gold.append("\n  let k3 = @maybe<M>.k;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

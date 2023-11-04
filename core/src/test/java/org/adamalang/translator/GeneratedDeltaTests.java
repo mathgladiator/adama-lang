@@ -80,6 +80,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowBasicsNoFormatException() {
+    assertNoFormatException(get_FlowBasics_2());
+  }
+
+  @Test
   public void testFlowBasicsGoodWillHappy() {
     assertGoodWillHappy(get_FlowBasics_2());
   }
@@ -101,6 +106,42 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowBasics_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\npublic int i;");
+    gold.append("\npublic long l;");
+    gold.append("\npublic double d;");
+    gold.append("\npublic bool b;");
+    gold.append("\npublic string s;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  i = 42;");
+    gold.append("\n  l = 314;");
+    gold.append("\n  d = 2.71;");
+    gold.append("\n  b = true;");
+    gold.append("\n  s = \"Hi\";");
+    gold.append("\n  transition #one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#one {");
+    gold.append("\n  i = 100;");
+    gold.append("\n  l = 4000000L;");
+    gold.append("\n  d = 3.14;");
+    gold.append("\n  b = false;");
+    gold.append("\n  s = \"There\";");
+    gold.append("\n  transition #two;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#two {");
+    gold.append("\n  i = 1000;");
+    gold.append("\n  l = 980000000000L;");
+    gold.append("\n  d = 42.13;");
+    gold.append("\n  b = true;");
+    gold.append("\n  s = \"Oh!!!\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -830,6 +871,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowChildRecordWithPrivacyChangeNoFormatException() {
+    assertNoFormatException(get_FlowChildRecordWithPrivacyChange_3());
+  }
+
+  @Test
   public void testFlowChildRecordWithPrivacyChangeGoodWillHappy() {
     assertGoodWillHappy(get_FlowChildRecordWithPrivacyChange_3());
   }
@@ -851,6 +897,50 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowChildRecordWithPrivacyChange_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  use_policy<foo> int i;");
+    gold.append("\n  use_policy<foo> long l;");
+    gold.append("\n  use_policy<foo> double d;");
+    gold.append("\n  use_policy<foo> bool b;");
+    gold.append("\n  use_policy<foo> string s;");
+    gold.append("\n");
+    gold.append("\n  policy foo {");
+    gold.append("\n    return b;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic X x;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x.i = 42;");
+    gold.append("\n  x.l = 314;");
+    gold.append("\n  x.d = 2.71;");
+    gold.append("\n  x.b = true;");
+    gold.append("\n  x.s = \"Hi\";");
+    gold.append("\n  transition #one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#one {");
+    gold.append("\n  x.i = 100;");
+    gold.append("\n  x.l = 4000000L;");
+    gold.append("\n  x.d = 3.14;");
+    gold.append("\n  x.b = false;");
+    gold.append("\n  x.s = \"There\";");
+    gold.append("\n  transition #two;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#two {");
+    gold.append("\n  x.i = 1000;");
+    gold.append("\n  x.l = 980000000000L;");
+    gold.append("\n  x.d = 42.13;");
+    gold.append("\n  x.b = true;");
+    gold.append("\n  x.s = \"Oh!!!\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1833,6 +1923,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowMaybeComplexNoFormatException() {
+    assertNoFormatException(get_FlowMaybeComplex_4());
+  }
+
+  @Test
   public void testFlowMaybeComplexGoodWillHappy() {
     assertGoodWillHappy(get_FlowMaybeComplex_4());
   }
@@ -1854,6 +1949,39 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowMaybeComplex_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction glist() -> list<M> {");
+    gold.append("\n  table<M> tbl;");
+    gold.append("\n  tbl <- {x:1};");
+    gold.append("\n  tbl <- {x:2};");
+    gold.append("\n  tbl <- {x:3};");
+    gold.append("\n  return iterate tbl;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula tx1 = @maybe(glist());");
+    gold.append("\npublic formula tx2 = @maybe(@maybe(glist()));");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\npublic formula tx = @maybe(iterate t);");
+    gold.append("\n");
+    gold.append("\nfunction mp() -> map<int, int> {");
+    gold.append("\n  map<int, int> m;");
+    gold.append("\n  m[1] = 2;");
+    gold.append("\n  return m;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula m1 = mp();");
+    gold.append("\npublic formula m2 = @maybe(mp());");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2947,6 +3075,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowMessageArrayNoFormatException() {
+    assertNoFormatException(get_FlowMessageArray_5());
+  }
+
+  @Test
   public void testFlowMessageArrayGoodWillHappy() {
     assertGoodWillHappy(get_FlowMessageArray_5());
   }
@@ -2968,6 +3101,14 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowMessageArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula m = {x:1};");
+    gold.append("\npublic formula mlist = [{x:1}, {x:2}, {x:3}];");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3676,6 +3817,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowMessageListNoFormatException() {
+    assertNoFormatException(get_FlowMessageList_6());
+  }
+
+  @Test
   public void testFlowMessageListGoodWillHappy() {
     assertGoodWillHappy(get_FlowMessageList_6());
   }
@@ -3697,6 +3843,22 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowMessageList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction glist() -> list<M> {");
+    gold.append("\n  table<M> tbl;");
+    gold.append("\n  tbl <- {x:1};");
+    gold.append("\n  tbl <- {x:2};");
+    gold.append("\n  tbl <- {x:3};");
+    gold.append("\n  return iterate tbl;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula tx = glist();");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4421,6 +4583,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowRecordArrayNoFormatException() {
+    assertNoFormatException(get_FlowRecordArray_7());
+  }
+
+  @Test
   public void testFlowRecordArrayGoodWillHappy() {
     assertGoodWillHappy(get_FlowRecordArray_7());
   }
@@ -4442,6 +4609,36 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowRecordArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\npublic formula tx = (iterate t).toArray();");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  t <- {x:2};");
+    gold.append("\n  t <- {x:3};");
+    gold.append("\n  transition #one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#one {");
+    gold.append("\n  t <- {x:4};");
+    gold.append("\n  t <- {x:5};");
+    gold.append("\n  t <- {x:6};");
+    gold.append("\n  transition #two;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#two {");
+    gold.append("\n  t <- {x:7};");
+    gold.append("\n  t <- {x:8};");
+    gold.append("\n  t <- {x:9};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5459,6 +5656,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowRecordListNoFormatException() {
+    assertNoFormatException(get_FlowRecordList_8());
+  }
+
+  @Test
   public void testFlowRecordListGoodWillHappy() {
     assertGoodWillHappy(get_FlowRecordList_8());
   }
@@ -5480,6 +5682,36 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowRecordList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\npublic formula tx = iterate t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  t <- {x:2};");
+    gold.append("\n  t <- {x:3};");
+    gold.append("\n  transition #one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#one {");
+    gold.append("\n  t <- {x:4};");
+    gold.append("\n  t <- {x:5};");
+    gold.append("\n  t <- {x:6};");
+    gold.append("\n  transition #two;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#two {");
+    gold.append("\n  t <- {x:7};");
+    gold.append("\n  t <- {x:8};");
+    gold.append("\n  t <- {x:9};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6497,6 +6729,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowSimpleArrayNoFormatException() {
+    assertNoFormatException(get_FlowSimpleArray_9());
+  }
+
+  @Test
   public void testFlowSimpleArrayGoodWillHappy() {
     assertGoodWillHappy(get_FlowSimpleArray_9());
   }
@@ -6518,6 +6755,49 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowSimpleArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction arr1(int x) -> int[] {");
+    gold.append("\n  return [1 + x, 2 * x, 3 * x * x];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction arr2(int x) -> long[] {");
+    gold.append("\n  return [1L + x, 2L * x, 3L * x * x];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction arr3(int x) -> double[] {");
+    gold.append("\n  return [1 + x, 2.71 * x, 3.14 * x * x];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction arr4(int x) -> bool[] {");
+    gold.append("\n  return [(x % 2).getOrDefaultTo(-100) == 0, (x % 2).getOrDefaultTo(-100) != 0];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction arr5(int x) -> string[] {");
+    gold.append("\n  return [\"Hi:\" + x, \"There:\" + (x * x)];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\npublic int input;");
+    gold.append("\npublic formula arr_int = arr1(input);");
+    gold.append("\npublic formula arr_long = arr2(input);");
+    gold.append("\npublic formula arr_double = arr3(input);");
+    gold.append("\npublic formula arr_bool = arr4(input);");
+    gold.append("\npublic formula arr_string = arr5(input);");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  input = 2;");
+    gold.append("\n  transition #one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#one {");
+    gold.append("\n  input = 3;");
+    gold.append("\n  transition #two;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#two {");
+    gold.append("\n  input = 100;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7311,6 +7591,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowSimpleMaybeNoFormatException() {
+    assertNoFormatException(get_FlowSimpleMaybe_10());
+  }
+
+  @Test
   public void testFlowSimpleMaybeGoodWillHappy() {
     assertGoodWillHappy(get_FlowSimpleMaybe_10());
   }
@@ -7332,6 +7617,42 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowSimpleMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\npublic maybe<int> i;");
+    gold.append("\npublic maybe<long> l;");
+    gold.append("\npublic maybe<double> d;");
+    gold.append("\npublic maybe<bool> b;");
+    gold.append("\npublic maybe<string> s;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  i = 42;");
+    gold.append("\n  l = 314;");
+    gold.append("\n  d = 2.71;");
+    gold.append("\n  b = true;");
+    gold.append("\n  s = \"Hi\";");
+    gold.append("\n  transition #one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#one {");
+    gold.append("\n  i.delete();");
+    gold.append("\n  l.delete();");
+    gold.append("\n  d.delete();");
+    gold.append("\n  b.delete();");
+    gold.append("\n  s.delete();");
+    gold.append("\n  transition #two;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#two {");
+    gold.append("\n  i = 1000;");
+    gold.append("\n  l = 980000000000L;");
+    gold.append("\n  d = 42.13;");
+    gold.append("\n  b = true;");
+    gold.append("\n  s = \"Oh!!!\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -8091,6 +8412,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testFlowSimpleMessageNoFormatException() {
+    assertNoFormatException(get_FlowSimpleMessage_11());
+  }
+
+  @Test
   public void testFlowSimpleMessageGoodWillHappy() {
     assertGoodWillHappy(get_FlowSimpleMessage_11());
   }
@@ -8112,6 +8438,20 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("Path:Delta_FlowSimpleMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage Y {");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  Y y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula m1 = {x:1};");
+    gold.append("\npublic formula m2 = {x:1, y:{y:123}};");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

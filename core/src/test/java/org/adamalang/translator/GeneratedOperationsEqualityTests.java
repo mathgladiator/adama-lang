@@ -40,6 +40,11 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
   }
 
   @Test
+  public void testTestingNoFormatException() {
+    assertNoFormatException(get_Testing_1());
+  }
+
+  @Test
   public void testTestingGoodWillHappy() {
     assertGoodWillHappy(get_Testing_1());
   }
@@ -61,6 +66,37 @@ public class GeneratedOperationsEqualityTests extends GeneratedBase {
     gold.append("Path:OperationsEquality_Testing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nformula b0 = 1 == 1;");
+    gold.append("\nformula b1 = 1 != 1;");
+    gold.append("\nformula b2 = 1 == 2L;");
+    gold.append("\nformula b3 = 1 != 2L;");
+    gold.append("\nformula b4 = 1L == 2;");
+    gold.append("\nformula b5 = 1L != 2;");
+    gold.append("\nformula b6 = 1L == 2L;");
+    gold.append("\nformula b7 = 1L != 2L;");
+    gold.append("\nformula b8 = @maybe(1) == 1;");
+    gold.append("\nformula b9 = 1 == @maybe(1);");
+    gold.append("\nformula b10 = @maybe(3L) != 1L;");
+    gold.append("\nformula b11 = 1L != @maybe(1L);");
+    gold.append("\nformula b12 = 1.23 == 4.5;");
+    gold.append("\nformula b13 = 1.23 != 4.5;");
+    gold.append("\nformula b14 = @no_one == @no_one;");
+    gold.append("\nformula b15 = @no_one != @no_one;");
+    gold.append("\nformula b16 = 1 + 2 * @i == 2 * @i + 1;");
+    gold.append("\nformula b17 = 1 + 2 * @i != 3 * @i + 1;");
+    gold.append("\n");
+    gold.append("\nenum E {");
+    gold.append("\nX, Y, Z");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nformula e0 = E::X == E::Y;");
+    gold.append("\nformula e1 = E::X != E::Y;");
+    gold.append("\nformula e2 = @maybe(E::X) == E::Y;");
+    gold.append("\nformula e3 = E::X != @maybe(E::Y);");
+    gold.append("\nformula e4 = @maybe<E> == E::Y;");
+    gold.append("\nformula e5 = E::X != @maybe<E>;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -120,6 +120,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyBlockNoFormatException() {
+    assertNoFormatException(get_LegacyBlock_3());
+  }
+
+  @Test
   public void testLegacyBlockGoodWillHappy() {
     assertGoodWillHappy(get_LegacyBlock_3());
   }
@@ -141,6 +146,44 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_LegacyBlock_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int v;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nbool skip = false;");
+    gold.append("\nbool done = false;");
+    gold.append("\n");
+    gold.append("\nint lastValue = 0;");
+    gold.append("\nchannel x(X msg) {");
+    gold.append("\n  lastValue = msg.v;");
+    gold.append("\n  if (msg.v == 50) {");
+    gold.append("\n    skip = true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  if (!skip) {");
+    gold.append("\n    block;");
+    gold.append("\n  }");
+    gold.append("\n  done = true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest foo {");
+    gold.append("\n  @pump {v:42} into x;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert !done;");
+    gold.append("\n  assert !skip;");
+    gold.append("\n  @pump {v:50} into x;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert done;");
+    gold.append("\n  assert skip;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -934,6 +977,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyForEachNoFormatException() {
+    assertNoFormatException(get_LegacyForEach_4());
+  }
+
+  @Test
   public void testLegacyForEachGoodWillHappy() {
     assertGoodWillHappy(get_LegacyForEach_4());
   }
@@ -955,6 +1003,27 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_LegacyForEach_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> zzz;");
+    gold.append("\nint out;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  zzz <- {z:2};");
+    gold.append("\n  zzz <- {z:3};");
+    gold.append("\n  foreach (chk in (iterate zzz)) {");
+    gold.append("\n    out += chk.z;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1887,6 +1956,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyIfNoFormatException() {
+    assertNoFormatException(get_LegacyIf_5());
+  }
+
+  @Test
   public void testLegacyIfGoodWillHappy() {
     assertGoodWillHappy(get_LegacyIf_5());
   }
@@ -1908,6 +1982,86 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_LegacyIf_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmaybe<int> x;");
+    gold.append("\nint y;");
+    gold.append("\n");
+    gold.append("\nmaybe<bool> b;");
+    gold.append("\nmaybe<string> s;");
+    gold.append("\nmaybe<double> d;");
+    gold.append("\nmaybe<string> s2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  if (x as xx) {");
+    gold.append("\n    y = xx * 2;");
+    gold.append("\n  }");
+    gold.append("\n  x = 42;");
+    gold.append("\n  if (x as xx) {");
+    gold.append("\n    y = xx * 3;");
+    gold.append("\n  } else {");
+    gold.append("\n    y = 42;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  b = true;");
+    gold.append("\n  s = \"Hi There\";");
+    gold.append("\n  d = 3.14;");
+    gold.append("\n  transition #next;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#next {");
+    gold.append("\n  x = 40;");
+    gold.append("\n  b = false;");
+    gold.append("\n  s = \"Hello There\";");
+    gold.append("\n  d = 2.71;");
+    gold.append("\n  transition #end;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint testDel;");
+    gold.append("\n#end {");
+    gold.append("\n  x.delete();");
+    gold.append("\n  b.delete();");
+    gold.append("\n  s.delete();");
+    gold.append("\n  d.delete();");
+    gold.append("\n  transition #done;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nbool bbbb;");
+    gold.append("\n#done {");
+    gold.append("\n  if (b as bbb) {");
+    gold.append("\n    testDel = 1;");
+    gold.append("\n  } else {");
+    gold.append("\n    testDel = 0;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  if (s as sss) {");
+    gold.append("\n    testDel += 4;");
+    gold.append("\n    s2 = sss;");
+    gold.append("\n  } else {");
+    gold.append("\n    testDel += 2;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  if (d as ddd) {");
+    gold.append("\n    testDel += 16;");
+    gold.append("\n  } else {");
+    gold.append("\n    testDel += 8;");
+    gold.append("\n  }");
+    gold.append("\n  maybe<bool> mmbb;");
+    gold.append("\n  maybe<bool> mmbb2 = true;");
+    gold.append("\n  mmbb = true;");
+    gold.append("\n  if (mmbb as mbv) {");
+    gold.append("\n    assert mbv;");
+    gold.append("\n  }");
+    gold.append("\n  mmbb.delete();");
+    gold.append("\n  if (mmbb as mbv) {");
+    gold.append("\n    bbbb = mbv;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2742,6 +2896,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyLoopsNoFormatException() {
+    assertNoFormatException(get_LegacyLoops_6());
+  }
+
+  @Test
   public void testLegacyLoopsGoodWillHappy() {
     assertGoodWillHappy(get_LegacyLoops_6());
   }
@@ -2763,6 +2922,69 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_LegacyLoops_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x;");
+    gold.append("\nint y;");
+    gold.append("\nint out;");
+    gold.append("\n");
+    gold.append("\nfunction foo() -> int {");
+    gold.append("\n  for(;;) {");
+    gold.append("\n    return 1;");
+    gold.append("\n  }");
+    gold.append("\n  return 0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n int x;");
+    gold.append("\n int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = 0;");
+    gold.append("\n  while (x < 5) {");
+    gold.append("\n    x++;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  do {");
+    gold.append("\n    x--;");
+    gold.append("\n  } while (x > 0);");
+    gold.append("\n");
+    gold.append("\n  y = 1;");
+    gold.append("\n  for(int z = 2; z < 10; z++) {");
+    gold.append("\n   y = z * y;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  int z = 2;");
+    gold.append("\n  for(; z < 10; z++) {");
+    gold.append("\n   y = z * y;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  z = 2;");
+    gold.append("\n  for(; z < 10;) {");
+    gold.append("\n   y = z * y;");
+    gold.append("\n   z++;");
+    gold.append("\n  }");
+    gold.append("\n  y = 0;");
+    gold.append("\n");
+    gold.append("\n  foreach (k in [{x:1}, {x:2}]) {");
+    gold.append("\n    y += k.x;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  tbl2 <- {x:100, y:3};");
+    gold.append("\n  tbl2 <- {x:2, y:2};");
+    gold.append("\n  tbl2 <- {x:100, y:1};");
+    gold.append("\n  tbl2 <- {x:4, y:2};");
+    gold.append("\n  tbl2 <- {x:5, y:2};");
+    gold.append("\n  tbl2 <- {x:1, y:2};");
+    gold.append("\n");
+    gold.append("\n  out = 0;");
+    gold.append("\n  foreach(vv in iterate tbl2) {");
+    gold.append("\n    out += vv.x + vv.y;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3932,6 +4154,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_7());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_7());
   }
@@ -3953,6 +4180,51 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint sum = 0;");
+    gold.append("\n");
+    gold.append("\nmessage X {");
+    gold.append("\n  int v;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint lastV;");
+    gold.append("\n");
+    gold.append("\nchannel x(X msg) {");
+    gold.append("\n  lastV = msg.v;");
+    gold.append("\n  if (msg.v == 32) {");
+    gold.append("\n    abort;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  for (int k = 0; k < 100; k++) {");
+    gold.append("\n    if (k == 5) {");
+    gold.append("\n      continue;");
+    gold.append("\n    }");
+    gold.append("\n    if (k == 50) {");
+    gold.append("\n      break;");
+    gold.append("\n    }");
+    gold.append("\n    sum += k;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest foo {");
+    gold.append("\n  @pump {v:42} into x;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert lastV == 42;");
+    gold.append("\n  @pump {v:32} into x;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert lastV == 42;");
+    gold.append("\n  @pump {v:50} into x;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert lastV == 50;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4748,6 +5020,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybeBoolNoFormatException() {
+    assertNoFormatException(get_MaybeBool_8());
+  }
+
+  @Test
   public void testMaybeBoolGoodWillHappy() {
     assertGoodWillHappy(get_MaybeBool_8());
   }
@@ -4769,6 +5046,24 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_MaybeBool_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int x;");
+    gold.append("\n@construct {");
+    gold.append("\n  if (@maybe(true)) {");
+    gold.append("\n    x += 1;");
+    gold.append("\n  }");
+    gold.append("\n  if (@maybe(false)) {");
+    gold.append("\n    x += 2;");
+    gold.append("\n  }");
+    gold.append("\n  if (@maybe<bool>) {");
+    gold.append("\n    x += 4;");
+    gold.append("\n  }");
+    gold.append("\n  if (@maybe(false) || true) {");
+    gold.append("\n    x += 8;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5401,6 +5696,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testMegaIfLegacyNoFormatException() {
+    assertNoFormatException(get_MegaIfLegacy_9());
+  }
+
+  @Test
   public void testMegaIfLegacyGoodWillHappy() {
     assertGoodWillHappy(get_MegaIfLegacy_9());
   }
@@ -5422,6 +5722,32 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_MegaIfLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x;");
+    gold.append("\nint y;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  if (true) {");
+    gold.append("\n    x = 1;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  if (x > 0) {");
+    gold.append("\n    x = 0;");
+    gold.append("\n  } else {");
+    gold.append("\n    x++;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  if (x == 0) {");
+    gold.append("\n   y = 1;");
+    gold.append("\n  } else if (x == 1) {");
+    gold.append("\n   y = 2;");
+    gold.append("\n  } else if (x == 2) {");
+    gold.append("\n   y = 3;");
+    gold.append("\n  } else {");
+    gold.append("\n   y = 4;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6111,6 +6437,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testVariousForNoFormatException() {
+    assertNoFormatException(get_VariousFor_11());
+  }
+
+  @Test
   public void testVariousForGoodWillHappy() {
     assertGoodWillHappy(get_VariousFor_11());
   }
@@ -6132,6 +6463,28 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("Path:Control_VariousFor_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int sum = 0;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  for (int x = 0; x < 10; x++) {");
+    gold.append("\n    sum += x;");
+    gold.append("\n  }");
+    gold.append("\n  int k = (sum % 7).getOrDefaultTo(-100);");
+    gold.append("\n  for(; k < 100; k++) {");
+    gold.append("\n    sum ++;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  for(;;) {");
+    gold.append("\n    break;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  for(;true;k++) {");
+    gold.append("\n    break;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -40,6 +40,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testAssignmentRecordProxyNoFormatException() {
+    assertNoFormatException(get_AssignmentRecordProxy_1());
+  }
+
+  @Test
   public void testAssignmentRecordProxyGoodWillHappy() {
     assertGoodWillHappy(get_AssignmentRecordProxy_1());
   }
@@ -61,6 +66,17 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("Path:InlineConditional_AssignmentRecordProxy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\nX a;");
+    gold.append("\nX b;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n (true ? a : b).x = 123;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -916,6 +932,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_3());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_3());
   }
@@ -937,6 +958,38 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("Path:InlineConditional_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x;");
+    gold.append("\nint y;");
+    gold.append("\n");
+    gold.append("\nint z1;");
+    gold.append("\ndouble z2;");
+    gold.append("\ndouble z3;");
+    gold.append("\ndouble z4;");
+    gold.append("\n");
+    gold.append("\nstring s;");
+    gold.append("\n");
+    gold.append("\nstring s2;");
+    gold.append("\nstring s3;");
+    gold.append("\n");
+    gold.append("\nint bump1;");
+    gold.append("\nint bump2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = true ? 1 : 2;");
+    gold.append("\n  y = false ? 1 : 2;");
+    gold.append("\n  (true ? x : y) = 3;");
+    gold.append("\n  (false ? x : y) = 4;");
+    gold.append("\n  z1 = true ? 1 : 2;");
+    gold.append("\n  z2 = true ? 1.0 : 2;");
+    gold.append("\n  z3 = true ? 1 : 2.0;");
+    gold.append("\n  z4 = false ? 1.0 : 2.0;");
+    gold.append("\n  s = true ? \"before\" : \"false\";");
+    gold.append("\n  (true ? s2 : s3) = \"GOT POTATO\";");
+    gold.append("\n  (true ? bump1 : bump2)++;");
+    gold.append("\n  ++(true ? bump1 : bump2);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1733,6 +1786,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybePromotionsNoFormatException() {
+    assertNoFormatException(get_MaybePromotions_5());
+  }
+
+  @Test
   public void testMaybePromotionsGoodWillHappy() {
     assertGoodWillHappy(get_MaybePromotions_5());
   }
@@ -1754,6 +1812,14 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("Path:InlineConditional_MaybePromotions_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  let x = true ? 3 : @maybe(2);");
+    gold.append("\n  let y = true ? @maybe(2) : 3;");
+    gold.append("\n  let z = true ? @maybe(3) : @maybe(2);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2349,6 +2415,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageRectifyNoFormatException() {
+    assertNoFormatException(get_MessageRectify_6());
+  }
+
+  @Test
   public void testMessageRectifyGoodWillHappy() {
     assertGoodWillHappy(get_MessageRectify_6());
   }
@@ -2370,6 +2441,22 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("Path:InlineConditional_MessageRectify_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#neat {");
+    gold.append("\n  readonly X a = {x:123};");
+    gold.append("\n  let b = true ? {x:3} : a;");
+    gold.append("\n  let c = true ? a : {y:3};");
+    gold.append("\n  let d = true ? a : a;");
+    gold.append("\n  readonly X e = {y:42};");
+    gold.append("\n  let f = true ? a : e;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

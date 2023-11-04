@@ -40,6 +40,11 @@ public class GeneratedEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testHaveContextNoFormatException() {
+    assertNoFormatException(get_HaveContext_1());
+  }
+
+  @Test
   public void testHaveContextGoodWillHappy() {
     assertGoodWillHappy(get_HaveContext_1());
   }
@@ -61,6 +66,39 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("Path:Events_HaveContext_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\npublic principal last_who;");
+    gold.append("\npublic string last_origin;");
+    gold.append("\npublic string last_ip;");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  last_who = @who;");
+    gold.append("\n  last_origin = @context.origin;");
+    gold.append("\n  last_ip = @context.ip;");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@disconnected {");
+    gold.append("\n  last_who = @who;");
+    gold.append("\n  last_origin = @context.origin;");
+    gold.append("\n  last_ip = @context.ip;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@can_attach {");
+    gold.append("\n  let me_who = @who;");
+    gold.append("\n  let me_origin = @context.origin;");
+    gold.append("\n  let me_ip = @context.ip;");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@attached (what) {");
+    gold.append("\n  last_who = @who;");
+    gold.append("\n  last_origin = @context.origin;");
+    gold.append("\n  last_ip = @context.ip;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -810,6 +848,11 @@ public class GeneratedEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testLoadChangeNoFormatException() {
+    assertNoFormatException(get_LoadChange_2());
+  }
+
+  @Test
   public void testLoadChangeGoodWillHappy() {
     assertGoodWillHappy(get_LoadChange_2());
   }
@@ -831,6 +874,13 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("Path:Events_LoadChange_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int x = 0;");
+    gold.append("\n");
+    gold.append("\n@load {");
+    gold.append("\n  x++;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1443,6 +1493,11 @@ public class GeneratedEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testLoadNoChangeNoFormatException() {
+    assertNoFormatException(get_LoadNoChange_3());
+  }
+
+  @Test
   public void testLoadNoChangeGoodWillHappy() {
     assertGoodWillHappy(get_LoadNoChange_3());
   }
@@ -1464,6 +1519,12 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("Path:Events_LoadNoChange_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int x = 0;");
+    gold.append("\n");
+    gold.append("\n@load {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

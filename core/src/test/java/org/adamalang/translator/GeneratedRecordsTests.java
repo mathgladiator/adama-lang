@@ -40,6 +40,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAssignmentHappyNoFormatException() {
+    assertNoFormatException(get_AssignmentHappy_1());
+  }
+
+  @Test
   public void testAssignmentHappyGoodWillHappy() {
     assertGoodWillHappy(get_AssignmentHappy_1());
   }
@@ -61,6 +66,30 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_AssignmentHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n}(X=\"This is a record named R\")");
+    gold.append("\n");
+    gold.append("\nmaybe<R> r1;");
+    gold.append("\nR r2;");
+    gold.append("\n");
+    gold.append("\nfunction foo(R x) -> int {");
+    gold.append("\n  return x.x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#valid {");
+    gold.append("\n  R r4 = r2;");
+    gold.append("\n  if (r1 as r) {");
+    gold.append("\n    r4 = r;");
+    gold.append("\n    R r6 = r;");
+    gold.append("\n  }");
+    gold.append("\n  R r7 = r2;");
+    gold.append("\n  r2.x = 7;");
+    gold.append("\n  r7.x = foo(r2) + 100;");
+    gold.append("\n  r7 <- {x:1};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1069,6 +1098,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testComputedFieldsNoFormatException() {
+    assertNoFormatException(get_ComputedFields_4());
+  }
+
+  @Test
   public void testComputedFieldsGoodWillHappy() {
     assertGoodWillHappy(get_ComputedFields_4());
   }
@@ -1090,6 +1124,13 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_ComputedFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nbubble cake1 = 1;");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1705,6 +1746,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDeleteOnListNoFormatException() {
+    assertNoFormatException(get_DeleteOnList_5());
+  }
+
+  @Test
   public void testDeleteOnListGoodWillHappy() {
     assertGoodWillHappy(get_DeleteOnList_5());
   }
@@ -1726,6 +1772,27 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_DeleteOnList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int x = 1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\npublic formula even = iterate t where (x % 2).getOrDefaultTo(-100) == 0;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n for (int k = 0; k < 10; k++) {");
+    gold.append("\n   t <- {x:k};");
+    gold.append("\n }");
+    gold.append("\n (iterate t where (x % 3).getOrDefaultTo(-100) == 0).delete();");
+    gold.append("\n (iterate t where (x % 8).getOrDefaultTo(-100) == 0).delete();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2968,6 +3035,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testLazyFieldsNoFormatException() {
+    assertNoFormatException(get_LazyFields_12());
+  }
+
+  @Test
   public void testLazyFieldsGoodWillHappy() {
     assertGoodWillHappy(get_LazyFields_12());
   }
@@ -2989,6 +3061,31 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_LazyFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Y {");
+    gold.append("\n  public int u;");
+    gold.append("\n  public formula v = u * u;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int y;");
+    gold.append("\n  public formula z = x + y;");
+    gold.append("\n");
+    gold.append("\n  public Y w;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nX x;");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  x.x = 1;");
+    gold.append("\n  x.y = 2;");
+    gold.append("\n  assert x.z == 3;");
+    gold.append("\n  x.w.u = 4;");
+    gold.append("\n  assert x.w.v == 16;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4107,6 +4204,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybeFieldsNoFormatException() {
+    assertNoFormatException(get_MaybeFields_13());
+  }
+
+  @Test
   public void testMaybeFieldsGoodWillHappy() {
     assertGoodWillHappy(get_MaybeFields_13());
   }
@@ -4128,6 +4230,25 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_MaybeFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  public maybe<int> mi;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic X x;");
+    gold.append("\n");
+    gold.append("\ntable<X> lst;");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  x.mi = 42;");
+    gold.append("\n  x.mi.delete();");
+    gold.append("\n  (iterate lst).mi = 40;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4995,6 +5116,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageFieldsLegacyNoFormatException() {
+    assertNoFormatException(get_MessageFieldsLegacy_14());
+  }
+
+  @Test
   public void testMessageFieldsLegacyGoodWillHappy() {
     assertGoodWillHappy(get_MessageFieldsLegacy_14());
   }
@@ -5016,6 +5142,38 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_MessageFieldsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  string name;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage Y {");
+    gold.append("\n  int val;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nenum E { yes:1, no:0 }");
+    gold.append("\n");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  double d;");
+    gold.append("\n  bool b;");
+    gold.append("\n  string s;");
+    gold.append("\n  Y[] ay;");
+    gold.append("\n  maybe<M> mm;");
+    gold.append("\n  maybe<int> mi;");
+    gold.append("\n  maybe<double> md;");
+    gold.append("\n  maybe<bool> mb;");
+    gold.append("\n  maybe<string> ms;");
+    gold.append("\n  maybe<E> me;");
+    gold.append("\n  E e;");
+    gold.append("\n  Y y;");
+    gold.append("\n  label lbl;");
+    gold.append("\n  maybe<label> mlbl;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6259,6 +6417,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPrivacyBulkNoFormatException() {
+    assertNoFormatException(get_PrivacyBulk_16());
+  }
+
+  @Test
   public void testPrivacyBulkGoodWillHappy() {
     assertGoodWillHappy(get_PrivacyBulk_16());
   }
@@ -6280,6 +6443,16 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_PrivacyBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nuse_policy<p> formula v42 = 42;");
+    gold.append("\nuse_policy<p> int x;");
+    gold.append("\nuse_policy<p> int y;");
+    gold.append("\nuse_policy<p> int z;");
+    gold.append("\n");
+    gold.append("\npolicy p {");
+    gold.append("\n  return @who != @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6963,6 +7136,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPrivacyGlobalPolicyNoFormatException() {
+    assertNoFormatException(get_PrivacyGlobalPolicy_17());
+  }
+
+  @Test
   public void testPrivacyGlobalPolicyGoodWillHappy() {
     assertGoodWillHappy(get_PrivacyGlobalPolicy_17());
   }
@@ -6984,6 +7162,32 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_PrivacyGlobalPolicy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprivate principal owner = @no_one;");
+    gold.append("\n");
+    gold.append("\npolicy saneG {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  use_policy<saneL> int x;");
+    gold.append("\n  use_policy<saneG> int y;");
+    gold.append("\n");
+    gold.append("\n  policy saneL {");
+    gold.append("\n    return x < y;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  require saneL;");
+    gold.append("\n  require saneG;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7846,6 +8050,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPrivacyLegacyNoFormatException() {
+    assertNoFormatException(get_PrivacyLegacy_18());
+  }
+
+  @Test
   public void testPrivacyLegacyGoodWillHappy() {
     assertGoodWillHappy(get_PrivacyLegacy_18());
   }
@@ -7867,6 +8076,81 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_PrivacyLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int open_int;");
+    gold.append("\npublic bool open_bool;");
+    gold.append("\npublic string open_string;");
+    gold.append("\npublic double open_double;");
+    gold.append("\n");
+    gold.append("\npublic maybe<int> maybe_open_int;");
+    gold.append("\npublic maybe<bool> maybe_open_bool;");
+    gold.append("\npublic maybe<string> maybe_open_string;");
+    gold.append("\npublic maybe<double> maybe_open_double;");
+    gold.append("\n");
+    gold.append("\npublic maybe<int> maybe_open_int2;");
+    gold.append("\npublic maybe<bool> maybe_open_bool2;");
+    gold.append("\npublic maybe<string> maybe_open_string2;");
+    gold.append("\npublic maybe<double> maybe_open_double2;");
+    gold.append("\n");
+    gold.append("\nprivate principal owner = @no_one;");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  use_policy<sane> int x;");
+    gold.append("\n  use_policy<sane, sane2> int y;");
+    gold.append("\n  use_policy<sane, sane2, sane3> auto sum = x + 1;");
+    gold.append("\n");
+    gold.append("\n  policy sane {");
+    gold.append("\n    return x < y;");
+    gold.append("\n  }");
+    gold.append("\n  policy sane2 {");
+    gold.append("\n    return x < y;");
+    gold.append("\n  }");
+    gold.append("\n  policy sane3 {");
+    gold.append("\n    return @who == @no_one;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  require sane;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Y {");
+    gold.append("\n  policy nope {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  require nope;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Z {");
+    gold.append("\n  policy yep {");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n  require yep;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nviewer_is<owner> X x;");
+    gold.append("\nviewer_is<owner> double owners_money;");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\nviewer_is<owner> auto listz = iterate tbl where x == 1;");
+    gold.append("\nviewer_is<owner> auto listz2 = iterate tbl;");
+    gold.append("\npublic Y y;");
+    gold.append("\npublic Z z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x.x = 13;");
+    gold.append("\n  x.y = 42;");
+    gold.append("\n  tbl <- {x:1, y:2};");
+    gold.append("\n  tbl <- {x:2, y:3};");
+    gold.append("\n  tbl <- {x:5, y:1};");
+    gold.append("\n  maybe_open_int2 = 123;");
+    gold.append("\n  maybe_open_bool2 = true;");
+    gold.append("\n  maybe_open_string2 = \"Cake\";");
+    gold.append("\n  maybe_open_double2 = 3.14;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -9732,6 +10016,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecordFieldsLegacyNoFormatException() {
+    assertNoFormatException(get_RecordFieldsLegacy_19());
+  }
+
+  @Test
   public void testRecordFieldsLegacyGoodWillHappy() {
     assertGoodWillHappy(get_RecordFieldsLegacy_19());
   }
@@ -9753,6 +10042,40 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("Path:Records_RecordFieldsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Y {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x = 13;");
+    gold.append("\n  double d = 42.0;");
+    gold.append("\n  bool b = true;");
+    gold.append("\n  string s;");
+    gold.append("\n  table<X> tbl;");
+    gold.append("\n  maybe<Y> y;");
+    gold.append("\n  maybe<string> ms = \"Hi\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> xs;");
+    gold.append("\n");
+    gold.append("\nint x = 3;");
+    gold.append("\ndouble y = 2.71;");
+    gold.append("\nbool b = true;");
+    gold.append("\nstring s = \"Hello\";");
+    gold.append("\n");
+    gold.append("\nX xyz;");
+    gold.append("\n");
+    gold.append("\nstring defMS;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  if (xyz.ms as xxxx) {");
+    gold.append("\n    defMS = xxxx;");
+    gold.append("\n  }");
+    gold.append("\n  xyz.delete();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Empty {}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

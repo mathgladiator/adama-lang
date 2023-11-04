@@ -120,6 +120,11 @@ public class GeneratedTemplateTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyDefnNoFormatException() {
+    assertNoFormatException(get_HappyDefn_3());
+  }
+
+  @Test
   public void testHappyDefnGoodWillHappy() {
     assertGoodWillHappy(get_HappyDefn_3());
   }
@@ -141,6 +146,17 @@ public class GeneratedTemplateTests extends GeneratedBase {
     gold.append("Path:Template_HappyDefn_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\ntemplate name : `x`");
+    gold.append("\n");
+    gold.append("\nHello World");
+    gold.append("\n");
+    gold.append("\nThis is the magic of templates that are easy to use");
+    gold.append("\n");
+    gold.append("\n`x`");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -726,6 +742,11 @@ public class GeneratedTemplateTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyUseNoFormatException() {
+    assertNoFormatException(get_HappyUse_4());
+  }
+
+  @Test
   public void testHappyUseGoodWillHappy() {
     assertGoodWillHappy(get_HappyUse_4());
   }
@@ -747,6 +768,21 @@ public class GeneratedTemplateTests extends GeneratedBase {
     gold.append("Path:Template_HappyUse_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\ntemplate name : `x`");
+    gold.append("\n");
+    gold.append("\nHello [[name]]");
+    gold.append("\n");
+    gold.append("\nThis is the magic of templates that are easy to use");
+    gold.append("\n");
+    gold.append("\n`x`");
+    gold.append("\n");
+    gold.append("\npublic formula made = name.html({name:\"World\"}.to_dynamic());");
+    gold.append("\n");
+    gold.append("\ntemplate l : `x`LEAN`x`");
+    gold.append("\n");
+    gold.append("\npublic formula l2 = l.raw({}.to_dynamic());");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -240,6 +240,11 @@ public class GeneratedCOETests extends GeneratedBase {
   }
 
   @Test
+  public void testIssue20230513NoFormatException() {
+    assertNoFormatException(get_Issue20230513_6());
+  }
+
+  @Test
   public void testIssue20230513GoodWillHappy() {
     assertGoodWillHappy(get_Issue20230513_6());
   }
@@ -261,6 +266,33 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("Path:COE_Issue20230513_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Family {");
+    gold.append("\n  public int id;");
+    gold.append("\n  public string name;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Family> _families;");
+    gold.append("\n");
+    gold.append("\nrecord Person {");
+    gold.append("\n  public int id;");
+    gold.append("\n  public principal account;");
+    gold.append("\n  public int family_id;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Person> _people;");
+    gold.append("\n");
+    gold.append("\nprocedure your_family_id_or_zero(principal w) -> int readonly {");
+    gold.append("\n  if ((iterate _people where account == w)[0] as person) {");
+    gold.append("\n    return person.family_id;");
+    gold.append("\n  }");
+    gold.append("\n  return 0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nbubble your_family_1 = (iterate _families where id == your_family_id_or_zero(@who))[0];");
+    gold.append("\n");
+    gold.append("\nbubble your_family_2 = (iterate _families where id == (iterate _people where account == @who)[0].family_id)[0];");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -40,6 +40,11 @@ public class GeneratedUnaryTests extends GeneratedBase {
   }
 
   @Test
+  public void testAggregateOpsNoFormatException() {
+    assertNoFormatException(get_AggregateOps_1());
+  }
+
+  @Test
   public void testAggregateOpsGoodWillHappy() {
     assertGoodWillHappy(get_AggregateOps_1());
   }
@@ -61,6 +66,23 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("Path:Unary_AggregateOps_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:4};");
+    gold.append("\n  (iterate t).x ++;");
+    gold.append("\n  ++((iterate t).x);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -968,6 +990,11 @@ public class GeneratedUnaryTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_2());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_2());
   }
@@ -989,6 +1016,37 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("Path:Unary_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int rx;");
+    gold.append("\npublic double ry;");
+    gold.append("\npublic double z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  int x = 4;");
+    gold.append("\n  rx = x++;");
+    gold.append("\n  x++;");
+    gold.append("\n  ++x;");
+    gold.append("\n  double y = 3.14;");
+    gold.append("\n  ry = ++y;");
+    gold.append("\n  ++y;");
+    gold.append("\n  y++;");
+    gold.append("\n  int x2 = ++rx;");
+    gold.append("\n  int x3 = rx++;");
+    gold.append("\n  double y2 = ++ry;");
+    gold.append("\n  double y3 = ry++;");
+    gold.append("\n  z = x2 + x3 + y2 + y3;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest Negate {");
+    gold.append("\n  assert !false;");
+    gold.append("\n  assert !(!true);");
+    gold.append("\n  assert -(1 + 4) == -5;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

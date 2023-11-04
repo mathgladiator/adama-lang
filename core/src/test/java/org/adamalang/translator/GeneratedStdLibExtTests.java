@@ -40,6 +40,11 @@ public class GeneratedStdLibExtTests extends GeneratedBase {
   }
 
   @Test
+  public void testSignAndHexWithGCDNoFormatException() {
+    assertNoFormatException(get_SignAndHexWithGCD_1());
+  }
+
+  @Test
   public void testSignAndHexWithGCDGoodWillHappy() {
     assertGoodWillHappy(get_SignAndHexWithGCD_1());
   }
@@ -61,6 +66,62 @@ public class GeneratedStdLibExtTests extends GeneratedBase {
     gold.append("Path:StdLibExt_SignAndHexWithGCD_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic formula s0d = Math.sign(1.2);");
+    gold.append("\npublic formula s1d = Math.sign(-1.2);");
+    gold.append("\npublic formula s2d = Math.sign(0.0);");
+    gold.append("\n");
+    gold.append("\npublic formula s0i = Math.sign(1);");
+    gold.append("\npublic formula s1i = Math.sign(-1);");
+    gold.append("\npublic formula s2i = Math.sign(0);");
+    gold.append("\n");
+    gold.append("\npublic formula s0l = Math.sign(1L);");
+    gold.append("\npublic formula s1l = Math.sign(-1L);");
+    gold.append("\npublic formula s2l = Math.sign(0L);");
+    gold.append("\n");
+    gold.append("\npublic formula s0dm = Math.sign(@maybe(1.2));");
+    gold.append("\npublic formula s1dm = Math.sign(@maybe(-1.2));");
+    gold.append("\npublic formula s2dm = Math.sign(@maybe(0.0));");
+    gold.append("\n");
+    gold.append("\npublic formula s0im = Math.sign(@maybe(1));");
+    gold.append("\npublic formula s1im = Math.sign(@maybe(-1));");
+    gold.append("\npublic formula s2im = Math.sign(@maybe(0));");
+    gold.append("\n");
+    gold.append("\npublic formula s0lm = Math.sign(@maybe(1L));");
+    gold.append("\npublic formula s1lm = Math.sign(@maybe(-1L));");
+    gold.append("\npublic formula s2lm = Math.sign(@maybe(0L));");
+    gold.append("\n");
+    gold.append("\npublic formula sdmn = Math.sign(@maybe<double>);");
+    gold.append("\npublic formula simn = Math.sign(@maybe<int>);");
+    gold.append("\npublic formula slmn = Math.sign(@maybe<long>);");
+    gold.append("\n");
+    gold.append("\npublic formula gcd1 = Math.gcd(20, 50);");
+    gold.append("\npublic formula gcd2 = Math.gcd(10, 13);");
+    gold.append("\npublic formula gcd3 = Math.gcd(10, 40);");
+    gold.append("\npublic formula gcd4 = Math.gcd(5, 25);");
+    gold.append("\n");
+    gold.append("\npublic formula h1 = (100).hexOf();");
+    gold.append("\npublic formula h2 = (100L).hexOf();");
+    gold.append("\n");
+    gold.append("\npublic formula fh1 = \"42FF\".intFromHex();");
+    gold.append("\npublic formula fh2 = \"42FF\".longFromHex();");
+    gold.append("\npublic formula fh1b = \"42FFX\".intFromHex();");
+    gold.append("\npublic formula fh2b = \"42FFX\".longFromHex();");
+    gold.append("\n");
+    gold.append("\npublic formula h1m = (@maybe(100)).hexOf();");
+    gold.append("\npublic formula h2m = (@maybe(100L)).hexOf();");
+    gold.append("\n");
+    gold.append("\npublic formula fh1m = (@maybe(\"4269\")).intFromHex();");
+    gold.append("\npublic formula fh2m = (@maybe(\"4269\")).longFromHex();");
+    gold.append("\npublic formula fh1bm = (@maybe(\"4269X\")).intFromHex();");
+    gold.append("\npublic formula fh2bm = (@maybe(\"4269X\")).longFromHex();");
+    gold.append("\n");
+    gold.append("\npublic formula h1mn = (@maybe<int>).hexOf();");
+    gold.append("\npublic formula h2mn = (@maybe<long>).hexOf();");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

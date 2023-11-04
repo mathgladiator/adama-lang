@@ -40,6 +40,11 @@ public class GeneratedWebTests extends GeneratedBase {
   }
 
   @Test
+  public void testAsyncPutNoFormatException() {
+    assertNoFormatException(get_AsyncPut_1());
+  }
+
+  @Test
   public void testAsyncPutGoodWillHappy() {
     assertGoodWillHappy(get_AsyncPut_1());
   }
@@ -61,6 +66,23 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("Path:Web_AsyncPut_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@link sample{}");
+    gold.append("\n");
+    gold.append("\npublic string msg = \"Hi\";");
+    gold.append("\n");
+    gold.append("\n@connected { return true; }");
+    gold.append("\n");
+    gold.append("\nmessage M { string name; }");
+    gold.append("\n");
+    gold.append("\n@web put /data (M m) {");
+    gold.append("\n  var res = sample.echo(@who, {message: \"Hello \" + m.name});");
+    gold.append("\n  if (res.await() as result) {");
+    gold.append("\n    return { html: result.message};");
+    gold.append("\n  }");
+    gold.append("\n  return { html: \"NOPE\" };");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1083,6 +1105,11 @@ public class GeneratedWebTests extends GeneratedBase {
   }
 
   @Test
+  public void testBigRouterNoFormatException() {
+    assertNoFormatException(get_BigRouter_5());
+  }
+
+  @Test
   public void testBigRouterGoodWillHappy() {
     assertGoodWillHappy(get_BigRouter_5());
   }
@@ -1104,6 +1131,43 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("Path:Web_BigRouter_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@web get / {");
+    gold.append("\n  return {html:\"root\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /fixed {");
+    gold.append("\n  return {html:\"fixed path\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path0/$x:int {");
+    gold.append("\n  return {html:\"path integer:\" + x, cache_ttl_seconds:50};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path1/$x:double {");
+    gold.append("\n  return {html:\"path double:\" + x};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path2/$x:long {");
+    gold.append("\n  return {html:\"path long without child:\" + x};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path2/$x:long/child {");
+    gold.append("\n  return {html:\"path long with child: \" + x + \"!\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path3/$a* {");
+    gold.append("\n  return {html:\"tail:\" + a};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path3/$a:string/child {");
+    gold.append("\n  return {html:\"abort tail and go with direct child:\" + a};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web delete /foo {");
+    gold.append("\n  return {html:\"OK...\",cors:true};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2178,6 +2242,11 @@ public class GeneratedWebTests extends GeneratedBase {
   }
 
   @Test
+  public void testHasContextNoFormatException() {
+    assertNoFormatException(get_HasContext_7());
+  }
+
+  @Test
   public void testHasContextGoodWillHappy() {
     assertGoodWillHappy(get_HasContext_7());
   }
@@ -2199,6 +2268,17 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("Path:Web_HasContext_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@web get / \"gg\" {");
+    gold.append("\n  return {error:\"Missing something...\" + @context.origin};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {}");
+    gold.append("\n");
+    gold.append("\n@web put / \"gg-put\" (M m) {");
+    gold.append("\n  return {error:\"Missing something...\" + @context.origin};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3003,6 +3083,11 @@ public class GeneratedWebTests extends GeneratedBase {
   }
 
   @Test
+  public void testParserHappyNoFormatException() {
+    assertNoFormatException(get_ParserHappy_9());
+  }
+
+  @Test
   public void testParserHappyGoodWillHappy() {
     assertGoodWillHappy(get_ParserHappy_9());
   }
@@ -3024,6 +3109,52 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("Path:Web_ParserHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@web get / {");
+    gold.append("\n  return {html:\"root\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /xyz {");
+    gold.append("\n  return {html:\"Hi\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /xyz / path0 {");
+    gold.append("\n  return {html:\"HiPath0\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /xyz/$id : string/$val : double {");
+    gold.append("\n  return {html:\"Hi there\" + id};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web options / {");
+    gold.append("\n  return {cors:true};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web put / (M m) {");
+    gold.append("\n  return {html:\"Put Root\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n@web options /xyz {");
+    gold.append("\n  return {cors:true};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web put /xyz (M m) {");
+    gold.append("\n  return {html:\"Hi XYZ\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web options /xyz/uv {");
+    gold.append("\n  return {cors:true};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web put /xyz/uv (M m) {");
+    gold.append("\n  return {html:\"PUT UV\"};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4035,6 +4166,11 @@ public class GeneratedWebTests extends GeneratedBase {
   }
 
   @Test
+  public void testSpecialNoFormatException() {
+    assertNoFormatException(get_Special_10());
+  }
+
+  @Test
   public void testSpecialGoodWillHappy() {
     assertGoodWillHappy(get_Special_10());
   }
@@ -4056,6 +4192,26 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("Path:Web_Special_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@web get / {");
+    gold.append("\n  return {json:{x:@parameters}};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /path {");
+    gold.append("\n  if (@headers[\"content\"] as c) {");
+    gold.append("\n    return {json:{x:\"Hi\"}};");
+    gold.append("\n  }");
+    gold.append("\n  return {json:{error:true}};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /sign {");
+    gold.append("\n  return {sign:\"\" + 1};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get /id {");
+    gold.append("\n  return {identity:\"anonymous:alice\"};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5375,6 +5531,11 @@ public class GeneratedWebTests extends GeneratedBase {
   }
 
   @Test
+  public void testStringPathNoFormatException() {
+    assertNoFormatException(get_StringPath_11());
+  }
+
+  @Test
   public void testStringPathGoodWillHappy() {
     assertGoodWillHappy(get_StringPath_11());
   }
@@ -5396,6 +5557,23 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("Path:Web_StringPath_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@web get / \"path.js\" {");
+    gold.append("\n  return {json:{error:true}};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get / \"badboy\" {");
+    gold.append("\n  return {error:\"Missing something...\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get / \"redirect\" /nope {");
+    gold.append("\n  return {redirect:\"/foop\"};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@web get / \"forward\"/ yep {");
+    gold.append("\n  return {forward:\"/foop\"};");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

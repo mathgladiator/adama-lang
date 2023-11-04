@@ -1209,6 +1209,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessagingLegacyNoFormatException() {
+    assertNoFormatException(get_MessagingLegacy_6());
+  }
+
+  @Test
   public void testMessagingLegacyGoodWillHappy() {
     assertGoodWillHappy(get_MessagingLegacy_6());
   }
@@ -1230,6 +1235,26 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("Path:Testing_MessagingLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint out;");
+    gold.append("\n");
+    gold.append("\nchannel chan(X payload) {");
+    gold.append("\n  out = payload.x + payload.y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest pumping {");
+    gold.append("\n  assert true;");
+    gold.append("\n  @pump {x:4, y:8} into chan;");
+    gold.append("\n  @step;");
+    gold.append("\n  assert out == 12;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1973,6 +1998,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   }
 
   @Test
+  public void testPumpMessagesNoFormatException() {
+    assertNoFormatException(get_PumpMessages_7());
+  }
+
+  @Test
   public void testPumpMessagesGoodWillHappy() {
     assertGoodWillHappy(get_PumpMessages_7());
   }
@@ -1994,6 +2024,41 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("Path:Testing_PumpMessages_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nstring status;");
+    gold.append("\n");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel<X> chan;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  status = \"Blocked\";");
+    gold.append("\n  future<X> fut = chan.fetch(@no_one);");
+    gold.append("\n  X val = fut.await();");
+    gold.append("\n  status = \"Value:\" + val.x + \"/\" + val.y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest drive_it {");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @step;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @pump {x:4, y:8} into chan;");
+    gold.append("\n  assert @blocked;");
+    gold.append("\n  assert status == \"\";");
+    gold.append("\n  @step;");
+    gold.append("\n  assert !(@blocked);");
+    gold.append("\n  assert status == \"Value:4/8\";");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

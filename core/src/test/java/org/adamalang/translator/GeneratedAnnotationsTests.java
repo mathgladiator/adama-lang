@@ -40,6 +40,11 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageNoFormatException() {
+    assertNoFormatException(get_Message_1());
+  }
+
+  @Test
   public void testMessageGoodWillHappy() {
     assertGoodWillHappy(get_Message_1());
   }
@@ -61,6 +66,12 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("Path:Annotations_Message_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int ( Z = 42 , uri = \"/blah/{tenant}/view/thing/{id}\" ) xyz;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -727,6 +738,11 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReactiveNoFormatException() {
+    assertNoFormatException(get_Reactive_2());
+  }
+
+  @Test
   public void testReactiveGoodWillHappy() {
     assertGoodWillHappy(get_Reactive_2());
   }
@@ -748,6 +764,25 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("Path:Annotations_Reactive_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int(A, B) x0;");
+    gold.append("\npublic double(C, D) x1;");
+    gold.append("\n");
+    gold.append("\nrecord X {");
+    gold.append("\n  public int(E) a;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X>(F,G,H) x;");
+    gold.append("\n");
+    gold.append("\nfunction foo(int(Y) x) -> int(X) {");
+    gold.append("\n  return x * x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nfunction fooz(tuple<int,int>(Z) z) -> int(W) {");
+    gold.append("\n  return z.first;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

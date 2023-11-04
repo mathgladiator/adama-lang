@@ -120,6 +120,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingBoolNoFormatException() {
+    assertNoFormatException(get_IndexingBool_3());
+  }
+
+  @Test
   public void testIndexingBoolGoodWillHappy() {
     assertGoodWillHappy(get_IndexingBool_3());
   }
@@ -141,6 +146,18 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_IndexingBool_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord S {");
+    gold.append("\n  bool s;");
+    gold.append("\n  index s;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<S> tbl;");
+    gold.append("\n");
+    gold.append("\n#code {");
+    gold.append("\n  (iterate tbl) where s;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1020,6 +1037,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingDateTimeNoFormatException() {
+    assertNoFormatException(get_IndexingDateTime_5());
+  }
+
+  @Test
   public void testIndexingDateTimeGoodWillHappy() {
     assertGoodWillHappy(get_IndexingDateTime_5());
   }
@@ -1041,6 +1063,19 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_IndexingDateTime_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Instance {");
+    gold.append("\n  public date the_date;");
+    gold.append("\n  public time the_time;");
+    gold.append("\n  index the_date;");
+    gold.append("\n  index the_time;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Instance> instances;");
+    gold.append("\n");
+    gold.append("\npublic formula at_date = iterate instances where the_date == @date 2023/4/29;");
+    gold.append("\npublic formula at_time = iterate instances where the_time == @time 13:30;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1997,6 +2032,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingMessageMaterializedNoFormatException() {
+    assertNoFormatException(get_IndexingMessageMaterialized_6());
+  }
+
+  @Test
   public void testIndexingMessageMaterializedGoodWillHappy() {
     assertGoodWillHappy(get_IndexingMessageMaterialized_6());
   }
@@ -2018,6 +2058,32 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_IndexingMessageMaterialized_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n");
+    gold.append("\n  index x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint countEq;");
+    gold.append("\nint countLEq;");
+    gold.append("\nint countL;");
+    gold.append("\nint countGEq;");
+    gold.append("\nint countG;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  table<M> msg;");
+    gold.append("\n  msg <- {x:1};");
+    gold.append("\n  msg <- {x:2};");
+    gold.append("\n  msg <- {x:3};");
+    gold.append("\n  list<M> mat = iterate msg materialize;");
+    gold.append("\n  countEq = (mat where x == 2).size();");
+    gold.append("\n  countLEq = (mat where x <= 2).size();");
+    gold.append("\n  countL = (mat where x < 2).size();");
+    gold.append("\n  countGEq = (mat where x >= 2).size();");
+    gold.append("\n  countG = (mat where x > 2).size();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2882,6 +2948,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingMessageSillyNoFormatException() {
+    assertNoFormatException(get_IndexingMessageSilly_7());
+  }
+
+  @Test
   public void testIndexingMessageSillyGoodWillHappy() {
     assertGoodWillHappy(get_IndexingMessageSilly_7());
   }
@@ -2903,6 +2974,30 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_IndexingMessageSilly_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint countEq;");
+    gold.append("\nint countLEq;");
+    gold.append("\nint countL;");
+    gold.append("\nint countGEq;");
+    gold.append("\nint countG;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  table<M> msg;");
+    gold.append("\n  msg <- {x:1};");
+    gold.append("\n  msg <- {x:2};");
+    gold.append("\n  msg <- {x:3};");
+    gold.append("\n  list<M> mat = iterate msg materialize;");
+    gold.append("\n  countEq = (mat where x == 2).size();");
+    gold.append("\n  countLEq = (mat where x <= 2).size();");
+    gold.append("\n  countL = (mat where x < 2).size();");
+    gold.append("\n  countGEq = (mat where x >= 2).size();");
+    gold.append("\n  countG = (mat where x > 2).size();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3757,6 +3852,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingStrNoFormatException() {
+    assertNoFormatException(get_IndexingStr_8());
+  }
+
+  @Test
   public void testIndexingStrGoodWillHappy() {
     assertGoodWillHappy(get_IndexingStr_8());
   }
@@ -3778,6 +3878,18 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_IndexingStr_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord S {");
+    gold.append("\n  string s;");
+    gold.append("\n  index s;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<S> tbl;");
+    gold.append("\n");
+    gold.append("\n#code {");
+    gold.append("\n  (iterate tbl) where s == \"hello\";");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4619,6 +4731,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingNoFormatException() {
+    assertNoFormatException(get_Indexing_9());
+  }
+
+  @Test
   public void testIndexingGoodWillHappy() {
     assertGoodWillHappy(get_Indexing_9());
   }
@@ -4640,6 +4757,54 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_Indexing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E { A, B }");
+    gold.append("\n");
+    gold.append("\nrecord One {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public E y;");
+    gold.append("\n  public principal z;");
+    gold.append("\n");
+    gold.append("\n  index x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Two {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public E y;");
+    gold.append("\n  public principal z;");
+    gold.append("\n");
+    gold.append("\n  index y;");
+    gold.append("\n  index x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Issues {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int y;");
+    gold.append("\n  public int z;");
+    gold.append("\n  public int u;");
+    gold.append("\n");
+    gold.append("\n  index z;");
+    gold.append("\n  index u;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Issues> itbl;");
+    gold.append("\n");
+    gold.append("\nrecord Three {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public E y;");
+    gold.append("\n  public principal z;");
+    gold.append("\n");
+    gold.append("\n  index z;");
+    gold.append("\n  index y;");
+    gold.append("\n  index x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#code {");
+    gold.append("\n  (iterate itbl) where x == y;");
+    gold.append("\n  (iterate itbl) where z == 123;");
+    gold.append("\n  (iterate itbl) where z == 42 && u == 13;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6504,6 +6669,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyShuffleNoFormatException() {
+    assertNoFormatException(get_LegacyShuffle_11());
+  }
+
+  @Test
   public void testLegacyShuffleGoodWillHappy() {
     assertGoodWillHappy(get_LegacyShuffle_11());
   }
@@ -6525,6 +6695,27 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_LegacyShuffle_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n int x;");
+    gold.append("\n int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\npublic auto list_1 = iterate tbl shuffle;");
+    gold.append("\npublic auto list_2 = iterate tbl shuffle;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {x:1, y:3};");
+    gold.append("\n  tbl <- {x:2, y:2};");
+    gold.append("\n  tbl <- {x:3, y:1};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7546,6 +7737,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyNoFormatException() {
+    assertNoFormatException(get_Legacy_12());
+  }
+
+  @Test
   public void testLegacyGoodWillHappy() {
     assertGoodWillHappy(get_Legacy_12());
   }
@@ -7567,6 +7763,61 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n int x;");
+    gold.append("\n int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord Z {");
+    gold.append("\n  table<X> tbl;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Z> z0;");
+    gold.append("\nZ z1;");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\nint count1;");
+    gold.append("\nint count2;");
+    gold.append("\nint count3;");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl2;");
+    gold.append("\ntable<X> tbl3;");
+    gold.append("\n");
+    gold.append("\nauto list_w = iterate tbl2 where y == 2;");
+    gold.append("\nauto list_w2 = iterate tbl2 where y == 2 order by x desc;");
+    gold.append("\nauto list_w3 = iterate tbl2 where y == 2 order by x asc;");
+    gold.append("\nauto list_w4 = iterate tbl2 order by y, x asc;");
+    gold.append("\nauto list_w5 = iterate tbl2 order by x desc, y desc;");
+    gold.append("\nauto list_w6 = iterate tbl2 order by x, y;");
+    gold.append("\nauto list_w7 = iterate tbl2 order by x, y limit 1;");
+    gold.append("\nauto list_w8 = iterate tbl2 order by x, y offset 1 limit 1;");
+    gold.append("\n");
+    gold.append("\nint count_tbl2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {x:1, y:3};");
+    gold.append("\n  tbl <- {x:2, y:2};");
+    gold.append("\n  tbl <- {x:3, y:1};");
+    gold.append("\n  count1 = (iterate tbl).size();");
+    gold.append("\n  count2 = (iterate tbl where x == 1).size();");
+    gold.append("\n  count3 = (iterate tbl where x <= 2).size();");
+    gold.append("\n");
+    gold.append("\n  tbl2 <- {x:100, y:3};");
+    gold.append("\n  tbl2 <- {x:2, y:2};");
+    gold.append("\n  tbl2 <- {x:2, y:2};");
+    gold.append("\n  tbl2 <- {x:100, y:1};");
+    gold.append("\n  tbl2 <- {x:4, y:2};");
+    gold.append("\n  tbl2 <- {x:5, y:2};");
+    gold.append("\n  tbl2 <- {x:1, y:2};");
+    gold.append("\n  count_tbl2 = tbl2.size();");
+    gold.append("\n  if  ((iterate tbl2 where x == 5)[0] as vvv) {");
+    gold.append("\n    vvv.delete();");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  tbl3 <- (iterate tbl2).toArray();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -9160,6 +9411,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testMapNoFormatException() {
+    assertNoFormatException(get_Map_14());
+  }
+
+  @Test
   public void testMapGoodWillHappy() {
     assertGoodWillHappy(get_Map_14());
   }
@@ -9181,6 +9437,47 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_Map_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> tbl;");
+    gold.append("\n");
+    gold.append("\npublic formula all = iterate tbl;");
+    gold.append("\n");
+    gold.append("\nprocedure shared_sqr(R r) -> int {");
+    gold.append("\n  return r.x * r.x + r.y * r.y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula all_sqr_explicit = iterate tbl map shared_sqr;");
+    gold.append("\n");
+    gold.append("\npublic formula all_sqr_anonymous = iterate tbl map (@lambda z: z.x * z.x + z.y * z.y);");
+    gold.append("\n");
+    gold.append("\nrecord Assoc {");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Assoc> assocs;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- { x: 1, y : 2 };");
+    gold.append("\n  tbl <- { x: 3, y : 3 };");
+    gold.append("\n  assocs <- {x : 1, z: 42 };");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure dj_1(R r) -> list<Assoc> {");
+    gold.append("\n  return iterate assocs where x == r.x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic formula dumb_join_explicit = iterate tbl map dj_1;");
+    gold.append("\n");
+    gold.append("\npublic formula dumb_join_annoy1 = iterate tbl map (@lambda z: iterate assocs where_as it: z.x == it.x);");
+    gold.append("\n");
+    gold.append("\npublic formula dumb_join_annoy2 = iterate tbl map (@lambda zz: iterate assocs where zz.x == x);");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -10810,6 +11107,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageSortNoFormatException() {
+    assertNoFormatException(get_MessageSort_15());
+  }
+
+  @Test
   public void testMessageSortGoodWillHappy() {
     assertGoodWillHappy(get_MessageSort_15());
   }
@@ -10831,6 +11133,25 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_MessageSort_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n  datetime y;");
+    gold.append("\n  long z;");
+    gold.append("\n  string ss;");
+    gold.append("\n  bool b;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  table<X> tbl;");
+    gold.append("\n");
+    gold.append("\n  var by_x = iterate tbl order x;");
+    gold.append("\n  var by_y = iterate tbl order y;");
+    gold.append("\n  var by_z = iterate tbl order z;");
+    gold.append("\n  var by_ss = iterate tbl order ss;");
+    gold.append("\n  var by_b = iterate tbl order b;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -11680,6 +12001,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testSortLegacyNoFormatException() {
+    assertNoFormatException(get_SortLegacy_18());
+  }
+
+  @Test
   public void testSortLegacyGoodWillHappy() {
     assertGoodWillHappy(get_SortLegacy_18());
   }
@@ -11701,6 +12027,46 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_SortLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  maybe<int> i;");
+    gold.append("\n  maybe<string> s;");
+    gold.append("\n  maybe<bool> b;");
+    gold.append("\n  maybe<double> d;");
+    gold.append("\n  formula mi = @maybe(123);");
+    gold.append("\n  int i1 = 123;");
+    gold.append("\n  formula i2 = i1 + 42;");
+    gold.append("\n  string ss;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\nauto l1 = iterate tbl order by i;");
+    gold.append("\nauto l2 = iterate tbl order by s;");
+    gold.append("\nauto l3 = iterate tbl order by b;");
+    gold.append("\nauto l4 = iterate tbl order by d;");
+    gold.append("\nauto l5 = iterate tbl order by mi;");
+    gold.append("\nauto l6 = iterate tbl order by i1;");
+    gold.append("\nauto l7 = iterate tbl order by i2;");
+    gold.append("\nauto l8 = iterate tbl order by ss;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {i:4};");
+    gold.append("\n  tbl <- {d:3.14};");
+    gold.append("\n  tbl <- {b:true};");
+    gold.append("\n  tbl <- {s:\"Hi\"};");
+    gold.append("\n");
+    gold.append("\n  tbl <- {i:8};");
+    gold.append("\n  tbl <- {d:2.71};");
+    gold.append("\n  tbl <- {b:false};");
+    gold.append("\n  tbl <- {s:\"Joe\"};");
+    gold.append("\n");
+    gold.append("\n  foreach (x in l1) {}");
+    gold.append("\n  foreach (x in l2) {}");
+    gold.append("\n  foreach (x in l3) {}");
+    gold.append("\n  foreach (x in l4) {}");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -13151,6 +13517,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhereBranchNoFormatException() {
+    assertNoFormatException(get_WhereBranch_19());
+  }
+
+  @Test
   public void testWhereBranchGoodWillHappy() {
     assertGoodWillHappy(get_WhereBranch_19());
   }
@@ -13172,6 +13543,52 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_WhereBranch_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  public int id;");
+    gold.append("\n  public int x;");
+    gold.append("\n  public int y;");
+    gold.append("\n");
+    gold.append("\n  index x;");
+    gold.append("\n  index y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\npublic formula i0 = iterate t where id == 1;");
+    gold.append("\npublic formula i1 = iterate t where x == 1;");
+    gold.append("\npublic formula i2 = iterate t where y == 1;");
+    gold.append("\n");
+    gold.append("\npublic formula i0b1 = iterate t where id == 1 || id == 2;");
+    gold.append("\npublic formula i1b1 = iterate t where x == 1 || x == 2;");
+    gold.append("\npublic formula i2b1 = iterate t where y == 1 || y == 2;");
+    gold.append("\n");
+    gold.append("\npublic formula i0b2 = iterate t where id == 1 || x == 3;");
+    gold.append("\npublic formula i1b2 = iterate t where x == 1 || y == 3;");
+    gold.append("\npublic formula i2b2 = iterate t where y == 1 || id == 3;");
+    gold.append("\n");
+    gold.append("\npublic formula i0as = iterate t where_as w: w.id == 1;");
+    gold.append("\npublic formula i1as = iterate t where_as w: w.x == 1;");
+    gold.append("\npublic formula i2as = iterate t where_as w: w.y == 1;");
+    gold.append("\n");
+    gold.append("\npublic formula i0b1as = iterate t where_as w: w.id == 1 || w.id == 2;");
+    gold.append("\npublic formula i1b1as = iterate t where_as w: w.x == 1 || w.x == 2;");
+    gold.append("\npublic formula i2b1as = iterate t where_as w: w.y == 1 || w.y == 2;");
+    gold.append("\n");
+    gold.append("\npublic formula i0b2as = iterate t where_as w: w.id == 1 || w.x == 3;");
+    gold.append("\npublic formula i1b2as = iterate t where_as w: w.x == 1 || w.y == 3;");
+    gold.append("\npublic formula i2b2as = iterate t where_as w: w.y == 1 || w.id == 3;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1, y:1};");
+    gold.append("\n  t <- {x:2, y:2};");
+    gold.append("\n  t <- {x:3, y:3};");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -15103,6 +15520,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhereBuildClosureNoFormatException() {
+    assertNoFormatException(get_WhereBuildClosure_20());
+  }
+
+  @Test
   public void testWhereBuildClosureGoodWillHappy() {
     assertGoodWillHappy(get_WhereBuildClosure_20());
   }
@@ -15124,6 +15546,26 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_WhereBuildClosure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\nprocedure gotown(int x0) -> list<X> {");
+    gold.append("\n  return iterate t where x == x0;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure gotown2(int x0, int x1) -> list<X> {");
+    gold.append("\n  return iterate t where x == x0 || x == x1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  gotown(1).x = 2;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -16078,6 +16520,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhereDuplicateFieldsNoFormatException() {
+    assertNoFormatException(get_WhereDuplicateFields_21());
+  }
+
+  @Test
   public void testWhereDuplicateFieldsGoodWillHappy() {
     assertGoodWillHappy(get_WhereDuplicateFields_21());
   }
@@ -16099,6 +16546,18 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_WhereDuplicateFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  (iterate t where x == 1 || x == 2).x = 0;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -17017,6 +17476,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhereOtherIndexingModesNoFormatException() {
+    assertNoFormatException(get_WhereOtherIndexingModes_22());
+  }
+
+  @Test
   public void testWhereOtherIndexingModesGoodWillHappy() {
     assertGoodWillHappy(get_WhereOtherIndexingModes_22());
   }
@@ -17038,6 +17502,30 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_WhereOtherIndexingModes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  private int id;");
+    gold.append("\n  public int z;");
+    gold.append("\n");
+    gold.append("\n  index z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\npublic formula t_less = (iterate t) where z < 50;");
+    gold.append("\npublic formula t_lesseq = (iterate t) where z <= 50;");
+    gold.append("\npublic formula t_eq = (iterate t) where z == 50;");
+    gold.append("\npublic formula t_greateq = (iterate t) where z >= 50;");
+    gold.append("\npublic formula t_great = (iterate t) where z > 50;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  for (int zz = 0; zz < 100; zz++ ) {");
+    gold.append("\n    t <- { z : zz };");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -18214,6 +18702,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testWherePrimaryKeyExtractionNoFormatException() {
+    assertNoFormatException(get_WherePrimaryKeyExtraction_23());
+  }
+
+  @Test
   public void testWherePrimaryKeyExtractionGoodWillHappy() {
     assertGoodWillHappy(get_WherePrimaryKeyExtraction_23());
   }
@@ -18235,6 +18728,31 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_WherePrimaryKeyExtraction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n  int id;");
+    gold.append("\n  int z;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  (iterate t) where id == 42;");
+    gold.append("\n  (iterate t) where 42 == id;");
+    gold.append("\n  (iterate t) where_as x: 42 == x.id;");
+    gold.append("\n  (iterate t) where_as x: x.id == 42;");
+    gold.append("\n  (iterate t) where_as x: ((x.id)) == 42;");
+    gold.append("\n  (iterate t) where_as x: x.id == ((42));");
+    gold.append("\n  (iterate t) where_as x: ((x.id == 42));");
+    gold.append("\n  (iterate t) where_as x: ((x.id == 42 && x.z == 50));");
+    gold.append("\n  (iterate t) where_as x: ((x.z == 50 && x.id == 42));");
+    gold.append("\n  (iterate t) where z == 50 && id == 42;");
+    gold.append("\n  (iterate t) where id == 42 && z == 50 && z == 50 && z == 50 && z == 50;");
+    gold.append("\n  (iterate t) where z == 50 && z == 50 && z == 50 && z == 50 && id == 42;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -19251,6 +19769,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhereSameWithPrimaryNoFormatException() {
+    assertNoFormatException(get_WhereSameWithPrimary_24());
+  }
+
+  @Test
   public void testWhereSameWithPrimaryGoodWillHappy() {
     assertGoodWillHappy(get_WhereSameWithPrimary_24());
   }
@@ -19272,6 +19795,19 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("Path:Linq_WhereSameWithPrimary_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int id;");
+    gold.append("\n  int r_id;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> tbl;");
+    gold.append("\n");
+    gold.append("\npublic formula odd = iterate tbl where id == r_id;");
+    gold.append("\n");
+    gold.append("\npublic int id;");
+    gold.append("\npublic formula odd2 = iterate tbl where_as x: id == x.id;");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

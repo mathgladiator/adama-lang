@@ -120,6 +120,11 @@ public class GeneratedScopeTests extends GeneratedBase {
   }
 
   @Test
+  public void testIfMultiDefineNoFormatException() {
+    assertNoFormatException(get_IfMultiDefine_3());
+  }
+
+  @Test
   public void testIfMultiDefineGoodWillHappy() {
     assertGoodWillHappy(get_IfMultiDefine_3());
   }
@@ -141,6 +146,36 @@ public class GeneratedScopeTests extends GeneratedBase {
     gold.append("Path:Scope_IfMultiDefine_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\nmessage C {");
+    gold.append("\n  bool v;");
+    gold.append("\n  int c;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic int v;");
+    gold.append("\n");
+    gold.append("\n@construct (C c) {");
+    gold.append("\n  if (c.v) {");
+    gold.append("\n    int z = 12;");
+    gold.append("\n    v = z;");
+    gold.append("\n  } else {");
+    gold.append("\n    int z = 24;");
+    gold.append("\n    v = z;");
+    gold.append("\n  }");
+    gold.append("\n  if (c.c == 1) {");
+    gold.append("\n    int z = 100;");
+    gold.append("\n    v *= z;");
+    gold.append("\n  } else if (c.c == 2) {");
+    gold.append("\n    int z = 1000;");
+    gold.append("\n    v *= z;");
+    gold.append("\n  } else {");
+    gold.append("\n    int z = 10000;");
+    gold.append("\n    v *= z;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

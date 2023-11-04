@@ -40,6 +40,11 @@ public class GeneratedArrayTests extends GeneratedBase {
   }
 
   @Test
+  public void testEmptyNoFormatException() {
+    assertNoFormatException(get_Empty_1());
+  }
+
+  @Test
   public void testEmptyGoodWillHappy() {
     assertGoodWillHappy(get_Empty_1());
   }
@@ -61,6 +66,13 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("Path:Array_Empty_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int count;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  count = [].size();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -671,6 +683,11 @@ public class GeneratedArrayTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexLookupLegacyNoFormatException() {
+    assertNoFormatException(get_IndexLookupLegacy_2());
+  }
+
+  @Test
   public void testIndexLookupLegacyGoodWillHappy() {
     assertGoodWillHappy(get_IndexLookupLegacy_2());
   }
@@ -692,6 +709,40 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("Path:Array_IndexLookupLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord X {");
+    gold.append("\n int x;");
+    gold.append("\n int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<X> tbl;");
+    gold.append("\n");
+    gold.append("\nint sum;");
+    gold.append("\nbool found_impossible_thing;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  tbl <- {x:100, y:3};");
+    gold.append("\n  tbl <- {x:2, y:2};");
+    gold.append("\n  tbl <- {x:100, y:1};");
+    gold.append("\n  tbl <- {x:4, y:2};");
+    gold.append("\n  tbl <- {x:5, y:2};");
+    gold.append("\n  tbl <- {x:1, y:2};");
+    gold.append("\n");
+    gold.append("\n  if ((iterate tbl order by x desc, y desc)[0] as thing) {");
+    gold.append("\n    sum = thing.x + thing.y;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  found_impossible_thing = false;");
+    gold.append("\n  if ((iterate tbl order by x desc, y desc)[100] as thing) {");
+    gold.append("\n    found_impossible_thing = true;");
+    gold.append("\n  }");
+    gold.append("\n  if ((iterate tbl order by x desc, y desc)[-100] as thing) {");
+    gold.append("\n    found_impossible_thing = true;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1724,6 +1775,11 @@ public class GeneratedArrayTests extends GeneratedBase {
   }
 
   @Test
+  public void testOfAllTypesNoFormatException() {
+    assertNoFormatException(get_OfAllTypes_3());
+  }
+
+  @Test
   public void testOfAllTypesGoodWillHappy() {
     assertGoodWillHappy(get_OfAllTypes_3());
   }
@@ -1745,6 +1801,30 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("Path:Array_OfAllTypes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nfunction mesum(int[] s) -> int {");
+    gold.append("\n  int r = 0;");
+    gold.append("\n  foreach(v in s) {");
+    gold.append("\n    r += v;");
+    gold.append("\n  }");
+    gold.append("\n  return r;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\nint x = 0;");
+    gold.append("\n@construct {");
+    gold.append("\n  x = mesum([1, 2, 3]);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure foo1(bool[] b) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nenum E { X, Y }");
+    gold.append("\n");
+    gold.append("\nprocedure foo2(E[] b) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -120,6 +120,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testFunctionPassingNoFormatException() {
+    assertNoFormatException(get_FunctionPassing_3());
+  }
+
+  @Test
   public void testFunctionPassingGoodWillHappy() {
     assertGoodWillHappy(get_FunctionPassing_3());
   }
@@ -141,6 +146,31 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("Path:NativeTables_FunctionPassing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure fill(table<M> ttt) {");
+    gold.append("\n  ttt <- {x:1};");
+    gold.append("\n  ttt <- {y:1};");
+    gold.append("\n  ttt <- {x:1, y:1};");
+    gold.append("\n  ttt <- [{x:4, y:3}, {x:2, y:2}];");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint sz;");
+    gold.append("\nint wz;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  table<M> t;");
+    gold.append("\n  fill(t);");
+    gold.append("\n  fill(t);");
+    gold.append("\n  sz = t.size();");
+    gold.append("\n  wz = (iterate t where y == 2).size();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1080,6 +1110,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_4());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_4());
   }
@@ -1101,6 +1136,25 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("Path:NativeTables_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint sz1 = 0;");
+    gold.append("\nint sz2;");
+    gold.append("\nint sz3;");
+    gold.append("\n@construct {");
+    gold.append("\n  table<M> t;");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  sz1 = t.size();");
+    gold.append("\n  sz2 = (iterate t).size();");
+    gold.append("\n  t.delete();");
+    gold.append("\n  sz3 = t.size() + 1000;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1925,6 +1979,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testIndexingNoFormatException() {
+    assertNoFormatException(get_Indexing_5());
+  }
+
+  @Test
   public void testIndexingGoodWillHappy() {
     assertGoodWillHappy(get_Indexing_5());
   }
@@ -1946,6 +2005,23 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("Path:NativeTables_Indexing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n");
+    gold.append("\n  index x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  table<M> t;");
+    gold.append("\n  for (int k = 0; k < 10; k++) {");
+    gold.append("\n    t <- {x:1 + k, y: 10};");
+    gold.append("\n  }");
+    gold.append("\n  let l = iterate t where x == 4;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2669,6 +2745,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageSyncNoFormatException() {
+    assertNoFormatException(get_MessageSync_6());
+  }
+
+  @Test
   public void testMessageSyncGoodWillHappy() {
     assertGoodWillHappy(get_MessageSync_6());
   }
@@ -2690,6 +2771,22 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("Path:NativeTables_MessageSync_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int id unique;");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure foo() -> list<M> readonly {");
+    gold.append("\n  table<M> tbl;");
+    gold.append("\n  tbl <- {id:1, x:4};");
+    gold.append("\n  tbl <- {id:2, x:8};");
+    gold.append("\n  tbl <- {id:3, x:16};");
+    gold.append("\n  return iterate tbl;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nbubble fooz = foo();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3477,6 +3574,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testTableCopyNoFormatException() {
+    assertNoFormatException(get_TableCopy_8());
+  }
+
+  @Test
   public void testTableCopyGoodWillHappy() {
     assertGoodWillHappy(get_TableCopy_8());
   }
@@ -3498,6 +3600,22 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("Path:NativeTables_TableCopy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n  int y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nint sz;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  table<M> t;");
+    gold.append("\n  t <- {x:1};");
+    gold.append("\n  table<M> t2 = t;");
+    gold.append("\n  sz = t2.size();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

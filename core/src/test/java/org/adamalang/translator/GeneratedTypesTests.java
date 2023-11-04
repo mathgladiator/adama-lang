@@ -120,6 +120,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testBooleanBulkNoFormatException() {
+    assertNoFormatException(get_BooleanBulk_3());
+  }
+
+  @Test
   public void testBooleanBulkGoodWillHappy() {
     assertGoodWillHappy(get_BooleanBulk_3());
   }
@@ -141,6 +146,20 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_BooleanBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nbool b = true;");
+    gold.append("\nauto ib = !b;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n b = false;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert !b;");
+    gold.append("\n  assert ib;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -769,6 +788,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testBooleanLegacyNoFormatException() {
+    assertNoFormatException(get_BooleanLegacy_4());
+  }
+
+  @Test
   public void testBooleanLegacyGoodWillHappy() {
     assertGoodWillHappy(get_BooleanLegacy_4());
   }
@@ -790,6 +814,86 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_BooleanLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic bool b1;");
+    gold.append("\npublic bool b2;");
+    gold.append("\n");
+    gold.append("\npublic bool bAnd1;");
+    gold.append("\npublic bool bOr1;");
+    gold.append("\npublic bool bAnd2;");
+    gold.append("\npublic bool bOr2;");
+    gold.append("\npublic bool bAnd3;");
+    gold.append("\npublic bool bOr3;");
+    gold.append("\npublic bool bAnd4;");
+    gold.append("\npublic bool bOr4;");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  b1 = false;");
+    gold.append("\n  b2 = false;");
+    gold.append("\n  bAnd1 = b1 && b2;");
+    gold.append("\n  bOr1 = b1 || b2;");
+    gold.append("\n  b1 = false;");
+    gold.append("\n  b2 = true;");
+    gold.append("\n  bAnd2 = b1 && b2;");
+    gold.append("\n  bOr2 = b1 || b2;");
+    gold.append("\n  b1 = true;");
+    gold.append("\n  b2 = false;");
+    gold.append("\n  bAnd3 = b1 && b2;");
+    gold.append("\n  bOr3 = b1 || b2;");
+    gold.append("\n  b1 = true;");
+    gold.append("\n  b2 = true;");
+    gold.append("\n  bAnd4 = b1 && b2;");
+    gold.append("\n  bOr4 = b1 || b2;");
+    gold.append("\n  transition #next;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#next {");
+    gold.append("\n  bool b1;");
+    gold.append("\n  bool b2;");
+    gold.append("\n  bool bAnd1;");
+    gold.append("\n  bool bOr1;");
+    gold.append("\n  bool bAnd2;");
+    gold.append("\n  bool bOr2;");
+    gold.append("\n  bool bAnd3;");
+    gold.append("\n  bool bOr3;");
+    gold.append("\n  bool bAnd4;");
+    gold.append("\n  bool bOr4;");
+    gold.append("\n  bool checkEq;");
+    gold.append("\n  bool checkNotEq;");
+    gold.append("\n  b1 = false;");
+    gold.append("\n  b2 = false;");
+    gold.append("\n  bAnd1 = b1 && b2;");
+    gold.append("\n  bOr1 = b1 || b2;");
+    gold.append("\n  checkEq = b1 == b2;");
+    gold.append("\n  checkNotEq = b1 != b2;");
+    gold.append("\n  b1 = false;");
+    gold.append("\n  b2 = true;");
+    gold.append("\n  bAnd2 = b1 && b2;");
+    gold.append("\n  bOr2 = b1 || b2;");
+    gold.append("\n  checkEq = b1 == b2;");
+    gold.append("\n  checkNotEq = b1 != b2;");
+    gold.append("\n  b1 = true;");
+    gold.append("\n  b2 = false;");
+    gold.append("\n  bAnd3 = b1 && b2;");
+    gold.append("\n  bOr3 = b1 || b2;");
+    gold.append("\n  checkEq = b1 == b2;");
+    gold.append("\n  checkNotEq = b1 != b2;");
+    gold.append("\n  b1 = true;");
+    gold.append("\n  b2 = true;");
+    gold.append("\n  bAnd4 = b1 && b2;");
+    gold.append("\n  bOr4 = b1 || b2;");
+    gold.append("\n  checkEq = b1 == b2;");
+    gold.append("\n  checkNotEq = b1 != b2;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1692,6 +1796,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testChannelFunkyNoFormatException() {
+    assertNoFormatException(get_ChannelFunky_5());
+  }
+
+  @Test
   public void testChannelFunkyGoodWillHappy() {
     assertGoodWillHappy(get_ChannelFunky_5());
   }
@@ -1713,6 +1822,29 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_ChannelFunky_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmessage X {");
+    gold.append("\n  int x;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nchannel<X> foo;");
+    gold.append("\nchannel<X> goo;");
+    gold.append("\nchannel<X[]> duo;");
+    gold.append("\n");
+    gold.append("\nprocedure wacky(channel<X> ch) {");
+    gold.append("\n  ch.fetch(@no_one);");
+    gold.append("\n  ch.decide(@no_one, [{x:12}, {x:152}]);");
+    gold.append("\n  duo.choose(@no_one, [{x:12}, {x:152}], 2);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nprocedure w00t(channel<X[]> carr) {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#neat {");
+    gold.append("\n  wacky(true ? foo : goo);");
+    gold.append("\n  w00t(false ? duo : duo);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2443,6 +2575,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testConstantsLegacyNoFormatException() {
+    assertNoFormatException(get_ConstantsLegacy_6());
+  }
+
+  @Test
   public void testConstantsLegacyGoodWillHappy() {
     assertGoodWillHappy(get_ConstantsLegacy_6());
   }
@@ -2464,6 +2601,13 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_ConstantsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x;");
+    gold.append("\ndouble y;");
+    gold.append("\nstring z;");
+    gold.append("\nbool u;");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3100,6 +3244,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testDoubleBulkNoFormatException() {
+    assertNoFormatException(get_DoubleBulk_7());
+  }
+
+  @Test
   public void testDoubleBulkGoodWillHappy() {
     assertGoodWillHappy(get_DoubleBulk_7());
   }
@@ -3121,6 +3270,25 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_DoubleBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic double x;");
+    gold.append("\npublic double y = 3.14;");
+    gold.append("\npublic double z = 2.0e3;");
+    gold.append("\npublic auto sum = x + y + z;");
+    gold.append("\n");
+    gold.append("\npublic double tiny = 2.0e-32;");
+    gold.append("\n@construct {");
+    gold.append("\n  x = 2.71;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert sum == 2005.85;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3828,6 +3996,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testIntegerBulkNoFormatException() {
+    assertNoFormatException(get_IntegerBulk_8());
+  }
+
+  @Test
   public void testIntegerBulkGoodWillHappy() {
     assertGoodWillHappy(get_IntegerBulk_8());
   }
@@ -3849,6 +4022,22 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_IntegerBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x = 1;");
+    gold.append("\nint y = 0x02;");
+    gold.append("\nint z;");
+    gold.append("\nauto sum = x + y + z;");
+    gold.append("\n@construct {");
+    gold.append("\n  z = 3;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert sum == 6;");
+    gold.append("\n  z = 10;");
+    gold.append("\n  assert sum == 13;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4508,6 +4697,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLabelLegacyNoFormatException() {
+    assertNoFormatException(get_LabelLegacy_9());
+  }
+
+  @Test
   public void testLabelLegacyGoodWillHappy() {
     assertGoodWillHappy(get_LabelLegacy_9());
   }
@@ -4529,6 +4723,32 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LabelLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nlabel ptr;");
+    gold.append("\nstring output;");
+    gold.append("\nstring output2;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #begin;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#begin {");
+    gold.append("\n  ptr = #begin;");
+    gold.append("\n  if (ptr == #begin) {");
+    gold.append("\n    output = \"YES\";");
+    gold.append("\n  }");
+    gold.append("\n  if (ptr != #end) {");
+    gold.append("\n    output2 = \"WHOOP\";");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#end {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5235,6 +5455,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyClientNoFormatException() {
+    assertNoFormatException(get_LegacyClient_11());
+  }
+
+  @Test
   public void testLegacyClientGoodWillHappy() {
     assertGoodWillHappy(get_LegacyClient_11());
   }
@@ -5256,6 +5481,28 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyClient_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nprincipal x;");
+    gold.append("\nprincipal y;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  let eq = @no_one == @who;");
+    gold.append("\n  let neq = @no_one != @who;");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  x = y;");
+    gold.append("\n  principal z = x;");
+    gold.append("\n  principal cake;");
+    gold.append("\n  cake = z;");
+    gold.append("\n  let eq = @no_one == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -5908,6 +6155,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyDoubleNoFormatException() {
+    assertNoFormatException(get_LegacyDouble_12());
+  }
+
+  @Test
   public void testLegacyDoubleGoodWillHappy() {
     assertGoodWillHappy(get_LegacyDouble_12());
   }
@@ -5929,6 +6181,41 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyDouble_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic double d1;");
+    gold.append("\npublic double d3;");
+    gold.append("\npublic bool is_near;");
+    gold.append("\npublic double dX;");
+    gold.append("\npublic double dY;");
+    gold.append("\nprivate double assign;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #setup;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#setup {");
+    gold.append("\n  d1 = 3.14;");
+    gold.append("\n  double d2 = 2.71;");
+    gold.append("\n  d3 = d1 + d2;");
+    gold.append("\n  double d4 = 100.0e4;");
+    gold.append("\n  double d5 = d4 * d3;");
+    gold.append("\n  double x = 0.1;");
+    gold.append("\n  x += 0.2;");
+    gold.append("\n  is_near = x == 0.3;");
+    gold.append("\n  dX = x;");
+    gold.append("\n  dY = 0.3;");
+    gold.append("\n  string foo = 0.1 + \"x\" + 0.2;");
+    gold.append("\n");
+    gold.append("\n  assign = 0;");
+    gold.append("\n  assign += 100;");
+    gold.append("\n  assign *= 3;");
+    gold.append("\n  assign -= 17;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -6672,6 +6959,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyEnumNoFormatException() {
+    assertNoFormatException(get_LegacyEnum_13());
+  }
+
+  @Test
   public void testLegacyEnumGoodWillHappy() {
     assertGoodWillHappy(get_LegacyEnum_13());
   }
@@ -6693,6 +6985,33 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyEnum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nenum E { X:1, Y:2 }");
+    gold.append("\n");
+    gold.append("\nE x;");
+    gold.append("\n");
+    gold.append("\nbool check1;");
+    gold.append("\nbool check2;");
+    gold.append("\n");
+    gold.append("\nenum D { one:1,");
+    gold.append("\n         @default two:2,");
+    gold.append("\n         three:0x3 }");
+    gold.append("\n");
+    gold.append("\nD d;");
+    gold.append("\nE ee;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = E::X;");
+    gold.append("\n  check1 = x == E::X;");
+    gold.append("\n  check2 = x == E::X;");
+    gold.append("\n  assert E::X.to_int() == 1;");
+    gold.append("\n  assert ee.to_int() == 1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest hasDefaultAtStart {");
+    gold.append("\n  assert d == D::two;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -7448,6 +7767,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyEnvironmentNoFormatException() {
+    assertNoFormatException(get_LegacyEnvironment_14());
+  }
+
+  @Test
   public void testLegacyEnvironmentGoodWillHappy() {
     assertGoodWillHappy(get_LegacyEnvironment_14());
   }
@@ -7469,6 +7793,15 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyEnvironment_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nbool a;");
+    gold.append("\nbool b;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  a = @blocked;");
+    gold.append("\n  b = @stable;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -8088,6 +8421,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyIntNoFormatException() {
+    assertNoFormatException(get_LegacyInt_15());
+  }
+
+  @Test
   public void testLegacyIntGoodWillHappy() {
     assertGoodWillHappy(get_LegacyInt_15());
   }
@@ -8109,6 +8447,49 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyInt_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint assign;");
+    gold.append("\nint hex;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  assert 1 < 2;");
+    gold.append("\n  assert 1 <= 3;");
+    gold.append("\n  assert 1 < 2.0;");
+    gold.append("\n  assert 1 <= 3.0;");
+    gold.append("\n  assert 2 > 1;");
+    gold.append("\n  assert 3 >= 1;");
+    gold.append("\n  assert 2.0 > 1;");
+    gold.append("\n  assert 2.0 >= 1;");
+    gold.append("\n  assert 2 == 2;");
+    gold.append("\n  assert 2 != 3;");
+    gold.append("\n  assert 1 + 1 == 2;");
+    gold.append("\n  assert 1 + 2.0 == 3.0;");
+    gold.append("\n  assert 1 + \" donkey\" == \"1 donkey\";");
+    gold.append("\n  assert 1 + 1 == 2;");
+    gold.append("\n  assert 2.0 + 1 == 3.0;");
+    gold.append("\n  assert \"#\" + 1 == \"#1\";");
+    gold.append("\n  if (4 / 2 as x1) {");
+    gold.append("\n    assert x1 > 1;");
+    gold.append("\n  } else {");
+    gold.append("\n    assert false;");
+    gold.append("\n  }");
+    gold.append("\n  if (5.0 / 2 as x2) {");
+    gold.append("\n    assert x2 > 1.9;");
+    gold.append("\n  } else {");
+    gold.append("\n    assert false;");
+    gold.append("\n  }");
+    gold.append("\n  assert (10 % 3).getOrDefaultTo(-100) > 0;");
+    gold.append("\n  assert 2 * 3 > 5;");
+    gold.append("\n  assert 2 * 3.0 > 5;");
+    gold.append("\n  assert 2.0 * 3 > 5.9;");
+    gold.append("\n");
+    gold.append("\n  assign = 0;");
+    gold.append("\n  assign += 100;");
+    gold.append("\n  assign *= 3;");
+    gold.append("\n  assign -= 17;");
+    gold.append("\n  hex = 0x123fb;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -8798,6 +9179,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyMaybeNoFormatException() {
+    assertNoFormatException(get_LegacyMaybe_16());
+  }
+
+  @Test
   public void testLegacyMaybeGoodWillHappy() {
     assertGoodWillHappy(get_LegacyMaybe_16());
   }
@@ -8819,6 +9205,21 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic maybe<double> md;");
+    gold.append("\npublic maybe<int> mi;");
+    gold.append("\npublic maybe<string> ms;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  md = 3.14;");
+    gold.append("\n  mi = 2;");
+    gold.append("\n  ms = \"hi\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -9496,6 +9897,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLegacyStringsNoFormatException() {
+    assertNoFormatException(get_LegacyStrings_17());
+  }
+
+  @Test
   public void testLegacyStringsGoodWillHappy() {
     assertGoodWillHappy(get_LegacyStrings_17());
   }
@@ -9517,6 +9923,66 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LegacyStrings_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic string s1;");
+    gold.append("\npublic string s2;");
+    gold.append("\npublic string s5;");
+    gold.append("\npublic string s6;");
+    gold.append("\npublic int len;");
+    gold.append("\npublic string s7;");
+    gold.append("\npublic string re1;");
+    gold.append("\npublic string re2;");
+    gold.append("\npublic string re3;");
+    gold.append("\npublic string big_finish;");
+    gold.append("\npublic string mult1;");
+    gold.append("\n");
+    gold.append("\n/** the begin state */");
+    gold.append("\n@construct {");
+    gold.append("\n  s1 = \"Hello \";");
+    gold.append("\n  s2 = \"World\";");
+    gold.append("\n  string s3 = s1 + s2;");
+    gold.append("\n  string s4;");
+    gold.append("\n  s5 = s3 + \"/\" + s4 + 3.14;");
+    gold.append("\n  s6 = \"cake\" + \" ninja\" + \"\\\"\";");
+    gold.append("\n  len = s6.length() + 1;");
+    gold.append("\n  s7 = s6.reverse();");
+    gold.append("\n");
+    gold.append("\n  re1 = (\"x\" < \"y\") + \";\" +");
+    gold.append("\n        (\"x\" <= \"y\") + \";\" +");
+    gold.append("\n        (\"x\" > \"y\") + \";\" +");
+    gold.append("\n        (\"x\" >= \"y\") + \";\" +");
+    gold.append("\n        (\"x\" == \"y\") + \";\" +");
+    gold.append("\n        (\"x\" != \"y\") + \";\";");
+    gold.append("\n");
+    gold.append("\n  re2 = (\"y\" < \"x\") + \";\" +");
+    gold.append("\n        (\"y\" <= \"x\") + \";\" +");
+    gold.append("\n        (\"y\" > \"x\") + \";\" +");
+    gold.append("\n        (\"y\" >= \"x\") + \";\" +");
+    gold.append("\n        (\"y\" == \"x\") + \";\" +");
+    gold.append("\n        (\"y\" != \"x\") + \";\";");
+    gold.append("\n");
+    gold.append("\n  re3 = (\"x\" < \"x\") + \";\" +");
+    gold.append("\n        (\"x\" <= \"x\") + \";\" +");
+    gold.append("\n        (\"x\" > \"x\") + \";\" +");
+    gold.append("\n        (\"x\" >= \"x\") + \";\" +");
+    gold.append("\n        (\"x\" == \"x\") + \";\" +");
+    gold.append("\n        (\"x\" != \"x\") + \";\";");
+    gold.append("\n  big_finish = \"X:\";");
+    gold.append("\n  big_finish += 1;");
+    gold.append("\n  big_finish += \"/\";");
+    gold.append("\n  big_finish += true; // nice");
+    gold.append("\n  big_finish += \" := \";");
+    gold.append("\n  big_finish += 3.14;");
+    gold.append("\n  big_finish += \"\\n\\t\\b\\f\\r\\\\\\\"' cake:\" + 0x123fb; // woah");
+    gold.append("\n  big_finish += \"\\n\\t\\b\\f\\r ninja:\" + 0xFEDCBA;");
+    gold.append("\n");
+    gold.append("\n  mult1 = \"Red\" * 2;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -10354,6 +10820,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLong64BitsNoFormatException() {
+    assertNoFormatException(get_Long64Bits_18());
+  }
+
+  @Test
   public void testLong64BitsGoodWillHappy() {
     assertGoodWillHappy(get_Long64Bits_18());
   }
@@ -10375,6 +10846,22 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_Long64Bits_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic long x;");
+    gold.append("\npublic long big;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = 123;");
+    gold.append("\n  long y = 42;");
+    gold.append("\n  let z = x + y;");
+    gold.append("\n  let u = 2423421234124213412L;");
+    gold.append("\n  big = (z + u);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -11020,6 +11507,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLongFunNoFormatException() {
+    assertNoFormatException(get_LongFun_19());
+  }
+
+  @Test
   public void testLongFunGoodWillHappy() {
     assertGoodWillHappy(get_LongFun_19());
   }
@@ -11041,6 +11533,22 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_LongFun_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nlong x;");
+    gold.append("\nrecord R {");
+    gold.append("\n  long y;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<R> t;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = 123L;");
+    gold.append("\n  (iterate t).y = 42;");
+    gold.append("\n  (iterate t).y ++;");
+    gold.append("\n  (iterate t).y += 90L;");
+    gold.append("\n  long x = 42;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -11872,6 +12380,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybeDeleteFlowNoFormatException() {
+    assertNoFormatException(get_MaybeDeleteFlow_20());
+  }
+
+  @Test
   public void testMaybeDeleteFlowGoodWillHappy() {
     assertGoodWillHappy(get_MaybeDeleteFlow_20());
   }
@@ -11893,6 +12406,14 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_MaybeDeleteFlow_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nmaybe<int> x;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x = 123;");
+    gold.append("\n  x.delete();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -12499,6 +13020,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaybeDeleteNoFormatException() {
+    assertNoFormatException(get_MaybeDelete_21());
+  }
+
+  @Test
   public void testMaybeDeleteGoodWillHappy() {
     assertGoodWillHappy(get_MaybeDelete_21());
   }
@@ -12520,6 +13046,59 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_MaybeDelete_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nmaybe<string> s;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  transition #start;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#start {");
+    gold.append("\n  s = \"xyz\";");
+    gold.append("\n  transition #next;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#next {");
+    gold.append("\n  s = \"abc\";");
+    gold.append("\n  transition #almost;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#almost {");
+    gold.append("\n  s.delete();");
+    gold.append("\n  transition #end;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#end {");
+    gold.append("\n  s = \"42\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmaybe<string> w00t;");
+    gold.append("\npublic bool t1;");
+    gold.append("\npublic bool t2;");
+    gold.append("\npublic bool t3;");
+    gold.append("\n");
+    gold.append("\ntest flow {");
+    gold.append("\n  int haves = 0;");
+    gold.append("\n  t1 = w00t.has();");
+    gold.append("\n  if (w00t as w) {");
+    gold.append("\n    haves ++;");
+    gold.append("\n  }");
+    gold.append("\n  w00t = \"noice\";");
+    gold.append("\n  t2 = w00t.has();");
+    gold.append("\n  if (w00t as w) {");
+    gold.append("\n    haves ++;");
+    gold.append("\n  }");
+    gold.append("\n  w00t.delete();");
+    gold.append("\n  t3 = w00t.has();");
+    gold.append("\n  if (w00t as w) {");
+    gold.append("\n    haves ++;");
+    gold.append("\n  }");
+    gold.append("\n  assert haves == 1;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -13326,6 +13905,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testNumberBulkNoFormatException() {
+    assertNoFormatException(get_NumberBulk_23());
+  }
+
+  @Test
   public void testNumberBulkGoodWillHappy() {
     assertGoodWillHappy(get_NumberBulk_23());
   }
@@ -13347,6 +13931,23 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_NumberBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x = 1;");
+    gold.append("\nint y = 0x02;");
+    gold.append("\ndouble z;");
+    gold.append("\nauto sum = x + y + z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  z = 3.14;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert (1 + 0x02 + 3.14) == 6.14;");
+    gold.append("\n  z = 10;");
+    gold.append("\n  assert sum == 13;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -14046,6 +14647,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testSpecialConstantsNoFormatException() {
+    assertNoFormatException(get_SpecialConstants_25());
+  }
+
+  @Test
   public void testSpecialConstantsGoodWillHappy() {
     assertGoodWillHappy(get_SpecialConstants_25());
   }
@@ -14067,6 +14673,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_SpecialConstants_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n// this is an open file to sort out how to make some keywords... not so special");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -14651,6 +15260,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testStringBulkNoFormatException() {
+    assertNoFormatException(get_StringBulk_26());
+  }
+
+  @Test
   public void testStringBulkGoodWillHappy() {
     assertGoodWillHappy(get_StringBulk_26());
   }
@@ -14672,6 +15286,26 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("Path:Types_StringBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int x = 1;");
+    gold.append("\npublic string y = \"2\";");
+    gold.append("\npublic double z;");
+    gold.append("\npublic auto sum = x + y + z;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  z = 3.14;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntest PrimaryTest {");
+    gold.append("\n  assert sum == \"123.14\";");
+    gold.append("\n  z = 10;");
+    gold.append("\n  assert sum == \"1210.0\";");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return @who == @no_one;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

@@ -18,13 +18,14 @@
 package org.adamalang.support.testgen;
 
 import org.adamalang.translator.env2.Scope;
-import org.adamalang.translator.parser.Parser;
-import org.adamalang.translator.parser.StringBuilderDocumentHandler;
+import org.adamalang.translator.parser.*;
 import org.adamalang.translator.parser.token.TokenEngine;
-import org.adamalang.translator.parser.Formatter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 public class PhaseEmission {
   public static void go(final String filename, final Path path, final StringBuilder outputFile) throws Exception {
@@ -33,12 +34,27 @@ public class PhaseEmission {
     final var readIn = Files.readString(path);
     final var tokenEngine = new TokenEngine(filename, readIn.codePoints().iterator());
     final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
-    parser.document().accept(esb);
-
-    Formatter formatter = new Formatter();
-
-
+    Consumer<TopLevelDocumentHandler> play = parser.document();
+    play.accept(esb);
     report(readIn, esb.builder.toString(), outputFile);
+    Formatter formatter = new Formatter();
+    try {
+      play.accept(new FormatDocumentHandler(formatter));
+      final var esb2 = new StringBuilderDocumentHandler();
+      play.accept(esb2);
+      outputFile.append("=FORMAT===================================================\n");
+      outputFile.append(esb2.builder.toString()).append("\n");
+      outputFile.append("==========================================================\n");
+    } catch (Exception ex) {
+      outputFile.append("-------------------------------------");
+      outputFile.append("!! FORMAT-EXCEPTION !!");
+      final var memory = new ByteArrayOutputStream();
+      final var writer = new PrintWriter(memory);
+      ex.printStackTrace(writer);
+      writer.flush();
+      outputFile.append(memory.toString()).append("\n");
+      outputFile.append("-------------------------------------");
+    }
   }
 
   public static void report(final String readIn, final String result, final StringBuilder outputFile) {

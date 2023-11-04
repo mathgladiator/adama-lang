@@ -40,6 +40,11 @@ public class GeneratedSelfTests extends GeneratedBase {
   }
 
   @Test
+  public void testBubbleNoFormatException() {
+    assertNoFormatException(get_Bubble_1());
+  }
+
+  @Test
   public void testBubbleGoodWillHappy() {
     assertGoodWillHappy(get_Bubble_1());
   }
@@ -61,6 +66,25 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("Path:Self_Bubble_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nprocedure double_x(R rr) -> int readonly {");
+    gold.append("\n  return rr.x * 2;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n");
+    gold.append("\n  bubble dx = double_x(@self);");
+    gold.append("\n  public formula dx2 = double_x(@self);");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic R r;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  r.x = 100;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -916,6 +940,11 @@ public class GeneratedSelfTests extends GeneratedBase {
   }
 
   @Test
+  public void testMethodNoFormatException() {
+    assertNoFormatException(get_Method_2());
+  }
+
+  @Test
   public void testMethodGoodWillHappy() {
     assertGoodWillHappy(get_Method_2());
   }
@@ -937,6 +966,35 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("Path:Self_Method_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n");
+    gold.append("\n  method double_x() {");
+    gold.append("\n    @self.x *= 2;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nmessage M {");
+    gold.append("\n  int x;");
+    gold.append("\n");
+    gold.append("\n  method double_of_x() -> int {");
+    gold.append("\n    return @self.x * 2;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic R r;");
+    gold.append("\npublic int mx;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  r.x = 100;");
+    gold.append("\n  r.double_x();");
+    gold.append("\n");
+    gold.append("\n  M m;");
+    gold.append("\n  m.x = 100;");
+    gold.append("\n  mx = m.double_of_x();");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1900,6 +1958,11 @@ public class GeneratedSelfTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhereNoFormatException() {
+    assertNoFormatException(get_Where_4());
+  }
+
+  @Test
   public void testWhereGoodWillHappy() {
     assertGoodWillHappy(get_Where_4());
   }
@@ -1921,6 +1984,18 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("Path:Self_Where_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Other {");
+    gold.append("\n  int c;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Other> others;");
+    gold.append("\n");
+    gold.append("\nrecord R {");
+    gold.append("\n  int x;");
+    gold.append("\n  bubble b = iterate others where c == @self.x;");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

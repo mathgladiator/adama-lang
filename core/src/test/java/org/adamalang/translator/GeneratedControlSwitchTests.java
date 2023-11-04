@@ -40,6 +40,11 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
   }
 
   @Test
+  public void testAliveCodeNoFormatException() {
+    assertNoFormatException(get_AliveCode_1());
+  }
+
+  @Test
   public void testAliveCodeGoodWillHappy() {
     assertGoodWillHappy(get_AliveCode_1());
   }
@@ -61,6 +66,24 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("Path:ControlSwitch_AliveCode_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nint x;");
+    gold.append("\n");
+    gold.append("\nprocedure alive() {");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n#sm_1 {");
+    gold.append("\n  switch (x) {");
+    gold.append("\n    case 1:");
+    gold.append("\n      break;");
+    gold.append("\n    default:");
+    gold.append("\n      return;");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  alive();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -837,6 +860,11 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyEnumNoFormatException() {
+    assertNoFormatException(get_HappyEnum_6());
+  }
+
+  @Test
   public void testHappyEnumGoodWillHappy() {
     assertGoodWillHappy(get_HappyEnum_6());
   }
@@ -858,6 +886,26 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("Path:ControlSwitch_HappyEnum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\n");
+    gold.append("\nenum X { Ax, Ay, Az, B, C }");
+    gold.append("\n");
+    gold.append("\npublic X v = X::Ay;");
+    gold.append("\npublic int sum;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  switch (v) {");
+    gold.append("\n    case X::A*:");
+    gold.append("\n      sum = 42;");
+    gold.append("\n      break;");
+    gold.append("\n    case X::B:");
+    gold.append("\n      sum = 123;");
+    gold.append("\n      break;");
+    gold.append("\n    default:");
+    gold.append("\n      sum = 50;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1543,6 +1591,11 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
   }
 
   @Test
+  public void testHappyNoFormatException() {
+    assertNoFormatException(get_Happy_7());
+  }
+
+  @Test
   public void testHappyGoodWillHappy() {
     assertGoodWillHappy(get_Happy_7());
   }
@@ -1564,6 +1617,37 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("Path:ControlSwitch_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\npublic int sum = 0;");
+    gold.append("\npublic int sum3;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  switch (sum) {");
+    gold.append("\n    case 0:");
+    gold.append("\n      sum = 123;");
+    gold.append("\n      break;");
+    gold.append("\n    case 1:");
+    gold.append("\n      sum = 42;");
+    gold.append("\n      break;");
+    gold.append("\n    case 2:");
+    gold.append("\n      sum = 1000;");
+    gold.append("\n      break;");
+    gold.append("\n    default:");
+    gold.append("\n      sum = 50;");
+    gold.append("\n  }");
+    gold.append("\n  string x = \"xyz\";");
+    gold.append("\n  switch(x) {");
+    gold.append("\n    case \"x\":");
+    gold.append("\n      sum3 = 100;");
+    gold.append("\n      break;");
+    gold.append("\n    case \"xyz\":");
+    gold.append("\n      sum3 = 1000;");
+    gold.append("\n      break;");
+    gold.append("\n    default:");
+    gold.append("\n      break;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");

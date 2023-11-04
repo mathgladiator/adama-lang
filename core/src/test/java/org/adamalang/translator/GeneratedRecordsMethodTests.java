@@ -80,6 +80,11 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
   }
 
   @Test
+  public void testCallingMethodNoFormatException() {
+    assertNoFormatException(get_CallingMethod_2());
+  }
+
+  @Test
   public void testCallingMethodGoodWillHappy() {
     assertGoodWillHappy(get_CallingMethod_2());
   }
@@ -101,6 +106,23 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("Path:RecordsMethod_CallingMethod_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Card {");
+    gold.append("\n  method one() -> int {");
+    gold.append("\n    return 1;");
+    gold.append("\n  }");
+    gold.append("\n  method two() -> int {");
+    gold.append("\n   return one() + one();");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -888,6 +910,11 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
   }
 
   @Test
+  public void testOverloadingNoFormatException() {
+    assertNoFormatException(get_Overloading_3());
+  }
+
+  @Test
   public void testOverloadingGoodWillHappy() {
     assertGoodWillHappy(get_Overloading_3());
   }
@@ -909,6 +936,27 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("Path:RecordsMethod_Overloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord R {");
+    gold.append("\n  int v = 10;");
+    gold.append("\n  method foo() {");
+    gold.append("\n");
+    gold.append("\n  }");
+    gold.append("\n");
+    gold.append("\n  method foo(int x) -> int {");
+    gold.append("\n    v *= x;");
+    gold.append("\n    return v + x;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\nR x;");
+    gold.append("\nint v;");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n  x.foo();");
+    gold.append("\n  v = x.foo(7);");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -1733,6 +1781,11 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
   }
 
   @Test
+  public void testReactiveNoFormatException() {
+    assertNoFormatException(get_Reactive_4());
+  }
+
+  @Test
   public void testReactiveGoodWillHappy() {
     assertGoodWillHappy(get_Reactive_4());
   }
@@ -1754,6 +1807,23 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("Path:RecordsMethod_Reactive_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Card {");
+    gold.append("\n  method one() -> int readonly {");
+    gold.append("\n    return 1;");
+    gold.append("\n  }");
+    gold.append("\n  public formula boom = one();");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\npublic Card card;");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -2578,6 +2648,11 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
   }
 
   @Test
+  public void testSimpleAccessNoFormatException() {
+    assertNoFormatException(get_SimpleAccess_5());
+  }
+
+  @Test
   public void testSimpleAccessGoodWillHappy() {
     assertGoodWillHappy(get_SimpleAccess_5());
   }
@@ -2599,6 +2674,25 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("Path:RecordsMethod_SimpleAccess_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nview string class_filter;");
+    gold.append("\n");
+    gold.append("\nrecord Thing {");
+    gold.append("\n  public int(Hidden) id;");
+    gold.append("\n  public string(Title) name;");
+    gold.append("\n  public string description;");
+    gold.append("\n");
+    gold.append("\n  method test(string cf) -> bool readonly {");
+    gold.append("\n    if (cf==\"\") {");
+    gold.append("\n      return true;");
+    gold.append("\n    }");
+    gold.append("\n    return name.contains(cf) || description.contains(cf);");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Thing> _things;");
+    gold.append("\nbubble things = iterate _things where_as x: x.test(@viewer.class_filter);");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -3530,6 +3624,11 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
   }
 
   @Test
+  public void testSimpleNoFormatException() {
+    assertNoFormatException(get_Simple_6());
+  }
+
+  @Test
   public void testSimpleGoodWillHappy() {
     assertGoodWillHappy(get_Simple_6());
   }
@@ -3551,6 +3650,25 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("Path:RecordsMethod_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nrecord Card {");
+    gold.append("\n  public int id;");
+    gold.append("\n  private principal owner;");
+    gold.append("\n  private int ordering;");
+    gold.append("\n");
+    gold.append("\n  method reset() {");
+    gold.append("\n    ordering = Random.genInt();");
+    gold.append("\n    owner = @no_one;");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@connected {");
+    gold.append("\n  return true;");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n@construct {");
+    gold.append("\n}");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
@@ -4377,6 +4495,11 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
   }
 
   @Test
+  public void testViewerAccessNoFormatException() {
+    assertNoFormatException(get_ViewerAccess_7());
+  }
+
+  @Test
   public void testViewerAccessGoodWillHappy() {
     assertGoodWillHappy(get_ViewerAccess_7());
   }
@@ -4398,6 +4521,26 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("Path:RecordsMethod_ViewerAccess_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
+    gold.append("\n=FORMAT===================================================");
+    gold.append("\nview string class_filter;");
+    gold.append("\n");
+    gold.append("\nrecord Thing {");
+    gold.append("\n  public int(Hidden) id;");
+    gold.append("\n  public string(Title) name;");
+    gold.append("\n  public string description;");
+    gold.append("\n");
+    gold.append("\n  method test() -> bool readonly viewer {");
+    gold.append("\n    string cf = @viewer.class_filter;");
+    gold.append("\n    if (cf==\"\") {");
+    gold.append("\n      return true;");
+    gold.append("\n    }");
+    gold.append("\n    return name.contains(cf) || description.contains(cf);");
+    gold.append("\n  }");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\ntable<Thing> _things;");
+    gold.append("\nbubble things = iterate _things where_as x: x.test();");
+    gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
