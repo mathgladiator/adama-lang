@@ -19,8 +19,65 @@ package org.adamalang.translator.parser;
 
 import org.adamalang.translator.parser.token.Token;
 
+import java.util.ArrayList;
+
 public class Formatter {
+  private static String[] TAB_CACHE = makeTabCache();
+
+  private static String[] makeTabCache() {
+    String current = "";
+    String[] cache = new String[40];
+    for (int k = 0; k < cache.length; k++) {
+      cache[k] = current;
+      current += "  ";
+    }
+    return cache;
+  }
+
+  private int tab;
+  private String tabCache;
+
+  private void updateTab() {
+    if (0 <= tab && tab < TAB_CACHE.length) {
+      tabCache = TAB_CACHE[tab];
+    } else {
+      tabCache = "";
+      for (int k = 0; k < tab; k++) {
+        tabCache += "  ";
+      }
+    }
+  }
+
+  public Formatter() {
+    this.tab = 0;
+    updateTab();
+  }
+
+  public void tabUp() {
+    this.tab++;
+    updateTab();
+  }
+
+  public void tab(Token t) {
+    if (t.nonSemanticTokensPrior == null) {
+      t.nonSemanticTokensPrior = new ArrayList<>();
+      t.nonSemanticTokensPrior.add(Token.WRAP(tabCache));
+    }
+  }
+
+  public void singleTab(Token t) {
+    if (t.nonSemanticTokensPrior == null) {
+      t.nonSemanticTokensPrior = new ArrayList<>();
+      t.nonSemanticTokensPrior.add(Token.WRAP("  "));
+    }
+  }
+
+  public void tabDown() {
+    this.tab--;
+    updateTab();
+  }
 
   public void normalizeWhitespace(Token token) {
   }
+
 }
