@@ -56,6 +56,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"code", "bundle-plan", "--help"});
     Main.testMain(new String[]{"code", "compile-file", "--help"});
     Main.testMain(new String[]{"code", "diagram", "--help"});
+    Main.testMain(new String[]{"code", "format", "--help"});
     Main.testMain(new String[]{"code", "lsp", "--help"});
     Main.testMain(new String[]{"code", "reflect-dump", "--help"});
     Main.testMain(new String[]{"code", "validate-plan", "--help"});

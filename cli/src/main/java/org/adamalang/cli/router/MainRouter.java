@@ -389,6 +389,16 @@ public class MainRouter {
                codeHandler.diagram(codeArgs, out);
                return 0;
             }
+            case "format": {
+              CodeFormatArgs codeArgs = CodeFormatArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeFormatArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.format(codeArgs, out);
+               return 0;
+            }
             case "lsp": {
               CodeLspArgs codeArgs = CodeLspArgs.from(args, 2);
               if (codeArgs == null) {

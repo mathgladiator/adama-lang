@@ -37,7 +37,7 @@ import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
-import org.adamalang.translator.parser.Parser;
+import org.adamalang.translator.parser.*;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
@@ -66,6 +66,37 @@ public class CodeHandlerImpl implements CodeHandler {
     plan.putArray("plan");
     Files.writeString(new File(args.output).toPath(), plan.toPrettyString());
     output.out();
+  }
+
+  public void formatSingleFile(File file) throws Exception {
+    if (!file.getName().endsWith(".adama")) {
+      return;
+    }
+    String input = Files.readString(file.toPath());
+    final var tokenEngine = new TokenEngine(file.getName(), input.codePoints().iterator());
+    final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+    Consumer<TopLevelDocumentHandler> play = parser.document();
+    Formatter formatter = new Formatter();
+    play.accept(new FormatDocumentHandler(formatter));
+    final var esb = new StringBuilderDocumentHandler();
+    play.accept(esb);
+    String output = esb.toString();
+    Files.writeString(file.toPath(), output);
+  }
+
+  private void scanFormat(File file) throws Exception {
+    if (file.isDirectory()) {
+      for (File ch : file.listFiles()) {
+        scanFormat(ch);
+      }
+    } else {
+      formatSingleFile(file);
+    }
+  }
+
+  @Override
+  public void format(Arguments.CodeFormatArgs args, Output.YesOrError output) throws Exception {
+    scanFormat(new File(args.file));
   }
 
   public void fillImports(File imports, String prefix, HashMap<String, String> map) throws Exception {

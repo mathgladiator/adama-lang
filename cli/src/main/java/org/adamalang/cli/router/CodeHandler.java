@@ -24,6 +24,7 @@ public interface CodeHandler {
   void bundlePlan(CodeBundlePlanArgs args, YesOrError output) throws Exception;
   void compileFile(CodeCompileFileArgs args, YesOrError output) throws Exception;
   void diagram(CodeDiagramArgs args, YesOrError output) throws Exception;
+  void format(CodeFormatArgs args, YesOrError output) throws Exception;
   void lsp(CodeLspArgs args, YesOrError output) throws Exception;
   void reflectDump(CodeReflectDumpArgs args, YesOrError output) throws Exception;
   void validatePlan(CodeValidatePlanArgs args, YesOrError output) throws Exception;

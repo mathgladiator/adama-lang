@@ -2026,6 +2026,54 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-tt, --title", Util.ANSI.Green) + " " + Util.prefix("<title>", Util.ANSI.White) + " : The title of the diagram");
 		}
 	}
+	public static class CodeFormatArgs {
+		public Config config;
+		public String file = null;
+		public static CodeFormatArgs from(String[] args, int start) {
+			CodeFormatArgs returnArgs = new CodeFormatArgs();
+			try {
+				returnArgs.config = new Config(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-f":
+					case "--file": {
+						if (k+1 < args.length) {
+							returnArgs.file = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Format the file or directory recursively (and inline updates)", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama code format", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-f, --file", Util.ANSI.Green) + " " + Util.prefix("<file>", Util.ANSI.White) + " : A file.");
+		}
+	}
 	public static class CodeLspArgs {
 		public Config config;
 		public String port = "2423";

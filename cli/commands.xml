@@ -549,6 +549,13 @@
             <arg name="dump-to" default="null" />
         </command>
 
+        <command name="format">
+            <documentation>
+                Format the file or directory recursively (and inline updates)
+            </documentation>
+            <arg name="file" default="null" />
+        </command>
+
         <command name="reflect-dump">
             <documentation>
                 Compiles the adama file and dumps the reflection json
