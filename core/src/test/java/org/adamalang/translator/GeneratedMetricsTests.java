@@ -118,7 +118,7 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:110)");
     gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:45)");
     gold.append("\n	at org.adamalang.cli.implementations.ContribHandlerImpl.testsAdama(ContribHandlerImpl.java:167)");
-    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:537)");
+    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:547)");
     gold.append("\n	at org.adamalang.cli.Main.main(Main.java:33)");
     gold.append("\n");
     gold.append("\n---------------------------------------ISSUES-------------------------------------------");
@@ -807,7 +807,7 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:110)");
     gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:45)");
     gold.append("\n	at org.adamalang.cli.implementations.ContribHandlerImpl.testsAdama(ContribHandlerImpl.java:167)");
-    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:537)");
+    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:547)");
     gold.append("\n	at org.adamalang.cli.Main.main(Main.java:33)");
     gold.append("\n");
     gold.append("\n---------------------------------------ISSUES-------------------------------------------");
@@ -1465,7 +1465,7 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:110)");
     gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:45)");
     gold.append("\n	at org.adamalang.cli.implementations.ContribHandlerImpl.testsAdama(ContribHandlerImpl.java:167)");
-    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:537)");
+    gold.append("\n	at org.adamalang.cli.router.MainRouter.route(MainRouter.java:547)");
     gold.append("\n	at org.adamalang.cli.Main.main(Main.java:33)");
     gold.append("\n");
     gold.append("\n---------------------------------------ISSUES-------------------------------------------");
