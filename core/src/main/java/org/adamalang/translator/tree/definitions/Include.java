@@ -53,5 +53,7 @@ public class Include extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(include);
+    formatter.endLine(semicolon);
   }
 }

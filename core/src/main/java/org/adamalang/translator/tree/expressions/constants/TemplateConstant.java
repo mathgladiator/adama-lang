@@ -45,6 +45,7 @@ public class TemplateConstant extends Expression {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.endLine(token);
   }
 
   @Override

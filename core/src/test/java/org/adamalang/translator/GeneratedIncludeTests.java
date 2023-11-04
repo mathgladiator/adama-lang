@@ -109,6 +109,7 @@ public class GeneratedIncludeTests extends GeneratedBase {
     gold.append("\n=FORMAT===================================================");
     gold.append("\n@include std;");
     gold.append("\n@include std/foo;");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

@@ -152,6 +152,7 @@ public class GeneratedInventionPolicyTests extends GeneratedBase {
     gold.append("\n    return true;");
     gold.append("\n  }");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

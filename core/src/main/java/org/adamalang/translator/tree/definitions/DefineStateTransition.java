@@ -48,6 +48,7 @@ public class DefineStateTransition extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(nameToken);
     code.format(formatter);
   }
 

@@ -44,5 +44,7 @@ public class IndexDefinition extends StructureComponent {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(indexToken);
+    formatter.endLine(semicolonToken);
   }
 }

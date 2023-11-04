@@ -57,7 +57,9 @@ public class DefineService extends Definition {
 
     @Override
     public void format(Formatter formatter) {
+      formatter.startLine(name);
       expression.format(formatter);
+      formatter.endLine(semicolon);
     }
 
     public void typing(Environment environment) {
@@ -94,6 +96,8 @@ public class DefineService extends Definition {
 
     @Override
     public void format(Formatter formatter) {
+      formatter.startLine(methodToken);
+      formatter.endLine(semicolon);
     }
 
     public boolean requiresSecureCaller() {
@@ -165,6 +169,8 @@ public class DefineService extends Definition {
 
     @Override
     public void format(Formatter formatter) {
+      formatter.startLine(methodToken);
+      formatter.endLine(semicolon);
     }
 
     public void typing(Environment environment) {

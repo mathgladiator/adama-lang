@@ -82,6 +82,10 @@ public class Token implements Comparable<Token> {
     return new Token(null, text, null, null, Integer.MAX_VALUE, Integer.MAX_VALUE, 0, 0, Integer.MAX_VALUE, 0);
   }
 
+  public static Token WS(final String text) {
+    return new Token(null, text, MajorTokenType.Whitespace, null, Integer.MAX_VALUE, Integer.MAX_VALUE, 0, 0, Integer.MAX_VALUE, 0);
+  }
+
   /** clone the token with new text */
   public Token cloneWithNewText(String newText) {
     return new Token(sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd, byteStart, byteEnd);

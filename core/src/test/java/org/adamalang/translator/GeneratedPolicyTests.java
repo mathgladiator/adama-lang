@@ -157,6 +157,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  maximum_history = 1 + 1;");
     gold.append("\n  delete_on_close = false;");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
@@ -835,6 +836,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  maximum_history = 1 + 1;");
     gold.append("\n  delete_on_close = true;");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

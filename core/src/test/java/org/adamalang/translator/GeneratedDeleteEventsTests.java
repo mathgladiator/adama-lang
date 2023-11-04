@@ -110,10 +110,10 @@ public class GeneratedDeleteEventsTests extends GeneratedBase {
     gold.append("\n@delete {");
     gold.append("\n  return false;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\n@delete {");
     gold.append("\n  return @who.isAdamaDeveloper();");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

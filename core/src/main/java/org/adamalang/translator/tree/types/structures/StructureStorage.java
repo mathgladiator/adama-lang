@@ -312,7 +312,13 @@ public class StructureStorage extends DocumentPosition {
   }
 
   public void format(Formatter formatter) {
-
+    formatter.endLine(this.openBraceToken);
+    formatter.tabUp();
+    for (Consumer<Formatter> f : formatting) {
+      f.accept(formatter);
+    }
+    formatter.tabDown();
+    formatter.endLine(this.closeBraceToken);
   }
 
   public void end(final Token closeBraceToken) {
@@ -343,7 +349,8 @@ public class StructureStorage extends DocumentPosition {
       yielder.accept(semicolon);
     });
     formatting.add(f -> {
-
+      f.startLine(requireToken);
+      f.endLine(semicolon);
     });
     final var policyToCheck = policyToCheckToken.text;
 

@@ -66,8 +66,23 @@ public class Block extends Statement {
 
   @Override
   public void format(Formatter formatter) {
+    if (openBraceToken != null) {
+      formatter.endLine(openBraceToken);
+      formatter.tabUp();
+    }
     for (final Statement statement : statements) {
+      Formatter.FirstAndLastToken fal = new Formatter.FirstAndLastToken();
+      statement.emit(fal);
+      if (fal.first != null) {
+        formatter.startLine(fal.first);
+        formatter.endLine(fal.last);
+      }
       statement.format(formatter);
+    }
+    if (closeBraceToken != null) {
+      formatter.tabDown();
+      formatter.startLine(closeBraceToken);
+      formatter.endLine(closeBraceToken);
     }
   }
 

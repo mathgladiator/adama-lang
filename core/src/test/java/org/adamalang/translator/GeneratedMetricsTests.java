@@ -108,11 +108,9 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\nEmission Success, Yay");
     gold.append("\n=FORMAT===================================================");
     gold.append("\nint x;");
-    gold.append("\n");
     gold.append("\nprocedure foo() -> int readonly {");
     gold.append("\n  return x;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\nmetric x = foo();");
     gold.append("\n");
     gold.append("\n==========================================================");
@@ -793,9 +791,9 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n=FORMAT===================================================");
     gold.append("\nlong val;");
     gold.append("\nmetric val = val + val;");
-    gold.append("\n");
     gold.append("\ndouble sum;");
     gold.append("\nmetric sss = sum;");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
@@ -1444,6 +1442,7 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\nmetric x = 1.2;");
     gold.append("\nmetric y = 5L;");
     gold.append("\nmetric z = 12;");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

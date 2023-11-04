@@ -89,8 +89,10 @@ public class JoinAssoc extends StructureComponent {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(joinToken);
     fromExpr.format(formatter);
     toExpr.format(formatter);
+    formatter.endLine(semicolon);
   }
 
   public Environment nextItemEnv(Environment env) {

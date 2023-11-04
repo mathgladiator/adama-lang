@@ -77,10 +77,12 @@ public class BubbleDefinition extends StructureComponent {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(bubbleToken);
     if (guard != null) {
       guard.format(formatter);
     }
     expression.format(formatter);
+    formatter.endLine(semicolonToken);
   }
 
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {

@@ -84,9 +84,14 @@ public class DefineStatic extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(staticToken);
+    formatter.endLine(openToken);
+    formatter.tabUp();
     for (StaticPiece defn : definitions) {
       defn.format(formatter);
     }
+    formatter.tabDown();
+    formatter.endLine(closeToken);
   }
 
   public void typing(TypeCheckerRoot checker) {

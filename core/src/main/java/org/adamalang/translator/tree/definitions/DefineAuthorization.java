@@ -64,6 +64,8 @@ public class DefineAuthorization extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(authorize);
+    code.format(formatter);
   }
 
   public Environment next(Environment environment) {

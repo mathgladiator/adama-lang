@@ -120,9 +120,14 @@ public class DefineHandler extends Definition {
 
   @Override
   public void format(Formatter formatter) {
-    if (openParenToken != null) {
-      if (code != null) {
-        code.format(formatter);
+    formatter.startLine(channelToken);
+    if (openType != null) {
+      formatter.endLine(semicolonToken);
+    } else {
+      if (openParenToken != null) {
+        if (code != null) {
+          code.format(formatter);
+        }
       }
     }
   }

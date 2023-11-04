@@ -155,7 +155,6 @@ public class GeneratedTemplateTests extends GeneratedBase {
     gold.append("\n");
     gold.append("\n`x`");
     gold.append("\n");
-    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
@@ -776,12 +775,10 @@ public class GeneratedTemplateTests extends GeneratedBase {
     gold.append("\nThis is the magic of templates that are easy to use");
     gold.append("\n");
     gold.append("\n`x`");
-    gold.append("\n");
     gold.append("\npublic formula made = name.html({name:\"World\"}.to_dynamic());");
-    gold.append("\n");
     gold.append("\ntemplate l : `x`LEAN`x`");
-    gold.append("\n");
     gold.append("\npublic formula l2 = l.raw({}.to_dynamic());");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

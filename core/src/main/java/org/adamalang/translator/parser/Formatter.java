@@ -20,6 +20,7 @@ package org.adamalang.translator.parser;
 import org.adamalang.translator.parser.token.Token;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class Formatter {
   private static String[] TAB_CACHE = makeTabCache();
@@ -58,18 +59,18 @@ public class Formatter {
     updateTab();
   }
 
-  public void tab(Token t) {
+  public void startLine(Token t) {
     if (t.nonSemanticTokensPrior == null) {
       t.nonSemanticTokensPrior = new ArrayList<>();
       t.nonSemanticTokensPrior.add(Token.WRAP(tabCache));
     }
   }
 
-  public void singleTab(Token t) {
-    if (t.nonSemanticTokensPrior == null) {
-      t.nonSemanticTokensPrior = new ArrayList<>();
-      t.nonSemanticTokensPrior.add(Token.WRAP("  "));
+  public void endLine(Token t) {
+    if (t.nonSemanticTokensAfter == null) {
+      t.nonSemanticTokensAfter = new ArrayList<>();
     }
+    t.nonSemanticTokensAfter.add(Token.WS("\n"));
   }
 
   public void tabDown() {
@@ -77,7 +78,22 @@ public class Formatter {
     updateTab();
   }
 
-  public void normalizeWhitespace(Token token) {
+  public static class FirstAndLastToken implements Consumer<Token> {
+    public Token first;
+    public Token last;
+
+    public FirstAndLastToken() {
+      this.first = null;
+      this.last = null;
+    }
+
+    @Override
+    public void accept(Token token) {
+      if (first == null) {
+        first = token;
+      }
+      last = token;
+    }
   }
 
 }

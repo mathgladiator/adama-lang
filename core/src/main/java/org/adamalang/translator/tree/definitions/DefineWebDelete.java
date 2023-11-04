@@ -58,6 +58,7 @@ public class DefineWebDelete extends Definition implements UriAction {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(webToken);
     uri.format(formatter);
     code.format(formatter);
   }

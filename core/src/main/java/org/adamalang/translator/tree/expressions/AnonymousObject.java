@@ -82,10 +82,36 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
 
   @Override
   public void format(Formatter formatter) {
-    for (final RawField rf : rawFields) {
+    boolean multiline = rawFields.size() > 1;
+    if (multiline) {
+      formatter.endLine(openBraceToken);
+      formatter.tabUp();
+      formatter.tabUp();
+    }
+    int n = rawFields.size();
+    for (int k = 0; k < n; k++) {
+      RawField rf = rawFields.get(k);
+      if (multiline) {
+        if (rf.commaToken != null) {
+          formatter.endLine(rf.commaToken);
+        }
+        formatter.startLine(rf.fieldToken);
+      }
       if (rf.colonToken != null) {
         rf.expression.format(formatter);
       }
+      if (multiline && k == n - 1) {
+        Formatter.FirstAndLastToken fal = new Formatter.FirstAndLastToken();
+        rf.expression.emit(fal);
+        if (fal.last != null) {
+          formatter.endLine(fal.last);
+        }
+      }
+    }
+    if (multiline) {
+      formatter.tabDown();
+      formatter.startLine(closeBraceToken);
+      formatter.tabDown();
     }
   }
 

@@ -767,17 +767,13 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\n=FORMAT===================================================");
     gold.append("\npublic int(A, B) x0;");
     gold.append("\npublic double(C, D) x1;");
-    gold.append("\n");
     gold.append("\nrecord X {");
     gold.append("\n  public int(E) a;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\ntable<X>(F,G,H) x;");
-    gold.append("\n");
     gold.append("\nfunction foo(int(Y) x) -> int(X) {");
     gold.append("\n  return x * x;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\nfunction fooz(tuple<int,int>(Z) z) -> int(W) {");
     gold.append("\n  return z.first;");
     gold.append("\n}");

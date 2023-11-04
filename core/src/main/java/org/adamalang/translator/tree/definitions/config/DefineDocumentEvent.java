@@ -71,6 +71,7 @@ public class DefineDocumentEvent extends StaticPiece {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(eventToken);
     code.format(formatter);
   }
 

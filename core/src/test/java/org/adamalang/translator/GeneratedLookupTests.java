@@ -150,13 +150,10 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\nmessage M {");
     gold.append("\n  int x;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\nrecord R {");
     gold.append("\n  int y;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\ntable<R> t;");
-    gold.append("\n");
     gold.append("\n@construct {");
     gold.append("\n  M[] m = [{x:1}];");
     gold.append("\n  int k = 4;");
@@ -167,6 +164,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    r.y = 1 + k;");
     gold.append("\n  }");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
@@ -1104,13 +1102,10 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\nmessage M {");
     gold.append("\n  int x;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\nrecord R {");
     gold.append("\n  int y;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\ntable<R> t;");
-    gold.append("\n");
     gold.append("\n@construct {");
     gold.append("\n  M[] m = [{x:1}];");
     gold.append("\n  if (m[0] as mm) {");
@@ -1120,6 +1115,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    r.y = 1;");
     gold.append("\n  }");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

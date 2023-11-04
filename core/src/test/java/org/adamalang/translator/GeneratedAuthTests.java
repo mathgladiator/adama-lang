@@ -113,14 +113,13 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  abort;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\npublic string password_last;");
-    gold.append("\n");
     gold.append("\n@password (password) {");
     gold.append("\n  if (@who == @no_one) {");
     gold.append("\n    password_last = password;");
     gold.append("\n  }");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

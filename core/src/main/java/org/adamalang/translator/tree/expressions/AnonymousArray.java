@@ -66,8 +66,31 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
 
   @Override
   public void format(Formatter formatter) {
-    for (final TokenizedItem<Expression> element : elements) {
+    boolean multiline = elements.size() > 1;
+    if (multiline) {
+      formatter.endLine(openBracketToken);
+      formatter.tabUp();
+      formatter.tabUp();
+    }
+    int n = elements.size();
+    for (int k = 0; k < n; k++) {
+      final TokenizedItem<Expression> element = elements.get(k);
       element.item.format(formatter);
+      if (multiline) {
+        Formatter.FirstAndLastToken fal = new Formatter.FirstAndLastToken();
+        element.emitBefore(fal);
+        element.item.emit(fal);
+        element.emitAfter(fal);
+        if (fal.last != null) {
+          formatter.startLine(fal.first);
+          formatter.endLine(fal.last);
+        }
+      }
+    }
+    if (multiline) {
+      formatter.tabDown();
+      formatter.startLine(closeBracketToken);
+      formatter.tabDown();
     }
   }
 

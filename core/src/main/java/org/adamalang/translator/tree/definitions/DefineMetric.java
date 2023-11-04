@@ -61,7 +61,9 @@ public class DefineMetric extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(metricToken);
     expression.format(formatter);
+    formatter.endLine(semicolonToken);
   }
 
   public void typing(TypeCheckerRoot checker) {

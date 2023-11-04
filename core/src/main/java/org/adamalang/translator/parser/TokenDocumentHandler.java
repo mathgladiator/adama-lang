@@ -22,6 +22,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.JoinAssoc;
@@ -29,161 +30,156 @@ import org.adamalang.translator.tree.types.structures.ReplicationDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
-/** format a document, yay! */
-public class FormatDocumentHandler implements TopLevelDocumentHandler{
+import java.util.function.Consumer;
 
-  public final Formatter formatter;
+public abstract class TokenDocumentHandler implements Consumer<Token>, TopLevelDocumentHandler {
+  public final StringBuilder builder = new StringBuilder();
 
-  public FormatDocumentHandler(Formatter formatter) {
-    this.formatter = formatter;
+  @Override
+  public void add(final BubbleDefinition bd) {
+    bd.emit(this);
   }
 
   @Override
-  public void add(BubbleDefinition bd) {
-    bd.format(formatter);
+  public void add(final DefineConstructor dc) {
+    dc.emit(this);
   }
 
   @Override
-  public void add(DefineConstructor dc) {
-    dc.format(formatter);
+  public void add(final DefineCustomPolicy customPolicy) {
+    customPolicy.emit(this);
   }
 
   @Override
-  public void add(DefineCustomPolicy customPolicy) {
-    customPolicy.format(formatter);
+  public void add(final DefineDispatcher dd) {
+    dd.emit(this);
   }
 
   @Override
-  public void add(DefineDispatcher dd) {
-    dd.format(formatter);
+  public void add(final DefineDocumentEvent dce) {
+    dce.emit(this);
   }
 
   @Override
-  public void add(DefineDocumentEvent dce) {
-    dce.format(formatter);
+  public void add(final DefineFunction func) {
+    func.emit(this);
   }
 
   @Override
-  public void add(DefineFunction func) {
-    func.format(formatter);
+  public void add(final DefineHandler handler) {
+    handler.emit(this);
   }
 
   @Override
-  public void add(DefineHandler handler) {
-    handler.format(formatter);
+  public void add(final DefineStateTransition transition) {
+    transition.emit(this);
   }
 
   @Override
-  public void add(DefineStateTransition transition) {
-    transition.format(formatter);
+  public void add(final DefineTest test) {
+    test.emit(this);
   }
 
   @Override
-  public void add(DefineTest test) {
-    test.format(formatter);
+  public void add(final FieldDefinition fd) {
+    fd.emit(this);
   }
 
   @Override
-  public void add(FieldDefinition fd) {
-    fd.format(formatter);
+  public void add(final IsEnum storage) {
+    if (storage instanceof TyNativeEnum) {
+      ((TyNativeEnum) storage).emit(this);
+    }
   }
 
   @Override
-  public void add(IsEnum storage) {
-    storage.format(formatter);
+  public void add(final IsStructure storage) {
+    storage.emit(this);
   }
 
   @Override
-  public void add(IsStructure storage) {
-    storage.format(formatter);
-  }
-
-  @Override
-  public void add(Token token) {
+  public void add(final Token token) {
+    accept(token);
   }
 
   @Override
   public void add(AugmentViewerState avs) {
-    avs.format(formatter);
+    avs.emit(this);
   }
 
   @Override
   public void add(DefineRPC rpc) {
-    rpc.format(formatter);
+    rpc.emit(this);
   }
 
   @Override
   public void add(DefineStatic ds) {
-    ds.format(formatter);
+    ds.emit(this);
   }
 
   @Override
   public void add(DefineWebGet dwg) {
-    dwg.format(formatter);
+    dwg.emit(this);
   }
 
   @Override
   public void add(DefineWebPut dwp) {
-    dwp.format(formatter);
+    dwp.emit(this);
   }
 
   @Override
   public void add(DefineWebOptions dwo) {
-    dwo.format(formatter);
+    dwo.emit(this);
   }
 
   @Override
   public void add(DefineWebDelete dwd) {
-    dwd.format(formatter);
+    dwd.emit(this);
   }
 
   @Override
   public void add(Include in, Scope rootScope) {
-    in.format(formatter);
+    in.emit(this);
   }
 
   @Override
-  public void add(LinkService link, Scope rootScope) {
-    link.format(formatter);
-  }
+  public void add(LinkService link, Scope rootScope) { link.emit(this); }
 
   @Override
   public void add(DefineService ds) {
-    ds.format(formatter);
+    ds.emit(this);
   }
 
   @Override
   public void add(DefineAuthorization da) {
-    da.format(formatter);
+    da.emit(this);
   }
 
   @Override
-  public void add(DefinePassword dp) {
-    dp.format(formatter);
-  }
+  public void add(DefinePassword dp) { dp.emit(this); }
 
   @Override
   public void add(ReplicationDefinition rd) {
-    rd.format(formatter);
+    rd.emit(this);
   }
 
   @Override
   public void add(DefineMetric dm) {
-    dm.format(formatter);
+    dm.emit(this);
   }
 
   @Override
   public void add(DefineAssoc da) {
-    da.format(formatter);
+    da.emit(this);
   }
 
   @Override
   public void add(JoinAssoc ja) {
-    ja.format(formatter);
+    ja.emit(this);
   }
 
   @Override
   public void add(DefineTemplate dt) {
-    dt.format(formatter);
+    dt.emit(this);
   }
 }

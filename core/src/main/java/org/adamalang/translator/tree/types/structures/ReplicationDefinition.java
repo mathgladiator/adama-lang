@@ -80,7 +80,9 @@ public class ReplicationDefinition extends StructureComponent  {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(replication);
     expression.format(formatter);
+    formatter.endLine(end);
   }
 
   public void typing(Environment prior) {

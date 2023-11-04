@@ -48,7 +48,6 @@ public class Lookup extends Expression {
 
   @Override
   public void format(Formatter formatter) {
-    formatter.normalizeWhitespace(variableToken);
   }
 
   @Override

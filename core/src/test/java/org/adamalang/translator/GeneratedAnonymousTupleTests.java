@@ -70,7 +70,10 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n@construct {");
     gold.append("\n  let x = (1, 2, 3);");
     gold.append("\n  let y = (\"true\", false, 3.14);");
-    gold.append("\n  let z = ([1,2], true);");
+    gold.append("\n  let z = ([");
+    gold.append("\n      1,");
+    gold.append("\n      2");
+    gold.append("\n    ], true);");
     gold.append("\n  let k = x.first;");
     gold.append("\n}");
     gold.append("\n");

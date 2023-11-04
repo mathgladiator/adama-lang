@@ -70,7 +70,6 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
     gold.append("\nint i = 1;");
     gold.append("\ndouble d = 3.14;");
     gold.append("\nstring s = \"x\";");
-    gold.append("\n");
     gold.append("\n@construct {");
     gold.append("\n  int r0 = i + i;");
     gold.append("\n  int r1 = r0 + i;");
@@ -84,7 +83,6 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
     gold.append("\n  string r9 = s + 123;");
     gold.append("\n  string r10 = r7 + r8 + r9;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\ntest PrimaryTest {");
     gold.append("\n}");
     gold.append("\n");

@@ -314,12 +314,14 @@ public class Parser {
         aa.end(tokens.pop());
         return aa;
       }
+      TokenizedItem<Expression> prior = null;
       while (current != null && !current.isSymbolWithTextEq("]")) {
-        final var item = new TokenizedItem<>(expression(scope));
-        if (current.isSymbolWithTextEq(",")) {
-          item.before(current);
+        if (current.isSymbolWithTextEq(",") && prior != null) {
+          prior.after(current);
         }
+        final var item = new TokenizedItem<>(expression(scope));
         aa.add(item);
+        prior = item;
         current = tokens.popIf(t -> t.isSymbolWithTextEq(",", "]"));
       }
       if (current == null) {

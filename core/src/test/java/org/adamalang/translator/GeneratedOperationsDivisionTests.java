@@ -238,6 +238,7 @@ public class GeneratedOperationsDivisionTests extends GeneratedBase {
     gold.append("\npublic formula f166 = (@i / 0.0) / 0.0;");
     gold.append("\npublic formula f167 = (@i / 0.0) / (@i * 0);");
     gold.append("\npublic formula f168 = (@i / 0.0) / (@i / 0.0);");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

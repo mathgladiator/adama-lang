@@ -511,7 +511,6 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  int xyz = 123;");
     gold.append("\n}");
     gold.append("\nchannel<M> foo;");
-    gold.append("\n");
     gold.append("\n@construct {");
     gold.append("\n  readonly int r0 = 1;");
     gold.append("\n  readonly bool r1 = true;");
@@ -528,10 +527,10 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  readonly table<M> r11;");
     gold.append("\n  readonly label r12;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\n#fooz {");
     gold.append("\n  readonly future<M> fut = foo.fetch(@no_one);");
     gold.append("\n}");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

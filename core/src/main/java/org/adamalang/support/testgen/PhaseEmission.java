@@ -39,6 +39,7 @@ public class PhaseEmission {
     report(readIn, esb.builder.toString(), outputFile);
     Formatter formatter = new Formatter();
     try {
+      play.accept(new WhiteSpaceNormalizeTokenDocumentHandler());
       play.accept(new FormatDocumentHandler(formatter));
       final var esb2 = new StringBuilderDocumentHandler();
       play.accept(esb2);

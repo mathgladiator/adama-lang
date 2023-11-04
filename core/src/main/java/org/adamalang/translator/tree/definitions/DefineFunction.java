@@ -106,6 +106,7 @@ public class DefineFunction extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(functionTypeToken);
     code.format(formatter);
   }
 

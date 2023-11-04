@@ -64,6 +64,8 @@ public class DefineConstructor extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(constructToken);
+    code.format(formatter);
   }
 
   // TODO: move to typing()

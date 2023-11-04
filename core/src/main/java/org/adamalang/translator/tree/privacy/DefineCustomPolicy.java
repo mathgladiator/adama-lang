@@ -56,6 +56,7 @@ public class DefineCustomPolicy extends DocumentPosition {
   }
 
   public void format(Formatter formatter) {
+    formatter.startLine(definePolicy);
     code.format(formatter);
   }
 

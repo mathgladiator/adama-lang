@@ -22,6 +22,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
+import org.adamalang.translator.tree.statements.loops.For;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
@@ -92,6 +93,16 @@ public class EnumStorage extends DocumentPosition {
       }
     });
     formatters.add((f) -> {
+      if (isDefault != null) {
+        f.startLine(isDefault);
+      } else {
+        f.startLine(optionToken);
+      }
+      if (colonToken != null) {
+        f.endLine(valueToken);
+      } else {
+        f.endLine(optionToken);
+      }
     });
     if (options.containsKey(optionToken.text) || options.containsValue(value)) {
       duplicates.add(optionToken.text);
@@ -147,6 +158,9 @@ public class EnumStorage extends DocumentPosition {
   }
 
   public void format(Formatter formatter) {
+    for(Consumer<Formatter> f : formatters) {
+      f.accept(formatter);
+    }
   }
 
   public String getDefaultLabel() {

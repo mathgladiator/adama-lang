@@ -232,9 +232,7 @@ public class GeneratedLinqUniqueTests extends GeneratedBase {
     gold.append("\n  int z;");
     gold.append("\n  int x;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\ntable<X> t;");
-    gold.append("\n");
     gold.append("\n@construct {");
     gold.append("\n  t <- {z:0};");
     gold.append("\n  t <- {z:1};");
@@ -244,9 +242,9 @@ public class GeneratedLinqUniqueTests extends GeneratedBase {
     gold.append("\n  t <- {z:0};");
     gold.append("\n  t <- {z:5};");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\npublic formula z_first = iterate t unique first z;");
     gold.append("\npublic formula z_last = iterate t unique last z;");
+    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

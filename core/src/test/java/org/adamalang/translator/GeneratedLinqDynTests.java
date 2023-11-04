@@ -71,9 +71,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n  public int id;");
     gold.append("\n  public int z;");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\ntable<X> t;");
-    gold.append("\n");
     gold.append("\n@construct {");
     gold.append("\n  t <- {z:0};");
     gold.append("\n  t <- {z:1};");
@@ -82,9 +80,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n  t <- {z:0};");
     gold.append("\n  t <- {z:0};");
     gold.append("\n}");
-    gold.append("\n");
     gold.append("\npublic formula happy = iterate t order_dyn \"z\";");
-    gold.append("\n");
     gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");

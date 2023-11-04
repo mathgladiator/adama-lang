@@ -55,6 +55,7 @@ public class DefineTest extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(testToken);
     code.format(formatter);
   }
 }

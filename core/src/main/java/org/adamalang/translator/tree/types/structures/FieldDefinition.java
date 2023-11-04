@@ -52,6 +52,7 @@ public class FieldDefinition extends StructureComponent {
   public Token lossyOrRequiredToken;
   public Token uniqueToken;
   public TyType type;
+  private Formatter.FirstAndLastToken fal;
 
   public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, final Token semicolonToken) {
     this.policy = policy;
@@ -164,6 +165,12 @@ public class FieldDefinition extends StructureComponent {
       if (defaultValueOverride != null) {
         defaultValueOverride.format(formatter);
       }
+    }
+    Formatter.FirstAndLastToken fal = new Formatter.FirstAndLastToken();
+    emit(fal);
+    if (fal.first != null) {
+      formatter.startLine(fal.first);
+      formatter.endLine(fal.last);
     }
   }
 

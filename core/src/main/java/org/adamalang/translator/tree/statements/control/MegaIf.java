@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.statements.control;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
+import org.adamalang.translator.parser.WhiteSpaceNormalizeTokenDocumentHandler;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
@@ -68,8 +69,10 @@ public class MegaIf extends Statement {
 
   @Override
   public void format(Formatter formatter) {
-    for (final If branch : branches) {
-      branch.format(formatter);
+    int n = branches.size();
+    for (int k = 0; k < branches.size(); k++) {
+      If branch = branches.get(k);
+      branch.format(formatter, elseToken != null || k < n - 1);
     }
     if (elseToken != null) {
       elseBranch.format(formatter);
@@ -243,9 +246,15 @@ public class MegaIf extends Statement {
       code.emit(yielder);
     }
 
-    public void format(Formatter formatter) {
+    public void format(Formatter formatter, boolean hasTraiingElse) {
       condition.format(formatter);
       code.format(formatter);
+      Formatter.FirstAndLastToken fal = new Formatter.FirstAndLastToken();
+      code.emit(fal);
+      WhiteSpaceNormalizeTokenDocumentHandler.remove(fal.last);
+      if (fal.last != null && !hasTraiingElse) {
+        formatter.endLine(fal.last);
+      }
     }
   }
 

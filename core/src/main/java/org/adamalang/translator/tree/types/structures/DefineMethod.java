@@ -99,6 +99,7 @@ public class DefineMethod extends StructureComponent {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(methodToken);
     for (final FunctionArg arg : args) {
       arg.type.format(formatter);
     }

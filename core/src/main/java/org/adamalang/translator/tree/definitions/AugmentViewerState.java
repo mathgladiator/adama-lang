@@ -48,7 +48,9 @@ public class AugmentViewerState extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(viewToken);
     type.format(formatter);
+    formatter.endLine(semicolon);
   }
 
   public void typing(TypeCheckerRoot checker) {

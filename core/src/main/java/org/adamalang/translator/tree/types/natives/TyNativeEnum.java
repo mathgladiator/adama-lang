@@ -102,7 +102,12 @@ public class TyNativeEnum extends TySimpleNative implements //
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(enumToken);
+    formatter.endLine(openBrace);
+    formatter.tabUp();
     storage.format(formatter);
+    formatter.tabDown();
+    formatter.endLine(endBrace);
   }
 
   @Override

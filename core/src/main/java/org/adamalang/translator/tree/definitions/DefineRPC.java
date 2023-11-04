@@ -70,6 +70,7 @@ public class DefineRPC extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(rpcToken);
     code.format(formatter);
   }
 

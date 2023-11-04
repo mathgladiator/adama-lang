@@ -161,6 +161,7 @@ public class TyNativeMessage extends TyType implements //
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(messageToken);
     storage.format(formatter);
   }
 

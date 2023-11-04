@@ -57,6 +57,8 @@ public class LinkService extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(link);
+    formatter.endLine(close);
   }
 
   public String toParams() {

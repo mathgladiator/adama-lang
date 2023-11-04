@@ -75,7 +75,6 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\npublic formula f5 = 1L % 1L;");
     gold.append("\npublic formula f6 = 1L % 0L;");
     gold.append("\n");
-    gold.append("\n");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");

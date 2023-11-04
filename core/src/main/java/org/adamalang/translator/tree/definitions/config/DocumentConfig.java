@@ -52,7 +52,9 @@ public class DocumentConfig extends StaticPiece {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(name);
     value.format(formatter);
+    formatter.endLine(semicolon);
   }
 
   @Override

@@ -72,6 +72,8 @@ public class DefineAssoc extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(assoc);
+    formatter.endLine(semicolon);
   }
 
   public void typing(TypeCheckerRoot checker) {

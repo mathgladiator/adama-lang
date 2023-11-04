@@ -57,6 +57,7 @@ public class DefinePassword extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(passwordToken);
     code.format(formatter);
   }
 

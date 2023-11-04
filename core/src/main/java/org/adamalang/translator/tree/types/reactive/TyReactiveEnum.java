@@ -19,6 +19,7 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -53,6 +54,11 @@ public class TyReactiveEnum extends TySimpleReactive implements //
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveEnum(token, storage).withPosition(position);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    super.format(formatter);
   }
 
   @Override

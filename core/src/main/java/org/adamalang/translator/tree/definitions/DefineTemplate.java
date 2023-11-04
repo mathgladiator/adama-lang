@@ -49,6 +49,7 @@ public class DefineTemplate extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(templateToken);
     value.format(formatter);
   }
 }

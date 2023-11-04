@@ -106,6 +106,7 @@ public class DefineDispatcher extends Definition {
 
   @Override
   public void format(Formatter formatter) {
+    formatter.startLine(dispatchToken);
     code.format(formatter);
   }
 
