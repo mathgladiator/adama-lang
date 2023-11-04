@@ -36,4 +36,9 @@ public class StringBuilderDocumentHandler extends TokenDocumentHandler {
       }
     }
   }
+
+  @Override
+  public String toString() {
+    return builder.toString();
+  }
 }

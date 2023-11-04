@@ -33,8 +33,6 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 import java.util.function.Consumer;
 
 public abstract class TokenDocumentHandler implements Consumer<Token>, TopLevelDocumentHandler {
-  public final StringBuilder builder = new StringBuilder();
-
   @Override
   public void add(final BubbleDefinition bd) {
     bd.emit(this);

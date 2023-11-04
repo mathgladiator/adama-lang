@@ -77,10 +77,11 @@ public class CodeHandlerImpl implements CodeHandler {
     final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
     Consumer<TopLevelDocumentHandler> play = parser.document();
     Formatter formatter = new Formatter();
+    play.accept(new WhiteSpaceNormalizeTokenDocumentHandler());
     play.accept(new FormatDocumentHandler(formatter));
     final var esb = new StringBuilderDocumentHandler();
     play.accept(esb);
-    String output = esb.toString();
+    String output = esb.builder.toString();
     Files.writeString(file.toPath(), output);
   }
 
