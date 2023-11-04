@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
@@ -55,6 +56,11 @@ public class DefineService extends Definition {
       yielder.accept(semicolon);
     }
 
+    @Override
+    public void format(Formatter formatter) {
+      expression.format(formatter);
+    }
+
     public void typing(Environment environment) {
       expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     }
@@ -85,6 +91,10 @@ public class DefineService extends Definition {
       this.semicolon = semicolon;
       ingest(methodToken);
       ingest(semicolon);
+    }
+
+    @Override
+    public void format(Formatter formatter) {
     }
 
     public boolean requiresSecureCaller() {
@@ -154,6 +164,10 @@ public class DefineService extends Definition {
       yielder.accept(semicolon);
     }
 
+    @Override
+    public void format(Formatter formatter) {
+    }
+
     public void typing(Environment environment) {
       if ("dynamic".equals(inputTypeName.text)) {
         return;
@@ -170,11 +184,12 @@ public class DefineService extends Definition {
   public final ArrayList<ServiceMethod> methods;
   public final TreeMap<String, ServiceMethod> methodsMap;
   public final ArrayList<Consumer<Consumer<Token>>> emission;
+  public final ArrayList<Consumer<Formatter>> formatting;
   public final ArrayList<ServiceReplication> replications;
   public final TreeMap<String, ServiceReplication> replicationsMap;
   public final Token close;
 
-  public DefineService(Token serviceToken, Token name, Token open, ArrayList<ServiceAspect> aspects, ArrayList<ServiceMethod> methods, ArrayList<ServiceReplication> replications, Token close, ArrayList<Consumer<Consumer<Token>>> emission) {
+  public DefineService(Token serviceToken, Token name, Token open, ArrayList<ServiceAspect> aspects, ArrayList<ServiceMethod> methods, ArrayList<ServiceReplication> replications, Token close, ArrayList<Consumer<Consumer<Token>>> emission, ArrayList<Consumer<Formatter>> formatting) {
     this.serviceToken = serviceToken;
     this.name = name;
     this.open = open;
@@ -197,6 +212,7 @@ public class DefineService extends Definition {
     for (ServiceReplication sr : replications) {
       replicationsMap.put(sr.name.text, sr);
     }
+    this.formatting = formatting;
   }
 
   @Override
@@ -208,6 +224,13 @@ public class DefineService extends Definition {
       e.accept(yielder);
     }
     yielder.accept(close);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    for(Consumer<Formatter> c : formatting) {
+      c.accept(formatter);
+    }
   }
 
   public void typing(TypeCheckerRoot checker) {

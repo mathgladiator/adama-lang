@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
@@ -67,6 +68,10 @@ public class DefineAssoc extends Definition {
     yielder.accept(close);
     yielder.accept(name);
     yielder.accept(semicolon);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   public void typing(TypeCheckerRoot checker) {

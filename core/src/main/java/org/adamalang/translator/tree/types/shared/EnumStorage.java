@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.types.shared;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
@@ -35,6 +36,7 @@ public class EnumStorage extends DocumentPosition {
   public final HashSet<String> duplicates;
   public final LinkedHashMap<String, Integer> options;
   private final ArrayList<Consumer<Consumer<Token>>> emissions;
+  private final ArrayList<Consumer<Formatter>> formatters;
   private final String name;
   private final HashMap<String, Integer> signatureToNameAndId;
   private String defaultLabel;
@@ -53,6 +55,7 @@ public class EnumStorage extends DocumentPosition {
     signatureToNameAndId = new HashMap<>();
     duplicates = new HashSet<>();
     defaultValue = 0;
+    formatters = new ArrayList<>();
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -87,6 +90,8 @@ public class EnumStorage extends DocumentPosition {
         yielder.accept(colonToken);
         yielder.accept(valueToken);
       }
+    });
+    formatters.add((f) -> {
     });
     if (options.containsKey(optionToken.text) || options.containsValue(value)) {
       duplicates.add(optionToken.text);
@@ -139,6 +144,9 @@ public class EnumStorage extends DocumentPosition {
     for (final Consumer<Consumer<Token>> toEmit : emissions) {
       toEmit.accept(yielder);
     }
+  }
+
+  public void format(Formatter formatter) {
   }
 
   public String getDefaultLabel() {

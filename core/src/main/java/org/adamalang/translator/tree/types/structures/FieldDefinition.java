@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.privacy.PublicPolicy;
@@ -146,6 +147,24 @@ public class FieldDefinition extends StructureComponent {
       yielder.accept(uniqueToken);
     }
     yielder.accept(semicolonToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    if (policy != null) {
+      policy.format(formatter);
+    }
+    if (type != null) {
+      type.format(formatter);
+    }
+    if (equalsToken != null) {
+      if (computeExpression != null) {
+        computeExpression.format(formatter);
+      }
+      if (defaultValueOverride != null) {
+        defaultValueOverride.format(formatter);
+      }
+    }
   }
 
   @Override

@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -60,6 +61,10 @@ public class UseCustomPolicy extends Policy {
       yielder.accept(token.item);
       token.emitAfter(yielder);
     }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   @Override

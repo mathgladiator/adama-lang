@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.TemplateConstant;
 import org.adamalang.translator.tree.types.ReflectionSource;
@@ -47,6 +48,10 @@ public class TyNativeTemplate extends TySimpleNative implements //
   @Override
   public void emitInternal(Consumer<Token> yielder) {
     yielder.accept(templateToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   @Override

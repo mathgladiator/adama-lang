@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -80,6 +81,12 @@ public class TyNativeMap extends TyType implements //
     yielder.accept(commaToken);
     rangeType.emit(yielder);
     yielder.accept(closeThing);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    domainType.format(formatter);
+    rangeType.format(formatter);
   }
 
   @Override

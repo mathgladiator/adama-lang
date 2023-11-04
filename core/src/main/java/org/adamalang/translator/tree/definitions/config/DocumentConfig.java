@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.definitions.config;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
@@ -47,6 +48,11 @@ public class DocumentConfig extends StaticPiece {
     yielder.accept(equals);
     value.emit(yielder);
     yielder.accept(semicolon);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    value.format(formatter);
   }
 
   @Override

@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.types.structures;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.definitions.DefineAssoc;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -84,6 +85,12 @@ public class JoinAssoc extends StructureComponent {
     yielder.accept(toLabel);
     toExpr.emit(yielder);
     yielder.accept(semicolon);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    fromExpr.format(formatter);
+    toExpr.format(formatter);
   }
 
   public Environment nextItemEnv(Environment env) {

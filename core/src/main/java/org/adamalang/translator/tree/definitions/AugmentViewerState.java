@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
@@ -43,6 +44,11 @@ public class AugmentViewerState extends Definition {
     type.emit(yielder);
     yielder.accept(name);
     yielder.accept(semicolon);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    type.format(formatter);
   }
 
   public void typing(TypeCheckerRoot checker) {

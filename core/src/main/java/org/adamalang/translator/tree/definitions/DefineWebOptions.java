@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.definitions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
@@ -51,6 +52,12 @@ public class DefineWebOptions extends Definition implements UriAction {
     yielder.accept(optionsToken);
     uri.emit(yielder);
     code.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    uri.format(formatter);
+    code.format(formatter);
   }
 
   @Override

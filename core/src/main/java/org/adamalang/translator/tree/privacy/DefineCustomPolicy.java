@@ -22,6 +22,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
@@ -53,6 +54,10 @@ public class DefineCustomPolicy extends DocumentPosition {
     yielder.accept(definePolicy);
     yielder.accept(name);
     code.emit(yielder);
+  }
+
+  public void format(Formatter formatter) {
+    code.format(formatter);
   }
 
   public Environment scope(final Environment environment, DocumentPosition position) {

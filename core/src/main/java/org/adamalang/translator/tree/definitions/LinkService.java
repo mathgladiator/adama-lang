@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,6 +53,10 @@ public class LinkService extends Definition {
        emitter.accept(yielder);
     }
     yielder.accept(close);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   public String toParams() {

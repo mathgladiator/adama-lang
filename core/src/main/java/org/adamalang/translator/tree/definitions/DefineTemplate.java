@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.constants.TemplateConstant;
 
 import java.util.function.Consumer;
@@ -44,5 +45,10 @@ public class DefineTemplate extends Definition {
     yielder.accept(nameToken);
     yielder.accept(colonToken);
     value.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    value.format(formatter);
   }
 }

@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.statements;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.control.AlterControlFlow;
 import org.adamalang.translator.tree.statements.control.AlterControlFlowMode;
@@ -60,6 +61,13 @@ public class Block extends Statement {
     }
     if (closeBraceToken != null) {
       yielder.accept(closeBraceToken);
+    }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    for (final Statement statement : statements) {
+      statement.format(formatter);
     }
   }
 

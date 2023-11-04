@@ -21,6 +21,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TyType;
 
@@ -30,6 +31,8 @@ public abstract class Expression extends DocumentPosition {
   protected TyType cachedType = null;
 
   public abstract void emit(Consumer<Token> yielder);
+
+  public abstract void format(Formatter formatter);
 
   public TyType getCachedType() {
     return cachedType;

@@ -19,6 +19,7 @@ package org.adamalang.translator.tree.types.structures;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.statements.Block;
@@ -94,6 +95,18 @@ public class DefineMethod extends StructureComponent {
     }
     paint.emit(yielder);
     code.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    for (final FunctionArg arg : args) {
+      arg.type.format(formatter);
+    }
+    if (introduceReturnToken != null) {
+      returnType.format(formatter);
+    }
+    paint.format(formatter);
+    code.format(formatter);
   }
 
   public FunctionOverloadInstance typing(StructureStorage storage, final Environment environment, HashSet<String> local) {

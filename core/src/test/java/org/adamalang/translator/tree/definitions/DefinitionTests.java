@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.junit.Test;
 
 import java.util.function.Consumer;
@@ -29,6 +30,10 @@ public class DefinitionTests {
         new Definition() {
           @Override
           public void emit(Consumer<Token> yielder) {}
+
+          @Override
+          public void format(Formatter formatter) {
+          }
         };
   }
 }

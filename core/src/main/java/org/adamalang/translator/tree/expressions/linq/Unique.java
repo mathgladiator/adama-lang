@@ -21,6 +21,7 @@ import org.adamalang.runtime.natives.lists.ListUniqueMode;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
@@ -65,6 +66,11 @@ public class Unique extends LinqExpression {
       yielder.accept(mode);
       yielder.accept(key);
     }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    sql.format(formatter);
   }
 
   @Override

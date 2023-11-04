@@ -22,6 +22,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -79,6 +80,14 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       element.emitAfter(yielder);
     }
     yielder.accept(closeParenToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    expression.format(formatter);
+    for (final TokenizedItem<Expression> element : args) {
+      element.item.format(formatter);
+    }
   }
 
   @Override

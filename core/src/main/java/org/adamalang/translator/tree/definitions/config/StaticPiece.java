@@ -20,12 +20,15 @@ package org.adamalang.translator.tree.definitions.config;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.function.Consumer;
 
 /** a piece of the static config */
 public abstract class StaticPiece extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);
+
+  public abstract void format(Formatter formatter);
 
   public abstract void typing(Environment environment);
 }

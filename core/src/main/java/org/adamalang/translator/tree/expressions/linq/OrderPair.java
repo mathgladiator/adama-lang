@@ -19,6 +19,7 @@ package org.adamalang.translator.tree.expressions.linq;
 
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.function.Consumer;
 
@@ -52,5 +53,8 @@ public class OrderPair extends DocumentPosition {
     if (ascToken != null) {
       yielder.accept(ascToken);
     }
+  }
+
+  public void format(Formatter formatter) {
   }
 }

@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.definitions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
@@ -101,6 +102,11 @@ public class DefineFunction extends Definition {
     }
     paint.emit(yielder);
     code.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    code.format(formatter);
   }
 
   public void typing(TypeCheckerRoot checker) {

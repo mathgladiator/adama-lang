@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.expressions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -76,6 +77,11 @@ public class FieldLookup extends Expression {
     expression.emit(yielder);
     yielder.accept(dotToken);
     yielder.accept(fieldNameToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    expression.format(formatter);
   }
 
   private void enforceSpecialIDReadonly(Environment environment) {

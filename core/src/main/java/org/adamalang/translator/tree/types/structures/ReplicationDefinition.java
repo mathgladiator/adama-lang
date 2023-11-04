@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.types.structures;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.definitions.DefineService;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -75,6 +76,11 @@ public class ReplicationDefinition extends StructureComponent  {
     yielder.accept(equals);
     expression.emit(yielder);
     yielder.accept(end);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    expression.format(formatter);
   }
 
   public void typing(Environment prior) {

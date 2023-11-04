@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.privacy;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -48,5 +49,8 @@ public class Guard extends DocumentPosition {
       policy.emitAfter(yielder);
     }
     yielder.accept(close);
+  }
+
+  public void format(Formatter formatter) {
   }
 }

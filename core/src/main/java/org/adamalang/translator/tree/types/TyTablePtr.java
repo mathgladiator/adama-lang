@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.TyNativeTable;
@@ -56,6 +57,10 @@ public class TyTablePtr extends TyType implements DetailRequiresResolveCall {
     nameToken.emitBefore(yielder);
     yielder.accept(nameToken.item);
     nameToken.emitAfter(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   @Override

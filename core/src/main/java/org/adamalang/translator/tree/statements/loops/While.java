@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.Block;
@@ -55,6 +56,12 @@ public class While extends Statement {
     condition.emit(yielder);
     yielder.accept(endParen);
     code.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    condition.format(formatter);
+    code.format(formatter);
   }
 
   @Override

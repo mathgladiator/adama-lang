@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -65,6 +66,11 @@ public class TyNativeFuture extends TyType implements //
     tokenResultType.emitBefore(yielder);
     tokenResultType.item.emit(yielder);
     tokenResultType.emitAfter(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    tokenResultType.item.format(formatter);
   }
 
   @Override

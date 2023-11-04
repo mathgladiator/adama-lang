@@ -24,6 +24,7 @@ import org.adamalang.translator.parser.token.MajorTokenType;
 import org.adamalang.translator.parser.token.MinorTokenType;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
@@ -634,6 +635,7 @@ public class Parser {
     ArrayList<DefineService.ServiceMethod> methods = new ArrayList<>();
     ArrayList<DefineService.ServiceReplication> replications = new ArrayList<>();
     ArrayList<Consumer<Consumer<Token>>> emissions = new ArrayList<>();
+    ArrayList<Consumer<Formatter>> formatting = new ArrayList<>();
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
       if (!nextOrClose.isIdentifier()) {
@@ -649,6 +651,7 @@ public class Parser {
         DefineService.ServiceReplication replication = new DefineService.ServiceReplication(nextOrClose, pairOpen, inputTypeName, pairClose, methodName, semicolon);
         replications.add(replication);
         emissions.add((y) -> replication.emit(y));
+        formatting.add((y) -> replication.format(y));
 
       } else if (nextOrClose.isIdentifier("method")) {
         Token secured = tokens.popIf((t) -> t.isIdentifier("secured"));
@@ -663,17 +666,19 @@ public class Parser {
         DefineService.ServiceMethod method = new DefineService.ServiceMethod(nextOrClose, secured, pairOpen, inputTypeName, comma, outputTypeName, outputArrayExt, pairClose, methodName, semicolon);
         methods.add(method);
         emissions.add((y) -> method.emit(y));
+        formatting.add((y) -> method.format(y));
       } else {
         Token equals = consumeExpectedSymbol("=");
         Expression val = expression(rootScope.makeServiceScope());
         Token semicolon = consumeExpectedSymbol(";");
         DefineService.ServiceAspect aspect = new DefineService.ServiceAspect(nextOrClose, equals, val, semicolon);
         emissions.add((y) -> aspect.emit(y));
+        formatting.add((y) -> aspect.format(y));
         aspects.add(aspect);
       }
       nextOrClose = tokens.pop();
     }
-    DefineService ds = new DefineService(serviceToken, name, open, aspects, methods, replications, nextOrClose, emissions);
+    DefineService ds = new DefineService(serviceToken, name, open, aspects, methods, replications, nextOrClose, emissions, formatting);
     return (doc) -> doc.add(ds);
   }
 

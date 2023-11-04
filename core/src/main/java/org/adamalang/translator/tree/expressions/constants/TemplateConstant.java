@@ -22,6 +22,7 @@ import org.adamalang.common.template.Parser;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeTemplate;
@@ -40,6 +41,10 @@ public class TemplateConstant extends Expression {
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(token);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   @Override

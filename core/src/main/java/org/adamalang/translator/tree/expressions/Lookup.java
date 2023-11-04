@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.expressions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -43,6 +44,11 @@ public class Lookup extends Expression {
   @Override
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(variableToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    formatter.normalizeWhitespace(variableToken);
   }
 
   @Override

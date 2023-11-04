@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.types.structures;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.function.Consumer;
 
@@ -39,5 +40,9 @@ public class IndexDefinition extends StructureComponent {
     yielder.accept(indexToken);
     yielder.accept(nameToken);
     yielder.accept(semicolonToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 }

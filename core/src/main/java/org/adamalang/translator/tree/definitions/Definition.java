@@ -19,10 +19,13 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.function.Consumer;
 
 /** provides a common framework for all Definitions */
 public abstract class Definition extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);
+
+  public abstract void format(Formatter formatter);
 }

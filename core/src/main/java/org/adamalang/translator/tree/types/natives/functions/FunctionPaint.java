@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.types.natives.functions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.function.Consumer;
 
@@ -67,6 +68,9 @@ public class FunctionPaint {
     for (Token token : tokens) {
       yielder.accept(token);
     }
+  }
+
+  public void format(Formatter formatter) {
   }
 
   public static final FunctionPaint READONLY_NORMAL = new FunctionPaint(true, false, false, false);

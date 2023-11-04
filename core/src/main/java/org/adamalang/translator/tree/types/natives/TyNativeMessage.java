@@ -26,6 +26,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.InjectExpression;
@@ -157,6 +158,11 @@ public class TyNativeMessage extends TyType implements //
     yielder.accept(messageToken);
     yielder.accept(nameToken);
     storage.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    storage.format(formatter);
   }
 
   @Override

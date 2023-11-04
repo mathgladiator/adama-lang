@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 
@@ -47,6 +48,11 @@ public class Offset extends LinqExpression {
     offset.emit(yielder);
   }
 
+  @Override
+  public void format(Formatter formatter) {
+    sql.format(formatter);
+    offset.format(formatter);
+  }
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {

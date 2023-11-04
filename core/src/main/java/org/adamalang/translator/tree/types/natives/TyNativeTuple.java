@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.AnonymousTuple;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -65,6 +66,13 @@ public class TyNativeTuple extends TyType implements //
       pt.type.emit(yielder);
     }
     yielder.accept(endToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    for (PrefixedType pt : types) {
+      pt.type.format(formatter);
+    }
   }
 
   @Override

@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.expressions.linq;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
@@ -29,20 +30,25 @@ import java.util.function.Consumer;
 /** begin a linq query to convert a table into a list which may be filtered, ordered, limited */
 public class Iterate extends LinqExpression {
   public final Expression expression;
-  public final Token selectToken;
+  public final Token iterateToken;
 
-  public Iterate(final Token selectToken, final Expression expression) {
+  public Iterate(final Token iterateToken, final Expression expression) {
     super(null);
-    this.selectToken = selectToken;
+    this.iterateToken = iterateToken;
     this.expression = expression;
-    ingest(selectToken);
+    ingest(iterateToken);
     ingest(expression);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
-    yielder.accept(selectToken);
+    yielder.accept(iterateToken);
     expression.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    expression.format(formatter);
   }
 
   @Override

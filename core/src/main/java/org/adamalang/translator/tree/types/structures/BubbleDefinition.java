@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.types.structures;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -72,6 +73,14 @@ public class BubbleDefinition extends StructureComponent {
     yielder.accept(equalsToken);
     expression.emit(yielder);
     yielder.accept(semicolonToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    if (guard != null) {
+      guard.format(formatter);
+    }
+    expression.format(formatter);
   }
 
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {

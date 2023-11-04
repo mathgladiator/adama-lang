@@ -25,6 +25,7 @@ import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -182,6 +183,11 @@ public class TyReactiveRecord extends TyType implements //
     yielder.accept(recordToken);
     yielder.accept(nameToken);
     storage.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    storage.format(formatter);
   }
 
   @Override

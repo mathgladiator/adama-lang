@@ -21,6 +21,7 @@ import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.config.DocumentConfig;
 import org.adamalang.translator.tree.definitions.config.StaticPiece;
@@ -79,6 +80,13 @@ public class DefineStatic extends Definition {
       definition.emit(yielder);
     }
     yielder.accept(closeToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    for (StaticPiece defn : definitions) {
+      defn.format(formatter);
+    }
   }
 
   public void typing(TypeCheckerRoot checker) {

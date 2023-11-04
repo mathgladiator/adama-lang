@@ -24,6 +24,7 @@ import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.env.topo.TopologicalSort;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
@@ -46,6 +47,7 @@ public class StructureStorage extends DocumentPosition {
   public final boolean anonymous;
   public final TreeMap<String, BubbleDefinition> bubbles;
   public final ArrayList<Consumer<Consumer<Token>>> emissions;
+  public final ArrayList<Consumer<Formatter>> formatting;
   public final TreeMap<String, FieldDefinition> fields;
   public final TreeMap<String, ReplicationDefinition> replications;
   public final ArrayList<FieldDefinition> fieldsByOrder;
@@ -87,6 +89,7 @@ public class StructureStorage extends DocumentPosition {
     replications = new TreeMap<>();
     this.joins = new ArrayList<>();
     ingest(openBraceToken);
+    formatting = new ArrayList<>();
   }
 
   public void setSelf(TyType ty) {
@@ -130,6 +133,7 @@ public class StructureStorage extends DocumentPosition {
 
   private void addCommon(JoinAssoc ja, FreeEnvironment fe, TypeChecker checker) {
     emissions.add(e -> ja.emit(e));
+    formatting.add(f -> ja.format(f));
     ingest(ja);
     fe.free.add(ja.tableName.text);
     ja.fromExpr.free(fe);
@@ -148,6 +152,7 @@ public class StructureStorage extends DocumentPosition {
 
   private void addCommon(ReplicationDefinition rd, FreeEnvironment fe, TypeChecker checker) {
     emissions.add(e -> rd.emit(e));
+    formatting.add(f -> rd.format(f));
     ingest(rd);
     rd.expression.free(fe);
     fe.free.add("service:" + rd.service.text);
@@ -177,6 +182,7 @@ public class StructureStorage extends DocumentPosition {
 
   public void addCommon(final BubbleDefinition bd, FreeEnvironment fe, TypeChecker inChecker) {
     emissions.add(emit -> bd.emit(emit));
+    formatting.add(f -> bd.format(f));
     ingest(bd);
     bd.expression.free(fe);
     inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.makeAuto(env, bd.variablesToWatch, bd.tablesToWatch, bd.servicesToWatch)), StructureStorage.this));
@@ -194,6 +200,7 @@ public class StructureStorage extends DocumentPosition {
 
   public void add(final DefineMethod dm) {
     emissions.add(emit -> dm.emit(emit));
+    formatting.add(f -> dm.format(f));
     ingest(dm);
     methods.add(dm);
     FreeEnvironment fe = FreeEnvironment.root();
@@ -238,6 +245,7 @@ public class StructureStorage extends DocumentPosition {
 
   public void addCommon(final FieldDefinition fd, FreeEnvironment fe, TypeChecker insertChecker) {
     emissions.add(emit -> fd.emit(emit));
+    formatting.add(f -> fd.format(f));
     ingest(fd);
 
     if (has(fd.nameToken.text)) {
@@ -264,6 +272,7 @@ public class StructureStorage extends DocumentPosition {
 
   public void add(final IndexDefinition indexDefn) {
     emissions.add(x -> indexDefn.emit(x));
+    formatting.add(f -> indexDefn.format(f));
     if (!indexSet.contains(indexDefn.nameToken.text)) {
       indices.add(indexDefn);
       indexSet.add(indexDefn.nameToken.text);
@@ -285,6 +294,7 @@ public class StructureStorage extends DocumentPosition {
   /** add the policy to the record */
   public void addPolicy(final DefineCustomPolicy policy) {
     emissions.add(emit -> policy.emit(emit));
+    formatting.add(f -> policy.format(f));
     if (policies.containsKey(policy.name.text)) {
       checker.issueError(policy, String.format("Policy '%s' was already defined", policy.name.text));
       return;
@@ -299,6 +309,10 @@ public class StructureStorage extends DocumentPosition {
       c.accept(yielder);
     }
     yielder.accept(closeBraceToken);
+  }
+
+  public void format(Formatter formatter) {
+
   }
 
   public void end(final Token closeBraceToken) {
@@ -327,6 +341,9 @@ public class StructureStorage extends DocumentPosition {
       yielder.accept(requireToken);
       yielder.accept(policyToCheckToken);
       yielder.accept(semicolon);
+    });
+    formatting.add(f -> {
+
     });
     final var policyToCheck = policyToCheckToken.text;
 

@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.expressions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMap;
@@ -47,6 +48,12 @@ public class PairCons extends Expression {
     key.emit(yielder);
     yielder.accept(arrow);
     value.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    key.format(formatter);
+    value.format(formatter);
   }
 
   @Override

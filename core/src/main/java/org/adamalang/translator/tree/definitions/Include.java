@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 
 import java.util.function.Consumer;
 
@@ -48,5 +49,9 @@ public class Include extends Definition {
       yielder.accept(token);
     }
     yielder.accept(semicolon);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 }

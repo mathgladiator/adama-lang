@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.ControlFlow;
@@ -59,6 +60,11 @@ public class PumpMessage extends Statement {
     yielder.accept(intoToken);
     yielder.accept(channelToken);
     yielder.accept(semiColonToken);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    expression.format(formatter);
   }
 
   @Override

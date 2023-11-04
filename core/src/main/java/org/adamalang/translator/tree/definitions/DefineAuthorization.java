@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.definitions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -59,6 +60,10 @@ public class DefineAuthorization extends Definition {
     yielder.accept(password);
     yielder.accept(endParen);
     code.emit(yielder);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
   }
 
   public Environment next(Environment environment) {

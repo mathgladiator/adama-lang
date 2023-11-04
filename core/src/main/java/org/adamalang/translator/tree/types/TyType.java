@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.common.Typable;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
@@ -36,6 +37,8 @@ public abstract class TyType extends DocumentPosition implements Typable {
     this.behavior = behavior;
     this.annotation = null;
   }
+
+  public abstract void format(Formatter formatter);
 
   public abstract void emitInternal(Consumer<Token> yielder);
 

@@ -21,6 +21,7 @@ import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -68,6 +69,14 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
     }
     for (final OrderPair op : keys) {
       op.emit(yielder);
+    }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    sql.format(formatter);
+    for (final OrderPair op : keys) {
+      op.format(formatter);
     }
   }
 

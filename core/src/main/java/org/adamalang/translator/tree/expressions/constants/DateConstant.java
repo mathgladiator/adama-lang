@@ -21,6 +21,7 @@ import org.adamalang.runtime.stdlib.LibDate;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -52,6 +53,9 @@ public class DateConstant extends Expression {
     }
   }
 
+  @Override
+  public void format(Formatter formatter) {
+  }
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {

@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -60,6 +61,15 @@ public class MaybeLift extends Expression {
       yielder.accept(openParen);
       value.emit(yielder);
       yielder.accept(closeParen);
+    }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    if (type != null) {
+      type.item.format(formatter);
+    } else {
+      value.format(formatter);
     }
   }
 

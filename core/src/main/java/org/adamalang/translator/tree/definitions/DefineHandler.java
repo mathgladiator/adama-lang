@@ -20,6 +20,7 @@ package org.adamalang.translator.tree.definitions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.statements.Block;
@@ -113,6 +114,15 @@ public class DefineHandler extends Definition {
       }
       if (code != null) {
         code.emit(yielder);
+      }
+    }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    if (openParenToken != null) {
+      if (code != null) {
+        code.format(formatter);
       }
     }
   }

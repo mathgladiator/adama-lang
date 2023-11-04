@@ -22,6 +22,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.Block;
@@ -62,6 +63,16 @@ public class MegaIf extends Statement {
     if (elseToken != null) {
       yielder.accept(elseToken);
       elseBranch.emit(yielder);
+    }
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    for (final If branch : branches) {
+      branch.format(formatter);
+    }
+    if (elseToken != null) {
+      elseBranch.format(formatter);
     }
   }
 
@@ -195,6 +206,10 @@ public class MegaIf extends Statement {
       }
       yielder.accept(closeParen);
     }
+
+    public void format(Formatter formatter) {
+      expression.format(formatter);
+    }
   }
 
   public static class If extends DocumentPosition {
@@ -226,6 +241,11 @@ public class MegaIf extends Statement {
       }
       condition.emit(yielder);
       code.emit(yielder);
+    }
+
+    public void format(Formatter formatter) {
+      condition.format(formatter);
+      code.format(formatter);
     }
   }
 
