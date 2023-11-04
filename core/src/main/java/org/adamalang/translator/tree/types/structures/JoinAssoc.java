@@ -20,7 +20,7 @@ package org.adamalang.translator.tree.types.structures;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.common.Formatter;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.DefineAssoc;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;

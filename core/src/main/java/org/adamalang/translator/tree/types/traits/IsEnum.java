@@ -17,10 +17,13 @@
 */
 package org.adamalang.translator.tree.types.traits;
 
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 
 public interface IsEnum {
   String name();
 
   EnumStorage storage();
+
+  public void format(Formatter formatter);
 }

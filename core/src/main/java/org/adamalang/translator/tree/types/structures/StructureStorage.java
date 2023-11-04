@@ -24,7 +24,7 @@ import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.env.topo.TopologicalSort;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.tree.common.Formatter;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;

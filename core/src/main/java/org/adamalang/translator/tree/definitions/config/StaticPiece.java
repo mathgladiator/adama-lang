@@ -20,7 +20,7 @@ package org.adamalang.translator.tree.definitions.config;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.tree.common.Formatter;
+import org.adamalang.translator.parser.Formatter;
 
 import java.util.function.Consumer;
 

@@ -1,4 +1,4 @@
-package org.adamalang.translator.tree.common;
+package org.adamalang.translator.parser;
 
 import org.adamalang.translator.parser.token.Token;
 

@@ -22,7 +22,7 @@ import org.adamalang.translator.codegen.CodeGenEnums;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.tree.common.Formatter;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
 import org.adamalang.translator.tree.expressions.Expression;

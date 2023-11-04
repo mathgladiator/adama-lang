@@ -21,7 +21,7 @@ import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.common.Formatter;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;

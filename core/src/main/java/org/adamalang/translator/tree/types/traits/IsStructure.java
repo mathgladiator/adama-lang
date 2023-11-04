@@ -18,6 +18,7 @@
 package org.adamalang.translator.tree.types.traits;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -30,6 +31,8 @@ public interface IsStructure {
   String name();
 
   StructureStorage storage();
+
+  public void format(Formatter formatter);
 
   void typing(Environment environment);
 

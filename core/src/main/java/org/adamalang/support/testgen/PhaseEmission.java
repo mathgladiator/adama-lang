@@ -21,6 +21,7 @@ import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.StringBuilderDocumentHandler;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.parser.Formatter;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +34,10 @@ public class PhaseEmission {
     final var tokenEngine = new TokenEngine(filename, readIn.codePoints().iterator());
     final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
     parser.document().accept(esb);
+
+    Formatter formatter = new Formatter();
+
+
     report(readIn, esb.builder.toString(), outputFile);
   }
 

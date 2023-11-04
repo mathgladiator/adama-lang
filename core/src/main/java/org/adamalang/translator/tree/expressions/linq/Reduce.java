@@ -20,7 +20,7 @@ package org.adamalang.translator.tree.expressions.linq;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.common.Formatter;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -34,7 +34,6 @@ import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresG
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Reduce extends LinqExpression {
   public final Token fieldToken;

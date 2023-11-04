@@ -24,7 +24,6 @@ import org.adamalang.translator.parser.token.MajorTokenType;
 import org.adamalang.translator.parser.token.MinorTokenType;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
-import org.adamalang.translator.tree.common.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
