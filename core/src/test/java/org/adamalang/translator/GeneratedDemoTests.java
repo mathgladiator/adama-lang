@@ -7792,12 +7792,12 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  future<maybe<CardDecision[]>> playX = single_play.choose(current, @convert<CardDecision>(choices), 1);");
     gold.append("\n  if (playX.await() as thePlay) {");
-    gold.append("\n  // TODO: don't think hearts can be played, there are some rules here");
+    gold.append("\n  // : don't think hearts can be played, there are some rules here");
     gold.append("\n  foreach (dec in thePlay) {");
     gold.append("\n");
     gold.append("\n    (iterate deck where id == dec.id).place = Place::InPlay;");
     gold.append("\n    if ( (iterate deck where id == dec.id)[0] as cardPlayed) {");
-    gold.append("\n// TODO");
+    gold.append("\n//");
     gold.append("\n//   cardPlayed.place = Place::InPlay;");
     gold.append("\n// this doesn't work");
     gold.append("\n");
@@ -7814,7 +7814,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n");
     gold.append("\n  // if the number of cards played is less than 4, then next player; otherwise, decide winner of pot and award points");
     gold.append("\n");
-    gold.append("\n  // TODO: need finite arrays and cyclic integers");
+    gold.append("\n  // : need finite arrays and cyclic integers");
     gold.append("\n  if (current == player1) {");
     gold.append("\n    current = player2;");
     gold.append("\n  } else if (current == player2) {");
@@ -7826,7 +7826,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n");
     gold.append("\n  if (played == 3) {");
-    gold.append("\n    // TODO: figure this out (why can't I limit and then)");
+    gold.append("\n    // : figure this out (why can't I limit and then)");
     gold.append("\n    if ( (iterate deck where place == Place::InPlay && suit == suit_in_play order by rank desc)[0] as winner) {");
     gold.append("\n      (iterate deck where place == Place::InPlay).owner = winner.owner;");
     gold.append("\n      last_winner = winner.owner;");

@@ -365,12 +365,12 @@ public principal last_winner;
   }
   future<maybe<CardDecision[]>> playX = single_play.choose(current, @convert<CardDecision>(choices), 1);
   if (playX.await() as thePlay) {
-  // TODO: don't think hearts can be played, there are some rules here
+  // : don't think hearts can be played, there are some rules here
   foreach (dec in thePlay) {
 
     (iterate deck where id == dec.id).place = Place::InPlay;
     if ( (iterate deck where id == dec.id)[0] as cardPlayed) {
-// TODO
+// 
 //   cardPlayed.place = Place::InPlay;
 // this doesn't work
 
@@ -387,7 +387,7 @@ public principal last_winner;
 
   // if the number of cards played is less than 4, then next player; otherwise, decide winner of pot and award points
 
-  // TODO: need finite arrays and cyclic integers
+  // : need finite arrays and cyclic integers
   if (current == player1) {
     current = player2;
   } else if (current == player2) {
@@ -399,7 +399,7 @@ public principal last_winner;
   }
 
   if (played == 3) {
-    // TODO: figure this out (why can't I limit and then)
+    // : figure this out (why can't I limit and then)
     if ( (iterate deck where place == Place::InPlay && suit == suit_in_play order by rank desc)[0] as winner) {
       (iterate deck where place == Place::InPlay).owner = winner.owner;
       last_winner = winner.owner;
