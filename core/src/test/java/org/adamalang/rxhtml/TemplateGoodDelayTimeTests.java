@@ -33,11 +33,11 @@ public class TemplateGoodDelayTimeTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;goodDelayTime.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <form rx:action=\"send:foo\">");
+    gold.append("\n    // <form rx:action=\"send:foo\" ln:ch=\"1;1;1;28;goodDelayTime.rx.html\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'foo');");
     gold.append("\n    var e=[];");
@@ -47,7 +47,7 @@ public class TemplateGoodDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,f);");
     gold.append("\n");
-    gold.append("\n    // <div rx:delay:500=\"submit\">");
+    gold.append("\n    // <div rx:delay:500=\"submit\" ln:ch=\"2;2;2;29;goodDelayTime.rx.html\">");
     gold.append("\n    var g=$.E('div');");
     gold.append("\n    $.oSBMT(g,'delay:500',a);");
     gold.append("\n    d.append(g);");
@@ -61,11 +61,11 @@ public class TemplateGoodDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;goodDelayTime.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <form rx:action=\"send:foo\">");
+    gold.append("\n    // <form rx:action=\"send:foo\" ln:ch=\"1;1;1;28;goodDelayTime.rx.html\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'foo');");
     gold.append("\n    var e=[];");
@@ -75,7 +75,7 @@ public class TemplateGoodDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,f);");
     gold.append("\n");
-    gold.append("\n    // <div rx:delay:500=\"submit\">");
+    gold.append("\n    // <div rx:delay:500=\"submit\" ln:ch=\"2;2;2;29;goodDelayTime.rx.html\">");
     gold.append("\n    var g=$.E('div');");
     gold.append("\n    $.oSBMT(g,'delay:500',a);");
     gold.append("\n    d.append(g);");

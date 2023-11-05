@@ -33,7 +33,7 @@ public class TemplateLookupTransformRefreshTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;lookupTransformRefresh.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.LTdT(a,'person',$.TR('nope'),1000));");
@@ -46,7 +46,7 @@ public class TemplateLookupTransformRefreshTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;lookupTransformRefresh.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.LTdT(a,'person',$.TR('nope'),1000));");

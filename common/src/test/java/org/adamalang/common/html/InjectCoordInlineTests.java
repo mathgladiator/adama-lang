@@ -15,9 +15,16 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.common.html;
 
-public class Platform {
-  public static final String VERSION = "20231105155858";
-  public static final String JS_VERSION = "367f626ca4bdf8c5126bb1e79e3c113e";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class InjectCoordInlineTests {
+  @Test
+  public void foo() {
+    Assert.assertEquals("<element ln:ch=\"0;0;0;9;name\">", InjectCoordInline.execute("<element>", "name"));
+    Assert.assertEquals("<element ln:ch=\"0;0;0;10;name\" />", InjectCoordInline.execute("<element/>", "name"));
+    Assert.assertEquals("<element ln:ch=\"0;0;0;18;name\">", InjectCoordInline.execute("<element         >", "name"));
+  }
 }

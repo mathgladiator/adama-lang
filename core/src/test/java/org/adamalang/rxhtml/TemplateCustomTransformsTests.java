@@ -33,11 +33,11 @@ public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;customTransforms.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <input value=\"{x|format_date_usa}\">");
+    gold.append("\n    // <input value=\"{x|format_date_usa}\" ln:ch=\"1;1;1;36;customTransforms.rx.html\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -51,7 +51,7 @@ public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(d);");
     gold.append("\n    b.append($.LT(a,'x',$.TR('format_date_usa')));");
     gold.append("\n");
-    gold.append("\n    // <span>");
+    gold.append("\n    // <span ln:ch=\"3;1;3;7;customTransforms.rx.html\">");
     gold.append("\n    var d=$.E('span');");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -63,11 +63,11 @@ public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;customTransforms.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <input value=\"{x|format_date_usa}\">");
+    gold.append("\n    // <input value=\"{x|format_date_usa}\" ln:ch=\"1;1;1;36;customTransforms.rx.html\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -81,7 +81,7 @@ public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
     gold.append("\n    b.append(d);");
     gold.append("\n    b.append($.LT(a,'x',$.TR('format_date_usa')));");
     gold.append("\n");
-    gold.append("\n    // <span>");
+    gold.append("\n    // <span ln:ch=\"3;1;3;7;customTransforms.rx.html\">");
     gold.append("\n    var d=$.E('span');");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");

@@ -33,7 +33,7 @@ public class TemplateShellSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"9;0;9;14;shellSimple.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n  });");
@@ -41,11 +41,11 @@ public class TemplateShellSimpleTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><title>Default Title</title><meta name=\"referrer\" content=\"origin\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\"><link rel=\"manifest\" href=\"/site.webmanifest\"><script src=\"/libadama.js/GENMODE.js\"></script><script>");
+    gold.append("\n<head><title>Default Title</title><meta name=\"referrer\" content=\"origin\" ln:ch=\"6;1;6;40;shellSimple.rx.html\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" ln:ch=\"7;1;7;69;shellSimple.rx.html\"><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\" ln:ch=\"2;1;2;75;shellSimple.rx.html\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\" ln:ch=\"3;1;3;75;shellSimple.rx.html\"><link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\" ln:ch=\"4;1;4;75;shellSimple.rx.html\"><link rel=\"manifest\" href=\"/site.webmanifest\" ln:ch=\"5;1;5;47;shellSimple.rx.html\"><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"9;0;9;14;shellSimple.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n  });");

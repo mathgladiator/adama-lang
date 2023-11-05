@@ -33,11 +33,11 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;commandGoto.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <button rx:click=\"goto:/{view:here}\">");
+    gold.append("\n    // <button rx:click=\"goto:/{view:here}\" ln:ch=\"1;1;1;38;commandGoto.rx.html\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var e={};");
     gold.append("\n    $.YS($.pV(a),e,'here');");
@@ -45,7 +45,7 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n    d.append($.T('goto View'));");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <button rx:click=\"goto:/path-to-data/{data:there}\">");
+    gold.append("\n    // <button rx:click=\"goto:/path-to-data/{data:there}\" ln:ch=\"2;1;2;52;commandGoto.rx.html\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var f={};");
     gold.append("\n    $.YS($.pD(a),f,'there');");
@@ -61,11 +61,11 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;commandGoto.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <button rx:click=\"goto:/{view:here}\">");
+    gold.append("\n    // <button rx:click=\"goto:/{view:here}\" ln:ch=\"1;1;1;38;commandGoto.rx.html\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var e={};");
     gold.append("\n    $.YS($.pV(a),e,'here');");
@@ -73,7 +73,7 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n    d.append($.T('goto View'));");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <button rx:click=\"goto:/path-to-data/{data:there}\">");
+    gold.append("\n    // <button rx:click=\"goto:/path-to-data/{data:there}\" ln:ch=\"2;1;2;52;commandGoto.rx.html\">");
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var f={};");
     gold.append("\n    $.YS($.pD(a),f,'there');");

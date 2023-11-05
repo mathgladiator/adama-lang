@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.common.StringHelper;
+import org.adamalang.common.html.InjectCoordInline;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -31,7 +32,10 @@ public class Bundler {
     output.append("<forest>\n");
     for (File file : files) {
       Document useDoc = Jsoup.parse(file);
-      output.append(StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html(), ""));
+      String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html(), "");
+      output.append(partial);
+      // TODO: once this is well tested, we ship it and have line numbers (and remove above line)
+      // output.append(InjectCoordInline.execute(partial, file.getName()));
     }
     output.append("</forest>\n");
     return output.toString();

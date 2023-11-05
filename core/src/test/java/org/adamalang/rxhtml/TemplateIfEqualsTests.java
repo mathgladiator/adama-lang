@@ -33,11 +33,11 @@ public class TemplateIfEqualsTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;ifEquals.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:if=\"left=right\">");
+    gold.append("\n    // <div rx:if=\"left=right\" ln:ch=\"1;1;1;25;ifEquals.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IFeq(d,a,a,'left',a,'right',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Yaz '));");
@@ -45,7 +45,7 @@ public class TemplateIfEqualsTests extends BaseRxHtmlTest {
     gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div rx:if=\"view:a=view:b\">");
+    gold.append("\n    // <div rx:if=\"view:a=view:b\" ln:ch=\"4;1;4;28;ifEquals.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IFeq(d,a,$.pV(a),'a',$.pV(a),'b',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Yaz '));");
@@ -61,11 +61,11 @@ public class TemplateIfEqualsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;ifEquals.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:if=\"left=right\">");
+    gold.append("\n    // <div rx:if=\"left=right\" ln:ch=\"1;1;1;25;ifEquals.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IFeq(d,a,a,'left',a,'right',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Yaz '));");
@@ -73,7 +73,7 @@ public class TemplateIfEqualsTests extends BaseRxHtmlTest {
     gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div rx:if=\"view:a=view:b\">");
+    gold.append("\n    // <div rx:if=\"view:a=view:b\" ln:ch=\"4;1;4;28;ifEquals.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IFeq(d,a,$.pV(a),'a',$.pV(a),'b',true,false,function(f,e) {");
     gold.append("\n      f.append($.T(' Yaz '));");

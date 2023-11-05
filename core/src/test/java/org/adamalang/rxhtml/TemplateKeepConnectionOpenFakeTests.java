@@ -33,7 +33,7 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;keepConnectionOpenFake.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.RX([]);");
@@ -59,7 +59,7 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n    $.P(i,a,f,function(i,h) {");
     gold.append("\n    },function(i,h) {");
     gold.append("\n");
-    gold.append("\n      // <div rx:disconnected=\"\">");
+    gold.append("\n      // <div rx:disconnected=\"\" ln:ch=\"4;2;4;23;keepConnectionOpenFake.rx.html\">");
     gold.append("\n      var j=$.E('div');");
     gold.append("\n      j.append($.T(' OH KNOWS... '));");
     gold.append("\n      i.append(j);");
@@ -74,7 +74,7 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;keepConnectionOpenFake.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    var d=$.RX([]);");
@@ -100,7 +100,7 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n    $.P(i,a,f,function(i,h) {");
     gold.append("\n    },function(i,h) {");
     gold.append("\n");
-    gold.append("\n      // <div rx:disconnected=\"\">");
+    gold.append("\n      // <div rx:disconnected=\"\" ln:ch=\"4;2;4;23;keepConnectionOpenFake.rx.html\">");
     gold.append("\n      var j=$.E('div');");
     gold.append("\n      j.append($.T(' OH KNOWS... '));");
     gold.append("\n      i.append(j);");

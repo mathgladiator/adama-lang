@@ -19,6 +19,7 @@ package org.adamalang.rxhtml;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
+import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.support.GenerateTemplateTests;
@@ -38,7 +39,7 @@ public abstract class BaseRxHtmlTest {
     if (cachedResult == null) {
       issuesLive = new StringBuilder();
       Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-      cachedResult = RxHtmlTool.convertStringToTemplateForest(source().replaceAll("\r", ""), ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
+      cachedResult = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(source().replaceAll("\r", ""), "test"), ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
     }
     return cachedResult;
   }

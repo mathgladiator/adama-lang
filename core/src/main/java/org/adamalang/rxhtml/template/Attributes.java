@@ -197,7 +197,7 @@ public class Attributes {
       }
     }
     for (Attribute attr : env.element.attributes().asList()) {
-      if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:")) {
+      if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:") || "ln:ch".equals(attr.getKey())) {
         continue;
       }
       if (attr.hasDeclaredValue()) {

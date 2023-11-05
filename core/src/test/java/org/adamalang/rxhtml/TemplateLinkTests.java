@@ -33,11 +33,11 @@ public class TemplateLinkTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;link.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:link=\"obj\">");
+    gold.append("\n    // <div rx:link=\"obj\" ln:ch=\"1;1;1;20;link.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    d.link(a,'obj',$);");
     gold.append("\n    b.append(d);");
@@ -50,11 +50,11 @@ public class TemplateLinkTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;link.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:link=\"obj\">");
+    gold.append("\n    // <div rx:link=\"obj\" ln:ch=\"1;1;1;20;link.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    d.link(a,'obj',$);");
     gold.append("\n    b.append(d);");

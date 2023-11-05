@@ -33,12 +33,12 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;pathWhiteSpace.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{data:lookup} \">");
+    gold.append("\n    // <div class=\"{data:lookup} \" ln:ch=\"2;1;2;29;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -51,7 +51,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{data:lookup/value} \">");
+    gold.append("\n    // <div class=\"{data:lookup/value} \" ln:ch=\"3;1;3;35;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -64,7 +64,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{view:/root} \">");
+    gold.append("\n    // <div class=\"{view:/root} \" ln:ch=\"4;1;4;28;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -77,7 +77,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{   data : lookup } \">");
+    gold.append("\n    // <div class=\"{   data : lookup } \" ln:ch=\"5;1;5;35;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -90,7 +90,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{   data : lookup / value  } \">");
+    gold.append("\n    // <div class=\"{   data : lookup / value  } \" ln:ch=\"6;1;6;44;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -103,7 +103,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{   view :  / root   } \">");
+    gold.append("\n    // <div class=\"{   view :  / root   } \" ln:ch=\"7;1;7;38;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -124,12 +124,12 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;pathWhiteSpace.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{data:lookup} \">");
+    gold.append("\n    // <div class=\"{data:lookup} \" ln:ch=\"2;1;2;29;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -142,7 +142,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{data:lookup/value} \">");
+    gold.append("\n    // <div class=\"{data:lookup/value} \" ln:ch=\"3;1;3;35;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -155,7 +155,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{view:/root} \">");
+    gold.append("\n    // <div class=\"{view:/root} \" ln:ch=\"4;1;4;28;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -168,7 +168,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{   data : lookup } \">");
+    gold.append("\n    // <div class=\"{   data : lookup } \" ln:ch=\"5;1;5;35;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -181,7 +181,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{   data : lookup / value  } \">");
+    gold.append("\n    // <div class=\"{   data : lookup / value  } \" ln:ch=\"6;1;6;44;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -194,7 +194,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{   view :  / root   } \">");
+    gold.append("\n    // <div class=\"{   view :  / root   } \" ln:ch=\"7;1;7;38;pathWhiteSpace.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");

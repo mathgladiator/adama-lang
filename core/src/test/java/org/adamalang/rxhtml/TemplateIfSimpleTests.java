@@ -33,11 +33,11 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;ifSimple.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:if=\"obj\">");
+    gold.append("\n    // <div rx:if=\"obj\" ln:ch=\"1;1;1;18;ifSimple.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IF(d,a,a,'obj',true,false,function(f,e) {");
     gold.append("\n      f.append($.L(e,'key'));");
@@ -45,7 +45,7 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      f.append($.L(e,'value'));");
     gold.append("\n    },function(f,e) {");
     gold.append("\n");
-    gold.append("\n      // <div rx:else=\"\">");
+    gold.append("\n      // <div rx:else=\"\" ln:ch=\"2;2;2;15;ifSimple.rx.html\">");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      g.append($.T(' Not set! '));");
     gold.append("\n      f.append(g);");
@@ -60,11 +60,11 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;ifSimple.rx.html\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:if=\"obj\">");
+    gold.append("\n    // <div rx:if=\"obj\" ln:ch=\"1;1;1;18;ifSimple.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.IF(d,a,a,'obj',true,false,function(f,e) {");
     gold.append("\n      f.append($.L(e,'key'));");
@@ -72,7 +72,7 @@ public class TemplateIfSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      f.append($.L(e,'value'));");
     gold.append("\n    },function(f,e) {");
     gold.append("\n");
-    gold.append("\n      // <div rx:else=\"\">");
+    gold.append("\n      // <div rx:else=\"\" ln:ch=\"2;2;2;15;ifSimple.rx.html\">");
     gold.append("\n      var g=$.E('div');");
     gold.append("\n      g.append($.T(' Not set! '));");
     gold.append("\n      f.append(g);");

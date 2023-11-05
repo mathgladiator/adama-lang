@@ -15,9 +15,27 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.common.html;
 
-public class Platform {
-  public static final String VERSION = "20231105155858";
-  public static final String JS_VERSION = "367f626ca4bdf8c5126bb1e79e3c113e";
+/** a very simple HTML token */
+public class Token {
+  public final Type type;
+  public final String text;
+  public final int lineStart;
+  public final int charStart;
+  public final int lineEnd;
+  public final int charEnd;
+
+  public Token(Type type, String text, int lineStart, int charStart, int lineEnd, int charEnd) {
+    this.type = type;
+    this.text = text;
+    this.lineStart = lineStart;
+    this.charStart = charStart;
+    this.lineEnd = lineEnd;
+    this.charEnd = charEnd;
+  }
+
+  public String coords() {
+    return lineStart + ";" + charStart + ";" + lineEnd + ";" + charEnd;
+  }
 }

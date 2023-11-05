@@ -33,11 +33,11 @@ public class TemplateNestedConditionTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/nest\">");
+    gold.append("\n  // <page uri=\"/nest\" ln:ch=\"0;0;0;18;nestedCondition.rx.html\">");
     gold.append("\n  $.PG(['fixed','nest'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[x]X is true[y]Y=true[#]Y=false[/][#]X is false [/]\">");
+    gold.append("\n    // <div class=\"[x]X is true[y]Y=true[#]Y=false[/][#]X is false [/]\" ln:ch=\"1;1;1;66;nestedCondition.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -60,11 +60,11 @@ public class TemplateNestedConditionTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/nest\">");
+    gold.append("\n  // <page uri=\"/nest\" ln:ch=\"0;0;0;18;nestedCondition.rx.html\">");
     gold.append("\n  $.PG(['fixed','nest'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[x]X is true[y]Y=true[#]Y=false[/][#]X is false [/]\">");
+    gold.append("\n    // <div class=\"[x]X is true[y]Y=true[#]Y=false[/][#]X is false [/]\" ln:ch=\"1;1;1;66;nestedCondition.rx.html\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
