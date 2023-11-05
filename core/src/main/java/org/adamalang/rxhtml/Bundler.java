@@ -34,7 +34,7 @@ public class Bundler {
       Document useDoc = Jsoup.parse(file);
       String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html(), "");
       output.append(partial);
-      output.append(InjectCoordInline.execute(partial, file.getName()));
+//      output.append(InjectCoordInline.execute(partial, file.getName()));
     }
     output.append("</forest>\n");
     return output.toString();
