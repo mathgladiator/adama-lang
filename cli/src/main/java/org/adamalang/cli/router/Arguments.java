@@ -4542,7 +4542,7 @@ public class Arguments {
 		public static CanaryArgs from(String[] args, int start) {
 			CanaryArgs returnArgs = new CanaryArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4598,7 +4598,7 @@ public class Arguments {
 		public static DeinitArgs from(String[] args, int start) {
 			DeinitArgs returnArgs = new DeinitArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4638,7 +4638,7 @@ public class Arguments {
 		public static DevboxArgs from(String[] args, int start) {
 			DevboxArgs returnArgs = new DevboxArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4745,7 +4745,7 @@ public class Arguments {
 		public static DumpenvArgs from(String[] args, int start) {
 			DumpenvArgs returnArgs = new DumpenvArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4779,7 +4779,7 @@ public class Arguments {
 		public static InitArgs from(String[] args, int start) {
 			InitArgs returnArgs = new InitArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4813,7 +4813,7 @@ public class Arguments {
 		public static KickstartArgs from(String[] args, int start) {
 			KickstartArgs returnArgs = new KickstartArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4847,7 +4847,7 @@ public class Arguments {
 		public static VersionArgs from(String[] args, int start) {
 			VersionArgs returnArgs = new VersionArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}

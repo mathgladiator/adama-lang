@@ -173,7 +173,7 @@ public class ArgumentsGen {
             sb.append("\t\tpublic static ").append(argClass).append(" from(String[] args, int start) {\n");
             sb.append("\t\t\t").append(argClass).append(" returnArgs = ").append("new ").append(argClass).append("();\n");
             sb.append("\t\t\ttry {\n");
-            sb.append("\t\t\t\treturnArgs.config = new Config(args);\n");
+            sb.append("\t\t\t\treturnArgs.config = Config.fromArgs(args);\n");
             sb.append("\t\t\t} catch (Exception er) {\n");
             sb.append("\t\t\t\tSystem.out.println(\"Error creating default config file.\");\n");
             sb.append("\t\t\t}\n");
