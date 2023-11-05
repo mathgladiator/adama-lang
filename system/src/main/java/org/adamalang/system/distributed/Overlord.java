@@ -15,11 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.distributed;
+package org.adamalang.system.distributed;
 
-import org.adamalang.cli.Config;
-import org.adamalang.cli.services.CommonServiceInit;
-import org.adamalang.cli.services.Role;
+import org.adamalang.system.CommonServiceInit;
+import org.adamalang.system.Role;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -29,6 +28,7 @@ import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
+import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
@@ -37,7 +37,7 @@ import org.adamalang.web.service.WebMetrics;
 import java.io.File;
 
 public class Overlord {
-  public static void run(Config config) throws Exception {
+  public static void run(JsonConfig config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Overlord);
     File targetsPath = new File(config.get_string("targets-filename", "targets.json"));
     init.engine.createLocalApplicationHeartbeat("overlord", init.webConfig.port, init.monitoringPort, (hb) -> {

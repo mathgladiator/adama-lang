@@ -15,15 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.global;
+package org.adamalang.system.global;
 
 import org.adamalang.auth.CachedAuthenticator;
 import org.adamalang.auth.GlobalAuthenticator;
-import org.adamalang.cli.Config;
-import org.adamalang.cli.services.FrontendHttpHandler;
-import org.adamalang.cli.services.Role;
-import org.adamalang.cli.services.common.CloudBoot;
-import org.adamalang.cli.services.common.EveryMachine;
+import org.adamalang.system.FrontendHttpHandler;
+import org.adamalang.system.Role;
+import org.adamalang.system.common.CloudBoot;
+import org.adamalang.system.common.EveryMachine;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.keys.PrivateKeyWithId;
@@ -40,6 +39,7 @@ import org.adamalang.runtime.sys.domains.CachedDomainFinder;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
+import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.CertificateBoot;
@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GlobalFrontend {
-  public static void run(Config config) throws Exception {
+  public static void run(JsonConfig config) throws Exception {
     EveryMachine em = new EveryMachine(config, Role.Web);
     DataBaseBoot db = new DataBaseBoot(em.alive, config, em.metricsFactory, em.system);
     CloudBoot cb = new CloudBoot(em.alive, em.metricsFactory, em.webBase, config.get_or_create_child("aws"), em.logsPrefix, em.system);

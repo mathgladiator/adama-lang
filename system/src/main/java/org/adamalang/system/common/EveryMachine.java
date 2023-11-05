@@ -15,10 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.common;
+package org.adamalang.system.common;
 
 import org.adamalang.api.SelfClient;
-import org.adamalang.cli.services.Role;
+import org.adamalang.system.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.jvm.MachineHeat;

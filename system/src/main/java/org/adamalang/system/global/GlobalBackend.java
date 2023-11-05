@@ -15,20 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.global;
+package org.adamalang.system.global;
 
-import org.adamalang.cli.Config;
-import org.adamalang.cli.services.Role;
-import org.adamalang.cli.services.common.EveryMachine;
+import org.adamalang.system.Role;
+import org.adamalang.system.common.EveryMachine;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.system.contracts.JsonConfig;
 
 public class GlobalBackend {
-  public static void run(Config config) throws Exception {
+  public static void run(JsonConfig config) throws Exception {
     EveryMachine em = new EveryMachine(config, Role.Adama);
     DataBaseBoot db = new DataBaseBoot(em.alive, config, em.metricsFactory, em.system);
 

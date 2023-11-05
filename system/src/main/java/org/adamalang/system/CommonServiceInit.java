@@ -15,12 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services;
+package org.adamalang.system;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.cli.services.common.CloudBoot;
-import org.adamalang.cli.services.common.EveryMachine;
-import org.adamalang.cli.services.global.DataBaseBoot;
+import org.adamalang.system.common.CloudBoot;
+import org.adamalang.system.common.EveryMachine;
+import org.adamalang.system.global.DataBaseBoot;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.net.NetBase;

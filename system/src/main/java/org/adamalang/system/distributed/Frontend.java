@@ -15,14 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.distributed;
+package org.adamalang.system.distributed;
 
 import org.adamalang.auth.CachedAuthenticator;
 import org.adamalang.auth.GlobalAuthenticator;
-import org.adamalang.cli.Config;
-import org.adamalang.cli.services.CommonServiceInit;
-import org.adamalang.cli.services.FrontendHttpHandler;
-import org.adamalang.cli.services.Role;
+import org.adamalang.system.CommonServiceInit;
+import org.adamalang.system.FrontendHttpHandler;
+import org.adamalang.system.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.frontend.FrontendConfig;
@@ -116,7 +115,7 @@ public class Frontend {
     System.err.println("frontend finished");
   }
 
-  public static void run(Config config) throws Exception {
+  public static void run(JsonConfig config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Web);
     LocalRegionClient client = init.makeLocalClient(null);
     new Frontend(config, init, client);

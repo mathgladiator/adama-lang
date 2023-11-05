@@ -15,10 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.standalone;
+package org.adamalang.system;
 
-import org.adamalang.cli.services.distributed.Backend;
-import org.adamalang.cli.services.distributed.Frontend;
+import org.adamalang.system.distributed.Backend;
+import org.adamalang.system.distributed.Frontend;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.system.contracts.JsonConfig;

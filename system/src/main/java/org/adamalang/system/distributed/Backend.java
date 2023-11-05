@@ -15,11 +15,11 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.distributed;
+package org.adamalang.system.distributed;
 
 import org.adamalang.caravan.CaravanBoot;
-import org.adamalang.cli.services.CommonServiceInit;
-import org.adamalang.cli.services.Role;
+import org.adamalang.system.CommonServiceInit;
+import org.adamalang.system.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.mysql.impl.GlobalBillingDocumentFinder;

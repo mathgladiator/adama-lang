@@ -15,12 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.region;
+package org.adamalang.system.region;
 
 import org.adamalang.cli.Config;
-import org.adamalang.cli.services.Role;
-import org.adamalang.cli.services.common.CloudBoot;
-import org.adamalang.cli.services.common.EveryMachine;
+import org.adamalang.system.Role;
+import org.adamalang.system.common.CloudBoot;
+import org.adamalang.system.common.EveryMachine;
 
 public class RegionFrontend {
   public static void run(Config config) throws Exception {

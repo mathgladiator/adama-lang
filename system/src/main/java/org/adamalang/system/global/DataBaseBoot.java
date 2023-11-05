@@ -15,54 +15,47 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.common;
+package org.adamalang.system.global;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.extern.aws.*;
-import org.adamalang.web.client.WebClientBase;
+import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.DataBaseConfig;
+import org.adamalang.mysql.DataBaseMetrics;
+import org.adamalang.mysql.model.Health;
+import org.adamalang.system.contracts.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CloudBoot {
-  private static final Logger LOGGER = LoggerFactory.getLogger(CloudBoot.class);
-  public final S3 s3;
-  public final AWSConfig awsConfig;
-  public final AWSMetrics awsMetrics;
-  public final SQS sqs;
-  public final SES ses;
+public class DataBaseBoot {
+  private static final Logger LOGGER = LoggerFactory.getLogger(DataBaseBoot.class);
 
-  public CloudBoot(AtomicBoolean alive, MetricsFactory metricsFactory, WebClientBase webBase, ObjectNode config, String logsPrefix, SimpleExecutor system) throws Exception {
-    this.awsConfig = new AWSConfig(new ConfigObject(config));
-    this.awsMetrics = new AWSMetrics(metricsFactory);
-    this.s3 = new S3(webBase, awsConfig, awsMetrics);
-    this.sqs = new SQS(webBase, awsConfig, awsMetrics);
+  public final DataBase database;
+
+  public DataBaseBoot(AtomicBoolean alive, JsonConfig config, MetricsFactory metricsFactory, SimpleExecutor system) throws Exception {
+    this.database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(metricsFactory));
     AtomicReference<Runnable> cancel = new AtomicReference<>();
-    this.ses = new SES(webBase, awsConfig, awsMetrics);
-    cancel.set(system.schedule(new NamedRunnable("archive-s3") {
+    cancel.set(system.schedule(new NamedRunnable("database-ping") {
       @Override
       public void execute() throws Exception {
         try {
-          s3.uploadLogs(new File("logs"), logsPrefix);
+          Health.pingDataBase(database);
         } catch (Exception ex) {
-          LOGGER.error("error-uploading-logs", ex);
-        } finally {
-          if (alive.get()) {
-            cancel.set(system.schedule(this, 60000));
-          }
+          LOGGER.error("health-check-failure-database", ex);
+        }
+        if (alive.get()) {
+          cancel.set(system.schedule(this, (int) (30000 + 30000 * Math.random())));
         }
       }
     }, 5000));
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
-      System.out.println("[CloudBoot-Shutdown]");
+      System.out.println("[DataBaseBoot-Shutdown]");
       alive.set(false);
       cancel.get().run();
     })));
