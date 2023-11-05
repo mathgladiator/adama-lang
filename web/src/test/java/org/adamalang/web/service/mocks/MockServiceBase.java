@@ -110,11 +110,27 @@ public class MockServiceBase implements ServiceBase {
       }
 
       @Override
+      public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+        switch (method) {
+          case PUT:
+            handlePost(uri, headers, parametersJson, body, callback);
+            return;
+          case OPTIONS:
+            handleOptions(uri, headers, parametersJson, callback);
+            return;
+          case DELETE:
+            handleDelete(uri, headers, parametersJson, callback);
+            return;
+          case GET:
+          default:
+            handleGet(uri, headers, parametersJson, callback);
+        }
+      }
+
       public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("", new byte[0], uri.equalsIgnoreCase("/ok-cors")));
       }
 
-      @Override
       public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
           callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "deleted".getBytes(StandardCharsets.UTF_8), true));
@@ -123,7 +139,6 @@ public class MockServiceBase implements ServiceBase {
         callback.failure(new ErrorCodeException(1000));
       }
 
-      @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
           callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8), true));
@@ -144,7 +159,6 @@ public class MockServiceBase implements ServiceBase {
         callback.success(null);
       }
 
-      @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if ("/body".equals(uri)){
           callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8), true));

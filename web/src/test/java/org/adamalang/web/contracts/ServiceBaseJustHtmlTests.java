@@ -35,21 +35,35 @@ public class ServiceBaseJustHtmlTests {
     ServiceBase base = ServiceBase.JUST_HTTP(new HttpHandler() {
 
       @Override
+      public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+        switch (method) {
+          case PUT:
+            handlePost(uri, headers, parametersJson, body, callback);
+            return;
+          case OPTIONS:
+            handleOptions(uri, headers, parametersJson, callback);
+            return;
+          case DELETE:
+            handleDelete(uri, headers, parametersJson, callback);
+            return;
+          case GET:
+          default:
+            handleGet(uri, headers, parametersJson, callback);
+        }
+      }
+
       public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("","".getBytes(StandardCharsets.UTF_8), uri.equalsIgnoreCase("/opt=yes")));
       }
 
-      @Override
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
-      @Override
       public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
-      @Override
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         callback.success(new HttpResult("post", "post".getBytes(StandardCharsets.UTF_8), true));
       }
@@ -79,7 +93,7 @@ public class ServiceBaseJustHtmlTests {
     base.establish(null).kill();
     base.assets();
     CountDownLatch latch = new CountDownLatch(4);
-    base.http().handleOptions("/opt=yes", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+    base.http().handle(HttpHandler.Method.OPTIONS, null, "/opt=yes", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertTrue(value.cors);
@@ -91,7 +105,7 @@ public class ServiceBaseJustHtmlTests {
 
       }
     });
-    base.http().handleGet("x", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+    base.http().handle(HttpHandler.Method.GET, null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("yay", new String(value.body, StandardCharsets.UTF_8));
@@ -103,7 +117,7 @@ public class ServiceBaseJustHtmlTests {
 
       }
     });
-    base.http().handleDelete("x", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+    base.http().handle(HttpHandler.Method.DELETE, null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("yay", new String(value.body, StandardCharsets.UTF_8));
@@ -115,7 +129,7 @@ public class ServiceBaseJustHtmlTests {
 
       }
     });
-    base.http().handlePost("x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
+    base.http().handle( HttpHandler.Method.PUT,null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("post", new String(value.body, StandardCharsets.UTF_8));

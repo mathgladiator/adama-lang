@@ -18,13 +18,11 @@
 package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.netty.handler.ssl.SslContext;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.common.web.UriMatcher;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -36,7 +34,6 @@ import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.ContentType;
-import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -114,23 +111,43 @@ public class DevBoxServiceBase implements ServiceBase {
   @Override
   public HttpHandler http() {
     return new HttpHandler() {
+
+      @Override
+      public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+        NtPrincipal who = NtPrincipal.NO_ONE;
+        if (identity != null) {
+          who = DevBoxAdama.principalOf(identity);
+        }
+        switch (method) {
+          case PUT:
+            handlePost(who, uri, headers, parametersJson, body, callback);
+            return;
+          case OPTIONS:
+            handleOptions(who, uri, headers, parametersJson, callback);
+            return;
+          case DELETE:
+            handleDelete(who, uri, headers, parametersJson, callback);
+            return;
+          case GET:
+          default:
+            handleGet(who, uri, headers, parametersJson, callback);
+        }
+      }
+
       @Override
       public void handleDeepHealth(Callback<String> callback) {
         callback.success("DEVSERVER");
       }
 
-      @Override
-      public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleOptions(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.failure(new ErrorCodeException(0));
       }
 
-      @Override
-      public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleDelete(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.failure(new ErrorCodeException(0));
       }
 
-      @Override
-      public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleGet(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         RxHTMLScanner.RxHTMLBundle current = bundle.get();
         if (current == null) {
           callback.failure(new ErrorCodeException(500));
@@ -141,7 +158,8 @@ public class DevBoxServiceBase implements ServiceBase {
             SpaceKeyRequest skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri.substring(3));
             Key key = new Key(skr.space, skr.key);
             io.info("service|getting from document: " + skr.uri);
-            WebGet webGet = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
+
+            WebGet webGet = new WebGet(new WebContext(who, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
             verse.service.webGet(key, webGet, route(skr, callback));
             return;
           }
@@ -277,8 +295,7 @@ public class DevBoxServiceBase implements ServiceBase {
         };
       }
 
-      @Override
-      public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+      public void handlePost(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if (verse != null) {
           // TODO: differiate between a document/domain put
           final SpaceKeyRequest skr;
@@ -288,7 +305,7 @@ public class DevBoxServiceBase implements ServiceBase {
             skr = SpaceKeyRequest.parse(uri);
           }
           Key key = new Key(skr.space, skr.key);
-          WebPut webPut = new WebPut(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);
+          WebPut webPut = new WebPut(new WebContext(who, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);
           verse.service.webPut(key, webPut, route(skr, callback));
         } else {
           callback.failure(new ErrorCodeException(0));

@@ -65,6 +65,23 @@ public class FrontendHttpHandler implements HttpHandler {
   }
 
   @Override
+  public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+    switch (method) {
+      case PUT:
+        handlePost(uri, headers, parametersJson, body, callback);
+        return;
+      case OPTIONS:
+        handleOptions(uri, headers, parametersJson, callback);
+        return;
+      case DELETE:
+        handleDelete(uri, headers, parametersJson, callback);
+        return;
+      case GET:
+      default:
+        handleGet(uri, headers, parametersJson, callback);
+    }
+  }
+
   public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
@@ -101,7 +118,6 @@ public class FrontendHttpHandler implements HttpHandler {
     return host;
   }
 
-  @Override
   public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     String host = extractHost(headers, callback);
     if (host == null) {
@@ -157,7 +173,6 @@ public class FrontendHttpHandler implements HttpHandler {
     });
   }
 
-  @Override
   public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
@@ -218,7 +233,6 @@ public class FrontendHttpHandler implements HttpHandler {
     };
   }
 
-  @Override
   public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     String host = extractHost(headers, callback);
     if (host == null) {

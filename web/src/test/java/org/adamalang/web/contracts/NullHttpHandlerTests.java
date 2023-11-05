@@ -30,7 +30,7 @@ public class NullHttpHandlerTests {
   @Test
   public void coverage() throws Exception {
     CountDownLatch latch = new CountDownLatch(5);
-    HttpHandler.NULL.handleGet("", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+    HttpHandler.NULL.handle(HttpHandler.Method.GET, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();
@@ -41,7 +41,7 @@ public class NullHttpHandlerTests {
 
       }
     });
-    HttpHandler.NULL.handleOptions("", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+    HttpHandler.NULL.handle(HttpHandler.Method.PUT, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();
@@ -52,7 +52,18 @@ public class NullHttpHandlerTests {
 
       }
     });
-    HttpHandler.NULL.handleDelete("", new TreeMap<>(), "{}", new Callback<HttpHandler.HttpResult>() {
+    HttpHandler.NULL.handle(HttpHandler.Method.DELETE, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
+      @Override
+      public void success(HttpHandler.HttpResult value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    HttpHandler.NULL.handle(HttpHandler.Method.OPTIONS, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();
@@ -66,17 +77,6 @@ public class NullHttpHandlerTests {
     HttpHandler.NULL.handleDeepHealth(new Callback<String>() {
       @Override
       public void success(String value) {
-        latch.countDown();
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-
-      }
-    });
-    HttpHandler.NULL.handlePost("", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
-      @Override
-      public void success(HttpHandler.HttpResult value) {
         latch.countDown();
       }
 

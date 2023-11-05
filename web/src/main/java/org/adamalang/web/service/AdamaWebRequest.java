@@ -37,9 +37,11 @@ public class AdamaWebRequest {
   public final TreeMap<String, String> headers;
   public final String parameters;
   public final String body;
+  public final String identity;
 
   public AdamaWebRequest(final FullHttpRequest req, ChannelHandlerContext ctx) {
     headers = new TreeMap<>();
+    String _identity = null;
     for (Map.Entry<String, String> entry : req.headers()) {
       String headerName = entry.getKey().toLowerCase(Locale.ROOT);
       if (headerName.equals("cookie")) {
@@ -47,6 +49,7 @@ public class AdamaWebRequest {
       }
       headers.put(headerName, entry.getValue());
     }
+    this.identity = _identity;
     ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
     headers.put("origin", context.origin + "");
     headers.put("remote-ip", context.remoteIp + "");

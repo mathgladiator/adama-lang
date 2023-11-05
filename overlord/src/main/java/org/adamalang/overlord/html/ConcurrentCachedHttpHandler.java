@@ -35,18 +35,12 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   }
 
   @Override
-  public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    callback.success(new HttpResult("", new byte[0], false));
-  }
-
-  @Override
-  public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    callback.success(new HttpResult("", new byte[0], false));
-  }
-
-  @Override
-  public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-    callback.success(uris.get(uri));
+  public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+    if (method == Method.GET) {
+      callback.success(uris.get(uri));
+    } else {
+      callback.success(new HttpResult("", new byte[0], false));
+    }
   }
 
   public void put(String uri, String html) {
@@ -55,11 +49,6 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
 
   public void put(String uri, HttpResult result) {
     uris.put(uri, result);
-  }
-
-  @Override
-  public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-    callback.success(null);
   }
 
   @Override
