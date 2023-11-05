@@ -29,7 +29,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.impl.global.GlobalPerSessionAuthenticator;
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;

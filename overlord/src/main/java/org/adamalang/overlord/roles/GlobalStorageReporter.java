@@ -19,7 +19,7 @@ package org.adamalang.overlord.roles;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.SystemUsageInventoryRecord;

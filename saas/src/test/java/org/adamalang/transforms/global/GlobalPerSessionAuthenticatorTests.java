@@ -26,7 +26,7 @@ import org.adamalang.frontend.Session;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.impl.global.GlobalPerSessionAuthenticator;
 import org.adamalang.contracts.data.ParsedToken;
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
 import org.junit.Test;

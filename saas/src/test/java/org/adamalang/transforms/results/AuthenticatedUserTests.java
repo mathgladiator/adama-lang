@@ -17,7 +17,7 @@
 */
 package org.adamalang.transforms.results;
 
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.contracts.data.ParsedToken;

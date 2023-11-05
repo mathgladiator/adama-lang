@@ -13,7 +13,7 @@
         </documentation>
         <transform service="org.adamalang.transforms.PerSessionAuthenticator"
                    output-name="who"
-                   output-java-type="org.adamalang.contracts.data.AuthenticatedUser"
+                   output-java-type="org.adamalang.auth.AuthenticatedUser"
                    error-code="444420"/>
     </parameter-definition>
 

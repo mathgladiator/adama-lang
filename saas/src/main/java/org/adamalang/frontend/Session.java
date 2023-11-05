@@ -18,7 +18,7 @@
 package org.adamalang.frontend;
 
 import org.adamalang.transforms.PerSessionAuthenticator;
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 
 import java.util.HashMap;
 

@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.contracts.data;
+package org.adamalang.auth;
 
 import io.jsonwebtoken.Jwts;
+import org.adamalang.common.cache.Measurable;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.web.io.ConnectionContext;
 
@@ -25,7 +26,7 @@ import java.security.PrivateKey;
 import java.util.TreeMap;
 
 /** a user that has been authenticated */
-public class AuthenticatedUser {
+public class AuthenticatedUser implements Measurable {
 
   /** if the user is an adama developer, then this is their id */
   public final int id;
@@ -38,11 +39,14 @@ public class AuthenticatedUser {
 
   public boolean isAdamaDeveloper;
 
+  private int size;
+
   public AuthenticatedUser(int id, NtPrincipal who, ConnectionContext context) {
     this.id = id;
     this.who = who;
     this.context = context;
     this.isAdamaDeveloper = "adama".equalsIgnoreCase(who.authority);
+    this.size = (int) (64 + who.memory());
   }
 
   /** convert the user to a token for cross-host transmission over the public interwebs; we do this so the remote region can capture and validate the IP and Origin */
@@ -56,5 +60,10 @@ public class AuthenticatedUser {
     claims.put("pak", context.assetKey);
     claims.put("pua", context.userAgent);
     return Jwts.builder().setClaims(claims).setIssuer("host").setSubject(who.agent).signWith(key).compact();
+  }
+
+  @Override
+  public long measure() {
+    return size;
   }
 }

@@ -19,6 +19,7 @@ package org.adamalang.contracts.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.data.SpaceInfo;
 

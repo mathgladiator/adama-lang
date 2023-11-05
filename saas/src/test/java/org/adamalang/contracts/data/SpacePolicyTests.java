@@ -17,6 +17,7 @@
 */
 package org.adamalang.contracts.data;
 
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;

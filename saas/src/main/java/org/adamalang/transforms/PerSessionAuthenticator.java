@@ -20,7 +20,7 @@ package org.adamalang.transforms;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.frontend.Session;
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 
 /** This is a per session Authenticator. This is in 1:1 correspondence to a session/connection */

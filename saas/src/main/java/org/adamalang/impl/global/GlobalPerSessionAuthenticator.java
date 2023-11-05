@@ -34,7 +34,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.security.Keystore;
 import org.adamalang.contracts.data.ParsedToken;
 import org.adamalang.transforms.PerSessionAuthenticator;
-import org.adamalang.contracts.data.AuthenticatedUser;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.web.io.ConnectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
