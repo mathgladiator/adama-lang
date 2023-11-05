@@ -82,4 +82,33 @@ public class Logzio extends SimpleService {
         callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
     }
   }
+
+  public static void main(String[] args) throws Exception {
+    WebClientBase base = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
+    String token = "<<THE TOKEN>>";
+    ObjectNode event = Json.newJsonObject();
+    event.put("@timestamp", LogTimestamp.now());
+    event.put("ag", "jeff");
+    event.put("au", "foo");
+    event.put("message", "the token was created");
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(event.toString()).append("\n");
+    SimpleHttpRequest request = new SimpleHttpRequest("POST", "https://listener.logz.io:8071/?token=" + token, new TreeMap<>(), SimpleHttpRequestBody.WRAP(sb.toString().getBytes()));
+    CountDownLatch latch = new CountDownLatch(1);
+    base.executeShared(request, new VoidCallbackHttpResponder(LOG, new NoOpMetricsFactory().makeRequestResponseMonitor("x").start(), new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        System.err.println("TRUE");
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.err.println("EX:" + ex.code);
+        latch.countDown();
+      }
+    }));
+    latch.await(1000, TimeUnit.MILLISECONDS);
+  }
 }
