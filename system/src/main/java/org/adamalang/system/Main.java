@@ -15,26 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.standalone;
+package org.adamalang.system;
 
-import org.adamalang.cli.services.distributed.Backend;
-import org.adamalang.cli.services.distributed.Frontend;
-import org.adamalang.net.client.LocalRegionClient;
-import org.adamalang.runtime.sys.capacity.HeatMonitor;
-import org.adamalang.system.contracts.JsonConfig;
-
-public class Solo {
-  public static void run(JsonConfig config) throws Exception {
-    // run the core service
-    Backend backend = Backend.run(config);
-
-    LocalRegionClient client = backend.init.makeLocalClient(new HeatMonitor() {
-      @Override
-      public void heat(String machine, double cpu, double memory) {
-
-      }
-    });
-    // spin up the frontend
-    new Frontend(config, backend.init, client);
-  }
+public class Main {
 }

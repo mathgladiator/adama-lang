@@ -18,7 +18,6 @@
 package org.adamalang.cli.services.distributed;
 
 import org.adamalang.caravan.CaravanBoot;
-import org.adamalang.cli.Config;
 import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
@@ -40,6 +39,7 @@ import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.capacity.CapacityOverseer;
 import org.adamalang.runtime.sys.metering.*;
+import org.adamalang.system.contracts.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public class Backend {
     this.serverThread = serverThread;
   }
 
-  public static Backend run(Config config) throws Exception {
+  public static Backend run(JsonConfig config) throws Exception {
     // create the common/shared service issues
     CommonServiceInit init = new CommonServiceInit(config, Role.Adama);
     // create metrics

@@ -18,7 +18,6 @@
 package org.adamalang.cli.services;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.cli.Config;
 import org.adamalang.cli.services.common.CloudBoot;
 import org.adamalang.cli.services.common.EveryMachine;
 import org.adamalang.cli.services.global.DataBaseBoot;
@@ -40,6 +39,7 @@ import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.sys.capacity.MachinePicker;
 import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.push.GlobalPusher;
+import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public class CommonServiceInit {
   public final int servicePort;
   public final SES ses;
 
-  public CommonServiceInit(Config config, Role role) throws Exception {
+  public CommonServiceInit(JsonConfig config, Role role) throws Exception {
     EveryMachine em = new EveryMachine(config, role);
     this.em = em;
     this.identity = em.identity;

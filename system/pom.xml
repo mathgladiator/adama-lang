@@ -8,7 +8,7 @@
         <version>MAIN</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cli</artifactId>
+    <artifactId>system</artifactId>
     <properties>
         <jdk.version>17</jdk.version>
         <maven.compiler.target>17</maven.compiler.target>
@@ -18,28 +18,23 @@
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>system</artifactId>
+            <artifactId>core</artifactId>
             <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>apikit</artifactId>
+            <artifactId>saas</artifactId>
             <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>clikit</artifactId>
+            <artifactId>overlord</artifactId>
             <version>MAIN</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>lsp</artifactId>
+            <artifactId>services</artifactId>
             <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline-reader</artifactId>
-            <version>3.23.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -53,37 +48,4 @@
             <version>1.4.5</version>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <workingDirectory>${project.basedir}</workingDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.adamalang.cli.Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

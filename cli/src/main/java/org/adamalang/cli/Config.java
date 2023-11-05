@@ -22,13 +22,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
+import org.adamalang.system.contracts.JsonConfig;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class Config {
+public class Config implements JsonConfig {
   public final String[] argsForTool;
   public final String configPath;
   private ObjectNode cache;
@@ -71,6 +72,7 @@ public class Config {
     }
   }
 
+  @Override
   public String get_string(String field, String defaultValue) {
     JsonNode node = read().get(field);
     if (node == null || node.isNull()) {
@@ -94,10 +96,12 @@ public class Config {
     return node.textValue();
   }
 
+  @Override
   public ObjectNode read() {
     return cache;
   }
 
+  @Override
   public int get_int(String field, int defaultValue) {
     JsonNode node = read().get(field);
     if (node == null || node.isNull() || !node.isInt()) {
@@ -114,6 +118,7 @@ public class Config {
     return node.booleanValue();
   }
 
+  @Override
   public ServiceHeatEstimator.HeatVector get_heat(String suffix, int cpu_m, int messages, int mem_mb, int connections) {
     return new ServiceHeatEstimator.HeatVector(
         get_int(suffix + "-cpu-m", cpu_m) * 1000L * 1000L,
@@ -122,6 +127,7 @@ public class Config {
         get_int(suffix + "-connections", connections));
   }
 
+  @Override
   public ObjectNode get_or_create_child(String field) {
     JsonNode node = read().get(field);
     if (node instanceof ObjectNode) {
@@ -130,6 +136,7 @@ public class Config {
     return Json.newJsonObject();
   }
 
+  @Override
   public ArrayList<String> get_str_list(String field) {
     JsonNode node = read().get(field);
     if (node instanceof ArrayNode) {

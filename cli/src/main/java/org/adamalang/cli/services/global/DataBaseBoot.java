@@ -17,7 +17,6 @@
 */
 package org.adamalang.cli.services.global;
 
-import org.adamalang.cli.Config;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.NamedRunnable;
@@ -27,6 +26,7 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.model.Health;
+import org.adamalang.system.contracts.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ public class DataBaseBoot {
 
   public final DataBase database;
 
-  public DataBaseBoot(AtomicBoolean alive, Config config, MetricsFactory metricsFactory, SimpleExecutor system) throws Exception {
+  public DataBaseBoot(AtomicBoolean alive, JsonConfig config, MetricsFactory metricsFactory, SimpleExecutor system) throws Exception {
     this.database = new DataBase(new DataBaseConfig(new ConfigObject(config.read())), new DataBaseMetrics(metricsFactory));
     AtomicReference<Runnable> cancel = new AtomicReference<>();
     cancel.set(system.schedule(new NamedRunnable("database-ping") {

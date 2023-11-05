@@ -35,6 +35,7 @@ import org.adamalang.mysql.impl.GlobalRxHtmlFetcher;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.runtime.sys.domains.CachedDomainFinder;
 import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
+import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.CertificateBoot;
@@ -54,7 +55,7 @@ public class Frontend {
   private static final Logger LOGGER = LoggerFactory.getLogger(Frontend.class);
   public final MultiRegionClient adama;
 
-  public Frontend(Config config, CommonServiceInit init, LocalRegionClient client) throws Exception {
+  public Frontend(JsonConfig config, CommonServiceInit init, LocalRegionClient client) throws Exception {
     this.adama = init.makeGlobalClient(client);
     CachedDomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database, init.masterKey));
     domainFinder.startSweeping(init.alive, 1000, 2000);

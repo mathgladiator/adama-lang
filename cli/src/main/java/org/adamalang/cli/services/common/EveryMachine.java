@@ -18,31 +18,23 @@
 package org.adamalang.cli.services.common;
 
 import org.adamalang.api.SelfClient;
-import org.adamalang.cli.Config;
 import org.adamalang.cli.services.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.jvm.MachineHeat;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.internal.InternalSigner;
-import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.region.MeteringBatchSubmit;
 import org.adamalang.region.MeteringBatchSubmitMetrics;
-import org.adamalang.runtime.contracts.PlanFetcher;
-import org.adamalang.runtime.deploy.DelayedDeploy;
-import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.deploy.OndemandDeploymentFactoryBase;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.sys.TriggerDeployment;
 import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
-import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.services.FirstPartyMetrics;
 import org.adamalang.services.FirstPartyServices;
+import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
@@ -86,7 +78,7 @@ public class EveryMachine {
   public final SimpleExecutor push;
   public final String environment;
 
-  public EveryMachine(Config config, Role role) throws Exception {
+  public EveryMachine(JsonConfig config, Role role) throws Exception {
     MachineHeat.install();
     ConfigObject configObjectForWeb = new ConfigObject(config.get_or_create_child(role == Role.Overlord ? "overlord-web" : "web"));
     if (role == Role.Overlord) {

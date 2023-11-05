@@ -15,26 +15,24 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.services.standalone;
+package org.adamalang.system.contracts;
 
-import org.adamalang.cli.services.distributed.Backend;
-import org.adamalang.cli.services.distributed.Frontend;
-import org.adamalang.net.client.LocalRegionClient;
-import org.adamalang.runtime.sys.capacity.HeatMonitor;
-import org.adamalang.system.contracts.JsonConfig;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.sys.ServiceHeatEstimator;
 
-public class Solo {
-  public static void run(JsonConfig config) throws Exception {
-    // run the core service
-    Backend backend = Backend.run(config);
+import java.util.ArrayList;
 
-    LocalRegionClient client = backend.init.makeLocalClient(new HeatMonitor() {
-      @Override
-      public void heat(String machine, double cpu, double memory) {
+/** configuration values for the service */
+public interface JsonConfig {
+  public String get_string(String field, String defaultValue);
 
-      }
-    });
-    // spin up the frontend
-    new Frontend(config, backend.init, client);
-  }
+  public int get_int(String field, int defaultValue);
+
+  public ServiceHeatEstimator.HeatVector get_heat(String suffix, int cpu_m, int messages, int mem_mb, int connections);
+
+  public ObjectNode get_or_create_child(String field);
+
+  public ArrayList<String> get_str_list(String field);
+
+  public ObjectNode read();
 }
