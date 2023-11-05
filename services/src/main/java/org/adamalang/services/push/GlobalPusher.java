@@ -18,10 +18,7 @@
 package org.adamalang.services.push;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.mysql.DataBase;
@@ -67,14 +64,14 @@ public class GlobalPusher implements Pusher {
   }
 
   @Override
-  public void notify(String domain, NtPrincipal who, String payload, Callback<String> callback) {
+  public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<String> callback) {
     executor.execute(new NamedRunnable("notify") {
       @Override
       public void execute() throws Exception {
         try {
           VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory);
           var subs = PushSubscriptions.list(dataBase, domain, who);
-          callback.success("future-tracking-token");
+          callback.success(pushTrackingToken);
           for (DeviceSubscription subscription : subs) {
             // TODO: test if the subscription is webpush
             Subscription sub = new org.adamalang.services.push.webpush.Subscription(subscription.subscription);

@@ -116,7 +116,7 @@ public class DevPush implements Pusher  {
   }
 
   @Override
-  public void notify(String domain, NtPrincipal who, String payload, Callback<String> callback) {
+  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<String> callback) {
     try {
       ObjectNode push = load();
       ArrayNode subscriptions = (ArrayNode) push.get(domain);
@@ -127,7 +127,7 @@ public class DevPush implements Pusher  {
           push(new Subscription(node.get("subscription").toString()), payload);
         }
       }
-      callback.success("future-tracking-token");
+      callback.success(pushTrackToken);
     } catch (Exception ex) {
       LOGGER.error("push-notify-failure", ex);
       callback.failure(new ErrorCodeException(-5000));

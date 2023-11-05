@@ -19,9 +19,7 @@ package org.adamalang.services.push;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.services.FirstPartyMetrics;
@@ -55,9 +53,15 @@ public class Push extends SimpleService  {
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     switch (method) {
       case "notify": {
+        String pushTrackToken = ProtectedUUID.generate();
         ObjectNode node = Json.parseJsonObject(request);
+        ObjectNode payload = Json.readObject(node, "payload");
+        payload.put("@pt", pushTrackToken);
+        payload.put("@timestamp", LogTimestamp.now());
+        payload.put("@agent", who.agent);
+        payload.put("@authority", who.authority);
         String domain = Json.readString(node, "domain");
-        pusher.notify(domain, who, Json.readObject(node, "payload").toString(), new Callback<String>() {
+        pusher.notify(pushTrackToken, domain, who, payload.toString(), new Callback<>() {
           @Override
           public void success(String value) {
             ObjectNode response = Json.newJsonObject();
