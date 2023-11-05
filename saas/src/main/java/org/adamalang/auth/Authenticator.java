@@ -21,5 +21,5 @@ import org.adamalang.common.Callback;
 
 /** transform an identity into a user */
 public interface Authenticator {
-  public void auth(String identity, Callback<AuthenticatedUser> callback);
+  public void auth(AuthRequest request, Callback<AuthenticatedUser> callback);
 }

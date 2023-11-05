@@ -20,8 +20,10 @@ package org.adamalang.transforms.global;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.adamalang.auth.GlobalAuthenticator;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.frontend.Session;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.impl.global.GlobalPerSessionAuthenticator;
@@ -61,7 +63,8 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void anonymous() throws Exception {
-    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D", null), new String[] {}, new String[] {});
+    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, "masterkey", SimpleExecutor.NOW);
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] {}, new String[] {});
     Assert.assertEquals("D", authenticator.getTransportAssetKey());
     authenticator.updateTransportAssetKey("E");
     Assert.assertEquals("E", authenticator.getTransportAssetKey());
@@ -85,10 +88,11 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void superUser() throws Exception {
+    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, "masterkey", SimpleExecutor.NOW);
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("super").setIssuer("super").signWith(pair.getPrivate()).compact();
-    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D", null), new String[] { publicKey }, new String[] {});
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] { publicKey }, new String[] {});
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override
@@ -109,10 +113,11 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void regionalKey() throws Exception {
+    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, "masterkey", SimpleExecutor.NOW);
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("xyz").setIssuer("region").signWith(pair.getPrivate()).compact();
-    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, "masterkey", new ConnectionContext("a", "b", "c", "D", null), new String[] {  }, new String[] {publicKey});
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] {  }, new String[] {publicKey});
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override

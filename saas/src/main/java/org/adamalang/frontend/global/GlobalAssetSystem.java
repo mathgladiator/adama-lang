@@ -17,6 +17,7 @@
 */
 package org.adamalang.frontend.global;
 
+import org.adamalang.auth.Authenticator;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.frontend.Session;
@@ -44,10 +45,12 @@ public class GlobalAssetSystem implements AssetSystem {
   public final String masterKey;
   public final MultiRegionClient adama;
   public final S3 s3;
+  public final Authenticator authenticator;
 
-  public GlobalAssetSystem(DataBase database, String masterKey, MultiRegionClient adama, S3 s3) {
+  public GlobalAssetSystem(DataBase database, String masterKey, Authenticator authenticator, MultiRegionClient adama, S3 s3) {
     this.database = database;
     this.masterKey = masterKey;
+    this.authenticator = authenticator;
     this.adama = adama;
     this.s3 = s3;
   }
@@ -65,8 +68,8 @@ public class GlobalAssetSystem implements AssetSystem {
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, String channel, String message, Callback<Integer> callback) {
-    PerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(database, masterKey, context, new String[] {}, new String[] {});
-    authenticator.execute(new Session(authenticator), identity, new Callback<AuthenticatedUser>() {
+    PerSessionAuthenticator sessionAuthenticator = new GlobalPerSessionAuthenticator(database, authenticator, context, new String[] {}, new String[] {});
+    sessionAuthenticator.execute(new Session(sessionAuthenticator), identity, new Callback<AuthenticatedUser>() {
       @Override
       public void success(AuthenticatedUser who) {
         AtomicBoolean responded = new AtomicBoolean(false);

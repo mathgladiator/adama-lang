@@ -19,19 +19,16 @@ package org.adamalang.impl.global;
 
 import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
+import org.adamalang.auth.AuthRequest;
+import org.adamalang.auth.Authenticator;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.frontend.Session;
 import org.adamalang.impl.common.FastAuth;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
-import org.adamalang.mysql.model.Secrets;
-import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.security.Keystore;
 import org.adamalang.contracts.data.ParsedToken;
 import org.adamalang.transforms.PerSessionAuthenticator;
 import org.adamalang.auth.AuthenticatedUser;
@@ -40,48 +37,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.PublicKey;
-import java.util.regex.Pattern;
 
 /** the authenticator for the global region */
 public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
   private static final Logger LOGGER = LoggerFactory.getLogger(GlobalPerSessionAuthenticator.class);
   private final DataBase database;
-  private final String masterKey;
+  private final Authenticator authenticator;
   private final String[] superKeys;
   private final String[] regionalPublicKeys;
 
-  public GlobalPerSessionAuthenticator(DataBase database, String masterKey, ConnectionContext defaultContext, String[] superKeys, String[] regionalPublicKeys) {
+  public GlobalPerSessionAuthenticator(DataBase database, Authenticator authenticator, ConnectionContext defaultContext, String[] superKeys, String[] regionalPublicKeys) {
     super(defaultContext);
-    this.masterKey = masterKey;
-    this.superKeys = superKeys;
     this.database = database;
+    this.authenticator = authenticator;
+    this.superKeys = superKeys;
     this.regionalPublicKeys = regionalPublicKeys;
   }
 
   @Override
   public ConnectionContext getTransportContext() {
     return transportContext;
-  }
-
-  private void authDocument(String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) {
-    final Runnable auth;
-    try {
-      if (parsedToken.key_id > 0) {
-        PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
-        auth = () -> Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(identity);
-      } else {
-        String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
-        SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
-        auth = () -> skp.validateTokenThrows(identity);
-      }
-    } catch (Exception ex) {
-      callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
-      return;
-    }
-    auth.run();
-    NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
-    AuthenticatedUser user = new AuthenticatedUser(-1, who, transportContext);
-    callback.success(user);
   }
 
   private void authHost(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
@@ -150,43 +125,6 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     return false;
   }
 
-  private boolean authAdama(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
-    int userId = Integer.parseInt(parsedToken.sub);
-    for (String publicKey64 : Users.listKeys(database, userId)) {
-      PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
-      try {
-        Jwts.parserBuilder()
-            .setSigningKey(publicKey)
-            .requireIssuer("adama")
-            .build()
-            .parseClaimsJws(identity);
-        AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), transportContext);
-        session.identityCache.put(identity, user);
-        callback.success(user);
-        return true;
-      } catch (Exception ex) {
-        // move on
-      }
-    }
-    return false;
-  }
-
-  private void authKeystore(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
-    // otherwise, try a keystore by the authority presented
-    final Keystore keystore;
-    try {
-      String keystoreJson = Authorities.getKeystoreInternal(database, parsedToken.iss);
-      keystore = Keystore.parse(keystoreJson);
-    } catch (ErrorCodeException ex) {
-      callback.failure(ex);
-      return;
-    }
-    NtPrincipal who = keystore.validate(parsedToken.iss, identity);
-    AuthenticatedUser user = new AuthenticatedUser(-1, who, transportContext);
-    session.identityCache.put(identity, user);
-    callback.success(user);
-  }
-
   /** authenticate */
   @Override
   public void execute(Session session, String identityRaw, Callback<AuthenticatedUser> callback) {
@@ -203,36 +141,24 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
       if (FastAuth.process(identity, callback, transportContext)) {
         return;
       }
-
       ParsedToken parsedToken = new ParsedToken(identity);
-      if (parsedToken.iss.startsWith("doc/")) {
-        authDocument(identity, parsedToken, callback);
-        return;
-      }
-      else if ("host".equals(parsedToken.iss)) { // Proxy mode
+      if ("host".equals(parsedToken.iss)) { // Proxy mode
         authHost(session, identity, parsedToken, callback);
         return;
-      }
-      else if ("internal".equals(parsedToken.iss)) { // Document calling another document
+      } else if ("internal".equals(parsedToken.iss)) { // Document calling another document
         authInternal(session, identity, parsedToken, callback);
         return;
-      }
-      else if ("super".equals(parsedToken.iss)) { // The superman machine
+      } else if ("super".equals(parsedToken.iss)) { // The superman machine
         if (authSuper(session, identity, parsedToken, callback)) {
           return;
         }
-      }
-      else if ("region".equals(parsedToken.iss)) { // The superman machine
+      } else if ("region".equals(parsedToken.iss)) { // The superman machine
         if (authRegion(session, identity, parsedToken, callback)) {
           return;
         }
-      }
-      else if ("adama".equals(parsedToken.iss)) {
-        if (authAdama(session, identity, parsedToken, callback)) {
-          return;
-        }
       } else {
-        authKeystore(session, identity, parsedToken, callback);
+        authenticator.auth(new AuthRequest(identity, transportContext), callback);
+        return;
       }
     } catch (Exception ex) {
       // TODO: classify errors here
@@ -240,5 +166,4 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     }
     callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FORBIDDEN));
   }
-
 }

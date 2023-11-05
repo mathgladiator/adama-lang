@@ -27,12 +27,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** cache authenticator */
 public class CachedAuthenticator implements Authenticator {
-  private final SyncCacheLRU<String, AuthenticatedUser> storage;
-  private final AsyncSharedLRUCache<String, AuthenticatedUser> cache;
+  private final SyncCacheLRU<AuthRequest, AuthenticatedUser> storage;
+  private final AsyncSharedLRUCache<AuthRequest, AuthenticatedUser> cache;
 
   @Override
-  public void auth(String identity, Callback<AuthenticatedUser> callback) {
-    cache.get(identity, callback);
+  public void auth(AuthRequest request, Callback<AuthenticatedUser> callback) {
+    cache.get(request, callback);
   }
 
   public CachedAuthenticator(TimeSource timeSource, int maxCredentials, long maxAge, SimpleExecutor executor, Authenticator finder) {

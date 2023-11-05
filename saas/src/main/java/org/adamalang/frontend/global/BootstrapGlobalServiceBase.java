@@ -51,7 +51,7 @@ public class BootstrapGlobalServiceBase {
       @Override
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
-          final Session session = new Session(new GlobalPerSessionAuthenticator(extern.database, extern.masterKey, context, extern.superPublicKeys, extern.regionalPublicKeys));
+          final Session session = new Session(new GlobalPerSessionAuthenticator(extern.database, extern.authenticator, context, extern.superPublicKeys, extern.regionalPublicKeys));
           final GlobalConnectionNexus globalNexus =
               new GlobalConnectionNexus(
                   extern.region,

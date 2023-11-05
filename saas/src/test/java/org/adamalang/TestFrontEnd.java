@@ -20,6 +20,7 @@ package org.adamalang;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.adamalang.auth.GlobalAuthenticator;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.contracts.Cloud;
@@ -385,7 +386,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", "test-machine", hostKeyPair.getPrivate(), keyId, new String[] {}, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
+    GlobalAuthenticator authenticator = new GlobalAuthenticator(dataBase, masterKey, clientExecutor);
+    this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, authenticator, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", "test-machine", hostKeyPair.getPrivate(), keyId, new String[] {}, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null, null);
     connection = this.frontend.establish(context);

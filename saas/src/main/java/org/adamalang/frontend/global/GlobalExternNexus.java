@@ -19,6 +19,8 @@ package org.adamalang.frontend.global;
 
 import org.adamalang.api.GlobalApiMetrics;
 import org.adamalang.api.RegionApiMetrics;
+import org.adamalang.auth.Authenticator;
+import org.adamalang.auth.GlobalAuthenticator;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.keys.VAPIDFactory;
@@ -68,11 +70,13 @@ public class GlobalExternNexus {
   public final SimpleExecutor metrics;
   public final String machine;
   public final VAPIDFactory vapidFactory;
+  public final Authenticator authenticator;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
     this.email = email;
     this.database = database;
+    this.authenticator = authenticator;
     this.globalApiMetrics = new GlobalApiMetrics(metricsFactory);
     this.regionApiMetrics = new RegionApiMetrics(metricsFactory);
     this.frontendMetrics = new FrontendMetrics(metricsFactory);
@@ -98,6 +102,7 @@ public class GlobalExternNexus {
     attachmentRoot.mkdir();
     this.vapidFactory = new VAPIDFactory(new SecureRandom());
   }
+
   public void close() throws Exception {
     database.close();
     adama.shutdown();

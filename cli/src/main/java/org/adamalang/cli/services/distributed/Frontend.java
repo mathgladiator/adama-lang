@@ -17,6 +17,8 @@
 */
 package org.adamalang.cli.services.distributed;
 
+import org.adamalang.auth.CachedAuthenticator;
+import org.adamalang.auth.GlobalAuthenticator;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.services.CommonServiceInit;
 import org.adamalang.cli.services.FrontendHttpHandler;
@@ -61,10 +63,13 @@ public class Frontend {
     FrontendHttpHandler http = new FrontendHttpHandler(init.alive, init.system, init.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, adama, init.s3);
+    GlobalAuthenticator globalAuthenticator = new GlobalAuthenticator(init.database, init.masterKey, init.em.system);
+    CachedAuthenticator cachedAuthenticator = new CachedAuthenticator(TimeSource.REAL_TIME, 4096, 120 * 1000, init.em.system, globalAuthenticator);
+    cachedAuthenticator.startSweeping(init.em.alive, 10000, 20000);
+    GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, cachedAuthenticator, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
-    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, assets, init.metricsFactory, new File("inflight"), (item) -> {
+    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, cachedAuthenticator, assets, init.metricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     }, init.masterKey, init.webBase, init.region, init.machine, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     System.err.println("ExternNexus constructed");
