@@ -58,8 +58,8 @@ public class Push extends SimpleService  {
         ObjectNode payload = Json.readObject(node, "payload");
         payload.put("@pt", pushTrackToken);
         payload.put("@timestamp", LogTimestamp.now());
-        payload.put("@agent", who.agent);
-        payload.put("@authority", who.authority);
+        payload.put("@ag", who.agent);
+        payload.put("@au", who.authority);
         String domain = Json.readString(node, "domain");
         pusher.notify(pushTrackToken, domain, who, payload.toString(), new Callback<>() {
           @Override
