@@ -128,7 +128,7 @@ public class Connection implements AutoCloseable {
         latch.countDown();
       }
     });
-    if (latch.await(30000, TimeUnit.MILLISECONDS)) {
+    if (latch.await(60000, TimeUnit.MILLISECONDS)) {
       if (value.get() != null) {
         if (value.get() instanceof ObjectNode) {
           return (ObjectNode) value.get();
