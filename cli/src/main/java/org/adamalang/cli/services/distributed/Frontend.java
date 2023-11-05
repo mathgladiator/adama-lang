@@ -60,12 +60,12 @@ public class Frontend {
     domainFinder.startSweeping(init.alive, 1000, 2000);
     CachedRxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, init.system, new GlobalRxHtmlFetcher(init.database, init.em.environment));
     rxHtmlFetcher.startSweeping(init.alive, 1000, 2000);
-    FrontendHttpHandler http = new FrontendHttpHandler(init.alive, init.system, init.webConfig, domainFinder, rxHtmlFetcher, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
-    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
-    Logger accessLog = LoggerFactory.getLogger("access");
     GlobalAuthenticator globalAuthenticator = new GlobalAuthenticator(init.database, init.masterKey, init.em.system);
     CachedAuthenticator cachedAuthenticator = new CachedAuthenticator(TimeSource.REAL_TIME, 4096, 120 * 1000, init.em.system, globalAuthenticator);
     cachedAuthenticator.startSweeping(init.em.alive, 10000, 20000);
+    FrontendHttpHandler http = new FrontendHttpHandler(init.alive, init.system, init.webConfig, domainFinder, rxHtmlFetcher, cachedAuthenticator, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
+    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
+    Logger accessLog = LoggerFactory.getLogger("access");
     GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, cachedAuthenticator, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");

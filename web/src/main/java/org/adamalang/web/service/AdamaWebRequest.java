@@ -23,6 +23,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.adamalang.common.Json;
 import org.adamalang.web.io.ConnectionContext;
 
@@ -45,6 +47,11 @@ public class AdamaWebRequest {
     for (Map.Entry<String, String> entry : req.headers()) {
       String headerName = entry.getKey().toLowerCase(Locale.ROOT);
       if (headerName.equals("cookie")) {
+        for (Cookie cookie : ServerCookieDecoder.STRICT.decodeAll(entry.getValue())) {
+          if ("id_default".equals(cookie.name())) {
+            _identity = cookie.value();
+          }
+        }
         continue;
       }
       headers.put(headerName, entry.getValue());

@@ -19,6 +19,7 @@ package org.adamalang.cli.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
+import org.adamalang.auth.Authenticator;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.multiregion.MultiRegionClient;
@@ -53,39 +54,42 @@ public class FrontendHttpHandler implements HttpHandler {
   private final WebConfig webConfig;
   private final PrivateKeyWithId signingKey;
   private final HttpResultCache getCache;
+  private final Authenticator authenticator;
 
-  public FrontendHttpHandler(AtomicBoolean alive, SimpleExecutor executor, WebConfig webConfig, DomainFinder domainFinder, RxHtmlFetcher rxHtmlFetcher, MultiRegionClient client, PrivateKeyWithId signingKey) {
+  public FrontendHttpHandler(AtomicBoolean alive, SimpleExecutor executor, WebConfig webConfig, DomainFinder domainFinder, RxHtmlFetcher rxHtmlFetcher, Authenticator authenticator, MultiRegionClient client, PrivateKeyWithId signingKey) {
     this.webConfig = webConfig;
     this.domainFinder = domainFinder;
     this.client = client;
     this.rxHtmlFetcher = rxHtmlFetcher;
     this.signingKey = signingKey;
     this.getCache = new HttpResultCache(TimeSource.REAL_TIME);
+    this.authenticator = authenticator;
     HttpResultCache.sweeper(executor, alive, this.getCache, 500, 1500);
   }
 
   @Override
   public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+    NtPrincipal who = NtPrincipal.NO_ONE;
     switch (method) {
       case PUT:
-        handlePost(uri, headers, parametersJson, body, callback);
+        handlePost(who, uri, headers, parametersJson, body, callback);
         return;
       case OPTIONS:
-        handleOptions(uri, headers, parametersJson, callback);
+        handleOptions(who, uri, headers, parametersJson, callback);
         return;
       case DELETE:
-        handleDelete(uri, headers, parametersJson, callback);
+        handleDelete(who, uri, headers, parametersJson, callback);
         return;
       case GET:
       default:
-        handleGet(uri, headers, parametersJson, callback);
+        handleGet(who, uri, headers, parametersJson, callback);
     }
   }
 
-  public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+  public void handleOptions(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
-      WebGet get = new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), skr.uri, new TreeMap<>(), new NtDynamic("{}"));
+      WebGet get = new WebGet(new WebContext(who, "origin", "ip"), skr.uri, new TreeMap<>(), new NtDynamic("{}"));
       client.webOptions(skr.space, skr.key, get, new Callback<>() {
         @Override
         public void success(WebResponse value) {
@@ -118,7 +122,7 @@ public class FrontendHttpHandler implements HttpHandler {
     return host;
   }
 
-  public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+  public void handleGet(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     String host = extractHost(headers, callback);
     if (host == null) {
       return; // handled by extractHost
@@ -127,7 +131,7 @@ public class FrontendHttpHandler implements HttpHandler {
     boolean isSpecial = webConfig.specialDomains.contains(host);
     if (!isSpecial) {
       if (host.endsWith("." + webConfig.regionalDomain)) {
-        get(SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
+        get(who, SpaceKeyRequest.parse(uri), headers, parametersJson, callback);
         return;
       }
 
@@ -135,9 +139,9 @@ public class FrontendHttpHandler implements HttpHandler {
         if (host.endsWith("." + suffix)) {
           String space = host.substring(0, host.length() - suffix.length() - 1);
           if (uri.startsWith("/~d/")) {
-            get(new SpaceKeyRequest(space, "default-document", uri.substring(3)), headers, parametersJson, callback);
+            get(who, new SpaceKeyRequest(space, "default-document", uri.substring(3)), headers, parametersJson, callback);
           } else {
-            getSpace(space, uri, headers, parametersJson, callback);
+            getSpace(who, space, uri, headers, parametersJson, callback);
           }
           return;
         }
@@ -155,9 +159,9 @@ public class FrontendHttpHandler implements HttpHandler {
           }
           if (domain.key != null && route) {
             SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uriToRoute);
-            get(skr, headers, parametersJson, callback);
+            get(who, skr, headers, parametersJson, callback);
           } else {
-            getSpace(domain.space, uri, headers, parametersJson, callback);
+            getSpace(who, domain.space, uri, headers, parametersJson, callback);
           }
         } else {
           LOGGER.error("domain-not-mapped:" + host);
@@ -173,17 +177,17 @@ public class FrontendHttpHandler implements HttpHandler {
     });
   }
 
-  public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+  public void handleDelete(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     SpaceKeyRequest skr = SpaceKeyRequest.parse(uri);
     if (skr != null) {
-      WebDelete delete = new WebDelete(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
+      WebDelete delete = new WebDelete(contextOf(who, headers), skr.uri, headers, new NtDynamic(parametersJson));
       client.webDelete(skr.space, skr.key, delete, route(skr, callback, null));
     }
     callback.failure(new ErrorCodeException(-1));
   }
 
-  private WebContext contextOf(TreeMap<String, String> headers) {
-    return new WebContext(NtPrincipal.NO_ONE, headers.get("origin"), headers.get("remote-ip"));
+  private WebContext contextOf(NtPrincipal who, TreeMap<String, String> headers) {
+    return new WebContext(who, headers.get("origin"), headers.get("remote-ip"));
   }
 
   private Callback<WebResponse> route(SpaceKeyRequest skr, Callback<HttpResult> callback, BiConsumer<Integer, HttpResult> writeToCache) {
@@ -233,19 +237,19 @@ public class FrontendHttpHandler implements HttpHandler {
     };
   }
 
-  public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+  public void handlePost(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     String host = extractHost(headers, callback);
     if (host == null) {
       return;
     }
     if (host.endsWith("." + webConfig.regionalDomain)) {
-      post(SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
+      post(who, SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
       return;
     }
     for (String suffix : webConfig.globalDomains) {
       if (host.endsWith("." + suffix)) {
         String space = host.substring(0, host.length() - suffix.length() - 1);
-        post(new SpaceKeyRequest(space, "default-document", uri), headers, parametersJson, body, callback);
+        post(who, new SpaceKeyRequest(space, "default-document", uri), headers, parametersJson, body, callback);
         return;
       }
     }
@@ -254,13 +258,13 @@ public class FrontendHttpHandler implements HttpHandler {
       public void success(Domain domain) {
         if (domain != null) {
           if (domain.key != null) {
-            post(new SpaceKeyRequest(domain.space, domain.key, uri), headers, parametersJson, body, callback);
+            post(who, new SpaceKeyRequest(domain.space, domain.key, uri), headers, parametersJson, body, callback);
           } else {
             KeyPrefixUri kpu = KeyPrefixUri.fromCompleteUri(uri);
-            post(new SpaceKeyRequest(domain.space, kpu.key, kpu.uri), headers, parametersJson, body, callback);
+            post(who, new SpaceKeyRequest(domain.space, kpu.key, kpu.uri), headers, parametersJson, body, callback);
           }
         } else {
-          post(SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
+          post(who, SpaceKeyRequest.parse(uri), headers, parametersJson, body, callback);
         }
       }
 
@@ -271,9 +275,9 @@ public class FrontendHttpHandler implements HttpHandler {
     });
   }
 
-  private void post(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+  private void post(NtPrincipal who, SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     if (skr != null) {
-      WebPut put = new WebPut(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson), body);
+      WebPut put = new WebPut(contextOf(who, headers), skr.uri, headers, new NtDynamic(parametersJson), body);
       client.webPut(skr.space, skr.key, put, route(skr, callback, null));
     } else {
       callback.success(null);
@@ -293,9 +297,9 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
-  private void get(SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+  private void get(NtPrincipal who, SpaceKeyRequest skr, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     if (skr != null) {
-      WebGet get = new WebGet(contextOf(headers), skr.uri, headers, new NtDynamic(parametersJson));
+      WebGet get = new WebGet(contextOf(who, headers), skr.uri, headers, new NtDynamic(parametersJson));
       String cacheKey = skr.cacheKey(parametersJson);
       HttpResult cachedResult = getCache.get(cacheKey);
       if (cachedResult != null) {
@@ -308,7 +312,7 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
-  private void getSpace(String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+  private void getSpace(NtPrincipal who, String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     rxHtmlFetcher.fetch(space, new Callback<>() {
       @Override
       public void success(LiveSiteRxHtmlResult result) {
@@ -316,12 +320,12 @@ public class FrontendHttpHandler implements HttpHandler {
           callback.success(new HttpResult("text/html", result.html, false));
           return;
         }
-        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
+        get(who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        get(new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
+        get(who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
     });
   }

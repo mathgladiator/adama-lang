@@ -541,6 +541,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     if (host == null) {
       host = "";
     }
+    boolean isDevBox = "localhost".equals(host) || host.startsWith("localhost:");
     if (webConfig.healthCheckPath.equals(req.uri())) { // health checks
       sendImmediate(metrics.webhandler_healthcheck, req, ctx, HttpResponseStatus.OK, ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8), "text/text; charset=UTF-8", true);
       return true;
@@ -593,16 +594,29 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         }
         res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
         DefaultCookie cookie = new DefaultCookie("skvp_" + name, value);
-        cookie.setSameSite(CookieHeaderNames.SameSite.None);
+        cookie.setSameSite(CookieHeaderNames.SameSite.Lax);
         cookie.setMaxAge(60 * 60 * 24 * 7);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
+        cookie.setPath("/");
         res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
         res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
         sendWithKeepAlive(webConfig, ctx, req, res);
       } else {
         sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
       }
+      return true;
+    } else if (req.uri().startsWith("/~stash/") && (req.method() == HttpMethod.OPTIONS)) {
+      String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+      if (origin == null) { // CORS support directly
+        sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
+        return true;
+      }
+      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+      res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
+      sendWithKeepAlive(webConfig, ctx, req, res);
       return true;
     } else if (req.uri().startsWith("/~stash/") && (req.method() == HttpMethod.PUT)) {
       try {
@@ -612,12 +626,12 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         String name = body.get("name").textValue();
         String value = body.get("identity").textValue();
         int maxAge = body.get("max-age").intValue();
-        final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
         String origin = req.headers().get(HttpHeaderNames.ORIGIN);
         if (origin == null) { // CORS support directly
           sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
           return true;
         }
+        final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
         res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
         res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
@@ -625,7 +639,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         cookie.setSameSite(CookieHeaderNames.SameSite.Strict);
         cookie.setMaxAge(maxAge);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        if (!isDevBox) {
+          cookie.setSecure(true);
+        }
+        cookie.setPath("/");
         res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
         res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
         sendWithKeepAlive(webConfig, ctx, req, res);
@@ -646,7 +663,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       cookie.setSameSite(CookieHeaderNames.SameSite.None);
       cookie.setMaxAge(60 * 60 * 24 * 7);
       cookie.setHttpOnly(true);
-      cookie.setSecure(true);
+      if (!isDevBox) {
+        cookie.setSecure(true);
+      }
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
       res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
       sendWithKeepAlive(webConfig, ctx, req, res);

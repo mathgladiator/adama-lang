@@ -223,6 +223,13 @@ public class TestClientRequestBuilder {
     return this;
   }
 
+  public TestClientRequestBuilder put(final String uri, final String data) {
+    method = HttpMethod.PUT;
+    this.uri = uri;
+    postBody = data;
+    return this;
+  }
+
   public TestClientRequestBuilder options(final String uri) {
     method = HttpMethod.OPTIONS;
     this.uri = uri;

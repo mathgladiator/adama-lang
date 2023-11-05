@@ -109,6 +109,27 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
+            .put("/~stash/fooyo", "{\"name\":\"def\",\"identity\":\"id\",\"max-age\":100000}")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("origin", "https://Oooooo.com")
+            .put("/~stash/fooyo", "{\"name\":\"def\",\"identity\":\"id\",\"max-age\":100000}")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("OK");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
             .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", SecureAssetUtil.makeAssetKeyHeader()))
             .get("/~assets/space/key/id=123")
             .execute(callback);
