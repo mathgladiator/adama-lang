@@ -33,7 +33,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"3;0;3;14;shellClasses.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n  });");
@@ -45,7 +45,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"3;0;3;14;shellClasses.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n  });");
@@ -56,7 +56,7 @@ public class TemplateShellClassesTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n");
     gold.append("\n");
-    gold.append("\n</style><script src=\"oh-hi.js\" ln:ch=\"1;1;1;24;shellClasses.rx.html\"></script></head><body class=\"my\"></body><script>");
+    gold.append("\n</style><script src=\"oh-hi.js\"></script></head><body class=\"my\"></body><script>");
     gold.append("\n  RxHTML.init();");
     gold.append("\n</script></html>");
     return gold.toString();

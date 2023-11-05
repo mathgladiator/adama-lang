@@ -33,7 +33,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" authenticate=\"\" ln:ch=\"0;0;0;27;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',c).abort) {");
@@ -43,7 +43,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user:text\" authenticate=\"\" ln:ch=\"3;0;3;37;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user'], function(b,a) {");
     gold.append("\n    var d=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',d).abort) {");
@@ -53,7 +53,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Text type user profile '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$usery:string\" authenticate=\"\" ln:ch=\"6;0;6;40;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$usery:string\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','usery'], function(b,a) {");
     gold.append("\n    var e=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',e).abort) {");
@@ -63,7 +63,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Text type user profile '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/profile\" authenticate=\"\" ln:ch=\"9;0;9;40;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/profile\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','profile'], function(b,a) {");
     gold.append("\n    var f=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',f).abort) {");
@@ -73,7 +73,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' No type '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/settings/$key\" authenticate=\"\" ln:ch=\"12;0;12;46;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/settings/$key\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','settings','text','key'], function(b,a) {");
     gold.append("\n    var g=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',g).abort) {");
@@ -83,7 +83,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/sets1/$key:number\" authenticate=\"\" ln:ch=\"15;0;15;50;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/sets1/$key:number\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','sets1','number','key'], function(b,a) {");
     gold.append("\n    var h=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',h).abort) {");
@@ -93,7 +93,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/sets2/$key:int\" authenticate=\"\" ln:ch=\"18;0;18;47;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/sets2/$key:int\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','sets2','number','key'], function(b,a) {");
     gold.append("\n    var i=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',i).abort) {");
@@ -103,7 +103,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/sets3/$key:double\" authenticate=\"\" ln:ch=\"21;0;21;50;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/sets3/$key:double\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','sets3','number','key'], function(b,a) {");
     gold.append("\n    var j=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',j).abort) {");
@@ -113,7 +113,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/yolo\" authenticate=\"\" redirect=\"/bounce\" ln:ch=\"24;0;24;50;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/yolo\" authenticate=\"\" redirect=\"/bounce\">");
     gold.append("\n  $.PG(['fixed','yolo'], function(b,a) {");
     gold.append("\n    var k=$.aRDz('/bounce');");
     gold.append("\n    if($.ID('default',k).abort) {");
@@ -122,7 +122,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    var k=$.X();");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/bounce\" authenticate=\"\" ln:ch=\"26;0;26;33;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/bounce\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','bounce'], function(b,a) {");
     gold.append("\n    var l=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',l).abort) {");
@@ -131,7 +131,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    var l=$.X();");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/login\" default-redirect-source=\"\" ln:ch=\"28;0;28;43;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/login\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','login'], function(b,a) {");
     gold.append("\n    var m=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");
@@ -144,7 +144,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" authenticate=\"\" ln:ch=\"0;0;0;27;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',c).abort) {");
@@ -154,7 +154,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user:text\" authenticate=\"\" ln:ch=\"3;0;3;37;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user'], function(b,a) {");
     gold.append("\n    var d=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',d).abort) {");
@@ -164,7 +164,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Text type user profile '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$usery:string\" authenticate=\"\" ln:ch=\"6;0;6;40;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$usery:string\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','usery'], function(b,a) {");
     gold.append("\n    var e=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',e).abort) {");
@@ -174,7 +174,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Text type user profile '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/profile\" authenticate=\"\" ln:ch=\"9;0;9;40;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/profile\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','profile'], function(b,a) {");
     gold.append("\n    var f=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',f).abort) {");
@@ -184,7 +184,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' No type '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/settings/$key\" authenticate=\"\" ln:ch=\"12;0;12;46;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/settings/$key\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','settings','text','key'], function(b,a) {");
     gold.append("\n    var g=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',g).abort) {");
@@ -194,7 +194,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/sets1/$key:number\" authenticate=\"\" ln:ch=\"15;0;15;50;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/sets1/$key:number\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','sets1','number','key'], function(b,a) {");
     gold.append("\n    var h=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',h).abort) {");
@@ -204,7 +204,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/sets2/$key:int\" authenticate=\"\" ln:ch=\"18;0;18;47;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/sets2/$key:int\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','sets2','number','key'], function(b,a) {");
     gold.append("\n    var i=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',i).abort) {");
@@ -214,7 +214,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/$user/sets3/$key:double\" authenticate=\"\" ln:ch=\"21;0;21;50;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/$user/sets3/$key:double\" authenticate=\"\">");
     gold.append("\n  $.PG(['text','user','fixed','sets3','number','key'], function(b,a) {");
     gold.append("\n    var j=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',j).abort) {");
@@ -224,7 +224,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    b.append($.T(' Keys for a user '));");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/yolo\" authenticate=\"\" redirect=\"/bounce\" ln:ch=\"24;0;24;50;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/yolo\" authenticate=\"\" redirect=\"/bounce\">");
     gold.append("\n  $.PG(['fixed','yolo'], function(b,a) {");
     gold.append("\n    var k=$.aRDz('/bounce');");
     gold.append("\n    if($.ID('default',k).abort) {");
@@ -233,7 +233,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    var k=$.X();");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/bounce\" authenticate=\"\" ln:ch=\"26;0;26;33;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/bounce\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','bounce'], function(b,a) {");
     gold.append("\n    var l=$.aRDz('/login');");
     gold.append("\n    if($.ID('default',l).abort) {");
@@ -242,7 +242,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
     gold.append("\n    var l=$.X();");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/login\" default-redirect-source=\"\" ln:ch=\"28;0;28;43;multipage.rx.html\">");
+    gold.append("\n  // <page uri=\"/login\" default-redirect-source=\"\">");
     gold.append("\n  $.PG(['fixed','login'], function(b,a) {");
     gold.append("\n    var m=$.X();");
     gold.append("\n    b.append($.T(' Simple Page '));");

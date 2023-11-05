@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.common.web.UriMatcher;
 import org.adamalang.rxhtml.Bundler;
 import org.adamalang.rxhtml.template.Task;
@@ -161,14 +162,14 @@ public class RxHTMLScanner implements AutoCloseable {
                 @Override
                 public void warn(Element element, String warning) {
                   errorCount.incrementAndGet();
-                  errors.append("<li>").append(warning).append("</li>\n");
-                  io.notice("rxhtml|warning:" + warning);
-                  io.notice("rxhtml|" + element.html());
+                  String location = element.attr("ln:ch");
+                  errors.append("<li><b>").append(location).append("</b> : ").append(warning).append("</li>\n");
+                  io.notice("rxhtml|warning:" + warning + " @ " + location);
                 }
               };
               try {
                 long started = System.currentTimeMillis();
-                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtml(scanRoot)), ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(rxhtml(scanRoot), true), "test"), ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;

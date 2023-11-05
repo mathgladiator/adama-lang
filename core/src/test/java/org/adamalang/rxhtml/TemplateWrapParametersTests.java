@@ -33,11 +33,11 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;wrapParameters.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\" ln:ch=\"1;1;1;68;wrapParameters.rx.html\">");
+    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.SA(d,'parameter:a',\"123\");");
     gold.append("\n    {");
@@ -67,11 +67,11 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;wrapParameters.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\" ln:ch=\"1;1;1;68;wrapParameters.rx.html\">");
+    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    $.SA(d,'parameter:a',\"123\");");
     gold.append("\n    {");

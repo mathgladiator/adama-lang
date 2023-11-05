@@ -33,11 +33,11 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;monitorSimple.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <form rx:action=\"send:blah\" ln:ch=\"1;1;1;29;monitorSimple.rx.html\">");
+    gold.append("\n    // <form rx:action=\"send:blah\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'blah');");
     gold.append("\n    var e=[];");
@@ -47,7 +47,7 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,f);");
     gold.append("\n");
-    gold.append("\n    // <div rx:monitor=\"set\" rx:fall=\"set:x=0\" rx:rise=\"submit\" ln:ch=\"2;2;2;59;monitorSimple.rx.html\">");
+    gold.append("\n    // <div rx:monitor=\"set\" rx:fall=\"set:x=0\" rx:rise=\"submit\">");
     gold.append("\n    var g=$.E('div');");
     gold.append("\n    $.oSBMT(g,'rise',a);");
     gold.append("\n    var h=[];");
@@ -75,11 +75,11 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;monitorSimple.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <form rx:action=\"send:blah\" ln:ch=\"1;1;1;29;monitorSimple.rx.html\">");
+    gold.append("\n    // <form rx:action=\"send:blah\">");
     gold.append("\n    var d=$.E('form');");
     gold.append("\n    $.aSD(d,a,'blah');");
     gold.append("\n    var e=[];");
@@ -89,7 +89,7 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    f.push($.bS(d,$.pV(a),'send_failed',true));");
     gold.append("\n    $.onB(d,'failure',a,f);");
     gold.append("\n");
-    gold.append("\n    // <div rx:monitor=\"set\" rx:fall=\"set:x=0\" rx:rise=\"submit\" ln:ch=\"2;2;2;59;monitorSimple.rx.html\">");
+    gold.append("\n    // <div rx:monitor=\"set\" rx:fall=\"set:x=0\" rx:rise=\"submit\">");
     gold.append("\n    var g=$.E('div');");
     gold.append("\n    $.oSBMT(g,'rise',a);");
     gold.append("\n    var h=[];");

@@ -18,6 +18,7 @@
 package org.adamalang.support;
 
 import org.adamalang.common.DefaultCopyright;
+import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.Bundler;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -60,7 +61,7 @@ public class GenerateTemplateTests {
           System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
-        RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file)), ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
+        RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file), false), ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
         String gold = fixTestGold(result.toString());
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);

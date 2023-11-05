@@ -33,11 +33,11 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;scopeView.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:scope=\"obj\" rx:expand-view-state=\"\" ln:ch=\"1;1;1;42;scopeView.rx.html\">");
+    gold.append("\n    // <div rx:scope=\"obj\" rx:expand-view-state=\"\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    var e=$.pIE(a,'obj', true);");
     gold.append("\n    d.append($.L(e,'key'));");
@@ -53,11 +53,11 @@ public class TemplateScopeViewTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;scopeView.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:scope=\"obj\" rx:expand-view-state=\"\" ln:ch=\"1;1;1;42;scopeView.rx.html\">");
+    gold.append("\n    // <div rx:scope=\"obj\" rx:expand-view-state=\"\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    var e=$.pIE(a,'obj', true);");
     gold.append("\n    d.append($.L(e,'key'));");

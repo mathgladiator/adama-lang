@@ -27,14 +27,17 @@ import java.util.List;
 
 /** simple bundler to repackage a set of RxHTML files into one file */
 public class Bundler {
-  public static String bundle(List<File> files) throws Exception {
+  public static String bundle(List<File> files, boolean inject) throws Exception {
     StringBuilder output = new StringBuilder();
     output.append("<forest>\n");
     for (File file : files) {
       Document useDoc = Jsoup.parse(file);
-      String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html(), "");
-      output.append(partial);
-//      output.append(InjectCoordInline.execute(partial, file.getName()));
+      String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), "");
+      if (inject) {
+        output.append(InjectCoordInline.execute(partial, file.getName()));
+      } else {
+        output.append(partial);
+      }
     }
     output.append("</forest>\n");
     return output.toString();

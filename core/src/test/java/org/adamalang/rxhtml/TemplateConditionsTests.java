@@ -33,11 +33,11 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;conditions.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name<val]X[/]\" ln:ch=\"1;1;1;29;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name<val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -50,7 +50,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name<=val]X[/]\" ln:ch=\"2;1;2;30;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name<=val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -63,7 +63,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name=val]X[/]\" ln:ch=\"3;1;3;29;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name=val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -76,7 +76,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name>=val]X[/]\" ln:ch=\"4;1;4;30;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name>=val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -89,7 +89,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name>val]X[/]\" ln:ch=\"5;1;5;29;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name>val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -110,11 +110,11 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/\" ln:ch=\"0;0;0;14;conditions.rx.html\">");
+    gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name<val]X[/]\" ln:ch=\"1;1;1;29;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name<val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -127,7 +127,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name<=val]X[/]\" ln:ch=\"2;1;2;30;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name<=val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -140,7 +140,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name=val]X[/]\" ln:ch=\"3;1;3;29;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name=val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -153,7 +153,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name>=val]X[/]\" ln:ch=\"4;1;4;30;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name>=val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -166,7 +166,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    b.append(d);");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[name>val]X[/]\" ln:ch=\"5;1;5;29;conditions.rx.html\">");
+    gold.append("\n    // <div class=\"[name>val]X[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");

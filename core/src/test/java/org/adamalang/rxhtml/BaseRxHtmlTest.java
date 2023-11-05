@@ -19,6 +19,7 @@ package org.adamalang.rxhtml;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
+import org.adamalang.common.StringHelper;
 import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
@@ -26,6 +27,8 @@ import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,7 +42,9 @@ public abstract class BaseRxHtmlTest {
     if (cachedResult == null) {
       issuesLive = new StringBuilder();
       Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
-      cachedResult = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(source().replaceAll("\r", ""), "test"), ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
+      Document useDoc = Jsoup.parse(source());
+      String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), "");
+      cachedResult = RxHtmlTool.convertStringToTemplateForest(partial, ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
     }
     return cachedResult;
   }

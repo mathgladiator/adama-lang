@@ -33,11 +33,11 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/nest\" ln:ch=\"0;0;0;18;transformCondition.rx.html\">");
+    gold.append("\n  // <page uri=\"/nest\">");
     gold.append("\n  $.PG(['fixed','nest'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[x|is_empty]X is empty[#]X is not empty[/]\" ln:ch=\"1;1;1;57;transformCondition.rx.html\">");
+    gold.append("\n    // <div class=\"[x|is_empty]X is empty[#]X is not empty[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
@@ -59,11 +59,11 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/nest\" ln:ch=\"0;0;0;18;transformCondition.rx.html\">");
+    gold.append("\n  // <page uri=\"/nest\">");
     gold.append("\n  $.PG(['fixed','nest'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div class=\"[x|is_empty]X is empty[#]X is not empty[/]\" ln:ch=\"1;1;1;57;transformCondition.rx.html\">");
+    gold.append("\n    // <div class=\"[x|is_empty]X is empty[#]X is not empty[/]\">");
     gold.append("\n    var d=$.E('div');");
     gold.append("\n    {");
     gold.append("\n      var e={};");

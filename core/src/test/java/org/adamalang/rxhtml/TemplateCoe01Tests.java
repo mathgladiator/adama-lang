@@ -33,11 +33,11 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     StringBuilder gold = new StringBuilder();
     gold.append("JavaScript:(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/huh\" ln:ch=\"0;0;0;17;coe01.rx.html\">");
+    gold.append("\n  // <page uri=\"/huh\">");
     gold.append("\n  $.PG(['fixed','huh'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <fieldset name=\"color\" class=\"blad [view:c=\\'{id}\\'] block [#view:c=\\'{id}\\'] hidden [/view:c=\\'{id}\\']\" ln:ch=\"1;1;1;100;coe01.rx.html\">");
+    gold.append("\n    // <fieldset name=\"color\" class=\"blad [view:c=\\'{id}\\'] block [#view:c=\\'{id}\\'] hidden [/view:c=\\'{id}\\']\">");
     gold.append("\n    var d=$.E('fieldset');");
     gold.append("\n    $.SA(d,'name',\"color\");");
     gold.append("\n    {");
@@ -60,11 +60,11 @@ public class TemplateCoe01Tests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/huh\" ln:ch=\"0;0;0;17;coe01.rx.html\">");
+    gold.append("\n  // <page uri=\"/huh\">");
     gold.append("\n  $.PG(['fixed','huh'], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <fieldset name=\"color\" class=\"blad [view:c=\\'{id}\\'] block [#view:c=\\'{id}\\'] hidden [/view:c=\\'{id}\\']\" ln:ch=\"1;1;1;100;coe01.rx.html\">");
+    gold.append("\n    // <fieldset name=\"color\" class=\"blad [view:c=\\'{id}\\'] block [#view:c=\\'{id}\\'] hidden [/view:c=\\'{id}\\']\">");
     gold.append("\n    var d=$.E('fieldset');");
     gold.append("\n    $.SA(d,'name',\"color\");");
     gold.append("\n    {");
