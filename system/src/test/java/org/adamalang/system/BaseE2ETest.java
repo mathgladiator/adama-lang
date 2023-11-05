@@ -22,7 +22,7 @@ import org.junit.BeforeClass;
 
 public class BaseE2ETest {
   @BeforeClass
-  public static void init() {
+  public static void init() throws Exception {
     if (TestEnvironment.ENV == null) {
       TestEnvironment.ENV = new TestEnvironment();
 

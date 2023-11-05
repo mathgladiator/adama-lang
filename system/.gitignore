@@ -5,3 +5,5 @@ aws.config.json
 stripe.config.json
 archive
 cache
+caravan-*
+archive-*

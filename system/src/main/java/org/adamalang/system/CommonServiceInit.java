@@ -18,6 +18,7 @@
 package org.adamalang.system;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.system.common.CloudBoot;
 import org.adamalang.system.common.EveryMachine;
 import org.adamalang.system.global.DataBaseBoot;
@@ -58,7 +59,7 @@ public class CommonServiceInit {
   public final int monitoringPort;
   public final MachineIdentity identity;
   public final PrivateKey hostKey;
-  public final PrometheusMetricsFactory metricsFactory;
+  public final MetricsFactory metricsFactory;
   public final DataBase database;
   public final NetBase netBase;
   public final GlobalFinder globalFinder;

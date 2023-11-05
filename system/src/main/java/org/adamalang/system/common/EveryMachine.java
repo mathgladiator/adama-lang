@@ -18,6 +18,8 @@
 package org.adamalang.system.common;
 
 import org.adamalang.api.SelfClient;
+import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.system.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
@@ -57,7 +59,7 @@ public class EveryMachine {
   public final MachineIdentity identity;
   public final PrivateKey hostKey;
   public final int monitoringPort;
-  public final PrometheusMetricsFactory metricsFactory;
+  public final MetricsFactory metricsFactory;
   public final String publicKey;
   public final AtomicBoolean alive;
   public final String region;
@@ -92,7 +94,12 @@ public class EveryMachine {
     this.hostKey = keyPair.getPrivate();
     this.publicKey = PublicKeyCodec.encodePublicKey(keyPair);
     this.monitoringPort = config.get_int("monitoring-" + role.name + "-port", role.monitoringPort);
-    this.metricsFactory = new PrometheusMetricsFactory(monitoringPort);
+    String monitor = config.get_string("monitoring-system", "prometheus");
+    if ("prometheus".equals(monitor)) {
+      this.metricsFactory = new PrometheusMetricsFactory(monitoringPort);
+    } else {
+      this.metricsFactory = new NoOpMetricsFactory();
+    }
     this.alive = new AtomicBoolean(true);
     this.region = config.get_string("region", null);
     this.role = role.name;

@@ -47,11 +47,13 @@ public class CloudBoot {
     this.sqs = new SQS(webBase, awsConfig, awsMetrics);
     AtomicReference<Runnable> cancel = new AtomicReference<>();
     this.ses = new SES(webBase, awsConfig, awsMetrics);
+    File logs = new File("logs");
+    logs.mkdirs();
     cancel.set(system.schedule(new NamedRunnable("archive-s3") {
       @Override
       public void execute() throws Exception {
         try {
-          s3.uploadLogs(new File("logs"), logsPrefix);
+          s3.uploadLogs(logs, logsPrefix);
         } catch (Exception ex) {
           LOGGER.error("error-uploading-logs", ex);
         } finally {
