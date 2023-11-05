@@ -1516,8 +1516,8 @@ var RxHTML = (function () {
     // the apply function is how we inject the value into the object
     var apply = function (val) { };
 
+    var name = "";
     if (hasName && (justSet || isInputBox || isFieldSet || isPull)) {
-      var name = "";
       name = el.name;
       if (name == "") { // this is a special name for things that don't get picked up
         return;
@@ -1572,7 +1572,7 @@ var RxHTML = (function () {
     } else if (isInputBox) {
       var type = ("type" in el) ? el.type.toUpperCase() : "TEXT";
       if (type == "SUBMIT" || type == "RESET") return;
-      if (type == "PASSWORD" && !allow_passwords) {
+      if ((type == "PASSWORD" || name == "password") && !allow_passwords) {
         return;
       }
       if (type == "CHECKBOX") {
@@ -1611,7 +1611,7 @@ var RxHTML = (function () {
 
   // HELPER | return a password from the given form
   var get_password = function (el) {
-    if (el.tagName.toUpperCase() == "INPUT" && el.type.toUpperCase() == "PASSWORD") {
+    if (el.tagName.toUpperCase() == "INPUT" && (el.type.toUpperCase() == "PASSWORD" || el.name == "password")) {
       return [el.name, el.value];
     }
     if ("children" in el) {
@@ -2462,6 +2462,33 @@ var RxHTML = (function () {
     form.target = iframeTarget.name;
   };
 
+  var stash_identity = function(name, identity, connection) {
+    var req = {};
+    req['name'] = name;
+    req['identity'] = identity;
+    req['max-age'] = 5529600;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          connection.IdentityStash(identity, name, {
+            success: function() {
+              // THIS HAS DRAGONS UNTIL A FULL PRODUCTION DEPLOYMENT
+              // localStorage.setItem("identity_" + name, "cookie:" + name);
+            },
+            failure: function(xyz) {
+
+            }
+          });
+        }
+      }
+    };
+    xhttp.open("PUT", self.protocol + "//" + self.host + "/~stash/" + Date.now(), true);
+    xhttp.withCredentials = true;
+    xhttp.send(JSON.stringify(req));
+  };
+
   // RUNTIME | rx:action=domain:sign-in
   self.adDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
@@ -2475,6 +2502,7 @@ var RxHTML = (function () {
         success: function (payload) {
           identities[identityName] = payload.identity;
           localStorage.setItem("identity_" + identityName, payload.identity);
+          stash_identity(identityName, payload.identity, connection);
           // TODO: blow away connections
           self.goto(rxobj.rx_forward, false);
           fire_success(form);
