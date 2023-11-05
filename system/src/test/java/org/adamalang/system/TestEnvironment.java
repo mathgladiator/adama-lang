@@ -17,12 +17,34 @@
 */
 package org.adamalang.system;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
+import org.adamalang.system.contracts.JsonConfig;
+
+import java.io.File;
+import java.nio.file.Files;
+
 public class TestEnvironment {
   public static TestEnvironment ENV;
+  private int port;
 
   public TestEnvironment() {
     System.out.println("[test environment started]");
     // connect to database for global region
+  }
+
+  private ObjectNode getAwsConfig() throws Exception {
+    File configFile = new File("./system/aws.config.json");
+    if (!configFile.exists()) {
+      configFile = new File("./aws.config.json");
+    }
+    return Json.parseJsonObject(Files.readString(configFile.toPath()));
+  }
+
+  public JsonConfig assembleConfigNewMachine(Role role) {
+    ObjectNode config = Json.newJsonObject();
+
+    return new JsonConfig(config);
   }
 
   public void shutdown() {

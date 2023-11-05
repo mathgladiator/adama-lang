@@ -27,7 +27,7 @@ public class Arguments {
 		public static SpaceCreateArgs from(String[] args, int start) {
 			SpaceCreateArgs returnArgs = new SpaceCreateArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -84,7 +84,7 @@ public class Arguments {
 		public static SpaceDeleteArgs from(String[] args, int start) {
 			SpaceDeleteArgs returnArgs = new SpaceDeleteArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -143,7 +143,7 @@ public class Arguments {
 		public static SpaceDeployArgs from(String[] args, int start) {
 			SpaceDeployArgs returnArgs = new SpaceDeployArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -225,7 +225,7 @@ public class Arguments {
 		public static SpaceDevelopersArgs from(String[] args, int start) {
 			SpaceDevelopersArgs returnArgs = new SpaceDevelopersArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -283,7 +283,7 @@ public class Arguments {
 		public static SpaceEncryptPrivArgs from(String[] args, int start) {
 			SpaceEncryptPrivArgs returnArgs = new SpaceEncryptPrivArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -353,7 +353,7 @@ public class Arguments {
 		public static SpaceEncryptSecretArgs from(String[] args, int start) {
 			SpaceEncryptSecretArgs returnArgs = new SpaceEncryptSecretArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -410,7 +410,7 @@ public class Arguments {
 		public static SpaceGenerateKeyArgs from(String[] args, int start) {
 			SpaceGenerateKeyArgs returnArgs = new SpaceGenerateKeyArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -468,7 +468,7 @@ public class Arguments {
 		public static SpaceGetArgs from(String[] args, int start) {
 			SpaceGetArgs returnArgs = new SpaceGetArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -539,7 +539,7 @@ public class Arguments {
 		public static SpaceGetPolicyArgs from(String[] args, int start) {
 			SpaceGetPolicyArgs returnArgs = new SpaceGetPolicyArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -610,7 +610,7 @@ public class Arguments {
 		public static SpaceGetRxhtmlArgs from(String[] args, int start) {
 			SpaceGetRxhtmlArgs returnArgs = new SpaceGetRxhtmlArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -681,7 +681,7 @@ public class Arguments {
 		public static SpaceListArgs from(String[] args, int start) {
 			SpaceListArgs returnArgs = new SpaceListArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -742,7 +742,7 @@ public class Arguments {
 		public static SpaceMetricsArgs from(String[] args, int start) {
 			SpaceMetricsArgs returnArgs = new SpaceMetricsArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -814,7 +814,7 @@ public class Arguments {
 		public static SpaceReflectArgs from(String[] args, int start) {
 			SpaceReflectArgs returnArgs = new SpaceReflectArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -898,7 +898,7 @@ public class Arguments {
 		public static SpaceSetPolicyArgs from(String[] args, int start) {
 			SpaceSetPolicyArgs returnArgs = new SpaceSetPolicyArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -970,7 +970,7 @@ public class Arguments {
 		public static SpaceSetRoleArgs from(String[] args, int start) {
 			SpaceSetRoleArgs returnArgs = new SpaceSetRoleArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1054,7 +1054,7 @@ public class Arguments {
 		public static SpaceSetRxhtmlArgs from(String[] args, int start) {
 			SpaceSetRxhtmlArgs returnArgs = new SpaceSetRxhtmlArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1127,7 +1127,7 @@ public class Arguments {
 		public static SpaceUploadArgs from(String[] args, int start) {
 			SpaceUploadArgs returnArgs = new SpaceUploadArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1223,7 +1223,7 @@ public class Arguments {
 		public static AuthorityAppendLocalArgs from(String[] args, int start) {
 			AuthorityAppendLocalArgs returnArgs = new AuthorityAppendLocalArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1305,7 +1305,7 @@ public class Arguments {
 		public static AuthorityCreateArgs from(String[] args, int start) {
 			AuthorityCreateArgs returnArgs = new AuthorityCreateArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1342,7 +1342,7 @@ public class Arguments {
 		public static AuthorityCreateLocalArgs from(String[] args, int start) {
 			AuthorityCreateLocalArgs returnArgs = new AuthorityCreateLocalArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1424,7 +1424,7 @@ public class Arguments {
 		public static AuthorityDestroyArgs from(String[] args, int start) {
 			AuthorityDestroyArgs returnArgs = new AuthorityDestroyArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1482,7 +1482,7 @@ public class Arguments {
 		public static AuthorityGetArgs from(String[] args, int start) {
 			AuthorityGetArgs returnArgs = new AuthorityGetArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1551,7 +1551,7 @@ public class Arguments {
 		public static AuthorityListArgs from(String[] args, int start) {
 			AuthorityListArgs returnArgs = new AuthorityListArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1587,7 +1587,7 @@ public class Arguments {
 		public static AuthoritySetArgs from(String[] args, int start) {
 			AuthoritySetArgs returnArgs = new AuthoritySetArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1659,7 +1659,7 @@ public class Arguments {
 		public static AuthoritySignArgs from(String[] args, int start) {
 			AuthoritySignArgs returnArgs = new AuthoritySignArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1741,7 +1741,7 @@ public class Arguments {
 		public static AccountSetPasswordArgs from(String[] args, int start) {
 			AccountSetPasswordArgs returnArgs = new AccountSetPasswordArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1779,7 +1779,7 @@ public class Arguments {
 		public static CodeBundlePlanArgs from(String[] args, int start) {
 			CodeBundlePlanArgs returnArgs = new CodeBundlePlanArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1876,7 +1876,7 @@ public class Arguments {
 		public static CodeCompileFileArgs from(String[] args, int start) {
 			CodeCompileFileArgs returnArgs = new CodeCompileFileArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -1960,7 +1960,7 @@ public class Arguments {
 		public static CodeDiagramArgs from(String[] args, int start) {
 			CodeDiagramArgs returnArgs = new CodeDiagramArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2032,7 +2032,7 @@ public class Arguments {
 		public static CodeFormatArgs from(String[] args, int start) {
 			CodeFormatArgs returnArgs = new CodeFormatArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2080,7 +2080,7 @@ public class Arguments {
 		public static CodeLspArgs from(String[] args, int start) {
 			CodeLspArgs returnArgs = new CodeLspArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2130,7 +2130,7 @@ public class Arguments {
 		public static CodeReflectDumpArgs from(String[] args, int start) {
 			CodeReflectDumpArgs returnArgs = new CodeReflectDumpArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2212,7 +2212,7 @@ public class Arguments {
 		public static CodeValidatePlanArgs from(String[] args, int start) {
 			CodeValidatePlanArgs returnArgs = new CodeValidatePlanArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2268,7 +2268,7 @@ public class Arguments {
 		public static ContribBundleJsArgs from(String[] args, int start) {
 			ContribBundleJsArgs returnArgs = new ContribBundleJsArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2302,7 +2302,7 @@ public class Arguments {
 		public static ContribCopyrightArgs from(String[] args, int start) {
 			ContribCopyrightArgs returnArgs = new ContribCopyrightArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2336,7 +2336,7 @@ public class Arguments {
 		public static ContribMakeApiArgs from(String[] args, int start) {
 			ContribMakeApiArgs returnArgs = new ContribMakeApiArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2374,7 +2374,7 @@ public class Arguments {
 		public static ContribMakeBookArgs from(String[] args, int start) {
 			ContribMakeBookArgs returnArgs = new ContribMakeBookArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2469,7 +2469,7 @@ public class Arguments {
 		public static ContribMakeCliArgs from(String[] args, int start) {
 			ContribMakeCliArgs returnArgs = new ContribMakeCliArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2503,7 +2503,7 @@ public class Arguments {
 		public static ContribMakeCodecArgs from(String[] args, int start) {
 			ContribMakeCodecArgs returnArgs = new ContribMakeCodecArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2537,7 +2537,7 @@ public class Arguments {
 		public static ContribMakeEmbedArgs from(String[] args, int start) {
 			ContribMakeEmbedArgs returnArgs = new ContribMakeEmbedArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2571,7 +2571,7 @@ public class Arguments {
 		public static ContribMakeEtArgs from(String[] args, int start) {
 			ContribMakeEtArgs returnArgs = new ContribMakeEtArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2605,7 +2605,7 @@ public class Arguments {
 		public static ContribStrTempArgs from(String[] args, int start) {
 			ContribStrTempArgs returnArgs = new ContribStrTempArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2642,7 +2642,7 @@ public class Arguments {
 		public static ContribTestsAdamaArgs from(String[] args, int start) {
 			ContribTestsAdamaArgs returnArgs = new ContribTestsAdamaArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2715,7 +2715,7 @@ public class Arguments {
 		public static ContribTestsRxhtmlArgs from(String[] args, int start) {
 			ContribTestsRxhtmlArgs returnArgs = new ContribTestsRxhtmlArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2774,7 +2774,7 @@ public class Arguments {
 		public static ContribVersionArgs from(String[] args, int start) {
 			ContribVersionArgs returnArgs = new ContribVersionArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2808,7 +2808,7 @@ public class Arguments {
 		public static DatabaseConfigureArgs from(String[] args, int start) {
 			DatabaseConfigureArgs returnArgs = new DatabaseConfigureArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2842,7 +2842,7 @@ public class Arguments {
 		public static DatabaseInstallArgs from(String[] args, int start) {
 			DatabaseInstallArgs returnArgs = new DatabaseInstallArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2878,7 +2878,7 @@ public class Arguments {
 		public static DatabaseMakeReservedArgs from(String[] args, int start) {
 			DatabaseMakeReservedArgs returnArgs = new DatabaseMakeReservedArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2947,7 +2947,7 @@ public class Arguments {
 		public static DatabaseMigrateArgs from(String[] args, int start) {
 			DatabaseMigrateArgs returnArgs = new DatabaseMigrateArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -2986,7 +2986,7 @@ public class Arguments {
 		public static DocumentAttachArgs from(String[] args, int start) {
 			DocumentAttachArgs returnArgs = new DocumentAttachArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3095,7 +3095,7 @@ public class Arguments {
 		public static DocumentConnectArgs from(String[] args, int start) {
 			DocumentConnectArgs returnArgs = new DocumentConnectArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3168,7 +3168,7 @@ public class Arguments {
 		public static DocumentCreateArgs from(String[] args, int start) {
 			DocumentCreateArgs returnArgs = new DocumentCreateArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3265,7 +3265,7 @@ public class Arguments {
 		public static DocumentDeleteArgs from(String[] args, int start) {
 			DocumentDeleteArgs returnArgs = new DocumentDeleteArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3337,7 +3337,7 @@ public class Arguments {
 		public static DocumentListArgs from(String[] args, int start) {
 			DocumentListArgs returnArgs = new DocumentListArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3418,7 +3418,7 @@ public class Arguments {
 		public static DomainListArgs from(String[] args, int start) {
 			DomainListArgs returnArgs = new DomainListArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3458,7 +3458,7 @@ public class Arguments {
 		public static DomainMapArgs from(String[] args, int start) {
 			DomainMapArgs returnArgs = new DomainMapArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3577,7 +3577,7 @@ public class Arguments {
 		public static DomainUnmapArgs from(String[] args, int start) {
 			DomainUnmapArgs returnArgs = new DomainUnmapArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3635,7 +3635,7 @@ public class Arguments {
 		public static FrontendBundleArgs from(String[] args, int start) {
 			FrontendBundleArgs returnArgs = new FrontendBundleArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3700,7 +3700,7 @@ public class Arguments {
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3810,7 +3810,7 @@ public class Arguments {
 		public static FrontendMake200Args from(String[] args, int start) {
 			FrontendMake200Args returnArgs = new FrontendMake200Args();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3884,7 +3884,7 @@ public class Arguments {
 		public static FrontendMobileCapacitorArgs from(String[] args, int start) {
 			FrontendMobileCapacitorArgs returnArgs = new FrontendMobileCapacitorArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -3965,7 +3965,7 @@ public class Arguments {
 		public static FrontendPushGenerateArgs from(String[] args, int start) {
 			FrontendPushGenerateArgs returnArgs = new FrontendPushGenerateArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4002,7 +4002,7 @@ public class Arguments {
 		public static FrontendRxhtmlArgs from(String[] args, int start) {
 			FrontendRxhtmlArgs returnArgs = new FrontendRxhtmlArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4085,7 +4085,7 @@ public class Arguments {
 		public static FrontendSetLibadamaArgs from(String[] args, int start) {
 			FrontendSetLibadamaArgs returnArgs = new FrontendSetLibadamaArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4133,7 +4133,7 @@ public class Arguments {
 		public static FrontendStudyCssArgs from(String[] args, int start) {
 			FrontendStudyCssArgs returnArgs = new FrontendStudyCssArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4181,7 +4181,7 @@ public class Arguments {
 		public static FrontendValidateArgs from(String[] args, int start) {
 			FrontendValidateArgs returnArgs = new FrontendValidateArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4230,7 +4230,7 @@ public class Arguments {
 		public static FrontendWrapCssArgs from(String[] args, int start) {
 			FrontendWrapCssArgs returnArgs = new FrontendWrapCssArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4289,7 +4289,7 @@ public class Arguments {
 		public static ServicesAutoArgs from(String[] args, int start) {
 			ServicesAutoArgs returnArgs = new ServicesAutoArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4323,7 +4323,7 @@ public class Arguments {
 		public static ServicesBackendArgs from(String[] args, int start) {
 			ServicesBackendArgs returnArgs = new ServicesBackendArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4357,7 +4357,7 @@ public class Arguments {
 		public static ServicesDashboardsArgs from(String[] args, int start) {
 			ServicesDashboardsArgs returnArgs = new ServicesDashboardsArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4391,7 +4391,7 @@ public class Arguments {
 		public static ServicesFrontendArgs from(String[] args, int start) {
 			ServicesFrontendArgs returnArgs = new ServicesFrontendArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4425,7 +4425,7 @@ public class Arguments {
 		public static ServicesOverlordArgs from(String[] args, int start) {
 			ServicesOverlordArgs returnArgs = new ServicesOverlordArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4460,7 +4460,7 @@ public class Arguments {
 		public static ServicesProbeArgs from(String[] args, int start) {
 			ServicesProbeArgs returnArgs = new ServicesProbeArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
@@ -4507,7 +4507,7 @@ public class Arguments {
 		public static ServicesSoloArgs from(String[] args, int start) {
 			ServicesSoloArgs returnArgs = new ServicesSoloArgs();
 			try {
-				returnArgs.config = new Config(args);
+				returnArgs.config = Config.fromArgs(args);
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}

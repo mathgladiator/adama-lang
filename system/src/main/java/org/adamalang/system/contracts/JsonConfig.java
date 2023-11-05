@@ -17,22 +17,82 @@
 */
 package org.adamalang.system.contracts;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 
 import java.util.ArrayList;
 
 /** configuration values for the service */
-public interface JsonConfig {
-  public String get_string(String field, String defaultValue);
+public class JsonConfig {
+  public static class BadException extends RuntimeException {
+    public BadException(String msg) {
+      super(msg);
+    }
+  }
 
-  public int get_int(String field, int defaultValue);
+  protected ObjectNode cache;
 
-  public ServiceHeatEstimator.HeatVector get_heat(String suffix, int cpu_m, int messages, int mem_mb, int connections);
+  public JsonConfig(ObjectNode cache) {
+    this.cache = cache;
+  }
 
-  public ObjectNode get_or_create_child(String field);
+  public String get_string(String field, String defaultValue) {
+    JsonNode node = read().get(field);
+    if (node == null || node.isNull()) {
+      if (defaultValue == null) {
+        if ("identity".equals(field)) {
+          throw new BadException("The config has no identity; this means you are unable to talk to adama until run: adama init (or java -jar adama.jar init)");
+        }
+        throw new NullPointerException("expected an '" + field + "' within the config");
+      } else {
+        return defaultValue;
+      }
+    }
+    return node.textValue();
+  }
 
-  public ArrayList<String> get_str_list(String field);
+  public ObjectNode read() {
+    return cache;
+  }
 
-  public ObjectNode read();
+  public int get_int(String field, int defaultValue) {
+    JsonNode node = read().get(field);
+    if (node == null || node.isNull() || !node.isInt()) {
+      return defaultValue;
+    }
+    return node.intValue();
+  }
+
+  public ServiceHeatEstimator.HeatVector get_heat(String suffix, int cpu_m, int messages, int mem_mb, int connections) {
+    return new ServiceHeatEstimator.HeatVector(
+        get_int(suffix + "-cpu-m", cpu_m) * 1000L * 1000L,
+        get_int(suffix + "-messages", messages),
+        get_int(suffix + "-mem-mb", mem_mb) * 1024L * 1024,
+        get_int(suffix + "-connections", connections));
+  }
+
+  public ObjectNode get_or_create_child(String field) {
+    JsonNode node = read().get(field);
+    if (node instanceof ObjectNode) {
+      return (ObjectNode) node;
+    }
+    return Json.newJsonObject();
+  }
+
+  public ArrayList<String> get_str_list(String field) {
+    JsonNode node = read().get(field);
+    if (node instanceof ArrayNode) {
+      ArrayList<String> results = new ArrayList<>(node.size());
+      for (int k = 0; k < node.size(); k++) {
+        if (node.get(k).isTextual()) {
+          results.add(node.get(k).textValue());
+        }
+      }
+      return results;
+    }
+    return new ArrayList<>();
+  }
 }
