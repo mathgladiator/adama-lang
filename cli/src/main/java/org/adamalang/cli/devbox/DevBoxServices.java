@@ -19,7 +19,6 @@ package org.adamalang.cli.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -29,12 +28,11 @@ import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.services.Adama;
 import org.adamalang.services.FirstPartyMetrics;
-import org.adamalang.services.FirstPartyServices;
-import org.adamalang.services.ServiceConfig;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.logging.Logzio;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
@@ -68,6 +66,28 @@ public class DevBoxServices {
     }
   }
 
+
+  public static class DevBoxLogzio extends SimpleService {
+    private final String space;
+    private final Consumer<String> logger;
+
+    public DevBoxLogzio(String space, Consumer<String> logger) {
+      super("logzio", new NtPrincipal("logzio", "service"), true);
+      this.space = space;
+      this.logger = logger;
+    }
+
+    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
+      return Logzio.definition(uniqueId, params, names, error);
+    }
+
+    @Override
+    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+      logger.accept("devservices|service[logzio/ " + space+ "]::" + method + "(" + request + ")");
+      callback.success("{}");
+    }
+  }
+
   public static class DevBoxSendGrid extends SimpleService {
     private final String space;
     private final Consumer<String> logger;
@@ -92,6 +112,7 @@ public class DevBoxServices {
   public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
     logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
+    ServiceRegistry.add("logzio", Logzio.class, (space, configRaw, keys) -> new DevBoxLogzio(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
     if (servicesDefn != null && servicesDefn.has("adama")) {

@@ -18,33 +18,24 @@
 package org.adamalang.services;
 
 import org.adamalang.api.SelfClient;
-import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.internal.InternalSigner;
-import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.logging.Logzio;
 import org.adamalang.services.push.NoOpPusher;
 import org.adamalang.services.push.Push;
-import org.adamalang.services.security.FacebookValidator;
-import org.adamalang.services.security.GithubValidator;
 import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
-import org.adamalang.services.security.TwitterValidator;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
 import org.adamalang.web.client.WebClientBase;
-import org.adamalang.web.client.socket.ConnectionReady;
-import org.adamalang.web.client.socket.MultiWebClientRetryPool;
-import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
-import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,6 +107,15 @@ public class FirstPartyServices {
         return IdentitySigner.build(metrics, config, executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-identitysigner", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("logzio", Logzio.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
+      try {
+        return Logzio.build(metrics, webClientBase, config, executor);
+      } catch (ErrorCodeException ex) {
+        LOGGER.error("failed-logzio", ex);
         return Service.FAILURE;
       }
     });
