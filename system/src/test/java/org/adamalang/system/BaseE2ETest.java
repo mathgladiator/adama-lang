@@ -15,9 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.system;
 
-public class Platform {
-  public static final String VERSION = "20231105112900";
-  public static final String JS_VERSION = "367f626ca4bdf8c5126bb1e79e3c113e";
+import org.junit.BeforeClass;
+
+
+public class BaseE2ETest {
+  @BeforeClass
+  public static void init() {
+    if (TestEnvironment.ENV == null) {
+      TestEnvironment.ENV = new TestEnvironment();
+
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        TestEnvironment.ENV.shutdown();
+      }));
+    }
+  }
 }

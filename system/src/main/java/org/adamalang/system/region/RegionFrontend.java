@@ -17,13 +17,13 @@
 */
 package org.adamalang.system.region;
 
-import org.adamalang.cli.Config;
 import org.adamalang.system.Role;
 import org.adamalang.system.common.CloudBoot;
 import org.adamalang.system.common.EveryMachine;
+import org.adamalang.system.contracts.JsonConfig;
 
 public class RegionFrontend {
-  public static void run(Config config) throws Exception {
+  public static void run(JsonConfig config) throws Exception {
     EveryMachine em = new EveryMachine(config, Role.Web);
     CloudBoot cb = new CloudBoot(em.alive, em.metricsFactory, em.webBase, config.get_or_create_child("aws"), em.logsPrefix, em.system);
     // TODO: REGION-SYNC HERE

@@ -17,12 +17,12 @@
 */
 package org.adamalang.system.region;
 
-import org.adamalang.cli.Config;
 import org.adamalang.system.Role;
 import org.adamalang.system.common.EveryMachine;
+import org.adamalang.system.contracts.JsonConfig;
 
 public class RegionBackend {
-  public static void run(Config config) throws Exception {
+  public static void run(JsonConfig config) throws Exception {
     EveryMachine em = new EveryMachine(config, Role.Adama);
   }
 }

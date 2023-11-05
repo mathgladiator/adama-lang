@@ -15,9 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.system.e2e;
 
-public class Platform {
-  public static final String VERSION = "20231105112900";
-  public static final String JS_VERSION = "367f626ca4bdf8c5126bb1e79e3c113e";
+import org.adamalang.system.BaseE2ETest;
+import org.adamalang.system.TestEnvironment;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class SimpleTests extends BaseE2ETest {
+
+  @Test
+  public void envSanity() {
+    TestEnvironment env = TestEnvironment.ENV;
+    Assert.assertNotNull(env);
+  }
 }
