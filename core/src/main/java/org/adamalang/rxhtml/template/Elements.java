@@ -143,6 +143,17 @@ public class Elements {
     obj.finish();
   }
 
+  public static void viewstate_params(Environment env) {
+    ArrayList<String> params = new ArrayList<>();
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.getKey().startsWith("sync:")) {
+        params.add("'" + attr.getKey().substring(5) + "'");
+      }
+    }
+    var sp = StatePath.resolve("view:/root", env.stateVar);
+    env.writer.tab().append("$.VSP(").append(sp.command).append(",[").append(String.join(",", params)).append("]);").newline();
+  }
+
   public static void viewsync(Environment env) {
     String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);

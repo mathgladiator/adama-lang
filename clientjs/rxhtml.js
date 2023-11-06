@@ -1451,6 +1451,35 @@ var RxHTML = (function () {
     }, true);
   };
 
+  self.VSP = function(state, vars) {
+    var sm = {};
+    sm.vars = vars;
+    sm.last = {};
+    sm.params = "";
+    sm.mode = "replace";
+    sm.ping = debounce(5, function() {
+      var args = [];
+      for (var k = 0; k < this.vars.length; k++) {
+        var arg = this.vars[k];
+        if (arg in this.last) {
+          args.push(arg + "=" + this.last[arg]);
+        }
+      }
+      var result = "?" +args.join("&");
+      if (result != "?" && window.location.search !== result) {
+        var obj = {};
+        obj.viewer_search_query = result;
+        var delta = path_to(state.view, obj);
+        state.view.tree.update(delta);
+        window.history.replaceState({}, "", fixHref(window.location.pathname + result));
+      }
+    }.bind(sm));
+    state.view.tree.subscribe(function(s) {
+      this.last = s;
+      this.ping();
+    }.bind(sm));
+  };
+
   // RUNTIME | <input ... rx:sync=path ...>
   self.SY = function (el, state, name, ms) {
     var type = ("type" in el) ? el.type.toUpperCase() : "text";
@@ -1465,14 +1494,14 @@ var RxHTML = (function () {
       }
     }.bind({dedupe:""});
     if (type == "CHECKBOX") {
-      el.addEventListener('change', debounce(ms, function (evt) {
+      el.addEventListener('change', debounce(ms, function () {
         signal(el.checked ? true : false);
       }));
       window.setTimeout(function () {
         signal(el.checked ? true : false);
       }, 1);
     } else if (type == "RADIO") {
-      el.addEventListener('change', debounce(ms, function (evt) {
+      el.addEventListener('change', debounce(ms, function () {
         if (el.checked) {
           signal(el.value);
         }
@@ -1869,9 +1898,9 @@ var RxHTML = (function () {
   };
 
   self.init = function () {
-    self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
+    self.run(document.body, fixPath(window.location.pathname + window.location.search + window.location.hash), false);
     window.onpopstate = function (p) {
-      self.run(document.body, fixPath(window.location.pathname + window.location.hash), false);
+      self.run(document.body, fixPath(window.location.pathname + window.location.search + window.location.hash), false);
     };
   };
 
@@ -1886,6 +1915,12 @@ var RxHTML = (function () {
       connections[conKey].tree.nuke();
       connections[conKey].nuke();
     }
+    var search = "";
+    var kQuestion = path.indexOf('?');
+    if (kQuestion > 0) {
+      search = path.substring(kQuestion);
+      path = path.substring(0, kQuestion);
+    }
     var parts = (path.startsWith("/") ? path.substring(1) : path).split("/");
     var init = {};
     self.currentViewerId++;
@@ -1895,6 +1930,17 @@ var RxHTML = (function () {
       init.viewer_language = navigator.language;
     } catch (browserBad) {
       // we just don't see the viewstate if we don't have these available
+    }
+    init.viewer_search_query = "";
+    if (search != "?") {
+      init.viewer_search_query = search;
+      const params = new URLSearchParams(search.substring(1));
+      var kIt = params.keys();
+      var p = kIt.next();
+      while (!p.done) {
+        init[p.value] = params.get(p.value);
+        p = kIt.next();
+      }
     }
     var foo = route(parts, 0, router, init);
     nuke(where);
@@ -1909,7 +1955,7 @@ var RxHTML = (function () {
       state.view.tree.subscribe(state.view.delta);
       state.view.tree.update(init);
       if (push) {
-        window.history.pushState({merge:false}, "", fixHref(path));
+        window.history.pushState({merge:false}, "", fixHref(path) + search);
       }
     } else {
       if (path != "/404") {
@@ -2494,8 +2540,6 @@ var RxHTML = (function () {
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      console.log("Trying to submit a form");
-
       var req = get_form(form, true);
       var sm = {attempts:0};
       sm.responder = {
@@ -2695,7 +2739,7 @@ var RxHTML = (function () {
       return dt;
     }
   };
-  
+
   transforms['time'] = function(dt) {
         // only transform strings
     if (typeof (dt) == "string") {
@@ -3003,7 +3047,15 @@ var RxHTML = (function () {
   self.HREF = function (dom, state, href, merge) {
     dom.setAttribute("href", fixHref(href));
     dom.onclick = function (evt) {
-      var parts = (href.startsWith("/") ? href.substring(1) : href).split("/");
+      var trimHref = href;
+      if (trimHref.startsWith("/")) {
+        trimHref = trimHref.substring(1);
+      }
+      var kQ = trimHref.indexOf('?');
+      if (kQ > 0) {
+        trimHref = trimHref.substring(0, kQ);
+      }
+      var parts = trimHref.split("/");
       var mergeInit = {};
       if (route(parts, 0, router, mergeInit)) {
         evt.preventDefault();
