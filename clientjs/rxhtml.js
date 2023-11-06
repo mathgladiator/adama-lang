@@ -1480,6 +1480,13 @@ var RxHTML = (function () {
     }.bind(sm));
   };
 
+  self.F = function(o,k) {
+    if (k in o) {
+      return o[k];
+    }
+    return "";
+  };
+
   // RUNTIME | <input ... rx:sync=path ...>
   self.SY = function (el, state, name, ms) {
     var type = ("type" in el) ? el.type.toUpperCase() : "text";

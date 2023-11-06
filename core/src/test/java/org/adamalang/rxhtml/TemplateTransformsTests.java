@@ -43,7 +43,7 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=($.TR('principal.agent'))(this['x']);");
+    gold.append("\n        this.__dom.value=($.TR('principal.agent'))($.F(this,'x'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");
@@ -73,7 +73,7 @@ public class TemplateTransformsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=($.TR('principal.agent'))(this['x']);");
+    gold.append("\n        this.__dom.value=($.TR('principal.agent'))($.F(this,'x'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");

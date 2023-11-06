@@ -42,7 +42,7 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    var e=[];");
     gold.append("\n    var f={};");
     gold.append("\n    $.YS($.pV(a),f,'here');");
-    gold.append("\n    e.push($.bS(d,$.pV(a),'x',function(){ return f['here'];}));");
+    gold.append("\n    e.push($.bS(d,$.pV(a),'x',function(){ return $.F(f,'here');}));");
     gold.append("\n    $.onB(d,'click',a,e);");
     gold.append("\n    d.append($.T('Set View'));");
     gold.append("\n    b.append(d);");
@@ -52,7 +52,7 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    var g=[];");
     gold.append("\n    var h={};");
     gold.append("\n    $.YS($.pD(a),h,'there');");
-    gold.append("\n    g.push($.bS(d,$.pV(a),'x',function(){ return h['there'];}));");
+    gold.append("\n    g.push($.bS(d,$.pV(a),'x',function(){ return $.F(h,'there');}));");
     gold.append("\n    g.push($.bS(d,$.pV(a),'y','The Big Long Title'));");
     gold.append("\n    $.onB(d,'click',a,g);");
     gold.append("\n    d.append($.T('Set Data'));");
@@ -75,7 +75,7 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    var e=[];");
     gold.append("\n    var f={};");
     gold.append("\n    $.YS($.pV(a),f,'here');");
-    gold.append("\n    e.push($.bS(d,$.pV(a),'x',function(){ return f['here'];}));");
+    gold.append("\n    e.push($.bS(d,$.pV(a),'x',function(){ return $.F(f,'here');}));");
     gold.append("\n    $.onB(d,'click',a,e);");
     gold.append("\n    d.append($.T('Set View'));");
     gold.append("\n    b.append(d);");
@@ -85,7 +85,7 @@ public class TemplateCommandSetTests extends BaseRxHtmlTest {
     gold.append("\n    var g=[];");
     gold.append("\n    var h={};");
     gold.append("\n    $.YS($.pD(a),h,'there');");
-    gold.append("\n    g.push($.bS(d,$.pV(a),'x',function(){ return h['there'];}));");
+    gold.append("\n    g.push($.bS(d,$.pV(a),'x',function(){ return $.F(h,'there');}));");
     gold.append("\n    g.push($.bS(d,$.pV(a),'y','The Big Long Title'));");
     gold.append("\n    $.onB(d,'click',a,g);");
     gold.append("\n    d.append($.T('Set Data'));");

@@ -43,7 +43,7 @@ public class TemplateNestedConditionTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((this['x']) ? (\" X is true \" + ((this['y']) ? (\" Y=true \") : (\" Y=false \"))) : (\" X is false \")));");
+    gold.append("\n        $.ACLASS(this.__dom,(($.F(this,'x')) ? (\" X is true \" + (($.F(this,'y')) ? (\" Y=true \") : (\" Y=false \"))) : (\" X is false \")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      $.Y(a,e,'y',f);");
@@ -70,7 +70,7 @@ public class TemplateNestedConditionTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((this['x']) ? (\" X is true \" + ((this['y']) ? (\" Y=true \") : (\" Y=false \"))) : (\" X is false \")));");
+    gold.append("\n        $.ACLASS(this.__dom,(($.F(this,'x')) ? (\" X is true \" + (($.F(this,'y')) ? (\" Y=true \") : (\" Y=false \"))) : (\" X is false \")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      $.Y(a,e,'y',f);");

@@ -65,7 +65,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B(this['disable']);");
+    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -91,7 +91,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B(this['disable']);");
+    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -100,7 +100,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.required=$.B(this['required']);");
+    gold.append("\n          this.__dom.required=$.B($.F(this,'required'));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'required',i);");
     gold.append("\n        i();");
@@ -108,11 +108,11 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n      b.append(g);");
     gold.append("\n      var g=$.RX(['value']);");
     gold.append("\n      $.Y2(f,g,'value','value_a',function(h) {");
-    gold.append("\n        g.value=h['value_a'] + \"_\" + h['value_b']");
+    gold.append("\n        g.value=$.F(h,'value_a') + \"_\" + $.F(h,'value_b')");
     gold.append("\n        g.__();");
     gold.append("\n      });");
     gold.append("\n      $.Y2(f,g,'value','value_b',function(h) {");
-    gold.append("\n        g.value=h['value_a'] + \"_\" + h['value_b']");
+    gold.append("\n        g.value=$.F(h,'value_a') + \"_\" + $.F(h,'value_b')");
     gold.append("\n        g.__();");
     gold.append("\n      });");
     gold.append("\n      $.VW($.pV(f),'',g);");
@@ -160,7 +160,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B(this['disable']);");
+    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -186,7 +186,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B(this['disable']);");
+    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -195,7 +195,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.required=$.B(this['required']);");
+    gold.append("\n          this.__dom.required=$.B($.F(this,'required'));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'required',i);");
     gold.append("\n        i();");
@@ -203,11 +203,11 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n      b.append(g);");
     gold.append("\n      var g=$.RX(['value']);");
     gold.append("\n      $.Y2(f,g,'value','value_a',function(h) {");
-    gold.append("\n        g.value=h['value_a'] + \"_\" + h['value_b']");
+    gold.append("\n        g.value=$.F(h,'value_a') + \"_\" + $.F(h,'value_b')");
     gold.append("\n        g.__();");
     gold.append("\n      });");
     gold.append("\n      $.Y2(f,g,'value','value_b',function(h) {");
-    gold.append("\n        g.value=h['value_a'] + \"_\" + h['value_b']");
+    gold.append("\n        g.value=$.F(h,'value_a') + \"_\" + $.F(h,'value_b')");
     gold.append("\n        g.__();");
     gold.append("\n      });");
     gold.append("\n      $.VW($.pV(f),'',g);");

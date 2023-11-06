@@ -41,7 +41,7 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n  // <page uri=\"/customer/$customer_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','customer','text','customer_id'], function(b,a) {");
-    gold.append("\n    var d=$.aRDp(a,function(vs) { return \"/customeraction/\" + vs['customer_id'] + \"/signin\";});");
+    gold.append("\n    var d=$.aRDp(a,function(vs) { return \"/customeraction/\" + $.F(vs,'customer_id') + \"/signin\";});");
     gold.append("\n    if($.ID('default',d).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");
@@ -57,7 +57,7 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n  // <page uri=\"/admin/$admin_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','admin','text','admin_id'], function(b,a) {");
-    gold.append("\n    var f=$.aRDp(a,function(vs) { return \"/adminaction/\" + vs['admin_id'] + \"/signin\";});");
+    gold.append("\n    var f=$.aRDp(a,function(vs) { return \"/adminaction/\" + $.F(vs,'admin_id') + \"/signin\";});");
     gold.append("\n    if($.ID('default',f).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");
@@ -95,7 +95,7 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n  // <page uri=\"/customer/$customer_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','customer','text','customer_id'], function(b,a) {");
-    gold.append("\n    var d=$.aRDp(a,function(vs) { return \"/customeraction/\" + vs['customer_id'] + \"/signin\";});");
+    gold.append("\n    var d=$.aRDp(a,function(vs) { return \"/customeraction/\" + $.F(vs,'customer_id') + \"/signin\";});");
     gold.append("\n    if($.ID('default',d).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");
@@ -111,7 +111,7 @@ public class TemplateMultipageWithMultiAuthTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n  // <page uri=\"/admin/$admin_id:text\" authenticate=\"\">");
     gold.append("\n  $.PG(['fixed','admin','text','admin_id'], function(b,a) {");
-    gold.append("\n    var f=$.aRDp(a,function(vs) { return \"/adminaction/\" + vs['admin_id'] + \"/signin\";});");
+    gold.append("\n    var f=$.aRDp(a,function(vs) { return \"/adminaction/\" + $.F(vs,'admin_id') + \"/signin\";});");
     gold.append("\n    if($.ID('default',f).abort) {");
     gold.append("\n      return;");
     gold.append("\n    }");

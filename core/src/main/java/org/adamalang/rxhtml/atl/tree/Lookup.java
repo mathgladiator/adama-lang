@@ -48,7 +48,7 @@ public class Lookup implements Tree {
 
   @Override
   public String js(Context context, String env) {
-    return env + "['" + name + "']";
+    return "$.F(" + env + ",'" + name + "')";
   }
 
   @Override

@@ -41,7 +41,7 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var e={};");
     gold.append("\n    $.YS($.pV(a),e,'here');");
-    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/\" + e['here'];});");
+    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/\" + $.F(e,'here');});");
     gold.append("\n    d.append($.T('goto View'));");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -49,7 +49,7 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var f={};");
     gold.append("\n    $.YS($.pD(a),f,'there');");
-    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/path-to-data/\" + f['there'];});");
+    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/path-to-data/\" + $.F(f,'there');});");
     gold.append("\n    d.append($.T('goto Data'));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -69,7 +69,7 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var e={};");
     gold.append("\n    $.YS($.pV(a),e,'here');");
-    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/\" + e['here'];});");
+    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/\" + $.F(e,'here');});");
     gold.append("\n    d.append($.T('goto View'));");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -77,7 +77,7 @@ public class TemplateCommandGotoTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('button');");
     gold.append("\n    var f={};");
     gold.append("\n    $.YS($.pD(a),f,'there');");
-    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/path-to-data/\" + f['there'];});");
+    gold.append("\n    $.onGO(d,'click',a,function(){ return \"/path-to-data/\" + $.F(f,'there');});");
     gold.append("\n    d.append($.T('goto Data'));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");

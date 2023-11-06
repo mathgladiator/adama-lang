@@ -44,7 +44,7 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.SA(this.__dom,'parameter:b',\"x \" + this['y']);");
+    gold.append("\n        $.SA(this.__dom,'parameter:b',\"x \" + $.F(this,'y'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'y',f);");
     gold.append("\n      f();");
@@ -52,7 +52,7 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n    var h=$.RX(['b']);");
     gold.append("\n    h.a='123';");
     gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
-    gold.append("\n      h.b=\"x \" + i['y']");
+    gold.append("\n      h.b=\"x \" + $.F(i,'y')");
     gold.append("\n      h.__();");
     gold.append("\n    });");
     gold.append("\n    $.WP(d,a,'param_wrapper',h,function(f,e,g) {");
@@ -78,7 +78,7 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.SA(this.__dom,'parameter:b',\"x \" + this['y']);");
+    gold.append("\n        $.SA(this.__dom,'parameter:b',\"x \" + $.F(this,'y'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'y',f);");
     gold.append("\n      f();");
@@ -86,7 +86,7 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n    var h=$.RX(['b']);");
     gold.append("\n    h.a='123';");
     gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
-    gold.append("\n      h.b=\"x \" + i['y']");
+    gold.append("\n      h.b=\"x \" + $.F(i,'y')");
     gold.append("\n      h.__();");
     gold.append("\n    });");
     gold.append("\n    $.WP(d,a,'param_wrapper',h,function(f,e,g) {");

@@ -39,11 +39,11 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.RX(['space','key']);");
     gold.append("\n    d.name='myname';");
     gold.append("\n    $.Y2(a,d,'space','suffix',function(e) {");
-    gold.append("\n      d.space=\"space\" + e['suffix']");
+    gold.append("\n      d.space=\"space\" + $.F(e,'suffix')");
     gold.append("\n      d.__();");
     gold.append("\n    });");
     gold.append("\n    $.Y2($.pR($.pV(a)),d,'key','key',function(e) {");
-    gold.append("\n      d.key=e['key']");
+    gold.append("\n      d.key=$.F(e,'key')");
     gold.append("\n      d.__();");
     gold.append("\n    });");
     gold.append("\n    d.identity=true;");
@@ -80,11 +80,11 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.RX(['space','key']);");
     gold.append("\n    d.name='myname';");
     gold.append("\n    $.Y2(a,d,'space','suffix',function(e) {");
-    gold.append("\n      d.space=\"space\" + e['suffix']");
+    gold.append("\n      d.space=\"space\" + $.F(e,'suffix')");
     gold.append("\n      d.__();");
     gold.append("\n    });");
     gold.append("\n    $.Y2($.pR($.pV(a)),d,'key','key',function(e) {");
-    gold.append("\n      d.key=e['key']");
+    gold.append("\n      d.key=$.F(e,'key')");
     gold.append("\n      d.__();");
     gold.append("\n    });");
     gold.append("\n    d.identity=true;");
