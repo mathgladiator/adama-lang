@@ -2724,7 +2724,7 @@ var RxHTML = (function () {
       // we are interested in producing a string like "X minutes ago", so start with seconds
       var delta = (Date.now() - d)/1000; // seconds;
       if (delta < 60) {
-        return Math.floor(delta) + " seconds ago";
+        return "Less than a minute ago";
       }
       // it wasn't 90 seconds ago or less, so let's refine towards minutes
       delta /= 60; // now it is minutes
