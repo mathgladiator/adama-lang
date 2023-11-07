@@ -1001,12 +1001,25 @@ public class JavaScriptClient {
   public static final byte[] ADAMA_WORKER_JS_CLIENT_BYTES = Base64.getDecoder().decode(makew());
   private static String makew() {
     StringBuilder sb = new StringBuilder();
-    sb.append("c2VsZi5hZGRFdmVudExpc3RlbmVyKCJwdXNoIixmdW5jdGlvbihpKXtpZihpLmRhdGEpe3ZhciB0PWku");
-    sb.append("ZGF0YS5qc29uKCk7aWYodCl7dmFyIGE9e2JvZHk6dC5ib2R5fHwiR2VuZXJpYyBQdXNoIEJvZHkifTtp");
-    sb.append("Zih0Lmljb24mJihhLmljb249dC5pY29uKSxpLndhaXRVbnRpbChzZWxmLnJlZ2lzdHJhdGlvbi5zaG93");
-    sb.append("Tm90aWZpY2F0aW9uKHQudGl0bGV8fCJHZW5lcmljIFB1c2ggVGl0bGUiLGEpKSx0LmJhZGdlJiZuYXZp");
-    sb.append("Z2F0b3Iuc2V0QXBwQmFkZ2UpdHJ5e25hdmlnYXRvci5zZXRBcHBCYWRnZSh0LmJhZGdlKX1jYXRjaChp");
-    sb.append("KXt9fX19KTsK");
+    sb.append("Y29uc29sZS5sb2coImFkYW1hIHdvcmtlciBzdGFydGVkIiksc2VsZi5hZGRFdmVudExpc3RlbmVyKCJw");
+    sb.append("dXNoIixmdW5jdGlvbih0KXtpZih0LmRhdGEpe3ZhciBpPXQuZGF0YS5qc29uKCk7aWYoaSl7dmFyIG89");
+    sb.append("e2JvZHk6aS5ib2R5fHwiR2VuZXJpYyBQdXNoIEJvZHkifSxuPShpLmljb24mJihvLmljb249aS5pY29u");
+    sb.append("KSx7fSk7aWYoaS51cmwmJihuLnVybD1pLnVybCksby5kYXRhPW4sdC53YWl0VW50aWwoc2VsZi5yZWdp");
+    sb.append("c3RyYXRpb24uc2hvd05vdGlmaWNhdGlvbihpLnRpdGxlfHwiR2VuZXJpYyBQdXNoIFRpdGxlIixvKSks");
+    sb.append("Im51bWJlciI9PXR5cGVvZiBpLmJhZGdlJiZuYXZpZ2F0b3Iuc2V0QXBwQmFkZ2UpdHJ5e3Qud2FpdFVu");
+    sb.append("dGlsKG5hdmlnYXRvci5zZXRBcHBCYWRnZShpLmJhZGdlKSl9Y2F0Y2godCl7fX19fSksc2VsZi5hZGRF");
+    sb.append("dmVudExpc3RlbmVyKCJub3RpZmljYXRpb25jbGljayIsZnVuY3Rpb24odCl7dmFyIGwsZTt0Lm5vdGlm");
+    sb.append("aWNhdGlvbiYmdC5ub3RpZmljYXRpb24uZGF0YSYmdC5ub3RpZmljYXRpb24uZGF0YS51cmwmJihsPXNl");
+    sb.append("bGYubG9jYXRpb24ucHJvdG9jb2wrIi8vIitzZWxmLmxvY2F0aW9uLmhvc3QrdC5ub3RpZmljYXRpb24u");
+    sb.append("ZGF0YS51cmwsZT1zZWxmLmxvY2F0aW9uLnByb3RvY29sKyIvLyIrc2VsZi5sb2NhdGlvbi5ob3N0LGNv");
+    sb.append("bnNvbGUubG9nKCJnb3Q6IitsKSx0Lm5vdGlmaWNhdGlvbi5jbG9zZSgpLHQud2FpdFVudGlsKGNsaWVu");
+    sb.append("dHMubWF0Y2hBbGwoe3R5cGU6IndpbmRvdyJ9KS50aGVuKHQ9Pnt2YXIgaT1udWxsLG89bnVsbDtjb25z");
+    sb.append("b2xlLmxvZyh0KTtmb3IodmFyIG49MDtuPHQubGVuZ3RoO24rKyl7dmFyIGE9dFtuXTtpZihjb25zb2xl");
+    sb.append("LmxvZygiY2xpZW50OiIrYS51cmwrIjsiK2wpLGEudXJsPT09bCYmImZvY3VzImluIGEpcmV0dXJuIGEu");
+    sb.append("Zm9jdXMoKTthLnVybC5zdGFydHNXaXRoKGwpJiYibmF2aWdhdGUiaW4gYSYmKGk9YSksYS51cmwuc3Rh");
+    sb.append("cnRzV2l0aChlKSYmIm5hdmlnYXRlImluIGEmJihvPWEpfXJldHVybiBudWxsIT1pP2kubmF2aWdhdGUo");
+    sb.append("bCk6bnVsbCE9bz9vLm5hdmlnYXRlKGwpOmNsaWVudHMub3BlbldpbmRvdz9jbGllbnRzLm9wZW5XaW5k");
+    sb.append("b3cobCk6dm9pZCAwfSkpKX0pOwo=");
     return sb.toString();
   }
   public static final byte[] BETA_ADAMA_WORKER_JS_CLIENT_BYTES = ADAMA_WORKER_JS_CLIENT_BYTES;

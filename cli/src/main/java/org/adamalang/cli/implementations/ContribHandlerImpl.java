@@ -180,6 +180,7 @@ public class ContribHandlerImpl implements ContribHandler {
     String versionCode = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
     MessageDigest md5 = Hashing.md5();
     md5.update(Files.readAllBytes(new File("release/libadama.js").toPath()));
+    md5.update(Files.readAllBytes(new File("release/libadama-worker.js").toPath()));
     String jsver = Hashing.finishAndEncodeHex(md5);
     System.out.println(Util.prefix("Generating a version number: " + versionCode, Util.ANSI.Cyan));
     String versionFile = "package org.adamalang.common;\n" + //
