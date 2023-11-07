@@ -79,7 +79,7 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
     });
     responder.error(ex);
     itemToLog.put("success", false);
-    itemToLog.put("failure-reason", ex.code);
+    itemToLog.put("failure-code", ex.code);
     logger.log(itemToLog);
   }
 }

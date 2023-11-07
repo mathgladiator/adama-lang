@@ -49,7 +49,7 @@ public class DevProxyResponder implements JsonResponder {
   public void error(ErrorCodeException ex) {
     responder.error(ex);
     itemToLog.put("success", false);
-    itemToLog.put("failure-reason", ex.code);
+    itemToLog.put("failure-code", ex.code);
     logger.log(itemToLog);
   }
 }

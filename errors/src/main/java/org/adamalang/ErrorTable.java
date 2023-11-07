@@ -40,6 +40,7 @@ public class ErrorTable {
     descriptions = new HashMap<>();
     userspace = new HashSet<>();
     retry = new HashSet<>();
+    userspace.add(438302);
     names.put(101386, "IMPOSSIBLE");
     descriptions.put(101386, "no description of error (yet)");
     names.put(123392, "DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE");

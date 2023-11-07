@@ -46,6 +46,9 @@ public class GenerateTables {
     sb.append("    descriptions = new HashMap<>();\n");
     sb.append("    userspace = new HashSet<>();\n");
     sb.append("    retry = new HashSet<>();\n");
+    for (int error : ManualUserTable.ERRORS) {
+      sb.append("    userspace.add(").append(error).append(");\n");
+    }
     for (Field f : ErrorCodes.class.getFields()) {
       sb.append("    names.put(").append(f.getInt(null)).append(", \"").append(f.getName()).append("\");\n");
       Description description = f.getAnnotation(Description.class);

@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang;
 
-public class Platform {
-  public static final String VERSION = "20231106232802";
-  public static final String JS_VERSION = "5729c3c520a0b8a29792b29dc8a42a49";
+/** these are error codes that are from api.xml */
+public class ManualUserTable {
+
+  public static final int[] ERRORS = new int[] { 438302 };
 }

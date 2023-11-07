@@ -53,7 +53,7 @@ public class SimpleMetricsProxyResponder implements JsonResponder {
     metrics.failure(ex.code);
     responder.error(ex);
     itemToLog.put("success", false);
-    itemToLog.put("failure-reason", ex.code);
+    itemToLog.put("failure-code", ex.code);
     logger.log(itemToLog);
   }
 }
