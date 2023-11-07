@@ -29,18 +29,14 @@ import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.finder.MockFinderService;
 import org.adamalang.net.mocks.MockMetricsReporter;
 import org.adamalang.runtime.data.BoundLocalFinderService;
-import org.adamalang.runtime.deploy.Deploy;
+import org.adamalang.runtime.deploy.*;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.NaughyHandler;
 import org.adamalang.net.server.Handler;
-import org.adamalang.net.server.LocalCapacityRequestor;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
-import org.adamalang.runtime.deploy.DeploymentFactory;
-import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -78,7 +74,7 @@ public class TestBed implements AutoCloseable {
   public final MockMetricsReporter metricsReporter;
 
   public TestBed(int port, String code) throws Exception {
-    DeploymentFactory.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>(), true);
+    SyncCompiler.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>(), true);
     this.base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");

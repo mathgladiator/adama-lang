@@ -63,7 +63,7 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
   }
 
   public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
-    spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
+    spaces.put(space, SyncCompiler.forge(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
   }
 
   public boolean contains(String space) {

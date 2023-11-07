@@ -87,8 +87,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
-    DeploymentFactory newFactory =
-        new DeploymentFactory("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
+    DeploymentFactory newFactory = SyncCompiler.forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
     Assert.assertEquals(1, newFactory.spacesAvailable().size());
   }
 
@@ -98,8 +97,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"instrument\":true,\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
-    DeploymentFactory newFactory =
-        new DeploymentFactory("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
+    DeploymentFactory newFactory = SyncCompiler.forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
     Assert.assertEquals(1, newFactory.spacesAvailable().size());
   }
 }
