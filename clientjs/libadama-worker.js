@@ -1,1 +1,1 @@
-self.addEventListener("push",function(i){var t,n;i.data&&(t=i.data.json())&&(n={body:t.body||"Generic Push Body"},t.icon&&(n.icon=t.icon),i.waitUntil(self.registration.showNotification(t.title||"Generic Push Title",n)))});
+self.addEventListener("push",function(i){if(i.data){var t=i.data.json();if(t){var a={body:t.body||"Generic Push Body"};if(t.icon&&(a.icon=t.icon),i.waitUntil(self.registration.showNotification(t.title||"Generic Push Title",a)),t.badge&&navigator.setAppBadge)try{navigator.setAppBadge(t.badge)}catch(i){}}}});

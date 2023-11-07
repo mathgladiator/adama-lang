@@ -49,12 +49,14 @@ import java.util.Iterator;
 
 public class DevPush implements Pusher  {
   private final static Logger LOGGER = LoggerFactory.getLogger(Pusher.class);
+  private final TerminalIO io;
   public final File path;
   private final VAPIDPublicPrivateKeyPair keypair;
   private final WebClientBase webClientBase;
   private final WebPushRequestFactory128 webPushFactory128;
 
-  public DevPush(File path, String email, VAPIDPublicPrivateKeyPair keypair, WebClientBase webClientBase) {
+  public DevPush(TerminalIO io, File path, String email, VAPIDPublicPrivateKeyPair keypair, WebClientBase webClientBase) {
+    this.io = io;
     this.path = path;
     this.keypair = keypair;
     this.webClientBase = webClientBase;
@@ -117,6 +119,7 @@ public class DevPush implements Pusher  {
 
   @Override
   public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
+    io.notice("devpush|" + pushTrackToken + " to " + who.agent + "@" + who.authority + " : " + payload);
     try {
       ObjectNode push = load();
       ArrayNode subscriptions = (ArrayNode) push.get(domain);

@@ -10,6 +10,15 @@ self.addEventListener('push', function(event) {
         options.icon = json.icon;
       }
       event.waitUntil(self.registration.showNotification(json.title ? json.title : "Generic Push Title", options));
+
+      if (json.badge) {
+        if (navigator.setAppBadge) {
+          try {
+            navigator.setAppBadge(json.badge);
+          } catch (e) {}
+        }
+      }
+
     }
   }
 });

@@ -323,6 +323,6 @@ public class DevBoxAdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(new File(pushFile), pushEmail, keyPair, webClientBase));
+    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase));
   }
 }

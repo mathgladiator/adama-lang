@@ -1857,33 +1857,42 @@ var RxHTML = (function () {
         });
     }).then(function (subscription) {
       // make sure we have an endpoint saved related to the right version
-      var pushKeyLocal = "push_endpoint_" + identityName;
-      if (localStorage.getItem("push_worker_version") != version) {
-        localStorage.removeItem(pushKeyLocal);
-        localStorage.setItem("push_worker_version", version);
-      }
-      var sub = subscription.toJSON();
-      sub['@method'] = 'webpush';
-      sub['@time'] = new Date().getTime();
-      var val = localStorage.getItem(pushKeyLocal);
-      if (val) {
-        if (val == sub.endpoint) {
-          return;
-        }
-      }
-      var device = {};
-      device.mode = 'web'
-      if (window && window.navigator && window.navigator.userAgent) {
-        device.ua = window.navigator.userAgent;
-      }
-      connection.PushRegister(identity, self.domain, sub, device, {
-        success: function() {
-          localStorage.setItem(pushKeyLocal, sub.endpoint);
+      connection.IdentityHash(identity, {
+        success: function(result) {
+          var pushKeyLocal = "push_endpoint_" + identityName;
+          if (localStorage.getItem("push_worker_version") != version || localStorage.getItem("last_identity_used") != result.identityHash) {
+            localStorage.removeItem(pushKeyLocal);
+            localStorage.setItem("push_worker_version", version);
+            localStorage.setItem("last_identity_used", result.identityHash);
+          }
+          var sub = subscription.toJSON();
+          var val = localStorage.getItem(pushKeyLocal);
+          if (val && val == sub.endpoint) {
+            return;
+          }
+          sub['@method'] = 'webpush';
+          sub['@time'] = new Date().getTime();
+          var device = {};
+          device.mode = 'web'
+          if (window && window.navigator && window.navigator.userAgent) {
+            device.ua = window.navigator.userAgent;
+          }
+          console.log("push-register");
+          connection.PushRegister(identity, self.domain, sub, device, {
+            success: function() {
+              localStorage.setItem(pushKeyLocal, sub.endpoint);
+            },
+            failure: function(reason) {
+              console.error("Failed to register subscription to Adama:" + reason);
+            }
+          });
         },
-        failure: function(reason) {
-          console.error("Failed to register subscription to Adama:" + reason);
+        failure: function() {
+          console.log("Failed to hash");
         }
-      });
+      })
+
+
     });
   }
 
@@ -2608,7 +2617,6 @@ var RxHTML = (function () {
       });
     }, true);
   };
-
 
   // RUNTIME | rx:action=domain:sign-in-reset
   self.adDSOr = function (form, state, identityName, rxobj) {
