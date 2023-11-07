@@ -400,6 +400,25 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientDomainPolicyResponse(obj), callback);
   }
 
+  /** document/authorization */
+  public void documentAuthorization(ClientDocumentAuthorizationRequest request, Callback<ClientInitiationResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/authorization");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.set("message", request.message);
+    pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
+  }
+
+  /** document/authorization-domain */
+  public void documentAuthorizationDomain(ClientDocumentAuthorizationDomainRequest request, Callback<ClientInitiationResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/authorization-domain");
+    node.put("domain", request.domain);
+    node.set("message", request.message);
+    pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
+  }
+
   /** document/authorize */
   public void documentAuthorize(ClientDocumentAuthorizeRequest request, Callback<ClientInitiationResponse> callback) {
     ObjectNode node = Json.newJsonObject();

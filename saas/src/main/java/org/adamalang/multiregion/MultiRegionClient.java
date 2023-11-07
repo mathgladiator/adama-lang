@@ -25,6 +25,7 @@ import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.*;
 import org.adamalang.auth.AuthenticatedUser;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -337,6 +338,29 @@ public class MultiRegionClient {
         if (location.location == LocationType.Machine) {
           if (location.region.equals(region)) {
             local.authorize(location.machine, ip, origin, space, key, username, password, new_password, callback);
+            return;
+          } else {
+            // TODO: remote
+          }
+        }
+        callback.failure(new ErrorCodeException(ErrorCodes.MULTI_REGION_CLIENT_NO_ROUTE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+
+  public void authorization(String ip, String origin, String space, String key, String payload, Callback<AuthResponse> callback) {
+    local.finder.find(new Key(space, key), new Callback<DocumentLocation>() {
+      @Override
+      public void success(DocumentLocation location) {
+        if (location.location == LocationType.Machine) {
+          if (location.region.equals(region)) {
+            local.authorization(location.machine, ip, origin, space, key, payload, callback);
             return;
           } else {
             // TODO: remote

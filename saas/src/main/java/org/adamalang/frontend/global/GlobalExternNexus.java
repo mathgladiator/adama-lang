@@ -71,6 +71,7 @@ public class GlobalExternNexus {
   public final String machine;
   public final VAPIDFactory vapidFactory;
   public final Authenticator authenticator;
+  public final SimpleExecutor crypto;
 
   public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
     this.config = config;
@@ -101,6 +102,7 @@ public class GlobalExternNexus {
     this.metricsReporter = new GlobalMetricsReporter(database, metrics);
     attachmentRoot.mkdir();
     this.vapidFactory = new VAPIDFactory(new SecureRandom());
+    this.crypto = SimpleExecutor.create("crypto");
   }
 
   public void close() throws Exception {
@@ -108,5 +110,6 @@ public class GlobalExternNexus {
     adama.shutdown();
     webBase.shutdown();
     metrics.shutdown();
+    crypto.shutdown();
   }
 }

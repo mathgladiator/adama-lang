@@ -30,6 +30,7 @@ import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.io.ConnectionContext;
@@ -54,6 +55,35 @@ public class GlobalDataHandler implements RootRegionHandler {
   public GlobalDataHandler(GlobalExternNexus nexus) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
+  }
+
+  private void commonAuthorization(Session session, Key key, JsonNode payload, InitiationResponder responder) {
+    try {
+      ObjectNode node = (ObjectNode) payload;
+      final String password = node.remove("password").textValue();
+      nexus.adama.authorization(session.authenticator.getTransportContext().remoteIp, session.authenticator.getTransportContext().origin, key.space, key.key, node.toString(), new Callback<>() {
+        @Override
+        public void success(AuthResponse response) {
+          nexus.crypto.execute(new NamedRunnable("crypto-check") {
+            @Override
+            public void execute() throws Exception {
+              if (SCryptUtil.check(password, response.hash)) {
+                responder.complete(nexus.signingKey.signDocumentIdentity(response.agent, key.space, key.key, 0));
+              } else {
+                responder.error(new ErrorCodeException(ErrorCodes.DOCUMENT_AUTHORIIZE_FAILURE));
+              }
+            }
+          });
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
+    } catch (Exception ex) {
+      responder.error(new ErrorCodeException(ErrorCodes.API_AUTH_FAILED_PARSING_PASSWORD));
+    }
   }
 
   private void commonAuthorize(Session session, Key key, String username, String password, String new_password, InitiationResponder responder) {
@@ -111,6 +141,19 @@ public class GlobalDataHandler implements RootRegionHandler {
     responder.next("remote-ip", context.remoteIp, "string");
     responder.next("cookie-identities-count", context.identities.size() + "", "int");
     responder.finish();
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizationDomainRequest request, InitiationResponder responder) {
+    Domain domain = domainToUse(request.resolvedDomain, responder);
+    if (domain != null) {
+      commonAuthorization(session, new Key(domain.space, domain.key), request.message, responder);
+    }
+  }
+
+  @Override
+  public void handle(Session session, DocumentAuthorizationRequest request, InitiationResponder responder) {
+    commonAuthorization(session, new Key(request.space, request.key), request.message, responder);
   }
 
   @Override

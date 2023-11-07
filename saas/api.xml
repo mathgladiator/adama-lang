@@ -1125,6 +1125,24 @@
         </documentation>
     </method>
 
+    <method name="document/authorization" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="message"/>
+        <documentation>
+            Send an authorization request to the document
+        </documentation>
+    </method>
+
+    <method name="document/authorization-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+        <parameter name="domain"/>
+        <parameter name="message"/>
+        <documentation>
+            Send an authorization request to a document via a domain
+        </documentation>
+    </method>
+
+    <!-- TO DEPRECATE -->
     <method name="document/authorize" responder="initiation" devbox="true" scope="region" policy-via-document="true">
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1135,6 +1153,7 @@
         </documentation>
     </method>
 
+    <!-- TO DEPRECATE -->
     <method name="document/authorize-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true">
         <parameter name="domain"/>
         <parameter name="username"/>
@@ -1144,6 +1163,7 @@
         </documentation>
     </method>
 
+    <!-- TO DEPRECATE -->
     <method name="document/authorize-with-reset" responder="initiation" devbox="true" scope="region" policy-via-document="true">
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1155,6 +1175,7 @@
         </documentation>
     </method>
 
+    <!-- TO DEPRECATE -->
     <method name="document/authorize-domain-with-reset" responder="initiation" devbox="true" scope="region" policy-via-document="true">
         <parameter name="domain"/>
         <parameter name="username"/>

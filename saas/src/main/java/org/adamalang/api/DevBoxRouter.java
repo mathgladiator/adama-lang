@@ -43,6 +43,10 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder);
 
+  public abstract void handle_DocumentAuthorization(long requestId, String space, String key, JsonNode message, InitiationResponder responder);
+
+  public abstract void handle_DocumentAuthorizationDomain(long requestId, String domain, JsonNode message, InitiationResponder responder);
+
   public abstract void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder);
 
   public abstract void handle_DocumentAuthorizeDomain(long requestId, String domain, String username, String password, InitiationResponder responder);
@@ -130,6 +134,22 @@ public abstract class DevBoxRouter {
             request.getString("identity", true, 458759), //
             request.getString("domain", true, 488444), //
             new DomainVapidResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "document/authorization":
+          _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
+          _accessLogItem.put("key", request.getString("key", true, 466947));
+          handle_DocumentAuthorization(requestId, //
+            request.getStringNormalize("space", true, 461828), //
+            request.getString("key", true, 466947), //
+            request.getJsonNode("message", true, 425987), //
+            new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "document/authorization-domain":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          handle_DocumentAuthorizationDomain(requestId, //
+            request.getString("domain", true, 488444), //
+            request.getJsonNode("message", true, 425987), //
+            new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize":
           _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));

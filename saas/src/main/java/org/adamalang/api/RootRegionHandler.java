@@ -26,6 +26,10 @@ public interface RootRegionHandler {
 
   public void handle(Session session, IdentityStashRequest request, SimpleResponder responder);
 
+  public void handle(Session session, DocumentAuthorizationRequest request, InitiationResponder responder);
+
+  public void handle(Session session, DocumentAuthorizationDomainRequest request, InitiationResponder responder);
+
   public void handle(Session session, DocumentAuthorizeRequest request, InitiationResponder responder);
 
   public void handle(Session session, DocumentAuthorizeDomainRequest request, InitiationResponder responder);
@@ -63,6 +67,8 @@ public interface RootRegionHandler {
       case "stats":
       case "identity/hash":
       case "identity/stash":
+      case "document/authorization":
+      case "document/authorization-domain":
       case "document/authorize":
       case "document/authorize-domain":
       case "document/authorize-with-reset":

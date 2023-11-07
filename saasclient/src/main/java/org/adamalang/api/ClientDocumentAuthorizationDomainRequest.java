@@ -15,9 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231106213625";
-  public static final String JS_VERSION = "f2ac9e230cea5e64e399a19445f12340";
+import com.fasterxml.jackson.databind.JsonNode;
+
+/** generated request type for document/authorization-domain */
+public class ClientDocumentAuthorizationDomainRequest {
+  public String domain;
+  public JsonNode message;
 }
