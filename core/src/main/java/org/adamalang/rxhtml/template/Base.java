@@ -223,7 +223,7 @@ public class Base {
         Environment childEnv = env.element(child, nodes.size() == 1);
         try {
           // use reflection to see if Elements has an override for this normalized tag name.
-          String tagNameNormal = child.tagName().replaceAll(Pattern.quote("-"), "_");
+          String tagNameNormal = child.tagName().replaceAll(Pattern.quote("-"), "").replaceAll(Pattern.quote("_"), "");
           Method method = Elements.class.getMethod(tagNameNormal, Environment.class);
           method.invoke(null, childEnv);
         } catch (Exception ex) {

@@ -128,7 +128,7 @@ class WebSocketAdamaConnection {
           success: function (payload) {
             try {
               var xhttp = new XMLHttpRequest();
-              xhttp.open("GET", "https://" + self.host + "/~p" + payload.assetKey, true);
+              xhttp.open("GET", location.protocol + "//" + self.host + "/~p" + payload.assetKey, true);
               xhttp.withCredentials = true;
               xhttp.send();
             } catch (ex) {

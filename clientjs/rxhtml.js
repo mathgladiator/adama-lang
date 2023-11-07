@@ -643,6 +643,29 @@ var RxHTML = (function () {
     }
   };
 
+  self.CSt = function (parent, state, childMakerConnected, childMakerDisconnected) {
+    var unsub = make_unsub();
+    if (!state.data.connection) {
+      return;
+    }
+    state.data.connection.connected(function(cs) {
+      if (this.prior == cs) {
+        return;
+      }
+      nuke(parent);
+      fire_unsub(unsub);
+      this.prior = cs;
+      var newState = fork(state);
+      if (cs) {
+        childMakerConnected(parent, newState);
+      } else {
+        childMakerDisconnected(parent, newState);
+      }
+      subscribe_state(newState, unsub);
+      return document.body.contains(parent);
+    }.bind({prior:null}));
+  };
+
   // RUNTIME | <pick name=...>
   self.P = function (parent, priorState, rxObj, childMakerConnected, childMakerDisconnected, keepOpen) {
     var unsub = make_unsub();
@@ -1845,7 +1868,6 @@ var RxHTML = (function () {
       var val = localStorage.getItem(pushKeyLocal);
       if (val) {
         if (val == sub.endpoint) {
-          console.log("reusing endpoint:" + sub.endpoint);
           return;
         }
       }

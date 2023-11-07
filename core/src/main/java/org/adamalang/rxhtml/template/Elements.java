@@ -63,7 +63,7 @@ public class Elements {
     attributes._event("fall");
   }
 
-  public static void view_write(Environment env) {
+  public static void viewwrite(Environment env) {
     StatePath path = StatePath.resolve("view:" + env.element.attr("path"), env.stateVar);
     RxObject obj = new RxObject(env, "value");
     env.writer.tab().append("$.VW(").append(path.command).append(",'").append(path.name).append("',").append(obj.rxObj).append(");").newline();
@@ -94,7 +94,7 @@ public class Elements {
     }
   }
 
-  public static void trusted_html(Environment env) {
+  public static void trustedhtml(Environment env) {
     StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     env.writer.tab().append(env.parentVariable).append(".append($.Lh(").append(path.command).append(",'").append(path.name).append("'));").newline();
   }
@@ -107,7 +107,7 @@ public class Elements {
     }
   }
 
-  public static void exit_gate(Environment env) {
+  public static void exitgate(Environment env) {
     boolean hasGuard = env.element.hasAttr("guard");
     boolean hasSet = env.element.hasAttr("set");
     if (hasGuard && hasSet) {
@@ -143,7 +143,7 @@ public class Elements {
     obj.finish();
   }
 
-  public static void viewstate_params(Environment env) {
+  public static void viewstateparams(Environment env) {
     ArrayList<String> params = new ArrayList<>();
     for (Attribute attr : env.element.attributes()) {
       if (attr.getKey().startsWith("sync:")) {
@@ -154,6 +154,7 @@ public class Elements {
     env.writer.tab().append("$.VSP(").append(sp.command).append(",[").append(String.join(",", params)).append("]);").newline();
   }
 
+  @Deprecated
   public static void viewsync(Environment env) {
     String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);
@@ -187,6 +188,32 @@ public class Elements {
       env.writer.tab().append(env.parentVariable).append(".append(").append(parentVar).append(");").newline();
     }
     return parentVar;
+  }
+
+  public static void connectionstatus(Environment env) {
+    if (!env.element.hasAttr("name")) {
+      env.element.attr("name", "default");
+    }
+    String childStateVar = env.pool.ask();
+    String parentVar = soloParent(env);
+
+    env.writer.tab().append("$.CSt(").append(parentVar).append(",").append(env.stateVar).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
+      } else {
+        return true;
+      }
+    });
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
+      } else {
+        return false;
+      }
+    });
+    env.writer.tabDown().tab().append("});").newline();
   }
 
   public static void connection(Environment env) {
@@ -259,6 +286,10 @@ public class Elements {
     env.pool.give(childStateVar);
   }
 
+  private static void __finish() {
+
+  }
+
   public static void customdata(Environment env) {
     ArrayList<String> parameters = new ArrayList<>();
     for (Attribute attr : env.element.attributes()) {
@@ -318,7 +349,7 @@ public class Elements {
     input(env);
   }
 
-  public static void inline_template(Environment env) {
+  public static void inlinetemplate(Environment env) {
     String eVar = env.parentVariable;
     String name = env.element.attr("name");
     String parentVar = env.pool.ask();
