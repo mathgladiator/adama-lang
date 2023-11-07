@@ -690,7 +690,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block(rootScope.makeStateMachineTransition()));
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
     }
@@ -703,6 +703,8 @@ public class Parser {
           return execute_link(op);
         case "@authorize":
           return define_authorize(op);
+        case "@authorization":
+          return define_authorization(op);
         case "@password":
           return define_password(op);
         case "enum":
@@ -898,6 +900,7 @@ public class Parser {
     }
   }
 
+  @Deprecated
   public Consumer<TopLevelDocumentHandler> define_authorize(final Token authorizeToken) throws AdamaLangException {
     Token openParen = consumeExpectedSymbol("(");
     Token username = id();
@@ -906,6 +909,15 @@ public class Parser {
     Token closeParen = consumeExpectedSymbol(")");
     Block code = block(rootScope.makeAuthorize());
     return (doc) -> doc.add(new DefineAuthorization(authorizeToken, openParen, username, comma, password, closeParen, code));
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_authorization(final Token authorizeToken) throws AdamaLangException {
+    Token openParen = consumeExpectedSymbol("(");
+    Token messageType = id();
+    Token messageValue = id();
+    Token closeParen = consumeExpectedSymbol(")");
+    Block code = block(rootScope.makeAuthorize());
+    return (doc) -> doc.add(new DefineAuthorizationPipe(authorizeToken, openParen, messageType, messageValue, closeParen, code));
   }
 
   public Consumer<TopLevelDocumentHandler> define_password(final Token passwordToken) throws AdamaLangException {

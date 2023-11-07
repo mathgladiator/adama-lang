@@ -81,6 +81,8 @@ public interface TopLevelDocumentHandler {
 
   void add(DefinePassword dp);
 
+  void add(DefineAuthorizationPipe da);
+
   void add(ReplicationDefinition rd);
 
   void add(DefineMetric dm);

@@ -163,6 +163,11 @@ public class FormatDocumentHandler implements TopLevelDocumentHandler{
   }
 
   @Override
+  public void add(DefineAuthorizationPipe da) {
+    da.format(formatter);
+  }
+
+  @Override
   public void add(ReplicationDefinition rd) {
     rd.format(formatter);
   }

@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import java.util.function.Consumer;
 
 /** a very special way for a user of a document to set their password */
+@Deprecated
 public class DefinePassword extends Definition {
   public final Token passwordToken;
   public final Token openParen;

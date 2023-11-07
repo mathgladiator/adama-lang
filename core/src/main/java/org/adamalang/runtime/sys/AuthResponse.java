@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys;
 
-public class Platform {
-  public static final String VERSION = "20231106202657";
-  public static final String JS_VERSION = "f2ac9e230cea5e64e399a19445f12340";
+public class AuthResponse {
+  public String hash;
+
+  public AuthResponse hash(String hash) {
+    this.hash = hash;
+    return this;
+  }
 }

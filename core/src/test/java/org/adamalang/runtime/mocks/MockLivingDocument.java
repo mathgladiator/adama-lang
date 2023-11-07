@@ -30,6 +30,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.web.WebDelete;
@@ -82,6 +83,11 @@ public class MockLivingDocument extends LivingDocument {
   @Override
   protected void __debug(JsonStreamWriter __writer) {
 
+  }
+
+  @Override
+  public AuthResponse __authpipe(CoreRequestContext __context, String __messsage) {
+    return null;
   }
 
   @Override

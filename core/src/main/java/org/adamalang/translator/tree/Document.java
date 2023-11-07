@@ -81,6 +81,7 @@ public class Document implements TopLevelDocumentHandler {
   private final ArrayList<File> searchPaths;
   private final TypeCheckerRoot typeChecker;
   public final ArrayList<DefineAuthorization> auths;
+  public final ArrayList<DefineAuthorizationPipe> authPipes;
   public final ArrayList<DefinePassword> passwords;
   private int autoClassId;
   private String className;
@@ -135,6 +136,7 @@ public class Document implements TopLevelDocumentHandler {
     assocs = new LinkedHashMap<>();
     assocIdGen = 0;
     templates = new LinkedHashMap<>();
+    authPipes = new ArrayList<>();
   }
 
   public void setIncludes(HashMap<String, String> include) {
@@ -326,6 +328,15 @@ public class Document implements TopLevelDocumentHandler {
     }
     auths.add(da);
     da.typing(typeChecker);
+  }
+
+  @Override
+  public void add(DefineAuthorizationPipe da) {
+   if (authPipes.size() >= 1) {
+     typeChecker.issueError(da, "Only one @authorization action allowed");
+   }
+   authPipes.add(da);
+   da.typing(typeChecker);
   }
 
   @Override

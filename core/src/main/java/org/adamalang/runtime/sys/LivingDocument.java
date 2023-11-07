@@ -880,6 +880,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** is the channel open */
   public abstract boolean __open_channel(String name);
 
+  @Deprecated
   public String __authorize(CoreRequestContext __context, String username, String password) {
     __time.set(System.currentTimeMillis());
     String result = __auth(__context, username, password);
@@ -888,8 +889,19 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** authenticate a user; return null to indicate forbidden, return an agent to sign for the document */
+  @Deprecated
   public abstract String __auth(CoreRequestContext context, String username, String password);
 
+  public AuthResponse __authorization(CoreRequestContext __context, String message) {
+    __time.set(System.currentTimeMillis());
+    AuthResponse result = __authpipe(__context, message);
+    __revert();
+    return result;
+  }
+
+  public abstract AuthResponse __authpipe(CoreRequestContext __context, String __messsage);
+
+  @Deprecated
   public abstract void __password(CoreRequestContext context, String password);
 
   private void __drive_webget_queue() {

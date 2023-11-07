@@ -42,11 +42,17 @@ public class Return extends Statement {
   private TreeSet<String> webFields;
   private TyNativeMessage webReturnType;
 
+  private TreeSet<String> authorizationFields;
+  private TyNativeMessage authorizationReturnType;
+
   public Return(final Token returnToken, final Expression expression, final Token semicolonToken) {
     this.returnToken = returnToken;
     this.expression = expression;
     this.semicolonToken = semicolonToken;
     webFields = null;
+    webReturnType = null;
+    authorizationFields = null;
+    authorizationReturnType = null;
     ingest(returnToken);
     ingest(semicolonToken);
   }
@@ -67,11 +73,11 @@ public class Return extends Statement {
     }
   }
 
-  private boolean consider(String field, TyNativeMessage message, Consumer<TyType> check) {
+  private static boolean consider(String field, TyNativeMessage message, Consumer<TyType> check, TreeSet<String> fields) {
     FieldDefinition fd = message.storage.fields.get(field);
     if (fd != null) {
       check.accept(fd.type);
-      webFields.add(field);
+      fields.add(field);
       return true;
     }
     return false;
@@ -79,49 +85,65 @@ public class Return extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    if (environment.state.isWeb()) {
+    final var expectedReturnType = environment.getMostRecentReturnType();
+    if (environment.state.isAuthorize() && expectedReturnType == null) {
+      final var givenReturnType = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), true);
+      if (givenReturnType instanceof TyNativeMessage) {
+        authorizationFields = new TreeSet<>();
+        authorizationReturnType = (TyNativeMessage) givenReturnType;
+        boolean hasHash = false;
+        if (consider("hash", webReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
+          hasHash = true;
+        }
+        if (!hasHash) {
+          environment.document.createError(this, String.format("The return statement within a @authorization expects a hash"));
+        }
+      } else {
+        environment.document.createError(this, String.format("The return statement within a @authorization expects a message type"));
+      }
+    } else if (environment.state.isWeb() && expectedReturnType == null) {
       final var givenReturnType = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), true);
       if (givenReturnType instanceof TyNativeMessage) {
         String method = environment.state.getWebMethod();
         webFields = new TreeSet<>();
         webReturnType = (TyNativeMessage) givenReturnType;
         int body = 0;
-        if (consider("html", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("html", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("sign", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("sign", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("xml", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("xml", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("js", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("js", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("css", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("css", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("error", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("error", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false))) {
+        if (consider("json", webReturnType, (ty) -> environment.rules.IsNativeMessage(ty, false), webFields)) {
           body++;
         }
-        if (consider("redirect", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("redirect", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("forward", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("forward", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("identity", webReturnType, (ty) -> environment.rules.IsString(ty, false))) {
+        if (consider("identity", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
-        if (consider("asset", webReturnType, (ty) -> environment.rules.IsAsset(ty, false))) {
-          consider("asset_transform", webReturnType, (ty) -> environment.rules.IsString(ty, false));
+        if (consider("asset", webReturnType, (ty) -> environment.rules.IsAsset(ty, false), webFields)) {
+          consider("asset_transform", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields);
           body++;
         }
-        consider("cors", webReturnType, (ty) -> environment.rules.IsBoolean(ty, false));
-        consider("cache_ttl_seconds", webReturnType, (ty) -> environment.rules.IsInteger(ty, false));
+        consider("cors", webReturnType, (ty) -> environment.rules.IsBoolean(ty, false), webFields);
+        consider("cache_ttl_seconds", webReturnType, (ty) -> environment.rules.IsInteger(ty, false), webFields);
         if (method.equals("options")) {
           if (body != 0) {
             environment.document.createError(this, String.format("The return statement within a @web expects no body fields; got " + body + " instead"));
@@ -134,9 +156,7 @@ public class Return extends Statement {
       } else {
         environment.document.createError(this, String.format("The return statement within a @web expects a message type"));
       }
-      return ControlFlow.Returns;
     } else {
-      final var expectedReturnType = environment.getMostRecentReturnType();
       if (expression != null) {
         if (expectedReturnType != null) {
           final var givenReturnType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), expectedReturnType);
@@ -149,26 +169,36 @@ public class Return extends Statement {
       } else if (expectedReturnType != null) {
         environment.document.createError(this, String.format("The return statement expected an expression of type `%s`", expectedReturnType.getAdamaType()));
       }
-      return ControlFlow.Returns;
     }
+    return ControlFlow.Returns;
   }
 
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    if (environment.state.isWeb()) {
-      if (webFields != null) {
-        sb.append("{").tabUp().writeNewline();
-        String exprName = "__capture" + environment.autoVariable();
-        sb.append("RTx").append(webReturnType.name).append(" ").append(exprName).append(" = ");
-        expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
-        sb.append(";").writeNewline();
-        sb.append("return new WebResponse()");
-        for (String webField : webFields) {
-          sb.append(".").append(webField).append("(").append(exprName).append(".").append(webField).append(")");
-        }
-        sb.append(";").tabDown().writeNewline();
-        sb.append("}");
+    if (authorizationFields != null) {
+      sb.append("{").tabUp().writeNewline();
+      String exprName = "__capture" + environment.autoVariable();
+      sb.append("RTx").append(authorizationReturnType.name).append(" ").append(exprName).append(" = ");
+      expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+      sb.append(";").writeNewline();
+      sb.append("return new AuthResponse()");
+      for (String authField : authorizationFields) {
+        sb.append(".").append(authField).append("(").append(exprName).append(".").append(authField).append(")");
       }
+      sb.append(";").tabDown().writeNewline();
+      sb.append("}");
+    } else if (webFields != null) {
+      sb.append("{").tabUp().writeNewline();
+      String exprName = "__capture" + environment.autoVariable();
+      sb.append("RTx").append(webReturnType.name).append(" ").append(exprName).append(" = ");
+      expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+      sb.append(";").writeNewline();
+      sb.append("return new WebResponse()");
+      for (String webField : webFields) {
+        sb.append(".").append(webField).append("(").append(exprName).append(".").append(webField).append(")");
+      }
+      sb.append(";").tabDown().writeNewline();
+      sb.append("}");
     } else {
       sb.append("return");
       if (expression != null) {

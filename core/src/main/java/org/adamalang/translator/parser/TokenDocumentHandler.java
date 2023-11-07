@@ -157,6 +157,11 @@ public abstract class TokenDocumentHandler implements Consumer<Token>, TopLevelD
   public void add(DefinePassword dp) { dp.emit(this); }
 
   @Override
+  public void add(DefineAuthorizationPipe da) {
+    da.emit(this);
+  }
+
+  @Override
   public void add(ReplicationDefinition rd) {
     rd.emit(this);
   }

@@ -669,6 +669,9 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
+    gold.append("\n  public AuthResponse __authpipe(CoreRequestContext __context, String __message) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
@@ -1568,6 +1571,9 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String __auth(CoreRequestContext __context, String username, String password) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  public AuthResponse __authpipe(CoreRequestContext __context, String __message) {");
     gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");

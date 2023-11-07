@@ -611,6 +611,9 @@ public class GeneratedAuthTests extends GeneratedBase {
     gold.append("\n      return null;");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  public AuthResponse __authpipe(CoreRequestContext __context, String __message) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String password) {");
     gold.append("\n    NtPrincipal __who = __context.who;");

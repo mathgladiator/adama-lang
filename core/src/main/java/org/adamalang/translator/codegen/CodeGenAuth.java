@@ -73,6 +73,15 @@ public class CodeGenAuth {
     }
     sb.append("}").writeNewline();
 
+    if (raw.document.authPipes.size() == 1) {
+      sb.append("public AuthResponse __authpipe(CoreRequestContext __context, String __message) {").tabUp().writeNewline();
+      sb.append("return null;").tabDown().writeNewline();
+    } else {
+      sb.append("public AuthResponse __authpipe(CoreRequestContext __context, String __message) {").tabUp().writeNewline();
+      sb.append("return null;").tabDown().writeNewline();
+    }
+    sb.append("}").writeNewline();
+
     sb.append("@Override").writeNewline();
     if (raw.document.passwords.size() == 1) {
       DefinePassword dp = raw.document.passwords.get(0);

@@ -19,10 +19,11 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.FreeEnvironment;
-import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
+import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
+import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeString;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
@@ -30,22 +31,19 @@ import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import java.util.function.Consumer;
 
 /** defines an authorization handler */
-@Deprecated
-public class DefineAuthorization extends Definition {
+public class DefineAuthorizationPipe extends Definition {
   public final Token authorize;
   public final Token openParen;
-  public final Token username;
-  public final Token comma;
-  public final Token password;
+  public final Token messageType;
+  public final Token messageValue;
   public final Token endParen;
   public final Block code;
 
-  public DefineAuthorization(Token authorize, Token openParen, Token username, Token comma, Token password, Token endParen, Block code) {
+  public DefineAuthorizationPipe(Token authorize, Token openParen, Token messageType, Token messageValue, Token endParen, Block code) {
     this.authorize = authorize;
     this.openParen = openParen;
-    this.username = username;
-    this.comma = comma;
-    this.password = password;
+    this.messageType = messageType;
+    this.messageValue = messageValue;
     this.endParen = endParen;
     this.code = code;
     ingest(authorize);
@@ -56,9 +54,8 @@ public class DefineAuthorization extends Definition {
   public void emit(Consumer<Token> yielder) {
     yielder.accept(authorize);
     yielder.accept(openParen);
-    yielder.accept(username);
-    yielder.accept(comma);
-    yielder.accept(password);
+    yielder.accept(messageType);
+    yielder.accept(messageValue);
     yielder.accept(endParen);
     code.emit(yielder);
   }
@@ -71,9 +68,11 @@ public class DefineAuthorization extends Definition {
 
   public Environment next(Environment environment) {
     Environment env = environment.scopeAsAuthorize();
-    TyNativeString tyStr = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, authorize);
-    env.define(username.text, tyStr, true, this);
-    env.define(password.text, tyStr, true, this);
+    TyType type = env.rules.Resolve(env.document.types.get(messageType.text), false);
+    env.rules.IsNativeMessage(type, false);
+    if (type != null) {
+      env.define(messageValue.text, type, true, this);
+    }
     return env;
   }
 
@@ -82,10 +81,9 @@ public class DefineAuthorization extends Definition {
     code.free(fe);
     checker.register(fe.free, (env) -> {
       Environment toUse = next(env);
-      toUse.setReturnType(new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, authorize));
       ControlFlow flow = code.typing(toUse);
       if (flow == ControlFlow.Open) {
-        checker.issueError(this, "@authorize must either return a string or abort");
+        checker.issueError(this, "@authorization must either return a special message");
       }
     });
   }
