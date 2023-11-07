@@ -57,7 +57,6 @@ public class Push extends SimpleService  {
         ObjectNode response = Json.newJsonObject();
         response.put("push_id", pushTrackToken);
         callback.success(response.toString());
-
         ObjectNode node = Json.parseJsonObject(request);
         ObjectNode payload = Json.readObject(node, "payload");
         payload.put("@pt", pushTrackToken);
