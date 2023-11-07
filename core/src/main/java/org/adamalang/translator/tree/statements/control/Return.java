@@ -92,11 +92,18 @@ public class Return extends Statement {
         authorizationFields = new TreeSet<>();
         authorizationReturnType = (TyNativeMessage) givenReturnType;
         boolean hasHash = false;
+        boolean hasAgent = false;
         if (consider("hash", webReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
           hasHash = true;
         }
+        if (consider("agent", webReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
+          hasAgent = true;
+        }
         if (!hasHash) {
           environment.document.createError(this, String.format("The return statement within a @authorization expects a hash"));
+        }
+        if (!hasAgent) {
+          environment.document.createError(this, String.format("The return statement within a @authorization expects an agent"));
         }
       } else {
         environment.document.createError(this, String.format("The return statement within a @authorization expects a message type"));

@@ -28,6 +28,7 @@ import org.adamalang.net.client.routing.cache.RoutingTableTarget;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -163,6 +164,20 @@ public class LocalRegionClient {
       @Override
       public void success(InstanceClient client) {
         client.authorize(ip, origin, space, key, username, password, new_password, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public void authorization(String machineToAsk, String ip, String origin, String space, String key, String payload, Callback<AuthResponse> callback) {
+    clientFinder.find(machineToAsk, new Callback<>() {
+      @Override
+      public void success(InstanceClient client) {
+        client.authorization(ip, origin, space, key, payload, callback);
       }
 
       @Override

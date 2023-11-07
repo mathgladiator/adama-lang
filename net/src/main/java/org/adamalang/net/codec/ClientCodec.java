@@ -22,6 +22,7 @@ import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientMessage.RateLimitTestRequest;
+import org.adamalang.net.codec.ClientMessage.AuthorizationRequest;
 import org.adamalang.net.codec.ClientMessage.Authorize;
 import org.adamalang.net.codec.ClientMessage.ReplicaDisconnect;
 import org.adamalang.net.codec.ClientMessage.ReplicaConnect;
@@ -53,6 +54,8 @@ public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
     public abstract void handle(RateLimitTestRequest payload);
+
+    public abstract void handle(AuthorizationRequest payload);
 
     public abstract void handle(Authorize payload);
 
@@ -118,6 +121,9 @@ public class ClientCodec {
       switch (buf.readIntLE()) {
         case 3044:
           handle(readBody_3044(buf, new RateLimitTestRequest()));
+          return;
+        case 2126:
+          handle(readBody_2126(buf, new AuthorizationRequest()));
           return;
         case 2124:
           handle(readBody_2124(buf, new Authorize()));
@@ -200,6 +206,7 @@ public class ClientCodec {
 
   public static interface HandlerServer {
     public void handle(RateLimitTestRequest payload);
+    public void handle(AuthorizationRequest payload);
     public void handle(Authorize payload);
     public void handle(ReplicaDisconnect payload);
     public void handle(ReplicaConnect payload);
@@ -231,6 +238,9 @@ public class ClientCodec {
     switch (buf.readIntLE()) {
       case 3044:
         handler.handle(readBody_3044(buf, new RateLimitTestRequest()));
+        return;
+      case 2126:
+        handler.handle(readBody_2126(buf, new AuthorizationRequest()));
         return;
       case 2124:
         handler.handle(readBody_2124(buf, new Authorize()));
@@ -360,6 +370,24 @@ public class ClientCodec {
     o.session = Helper.readString(buf);
     o.resource = Helper.readString(buf);
     o.type = Helper.readString(buf);
+    return o;
+  }
+
+  public static AuthorizationRequest read_AuthorizationRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2126:
+        return readBody_2126(buf, new AuthorizationRequest());
+    }
+    return null;
+  }
+
+
+  private static AuthorizationRequest readBody_2126(ByteBuf buf, AuthorizationRequest o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.payload = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
     return o;
   }
 
@@ -813,6 +841,19 @@ public class ClientCodec {
     Helper.writeString(buf, o.session);;
     Helper.writeString(buf, o.resource);;
     Helper.writeString(buf, o.type);;
+  }
+
+  public static void write(ByteBuf buf, AuthorizationRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2126);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.payload);;
+    Helper.writeString(buf, o.ip);;
+    Helper.writeString(buf, o.origin);;
   }
 
   public static void write(ByteBuf buf, Authorize o) {

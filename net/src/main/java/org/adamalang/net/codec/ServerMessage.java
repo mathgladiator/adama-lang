@@ -167,6 +167,15 @@ public class ServerMessage {
     public String agent;
   }
 
+  @TypeId(2125)
+  @Flow("Authorization")
+  public static class AuthorizationResponse {
+    @FieldOrder(1)
+    public String agent;
+    @FieldOrder(2)
+    public String hash;
+  }
+
   @TypeId(2001)
   @Flow("Query")
   public static class QueryResult {

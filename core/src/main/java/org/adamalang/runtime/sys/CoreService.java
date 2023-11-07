@@ -647,6 +647,27 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
+  public void authorization(String origin, String ip, Key key, String payload, Callback<AuthResponse> callback) {
+    CoreRequestContext context = new CoreRequestContext(NtPrincipal.NO_ONE, origin, ip, key.key);
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.registerActivity();
+        AuthResponse response = document.document().__authorization(context, payload);
+        if (response != null) {
+          callback.success(response);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_AUTHORIIZE_FAILURE));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
   /** execute a web get against the document */
   public void webGet(Key key, WebGet get, Callback<WebResponse> callback) {
     loadOrCreate(get.context.toCoreRequestContext(key), key, new Callback<>() {

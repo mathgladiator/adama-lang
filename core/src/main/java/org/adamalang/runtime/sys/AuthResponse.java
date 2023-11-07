@@ -19,9 +19,15 @@ package org.adamalang.runtime.sys;
 
 public class AuthResponse {
   public String hash;
+  public String agent;
 
   public AuthResponse hash(String hash) {
     this.hash = hash;
+    return this;
+  }
+
+  public AuthResponse agent(String agent) {
+    this.agent = agent;
     return this;
   }
 }

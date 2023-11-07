@@ -36,6 +36,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.TriggerDeployment;
@@ -208,6 +209,28 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
       public void success(String agent) {
         ServerMessage.AuthResponse response = new ServerMessage.AuthResponse();
         response.agent = agent;
+        ByteBuf buf = upstream.create(response.agent.length() + 32);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
+  @Override
+  public void handle(ClientMessage.AuthorizationRequest payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.authorization(payload.origin, payload.ip, key, payload.payload, new Callback<AuthResponse>() {
+      @Override
+      public void success(AuthResponse fromCore) {
+        ServerMessage.AuthorizationResponse response = new ServerMessage.AuthorizationResponse();
+        response.hash = fromCore.hash;
+        response.agent = fromCore.agent;
         ByteBuf buf = upstream.create(response.agent.length() + 32);
         ServerCodec.write(buf, response);
         upstream.next(buf);

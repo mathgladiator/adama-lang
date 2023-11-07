@@ -368,6 +368,21 @@ public class ClientMessage {
     public String origin;
   }
 
+  @TypeId(2126)
+  @Flow("Server")
+  public static class AuthorizationRequest {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String payload;
+    @FieldOrder(4)
+    public String ip;
+    @FieldOrder(5)
+    public String origin;
+  }
+
   @TypeId(3044)
   @Flow("Server")
   public static class RateLimitTestRequest {

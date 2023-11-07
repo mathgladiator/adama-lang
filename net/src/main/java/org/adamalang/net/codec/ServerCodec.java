@@ -25,6 +25,7 @@ import org.adamalang.net.codec.ServerMessage.RateLimitResult;
 import org.adamalang.net.codec.ServerMessage.ReplicaData;
 import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
 import org.adamalang.net.codec.ServerMessage.QueryResult;
+import org.adamalang.net.codec.ServerMessage.AuthorizationResponse;
 import org.adamalang.net.codec.ServerMessage.AuthResponse;
 import org.adamalang.net.codec.ServerMessage.WebResponseNet;
 import org.adamalang.net.codec.ServerMessage.InventoryHeartbeat;
@@ -439,6 +440,41 @@ public class ServerCodec {
   }
 
 
+  public static abstract class StreamAuthorization implements ByteStream {
+    public abstract void handle(AuthorizationResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 2125:
+          handle(readBody_2125(buf, new AuthorizationResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerAuthorization {
+    public void handle(AuthorizationResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerAuthorization handler) {
+    switch (buf.readIntLE()) {
+      case 2125:
+        handler.handle(readBody_2125(buf, new AuthorizationResponse()));
+        return;
+    }
+  }
+
+
   public static abstract class StreamWeb implements ByteStream {
     public abstract void handle(WebResponseNet payload);
 
@@ -669,6 +705,21 @@ public class ServerCodec {
 
   private static QueryResult readBody_2001(ByteBuf buf, QueryResult o) {
     o.result = Helper.readString(buf);
+    return o;
+  }
+
+  public static AuthorizationResponse read_AuthorizationResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2125:
+        return readBody_2125(buf, new AuthorizationResponse());
+    }
+    return null;
+  }
+
+
+  private static AuthorizationResponse readBody_2125(ByteBuf buf, AuthorizationResponse o) {
+    o.agent = Helper.readString(buf);
+    o.hash = Helper.readString(buf);
     return o;
   }
 
@@ -947,6 +998,16 @@ public class ServerCodec {
     }
     buf.writeIntLE(2001);
     Helper.writeString(buf, o.result);;
+  }
+
+  public static void write(ByteBuf buf, AuthorizationResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2125);
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.hash);;
   }
 
   public static void write(ByteBuf buf, AuthResponse o) {
