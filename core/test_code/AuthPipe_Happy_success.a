@@ -1,0 +1,7 @@
+message M {
+
+}
+
+@authorization (M m) {
+  return {agent:"1", hash:"hash"};
+}

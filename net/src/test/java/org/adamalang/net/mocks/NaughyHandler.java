@@ -117,6 +117,11 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.AuthorizationRequest payload) {
+    real.failure(new ErrorCodeException(-13));
+  }
+
+  @Override
   public void onSetupComplete(CoreStream stream) {
     real.onSetupComplete(stream);
   }

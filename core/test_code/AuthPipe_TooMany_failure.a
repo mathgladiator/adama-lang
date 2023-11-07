@@ -1,0 +1,8 @@
+message M {
+}
+
+@authorization (M m) {
+}
+
+@authorization (M m) {
+}

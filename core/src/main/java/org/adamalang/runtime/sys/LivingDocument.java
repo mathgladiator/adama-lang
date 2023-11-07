@@ -894,9 +894,11 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   public AuthResponse __authorization(CoreRequestContext __context, String message) {
     __time.set(System.currentTimeMillis());
-    AuthResponse result = __authpipe(__context, message);
-    __revert();
-    return result;
+    try {
+      return __authpipe(__context, message);
+    } finally {
+      __revert();
+    }
   }
 
   public abstract AuthResponse __authpipe(CoreRequestContext __context, String __messsage);

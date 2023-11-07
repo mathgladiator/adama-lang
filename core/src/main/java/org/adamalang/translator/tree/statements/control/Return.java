@@ -93,10 +93,10 @@ public class Return extends Statement {
         authorizationReturnType = (TyNativeMessage) givenReturnType;
         boolean hasHash = false;
         boolean hasAgent = false;
-        if (consider("hash", webReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
+        if (consider("hash", authorizationReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
           hasHash = true;
         }
-        if (consider("agent", webReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
+        if (consider("agent", authorizationReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
           hasAgent = true;
         }
         if (!hasHash) {

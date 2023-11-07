@@ -22,6 +22,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.TestBed;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.mocks.SimpleIntCallback;
@@ -486,7 +487,6 @@ public class InstanceClientTests {
     }
   }
 
-
   @Test
   public void auth() throws Exception {
     try (TestBed bed =
@@ -519,6 +519,54 @@ public class InstanceClientTests {
           client.authorize("127.0.0.1", "origin", "space", "1", "user", "yop", null, new Callback<String>() {
             @Override
             public void success(String value) {
+
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              latchGotFailure.countDown();
+            }
+          });
+          Assert.assertTrue(latchGotFailure.await(5000, TimeUnit.MILLISECONDS));
+        }
+
+
+      }
+    }
+  }
+
+  @Test
+  public void authpipe() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10013,
+                 "@static { create { return true; } invent { return true; } } @connected { return true; } message M { bool fail; } @authorization (M m) { if (m.fail) abort; return {agent:\"1\", hash:\"h\"}; }")) {
+      bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        {
+          CountDownLatch latchGotHappy = new CountDownLatch(1);
+          client.authorization("127.0.0.1", "origin", "space", "1", "{}", new Callback<AuthResponse>() {
+            @Override
+            public void success(AuthResponse value) {
+              System.err.println(value.agent + ";" + value.hash);
+              latchGotHappy.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              ex.printStackTrace();
+            }
+          });
+          Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+        }
+        {
+          CountDownLatch latchGotFailure = new CountDownLatch(1);
+          client.authorization("127.0.0.1", "origin", "space", "1", "{\"fail\":true}", new Callback<AuthResponse>() {
+            @Override
+            public void success(AuthResponse value) {
 
             }
 

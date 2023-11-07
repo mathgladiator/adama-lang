@@ -1,0 +1,6 @@
+message M {
+}
+
+@authorization (M m) {
+  return {};
+}

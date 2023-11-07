@@ -20,6 +20,7 @@ package org.adamalang.translator.codegen;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineAuthorization;
+import org.adamalang.translator.tree.definitions.DefineAuthorizationPipe;
 import org.adamalang.translator.tree.definitions.DefineHandler;
 import org.adamalang.translator.tree.definitions.DefinePassword;
 
@@ -75,7 +76,14 @@ public class CodeGenAuth {
 
     if (raw.document.authPipes.size() == 1) {
       sb.append("public AuthResponse __authpipe(CoreRequestContext __context, String __message) {").tabUp().writeNewline();
+      DefineAuthorizationPipe pipe = raw.document.authPipes.get(0);
+      sb.append("try {").tabUp().writeNewline();
+      sb.append("if (__message == null) throw new AbortMessageException();").writeNewline();
+      sb.append("RTx").append(pipe.messageType.text).append(" ").append(pipe.messageValue.text).append(" = new RTx").append(pipe.messageType.text).append("(new JsonStreamReader(__message));").writeNewline();
+      pipe.code.specialWriteJava(sb, raw, false, true);
+      sb.append("} catch (AbortMessageException ame) {").tabUp().writeNewline();
       sb.append("return null;").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
     } else {
       sb.append("public AuthResponse __authpipe(CoreRequestContext __context, String __message) {").tabUp().writeNewline();
       sb.append("return null;").tabDown().writeNewline();
