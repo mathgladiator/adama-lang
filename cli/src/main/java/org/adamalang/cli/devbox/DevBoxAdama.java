@@ -27,6 +27,7 @@ import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -96,6 +97,42 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
     // TODO: parse identity and then resolve against a table
     return NtPrincipal.NO_ONE;
+  }
+  // public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
+  private void commonAuthorizatiopn(Key key, JsonNode payload, InitiationResponder responder) {
+    ObjectNode message = (ObjectNode) payload;
+    String pw = message.remove("password").textValue();
+    verse.service.authorization(context.origin, context.remoteIp, key, message.toString(), new Callback<AuthResponse>() {
+      @Override
+      public void success(AuthResponse response) {
+        if (response != null) {
+          if (SCryptUtil.check(pw, response.hash)) {
+            responder.complete("document/" + key.space + "/" + key.key + "/" + response.agent);
+            return;
+          }
+        }
+        responder.error(new ErrorCodeException(ErrorCodes.DOCUMENT_AUTHORIIZE_FAILURE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle_DocumentAuthorization(long requestId, String space, String key, JsonNode message, InitiationResponder responder) {
+    commonAuthorizatiopn(new Key(space, key), message, responder);
+  }
+
+  @Override
+  public void handle_DocumentAuthorizationDomain(long requestId, String domain, JsonNode message, InitiationResponder responder) {
+    if (verse.domainKeyToUse != null) {
+      commonAuthorizatiopn(verse.domainKeyToUse, message, responder);
+    } else {
+      responder.error(new ErrorCodeException(0));
+    }
   }
 
   @Override

@@ -33,11 +33,13 @@ import java.util.regex.Pattern;
 public class LibString {
 
   @Extension
+  @Deprecated
   public static String passwordHash(String password) {
     return SCryptUtil.scrypt(password, 16384, 8, 1);
   }
 
   @Extension
+  @Deprecated
   public static boolean passwordCheck(String hash, String password) {
     try {
       return SCryptUtil.check(password, hash);

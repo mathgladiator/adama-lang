@@ -64,6 +64,10 @@ public class GlobalDataHandler implements RootRegionHandler {
       nexus.adama.authorization(session.authenticator.getTransportContext().remoteIp, session.authenticator.getTransportContext().origin, key.space, key.key, node.toString(), new Callback<>() {
         @Override
         public void success(AuthResponse response) {
+          if (response == null) {
+            responder.error(new ErrorCodeException(ErrorCodes.DOCUMENT_AUTHORIIZE_FAILURE));
+            return;
+          }
           nexus.crypto.execute(new NamedRunnable("crypto-check") {
             @Override
             public void execute() throws Exception {
