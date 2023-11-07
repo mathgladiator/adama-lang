@@ -46,7 +46,7 @@ public class ParserTests {
   @Test
   public void cmd_goto1() throws Exception {
     Goto goto_ = (Goto) (Parser.parse("goto:/view/x-yz-{data}").get(0));
-    assertIs(goto_, "var a={};\n" + "$.YS(State,a,'data');\n" + "$.onGO(DOM,'type',State,function(){ return \"/view/x-yz-\" + a['data'];});\n");
+    assertIs(goto_, "var a={};\n" + "$.YS(State,a,'data');\n" + "$.onGO(DOM,'type',State,function(){ return \"/view/x-yz-\" + $.F(a,'data');});\n");
   }
 
   private static void assertIs(Command command, String expected) {
@@ -197,8 +197,8 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("set:xyz={xyz}").get(0));
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("{xyz}", set.value);
-    assertIs(set, "var a={};\n" + "$.YS(State,a,'xyz');\n" + "$.onS(DOM,'type',$.pV(State),'xyz',function(){ return a['xyz'];});\n");
-    assertIsBulk(set, "var a={};\n" + "$.YS(State,a,'xyz');\n" + "$ARR.push($.bS(DOM,$.pV(State),'xyz',function(){ return a['xyz'];}));\n");
+    assertIs(set, "var a={};\n" + "$.YS(State,a,'xyz');\n" + "$.onS(DOM,'type',$.pV(State),'xyz',function(){ return $.F(a,'xyz');});\n");
+    assertIsBulk(set, "var a={};\n" + "$.YS(State,a,'xyz');\n" + "$ARR.push($.bS(DOM,$.pV(State),'xyz',function(){ return $.F(a,'xyz');}));\n");
   }
 
   @Test
