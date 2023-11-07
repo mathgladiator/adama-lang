@@ -51,10 +51,14 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
         invokeSuccess = true;
       } else {
         logger.error("get-callback-not-200: {}, {}", header.status + ":" + header.headers.toString());
-        monitor.failure(ErrorCodes.WEB_STRING_CALLBACK_NOT_200);
-        callback.failure(new ErrorCodeException(ErrorCodes.WEB_STRING_CALLBACK_NOT_200, header.status + ""));
         emissionPossible = false;
         logBody = true;
+        int errorCode = ErrorCodes.WEB_STRING_CALLBACK_NOT_200;
+        if (header.status == 410) {
+          errorCode = ErrorCodes.WEB_CALLBACK_RESOURCE_GONE;
+        }
+        monitor.failure(errorCode);
+        callback.failure(new ErrorCodeException(errorCode, header.status + ""));
       }
     }
   }

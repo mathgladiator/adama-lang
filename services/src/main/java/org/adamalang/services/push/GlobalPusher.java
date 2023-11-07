@@ -85,7 +85,7 @@ public class GlobalPusher implements Pusher {
               @Override
               public void failure(ErrorCodeException ex) {
                 // track some metrics
-                if (ex.code == 410) {
+                if (ex.code == ErrorCodes.WEB_CALLBACK_RESOURCE_GONE) {
                   executor.execute(new NamedRunnable("delete-sub") {
                      @Override
                      public void execute() throws Exception {

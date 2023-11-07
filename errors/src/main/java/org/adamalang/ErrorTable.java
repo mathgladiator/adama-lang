@@ -608,6 +608,8 @@ public class ErrorTable {
     names.put(928828, "NET_LCSM_TIMEOUT");
     descriptions.put(928828, "no description of error (yet)");
     retry.add(928828);
+    names.put(984312, "WEB_CALLBACK_RESOURCE_GONE");
+    descriptions.put(984312, "no description of error (yet)");
     names.put(931015, "WEB_VOID_CALLBACK_NOT_200");
     descriptions.put(931015, "no description of error (yet)");
     names.put(979143, "WEB_STRING_CALLBACK_NOT_200");

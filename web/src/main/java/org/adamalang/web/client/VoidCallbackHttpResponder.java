@@ -41,8 +41,12 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
       callback.success(null);
     } else {
       logger.error("void-callback-not-20x: {} -> {}", header.status, header.headers.toString());
-      monitor.failure(ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
-      callback.failure(new ErrorCodeException(ErrorCodes.WEB_VOID_CALLBACK_NOT_200, header.status + ""));
+      int errorCode = ErrorCodes.WEB_VOID_CALLBACK_NOT_200;
+      if (header.status == 410) {
+        errorCode = ErrorCodes.WEB_CALLBACK_RESOURCE_GONE;
+      }
+      monitor.failure(errorCode);
+      callback.failure(new ErrorCodeException(errorCode, header.status + ""));
     }
   }
 
