@@ -54,6 +54,10 @@ public class Push extends SimpleService  {
     switch (method) {
       case "notify": {
         String pushTrackToken = ProtectedUUID.generate();
+        ObjectNode response = Json.newJsonObject();
+        response.put("push_id", pushTrackToken);
+        callback.success(response.toString());
+
         ObjectNode node = Json.parseJsonObject(request);
         ObjectNode payload = Json.readObject(node, "payload");
         payload.put("@pt", pushTrackToken);
@@ -61,19 +65,7 @@ public class Push extends SimpleService  {
         payload.put("@ag", who.agent);
         payload.put("@au", who.authority);
         String domain = Json.readString(node, "domain");
-        pusher.notify(pushTrackToken, domain, who, payload.toString(), new Callback<>() {
-          @Override
-          public void success(String value) {
-            ObjectNode response = Json.newJsonObject();
-            response.put("push_id", value);
-            callback.success(response.toString());
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
+        pusher.notify(pushTrackToken, domain, who, payload.toString(), Callback.DONT_CARE_VOID);
         return;
       }
       default:

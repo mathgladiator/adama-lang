@@ -22,5 +22,5 @@ import org.adamalang.runtime.natives.NtPrincipal;
 
 public interface Pusher {
 
-  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<String> callback);
+  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<Void> callback);
 }

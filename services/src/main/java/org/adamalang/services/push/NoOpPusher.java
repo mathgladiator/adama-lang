@@ -23,7 +23,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 
 public class NoOpPusher implements Pusher {
   @Override
-  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<String> callback) {
+  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
     callback.failure(new ErrorCodeException(0));
   }
 }

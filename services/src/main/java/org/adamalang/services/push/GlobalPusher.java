@@ -64,14 +64,13 @@ public class GlobalPusher implements Pusher {
   }
 
   @Override
-  public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<String> callback) {
+  public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
     executor.execute(new NamedRunnable("notify") {
       @Override
       public void execute() throws Exception {
         try {
           VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory);
           var subs = PushSubscriptions.list(dataBase, domain, who);
-          callback.success(pushTrackingToken);
           for (DeviceSubscription subscription : subs) {
             // TODO: test if the subscription is webpush
             Subscription sub = new org.adamalang.services.push.webpush.Subscription(subscription.subscription);
@@ -80,7 +79,7 @@ public class GlobalPusher implements Pusher {
               int boundId = subscription.id;
               @Override
               public void success(Void value) {
-                // track some metrics
+                callback.success(null);
               }
 
               @Override
