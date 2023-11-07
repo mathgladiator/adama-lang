@@ -420,8 +420,8 @@ public class LivingDocumentTests {
           public void disconnect() {}
         };
     setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
-    setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(4));
-    setup.document.invalidate(new RealDocumentSetup.AssertInt(8));
+    setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
     Thread.sleep(1000);
     for (String item : list) {
       System.err.println(item);
@@ -459,7 +459,7 @@ public class LivingDocumentTests {
       }
     });
     gotResponse.await(1000, TimeUnit.MILLISECONDS);
-    setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(2));
     setup.assertCompare();
   }
 
@@ -493,7 +493,7 @@ public class LivingDocumentTests {
       }
     });
     gotResponse.await(1000, TimeUnit.MILLISECONDS);
-    setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(2));
     setup.assertCompare();
   }
 

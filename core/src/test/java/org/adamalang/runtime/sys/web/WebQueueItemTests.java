@@ -38,6 +38,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public class WebQueueItemTests {
   @Test
@@ -54,9 +55,12 @@ public class WebQueueItemTests {
     MockRxParent parent = new MockRxParent();
     RxCache cache = new RxCache(doc, parent);
     ArrayList<Runnable> tasks = new ArrayList<>();
-    BiConsumer<Integer, String> service = (id, s) -> tasks.add(() -> {
-      deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
-    });
+    BiFunction<Integer, String, RemoteResult> service = (id, s) -> {
+      tasks.add(() -> {
+        deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
+      });
+      return null;
+    };
     WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
     EphemeralFuture<WebResponse> fut = new EphemeralFuture<>();
     WebQueueItem item = new WebQueueItem(100, context, new WebPut(context, "/uri", new TreeMap<>(), new NtDynamic("{}"), "{\"body\":123}"), cache, fut);

@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public class WebQueueTests {
   @Test
@@ -102,9 +103,12 @@ public class WebQueueTests {
     DelayParent delay = new DelayParent();
     RxCache cache = new RxCache(doc, delay);
     ArrayList<Runnable> tasks = new ArrayList<>();
-    BiConsumer<Integer, String> service = (id, s) -> tasks.add(() -> {
-      deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
-    });
+    BiFunction<Integer, String, RemoteResult> service = (id, s) -> {
+      tasks.add(() -> {
+        deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
+      });
+      return null;
+    };
     WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
     EphemeralFuture<WebResponse> fut = new EphemeralFuture<>();
     RxInt32 taskId = new RxInt32(doc, 1);
@@ -181,6 +185,73 @@ public class WebQueueTests {
   }
 
   @Test
+  public void coverage_delivery_instant() {
+    MockLivingDocument doc = new MockLivingDocument();
+    MockDeliverer deliverer = new MockDeliverer();
+    ServiceRegistry registry = new ServiceRegistry();
+    doc.__lateBind("space", "key", deliverer, registry);
+    DelayParent delay = new DelayParent();
+    RxCache cache = new RxCache(doc, delay);
+    ArrayList<Runnable> tasks = new ArrayList<>();
+    BiFunction<Integer, String, RemoteResult> service = (id, s) -> {
+      return new RemoteResult(s, null, null);
+    };
+    WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
+    EphemeralFuture<WebResponse> fut = new EphemeralFuture<>();
+    RxInt32 taskId = new RxInt32(doc, 1);
+    WebQueue queue = new WebQueue(taskId);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      queue.dump(writer);
+      Assert.assertEquals("\"__webqueue\":{}", writer.toString());
+      Json.parseJsonObject("{" + writer.toString() + "}");
+      System.err.println("{" + writer.toString() + "}");
+    }
+    queue.queue(context, new WebPut(context, "/uri", new TreeMap<>(), new NtDynamic("{}"), "{\"body\":123}"), fut, cache, delay);
+    queue.dirty();
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      queue.dump(writer);
+      Assert.assertEquals("\"__webqueue\":{\"2\":{\"context\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"origin\":\"origin\",\"ip\":\"ip\"},\"item\":{\"put\":{\"uri\":\"/uri\",\"headers\":{},\"parameters\":{},\"bodyJson\":{\"body\":123}}},\"cache\":{}}}", writer.toString());
+      Json.parseJsonObject("{" + writer.toString() + "}");
+    }
+
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      queue.dump(writer);
+      Assert.assertEquals("\"__webqueue\":{\"2\":{\"context\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"origin\":\"origin\",\"ip\":\"ip\"},\"item\":{\"put\":{\"uri\":\"/uri\",\"headers\":{},\"parameters\":{},\"bodyJson\":{\"body\":123}}},\"cache\":{}}}", writer.toString());
+      Json.parseJsonObject("{" + writer.toString() + "}");
+      System.err.println("{" + writer.toString() + "}");
+    }
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      queue.commit(forward, reverse);
+      Assert.assertEquals("\"__webqueue\":{\"2\":{\"context\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"origin\":\"origin\",\"ip\":\"ip\"},\"item\":{\"put\":{\"uri\":\"/uri\",\"headers\":{},\"parameters\":{},\"bodyJson\":{\"body\":123}}},\"cache\":{}}}", forward.toString());
+      Assert.assertEquals("\"__webqueue\":{\"2\":null}", reverse.toString());
+      Json.parseJsonObject("{" + forward + "}");
+      Json.parseJsonObject("{" + reverse + "}");
+    }
+    cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(123, 42), (str) -> new MockMessage(new JsonStreamReader(str)), service);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      queue.commit(forward, reverse);
+      Assert.assertEquals("\"__webqueue\":{\"2\":{\"cache\":{\"1\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":123,\"y\":42}},\"result\":{\"result\":{\"x\":123,\"y\":42},\"failure\":null,\"failure_code\":null}}}}}", forward.toString());
+      Assert.assertEquals("\"__webqueue\":{\"2\":{\"cache\":{\"1\":null}}}", reverse.toString());
+      Json.parseJsonObject("{" + forward + "}");
+      Json.parseJsonObject("{" + reverse + "}");
+    }
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      queue.dump(writer);
+      Assert.assertEquals("\"__webqueue\":{\"2\":{\"context\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"origin\":\"origin\",\"ip\":\"ip\"},\"item\":{\"put\":{\"uri\":\"/uri\",\"headers\":{},\"parameters\":{},\"bodyJson\":{\"body\":123}}},\"cache\":{\"1\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":123,\"y\":42}},\"result\":{\"result\":{\"x\":123,\"y\":42},\"failure\":null,\"failure_code\":null}}}}}", writer.toString());
+      Json.parseJsonObject("{" + writer.toString() + "}");
+      System.err.println("{" + writer.toString() + "}");
+    }
+  }
+
+  @Test
   public void coverage_delivery_delete() {
     MockLivingDocument doc = new MockLivingDocument();
     MockDeliverer deliverer = new MockDeliverer();
@@ -189,9 +260,12 @@ public class WebQueueTests {
     DelayParent delay = new DelayParent();
     RxCache cache = new RxCache(doc, delay);
     ArrayList<Runnable> tasks = new ArrayList<>();
-    BiConsumer<Integer, String> service = (id, s) -> tasks.add(() -> {
-      deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
-    });
+    BiFunction<Integer, String, RemoteResult> service = (id, s) -> {
+      tasks.add(() -> {
+        deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
+      });
+      return null;
+    };
     WebContext context = new WebContext(NtPrincipal.NO_ONE, "origin", "ip");
     EphemeralFuture<WebResponse> fut = new EphemeralFuture<>();
     RxInt32 taskId = new RxInt32(doc, 1);

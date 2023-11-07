@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -77,7 +78,7 @@ public class RxCache extends RxBase implements RxKillable {
   }
 
   /** try to answer a service request against the cache, and emit an execution if we need to do some work */
-  public <Tx> NtResult<Tx> answer(String service, String method, NtPrincipal who, NtToDynamic request, Function<String, Tx> parser, BiConsumer<Integer, String> execute) {
+  public <Tx> NtResult<Tx> answer(String service, String method, NtPrincipal who, NtToDynamic request, Function<String, Tx> parser, BiFunction<Integer, String, RemoteResult> execute) {
     // create the invocation
     String parameters = request.to_dynamic().json;
     RemoteInvocation invocation = new RemoteInvocation(service, method, who, parameters);
@@ -104,7 +105,12 @@ public class RxCache extends RxBase implements RxKillable {
       // and we don't have a route established, then execute the request
       if (!root.__isRouteInflight(site.id)) {
         root.__bindRoute(site.id, this);
-        execute.accept(site.id, parameters);
+        RemoteResult instant = execute.apply(site.id, parameters);
+        if (instant != null) {
+          root.__removeRoute(site.id);
+          site.deliver(instant);
+          __raiseDirty();
+        }
       }
     }
     return result;

@@ -42,7 +42,10 @@ public abstract class SimpleService implements Service {
   @Override
   public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal who, NtToDynamic request, Function<String, T> parser) {
     return cache.answer(name, method, who, request, parser, (id, json) -> {
-      request(who, method, json, new Callback<String>() {
+      InstantCallbackWrapper instant = new InstantCallbackWrapper();
+      AtomicCallbackWrapper<String> wrapper = new AtomicCallbackWrapper<>(instant);
+      request(who, method, json, wrapper);
+      Callback<String> async = new Callback<String>() {
         @Override
         public void success(String value) {
           deliver(new RemoteResult(value, null, null));
@@ -57,7 +60,9 @@ public abstract class SimpleService implements Service {
           Key key = new Key(caller.__getSpace(), caller.__getKey());
           caller.__getDeliverer().deliver(agent, key, id, result, firstParty, Callback.DONT_CARE_INTEGER);
         }
-      });
+      };
+      wrapper.set(async);
+      return instant.convert();
     });
   }
 

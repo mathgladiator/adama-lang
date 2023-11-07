@@ -33,6 +33,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class RxCacheTests {
@@ -45,9 +46,12 @@ public class RxCacheTests {
     MockRxParent parent = new MockRxParent();
     RxCache cache = new RxCache(doc, parent);
     ArrayList<Runnable> tasks = new ArrayList<>();
-    BiConsumer<Integer, String> service = (id, s) -> tasks.add(() -> {
-      deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
-    });
+    BiFunction<Integer, String, RemoteResult> service = (id, s) -> {
+      tasks.add(() -> {
+        deliverer.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), id, new RemoteResult(s, null, null), true, Callback.DONT_CARE_INTEGER);
+      });
+      return null;
+    };
     AtomicInteger x = new AtomicInteger(100);
     Supplier<String> func = cache.wrap(() -> {
       NtResult<MockMessage> result1 = cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(x.get(), 42), (str) -> new MockMessage(new JsonStreamReader(str)), service);
@@ -209,5 +213,39 @@ public class RxCacheTests {
       cache.__patch(new JsonStreamReader("{\"1\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":42}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}},\"6\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":250,\"y\":50}},\"result\":{\"result\":null,\"failure\":null,\"failure_code\":null}}}"));
     }
 
+  }
+
+  @Test
+  public void core_instant() {
+    MockLivingDocument doc = new MockLivingDocument();
+    MockDeliverer deliverer = new MockDeliverer();
+    ServiceRegistry registry = new ServiceRegistry();
+    doc.__lateBind("space", "key", deliverer, registry);
+    MockRxParent parent = new MockRxParent();
+    RxCache cache = new RxCache(doc, parent);
+    BiFunction<Integer, String, RemoteResult> service = (id, s) -> {
+      return new RemoteResult(s, null, null);
+    };
+    AtomicInteger x = new AtomicInteger(100);
+    Supplier<String> func = cache.wrap(() -> {
+      NtResult<MockMessage> result1 = cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(x.get(), 42), (str) -> new MockMessage(new JsonStreamReader(str)), service);
+      NtResult<MockMessage> result2 = cache.answer("service", "method", NtPrincipal.NO_ONE, new MockMessage(x.get(), 50), (str) -> new MockMessage(new JsonStreamReader(str)), service);
+      return "X:" + result1.get() + "|" + result2.get();
+    });
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      cache.__commit("X", redo, undo);
+      Assert.assertEquals("", redo.toString());
+      Assert.assertEquals("", undo.toString());
+    }
+    Assert.assertEquals("X:null|null", func.get());
+    {
+      JsonStreamWriter redo = new JsonStreamWriter();
+      JsonStreamWriter undo = new JsonStreamWriter();
+      cache.__commit("X", redo, undo);
+      Assert.assertEquals("\"X\":{\"1\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":100,\"y\":42}},\"result\":{\"result\":{\"x\":100,\"y\":42},\"failure\":null,\"failure_code\":null}},\"2\":{\"invoke\":{\"service\":\"service\",\"method\":\"method\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"parameter\":{\"x\":100,\"y\":50}},\"result\":{\"result\":{\"x\":100,\"y\":50},\"failure\":null,\"failure_code\":null}}}", redo.toString());
+      Assert.assertEquals("\"X\":{\"1\":null,\"2\":null}", undo.toString());
+    }
   }
 }

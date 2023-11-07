@@ -20,34 +20,27 @@ package org.adamalang.runtime.remote;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 
+/** an attomic callback for swapping out the end path */
+public class AtomicCallbackWrapper<T> implements Callback<T> {
+  private Callback<T> ref;
 
-/** experimental callback wrapper to instantly detect a return value */
-public class InstantCallbackWrapper implements Callback<String> {
-  private String value;
-  private ErrorCodeException exception;
-
-  public InstantCallbackWrapper() {
-    this.value = null;
-    this.exception = null;
+  public AtomicCallbackWrapper(Callback<T> initial) {
+    this.ref = initial;
   }
 
   @Override
-  public void success(String value) {
-    this.value = value;
+  public synchronized void success(T value) {
+    ref.success(value);
   }
 
   @Override
-  public void failure(ErrorCodeException ex) {
-    this.exception = ex;
+  public synchronized void failure(ErrorCodeException ex) {
+    ref.failure(ex);
   }
 
-  public RemoteResult convert() {
-    if (value != null) {
-      return new RemoteResult(value, null, null);
-    } else if (exception != null) {
-      return new RemoteResult(null, "" + exception.getMessage(), exception.code);
-    } else {
-      return null;
-    }
+  public synchronized Callback<T> set(Callback<T> v) {
+    Callback<T> prior = this.ref;
+    this.ref = v;
+    return prior;
   }
 }
