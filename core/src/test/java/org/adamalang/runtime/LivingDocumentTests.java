@@ -464,6 +464,46 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void channel_async_service() throws Exception {
+    ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
+    RealDocumentSetup setup = new RealDocumentSetup(
+        "@link sample{}" +
+            "public string msg = \"Hi\";" +
+            "@connected { return true; }" +
+            "message M { string name; }" +
+            "public string t = \"start\";" +
+            "channel foo(M m) {" +
+            "  var mresult = sample.echo(@who, {message: \"Hello \" + m.name}).await();" +
+            "  if (mresult as result) { t = result.message; }" +
+            "}",
+        "{}");
+    RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
+    ArrayList<String> list = new ArrayList<>();
+    CountDownLatch latch = new CountDownLatch(3);
+    Perspective linked =
+        new Perspective() {
+          @Override
+          public void data(String data) {
+            list.add(data);
+            latch.countDown();
+          }
+
+          @Override
+          public void disconnect() {}
+        };
+    setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(1));
+    setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.send(ContextSupport.WRAP(A), 0, "", "foo", "{\"name\":\"ninja\"}", new RealDocumentSetup.AssertInt(4));
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
+    Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(3, list.size());
+    Assert.assertEquals("{\"data\":{\"msg\":\"Hi\",\"t\":\"start\"},\"seq\":3}", list.get(0));
+    Assert.assertEquals("{\"data\":{\"t\":\"Hello ninja\"},\"seq\":4}", list.get(1));
+    Assert.assertEquals("{\"seq\":5}", list.get(2));
+    setup.assertCompare();
+  }
+
+  @Test
   public void webdel_async_service() throws Exception {
     ServiceRegistry.add("sample", SampleService.class, (s, stringObjectHashMap, keys) -> new SampleService());
     RealDocumentSetup setup = new RealDocumentSetup(
