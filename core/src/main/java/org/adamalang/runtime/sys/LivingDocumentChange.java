@@ -33,12 +33,14 @@ public class LivingDocumentChange {
   public final RemoteDocumentUpdate update;
   public final Object response;
   private final List<Broadcast> broadcasts;
+  public final boolean needBroadcast;
 
   /** wrap both the update and broadcasts into a nice package */
-  public LivingDocumentChange(RemoteDocumentUpdate update, List<Broadcast> broadcasts, Object response) {
+  public LivingDocumentChange(RemoteDocumentUpdate update, List<Broadcast> broadcasts, Object response, boolean needBroadcast) {
     this.update = update;
     this.broadcasts = broadcasts;
     this.response = response;
+    this.needBroadcast = needBroadcast;
   }
 
   /** complete the update. This is to be called once the change is made durable */

@@ -15,9 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys;
 
-public class Platform {
-  public static final String VERSION = "20231108052222";
-  public static final String JS_VERSION = "26c9272a42ea56bcf8f2173119483797";
+/** signal for doing app mode broadcasts */
+public enum BroadcastPathway {
+  Other,
+  Invalidate,
+  Blocked,
+  Send
 }
