@@ -239,7 +239,7 @@ public class RxCacheTests {
       Assert.assertEquals("", redo.toString());
       Assert.assertEquals("", undo.toString());
     }
-    Assert.assertEquals("X:null|null", func.get());
+    Assert.assertEquals("X:{\"x\":100,\"y\":42}|{\"x\":100,\"y\":50}", func.get());
     {
       JsonStreamWriter redo = new JsonStreamWriter();
       JsonStreamWriter undo = new JsonStreamWriter();
