@@ -114,7 +114,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new NetMetrics(metricsFactory);
     metricsFactory.page("aws", "AWS");
     new AWSMetrics(metricsFactory);
-    metricsFactory.page("aws", "Web Client");
+    metricsFactory.page("webclient", "Web Client");
     new WebClientBaseMetrics(metricsFactory);
     metricsFactory.page("fp", "First Party");
     new FirstPartyMetrics(metricsFactory);
