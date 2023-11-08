@@ -110,6 +110,7 @@ public class RxCache extends RxBase implements RxKillable {
           root.__removeRoute(site.id);
           site.deliver(instant);
           __raiseDirty();
+          result = site.of(parser);
         }
       }
     }
