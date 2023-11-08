@@ -5,18 +5,25 @@ self.addEventListener('push', function(event) {
   if (event.data) {
     var json = event.data.json();
     if (json) {
+      console.log(json);
       var options = {
         body: json.body ? json.body : "Generic Push Body",
       };
       if (json.icon) {
         options.icon = json.icon;
       }
+      var show = true;
+      if (json.hide) {
+        show = false;
+      }
       var data = {};
       if (json.url) {
         data.url = json.url;
       }
       options.data = data;
-      event.waitUntil(self.registration.showNotification(json.title ? json.title : "Generic Push Title", options));
+      if (show) {
+        event.waitUntil(self.registration.showNotification(json.title ? json.title : "Generic Push Title", options));
+      }
       if (typeof(json.badge) == "number" && navigator.setAppBadge) {
         try {
           event.waitUntil(navigator.setAppBadge(json.badge));
@@ -30,14 +37,12 @@ self.addEventListener('notificationclick', function(event) {
   if (event.notification && event.notification.data && event.notification.data.url) {
     var url = self.location.protocol + "//" + self.location.host + event.notification.data.url;
     var home = self.location.protocol + "//" + self.location.host;
-    console.log("got:" + url);
     event.notification.close(); // Android needs explicit close.
     event.waitUntil(
       clients.matchAll({type: 'window'}).then( wc => {
         // Check if there is already a window/tab open with the target URL
         var clientWithPrefix = null;
         var clientWithHome = null;
-        console.log(wc);
         for (var i = 0; i < wc.length; i++) {
           var client = wc[i];
           console.log("client:" + client.url + ";" + url);
@@ -52,12 +57,15 @@ self.addEventListener('notificationclick', function(event) {
           }
         }
         if (clientWithPrefix != null) {
+          console.log("nav:prefix:" + url);
           return clientWithPrefix.navigate(url);
         }
         if (clientWithHome != null) {
+          console.log("nav:home:" + url);
           return clientWithHome.navigate(url);
         }
         if (clients.openWindow) {
+          console.log("open:new:" + url);
           return clients.openWindow(url);
         }
       })
