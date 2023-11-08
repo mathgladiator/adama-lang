@@ -62,9 +62,11 @@ public class DocumentConfig extends StaticPiece {
     Environment next = environment.scopeWithComputeContext(ComputeContext.Computation);
     switch (name.text) {
       case "maximum_history":
+      case "app_delay":
         next.rules.IsInteger(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
         return;
       case "delete_on_close":
+      case "app_mode":
         next.rules.IsBoolean(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
         return;
     }
