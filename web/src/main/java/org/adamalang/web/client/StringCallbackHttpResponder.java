@@ -82,6 +82,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   public void bodyEnd() {
     if (invokeSuccess && emissionPossible) {
       callback.success(new String(memory.toByteArray(), StandardCharsets.UTF_8));
+      monitor.success();
     }
     if (logBody) {
       logger.error("failed body: {}", new String(memory.toByteArray(), StandardCharsets.UTF_8));
