@@ -1129,7 +1129,7 @@ public class Parser {
       } else {
         Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
         if (methodToken != null) {
-          storage.add(define_method_trailer(scope, methodToken));
+          storage.add(define_method_trailer(scope, methodToken, storage));
         } else {
           final var type = native_type(false);
           final var field = id();
@@ -1180,7 +1180,7 @@ public class Parser {
     return new FunctionPaint(arr.toArray(new Token[arr.size()]));
   }
 
-  public DefineMethod define_method_trailer(Scope scope, final Token methodToken) throws AdamaLangException {
+  public DefineMethod define_method_trailer(Scope scope, final Token methodToken, StructureStorage storage) throws AdamaLangException {
     final var name = id();
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
@@ -1193,7 +1193,7 @@ public class Parser {
     FunctionPaint fp = painting();
     Scope mscope = scope.makeMethod(fp);
     final var code = block(mscope);
-    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, fp, code);
+    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, fp, code, storage);
   }
 
   public DefineCustomPolicy define_policy_trailer(Scope scope, final Token definePolicy) throws AdamaLangException {
@@ -1241,7 +1241,7 @@ public class Parser {
             storage.addPolicy(define_policy_trailer(scope, op));
             break;
           case "method":
-            storage.add(define_method_trailer(scope, op));
+            storage.add(define_method_trailer(scope, op, storage));
             break;
           case "join":
             storage.add(join_assoc(scope, op));

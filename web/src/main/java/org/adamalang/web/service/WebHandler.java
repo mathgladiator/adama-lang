@@ -52,10 +52,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
@@ -536,6 +533,30 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     });
   }
 
+  private void ok(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
+    HttpUtil.setContentLength(res, 0);
+    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+    if (origin != null) {
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+    }
+    res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
+    sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
+  private static String logSanitize(String x) {
+    PrimitiveIterator.OfInt it = x.codePoints().iterator();
+    StringBuilder result = new StringBuilder();
+    while (it.hasNext()) {
+      int codepoint = it.nextInt();
+      if (Character.isLetterOrDigit(codepoint) || codepoint == ':' || Character.isWhitespace(codepoint)) {
+        result.append(Character.toString(codepoint));
+      }
+    }
+    return result.toString();
+  }
+
   private boolean handleInternal(final ChannelHandlerContext ctx, final FullHttpRequest req) {
     String host = req.headers().get(HttpHeaderNames.HOST);
     if (host == null) {
@@ -583,6 +604,33 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       return true;
     } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
       handleEncryptedAsset(req, ctx);
+      return true;
+    } else if (req.uri().startsWith("/~lg/") && req.method() == HttpMethod.PUT) {
+      String logName = req.uri().substring(5);
+      byte[] memory = new byte[req.content().readableBytes()];
+      req.content().readBytes(memory);
+      String result = new String(memory, StandardCharsets.UTF_8);
+      LOG.error(logName + ":{} %s", logSanitize(result));
+      ok(ctx, req);
+      return true;
+    } else if (req.uri().startsWith("/~pt/") && req.uri().length() >= 10 && req.method() == HttpMethod.PUT) {
+      metrics.webclient_pushack.run();
+      String pushToken = req.uri().substring(5);
+      LOG.error("push-token-ack:" + logSanitize(pushToken));
+      // TODO: route to real logger
+      ok(ctx, req);
+      return true;
+    } else if (req.uri().startsWith("/~bm/") && req.uri().length() >= 6) { // bump a metric
+      String metricName = req.uri().substring(5);
+      switch (metricName) {
+        case "r":
+          metrics.webclient_retry.run();
+          break;
+        case "rxhtml":
+          metrics.webclient_rxhtml.run();
+          break;
+      }
+      ok(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~set/")) { // set a secure cookie
       String[] fragments = req.uri().split(Pattern.quote("/"));

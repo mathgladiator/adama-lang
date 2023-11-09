@@ -52,9 +52,10 @@ public class DefineMethod extends StructureComponent {
   private LinkedHashSet<String> services;
   private final FunctionPaint paint;
   public final TreeSet<String> viewerFields;
+  private final StructureStorage storage;
 
   /** construct the function of a type with a name */
-  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final FunctionPaint paint, final Block code) {
+  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final FunctionPaint paint, final Block code, StructureStorage storage) {
     this.methodToken = methodToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -74,6 +75,7 @@ public class DefineMethod extends StructureComponent {
     this.depends = new LinkedHashSet<>();
     this.services = new LinkedHashSet<>();
     this.viewerFields = new TreeSet<>();
+    this.storage = storage;
   }
 
   @Override
@@ -184,7 +186,7 @@ public class DefineMethod extends StructureComponent {
       sb.append("throws AbortMessageException ");
     }
 
-    if (environment.state.options.instrumentPerf) {
+    if (environment.state.options.instrumentPerf && storage.specialization == StorageSpecialization.Record) {
       String measure = "__measure_" + environment.autoVariable();
       sb.append("{").tabUp().writeNewline();
       sb.append("Runnable ").append(measure).append(" = __perf.measure(\"").append("mt_").append(name).append("\");").writeNewline();

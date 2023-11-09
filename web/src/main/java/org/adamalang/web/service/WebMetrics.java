@@ -61,6 +61,10 @@ public class WebMetrics {
   public final Runnable websockets_start;
   public final Runnable websockets_end;
 
+  public final Runnable webclient_retry;
+  public final Runnable webclient_rxhtml;
+  public final Runnable webclient_pushack;
+
   public final CallbackMonitor web_asset_upload;
 
   public WebMetrics(MetricsFactory factory) {
@@ -101,5 +105,9 @@ public class WebMetrics {
     this.webhandler_options = factory.counter("webhandler_options");
     this.webhandler_options_failure = factory.counter("webhandler_options_failure");
     this.web_asset_upload = factory.makeCallbackMonitor("web_asset_upload");
+    factory.section("public web client");
+    this.webclient_retry = factory.counter("webclient_retry");
+    this.webclient_rxhtml = factory.counter("webclient_rxhtml");
+    this.webclient_pushack = factory.counter("webclient_pushack");
   }
 }

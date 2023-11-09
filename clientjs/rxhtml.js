@@ -31,6 +31,18 @@ var RxHTML = (function () {
   }
   connection.start();
 
+  window.addEventListener('error', function(event) {
+    var payload = {};
+    payload.message = event.message;
+    payload.filename = event.filename;
+    payload.lineno = event.lineno;
+    payload.colno = event.colno;
+    payload.filename = event.filename;
+    connection.log("window.error", JSON.stringify(payload));
+  });
+
+  connection.bump("rxhtml");
+
   var rootReplace = "/";
   var fixPath = function (path) {
     return path;

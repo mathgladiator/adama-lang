@@ -6,6 +6,10 @@ self.addEventListener('push', function(event) {
     var json = event.data.json();
     if (json) {
       console.log(json);
+      var pushToken = "NA";
+      if ('@pt' in json) {
+        pushToken = json['@pt'];
+      }
       var options = {
         body: json.body ? json.body : "Generic Push Body",
       };
@@ -28,6 +32,16 @@ self.addEventListener('push', function(event) {
         try {
           event.waitUntil(navigator.setAppBadge(json.badge));
         } catch (e) {}
+      }
+      try {
+        event.waitUntil(fetch(self.location.protocol + "//" + self.location.host + "/~pt/" + pushToken, {
+          method: "PUT",
+          headers: {},
+          body: pushToken
+        }));
+      } catch (ex) {
+        console.log(ex);
+        // don't care
       }
     }
   }

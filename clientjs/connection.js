@@ -49,6 +49,26 @@ class WebSocketAdamaConnection {
     }
   }
 
+  bump(bm) {
+    try {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", location.protocol + "//" + this.host + "/~bm/" + bm, true);
+      xhttp.send();
+    } catch (ex) {
+      // don't care
+    }
+  }
+
+  log(name, body) {
+    try {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", location.protocol + "//" + this.host + "/~lg/" + name, true);
+      xhttp.send(body);
+    } catch (ex) {
+      // don't care
+    }
+  }
+
   /** private: retry the connection */
   _retry() {
     // null out the socket
@@ -164,10 +184,12 @@ class WebSocketAdamaConnection {
       }
     };
     this.socket.onclose = function (event) {
+      self.bump("r");
       // let's retry... or should we not
       self._retry();
     };
     this.socket.onerror = function (event) {
+      self.bump("r");
       // something bad happened, let's retry
       self._retry();
     };
