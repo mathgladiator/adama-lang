@@ -44,3 +44,9 @@ procedure foo() -> int {
 function g(int x, int y) -> int {
   return x + y;
 }
+
+record R {
+  method foo() -> int {
+    return 1;
+  }
+}

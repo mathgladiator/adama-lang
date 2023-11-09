@@ -183,7 +183,20 @@ public class DefineMethod extends StructureComponent {
     if (paint.aborts) {
       sb.append("throws AbortMessageException ");
     }
-    code.writeJava(sb, prepareEnvironment(environment));
+
+    if (environment.state.options.instrumentPerf) {
+      String measure = "__measure_" + environment.autoVariable();
+      sb.append("{").tabUp().writeNewline();
+      sb.append("Runnable ").append(measure).append(" = __perf.measure(\"").append("mt_").append(name).append("\");").writeNewline();
+      sb.append("try {").tabUp().writeNewline();
+      code.specialWriteJava(sb, prepareEnvironment(environment), false, true);
+      sb.append("} finally {").tabUp().writeNewline();
+      sb.append(measure).append(".run();").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}");
+    } else {
+      code.writeJava(sb, prepareEnvironment(environment));
+    }
     sb.writeNewline();
   }
 }
