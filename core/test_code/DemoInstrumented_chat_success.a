@@ -36,3 +36,11 @@ channel say(Say what) {
 
 // emit the data out
 public formula chat = iterate _chat;
+
+procedure foo() -> int {
+  return 123;
+}
+
+function g(int x, int y) -> int {
+  return x + y;
+}

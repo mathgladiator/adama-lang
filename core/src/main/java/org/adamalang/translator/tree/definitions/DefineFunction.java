@@ -223,7 +223,19 @@ public class DefineFunction extends Definition {
     if (paint.aborts) {
       sb.append("throws AbortMessageException ");
     }
-    code.writeJava(sb, environment);
+    if (environment.state.options.instrumentPerf) {
+      String measure = "__measure_" + environment.autoVariable();
+      sb.append("{").tabUp().writeNewline();
+      sb.append("Runnable ").append(measure).append(" = __perf.measure(\"").append("fn_").append(name).append("\");").writeNewline();
+      sb.append("try {").tabUp().writeNewline();
+      code.specialWriteJava(sb, environment, false, true);
+      sb.append("} finally {").tabUp().writeNewline();
+      sb.append(measure).append(".run();").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}");
+    } else {
+      code.writeJava(sb, environment);
+    }
     sb.writeNewline();
   }
 }
