@@ -128,6 +128,7 @@ public class GlobalAuthenticator implements Authenticator {
             }
           } else {
             authKeystore(request.identity, parsedToken, request.context, callback);
+            return;
           }
         } catch (Exception ex) {
           LOGGER.error("auth-issue-not-known:", ex);
