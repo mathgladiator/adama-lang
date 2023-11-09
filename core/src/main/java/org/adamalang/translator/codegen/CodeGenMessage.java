@@ -263,7 +263,7 @@ public class CodeGenMessage {
       final var localItem = "__localItem_" + localVar.getAndIncrement();
       sb.append("for (").append(elementType.getJavaConcreteType(environment)).append(" ").append(localItem).append(" : ").append(name).append(") {").tabUp().writeNewline();
       writeValueWriter(localItem, elementType, sb, environment, localVar, true);
-      sb.append("}");
+      sb.append("}").writeNewline();
       sb.append("__writer.endArray();");
     }
     if (tabDown) {

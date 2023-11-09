@@ -770,7 +770,8 @@ public class GeneratedAnonymousTupleTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (int __localItem_3 : first) {");
     gold.append("\n        __writer.writeInteger(__localItem_3);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"second\");");
     gold.append("\n      __writer.writeBoolean(second);");
     gold.append("\n      __writer.endObject();");

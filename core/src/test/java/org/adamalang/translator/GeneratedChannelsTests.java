@@ -1586,13 +1586,15 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (int __localItem_19 : li) {");
     gold.append("\n        __writer.writeInteger(__localItem_19);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"miarr\");");
     gold.append("\n      if (miarr.has()) {");
     gold.append("\n        __writer.beginArray();");
     gold.append("\n        for (int __localItem_20 : miarr.get()) {");
     gold.append("\n          __writer.writeInteger(__localItem_20);");
-    gold.append("\n        }__writer.endArray();");
+    gold.append("\n        }");
+    gold.append("\n        __writer.endArray();");
     gold.append("\n      } else {");
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
@@ -1610,7 +1612,8 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n        __writer.beginArray();");
     gold.append("\n        for (int __localItem_23 : __localEntry_22.value) {");
     gold.append("\n          __writer.writeInteger(__localItem_23);");
-    gold.append("\n        }__writer.endArray();");
+    gold.append("\n        }");
+    gold.append("\n        __writer.endArray();");
     gold.append("\n      }");
     gold.append("\n      __writer.endObject();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"mls\");");

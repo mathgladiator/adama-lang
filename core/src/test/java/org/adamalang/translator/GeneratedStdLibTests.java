@@ -2202,7 +2202,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_7 __localItem_3 : _a) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
@@ -2316,7 +2317,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_7 __localItem_3 : _a) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"v\");");
     gold.append("\n      __writer.writeInteger(v);");
     gold.append("\n      __writer.endObject();");

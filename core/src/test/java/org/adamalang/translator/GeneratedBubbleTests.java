@@ -5063,7 +5063,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (int __localItem_3 : offsets_z) {");
     gold.append("\n        __writer.writeInteger(__localItem_3);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"scroll_x\");");
     gold.append("\n      __writer.writeInteger(scroll_x);");
     gold.append("\n      __writer.endObject();");

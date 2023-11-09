@@ -539,6 +539,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     String origin = req.headers().get(HttpHeaderNames.ORIGIN);
     if (origin != null) {
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "*");
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
     }
     res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
@@ -601,6 +602,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       } else {
         sendImmediate(metrics.webhandler_worker_download, req, ctx, HttpResponseStatus.OK, JavaScriptClient.ADAMA_WORKER_JS_CLIENT_BYTES, "text/javascript; charset=UTF-8", true);
       }
+      return true;
+    } else if ((req.uri().startsWith("/~lg/") || req.uri().startsWith("/~pt/") || req.uri().startsWith("/~bm/")) && req.method() == HttpMethod.OPTIONS) {
+      ok(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
       handleEncryptedAsset(req, ctx);
@@ -666,6 +670,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
       res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "PUT");
       res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
       sendWithKeepAlive(webConfig, ctx, req, res);
       return true;

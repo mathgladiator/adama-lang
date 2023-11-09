@@ -1668,7 +1668,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_8 __localItem_3 : events) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"has_events\");");
     gold.append("\n      __writer.writeBoolean(has_events);");
     gold.append("\n      __writer.writeObjectFieldIntro(\"room_color\");");
@@ -4118,7 +4119,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (int __localItem_4 : y) {");
     gold.append("\n        __writer.writeInteger(__localItem_4);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AutoMaxRecord_34() { __this = this; }");
@@ -4514,7 +4516,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTx_AutoMaxRecord_58 __localItem_3 : x) {");
     gold.append("\n        __localItem_3.__writeOut(__writer);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    private RTx_AutoMaxRecord_59() { __this = this; }");

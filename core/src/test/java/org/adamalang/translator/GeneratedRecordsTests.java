@@ -5970,7 +5970,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __writer.beginArray();");
     gold.append("\n      for (RTxY __localItem_10 : ay) {");
     gold.append("\n        __localItem_10.__writeOut(__writer);");
-    gold.append("\n      }__writer.endArray();");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.writeObjectFieldIntro(\"b\");");
     gold.append("\n      __writer.writeBoolean(b);");
     gold.append("\n      __writer.writeObjectFieldIntro(\"d\");");

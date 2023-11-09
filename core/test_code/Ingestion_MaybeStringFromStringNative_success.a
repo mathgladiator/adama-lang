@@ -1,0 +1,28 @@
+message M {
+  maybe<string> name;
+}
+
+record R {
+  string name;
+}
+
+record R2 {
+  maybe<string> name;
+}
+
+table<R> rrr;
+table<R> rrr2;
+
+maybe<string> huh;
+
+procedure foo() {
+  table<M> tbl;
+  tbl <- {name: @maybe("Harvey").getOrDefaultTo("huh")};
+  tbl <- {name: "Dent"};
+  tbl <- {name: huh};
+  tbl <- {name: huh.getOrDefaultTo("huh") };
+  tbl <- {name: @maybe<string>};
+  tbl <- {name: (iterate rrr)[0].name };
+  tbl <- {name: (iterate rrr2)[0].name };
+  tbl <- {name: (iterate rrr)[0].name.getOrDefaultTo("name") };
+}
