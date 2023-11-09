@@ -15,9 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang;
 
-public class Platform {
-  public static final String VERSION = "20231109051706";
-  public static final String JS_VERSION = "627383d2886c4a69b6b354cca3a2217b";
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+/** the error is fixable by the user */
+public @interface NotProblem {
 }

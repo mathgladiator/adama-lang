@@ -47,6 +47,8 @@ public class ErrorCodes {
   @Description("The message given to the channel was not parsable")
   public static final int LIVING_DOCUMENT_TRANSACTION_FAILED_PARSE_MESSAGE = 145627;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED = 115724;
+
+  @NotProblem
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_CHANGE = 109775;
   public static final int LIVING_DOCUMENT_FAILURE_LOAD = 139469;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED = 132111;

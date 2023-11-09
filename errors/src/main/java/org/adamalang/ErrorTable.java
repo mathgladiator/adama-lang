@@ -25,6 +25,7 @@ public class ErrorTable {
   public final HashMap<Integer, String> names;
   public final HashMap<Integer, String> descriptions;
   private final HashSet<Integer> userspace;
+  private final HashSet<Integer> notproblem;
   private final HashSet<Integer> retry;
 
   public boolean shouldRetry(int code) {
@@ -35,10 +36,15 @@ public class ErrorTable {
     return userspace.contains(code);
   }
 
+  public boolean isNotAProblem(int code) {
+    return notproblem.contains(code);
+  }
+
   public ErrorTable() {
     names = new HashMap<>();
     descriptions = new HashMap<>();
     userspace = new HashSet<>();
+    notproblem = new HashSet<>();
     retry = new HashSet<>();
     userspace.add(438302);
     names.put(101386, "IMPOSSIBLE");
@@ -74,6 +80,7 @@ public class ErrorTable {
     descriptions.put(115724, "no description of error (yet)");
     names.put(109775, "LIVING_DOCUMENT_TRANSACTION_NO_CHANGE");
     descriptions.put(109775, "no description of error (yet)");
+    notproblem.add(109775);
     names.put(139469, "LIVING_DOCUMENT_FAILURE_LOAD");
     descriptions.put(139469, "no description of error (yet)");
     names.put(132111, "LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED");

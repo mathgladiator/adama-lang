@@ -94,7 +94,10 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         @Override
         public void failure(int code) {
           time();
-          if (ErrorTable.INSTANCE.isUserProblem(code)) {
+          if (ErrorTable.INSTANCE.isNotAProblem(code)) {
+            /** the exception is not a problem as it is being used back tracking */
+            success.inc();
+          } else if (ErrorTable.INSTANCE.isUserProblem(code)) {
             /** this is not actionable by the platform and we consider it a success */
             success.inc();
             user_issue.inc();
@@ -165,7 +168,10 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         public void failure(int code) {
           time();
           dec();
-          if (ErrorTable.INSTANCE.isUserProblem(code)) {
+          if (ErrorTable.INSTANCE.isNotAProblem(code)) {
+            /** the exception is not a problem as it is being used back tracking */
+            finish.inc();
+          } else if (ErrorTable.INSTANCE.isUserProblem(code)) {
             /** this is not actionable by the platform and we consider it a success */
             finish.inc();
             user_issue.inc();
@@ -213,7 +219,10 @@ public class PrometheusMetricsFactory implements MetricsFactory {
 
           @Override
           public void failure(int code) {
-            if (ErrorTable.INSTANCE.isUserProblem(code)) {
+            if (ErrorTable.INSTANCE.isNotAProblem(code)) {
+              /** the exception is not a problem as it is being used back tracking */
+              success.inc();
+            } else if (ErrorTable.INSTANCE.isUserProblem(code)) {
               /** this is not actionable by the platform and we consider it a success */
               success.inc();
               user_issue.inc();

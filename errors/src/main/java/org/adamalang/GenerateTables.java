@@ -31,6 +31,7 @@ public class GenerateTables {
     sb.append("  public final HashMap<Integer, String> names;\n");
     sb.append("  public final HashMap<Integer, String> descriptions;\n");
     sb.append("  private final HashSet<Integer> userspace;\n");
+    sb.append("  private final HashSet<Integer> notproblem;\n");
     sb.append("  private final HashSet<Integer> retry;\n");
     sb.append("\n");
     sb.append("  public boolean shouldRetry(int code) {\n");
@@ -41,10 +42,15 @@ public class GenerateTables {
     sb.append("    return userspace.contains(code);\n");
     sb.append("  }\n");
     sb.append("\n");
+    sb.append("  public boolean isNotAProblem(int code) {\n");
+    sb.append("    return notproblem.contains(code);\n");
+    sb.append("  }\n");
+    sb.append("\n");
     sb.append("  public ErrorTable() {\n");
     sb.append("    names = new HashMap<>();\n");
     sb.append("    descriptions = new HashMap<>();\n");
     sb.append("    userspace = new HashSet<>();\n");
+    sb.append("    notproblem = new HashSet<>();\n");
     sb.append("    retry = new HashSet<>();\n");
     for (int error : ManualUserTable.ERRORS) {
       sb.append("    userspace.add(").append(error).append(");\n");
@@ -59,6 +65,9 @@ public class GenerateTables {
       }
       if (f.getAnnotation(User.class) != null) {
         sb.append("    userspace.add(").append(f.getInt(null)).append(");\n");
+      }
+      if (f.getAnnotation(NotProblem.class) != null) {
+        sb.append("    notproblem.add(").append(f.getInt(null)).append(");\n");
       }
       if (f.getAnnotation(RetryInternally.class) != null) {
         sb.append("    retry.add(").append(f.getInt(null)).append(");\n");
