@@ -207,6 +207,7 @@ public class DurableLivingDocument implements Queryable {
                     if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CHANGE) {
                       callback.success(newDocument);
                     } else {
+                      LOG.error("failed-loading[" + key.space + "/" + key.key + "]:" + ex.code);
                       callback.failure(ex);
                     }
                   }
