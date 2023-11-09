@@ -66,8 +66,8 @@ public abstract class RxDependent extends RxBase implements RxChild {
   public void __guard(RxTable<?> table, RxTableGuard guard) {
     if (guards == null) {
       guards = new ArrayList<>();
-      guards.add(new GuardPair(table, guard));
     }
+    guards.add(new GuardPair(table, guard));
   }
 
   /** [bubble version] start capturing reads */

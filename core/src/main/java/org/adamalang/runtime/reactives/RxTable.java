@@ -86,7 +86,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     // check if we have rows; make sure we link into the JSON tree
     this.itemsByKey = new LinkedHashMap<>();
     this.createdObjects = new LinkedHashMap<>();
-    this.pubsub = new TablePubSub(owner);
+    this.pubsub = new TablePubSub(this);
     this.activeGuard = null;
     this.trackers = null;
     this.trackerSub = null;
@@ -224,7 +224,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
             if (unknowns != null) {
               tyObj.__reindex();
             }
-            tyObj.__subscribe(this);
+            tyObj.__subscribe(() -> {
+              pubsub.primary(key);
+              return RxTable.this.__raiseInvalid();
+            });
+            tyObj.__pumpIndexEvents(pubsub);
           } else {
             // it exists, so it is already subscribed
             tyPrior.__insert(reader);
