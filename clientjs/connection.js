@@ -117,6 +117,9 @@ class WebSocketAdamaConnection {
     var self = this;
     this.scheduled = false;
     this.dead = false;
+    this.has_had_ping = false;
+    this.last_ping = 0;
+    this.ping_failures = 0;
     // create the socket and bind event handlers
     this.socket = new WebSocket(this.url);
     this.socket.onmessage = function (event) {
@@ -126,6 +129,8 @@ class WebSocketAdamaConnection {
         self.onping(result.ping, result.latency);
         result.pong = new Date().getTime() / 1000.0;
         self.socket.send(JSON.stringify(result));
+        self.last_ping = new Date().getTime();
+        self.has_had_ping = true;
         return;
       }
       if ("status" in result) {
@@ -193,6 +198,35 @@ class WebSocketAdamaConnection {
       // something bad happened, let's retry
       self._retry();
     };
+
+  }
+
+  keepalive() {
+    var self = this;
+    window.setInterval(function() {
+      try {
+        if (self.has_had_ping && self.socket) {
+          var timeSinceLastPing = new Date().getTime() - self.last_ping;
+          // TODO: broadcast a latency
+          if (timeSinceLastPing > 2500) {
+            self.ping_failures++;
+            if (self.ping_failures >= 3) {
+              self.has_had_ping = false;
+              self.socket.onclose = function() {};
+              self.socket.close();
+              self.socket = null;
+              self._retry();
+              self.bump("d");
+              console.error("had to force a disconnect");
+            }
+          } else {
+            this.ping_failures = 0;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }, 1250);
   }
 
   /** private: send a raw message */

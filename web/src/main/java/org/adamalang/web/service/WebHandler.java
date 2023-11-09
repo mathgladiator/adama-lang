@@ -630,6 +630,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         case "r":
           metrics.webclient_retry.run();
           break;
+        case "d":
+          metrics.webclient_disconnect_force.run();
+          break;
         case "rxhtml":
           metrics.webclient_rxhtml.run();
           break;

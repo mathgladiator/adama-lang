@@ -62,6 +62,7 @@ public class WebMetrics {
   public final Runnable websockets_end;
 
   public final Runnable webclient_retry;
+  public final Runnable webclient_disconnect_force;
   public final Runnable webclient_rxhtml;
   public final Runnable webclient_pushack;
 
@@ -109,5 +110,6 @@ public class WebMetrics {
     this.webclient_retry = factory.counter("webclient_retry");
     this.webclient_rxhtml = factory.counter("webclient_rxhtml");
     this.webclient_pushack = factory.counter("webclient_pushack");
+    this.webclient_disconnect_force = factory.counter("webclient_disconnect_force");
   }
 }

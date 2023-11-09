@@ -30,6 +30,7 @@ var RxHTML = (function () {
     connectionMonitorDom.onclick = Adama.Debugger.toggle;
   }
   connection.start();
+  connection.keepalive();
 
   window.addEventListener('error', function(event) {
     var payload = {};
