@@ -551,7 +551,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     StringBuilder result = new StringBuilder();
     while (it.hasNext()) {
       int codepoint = it.nextInt();
-      if (Character.isLetterOrDigit(codepoint) || codepoint == ':' || Character.isWhitespace(codepoint)) {
+      if (Character.isLetterOrDigit(codepoint) || Character.isWhitespace(codepoint) || codepoint == ':' || codepoint == '.' || codepoint == '/') {
         result.append(Character.toString(codepoint));
       }
     }

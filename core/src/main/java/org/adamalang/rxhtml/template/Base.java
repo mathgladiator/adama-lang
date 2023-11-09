@@ -31,6 +31,8 @@ public class Base {
     "mouseenter", "mouseleave", // regions
     "blur", "focus", "change", // inputs
     "rise", "fall", // monitor
+    "check", "uncheck", // checkboxes
+    "keyup", "keydown", // keyboard antics
     "load", "success", "failure", "submit", "submitted", "aftersync"};
 
   private static String xmlnsOf(Environment env) {

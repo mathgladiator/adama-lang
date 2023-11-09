@@ -15,9 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.acl.commands;
 
-public class Platform {
-  public static final String VERSION = "20231109091732";
-  public static final String JS_VERSION = "39a46a6c7783667705add27a8c9b90bd";
+import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
+
+/** Reload the form */
+public class Reload implements Command {
+  public Reload() {
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+  }
+
+  @Override
+  public void write(Environment env, String type, String eVar) {
+    env.writer.tab().append("$.oRLD(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(");").newline();
+  }
 }

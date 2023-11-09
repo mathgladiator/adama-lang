@@ -1018,7 +1018,15 @@ var RxHTML = (function () {
 
   var reg_event = function (state, dom, type, runnable) {
     // TODO: connected/disconnected as special events to consider
-    if (type == "load") {
+    if (type == "check" || type == "uncheck") {
+      dom.addEventListener("change", function() {
+        if (this.type == "check" && dom.checked) {
+          runnable();
+        } else if (this.type == "uncheck" && !dom.checked) {
+          runnable();
+        }
+      }.bind({type:type}));
+    } else if (type == "load") {
       window.setTimeout(runnable, 1);
     } else if (type=="submit" || type=="submitted") {
       window.setTimeout(function() {
@@ -1040,7 +1048,26 @@ var RxHTML = (function () {
         }
       }, delayTimeMS);
     } else {
-      dom.addEventListener(type, runnable);
+      if (type == "click") {
+        dom.addEventListener(type, function(event) {
+          var fire = true;
+          try {
+            var el = event.target;
+            while (el && fire) {
+              if (el.hasAttribute('prevent:click')) {
+                fire = false;
+              }
+              el = el.parentElement;
+            }
+          } catch (ex) {
+          }
+          if (fire) {
+            runnable();
+          }
+        });
+      } else {
+        dom.addEventListener(type, runnable);
+      }
     }
   }
 
@@ -1218,6 +1245,13 @@ var RxHTML = (function () {
       if (f != null) {
         f.reset();
       }
+    });
+  };
+
+  // RUNTIME: <tag .. rx:event="... reset ...">
+  self.oRLD = function (dom, type, state) {
+    reg_event(state, dom, type, function (event) {
+      location.reload();
     });
   };
 
@@ -1909,25 +1943,33 @@ var RxHTML = (function () {
   }
 
   var setupPush = function(path, vapidPublicKey, identity, identityName, version) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      var found = false;
-      for(let registration of registrations) {
-        if (registration.active) {
-          if (!registration.active.scriptURL.endsWith(path)) {
-            registration.unregister();
-          } else {
-            found = true;
-            setupSubscription(registration, vapidPublicKey, identity, identityName, version);
+    if (navigator.serviceWorker) {
+      try {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          var found = false;
+          for (let registration of registrations) {
+            if (registration.active) {
+              if (!registration.active.scriptURL.endsWith(path)) {
+                registration.unregister();
+              } else {
+                found = true;
+                setupSubscription(registration, vapidPublicKey, identity, identityName, version);
+              }
+            }
           }
-        }
-      }
-      if (!found) {
-        navigator.serviceWorker.register(path);
-        navigator.serviceWorker.ready.then(function (registration) {
-          setupSubscription(registration, vapidPublicKey, identity, identityName, version);
+          if (!found) {
+            navigator.serviceWorker.register(path);
+            navigator.serviceWorker.ready.then(function (registration) {
+              setupSubscription(registration, vapidPublicKey, identity, identityName, version);
+            });
+          }
         });
+      } catch (ex) {
+        console.error("failed to register service worker", ex);
       }
-    });
+    } else {
+      console.log("no service worker available");
+    }
   }
 
   self.worker = function(identityName, path, version) {
