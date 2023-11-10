@@ -19,6 +19,8 @@ package org.adamalang.runtime.remote;
 
 import org.adamalang.runtime.contracts.RxParent;
 
+import java.util.Set;
+
 /** allows delaying a dirty signal to an event */
 public class DelayParent implements RxParent {
   private boolean dirty;
@@ -53,5 +55,10 @@ public class DelayParent implements RxParent {
 
   @Override
   public void __cost(int cost) {
+  }
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+
   }
 }

@@ -215,4 +215,8 @@ public class MockLivingDocument extends LivingDocument {
   @Override
   public void __commit(
       final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {}
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+  }
 }

@@ -27,6 +27,8 @@ import org.adamalang.runtime.reactives.RxString;
 import org.adamalang.runtime.reactives.RxTable;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
 
+import java.util.Set;
+
 public class MockRecord extends RxRecordBase<MockRecord> {
   public final RxString data;
   public final RxInt32 index;
@@ -186,5 +188,12 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   @Override
   public int __id() {
     return id;
+  }
+
+  public int settled = 0;
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+    settled++;
   }
 }

@@ -65,8 +65,8 @@ public class RxLazyTests {
     JsonStreamWriter f = new JsonStreamWriter();
     JsonStreamWriter r = new JsonStreamWriter();
     val.__commit("val", f, r);
-    lz.dropInvalid();
-    lz2.dropInvalid();
+    lz.__settle(null);
+    lz2.__settle(null);
     Assert.assertEquals("\"val\":4", f.toString());
     Assert.assertEquals("\"val\":42", r.toString());
     Assert.assertEquals(42333092, lz.getGeneration());

@@ -37,6 +37,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
+import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -48,6 +49,7 @@ import java.util.function.Consumer;
 
 public class TyReactiveRecord extends TyType implements //
     IsStructure, //
+    DetailNeedsSettle, //
     DetailHasDeltaType, //
     IsKillable, //
     DetailTypeProducesRootLevelCode, //

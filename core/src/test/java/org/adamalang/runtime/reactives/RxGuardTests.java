@@ -24,6 +24,7 @@ import org.adamalang.runtime.mocks.MockRxChild;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RxGuardTests {
@@ -40,20 +41,23 @@ public class RxGuardTests {
     final var guard = new RxGuard(null);
     Assert.assertEquals(1, guard.getGeneration(0));
     Assert.assertEquals(true, guard.invalid);
-    guard.__commit(null, null, null);
-    Assert.assertEquals(65522, guard.getGeneration(0));
+    guard.__settle(null);
+    Assert.assertEquals(1, guard.getGeneration(0));
     Assert.assertEquals(false, guard.invalid);
     final var child = new MockRxChild();
     guard.__subscribe(child);
     guard.__raiseInvalid();
     child.assertInvalidateCount(0);
-    Assert.assertEquals(-1900333, guard.getGeneration(0));
+    Assert.assertEquals(65522, guard.getGeneration(0));
     Assert.assertEquals(true, guard.invalid);
-    guard.__revert();
+    guard.__settle(null);
     Assert.assertEquals(false, guard.invalid);
-    Assert.assertEquals(42333092, guard.getGeneration(0));
+    Assert.assertEquals(65522, guard.getGeneration(0));
     guard.__insert(null);
     guard.__patch(null);
+    guard.__commit(null, null, null);
+    guard.__revert();
+    guard.__dump(null);
   }
 
   @Test
@@ -73,6 +77,10 @@ public class RxGuardTests {
       @Override
       public void __cost(int cost) {
 
+      }
+
+      @Override
+      public void __settle(Set<Integer> viewers) {
       }
     });
     self.set(g);

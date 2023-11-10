@@ -554,6 +554,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListGameMode() {
     Runnable perf = __perf.measure("ld_build_broadcast_list");
+    __settle(__viewsById.keySet());
     // build a broadcast task list
     ArrayList<BroadcastTask> tasks = new ArrayList<>(__trackedViews.size());
     final var itTrackedViews = __trackedViews.entrySet().iterator();

@@ -514,4 +514,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public void setGuard(RxTableGuard guard) {
     activeGuard = guard;
   }
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+    for (Ty child : itemsByKey.values()) {
+      child.__settle(viewers);
+    }
+  }
 }

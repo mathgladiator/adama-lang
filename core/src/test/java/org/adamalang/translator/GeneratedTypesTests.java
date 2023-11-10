@@ -207,6 +207,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    ib.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -442,7 +446,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
     gold.append("\n    b.__commit(\"b\", __forward, __reverse);");
-    gold.append("\n    ib.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -462,7 +465,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    b.__revert();");
-    gold.append("\n    ib.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -961,6 +963,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    bOr4 = new RxBoolean(this, false);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -1890,6 +1895,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -2668,6 +2676,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -3356,6 +3367,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    sum.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -3617,7 +3632,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    tiny.__commit(\"tiny\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -3640,7 +3654,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    tiny.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
@@ -4104,6 +4117,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    sum.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -4357,7 +4374,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4379,7 +4395,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -4807,6 +4822,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    output2 = new RxString(this, \"\");");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -5561,6 +5579,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -6284,6 +6305,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    assign = new RxDouble(this, 0.0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -7084,6 +7108,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -7868,6 +7895,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -8558,6 +8588,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    hex = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -9293,6 +9326,12 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    ms = new RxMaybe<RxString,String>(this, (RxParent __parent) -> new RxString(__parent, \"\"));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    md.__settle(__viewers);");
+    gold.append("\n    mi.__settle(__viewers);");
+    gold.append("\n    ms.__settle(__viewers);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -10064,6 +10103,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    mult1 = new RxString(this, \"\");");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -10920,6 +10962,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -11609,6 +11654,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    t.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -12042,6 +12091,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while(__reader.notEndOfObject()) {");
@@ -12472,6 +12524,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x = new RxMaybe<RxInt32,Integer>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    x.__settle(__viewers);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -13163,6 +13219,11 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    t3 = new RxBoolean(this, false);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    s.__settle(__viewers);");
+    gold.append("\n    w00t.__settle(__viewers);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -14015,6 +14076,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    sum.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -14268,7 +14333,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -14290,7 +14354,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -14729,6 +14792,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -15377,6 +15443,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    sum.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -15630,7 +15700,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    z.__commit(\"z\", __forward, __reverse);");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -15652,7 +15721,6 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    y.__revert();");
     gold.append("\n    z.__revert();");
-    gold.append("\n    sum.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

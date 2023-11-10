@@ -231,6 +231,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -1069,6 +1072,10 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    zzz.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -1500,6 +1507,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n        default:");
     gold.append("\n          return null;");
     gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -2121,6 +2131,14 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    bbbb = new RxBoolean(this, false);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    x.__settle(__viewers);");
+    gold.append("\n    b.__settle(__viewers);");
+    gold.append("\n    s.__settle(__viewers);");
+    gold.append("\n    d.__settle(__viewers);");
+    gold.append("\n    s2.__settle(__viewers);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -3056,6 +3074,10 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    tbl2.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -3512,6 +3534,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n        default:");
     gold.append("\n          return null;");
     gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -4286,6 +4311,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    lastV = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -5127,6 +5155,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -5815,6 +5846,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    y = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -6553,6 +6587,9 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    sum = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");

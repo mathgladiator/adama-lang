@@ -133,6 +133,10 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    t.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -564,6 +568,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n        default:");
     gold.append("\n          return null;");
     gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -1179,6 +1186,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    special_one.__settle(__viewers);");
+    gold.append("\n    forty_five.__settle(__viewers);");
+    gold.append("\n    recip.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -1429,9 +1442,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
-    gold.append("\n    special_one.dropInvalid();");
-    gold.append("\n    forty_five.dropInvalid();");
-    gold.append("\n    recip.dropInvalid();");
     gold.append("\n    final_foo.__commit(\"final_foo\", __forward, __reverse);");
     gold.append("\n    final_foo2.__commit(\"final_foo2\", __forward, __reverse);");
     gold.append("\n    final_foo3.__commit(\"final_foo3\", __forward, __reverse);");
@@ -1453,9 +1463,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
-    gold.append("\n    special_one.dropInvalid();");
-    gold.append("\n    forty_five.dropInvalid();");
-    gold.append("\n    recip.dropInvalid();");
     gold.append("\n    final_foo.__revert();");
     gold.append("\n    final_foo2.__revert();");
     gold.append("\n    final_foo3.__revert();");
@@ -1947,6 +1954,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -2702,6 +2712,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    s = new RxString(this, \"\");");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
@@ -3537,6 +3550,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    x.__settle(__viewers);");
+    gold.append("\n    y.__settle(__viewers);");
+    gold.append("\n    z.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -3763,9 +3782,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_cache_id.__commit(\"__auto_cache_id\", __forward, __reverse);");
     gold.append("\n    __cache.__commit(\"__cache\", __forward, __reverse);");
     gold.append("\n    __webTaskId.__commit(\"__webTaskId\", __forward, __reverse);");
-    gold.append("\n    x.dropInvalid();");
-    gold.append("\n    y.dropInvalid();");
-    gold.append("\n    z.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3784,9 +3800,6 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __timezone.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    __webTaskId.__revert();");
-    gold.append("\n    x.dropInvalid();");
-    gold.append("\n    y.dropInvalid();");
-    gold.append("\n    z.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
@@ -4201,6 +4214,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");

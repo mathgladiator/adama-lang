@@ -28,10 +28,7 @@ import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.NtPair;
 import org.adamalang.runtime.natives.NtPrincipal;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /** a reactive map */
 public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<NtPair<DomainTy, RangeTy>>, RxParent, RxChild, RxKillable {
@@ -61,6 +58,11 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     if (__parent != null) {
       __parent.__cost(cost);
     }
+  }
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+
   }
 
   @Override

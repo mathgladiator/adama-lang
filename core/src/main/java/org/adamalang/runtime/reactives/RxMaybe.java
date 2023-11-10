@@ -26,6 +26,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMaybe;
 
 import java.util.Comparator;
+import java.util.Set;
 import java.util.function.Function;
 
 /** a reactive maybe */
@@ -212,5 +213,14 @@ public class RxMaybe<Ty extends RxBase, Ry> extends RxBase implements RxParent, 
       delete();
     }
     __raiseDirty();
+  }
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+    if (value != null) {
+      if (value instanceof RxParent) {
+        ((RxParent) value).__settle(viewers);
+      }
+    }
   }
 }

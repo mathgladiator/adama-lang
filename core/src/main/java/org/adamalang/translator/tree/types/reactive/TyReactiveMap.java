@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadIns
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
+import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -43,6 +44,7 @@ import java.util.function.Consumer;
 
 public class TyReactiveMap extends TyType implements //
     DetailTypeHasMethods, //
+    DetailNeedsSettle, //
     IsMap, //
     IsKillable, //
     DetailContainsAnEmbeddedType, //

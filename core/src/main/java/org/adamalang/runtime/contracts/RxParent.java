@@ -17,6 +17,8 @@
 */
 package org.adamalang.runtime.contracts;
 
+import java.util.Set;
+
 /** the parent (or data owner) of a reactive data type */
 public interface RxParent {
   /** make this item dirty */
@@ -27,4 +29,7 @@ public interface RxParent {
 
   /** hidden costs made manifest up the parent chain */
   void __cost(int cost);
+
+  /** settle down the reactivity */
+  void __settle(Set<Integer> viewers);
 }

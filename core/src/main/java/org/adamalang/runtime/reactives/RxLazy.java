@@ -23,6 +23,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /** a reactive lazy formula which is computed on demand */
@@ -116,14 +117,6 @@ public class RxLazy<Ty> extends RxDependent {
     generation++;
   }
 
-  /** this has the impact of ensuring the value is cached after being invalidated */
-  public void dropInvalid() {
-    if (checkInvalidAndLower()) {
-      cached = null;
-      inc();
-    }
-  }
-
   private Ty computeWithGuard() {
     Runnable track = null;
     if (perf != null) {
@@ -159,5 +152,12 @@ public class RxLazy<Ty> extends RxDependent {
     }
     ensureCacheValid();
     return generation;
+  }
+
+  public void __settle(Set<Integer> views) {
+    if (checkInvalidAndLower()) {
+      cached = null;
+      inc();
+    }
   }
 }

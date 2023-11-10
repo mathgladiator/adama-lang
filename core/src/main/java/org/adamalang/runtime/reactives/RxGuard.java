@@ -21,6 +21,7 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -50,21 +51,19 @@ public class RxGuard extends RxDependent {
   }
 
   @Override
-  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
-    __revert();
-  }
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {}
 
   @Override
-  public void __dump(final JsonStreamWriter writer) {
-  }
+  public void __dump(final JsonStreamWriter writer) {}
 
   @Override
-  public void __insert(final JsonStreamReader reader) {
-  }
+  public void __insert(final JsonStreamReader reader) {}
 
   @Override
-  public void __patch(JsonStreamReader reader) {
-  }
+  public void __patch(JsonStreamReader reader) {}
+
+  @Override
+  public void __revert() {}
 
   private void inc() {
     if (__parent instanceof RxRecordBase && generation == 0) {
@@ -75,27 +74,16 @@ public class RxGuard extends RxDependent {
   }
 
   @Override
-  public void __revert() {
-    if (invalid) {
+  public boolean __raiseInvalid() {
+    if (!invalid) {
       inc();
-      invalid = false;
+      invalid = true;
     }
+    return true;
   }
 
-  @Override
-  public boolean __raiseInvalid() {
-    if (__parent != null) {
-      if (raisingDirtyParent) {
-        return true;
-      } else {
-        raisingDirtyParent = true;
-        __parent.__raiseDirty();
-        raisingDirtyParent = false;
-      }
-    }
-    inc();
-    invalid = true;
-    return true;
+  public void __settle(Set<Integer> viewers) {
+    invalid = false;
   }
 
   public int getGeneration(int viewerId) {

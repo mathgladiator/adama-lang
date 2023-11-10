@@ -20,14 +20,18 @@ package org.adamalang.runtime.mocks;
 import org.adamalang.runtime.contracts.RxParent;
 import org.junit.Assert;
 
+import java.util.Set;
+
 public class MockRxParent implements RxParent {
   public int dirtyCount;
   public boolean alive;
   public int cost;
+  public int settleCount;
 
   public MockRxParent() {
     dirtyCount = 0;
     alive = true;
+    settleCount = 0;
   }
 
   @Override
@@ -47,5 +51,10 @@ public class MockRxParent implements RxParent {
   @Override
   public void __cost(int cost) {
     this.cost += cost;
+  }
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+    settleCount++;
   }
 }

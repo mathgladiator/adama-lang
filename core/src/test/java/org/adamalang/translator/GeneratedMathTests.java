@@ -157,6 +157,10 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    c4_len.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -446,7 +450,6 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    sqrt_4.__commit(\"sqrt_4\", __forward, __reverse);");
     gold.append("\n    eq1.__commit(\"eq1\", __forward, __reverse);");
     gold.append("\n    c4.__commit(\"c4\", __forward, __reverse);");
-    gold.append("\n    c4_len.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -472,7 +475,6 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    sqrt_4.__revert();");
     gold.append("\n    eq1.__revert();");
     gold.append("\n    c4.__revert();");
-    gold.append("\n    c4_len.dropInvalid();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

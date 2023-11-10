@@ -27,6 +27,7 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
+import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -36,6 +37,7 @@ import java.util.function.Consumer;
 
 public class TyReactiveMaybe extends TyType implements //
     DetailContainsAnEmbeddedType, //
+    DetailNeedsSettle, //
     DetailComputeRequiresGet, //
     IsKillable, //
     AssignmentViaSetter //

@@ -367,6 +367,17 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    _families.__settle(__viewers);");
+    gold.append("\n    _people.__settle(__viewers);");
+    gold.append("\n    ___your_family_1.__settle(__viewers);");
+    gold.append("\n    __your_family_1__families.__settle(__viewers);");
+    gold.append("\n    __your_family_1__people.__settle(__viewers);");
+    gold.append("\n    ___your_family_2.__settle(__viewers);");
+    gold.append("\n    __your_family_2__families.__settle(__viewers);");
+    gold.append("\n    __your_family_2__people.__settle(__viewers);");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __insert(JsonStreamReader __reader) {");
     gold.append("\n    if (__reader.startObject()) {");
     gold.append("\n      while(__reader.notEndOfObject()) {");
@@ -843,6 +854,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
     gold.append("\n      if (__reader.startObject()) {");
     gold.append("\n        while(__reader.notEndOfObject()) {");
@@ -1053,6 +1067,9 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n        default:");
     gold.append("\n          return null;");
     gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");

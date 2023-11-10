@@ -25,6 +25,7 @@ import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -33,6 +34,7 @@ import java.util.function.Consumer;
 
 public class TyReactiveLazy extends TyType implements //
     DetailContainsAnEmbeddedType, //
+    DetailNeedsSettle, //
     DetailComputeRequiresGet // to get the native value
 {
   public final TyType computedType;

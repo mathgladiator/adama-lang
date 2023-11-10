@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
+import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -66,6 +67,7 @@ public class CodeGenRecords {
     if (!isRoot) {
       writeFieldOf(storage, sb);
     }
+    writeSettles(storage, sb, environment);
     writeInsert(storage, sb, environment, isRoot, others);
     writerDump(storage, sb, environment, isRoot, others);
     sb.append("@Override").writeNewline();
@@ -86,9 +88,6 @@ public class CodeGenRecords {
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __forward, __reverse);").writeNewline();
-      }
-      if (fieldType instanceof TyReactiveLazy) {
-        sb.append(fieldName).append(".dropInvalid();").writeNewline();
       }
       if (isCommitCache(fdInOrder, fieldType)) {
         sb.append(fieldName).append(".get();").writeNewline();
@@ -124,9 +123,6 @@ public class CodeGenRecords {
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__revert();").writeNewline();
-      }
-      if (fieldType instanceof TyReactiveLazy) {
-        sb.append(fieldName).append(".dropInvalid();").writeNewline();
       }
       if (isCommitCache(fdInOrder, fieldType)) {
         sb.append(fieldName).append(".get();").writeNewline();
@@ -360,6 +356,45 @@ public class CodeGenRecords {
     sb.append("return null;").tabDown().tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
+  }
+
+  public static void writeSettles(final StructureStorage storage, final StringBuilderWithTabs sb, Environment environment) {
+    ArrayList<String> thingsToSettle = new ArrayList<>();
+    for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
+      final var fieldName = fdInOrder.name;
+      final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
+      if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
+        thingsToSettle.add(fieldName);
+        for (final String watched : fdInOrder.tablesToInject) {
+          thingsToSettle.add("__" + fieldName + "_" + watched);
+        }
+      } else if (fieldType instanceof DetailNeedsSettle) {
+        thingsToSettle.add(fieldName);
+      }
+    }
+    for (final BubbleDefinition bubble : storage.bubbles.values()) {
+      thingsToSettle.add("___" + bubble.nameToken.text);
+      for (final String watched : bubble.tablesToWatch) {
+        thingsToSettle.add("__" + bubble.nameToken.text + "_" + watched);
+      }
+    }
+    int n = thingsToSettle.size();
+    if (n == 0) {
+      sb.append("@Override").writeNewline();
+      sb.append("public void __settle(Set<Integer> __viewers) {").writeNewline();
+      sb.append("}").writeNewline();
+    } else {
+      sb.append("@Override").writeNewline();
+      sb.append("public void __settle(Set<Integer> __viewers) {").tabUp().writeNewline();
+      for (int k = 0; k < n; k++) {
+        sb.append(thingsToSettle.get(k)).append(".__settle(__viewers);");
+        if (k == n - 1) {
+          sb.tabDown();
+        }
+        sb.writeNewline();
+      }
+      sb.append("}").writeNewline();
+    }
   }
 
   public static void writeInsert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
