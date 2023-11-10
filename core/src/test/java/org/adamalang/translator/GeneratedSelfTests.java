@@ -650,6 +650,8 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -1574,6 +1576,8 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
@@ -2555,6 +2559,8 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -2760,11 +2766,12 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR __link() {");
-    gold.append("\n      others.__subscribe(___b);");
     gold.append("\n      others.__subscribe(__b_others);");
     gold.append("\n      ___b.__guard(others,__b_others);");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

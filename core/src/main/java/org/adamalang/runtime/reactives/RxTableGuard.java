@@ -118,7 +118,7 @@ public class RxTableGuard implements TableSubscription {
 
   /** there was a change in a primary key */
   @Override
-  public void primary(int primaryKey) {
+  public boolean primary(int primaryKey) {
     if (children != null) {
       for (Map.Entry<Integer, FireGate> cv : children.entrySet()) {
         cv.getValue().primary(primaryKey);
@@ -128,6 +128,7 @@ public class RxTableGuard implements TableSubscription {
         owner.__raiseInvalid();
       }
     }
+    return false;
   }
 
   /** reset the state */

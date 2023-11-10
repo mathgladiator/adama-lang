@@ -24,19 +24,17 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
 
 /** the base object for generated record types */
-public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, MultiIndexable, RxParent, RxChild, RxKillable {
+public abstract class RxRecordBase<Ty extends RxRecordBase<Ty>> extends RxBase implements Comparable<Ty>, MultiIndexable, RxParent, RxChild, RxKillable {
   protected boolean __isDying;
   private boolean __alive;
-  private TablePubSub pubsub;
+  private RxTable<Ty> __table;
 
   public RxRecordBase(final RxParent __owner) {
     super(__owner);
     this.__alive = true;
     this.__isDying = false;
     if (__owner instanceof RxTable) {
-      this.pubsub = ((RxTable<?>) __owner).pubsub;
-    } else {
-      this.pubsub = null;
+      this.__table = ((RxTable<Ty>) __owner);
     }
   }
 
@@ -47,8 +45,8 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   private void __raiseDying() {
     if (!__isDying) {
       __isDying = true;
-      if (pubsub != null) {
-        pubsub.primary(__id());
+      if (__table != null) {
+        __table.invalidatePrimaryKey(__id(), (Ty) this);
       }
     }
   }
@@ -109,6 +107,8 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   public abstract void __reindex();
 
   public abstract void __setId(int __id, boolean __useForce);
+
+  public abstract void __invalidateIndex(TablePubSub pubsub);
 
   public abstract void __pumpIndexEvents(TablePubSub pubsub);
 

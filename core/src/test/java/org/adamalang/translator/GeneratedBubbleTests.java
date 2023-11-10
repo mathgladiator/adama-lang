@@ -3595,7 +3595,6 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    ___cake =  new RxGuard(this);");
     gold.append("\n    __cake_tbl = new RxTableGuard(___cake);");
     gold.append("\n    ___todo =  new RxGuard(this);");
-    gold.append("\n    tbl.__subscribe(___cake);");
     gold.append("\n    tbl.__subscribe(__cake_tbl);");
     gold.append("\n    ___cake.__guard(tbl,__cake_tbl);");
     gold.append("\n    __today.__subscribe(___todo);");
@@ -4224,6 +4223,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

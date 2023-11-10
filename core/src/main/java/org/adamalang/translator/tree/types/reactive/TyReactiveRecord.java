@@ -125,27 +125,44 @@ public class TyReactiveRecord extends TyType implements //
     }
     sb.append("return this;").tabDown().writeNewline();
     sb.append("}").writeNewline();
-
-
-    sb.append("@Override").writeNewline();
-    sb.append("public void __pumpIndexEvents(TablePubSub __pubsub) {");
-    int countdown = storage.indices.size();
-    if (countdown > 0) {
-      sb.tabUp().writeNewline();
-    }
-    int indexVal = 0;
-    for (IndexDefinition index : storage.indices) {
-      countdown--;
-      sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(").append(indexVal + "").append(", __value));");
-      if (countdown == 0) {
-        sb.tabDown();
+    {
+      sb.append("@Override").writeNewline();
+      sb.append("public void __invalidateIndex(TablePubSub __pubsub) {");
+      int countdown = storage.indices.size();
+      if (countdown > 0) {
+        sb.tabUp().writeNewline();
       }
-      sb.writeNewline();
-      indexVal++;
+      int indexVal = 0;
+      for (IndexDefinition index : storage.indices) {
+        countdown--;
+        sb.append("__pubsub.index(").append("" + indexVal).append(",").append(index.nameToken.text).append(".getIndexValue());");
+        if (countdown == 0) {
+          sb.tabDown();
+        }
+        sb.writeNewline();
+        indexVal++;
+      }
+      sb.append("}").writeNewline();
     }
-    sb.append("}").writeNewline();
-
-
+    {
+      sb.append("@Override").writeNewline();
+      sb.append("public void __pumpIndexEvents(TablePubSub __pubsub) {");
+      int countdown = storage.indices.size();
+      if (countdown > 0) {
+        sb.tabUp().writeNewline();
+      }
+      int indexVal = 0;
+      for (IndexDefinition index : storage.indices) {
+        countdown--;
+        sb.append(index.nameToken.text).append(".setWatcher(__value -> __pubsub.index(").append(indexVal + "").append(", __value));");
+        if (countdown == 0) {
+          sb.tabDown();
+        }
+        sb.writeNewline();
+        indexVal++;
+      }
+      sb.append("}").writeNewline();
+    }
     sb.append("@Override").writeNewline();
     sb.append("public String __name() {").tabUp().writeNewline();
     sb.append("return \"").append(name).append("\";").tabDown().writeNewline();

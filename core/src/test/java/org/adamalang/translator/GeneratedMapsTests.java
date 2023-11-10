@@ -1540,6 +1540,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -5331,6 +5333,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -6574,6 +6578,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -7757,6 +7763,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -8868,6 +8876,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -9429,7 +9439,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    goats = new RxTable<>(__self, this, \"goats\", (RxParent __parent) -> new RTxGoat(__parent).__link(), 0);");
     gold.append("\n    grouped_by_breed = new RxLazy<NtMap<Integer,NtList<RTxGoat>>>(this, () -> (NtMap<Integer,NtList<RTxGoat>>)(goats.iterate(false).reduce((__item) -> __item.breed.get(), (new __CLOSURE_Lambda0()))), null);");
     gold.append("\n    __grouped_by_breed_goats = new RxTableGuard(grouped_by_breed);");
-    gold.append("\n    goats.__subscribe(grouped_by_breed);");
     gold.append("\n    goats.__subscribe(__grouped_by_breed_goats);");
     gold.append("\n    grouped_by_breed.__guard(goats,__grouped_by_breed_goats);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -10020,6 +10029,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    public RTxGoat __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

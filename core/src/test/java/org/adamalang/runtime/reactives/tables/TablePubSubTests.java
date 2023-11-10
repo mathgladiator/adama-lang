@@ -33,10 +33,14 @@ public class TablePubSubTests {
     pubsub.gc();
     pubsub.primary(123);
     pubsub.index(13, 69);
+    for (int k = 0; k < 100; k++) { // dedupe!
+      pubsub.primary(123);
+      pubsub.index(13, 69);
+    }
     one.alive = false;
     pubsub.gc();
-    pubsub.primary(123);
-    pubsub.index( 13, 69);
+    pubsub.primary(125);
+    pubsub.index( 14, 69);
     Assert.assertTrue(pubsub.alive());
     par.alive = false;
     Assert.assertFalse(pubsub.alive());
@@ -46,8 +50,8 @@ public class TablePubSubTests {
     Assert.assertEquals("IDX:13=69", one.publishes.get(1));
     Assert.assertEquals("PKEY:123", two.publishes.get(0));
     Assert.assertEquals("IDX:13=69", two.publishes.get(1));
-    Assert.assertEquals("PKEY:123", two.publishes.get(2));
-    Assert.assertEquals("IDX:13=69", two.publishes.get(3));
+    Assert.assertEquals("PKEY:125", two.publishes.get(2));
+    Assert.assertEquals("IDX:14=69", two.publishes.get(3));
   }
 
   @Test

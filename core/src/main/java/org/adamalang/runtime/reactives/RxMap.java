@@ -62,7 +62,13 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public void __settle(Set<Integer> viewers) {
-
+    for (RangeTy item : objects.storage.values()) {
+      if (item instanceof RxParent) {
+        ((RxParent) item).__settle(viewers);
+      } else {
+        return;
+      }
+    }
   }
 
   @Override

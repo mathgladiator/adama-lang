@@ -17,7 +17,6 @@
 */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.common.Json;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -29,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class RxTableTests {
   @Test
@@ -466,7 +466,9 @@ public class RxTableTests {
         "\"t\":{\"4\":{\"data\":\"\",\"index\":13},\"5\":{\"data\":\"\",\"index\":12},\"6\":{\"data\":\"\",\"index\":13}}",
         reverse.toString());
     Assert.assertEquals(3, common.__getSubscriberCount());
-    common.__raiseInvalid();
+    common.__settle(null);
+    Assert.assertTrue(common.__raiseInvalid());
+    common.__settle(null);
     common.getGeneration();
     common.__raiseInvalid();
     Assert.assertEquals(0, common.__getSubscriberCount());

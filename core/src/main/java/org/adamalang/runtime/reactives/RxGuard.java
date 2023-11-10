@@ -31,14 +31,12 @@ import java.util.TreeMap;
 public class RxGuard extends RxDependent {
   protected boolean invalid;
   private int generation;
-  private boolean raisingDirtyParent;
   private TreeMap<Integer, Integer> bumps;
 
   public RxGuard(RxParent parent) {
     super(parent);
     generation = 0;
     invalid = true;
-    raisingDirtyParent = false;
     bumps = null;
   }
 

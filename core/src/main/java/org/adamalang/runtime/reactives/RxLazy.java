@@ -17,12 +17,10 @@
 */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -131,31 +129,16 @@ public class RxLazy<Ty> extends RxDependent {
     return result;
   }
 
-  private void ensureCacheValid() {
-    if (checkInvalidAndLower() || cached == null) {
-      cached = computeWithGuard();
-      inc();
-    }
-  }
-
-  protected boolean checkInvalidAndLower() {
-    if (invalid) {
-      invalid = false;
-      return true;
-    }
-    return false;
-  }
-
   public int getGeneration() {
     if (generation == 0) {
       inc();
     }
-    ensureCacheValid();
     return generation;
   }
 
   public void __settle(Set<Integer> views) {
-    if (checkInvalidAndLower()) {
+    if (invalid) {
+      invalid = false;
       cached = null;
       inc();
     }

@@ -1556,6 +1556,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -2038,7 +2040,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    tx2 = new RxLazy<NtMaybe<NtMaybe<NtList<RTxM>>>>(this, () -> (NtMaybe<NtMaybe<NtList<RTxM>>>)(new NtMaybe<NtMaybe<NtList<RTxM>>>(new NtMaybe<NtList<RTxM>>(__FUNC_0_glist()))), null);");
     gold.append("\n    m1 = new RxLazy<NtMap<Integer,Integer>>(this, () -> (NtMap<Integer,Integer>)(__FUNC_1_mp()), null);");
     gold.append("\n    m2 = new RxLazy<NtMaybe<NtMap<Integer,Integer>>>(this, () -> (NtMaybe<NtMap<Integer,Integer>>)(new NtMaybe<NtMap<Integer,Integer>>(__FUNC_1_mp())), null);");
-    gold.append("\n    t.__subscribe(tx);");
     gold.append("\n    t.__subscribe(__tx_t);");
     gold.append("\n    tx.__guard(t,__tx_t);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -2772,6 +2773,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
@@ -4695,7 +4698,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    tx = new RxLazy<RTxR[]>(this, () -> (RTxR[])((t.iterate(true)).toArray((Integer __n) -> (Object) (new RTxR[__n]))), null);");
     gold.append("\n    __tx_t = new RxTableGuard(tx);");
-    gold.append("\n    t.__subscribe(tx);");
     gold.append("\n    t.__subscribe(__tx_t);");
     gold.append("\n    tx.__guard(t,__tx_t);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -5231,6 +5233,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
@@ -5773,7 +5777,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    tx = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(t.iterate(true)), null);");
     gold.append("\n    __tx_t = new RxTableGuard(tx);");
-    gold.append("\n    t.__subscribe(tx);");
     gold.append("\n    t.__subscribe(__tx_t);");
     gold.append("\n    tx.__guard(t,__tx_t);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -6309,6 +6312,8 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

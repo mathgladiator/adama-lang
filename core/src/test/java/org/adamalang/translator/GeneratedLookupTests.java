@@ -797,6 +797,8 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
+    gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public String __name() {");
@@ -1757,6 +1759,8 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

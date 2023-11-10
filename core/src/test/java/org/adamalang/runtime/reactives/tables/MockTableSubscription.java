@@ -34,8 +34,9 @@ public class MockTableSubscription implements TableSubscription {
   }
 
   @Override
-  public void primary(int primaryKey) {
+  public boolean primary(int primaryKey) {
     publishes.add("PKEY:" + primaryKey);
+    return false;
   }
 
   @Override

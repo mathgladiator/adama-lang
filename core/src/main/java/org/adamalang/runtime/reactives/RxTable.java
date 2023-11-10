@@ -102,10 +102,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         }
 
         @Override
-        public void primary(int primaryKey) {
+        public boolean primary(int primaryKey) {
           for (DifferentialEdgeTracker<Ty> child : trackers) {
             child.change(primaryKey);
           }
+          return false;
         }
 
         @Override
@@ -205,6 +206,12 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     writer.endObject();
   }
 
+  public void invalidatePrimaryKey(int key, Ty value) {
+    if (pubsub.primary(key)) {
+      value.__invalidateIndex(pubsub);
+    }
+  }
+
   @Override
   public void __insert(final JsonStreamReader reader) {
     if (reader.startObject()) {
@@ -225,7 +232,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
               tyObj.__reindex();
             }
             tyObj.__subscribe(() -> {
-              pubsub.primary(key);
+              invalidatePrimaryKey(key, tyObj);
               return RxTable.this.__raiseInvalid();
             });
             tyObj.__pumpIndexEvents(pubsub);
@@ -255,17 +262,18 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       while (reader.notEndOfObject()) {
         final var f2 = reader.fieldName();
         final var key = Integer.parseInt(f2);
-        pubsub.primary(key);
         if (reader.testLackOfNull()) {
           var tyPrior = itemsByKey.get(key);
           if (tyPrior == null) {
             tyPrior = make(key);
           }
           tyPrior.__patch(reader);
+          invalidatePrimaryKey(key, tyPrior);
         } else {
           var tyPrior = itemsByKey.get(key);
           if (tyPrior != null) {
             tyPrior.__delete();
+            invalidatePrimaryKey(key, tyPrior);
           }
         }
       }
@@ -317,7 +325,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     final var result = maker.apply(this);
     result.__setId(key, false);
     result.__subscribe(() -> {
-      pubsub.primary(key);
+      invalidatePrimaryKey(key, result);
       return RxTable.this.__raiseInvalid();
     });
     result.__raiseDirty();
@@ -328,7 +336,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.itemsByKey.put(key, result);
     result.__pumpIndexEvents(pubsub);
     __raiseDirty();
-    pubsub.primary(key);
+    invalidatePrimaryKey(key, result);
     return result;
   }
 
@@ -402,6 +410,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
           return;
         }
         Ty val = itemsByKey.get(value);
+        readPrimaryKey(value);
         if (val != null) {
           if (current == null) {
             current = new TreeSet<>();
@@ -443,6 +452,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       }
     });
     if (everything.get() || union.get() == null) {
+      readAll();
       return this;
     }
     final var clone = new TreeSet<>(union.get());
@@ -520,5 +530,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     for (Ty child : itemsByKey.values()) {
       child.__settle(viewers);
     }
+    pubsub.settle();
   }
 }

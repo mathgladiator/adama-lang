@@ -129,7 +129,6 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxX(__parent).__link(), 0);");
     gold.append("\n    happy = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(t.iterate(false).orderBy(true,new DynCmp_RTxX(\"z\"))), null);");
     gold.append("\n    __happy_t = new RxTableGuard(happy);");
-    gold.append("\n    t.__subscribe(happy);");
     gold.append("\n    t.__subscribe(__happy_t);");
     gold.append("\n    happy.__guard(t,__happy_t);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -665,6 +664,8 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

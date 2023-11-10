@@ -297,10 +297,8 @@ public class GeneratedLinqUniqueTests extends GeneratedBase {
     gold.append("\n    __z_first_t = new RxTableGuard(z_first);");
     gold.append("\n    z_last = new RxLazy<NtList<RTxX>>(this, () -> (NtList<RTxX>)(t.iterate(false).unique(ListUniqueMode.Last, (__x) -> __x.z.get())), null);");
     gold.append("\n    __z_last_t = new RxTableGuard(z_last);");
-    gold.append("\n    t.__subscribe(z_first);");
     gold.append("\n    t.__subscribe(__z_first_t);");
     gold.append("\n    z_first.__guard(t,__z_first_t);");
-    gold.append("\n    t.__subscribe(z_last);");
     gold.append("\n    t.__subscribe(__z_last_t);");
     gold.append("\n    z_last.__guard(t,__z_last_t);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -876,6 +874,8 @@ public class GeneratedLinqUniqueTests extends GeneratedBase {
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __invalidateIndex(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");
     gold.append("\n    public void __pumpIndexEvents(TablePubSub __pubsub) {}");
     gold.append("\n    @Override");

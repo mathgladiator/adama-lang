@@ -181,6 +181,10 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
+  public void __invalidateIndex(TablePubSub pubsub) {
+  }
+
+  @Override
   public void __pumpIndexEvents(TablePubSub pubsub) {
     index.setWatcher(value -> pubsub.index(0, value));
   }

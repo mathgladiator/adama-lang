@@ -23,14 +23,16 @@ import org.adamalang.runtime.mocks.MockRxParent;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.TreeSet;
+
 public class RxLazyTests {
   @Test
   public void flow() {
     final var val = new RxInt32(null, 42);
     final var lz = new RxLazy<>(null, () -> val.get() * val.get(), null);
     final var lz2 = new RxLazy<>(null, () -> lz.get() / 2, null);
-    Assert.assertEquals(65522, lz.getGeneration());
-    Assert.assertEquals(65522, lz2.getGeneration());
+    Assert.assertEquals(1, lz.getGeneration());
+    Assert.assertEquals(1, lz2.getGeneration());
     val.__subscribe(lz);
     lz.__subscribe(lz2);
     val.set(4);
@@ -46,8 +48,8 @@ public class RxLazyTests {
     lz.__insert(new JsonStreamReader("{}"));
     lz.__dump(null);
     lz.__patch(new JsonStreamReader("{}"));
-    Assert.assertEquals(-1900333, lz.getGeneration());
-    Assert.assertEquals(-1900333, lz2.getGeneration());
+    Assert.assertEquals(1, lz.getGeneration());
+    Assert.assertEquals(1, lz2.getGeneration());
   }
 
   @Test
@@ -55,8 +57,8 @@ public class RxLazyTests {
     final var val = new RxInt32(null, 42);
     final var lz = new RxLazy<>(null, () -> val.get() * val.get(), null);
     final var lz2 = new RxLazy<>(null, () -> lz.get() / 2, null);
-    Assert.assertEquals(65522, lz.getGeneration());
-    Assert.assertEquals(65522, lz2.getGeneration());
+    Assert.assertEquals(1, lz.getGeneration());
+    Assert.assertEquals(1, lz2.getGeneration());
     val.__subscribe(lz);
     lz.__subscribe(lz2);
     val.set(4);
@@ -69,20 +71,22 @@ public class RxLazyTests {
     lz2.__settle(null);
     Assert.assertEquals("\"val\":4", f.toString());
     Assert.assertEquals("\"val\":42", r.toString());
-    Assert.assertEquals(42333092, lz.getGeneration());
-    Assert.assertEquals(42333092, lz2.getGeneration());
+    Assert.assertEquals(65522, lz.getGeneration());
+    Assert.assertEquals(65522, lz2.getGeneration());
     val.set(6);
     Assert.assertEquals(18, (int) lz2.get());
     Assert.assertEquals(36, (int) lz.get());
     Assert.assertEquals(18, (int) lz2.get());
     Assert.assertEquals(36, (int) lz.get());
     val.set(10);
+    lz.__settle(null);
+    lz2.__settle(null);
     Assert.assertEquals(50, (int) lz2.get());
     lz.__insert(new JsonStreamReader("{}"));
     lz.__dump(null);
     lz.__patch(new JsonStreamReader("{}"));
-    Assert.assertEquals(-842352283, lz.getGeneration());
-    Assert.assertEquals(-842352283, lz2.getGeneration());
+    Assert.assertEquals(-1900333, lz.getGeneration());
+    Assert.assertEquals(-1900333, lz2.getGeneration());
   }
 
   @Test
