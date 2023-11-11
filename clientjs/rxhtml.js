@@ -2366,6 +2366,13 @@ var RxHTML = (function () {
         retry_sm.backoff = 1;
         if ("data" in payload.delta) {
           co.tree.update(payload.delta.data);
+          const viewstate = localStorage.getItem('rxviewstate');
+          if (null !== viewstate) {
+            setTimeout(function() {
+              co.viewstatetree.update(JSON.parse(viewstate));
+              localStorage.removeItem('rxviewstate');
+            }, 100);
+          }
         }
         if ("outstanding" in payload.delta) {
           co.ondecide(payload.delta.outstanding);
@@ -2375,6 +2382,10 @@ var RxHTML = (function () {
         }
         if ('log' in payload.delta) {
           console.log(payload.delta.log);
+        }
+        if ('reload' in payload.delta) {
+          localStorage.setItem('rxviewstate', JSON.stringify(co.viewstatetree.raw()));
+          window.location.reload();
         }
         if ('viewport' in payload.delta && 'message' in payload.delta) {
           var viewport = payload.delta.viewport;

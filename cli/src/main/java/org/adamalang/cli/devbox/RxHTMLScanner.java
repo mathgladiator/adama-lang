@@ -181,6 +181,8 @@ public class RxHTMLScanner implements AutoCloseable {
                 }
                 onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
+                RxPubSub.instance.notifyReload();
+                io.notice("rxhtml|responders; count=" + RxPubSub.instance.responders.size());
                 try {
                   Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
                   Files.writeString(new File("view.schema.json").toPath(), updated.viewSchema.toPrettyString());

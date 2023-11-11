@@ -255,8 +255,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
     long started = System.currentTimeMillis();
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
+
     verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       private CoreStream got = null;
+      private Integer rxResponderId = RxPubSub.instance.getNextId();
+
       @Override
       public void onSetupComplete(CoreStream stream) {
         this.got = stream;
@@ -271,10 +274,15 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
           io.error("adama|connection; It took over " + Math.round((delta / 100.0)) / 10.0 + " seconds to establish a connection");
         }
         PERF_LOG.error(entry.toString());
+        RxPubSub.instance.subscribe(rxResponderId, responder);
       }
 
       @Override
       public void status(StreamStatus status) {
+        if (status == StreamStatus.Disconnected) {
+          RxPubSub.instance.unsubscribe(rxResponderId);
+          io.info("adama|disconnected from " + key.space + "/" + key.key);
+        }
       }
 
       @Override
