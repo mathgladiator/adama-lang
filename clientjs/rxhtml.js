@@ -2155,6 +2155,15 @@ var RxHTML = (function () {
       window.scrollTo(0, 0);
       var state = { service: connection, data: null, view: fresh(where), current: "view" };
       self.__current = state;
+
+      const viewstate = localStorage.getItem('rxviewstate');
+      if (null !== viewstate) {
+        localStorage.removeItem('rxviewstate');
+        console.log(Object.assign({}, init));
+        Object.assign(init, JSON.parse(viewstate));
+        console.log(Object.assign({}, init));
+      }
+
       state.view.init = init;
       self.gates = [];
       self.resume_uri = path;
@@ -2366,13 +2375,6 @@ var RxHTML = (function () {
         retry_sm.backoff = 1;
         if ("data" in payload.delta) {
           co.tree.update(payload.delta.data);
-          const viewstate = localStorage.getItem('rxviewstate');
-          if (null !== viewstate) {
-            setTimeout(function() {
-              co.viewstatetree.update(JSON.parse(viewstate));
-              localStorage.removeItem('rxviewstate');
-            }, 100);
-          }
         }
         if ("outstanding" in payload.delta) {
           co.ondecide(payload.delta.outstanding);
