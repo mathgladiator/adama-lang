@@ -2162,6 +2162,9 @@ var RxHTML = (function () {
         console.log(Object.assign({}, init));
         Object.assign(init, JSON.parse(viewstate));
         console.log(Object.assign({}, init));
+        setTimeout(function() {
+            state.view.tree.update(init);
+        }, 100);
       }
 
       state.view.init = init;
@@ -2386,7 +2389,9 @@ var RxHTML = (function () {
           console.log(payload.delta.log);
         }
         if ('reload' in payload.delta) {
-          localStorage.setItem('rxviewstate', JSON.stringify(co.viewstatetree.raw()));
+          if (payload.delta.reload['preserve-view'] === true) {
+            localStorage.setItem('rxviewstate', JSON.stringify(co.viewstatetree.raw()));
+          }
           window.location.reload();
         }
         if ('viewport' in payload.delta && 'message' in payload.delta) {

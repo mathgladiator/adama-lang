@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -61,14 +62,16 @@ public class RxHTMLScanner implements AutoCloseable {
   private final AtomicBoolean scheduled;
   private final AtomicBoolean again;
   private final String env;
+  private final AtomicReference<RxPubSub> rxPubSub;
 
-  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, AtomicReference<RxPubSub> rxPubSub) throws Exception {
     this.alive = alive;
     this.io = io;
     this.scanRoot = scanRoot;
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
     this.env = env;
     this.onBuilt = onBuilt;
+    this.rxPubSub = rxPubSub;
     this.service = FileSystems.getDefault().newWatchService();
     this.watchKeyCache = new HashMap<>();
     sync(scanRoot);
@@ -181,8 +184,11 @@ public class RxHTMLScanner implements AutoCloseable {
                 }
                 onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
-                RxPubSub.instance.notifyReload();
-                io.notice("rxhtml|responders; count=" + RxPubSub.instance.responders.size());
+                RxPubSub rxPubSub = RxHTMLScanner.this.rxPubSub.get();
+                if (rxPubSub != null) {
+                  rxPubSub.notifyReload();
+                  io.notice("rxhtml|responders; count=" + rxPubSub.responders.size());
+                }
                 try {
                   Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
                   Files.writeString(new File("view.schema.json").toPath(), updated.viewSchema.toPrettyString());

@@ -42,6 +42,7 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
@@ -54,6 +55,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final ConcurrentHashMap<Long, LocalStream> streams;
   private final DevBoxAdamaMicroVerse verse;
   private final Runnable death;
+  private final AtomicReference<RxPubSub> rxPubSub;
 
   private class LocalStream {
     public final Key key;
@@ -65,7 +67,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
-  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death) {
+  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death, AtomicReference<RxPubSub> rxPubSub) {
     this.executor = executor;
     this.context = context;
     this.control = control;
@@ -73,6 +75,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
     this.death = death;
+    this.rxPubSub = rxPubSub;
     if (context.identities != null) {
       for (Map.Entry<String, String> entry : context.identities.entrySet()) {
         LOCALHOST_COOKIES.put(entry.getKey(), entry.getValue());
@@ -258,7 +261,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
 
     verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
       private CoreStream got = null;
-      private Integer rxResponderId = RxPubSub.instance.getNextId();
+      Runnable unsub = null;
 
       @Override
       public void onSetupComplete(CoreStream stream) {
@@ -273,16 +276,15 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
         if (delta > 10000) {
           io.error("adama|connection; It took over " + Math.round((delta / 100.0)) / 10.0 + " seconds to establish a connection");
         }
+        RxPubSub pubsub = rxPubSub.get();
+        if (rxPubSub != null) {
+          this.unsub = pubsub.subscribe(responder);
+        }
         PERF_LOG.error(entry.toString());
-        RxPubSub.instance.subscribe(rxResponderId, responder);
       }
 
       @Override
       public void status(StreamStatus status) {
-        if (status == StreamStatus.Disconnected) {
-          RxPubSub.instance.unsubscribe(rxResponderId);
-          io.info("adama|disconnected from " + key.space + "/" + key.key);
-        }
       }
 
       @Override
@@ -296,6 +298,9 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
           if (got != null) {
             io.info("adama|forced disconnect");
             got.close();
+            if (unsub != null) {
+              unsub.run();
+            }
           }
         }
       }

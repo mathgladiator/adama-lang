@@ -291,6 +291,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="preserve-view" type="bool" short="pv">
+        <documentation>
+            Whether or not to preserve (take a snapshot) of the viewstate before automatically reloading (default 'true').
+        </documentation>
+    </arg-definition>
+
     <!-- groups collect commands -->
     <group name="space" alt-name="spaces">
         <documentation>
@@ -790,6 +796,7 @@
             <arg name="debugger" default="true" />
             <arg name="local-libadama-path" default="null" />
             <arg name="environment" default="test" />
+            <arg name="preserve-view" default="true" />
         </command>
         <command name="set-libadama">
             <documentation>
@@ -935,6 +942,7 @@
         <arg name="debugger" default="true" />
         <arg name="local-libadama-path" default="null" />
         <arg name="environment" default="test" />
+        <arg name="preserve-view" default="true" />
     </command>
 
 </cli>
