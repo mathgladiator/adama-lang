@@ -2767,6 +2767,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    _things = new RxTable<>(__self, this, \"_things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
     gold.append("\n    ___things =  new RxGuard(this);");
     gold.append("\n    __things__things = new RxTableGuard(___things);");
+    gold.append("\n    _things.__subscribe(___things);");
     gold.append("\n    _things.__subscribe(__things__things);");
     gold.append("\n    ___things.__guard(_things,__things__things);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -4635,6 +4636,7 @@ public class GeneratedRecordsMethodTests extends GeneratedBase {
     gold.append("\n    _things = new RxTable<>(__self, this, \"_things\", (RxParent __parent) -> new RTxThing(__parent).__link(), 0);");
     gold.append("\n    ___things =  new RxGuard(this);");
     gold.append("\n    __things__things = new RxTableGuard(___things);");
+    gold.append("\n    _things.__subscribe(___things);");
     gold.append("\n    _things.__subscribe(__things__things);");
     gold.append("\n    ___things.__guard(_things,__things__things);");
     gold.append("\n    __goodwillBudget = 100000;");

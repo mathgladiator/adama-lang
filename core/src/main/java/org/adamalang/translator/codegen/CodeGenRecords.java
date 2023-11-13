@@ -246,7 +246,7 @@ public class CodeGenRecords {
         }
         for (final String watched : fdInOrder.tablesToInject) {
           // TODO: REMOVE THIS LINE ONCE TABLE EVENTS ARE BEING PRODUCED! SUPER AWESOME MODE!
-          // classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+           classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
           classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline();
           classLinker.append(fieldName).append(".__guard(").append(watched).append(",__").append(fieldName).append("_").append(watched).append(");").writeNewline();
         }
@@ -334,7 +334,7 @@ public class CodeGenRecords {
       }
       for (final String watched : bubble.tablesToWatch) {
         // TODO: REMOVE THIS LINE ONCE TABLE EVENTS ARE BEING PRODUCED! SUPER AWESOME MODE!
-        // classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
+        classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
         classLinker.append(watched).append(".__subscribe(__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
         classLinker.append("___").append(bubble.nameToken.text).append(".__guard(").append(watched).append(",__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
       }

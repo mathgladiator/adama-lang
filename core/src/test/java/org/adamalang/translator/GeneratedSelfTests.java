@@ -2766,6 +2766,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR __link() {");
+    gold.append("\n      others.__subscribe(___b);");
     gold.append("\n      others.__subscribe(__b_others);");
     gold.append("\n      ___b.__guard(others,__b_others);");
     gold.append("\n      return this;");

@@ -1855,6 +1855,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
     gold.append("\n    even = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(t.iterate(false).where(true, new __CLOSURE_WhereClause0())), null);");
     gold.append("\n    __even_t = new RxTableGuard(even);");
+    gold.append("\n    t.__subscribe(even);");
     gold.append("\n    t.__subscribe(__even_t);");
     gold.append("\n    even.__guard(t,__even_t);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -8318,8 +8319,10 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    y = new RTxY(this);");
     gold.append("\n    z = new RTxZ(this);");
     gold.append("\n    x.__link();");
+    gold.append("\n    tbl.__subscribe(listz);");
     gold.append("\n    tbl.__subscribe(__listz_tbl);");
     gold.append("\n    listz.__guard(tbl,__listz_tbl);");
+    gold.append("\n    tbl.__subscribe(listz2);");
     gold.append("\n    tbl.__subscribe(__listz2_tbl);");
     gold.append("\n    listz2.__guard(tbl,__listz2_tbl);");
     gold.append("\n    y.__link();");
