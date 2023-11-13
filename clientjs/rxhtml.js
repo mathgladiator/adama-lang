@@ -2162,9 +2162,6 @@ var RxHTML = (function () {
         console.log(Object.assign({}, init));
         Object.assign(init, JSON.parse(viewstate));
         console.log(Object.assign({}, init));
-        setTimeout(function() {
-            state.view.tree.update(init);
-        }, 100);
       }
 
       state.view.init = init;
@@ -2389,7 +2386,7 @@ var RxHTML = (function () {
           console.log(payload.delta.log);
         }
         if ('reload' in payload.delta) {
-          if (payload.delta.reload['preserve-view'] === true) {
+          if (payload.delta.reload['preserve-view']) {
             localStorage.setItem('rxviewstate', JSON.stringify(co.viewstatetree.raw()));
           }
           window.location.reload();
