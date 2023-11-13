@@ -2348,13 +2348,10 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n    __v1_tbl = new RxTableGuard(v1);");
     gold.append("\n    v2 = new RxLazy<NtList<RTxR>>(this, () -> (NtList<RTxR>)(tbl.iterate(false).where(true, new __CLOSURE_WhereClause1())), null);");
     gold.append("\n    __v2_tbl = new RxTableGuard(v2);");
-    gold.append("\n    tbl.__subscribe(all);");
     gold.append("\n    tbl.__subscribe(__all_tbl);");
     gold.append("\n    all.__guard(tbl,__all_tbl);");
-    gold.append("\n    tbl.__subscribe(v1);");
     gold.append("\n    tbl.__subscribe(__v1_tbl);");
     gold.append("\n    v1.__guard(tbl,__v1_tbl);");
-    gold.append("\n    tbl.__subscribe(v2);");
     gold.append("\n    tbl.__subscribe(__v2_tbl);");
     gold.append("\n    v2.__guard(tbl,__v2_tbl);");
     gold.append("\n    __goodwillBudget = 100000;");

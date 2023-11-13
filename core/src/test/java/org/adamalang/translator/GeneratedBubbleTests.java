@@ -3595,7 +3595,6 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    ___cake =  new RxGuard(this);");
     gold.append("\n    __cake_tbl = new RxTableGuard(___cake);");
     gold.append("\n    ___todo =  new RxGuard(this);");
-    gold.append("\n    tbl.__subscribe(___cake);");
     gold.append("\n    tbl.__subscribe(__cake_tbl);");
     gold.append("\n    ___cake.__guard(tbl,__cake_tbl);");
     gold.append("\n    __today.__subscribe(___todo);");

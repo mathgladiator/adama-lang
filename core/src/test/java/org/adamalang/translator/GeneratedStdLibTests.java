@@ -994,13 +994,10 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __x_b__b = new RxTableGuard(x_b);");
     gold.append("\n    _b_all = new RxLazy<NtList<NtMaybe<RTxB>>>(this, () -> (NtList<NtMaybe<RTxB>>)(_b.lookup((_b.iterate(true)).transform((RTxB item) -> (Integer) (item.id.get())))), null);");
     gold.append("\n    ___b_all__b = new RxTableGuard(_b_all);");
-    gold.append("\n    _b.__subscribe(_b_1);");
     gold.append("\n    _b.__subscribe(___b_1__b);");
     gold.append("\n    _b_1.__guard(_b,___b_1__b);");
-    gold.append("\n    _b.__subscribe(_b_2);");
     gold.append("\n    _b.__subscribe(___b_2__b);");
     gold.append("\n    _b_2.__guard(_b,___b_2__b);");
-    gold.append("\n    _b.__subscribe(x);");
     gold.append("\n    _b.__subscribe(__x__b);");
     gold.append("\n    x.__guard(_b,__x__b);");
     gold.append("\n    x.__subscribe(r_x);");
@@ -1008,10 +1005,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    x.__subscribe(x_skip_1_r);");
     gold.append("\n    x.__subscribe(x_d);");
     gold.append("\n    x.__subscribe(x_mirror);");
-    gold.append("\n    _b.__subscribe(x_b);");
     gold.append("\n    _b.__subscribe(__x_b__b);");
     gold.append("\n    x_b.__guard(_b,__x_b__b);");
-    gold.append("\n    _b.__subscribe(_b_all);");
     gold.append("\n    _b.__subscribe(___b_all__b);");
     gold.append("\n    _b_all.__guard(_b,___b_all__b);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -1972,7 +1967,6 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxB __link() {");
-    gold.append("\n      _a.__subscribe(a);");
     gold.append("\n      _a.__subscribe(__a__a);");
     gold.append("\n      a.__guard(_a,__a__a);");
     gold.append("\n      return this;");

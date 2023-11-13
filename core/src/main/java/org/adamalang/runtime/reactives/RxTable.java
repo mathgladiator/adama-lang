@@ -514,6 +514,9 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public NtList<Ty> iterate(final boolean done) {
+    if (done) {
+      readAll();
+    }
     return new SelectorRxObjectList<>(this);
   }
 
