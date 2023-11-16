@@ -276,7 +276,7 @@ public class WebClientBase {
             null, //
             true, //
             new DefaultHttpHeaders(), //
-            50000));
+            4 * 1024 * 1024));
         ch.pipeline().addLast(new WebClientConnectionInboundHandler(lifecycle));
       }
     });

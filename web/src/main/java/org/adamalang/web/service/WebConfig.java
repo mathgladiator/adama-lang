@@ -61,7 +61,7 @@ public class WebConfig {
     this.idleReadSeconds = config.intOf("http-read-idle-sec", 60);
     this.idleWriteSeconds = config.intOf("http-write-idle-sec", 60);
     this.idleAllSeconds = config.intOf("websocket-all-idle-sec", 60);
-    this.maxWebSocketFrameSize = config.intOf("websocket-max-frame-size", 1048576);
+    this.maxWebSocketFrameSize = config.intOf("websocket-max-frame-size", 4 * 1024 * 1024);
     this.heartbeatTimeMilliseconds = config.intOf("websocket-heart-beat-ms", 1000);
     this.bossThreads = config.intOf("http-boss-threads", 2);
     this.workerThreads = config.intOf("http-worker-threads", 16);

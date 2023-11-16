@@ -25,12 +25,15 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Json;
 import org.adamalang.web.contracts.WebJsonStream;
 import org.adamalang.web.contracts.WebLifecycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** internal: class for wrapping the netty handler into a nice and neat package */
 public class WebClientConnectionInboundHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebClientConnectionInboundHandler.class);
   private final WebLifecycle lifecycle;
   private final ConcurrentHashMap<Integer, WebJsonStream> streams;
   private WebClientConnection connection;
@@ -113,6 +116,7 @@ public class WebClientConnectionInboundHandler extends SimpleChannelInboundHandl
 
   @Override
   public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+    LOGGER.error("web-client-fail:", cause);
     lifecycle.failure(cause);
     end(ctx);
   }

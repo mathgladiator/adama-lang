@@ -95,7 +95,7 @@ public class TestClientRequestBuilder {
                           null, //
                           true, //
                           headers, //
-                          50000));
+                          4 * 1024 * 1024));
               ch.pipeline()
                   .addLast(
                       new SimpleChannelInboundHandler<TextWebSocketFrame>() {
