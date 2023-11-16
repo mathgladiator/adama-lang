@@ -147,6 +147,10 @@ public class CommonServiceInit {
           targetsQuorum.deliverDatabase(Hosts.listHosts(database, region, "adama"));
         } catch (Exception ex) {
           LOGGER.error("failed-delivery-database-list-hosts", ex);
+        } finally {
+          if (alive.get()) {
+            system.schedule(this, 120000);
+          }
         }
       }
     }, 50);
