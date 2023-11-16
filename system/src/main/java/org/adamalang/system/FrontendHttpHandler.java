@@ -19,6 +19,8 @@ package org.adamalang.system;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
+import org.adamalang.auth.AuthRequest;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.auth.Authenticator;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.PrivateKeyWithId;
@@ -31,6 +33,7 @@ import org.adamalang.runtime.sys.web.*;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
 import org.adamalang.web.contracts.HttpHandler;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.service.KeyPrefixUri;
 import org.adamalang.web.service.SpaceKeyRequest;
 import org.adamalang.web.service.WebConfig;
@@ -83,17 +86,25 @@ public class FrontendHttpHandler implements HttpHandler {
         handleGet(who, uri, headers, parametersJson, callback);
     }
   }
+
   @Override
-  public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-    NtPrincipal who = NtPrincipal.NO_ONE;
-    handleWithPrincipal(method, who, uri, headers, parametersJson, body, callback);
-    /*
+  public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     if (identity == null || "".equals(identity)) {
-      // USE NO_ONE
+      NtPrincipal who = NtPrincipal.NO_ONE;
+      handleWithPrincipal(method, who, uri, headers, parametersJson, body, callback);
     } else {
-      authenticator.auth(new AuthRequest(identity, new ConnectionContext()... shit, need the context in the plumbing
+      authenticator.auth(new AuthRequest(identity, context), new Callback<AuthenticatedUser>() {
+        @Override
+        public void success(AuthenticatedUser user) {
+         handleWithPrincipal(method, user.who, uri, headers, parametersJson, body, callback);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     }
-    */
   }
 
   public void handleOptions(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {

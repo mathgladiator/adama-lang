@@ -19,6 +19,7 @@ package org.adamalang.web.contracts;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,7 +31,8 @@ public class NullHttpHandlerTests {
   @Test
   public void coverage() throws Exception {
     CountDownLatch latch = new CountDownLatch(5);
-    HttpHandler.NULL.handle(HttpHandler.Method.GET, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
+    ConnectionContext context = new ConnectionContext("origin", "remote-ip", "user-agent", null, new TreeMap<>());
+    HttpHandler.NULL.handle(context, HttpHandler.Method.GET, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();
@@ -41,7 +43,7 @@ public class NullHttpHandlerTests {
 
       }
     });
-    HttpHandler.NULL.handle(HttpHandler.Method.PUT, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
+    HttpHandler.NULL.handle(context, HttpHandler.Method.PUT, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();
@@ -52,7 +54,7 @@ public class NullHttpHandlerTests {
 
       }
     });
-    HttpHandler.NULL.handle(HttpHandler.Method.DELETE, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
+    HttpHandler.NULL.handle(context, HttpHandler.Method.DELETE, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();
@@ -63,7 +65,7 @@ public class NullHttpHandlerTests {
 
       }
     });
-    HttpHandler.NULL.handle(HttpHandler.Method.OPTIONS, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
+    HttpHandler.NULL.handle(context, HttpHandler.Method.OPTIONS, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         latch.countDown();

@@ -110,7 +110,7 @@ public class MockServiceBase implements ServiceBase {
       }
 
       @Override
-      public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+      public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         switch (method) {
           case PUT:
             handlePost(uri, headers, parametersJson, body, callback);

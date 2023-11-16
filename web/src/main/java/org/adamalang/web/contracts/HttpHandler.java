@@ -19,6 +19,7 @@ package org.adamalang.web.contracts;
 
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.web.io.ConnectionContext;
 
 import java.util.TreeMap;
 
@@ -34,7 +35,7 @@ public interface HttpHandler {
 
   HttpHandler NULL = new HttpHandler() {
     @Override
-    public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+    public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
       callback.success(null);
     }
 
@@ -44,8 +45,7 @@ public interface HttpHandler {
     }
   };
 
-  void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback);
-
+  void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback);
 
   void handleDeepHealth(Callback<String> callback);
 

@@ -113,7 +113,7 @@ public class DevBoxServiceBase implements ServiceBase {
     return new HttpHandler() {
 
       @Override
-      public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+      public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         NtPrincipal who = NtPrincipal.NO_ONE;
         if (identity != null) {
           who = DevBoxAdama.principalOf(identity);
