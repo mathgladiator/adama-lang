@@ -19,6 +19,7 @@ package org.adamalang.web.contracts;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonResponder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class ServiceBaseJustHtmlTests {
     ServiceBase base = ServiceBase.JUST_HTTP(new HttpHandler() {
 
       @Override
-      public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+      public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         switch (method) {
           case PUT:
             handlePost(uri, headers, parametersJson, body, callback);
@@ -93,7 +94,8 @@ public class ServiceBaseJustHtmlTests {
     base.establish(null).kill();
     base.assets();
     CountDownLatch latch = new CountDownLatch(4);
-    base.http().handle(HttpHandler.Method.OPTIONS, null, "/opt=yes", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
+    ConnectionContext context = new ConnectionContext("origin", "ip", "ua", null, new TreeMap<>());
+    base.http().handle(context, HttpHandler.Method.OPTIONS, null, "/opt=yes", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertTrue(value.cors);
@@ -105,7 +107,7 @@ public class ServiceBaseJustHtmlTests {
 
       }
     });
-    base.http().handle(HttpHandler.Method.GET, null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
+    base.http().handle(context, HttpHandler.Method.GET, null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("yay", new String(value.body, StandardCharsets.UTF_8));
@@ -117,7 +119,7 @@ public class ServiceBaseJustHtmlTests {
 
       }
     });
-    base.http().handle(HttpHandler.Method.DELETE, null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
+    base.http().handle(context, HttpHandler.Method.DELETE, null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("yay", new String(value.body, StandardCharsets.UTF_8));
@@ -129,7 +131,7 @@ public class ServiceBaseJustHtmlTests {
 
       }
     });
-    base.http().handle( HttpHandler.Method.PUT,null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
+    base.http().handle(context, HttpHandler.Method.PUT,null, "x", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {
         Assert.assertEquals("post", new String(value.body, StandardCharsets.UTF_8));

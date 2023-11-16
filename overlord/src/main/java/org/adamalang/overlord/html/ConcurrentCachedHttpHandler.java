@@ -20,6 +20,7 @@ package org.adamalang.overlord.html;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.contracts.HttpHandler;
+import org.adamalang.web.io.ConnectionContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   }
 
   @Override
-  public void handle(Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+  public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     if (method == Method.GET) {
       callback.success(uris.get(uri));
     } else {
