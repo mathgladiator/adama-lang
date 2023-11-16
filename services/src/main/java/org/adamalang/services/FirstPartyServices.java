@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class FirstPartyServices {
   private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
 
-  public static FirstPartyMetrics install(SimpleExecutor executor, MetricsFactory factory, WebClientBase webClientBase, SelfClient adamaClientRaw, InternalSigner signer) {
+  public static FirstPartyMetrics install(SimpleExecutor executor, SimpleExecutor offload, MetricsFactory factory, WebClientBase webClientBase, SelfClient adamaClientRaw, InternalSigner signer) {
     FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
     final SelfClient adamaClient = adamaClientRaw;
     ServiceRegistry.add("adama", Adama.class, (space, configRaw, keys) -> { // TODO
@@ -125,7 +125,7 @@ public class FirstPartyServices {
     ServiceRegistry.add("githubvalidator", GithubValidator.class, (space, configRaw, keys) -> GithubValidator.build(metrics, webClientBase));
      */
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(metrics, executor, webClientBase));
-    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
+    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(offload));
     ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, new NoOpPusher()));
     return metrics;
   }

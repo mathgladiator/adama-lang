@@ -143,7 +143,11 @@ public class CommonServiceInit {
     system.schedule(new NamedRunnable("list-hosts-database") {
       @Override
       public void execute() throws Exception {
-        targetsQuorum.deliverDatabase(Hosts.listHosts(database, region, "adama"));
+        try {
+          targetsQuorum.deliverDatabase(Hosts.listHosts(database, region, "adama"));
+        } catch (Exception ex) {
+          LOGGER.error("failed-delivery-database-list-hosts", ex);
+        }
       }
     }, 50);
     this.engine.subscribe("adama", targetsQuorum::deliverGossip);

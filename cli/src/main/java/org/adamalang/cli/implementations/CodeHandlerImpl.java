@@ -122,7 +122,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
+    FirstPartyServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.code);
@@ -147,7 +147,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, new NoOpMetricsFactory(), null, null, null);
+    FirstPartyServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.reflection);
