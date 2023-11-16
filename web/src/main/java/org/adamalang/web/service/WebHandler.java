@@ -802,7 +802,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     try {
       AdamaWebRequest wta = new AdamaWebRequest(req, ctx);
       HttpHandler.Method hhmethod = HttpHandler.Method.GET;
-
+      final ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
       if (req.method() == HttpMethod.OPTIONS) {
         metrics.webhandler_options.run();
         hhmethod = HttpHandler.Method.OPTIONS;
@@ -816,7 +816,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         metrics.webhandler_get.run();
         hhmethod = HttpHandler.Method.GET;
       }
-      httpHandler.handle(hhmethod, wta.identity, wta.uri, wta.headers, wta.parameters, wta.body, callback);
+      httpHandler.handle(context, hhmethod, wta.identity, wta.uri, wta.headers, wta.parameters, wta.body, callback);
     } catch (Exception ex) {
       LOG.error("failure-to-build-wta:", ex);
       sendImmediate(metrics.webhandler_wta_crash, req, ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR, EMPTY_RESPONSE, null, true);
