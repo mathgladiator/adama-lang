@@ -35,6 +35,7 @@ import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
+import org.adamalang.services.video.Jitsi;
 import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,6 +117,15 @@ public class FirstPartyServices {
         return Logzio.build(metrics, webClientBase, config, executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-logzio", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("jitzi", Jitsi.class, (space, configRaw, keys) -> {
+      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
+      try {
+        return Jitsi.build(metrics, config, webClientBase, offload);
+      } catch (Exception ex) {
+        LOGGER.error("failed-jitsi", ex);
         return Service.FAILURE;
       }
     });

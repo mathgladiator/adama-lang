@@ -17,10 +17,12 @@
 */
 package org.adamalang.cli.devbox;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.keys.RSAPemKey;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Service;
@@ -37,6 +39,7 @@ import org.adamalang.services.security.GoogleValidator;
 import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
+import org.adamalang.services.video.Jitsi;
 import org.adamalang.web.client.WebClientBase;
 
 import java.util.HashSet;
@@ -152,5 +155,19 @@ public class DevBoxServices {
       ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw, keys) -> Service.FAILURE);
     }
     ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, webClientBase));
+
+    if (servicesDefn != null && servicesDefn.has("jitsi")) {
+      String privateKeyDev = servicesDefn.get("jitsi").textValue();
+      ServiceRegistry.add("jitsi", Jitsi.class, (space, configRaw, keys) -> {
+        try {
+          return new Jitsi(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, executor, RSAPemKey.privateFrom(privateKeyDev), configRaw.get("sub").toString());
+        } catch (Exception ex) {
+          ex.printStackTrace();
+          return Service.FAILURE;
+        }
+      });
+    } else {
+      ServiceRegistry.add("jitsi", Jitsi.class, (space, configRaw, keys) -> Service.FAILURE);
+    }
   }
 }
