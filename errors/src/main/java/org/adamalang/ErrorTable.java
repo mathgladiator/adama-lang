@@ -973,5 +973,7 @@ public class ErrorTable {
     descriptions.put(737266, "no description of error (yet)");
     names.put(774130, "VAPID_CREATE_UNKNOWN_FAILURE");
     descriptions.put(774130, "no description of error (yet)");
+    names.put(783347, "JITSI_FAILED_SIGNING_TOKEN");
+    descriptions.put(783347, "no description of error (yet)");
   }
 }
