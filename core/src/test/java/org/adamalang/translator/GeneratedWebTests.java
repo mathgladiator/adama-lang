@@ -844,7 +844,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __put_H(CoreRequestContext __context, NtPrincipal __who, WebPut __request) {");
+    gold.append("\n  private WebResponse __put_H(CoreRequestContext __context, NtPrincipal __who, WebPut __request) throws AbortMessageException {");
     gold.append("\n    RTxM m = new RTxM(__request.body());");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(0);");
@@ -2011,7 +2011,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_A(CoreRequestContext __context, NtPrincipal __who, WebGet __request, int x){");
+    gold.append("\n  private WebResponse __get_A(CoreRequestContext __context, NtPrincipal __who, WebGet __request, int x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -2019,7 +2019,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().cache_ttl_seconds(__capture9.cache_ttl_seconds).html(__capture9.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_F(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String a){");
+    gold.append("\n  private WebResponse __get_F(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String a) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
     gold.append("\n    {");
@@ -2027,7 +2027,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture10.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_G(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_G(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
     gold.append("\n    {");
@@ -2035,7 +2035,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture11.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_GH(CoreRequestContext __context, NtPrincipal __who, WebGet __request, long x){");
+    gold.append("\n  private WebResponse __get_GH(CoreRequestContext __context, NtPrincipal __who, WebGet __request, long x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(3);");
     gold.append("\n    {");
@@ -2043,7 +2043,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture12.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(4);");
     gold.append("\n    {");
@@ -2051,7 +2051,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture13.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_JA(CoreRequestContext __context, NtPrincipal __who, WebGet __request, double x){");
+    gold.append("\n  private WebResponse __get_JA(CoreRequestContext __context, NtPrincipal __who, WebGet __request, double x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
     gold.append("\n    {");
@@ -2059,7 +2059,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture14.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_K(CoreRequestContext __context, NtPrincipal __who, WebGet __request, long x){");
+    gold.append("\n  private WebResponse __get_K(CoreRequestContext __context, NtPrincipal __who, WebGet __request, long x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(6);");
     gold.append("\n    {");
@@ -2067,7 +2067,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture15.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_P(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String a){");
+    gold.append("\n  private WebResponse __get_P(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String a) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(7);");
     gold.append("\n    {");
@@ -2097,7 +2097,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __delete_N(CoreRequestContext __context, NtPrincipal __who, WebDelete __request){");
+    gold.append("\n  private WebResponse __delete_N(CoreRequestContext __context, NtPrincipal __who, WebDelete __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(8);");
     gold.append("\n    {");
@@ -2913,7 +2913,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -2938,7 +2938,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __put_B(CoreRequestContext __context, NtPrincipal __who, WebPut __request) {");
+    gold.append("\n  private WebResponse __put_B(CoreRequestContext __context, NtPrincipal __who, WebPut __request) throws AbortMessageException {");
     gold.append("\n    RTxM m = new RTxM(__request.body());");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
@@ -3922,7 +3922,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_G(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String id, double val){");
+    gold.append("\n  private WebResponse __get_G(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String id, double val) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -3930,7 +3930,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture10.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_H(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_H(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
     gold.append("\n    {");
@@ -3938,7 +3938,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture11.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
     gold.append("\n    {");
@@ -3946,7 +3946,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture12.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_L(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_L(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(3);");
     gold.append("\n    {");
@@ -3987,7 +3987,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __put_A(CoreRequestContext __context, NtPrincipal __who, WebPut __request) {");
+    gold.append("\n  private WebResponse __put_A(CoreRequestContext __context, NtPrincipal __who, WebPut __request) throws AbortMessageException {");
     gold.append("\n    RTxM m = new RTxM(__request.body());");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(4);");
@@ -3996,7 +3996,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture14.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __put_K(CoreRequestContext __context, NtPrincipal __who, WebPut __request) {");
+    gold.append("\n  private WebResponse __put_K(CoreRequestContext __context, NtPrincipal __who, WebPut __request) throws AbortMessageException {");
     gold.append("\n    RTxM m = new RTxM(__request.body());");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
@@ -4005,7 +4005,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture15.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __put_L(CoreRequestContext __context, NtPrincipal __who, WebPut __request) {");
+    gold.append("\n  private WebResponse __put_L(CoreRequestContext __context, NtPrincipal __who, WebPut __request) throws AbortMessageException {");
     gold.append("\n    RTxM m = new RTxM(__request.body());");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(6);");
@@ -5387,7 +5387,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_G(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_G(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    NtMaybe<String> _AutoConditionc_8;");
@@ -5406,7 +5406,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().json(__capture10.json);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(3);");
     gold.append("\n    {");
@@ -5414,7 +5414,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().json(__capture11.json);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(4);");
     gold.append("\n    {");
@@ -5422,7 +5422,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().identity(__capture12.identity);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_NG(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_NG(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
     gold.append("\n    {");
@@ -6519,7 +6519,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_D(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_D(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    {");
@@ -6527,7 +6527,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().json(__capture5.json);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_F(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_F(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
     gold.append("\n    {");
@@ -6535,7 +6535,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().error(__capture6.error);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
     gold.append("\n    {");
@@ -6543,7 +6543,7 @@ public class GeneratedWebTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().forward(__capture7.forward);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(3);");
     gold.append("\n    {");

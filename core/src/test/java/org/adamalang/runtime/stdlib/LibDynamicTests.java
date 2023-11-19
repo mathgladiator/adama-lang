@@ -113,6 +113,16 @@ public class LibDynamicTests {
   }
 
   @Test
+  public void coverage_str_defaults() {
+    Assert.assertEquals("{}", LibDynamic.to_dyn("{}").get().json);
+    Assert.assertFalse(LibDynamic.to_dyn("x").has());
+    Assert.assertEquals("here", LibDynamic.str(new NtDynamic("{\"x\":\"here\"}"), "x", "def"));
+    Assert.assertEquals("123", LibDynamic.str(new NtDynamic("{\"x\":123}"), "x", "def"));
+    Assert.assertEquals("123.4", LibDynamic.str(new NtDynamic("{\"x\":123.4}"), "x", "def"));
+    Assert.assertEquals("def", LibDynamic.str(new NtDynamic("{}"), "x", "def"));
+  }
+
+  @Test
   public void coverage_integer() {
     Assert.assertEquals(123, (int) (LibDynamic.i(new NtDynamic("{\"x\":\"123\"}"), "x").get()));
     Assert.assertEquals(123, (int) (LibDynamic.i(new NtDynamic("{\"x\":123}"), "x").get()));
@@ -120,6 +130,16 @@ public class LibDynamicTests {
     Assert.assertFalse(LibDynamic.i(new NtDynamic("{\"x\":\"4.2\"}"), "x").has());
     Assert.assertFalse(LibDynamic.i(new NtDynamic("{\"x\":\"xyz\"}"), "x").has());
     Assert.assertFalse(LibDynamic.i(new NtDynamic("null"), "x").has());
+  }
+
+  @Test
+  public void coverage_integer_defaults() {
+    Assert.assertEquals(123, (int) (LibDynamic.i(new NtDynamic("{\"x\":\"123\"}"), "x", 0)));
+    Assert.assertEquals(123, (int) (LibDynamic.i(new NtDynamic("{\"x\":123}"), "x", 0)));
+    Assert.assertEquals(42, LibDynamic.i(new NtDynamic("{}"), "x", 42));
+    Assert.assertEquals(42, LibDynamic.i(new NtDynamic("{\"x\":\"4.2\"}"), "x", 42));
+    Assert.assertEquals(42, LibDynamic.i(new NtDynamic("{\"x\":\"xyz\"}"), "x", 42));
+    Assert.assertEquals(42, LibDynamic.i(new NtDynamic("null"), "x", 42));
   }
 
   @Test
@@ -134,6 +154,17 @@ public class LibDynamicTests {
   }
 
   @Test
+  public void coverage_long_defaults() {
+    Assert.assertEquals(123L, (long) (LibDynamic.l(new NtDynamic("{\"x\":\"123\"}"), "x", 0)));
+    Assert.assertEquals(123L, (long) (LibDynamic.l(new NtDynamic("{\"x\":123}"), "x", 0)));
+    Assert.assertEquals(42424242424242L, (long) (LibDynamic.l(new NtDynamic("{\"x\":42424242424242}"), "x", 0)));
+    Assert.assertEquals(42L, LibDynamic.l(new NtDynamic("{}"), "x", 42L));
+    Assert.assertEquals(42L, LibDynamic.l(new NtDynamic("{\"x\":\"4.2\"}"), "x", 42L));
+    Assert.assertEquals(42L, LibDynamic.l(new NtDynamic("{\"x\":\"xyz\"}"), "x", 42L));
+    Assert.assertEquals(42L, LibDynamic.l(new NtDynamic("null"), "x", 42L));
+  }
+
+  @Test
   public void coverage_double() {
     Assert.assertEquals(42.123, (LibDynamic.d(new NtDynamic("{\"x\":\"42.123\"}"), "x").get()), 0.1);
     Assert.assertEquals(42.123, (LibDynamic.d(new NtDynamic("{\"x\":42.123}"), "x").get()), 0.1);
@@ -145,6 +176,17 @@ public class LibDynamicTests {
   }
 
   @Test
+  public void coverage_double_defaults() {
+    Assert.assertEquals(42.123, (LibDynamic.d(new NtDynamic("{\"x\":\"42.123\"}"), "x", -1.0)), 0.1);
+    Assert.assertEquals(42.123, (LibDynamic.d(new NtDynamic("{\"x\":42.123}"), "x", -1.0)), 0.1);
+    Assert.assertEquals(42, (LibDynamic.d(new NtDynamic("{\"x\":42}"), "x", -1.0)), 0.1);
+    Assert.assertEquals(424242424242.0, (LibDynamic.d(new NtDynamic("{\"x\":424242424242}"), "x", -1.0)), 0.1);
+    Assert.assertEquals(-1, LibDynamic.d(new NtDynamic("{}"), "x", -1.0), 0.1);
+    Assert.assertEquals(-1, LibDynamic.d(new NtDynamic("{\"x\":\"str\"}"), "x", -1.0), 0.1);
+    Assert.assertEquals(-1, LibDynamic.d(new NtDynamic("null"), "x", -1.0), 0.1);
+  }
+
+  @Test
   public void coverage_boolean() {
     Assert.assertTrue((LibDynamic.b(new NtDynamic("{\"x\":\"true\"}"), "x").get()));
     Assert.assertFalse((LibDynamic.b(new NtDynamic("{\"x\":\"false\"}"), "x").get()));
@@ -153,6 +195,24 @@ public class LibDynamicTests {
     Assert.assertFalse(LibDynamic.b(new NtDynamic("{\"x\":\"4.2\"}"), "x").has());
     Assert.assertFalse(LibDynamic.b(new NtDynamic("{\"x\":4.2}"), "x").has());
     Assert.assertFalse(LibDynamic.b(new NtDynamic("null"), "x").has());
+  }
+
+  @Test
+  public void coverage_boolean_defaults() {
+    Assert.assertTrue((LibDynamic.b(new NtDynamic("{\"x\":\"true\"}"), "x", true)));
+    Assert.assertFalse((LibDynamic.b(new NtDynamic("{\"x\":\"false\"}"), "x", true)));
+    Assert.assertTrue((LibDynamic.b(new NtDynamic("{\"x\":\"true\"}"), "x", false)));
+    Assert.assertFalse((LibDynamic.b(new NtDynamic("{\"x\":\"false\"}"), "x", false)));
+    Assert.assertTrue((LibDynamic.b(new NtDynamic("{\"x\":true}"), "x", false)));
+    Assert.assertFalse((LibDynamic.b(new NtDynamic("{\"x\":false}"), "x", false)));
+    Assert.assertTrue((LibDynamic.b(new NtDynamic("{\"x\":true}"), "x", true)));
+    Assert.assertFalse((LibDynamic.b(new NtDynamic("{\"x\":false}"), "x", true)));
+    Assert.assertTrue(LibDynamic.b(new NtDynamic("{\"x\":\"4.2\"}"), "x", true));
+    Assert.assertFalse(LibDynamic.b(new NtDynamic("{\"x\":\"4.2\"}"), "x", false));
+    Assert.assertTrue(LibDynamic.b(new NtDynamic("{\"x\":4.2}"), "x", true));
+    Assert.assertFalse(LibDynamic.b(new NtDynamic("{\"x\":4.2}"), "x", false));
+    Assert.assertTrue(LibDynamic.b(new NtDynamic("null"), "x", true));
+    Assert.assertFalse(LibDynamic.b(new NtDynamic("null"), "x", false));
   }
 
   @Test

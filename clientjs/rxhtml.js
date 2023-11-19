@@ -679,6 +679,80 @@ var RxHTML = (function () {
     }.bind({prior:null}));
   };
 
+  // document-get
+  self.DcG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed) {
+    // TODO
+  };
+
+  // RUNTIME <domain-get url="path" search:x="...">
+  self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed) {
+    var unsub = make_unsub();
+    rxObj.__ = debounce(50, function () {
+      if (!('url' in rxObj)) {
+        return;
+      }
+      var args = [];
+      var identity = null;
+      for (var arg in rxObj) {
+        var val = rxObj[arg];
+        switch (arg) {
+          case "__":
+          case "_":
+          case "url":
+          case "redirect":
+            break;
+          case "identity":
+            if (typeof(val) == "string") {
+              identity = rxObj[arg];
+            }
+            break;
+          default:
+            args.push(arg + "=" + encodeURIComponent(val));
+        }
+      }
+      var url = rxObj.url + (args.length > 0 ? "?" + args.join("&") : "");
+      this.gen ++;
+      var self = this;
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.xhttp.readyState == 4 && this.gen == self.gen) {
+          fire_unsub(unsub);
+          nuke(parent);
+          var tree = new AdamaTree();
+          var state = {
+            service: priorState.service,
+            data: { connection: priorState.connection, tree: tree, delta: {}, parent: null, path: null },
+            view: new_delta_copy(priorState.view),
+            current: "data"
+          };
+
+          if (this.xhttp.status == 200) {
+            var type = this.xhttp.getResponseHeader("Content-Type");
+            if (type == "application/json") {
+              var toPush = tree.MakeDelta(JSON.parse(this.xhttp.responseText));
+              childMakerFetched(parent, state);
+              subscribe_state(state, unsub);
+              tree.update(toPush);
+            } else {
+              childMakerFailed(parent, state);
+              subscribe_state(state, unsub);
+            }
+          } else {
+            childMakerFailed(parent, state);
+            subscribe_state(state, unsub);
+          }
+        }
+      }.bind({gen:self.gen, xhttp:xhttp});
+      xhttp.open("GET", "/~d" + url, true);
+      if (identity != null) {
+        xhttp.setRequestHeader("Authorization", "Bearer " + identity);
+      }
+      xhttp.withCredentials = true;
+      xhttp.send();
+    }.bind({url:"", gen:0}));
+    rxObj.__();
+  }
+
   // RUNTIME | <pick name=...>
   self.P = function (parent, priorState, rxObj, childMakerConnected, childMakerDisconnected, keepOpen) {
     var unsub = make_unsub();
@@ -1938,8 +2012,6 @@ var RxHTML = (function () {
           console.log("Failed to hash");
         }
       })
-
-
     });
   }
 

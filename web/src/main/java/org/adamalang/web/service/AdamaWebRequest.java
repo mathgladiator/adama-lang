@@ -43,20 +43,27 @@ public class AdamaWebRequest {
 
   public AdamaWebRequest(final FullHttpRequest req, ChannelHandlerContext ctx) {
     headers = new TreeMap<>();
-    String _identity = null;
+    String cookieIdentity = null;
+    String bearerIdentity = null;
     for (Map.Entry<String, String> entry : req.headers()) {
       String headerName = entry.getKey().toLowerCase(Locale.ROOT);
       if (headerName.equals("cookie")) {
         for (Cookie cookie : ServerCookieDecoder.STRICT.decodeAll(entry.getValue())) {
           if ("id_default".equals(cookie.name())) {
-            _identity = cookie.value();
+            cookieIdentity = cookie.value();
           }
         }
         continue;
+      } else if (headerName.equals("authorization")) {
+        String testForIdentity = entry.getValue().stripLeading();
+        if (testForIdentity.startsWith("Bearer ")) {
+          bearerIdentity = testForIdentity.substring(7).trim();
+        }
       }
       headers.put(headerName, entry.getValue());
     }
-    this.identity = _identity;
+    this.identity = bearerIdentity != null ? bearerIdentity :  cookieIdentity;
+
     ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
     headers.put("origin", context.origin + "");
     headers.put("remote-ip", context.remoteIp + "");

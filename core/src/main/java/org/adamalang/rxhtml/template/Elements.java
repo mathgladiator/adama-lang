@@ -258,6 +258,44 @@ public class Elements {
     }
   }
 
+  public static void domainget(Environment env) {
+    String childStateVar = env.pool.ask();
+    String parentVar = soloParent(env);
+    ArrayList<String> parameters = new ArrayList<>();
+    parameters.add("url");
+    parameters.add("identity");
+    parameters.add("redirect");
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.getKey().startsWith("search:") || attr.getKey().startsWith("parameter:")) {
+        parameters.add(attr.getKey());
+      }
+    }
+    RxObject obj = new RxObject(env, parameters.toArray(new String[parameters.size()]));
+    env.writer.tab().append("$.DG(") //
+        .append(parentVar).append(",") //
+        .append(env.stateVar) //
+        .append(",").append(obj.rxObj).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected") || node.hasAttr("rx:disconnected"));
+      } else {
+        return true;
+      }
+    });
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
+      if (node instanceof Element) {
+        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected") || node.hasAttr("rx:failed"));
+      } else {
+        return false;
+      }
+    });
+    env.writer.tabDown().tab().append("}").append(");").newline();
+    obj.finish();
+    env.pool.give(childStateVar);
+    obj.finish();
+  }
+
   public static void pick(Environment env) {
     if (!env.element.hasAttr("name")) {
       env.element.attr("name", "default");

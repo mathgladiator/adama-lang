@@ -170,7 +170,7 @@ public class CodeGenWeb {
     for (Map.Entry<String, TyType> param : get.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
-    sb.append(")");
+    sb.append(") throws AbortMessageException ");
     get.code.writeJava(sb, get.next(environment));
     sb.writeNewline();
   }
@@ -190,7 +190,7 @@ public class CodeGenWeb {
     for (Map.Entry<String, TyType> param : put.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
-    sb.append(") {").tabUp().writeNewline();
+    sb.append(") throws AbortMessageException {").tabUp().writeNewline();
     sb.append("RTx").append(put.messageType.text).append(" ").append(put.messageVariable.text).append(" = new RTx").append(put.messageType.text).append("(__request.body());").writeNewline();
     put.code.specialWriteJava(sb, put.next(environment), false, true);
     sb.append("}").writeNewline();
@@ -201,7 +201,7 @@ public class CodeGenWeb {
     for (Map.Entry<String, TyType> param : delete.parameters().entrySet()) {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
-    sb.append(")");
+    sb.append(") throws AbortMessageException ");
     delete.code.writeJava(sb, delete.next(environment));
     sb.writeNewline();
   }

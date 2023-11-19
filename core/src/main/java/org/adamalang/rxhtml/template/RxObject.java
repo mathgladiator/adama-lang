@@ -47,6 +47,9 @@ public class RxObject {
       if (nameToUse.startsWith("parameter:")) {
         nameToUse = nameToUse.substring(10);
         attrToRemove.add(attrName);
+      } else if (nameToUse.startsWith("search:")) {
+        nameToUse = nameToUse.substring(7);
+        attrToRemove.add(attrName);
       }
       nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {
@@ -70,6 +73,8 @@ public class RxObject {
       String nameToUse = attrName;
       if (nameToUse.startsWith("parameter:")) {
         nameToUse = nameToUse.substring(10);
+      } else if (nameToUse.startsWith("search:")) {
+        nameToUse = nameToUse.substring(7);
       }
       nameToUse = nameToUse.replaceAll(Pattern.quote(":"), "_");
       if (env.element.hasAttr(attrName)) {

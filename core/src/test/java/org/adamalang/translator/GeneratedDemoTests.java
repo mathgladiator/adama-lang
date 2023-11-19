@@ -7003,7 +7003,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request){");
+    gold.append("\n  private WebResponse __get_J(CoreRequestContext __context, NtPrincipal __who, WebGet __request) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(20);");
     gold.append("\n    {");
@@ -7011,7 +7011,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      return new WebResponse().html(__capture37.html);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String path){");
+    gold.append("\n  private WebResponse __get_N(CoreRequestContext __context, NtPrincipal __who, WebGet __request, String path) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(21);");
     gold.append("\n    NtMaybe<RTxResource> _AutoConditionfound_38;");
@@ -7047,7 +7047,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    return null;");
     gold.append("\n  }");
-    gold.append("\n  private WebResponse __put_K(CoreRequestContext __context, NtPrincipal __who, WebPut __request) {");
+    gold.append("\n  private WebResponse __put_K(CoreRequestContext __context, NtPrincipal __who, WebPut __request) throws AbortMessageException {");
     gold.append("\n    RTxM m = new RTxM(__request.body());");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(24);");

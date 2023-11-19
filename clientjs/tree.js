@@ -406,6 +406,7 @@ function AdamaTree() {
     }
     return delta;
   };
+  this.MakeDelta = make_delta;
 
   var make_optimal_delta = function(st, subs) {
     var filter = {};
