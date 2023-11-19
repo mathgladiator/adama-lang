@@ -66,6 +66,10 @@ public class WebMetrics {
   public final Runnable webclient_rxhtml;
   public final Runnable webclient_pushack;
 
+  public final Runnable webclient_webpush_denial;
+  public final Runnable webclient_webpush_setup;
+  public final Runnable webclient_webpush_avail;
+
   public final CallbackMonitor web_asset_upload;
 
   public WebMetrics(MetricsFactory factory) {
@@ -109,7 +113,11 @@ public class WebMetrics {
     factory.section("public web client");
     this.webclient_retry = factory.counter("webclient_retry");
     this.webclient_rxhtml = factory.counter("webclient_rxhtml");
-    this.webclient_pushack = factory.counter("webclient_pushack");
     this.webclient_disconnect_force = factory.counter("webclient_disconnect_force");
+    factory.section("web push");
+    this.webclient_pushack = factory.counter("webclient_pushack");
+    this.webclient_webpush_setup = factory.counter("webclient_webpush_setup");
+    this.webclient_webpush_denial = factory.counter("webclient_webpush_denial");
+    this.webclient_webpush_avail = factory.counter("webclient_webpush_avail");
   }
 }

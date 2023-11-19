@@ -1965,7 +1965,27 @@ var RxHTML = (function () {
     return outputArray;
   }
 
+  self.currentPushEvent = function() {};
+
+  var getWebPushStatus = function() {
+    var result = localStorage.getItem("webpush_status");
+    if (result && typeof(result) == "string") {
+      return result;
+    }
+    return "unknown";
+  }
+
+  var setPushStatus = function(status) {
+    localStorage.setItem("webpush_status", status);
+    self.currentPushEvent();
+  }
+
+  var setPushEvent = function(foo) {
+    self.currentPushEvent = foo;
+  };
+
   var setupSubscription = function (registration, vapidPublicKey, identity, identityName, version) {
+    var pushKeyLocal = "push_endpoint_" + identityName;
     registration.pushManager
     .getSubscription().then(async function (subscription) {
         if (subscription) {
@@ -1980,7 +2000,6 @@ var RxHTML = (function () {
       // make sure we have an endpoint saved related to the right version
       connection.IdentityHash(identity, {
         success: function(result) {
-          var pushKeyLocal = "push_endpoint_" + identityName;
           if (localStorage.getItem("push_worker_version") != version || localStorage.getItem("last_identity_used") != result.identityHash) {
             localStorage.removeItem(pushKeyLocal);
             localStorage.setItem("push_worker_version", version);
@@ -1989,6 +2008,8 @@ var RxHTML = (function () {
           var sub = subscription.toJSON();
           var val = localStorage.getItem(pushKeyLocal);
           if (val && val == sub.endpoint) {
+            connection.bump("wpa");
+            setPushStatus("success");
             return;
           }
           sub['@method'] = 'webpush';
@@ -1998,20 +2019,24 @@ var RxHTML = (function () {
           if (window && window.navigator && window.navigator.userAgent) {
             device.ua = window.navigator.userAgent;
           }
-          console.log("push-register");
           connection.PushRegister(identity, self.domain, sub, device, {
             success: function() {
               localStorage.setItem(pushKeyLocal, sub.endpoint);
+              localStorage.setItem("webpush_status", "success");
+              setPushStatus("success");
             },
-            failure: function(reason) {
-              console.error("Failed to register subscription to Adama:" + reason);
-            }
+            failure: function() {}
           });
         },
-        failure: function() {
-          console.log("Failed to hash");
-        }
+        failure: function() {}
       })
+    }, function(err) {
+      setPushStatus("failed");
+      localStorage.removeItem(pushKeyLocal);
+      localStorage.removeItem("last_identity_used");
+      localStorage.removeItem("push_worker_version");
+      connection.bump("wpd");
+      connection.log("pushsetup", "" + err);
     });
   }
 
@@ -2097,6 +2122,7 @@ var RxHTML = (function () {
       // we just don't see the viewstate if we don't have these available
     }
     init.viewer_search_query = "";
+    init.viewer_web_push_status = getWebPushStatus();
     if (search != "?") {
       init.viewer_search_query = search;
       const params = new URLSearchParams(search.substring(1));
@@ -2122,6 +2148,9 @@ var RxHTML = (function () {
       if (push) {
         window.history.pushState({merge:false}, "", fixHref(path) + search);
       }
+      setPushEvent(function() {
+        state.view.tree.update({ viewer_web_push_status: getWebPushStatus()});
+      });
     } else {
       if (path != "/404") {
         self.run(where, "/404");

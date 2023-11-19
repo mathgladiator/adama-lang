@@ -636,6 +636,15 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         case "rxhtml":
           metrics.webclient_rxhtml.run();
           break;
+        case "wps":
+          metrics.webclient_webpush_setup.run();
+          break;
+        case "wpa":
+          metrics.webclient_webpush_avail.run();
+          break;
+        case "wpd":
+          metrics.webclient_webpush_denial.run();
+          break;
       }
       ok(ctx, req);
       return true;
