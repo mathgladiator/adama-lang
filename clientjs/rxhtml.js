@@ -850,6 +850,9 @@ var RxHTML = (function () {
         var item_delta = new_state.data.delta;
         new_state.data.delta = {};
         subscribe_state(new_state, unsub);
+        if (expandView) {
+          state.view.tree.update(path_to(new_state.view, {"$index": key}));
+        };
         return item_delta;
       },
       "-": function (key) {
@@ -883,6 +886,7 @@ var RxHTML = (function () {
         }
       }
     };
+    console.log(state)
     subscribe(state, name, sub);
   };
 
