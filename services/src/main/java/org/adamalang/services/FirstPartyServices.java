@@ -120,7 +120,7 @@ public class FirstPartyServices {
         return Service.FAILURE;
       }
     });
-    ServiceRegistry.add("jitzi", Jitsi.class, (space, configRaw, keys) -> {
+    ServiceRegistry.add("jitsi", Jitsi.class, (space, configRaw, keys) -> {
       ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
         return Jitsi.build(metrics, config, webClientBase, offload);
