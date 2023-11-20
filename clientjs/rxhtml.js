@@ -886,7 +886,6 @@ var RxHTML = (function () {
         }
       }
     };
-    console.log(state)
     subscribe(state, name, sub);
   };
 
