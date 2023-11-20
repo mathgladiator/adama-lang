@@ -851,7 +851,7 @@ var RxHTML = (function () {
         new_state.data.delta = {};
         subscribe_state(new_state, unsub);
         if (expandView) {
-          state.view.tree.update(path_to(new_state.view, {"$index": key}));
+          state.view.tree.update(path_to(new_state.view, {"$key": key}));
         };
         return item_delta;
       },
