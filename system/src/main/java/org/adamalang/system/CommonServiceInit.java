@@ -26,7 +26,6 @@ import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.extern.aws.*;
-import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.impl.GlobalFinder;
@@ -35,7 +34,6 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.TargetsQuorum;
-import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.sys.capacity.MachinePicker;
 import org.adamalang.services.FirstPartyMetrics;
@@ -136,8 +134,7 @@ public class CommonServiceInit {
         callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE, ex, EXLOGGER));
       }
     };
-    ClientRouter router = ClientRouter.FINDER(metrics, globalFinder, fallback, region);
-    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, metrics, router, heat);
+    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, metrics, heat);
 
     TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());
     system.schedule(new NamedRunnable("list-hosts-database") {

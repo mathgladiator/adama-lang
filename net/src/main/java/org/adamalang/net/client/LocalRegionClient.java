@@ -17,14 +17,10 @@
 */
 package org.adamalang.net.client;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
-import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
-import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
-import org.adamalang.net.client.routing.cache.RoutingTableTarget;
+import org.adamalang.net.client.routing.RoutingTableTarget;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
@@ -43,7 +39,7 @@ import java.util.function.Consumer;
 /** the front-door to talking to the gRPC client. */
 public class LocalRegionClient {
   public final LocalRegionClientMetrics metrics;
-  private final ClientRouter router;
+  private final RoutingTableTarget table;
   private final InstanceClientFinder clientFinder;
   private final SimpleExecutor[] executors;
   private final Random rng;
@@ -51,16 +47,14 @@ public class LocalRegionClient {
   private final SimpleExecutor finderExecutor;
   public final LocalFinder finder;
 
-  public LocalRegionClient(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, ClientRouter router, HeatMonitor monitor) {
+  public LocalRegionClient(NetBase base, ClientConfig config, LocalRegionClientMetrics metrics, HeatMonitor monitor) {
     this.config = config;
     this.metrics = metrics;
-    this.router = router;
     this.finderExecutor = SimpleExecutorFactory.DEFAULT.makeSingle("local-finder");
-    RoutingTableTarget table = new RoutingTableTarget(finderExecutor);
+    this.table = new RoutingTableTarget(finderExecutor);
     this.clientFinder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, new RoutingTarget() {
       @Override
       public void integrate(String target, Collection<String> spaces) {
-        router.engine.integrate(target, spaces);
         table.integrate(target, spaces);
       }
     }, ExceptionLogger.FOR(LocalRegionClient.class));
@@ -74,13 +68,12 @@ public class LocalRegionClient {
     return (targets) -> clientFinder.sync(new TreeSet<>(targets));
   }
 
-  @Deprecated
-  public AggregatedCacheRouter routing() {
-    return router.engine;
+  public void getMachineFor(Key key, Callback<String> callback) {
+    table.get(key, callback);
   }
 
   public void getDeploymentTargets(String space, Consumer<String> stream) {
-    router.engine.list(space, targets -> clientFinder.findCapacity(targets, (set) -> {
+    table.list(space, targets -> clientFinder.findCapacity(targets, (set) -> {
       for (String target : set) {
         stream.accept(target);
       }
@@ -93,7 +86,7 @@ public class LocalRegionClient {
       @Override
       public void execute() throws Exception {
         NamedRunnable self = this;
-        router.engine.list(space, (targets) -> {
+        table.list(space, (targets) -> {
           if (targets.size() == 0) {
             if (time.get() < timeout) {
               int step = (int) (125 + Math.random() * 125);
@@ -288,9 +281,9 @@ public class LocalRegionClient {
 
   /** Connect to a machine directly */
   public Connection connect(String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
-    ConnectionBase base = new ConnectionBase(config, metrics, router.routerForDocuments, clientFinder, executors[rng.nextInt(executors.length)]);
-    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
-    connection.open(machineToAsk);
+    ConnectionBase base = new ConnectionBase(config, metrics, clientFinder, executors[rng.nextInt(executors.length)]);
+    Connection connection = new Connection(base, machineToAsk, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
+    connection.open();
     return connection;
   }
 
@@ -303,6 +296,5 @@ public class LocalRegionClient {
       AwaitHelper.block(latch, 500);
     }
     AwaitHelper.block(clientFinder.shutdown(), 1000);
-    router.shutdown();
   }
 }

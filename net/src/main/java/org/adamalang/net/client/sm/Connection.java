@@ -28,7 +28,6 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.net.client.contracts.Remote;
-import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
@@ -56,8 +55,9 @@ public class Connection implements AdamaStream {
   private int timeoutMilliseconds;
   private int waitingInError;
   private boolean connectedOnce;
+  private String machineToAsk;
 
-  public Connection(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, int timeoutMilliseconds, SimpleEvents events) {
+  public Connection(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
@@ -73,6 +73,7 @@ public class Connection implements AdamaStream {
     this.closed = false;
     this.waitingInError = 0;
     this.connectedOnce = false;
+    this.machineToAsk = machineToAsk;
     base.metrics.client_state_machines_alive.up();
   }
 
@@ -107,8 +108,8 @@ public class Connection implements AdamaStream {
     }
   }
 
-  public void open(String machine) {
-    base.mesh.find(machine, new Callback<>() {
+  public void open() {
+    base.mesh.find(machineToAsk, new Callback<>() {
       @Override
       public void success(InstanceClient client) {
         client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
@@ -152,29 +153,6 @@ public class Connection implements AdamaStream {
             error(ErrorCodes.NET_LCSM_DISCONNECTED_PREMATURE);
           }
         });
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        handleError(ex.code);
-      }
-    });
-  }
-
-  public void open() {
-    base.router.get(key, new RoutingCallback() {
-      @Override
-      public void onRegion(String region) {
-        handleError(ErrorCodes.NET_LCSM_WRONG_REGION);
-      }
-
-      @Override
-      public void onMachine(String machine) {
-        if (machine == null) {
-          handleError(ErrorCodes.NET_LCSM_NO_MACHINE_FOUND);
-          return;
-        }
-        open(machine);
       }
 
       @Override

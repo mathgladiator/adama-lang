@@ -24,7 +24,7 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.TestClientConfig;
-import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
+import org.adamalang.net.client.mocks.MockRoutingTarget;
 import org.adamalang.net.mocks.LatchedSeqCallback;
 import org.adamalang.net.mocks.MockSimpleEvents;
 import org.junit.Test;
@@ -42,14 +42,14 @@ public class ConnectionTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
-      AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      MockRoutingTarget target = new MockRoutingTarget();
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, target, logger);
       try {
-        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
+        Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 2; k++) {
           connection.update("{\"k\":" + k + "}");
@@ -105,14 +105,14 @@ public class ConnectionTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.BAD_CODE);
-      AggregatedCacheRouter engine = new AggregatedCacheRouter(executor);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      MockRoutingTarget target = new MockRoutingTarget();
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, target, logger);
       try {
-        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
+        Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 20; k++) {
           connection.update("{\"k\":" + k + "}");

@@ -19,11 +19,8 @@ package org.adamalang.net.client;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.net.client.routing.cache.RoutingTableTarget;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
@@ -44,7 +41,7 @@ public class LocalFinderTests {
       ClientConfig clientConfig = new TestClientConfig();
       bed.finderService.bindArchive(new Key("archive", "key"), "archive");
       bed.finderService.bindLocal(new Key("space", "key"));
-      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new LocalRegionClientMetrics(new NoOpMetricsFactory())), null);
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), null);
       try {
         LocalRegionClientTests.waitForRouting(bed, client);
 

@@ -521,7 +521,7 @@ public class ErrorCodes {
   public static final int NET_LCSM_ATTACH_REJECTED = 969806;
 
   @RetryInternally
-  public static final int NET_LCSM_WRONG_REGION = 902223;
+  public static final int NET_RTT_MACHINE_NOT_FOUND = 902223;
 
   @RetryInternally
   public static final int NET_LCSM_NO_MACHINE_FOUND = 912544;

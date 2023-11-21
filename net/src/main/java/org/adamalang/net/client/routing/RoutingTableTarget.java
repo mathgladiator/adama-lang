@@ -15,27 +15,38 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.net.client.routing.cache;
+package org.adamalang.net.client.routing;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.net.client.contracts.RoutingCallback;
 import org.adamalang.net.client.contracts.RoutingTarget;
-import org.adamalang.net.client.routing.Router;
 import org.adamalang.runtime.data.Key;
 
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
-@Deprecated
-public class AggregatedCacheRouter implements RoutingTarget, Router {
-  private final SimpleExecutor executor;
-  private final RoutingTable table;
+/** converts a RoutingTable into a thread-safe RoutingTarget using an executor */
+public class RoutingTableTarget implements RoutingTarget {
+  public final RoutingTable table;
+  public final SimpleExecutor executor;
 
-  public AggregatedCacheRouter(SimpleExecutor executor) {
+  public RoutingTableTarget(SimpleExecutor executor) {
     this.executor = executor;
     this.table = new RoutingTable();
+  }
+
+  @Override
+  public void integrate(String target, Collection<String> spaces) {
+    executor.execute(new NamedRunnable("local-finder-integrate", target) {
+      @Override
+      public void execute() throws Exception {
+        table.integrate(target, spaces);
+      }
+    });
   }
 
   public void list(String space, Consumer<TreeSet<String>> callback) {
@@ -47,37 +58,22 @@ public class AggregatedCacheRouter implements RoutingTarget, Router {
     });
   }
 
-  public void random(Consumer<String> callback) {
-    executor.execute(new NamedRunnable("find-random-target") {
-      @Override
-      public void execute() throws Exception {
-        callback.accept(table.random());
-      }
-    });
-  }
-
-  @Override
-  public void get(Key key, RoutingCallback callback) {
+  public void get(Key key, Callback<String> callback) {
     executor.execute(new NamedRunnable("get", key.space, key.key) {
       @Override
       public void execute() throws Exception {
-        callback.onMachine(table.get(key.space, key.key));
-      }
-    });
-  }
-
-  @Override
-  public void integrate(String target, Collection<String> newSpaces) {
-    executor.execute(new NamedRunnable("routing-integrate", target) {
-      @Override
-      public void execute() throws Exception {
-        table.integrate(target, newSpaces);
+        String machine = table.get(key.space, key.key);
+        if (machine != null) {
+          callback.success(machine);
+        } else {
+          callback.failure(new ErrorCodeException(ErrorCodes.NET_RTT_MACHINE_NOT_FOUND));
+        }
       }
     });
   }
 
   public void remove(String target) {
-    executor.execute(new NamedRunnable("routing-remove", target) {
+    executor.execute(new NamedRunnable("local-finder-remove-target") {
       @Override
       public void execute() throws Exception {
         table.remove(target);

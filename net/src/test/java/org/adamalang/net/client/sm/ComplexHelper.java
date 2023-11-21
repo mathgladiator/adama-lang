@@ -20,8 +20,6 @@ package org.adamalang.net.client.sm;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.contracts.RoutingCallback;
-import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
@@ -58,41 +56,6 @@ public class ComplexHelper {
         servers[k].startServer();
       }
     }
-  }
-
-  public static void waitForRoutingToCatch(AggregatedCacheRouter engine, String space, String key, String target) throws Exception {
-    CountDownLatch latch = new CountDownLatch(1);
-    int timeout = 10000;
-    do {
-      timeout -= 50;
-      if (timeout < 0) {
-        throw new RuntimeException("timed out");
-      }
-      engine.get(new Key(space, key), new RoutingCallback() {
-        @Override
-        public void onRegion(String region) {
-        }
-        @Override
-        public void failure(ErrorCodeException ex) {
-        }
-        @Override
-        public void onMachine(String machine) {
-          if (target == null && machine == null) {
-            latch.countDown();
-          }
-          if (target != null && target.equals(machine)) {
-            latch.countDown();
-          }
-        }
-      });
-    } while (!latch.await(50, TimeUnit.MILLISECONDS));
-  }
-
-  public static void startCapacity(TestBed[] servers) throws Exception{
-    for (int k = 0; k < servers.length; k++) {
-        servers[k].startServer();
-    }
-    System.err.println("START WENT GREAT");
   }
 
   public static void stopCapacity(TestBed[] servers) {

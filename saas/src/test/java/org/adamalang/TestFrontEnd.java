@@ -46,7 +46,6 @@ import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.deploy.DeploySync;
 import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.runtime.deploy.OndemandDeploymentFactoryBase;
-import org.adamalang.runtime.sys.capacity.MachinePicker;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
@@ -67,8 +66,6 @@ import org.adamalang.mysql.Installer;
 import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
-import org.adamalang.net.client.contracts.RoutingCallback;
-import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -278,21 +275,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
     LocalRegionClientMetrics localRegionClientMetrics =  new LocalRegionClientMetrics(new NoOpMetricsFactory());
-    ClientRouter router = ClientRouter.FINDER(localRegionClientMetrics, globalFinder, new MachinePicker() {
-      @Override
-      public void pickHost(Key key, Callback<String> callback) {
-        System.err.println("picking a host via fallback");
-        try {
-          Capacity.add(dataBase, key.space, "test-region", identity.ip + ":" + port);
-        } catch (Exception exx) {
-          exx.printStackTrace();
-        }
-        callback.success(identity.ip + ":" + port);
-      }
-    }, "test-region");
-    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, localRegionClientMetrics, router, null);
+    LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, localRegionClientMetrics, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
-
 
     ServiceHeatEstimator.HeatVector low = new ServiceHeatEstimator.HeatVector(10000, 100, 1000*1000, 100);
     ServiceHeatEstimator.HeatVector hot = new ServiceHeatEstimator.HeatVector(1000L * 1000L * 1000L, 100000, 1000*1000*500L, 250L);
@@ -301,42 +285,29 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     // new fast path for routing table
     CountDownLatch waitForRouting = new CountDownLatch(1);
-    router.routerForDocuments.get(new Key("ide", "default"), new RoutingCallback() {
+    client.getMachineFor(new Key("ide", "default"), new Callback<String>() {
       @Override
-      public void onRegion(String region) {
-      }
-
-      @Override
-      public void onMachine(String machine) {
+      public void success(String machine) {
         waitForRouting.countDown();
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        System.err.println("RouterForDocumentsFailed!");
-        ex.printStackTrace();
+
       }
     });
     backendNexus.deployer.deploy("ide", Callback.DONT_CARE_VOID);
     do {
       System.err.println("Waiting for routing table to be built...");
-      router.engine.get(new Key("ide", "default"), new RoutingCallback() {
+      client.getMachineFor(new Key("ide", "default"), new Callback<String>() {
         @Override
-        public void onRegion(String region) {
-        }
-
-        @Override
-        public void onMachine(String machine) {
-          if (machine != null) {
-            waitForRouting.countDown();
-          } else {
-            System.err.println("found null");
-          }
+        public void success(String machine) {
+          waitForRouting.countDown();
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
-          ex.printStackTrace();
+
         }
       });
     } while (!waitForRouting.await(250, TimeUnit.MILLISECONDS));

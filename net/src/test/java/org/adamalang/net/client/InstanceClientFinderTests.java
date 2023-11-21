@@ -20,7 +20,7 @@ package org.adamalang.net.client;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.routing.cache.AggregatedCacheRouter;
+import org.adamalang.net.client.mocks.MockRoutingTarget;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,8 +49,8 @@ public class InstanceClientFinderTests {
         servers[k].startServer();
         targets.add("127.0.0.1:" + (20001 + k));
       }
-      AggregatedCacheRouter engine = new AggregatedCacheRouter(routingExecutor);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      MockRoutingTarget target = new MockRoutingTarget();
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, target, logger);
       try {
         finder.sync(targets);
         CountDownLatch latchFoundSame = new CountDownLatch(1);

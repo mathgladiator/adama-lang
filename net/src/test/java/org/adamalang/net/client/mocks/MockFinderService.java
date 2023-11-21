@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.net.client.routing.finder;
+package org.adamalang.net.client.mocks;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;

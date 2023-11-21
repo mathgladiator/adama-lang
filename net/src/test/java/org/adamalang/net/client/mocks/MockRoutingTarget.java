@@ -15,20 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.net.client.contracts;
+package org.adamalang.net.client.mocks;
 
-import org.adamalang.common.ErrorCodeException;
+import org.adamalang.net.client.contracts.RoutingTarget;
 
-/** what happens when you subscribe to a key */
-@Deprecated
-public interface RoutingCallback {
+import java.util.Collection;
+import java.util.HashMap;
 
-  /** routing found the document in another region */
-  public void onRegion(String region);
+/** dumb implementation of RoutingTarget for testing */
+public class MockRoutingTarget implements RoutingTarget {
+  public final HashMap<String, Collection<String>> results = new HashMap<>();
 
-  /** routing found the document within the current region on a specific machine */
-  public void onMachine(String machine);
-
-  /** a failure in finding a machine */
-  public void failure(ErrorCodeException ex);
+  @Override
+  public synchronized void integrate(String target, Collection<String> spaces) {
+    results.put(target, spaces);
+  }
 }

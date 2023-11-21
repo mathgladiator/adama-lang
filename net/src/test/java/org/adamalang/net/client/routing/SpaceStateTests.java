@@ -17,10 +17,26 @@
 */
 package org.adamalang.net.client.routing;
 
-import org.adamalang.net.client.contracts.RoutingCallback;
-import org.adamalang.runtime.data.Key;
+import org.junit.Assert;
+import org.junit.Test;
 
-@Deprecated
-public interface Router {
-  public void get(Key key, RoutingCallback callback);
+import java.util.TreeSet;
+
+public class SpaceStateTests {
+  @Test
+  public void flow() {
+    SpaceState state = new SpaceState();
+    state.add("x");
+    Assert.assertTrue(state.list().contains("x"));
+    Assert.assertTrue(state.subtract("x"));
+    Assert.assertNull(state.pick("key"));
+    state.add("y");
+    state.add("z");
+    state.add("t");
+    TreeSet<String> targets = state.list();
+    Assert.assertTrue(targets.contains("y"));
+    Assert.assertTrue(targets.contains("z"));
+    Assert.assertTrue(targets.contains("t"));
+    Assert.assertFalse(targets.contains("x"));
+  }
 }

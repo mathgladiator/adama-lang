@@ -603,7 +603,7 @@ public class ErrorTable {
     descriptions.put(996436, "no description of error (yet)");
     names.put(969806, "NET_LCSM_ATTACH_REJECTED");
     descriptions.put(969806, "no description of error (yet)");
-    names.put(902223, "NET_LCSM_WRONG_REGION");
+    names.put(902223, "NET_RTT_MACHINE_NOT_FOUND");
     descriptions.put(902223, "no description of error (yet)");
     retry.add(902223);
     names.put(912544, "NET_LCSM_NO_MACHINE_FOUND");

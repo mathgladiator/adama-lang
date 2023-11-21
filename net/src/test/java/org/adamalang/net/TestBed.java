@@ -26,7 +26,7 @@ import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.TestClientConfig;
-import org.adamalang.net.client.routing.finder.MockFinderService;
+import org.adamalang.net.client.mocks.MockFinderService;
 import org.adamalang.net.mocks.MockMetricsReporter;
 import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.deploy.*;
