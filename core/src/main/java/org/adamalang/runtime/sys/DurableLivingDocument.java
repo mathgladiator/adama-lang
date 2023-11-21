@@ -57,7 +57,7 @@ public class DurableLivingDocument implements Queryable {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final Logger LOG = LoggerFactory.getLogger(DurableLivingDocument.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOG);
-  private static final int INTERNAL_INVALIDATION_LIMIT = 8;
+  private static final int INTERNAL_INVALIDATION_LIMIT = 128;
 
   private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<>() {
     @Override
