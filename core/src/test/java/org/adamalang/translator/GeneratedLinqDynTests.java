@@ -962,7 +962,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef12 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr14 = new RTx_AnonObjConvert_0(0);");
     gold.append("\n      RTxX _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef13.z.set(_AutoExpr14.z);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
@@ -970,7 +970,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef15 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr17 = new RTx_AnonObjConvert_0(1);");
     gold.append("\n      RTxX _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef16.z.set(_AutoExpr17.z);");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -978,7 +978,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef18 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr20 = new RTx_AnonObjConvert_0(2);");
     gold.append("\n      RTxX _CreateRef19 = _AutoRef18.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef19.z.set(_AutoExpr20.z);");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
@@ -986,7 +986,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef21 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr23 = new RTx_AnonObjConvert_0(5);");
     gold.append("\n      RTxX _CreateRef22 = _AutoRef21.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef22.z.set(_AutoExpr23.z);");
     gold.append("\n    }");
     gold.append("\n    __track(4);");
@@ -994,7 +994,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef24 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr26 = new RTx_AnonObjConvert_0(0);");
     gold.append("\n      RTxX _CreateRef25 = _AutoRef24.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef25.z.set(_AutoExpr26.z);");
     gold.append("\n    }");
     gold.append("\n    __track(5);");
@@ -1002,7 +1002,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef27 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr29 = new RTx_AnonObjConvert_0(0);");
     gold.append("\n      RTxX _CreateRef28 = _AutoRef27.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef28.z.set(_AutoExpr29.z);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -1025,7 +1025,7 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"z\":0},\"2\":{\"id\":2,\"z\":1},\"3\":{\"id\":3,\"z\":2},\"4\":{\"id\":4,\"z\":5},\"5\":{\"id\":5,\"z\":0},\"6\":{\"id\":6,\"z\":0}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:13");
+    gold.append("\nCPU:19");
     gold.append("\nMEMORY:1478");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

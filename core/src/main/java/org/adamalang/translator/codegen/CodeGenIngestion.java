@@ -142,42 +142,52 @@ public class CodeGenIngestion {
         var countDownUntilTab = ((IsStructure) elementType).storage().fields.size();
         environment.define(assignVar, assignType, false, assignType);
         environment.define(elementVar, elementType, false, elementType);
-        if (!environment.state.hasNoCost()) {
-          sb.append("__code_cost += ").append(Integer.toString(((IsStructure) elementType).storage().fields.size())).append(";").writeNewline();
-        }
-        for (final Map.Entry<String, FieldDefinition> entryType : ((IsStructure) elementType).storage().fields.entrySet()) {
-          final var fd = ((IsStructure) assignType).storage().fields.get(entryType.getKey());
-          if (fd != null) {
-            boolean isLeftMessageType = environment.rules.IsNativeMessage(assignType, true);
-            if ("id".equals(fd.name) && !isLeftMessageType) {
-              sb.append("/* id field skipped */");
-            } else {
-              final var leftAssignType = ((IsStructure) assignType).storage().fields.get(entryType.getKey()).type;
-              TyType rightType = entryType.getValue().type;
-              Expression rightExpr = new FieldLookup(new Lookup(Token.WRAP(elementVar)), null, entryType.getValue().nameToken);
-              final var op = environment.rules.IngestionLeftElementRequiresRecursion(leftAssignType) ? "<-" : "=";
-              if (environment.rules.IsMaybe(rightType, true)) {
-                // the right side is a maybe, so let's unwrap it
-                Token unwrapMaybe = Token.WRAP("__unwrap_" + fd.name + "_" + environment.autoVariable());
-                Block assBlock = new Block(null);
-                assBlock.add(new Assignment( //
-                    new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
-                    new Lookup(unwrapMaybe), null, null, null, false));
-                MegaIf _if = new MegaIf(null, new MegaIf.Condition(null, rightExpr, null, unwrapMaybe, null), assBlock);
-                _if.typing(environment);
-                _if.writeJava(sb, environment);
+        if (countDownUntilTab > 0) {
+          if (!environment.state.hasNoCost()) {
+            sb.append("__code_cost += ").append(Integer.toString(((IsStructure) elementType).storage().fields.size() + 1)).append(";").writeNewline();
+          }
+          for (final Map.Entry<String, FieldDefinition> entryType : ((IsStructure) elementType).storage().fields.entrySet()) {
+            final var fd = ((IsStructure) assignType).storage().fields.get(entryType.getKey());
+            if (fd != null) {
+              boolean isLeftMessageType = environment.rules.IsNativeMessage(assignType, true);
+              if ("id".equals(fd.name) && !isLeftMessageType) {
+                sb.append("/* id field skipped */");
               } else {
-                final var ass = new Assignment( //
-                    new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
-                    rightExpr, null, null, null, false);
-                ass.typing(environment);
-                ass.writeJava(sb, environment);
+                final var leftAssignType = ((IsStructure) assignType).storage().fields.get(entryType.getKey()).type;
+                TyType rightType = entryType.getValue().type;
+                Expression rightExpr = new FieldLookup(new Lookup(Token.WRAP(elementVar)), null, entryType.getValue().nameToken);
+                final var op = environment.rules.IngestionLeftElementRequiresRecursion(leftAssignType) ? "<-" : "=";
+                if (environment.rules.IsMaybe(rightType, true)) {
+                  // the right side is a maybe, so let's unwrap it
+                  Token unwrapMaybe = Token.WRAP("__unwrap_" + fd.name + "_" + environment.autoVariable());
+                  Block assBlock = new Block(null);
+                  assBlock.add(new Assignment( //
+                      new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
+                      new Lookup(unwrapMaybe), null, null, null, false));
+                  MegaIf _if = new MegaIf(null, new MegaIf.Condition(null, rightExpr, null, unwrapMaybe, null), assBlock);
+                  _if.typing(environment);
+                  _if.writeJava(sb, environment);
+                } else {
+                  final var ass = new Assignment( //
+                      new FieldLookup(new Lookup(Token.WRAP(assignVar)), null, entryType.getValue().nameToken), Token.WRAP(op), //
+                      rightExpr, null, null, null, false);
+                  ass.typing(environment);
+                  ass.writeJava(sb, environment);
+                }
               }
+            } else {
+              sb.append("// N/A ").append(entryType.getKey());
             }
             if (--countDownUntilTab == 0) {
               sb.tabDown();
             }
             sb.writeNewline();
+          }
+        } else {
+          if (!environment.state.hasNoCost()) {
+            sb.append("__code_cost += 1;").tabDown().writeNewline();
+          } else {
+            sb.append("// NOTHING TO INGEST").tabDown().writeNewline();
           }
         }
       } else {

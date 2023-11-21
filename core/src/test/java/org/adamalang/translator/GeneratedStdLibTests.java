@@ -2502,12 +2502,12 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxB> _AutoRef74 = _b;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr76 = new RTx_AnonObjConvert_0(new RTx_AutoMaxRecord_7[] {new RTx_AutoMaxRecord_7(1), new RTx_AutoMaxRecord_7(2), new RTx_AutoMaxRecord_7(3)});");
     gold.append("\n      RTxB _CreateRef75 = _AutoRef74.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      {");
     gold.append("\n        RxTable<RTxA> _AutoRef77 = _CreateRef75._a;");
     gold.append("\n        for (RTx_AutoMaxRecord_7 _AutoElement78 : _AutoExpr76._a) {");
     gold.append("\n          RTxA _CreateRef78 = _AutoRef77.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef78.x.set(_AutoElement78.x);");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -2517,12 +2517,12 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxB> _AutoRef79 = _b;");
     gold.append("\n      RTx_AnonObjConvert_8 _AutoExpr81 = new RTx_AnonObjConvert_8(new RTx_AutoMaxRecord_7[] {new RTx_AutoMaxRecord_7(4), new RTx_AutoMaxRecord_7(5), new RTx_AutoMaxRecord_7(6)}, 1);");
     gold.append("\n      RTxB _CreateRef80 = _AutoRef79.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      {");
     gold.append("\n        RxTable<RTxA> _AutoRef82 = _CreateRef80._a;");
     gold.append("\n        for (RTx_AutoMaxRecord_7 _AutoElement83 : _AutoExpr81._a) {");
     gold.append("\n          RTxA _CreateRef83 = _AutoRef82.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef83.x.set(_AutoElement83.x);");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -2548,7 +2548,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":8,\"_b\":{\"1\":{\"id\":1,\"_a\":{\"2\":{\"id\":2,\"x\":1},\"3\":{\"id\":3,\"x\":2},\"4\":{\"id\":4,\"x\":3}},\"v\":null},\"5\":{\"id\":5,\"_a\":{\"6\":{\"id\":6,\"x\":4},\"7\":{\"id\":7,\"x\":5},\"8\":{\"id\":8,\"x\":6}},\"v\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:12");
+    gold.append("\nCPU:20");
     gold.append("\nMEMORY:2580");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -3687,7 +3687,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef3 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr5 = new RTx_AnonObjConvert_0(1, 29.0);");
     gold.append("\n      RTxR _CreateRef4 = _AutoRef3.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef4.x.set(_AutoExpr5.x);");
     gold.append("\n      _CreateRef4.y.set(_AutoExpr5.y);");
     gold.append("\n    }");
@@ -3696,7 +3696,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef6 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr8 = new RTx_AnonObjConvert_0(2, 6.0);");
     gold.append("\n      RTxR _CreateRef7 = _AutoRef6.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef7.x.set(_AutoExpr8.x);");
     gold.append("\n      _CreateRef7.y.set(_AutoExpr8.y);");
     gold.append("\n    }");
@@ -3705,7 +3705,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef9 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr11 = new RTx_AnonObjConvert_0(3, 1.0);");
     gold.append("\n      RTxR _CreateRef10 = _AutoRef9.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef10.x.set(_AutoExpr11.x);");
     gold.append("\n      _CreateRef10.y.set(_AutoExpr11.y);");
     gold.append("\n    }");
@@ -3733,7 +3733,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":3,\"x1\":\"\\\"\",\"x2\":\" \",\"x3\":\"A\",\"x4\":\"nope\",\"z1\":0.0015926529164868282,\"z2\":\"123\",\"rows\":{\"1\":{\"id\":1,\"x\":1,\"y\":29.0},\"2\":{\"id\":2,\"x\":2,\"y\":6.0},\"3\":{\"id\":3,\"x\":3,\"y\":1.0}},\"d1\":6,\"d2\":12.0,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:25");
+    gold.append("\nCPU:28");
     gold.append("\nMEMORY:1606");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -4918,7 +4918,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef6 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr8 = new RTx_AnonObjConvert_0(1, 29.0);");
     gold.append("\n      RTxR _CreateRef7 = _AutoRef6.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef7.x.set(_AutoExpr8.x);");
     gold.append("\n      _CreateRef7.y.set(_AutoExpr8.y);");
     gold.append("\n    }");
@@ -4927,7 +4927,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef9 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr11 = new RTx_AnonObjConvert_0(2, 6.0);");
     gold.append("\n      RTxR _CreateRef10 = _AutoRef9.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef10.x.set(_AutoExpr11.x);");
     gold.append("\n      _CreateRef10.y.set(_AutoExpr11.y);");
     gold.append("\n    }");
@@ -4936,7 +4936,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef12 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr14 = new RTx_AnonObjConvert_0(3, 1.0);");
     gold.append("\n      RTxR _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef13.x.set(_AutoExpr14.x);");
     gold.append("\n      _CreateRef13.y.set(_AutoExpr14.y);");
     gold.append("\n    }");
@@ -4945,7 +4945,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef15 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr17 = new RTx_AnonObjConvert_0(4, 100.0);");
     gold.append("\n      RTxR _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef16.x.set(_AutoExpr17.x);");
     gold.append("\n      _CreateRef16.y.set(_AutoExpr17.y);");
     gold.append("\n    }");
@@ -4954,7 +4954,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef18 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr20 = new RTx_AnonObjConvert_0(5, 23.0);");
     gold.append("\n      RTxR _CreateRef19 = _AutoRef18.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef19.x.set(_AutoExpr20.x);");
     gold.append("\n      _CreateRef19.y.set(_AutoExpr20.y);");
     gold.append("\n    }");
@@ -4963,7 +4963,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef21 = rows;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr23 = new RTx_AnonObjConvert_0(6, 452.45);");
     gold.append("\n      RTxR _CreateRef22 = _AutoRef21.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef22.x.set(_AutoExpr23.x);");
     gold.append("\n      _CreateRef22.y.set(_AutoExpr23.y);");
     gold.append("\n    }");
@@ -5015,7 +5015,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"rows\":{\"1\":{\"id\":1,\"x\":1,\"y\":29.0},\"2\":{\"id\":2,\"x\":2,\"y\":6.0},\"3\":{\"id\":3,\"x\":3,\"y\":1.0},\"4\":{\"id\":4,\"x\":4,\"y\":100.0},\"5\":{\"id\":5,\"x\":5,\"y\":23.0},\"6\":{\"id\":6,\"x\":6,\"y\":452.45}},\"y1\":611.45,\"y2\":26.0,\"y3\":452.45,\"y4\":1.0,\"y5\":1.0,\"y6\":452.45,\"y7\":101.90833333333335,\"x1\":21,\"x2\":3,\"x3\":6,\"x4\":1,\"x5\":1,\"x6\":6,\"x7\":3.5,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:117");
+    gold.append("\nCPU:123");
     gold.append("\nMEMORY:2516");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -6586,7 +6586,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxS> _AutoRef21 = _s;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr23 = new RTx_AnonObjConvert_0(new NtMaybe<String>());");
     gold.append("\n      RTxS _CreateRef22 = _AutoRef21.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      NtMaybe<String> _AutoCondition__unwrap_item_24_25;");
     gold.append("\n      if ((_AutoCondition__unwrap_item_24_25 = _AutoExpr23.item).has()) {");
     gold.append("\n        String __unwrap_item_24 = _AutoCondition__unwrap_item_24_25.get();");
@@ -6600,7 +6600,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxS> _AutoRef26 = _s;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr28 = new RTx_AnonObjConvert_0(new NtMaybe<String>());");
     gold.append("\n      RTxS _CreateRef27 = _AutoRef26.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      NtMaybe<String> _AutoCondition__unwrap_item_29_30;");
     gold.append("\n      if ((_AutoCondition__unwrap_item_29_30 = _AutoExpr28.item).has()) {");
     gold.append("\n        String __unwrap_item_29 = _AutoCondition__unwrap_item_29_30.get();");
@@ -6614,7 +6614,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxS> _AutoRef31 = _s;");
     gold.append("\n      RTx_AnonObjConvert_2 _AutoExpr33 = new RTx_AnonObjConvert_2(\"x\");");
     gold.append("\n      RTxS _CreateRef32 = _AutoRef31.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef32.item.make().set(_AutoExpr33.item);");
     gold.append("\n    }");
     gold.append("\n    __track(23);");
@@ -6622,7 +6622,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxS> _AutoRef34 = _s;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr36 = new RTx_AnonObjConvert_0(new NtMaybe<String>());");
     gold.append("\n      RTxS _CreateRef35 = _AutoRef34.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      NtMaybe<String> _AutoCondition__unwrap_item_37_38;");
     gold.append("\n      if ((_AutoCondition__unwrap_item_37_38 = _AutoExpr36.item).has()) {");
     gold.append("\n        String __unwrap_item_37 = _AutoCondition__unwrap_item_37_38.get();");
@@ -6636,7 +6636,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxS> _AutoRef39 = _s;");
     gold.append("\n      RTx_AnonObjConvert_2 _AutoExpr41 = new RTx_AnonObjConvert_2(\"y\");");
     gold.append("\n      RTxS _CreateRef40 = _AutoRef39.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef40.item.make().set(_AutoExpr41.item);");
     gold.append("\n    }");
     gold.append("\n    __track(26);");
@@ -6644,7 +6644,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxS> _AutoRef42 = _s;");
     gold.append("\n      RTx_AnonObjConvert_2 _AutoExpr44 = new RTx_AnonObjConvert_2(\"z\");");
     gold.append("\n      RTxS _CreateRef43 = _AutoRef42.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef43.item.make().set(_AutoExpr44.item);");
     gold.append("\n    }");
     gold.append("\n    __track(27);");
@@ -6669,7 +6669,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"x1\":\"321\",\"x2\":\"mmmm\",\"x3\":\"mmmmzmmmmz\",\"x4\":\"mm\",\"x5\":\"212121212121\",\"x6\":\"NOPE\",\"x7\":\"NOPE\",\"x8\":\"KO\",\"x9\":\"b\",\"x10\":\"BCD\",\"checkT\":true,\"cp\":29503,\"y1\":\"ABCABCABC\",\"y2\":\"ABCXYZABCXYZABCXYZ\",\"y3\":\"XY\",\"y4\":\"X, Y\",\"join_maybe\":\"x, y, z\",\"_s\":{\"1\":{\"id\":1,\"item\":null},\"2\":{\"id\":2,\"item\":null},\"3\":{\"id\":3,\"item\":\"x\"},\"4\":{\"id\":4,\"item\":null},\"5\":{\"id\":5,\"item\":\"y\"},\"6\":{\"id\":6,\"item\":\"z\"}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:38");
+    gold.append("\nCPU:44");
     gold.append("\nMEMORY:3636");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -7363,7 +7363,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef8 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr10 = new RTxJustStr(\"Mo\");");
     gold.append("\n          RTxJustStr _CreateRef9 = _AutoRef8.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef9.str = _AutoExpr10.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -7375,7 +7375,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef11 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr13 = new RTxJustStr(\"Tu\");");
     gold.append("\n          RTxJustStr _CreateRef12 = _AutoRef11.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef12.str = _AutoExpr13.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -7387,7 +7387,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef14 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr16 = new RTxJustStr(\"Wed\");");
     gold.append("\n          RTxJustStr _CreateRef15 = _AutoRef14.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef15.str = _AutoExpr16.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -7399,7 +7399,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef17 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr19 = new RTxJustStr(\"Th\");");
     gold.append("\n          RTxJustStr _CreateRef18 = _AutoRef17.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef18.str = _AutoExpr19.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -7411,7 +7411,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef20 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr22 = new RTxJustStr(\"Fr\");");
     gold.append("\n          RTxJustStr _CreateRef21 = _AutoRef20.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef21.str = _AutoExpr22.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -7423,7 +7423,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef23 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr25 = new RTxJustStr(\"Sa\");");
     gold.append("\n          RTxJustStr _CreateRef24 = _AutoRef23.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef24.str = _AutoExpr25.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -7435,7 +7435,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef26 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr28 = new RTxJustStr(\"Su\");");
     gold.append("\n          RTxJustStr _CreateRef27 = _AutoRef26.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef27.str = _AutoExpr28.str;");
     gold.append("\n        }");
     gold.append("\n      }");

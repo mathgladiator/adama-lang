@@ -989,7 +989,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef1 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr3 = new RTx_AnonObjConvert_0(3, 1);");
     gold.append("\n      RTxX _CreateRef2 = _AutoRef1.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef2.d.set(_AutoExpr3.d);");
     gold.append("\n      _CreateRef2.i.set(_AutoExpr3.i);");
     gold.append("\n    }");
@@ -1027,7 +1027,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"id\":1,\"i\":12,\"d\":22.0,\"s\":\"xyz\"}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:18");
+    gold.append("\nCPU:19");
     gold.append("\nMEMORY:772");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

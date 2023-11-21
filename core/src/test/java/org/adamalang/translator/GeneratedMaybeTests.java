@@ -3239,7 +3239,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef23 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr25 = new RTx_AnonObjConvert_0(0);");
     gold.append("\n      RTxR _CreateRef24 = _AutoRef23.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef24.val.make().set(_AutoExpr25.val);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
@@ -3247,7 +3247,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef26 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr28 = new RTx_AnonObjConvert_0(42);");
     gold.append("\n      RTxR _CreateRef27 = _AutoRef26.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef27.val.make().set(_AutoExpr28.val);");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -3255,7 +3255,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef29 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr31 = new RTx_AnonObjConvert_0(42);");
     gold.append("\n      RTxR _CreateRef30 = _AutoRef29.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef30.val.make().set(_AutoExpr31.val);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -3310,7 +3310,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":3,\"tbl\":{\"1\":{\"id\":1,\"val\":0},\"2\":{\"id\":2,\"val\":42},\"3\":{\"id\":3,\"val\":42}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:7");
+    gold.append("\nCPU:10");
     gold.append("\nMEMORY:1424");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -4547,7 +4547,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n      RxMaybe<RTxR,RTxR> _AutoRef12 = r;");
     gold.append("\n      RTx_AnonObjConvert_1 _AutoExpr14 = new RTx_AnonObjConvert_1(1);");
     gold.append("\n      RTxR _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef13.x.set(_AutoExpr14.x);");
     gold.append("\n    }");
     gold.append("\n    __track(9);");
@@ -4576,7 +4576,7 @@ public class GeneratedMaybeTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"r\":{\"x\":1},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:13");
+    gold.append("\nCPU:14");
     gold.append("\nMEMORY:940");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

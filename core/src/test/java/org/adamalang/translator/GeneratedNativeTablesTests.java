@@ -888,7 +888,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef9 = ttt;");
     gold.append("\n      RTx_AnonObjConvert_1 _AutoExpr11 = new RTx_AnonObjConvert_1(1);");
     gold.append("\n      RTxM _CreateRef10 = _AutoRef9.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef10.x = _AutoExpr11.x;");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
@@ -896,7 +896,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef12 = ttt;");
     gold.append("\n      RTx_AnonObjConvert_2 _AutoExpr14 = new RTx_AnonObjConvert_2(1);");
     gold.append("\n      RTxM _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef13.y = _AutoExpr14.y;");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -904,7 +904,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef15 = ttt;");
     gold.append("\n      RTxM _AutoExpr17 = new RTxM(1, 1);");
     gold.append("\n      RTxM _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef16.x = _AutoExpr17.x;");
     gold.append("\n      _CreateRef16.y = _AutoExpr17.y;");
     gold.append("\n    }");
@@ -913,7 +913,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef18 = ttt;");
     gold.append("\n      for (RTxM _AutoElement19 : new RTxM[] {new RTxM(4, 3), new RTxM(2, 2)}) {");
     gold.append("\n        RTxM _CreateRef19 = _AutoRef18.make();");
-    gold.append("\n        __code_cost += 2;");
+    gold.append("\n        __code_cost += 3;");
     gold.append("\n        _CreateRef19.x = _AutoElement19.x;");
     gold.append("\n        _CreateRef19.y = _AutoElement19.y;");
     gold.append("\n      }");
@@ -1077,7 +1077,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"sz\":10,\"wz\":2,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:42");
+    gold.append("\nCPU:52");
     gold.append("\nMEMORY:480");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -1920,7 +1920,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef1 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr3 = new RTx_AnonObjConvert_0(1);");
     gold.append("\n      RTxM _CreateRef2 = _AutoRef1.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef2.x = _AutoExpr3.x;");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -1951,7 +1951,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"sz1\":1,\"sz2\":1,\"sz3\":1000,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:8");
+    gold.append("\nCPU:9");
     gold.append("\nMEMORY:528");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -2679,7 +2679,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxM> _AutoRef1 = t;");
     gold.append("\n          RTxM _AutoExpr3 = new RTxM(1 + k, 10);");
     gold.append("\n          RTxM _CreateRef2 = _AutoRef1.make();");
-    gold.append("\n          __code_cost += 2;");
+    gold.append("\n          __code_cost += 3;");
     gold.append("\n          _CreateRef2.x = _AutoExpr3.x;");
     gold.append("\n          _CreateRef2.y = _AutoExpr3.y;");
     gold.append("\n        }");
@@ -2725,7 +2725,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:54");
+    gold.append("\nCPU:64");
     gold.append("\nMEMORY:384");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -3377,7 +3377,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef9 = tbl;");
     gold.append("\n      RTxM _AutoExpr11 = new RTxM(1, 4);");
     gold.append("\n      RTxM _CreateRef10 = _AutoRef9.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef10.id = _AutoExpr11.id;");
     gold.append("\n      _CreateRef10.x = _AutoExpr11.x;");
     gold.append("\n    }");
@@ -3386,7 +3386,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef12 = tbl;");
     gold.append("\n      RTxM _AutoExpr14 = new RTxM(2, 8);");
     gold.append("\n      RTxM _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef13.id = _AutoExpr14.id;");
     gold.append("\n      _CreateRef13.x = _AutoExpr14.x;");
     gold.append("\n    }");
@@ -3395,7 +3395,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef15 = tbl;");
     gold.append("\n      RTxM _AutoExpr17 = new RTxM(3, 16);");
     gold.append("\n      RTxM _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef16.id = _AutoExpr17.id;");
     gold.append("\n      _CreateRef16.x = _AutoExpr17.x;");
     gold.append("\n    }");
@@ -4382,7 +4382,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef1 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr3 = new RTx_AnonObjConvert_0(1);");
     gold.append("\n      RTxM _CreateRef2 = _AutoRef1.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef2.x = _AutoExpr3.x;");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -4409,7 +4409,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"sz\":1,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:6");
+    gold.append("\nCPU:7");
     gold.append("\nMEMORY:432");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

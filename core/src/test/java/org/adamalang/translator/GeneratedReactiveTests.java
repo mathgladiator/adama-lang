@@ -1582,7 +1582,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef8 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr10 = new RTxJustStr(\"Mo\");");
     gold.append("\n          RTxJustStr _CreateRef9 = _AutoRef8.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef9.str = _AutoExpr10.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -1594,7 +1594,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef11 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr13 = new RTxJustStr(\"Tu\");");
     gold.append("\n          RTxJustStr _CreateRef12 = _AutoRef11.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef12.str = _AutoExpr13.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -1606,7 +1606,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef14 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr16 = new RTxJustStr(\"Wed\");");
     gold.append("\n          RTxJustStr _CreateRef15 = _AutoRef14.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef15.str = _AutoExpr16.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -1618,7 +1618,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef17 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr19 = new RTxJustStr(\"Th\");");
     gold.append("\n          RTxJustStr _CreateRef18 = _AutoRef17.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef18.str = _AutoExpr19.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -1630,7 +1630,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef20 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr22 = new RTxJustStr(\"Fr\");");
     gold.append("\n          RTxJustStr _CreateRef21 = _AutoRef20.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef21.str = _AutoExpr22.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -1642,7 +1642,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef23 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr25 = new RTxJustStr(\"Sa\");");
     gold.append("\n          RTxJustStr _CreateRef24 = _AutoRef23.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef24.str = _AutoExpr25.str;");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -1654,7 +1654,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n          NtTable<RTxJustStr> _AutoRef26 = tbl;");
     gold.append("\n          RTxJustStr _AutoExpr28 = new RTxJustStr(\"Su\");");
     gold.append("\n          RTxJustStr _CreateRef27 = _AutoRef26.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef27.str = _AutoExpr28.str;");
     gold.append("\n        }");
     gold.append("\n      }");

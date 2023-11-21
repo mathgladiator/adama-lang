@@ -3188,7 +3188,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      RTxR _AutoRef1 = r;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr3 = new RTx_AnonObjConvert_0(\"42\");");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _AutoRef1.doc.set(_AutoExpr3.doc);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -3211,7 +3211,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_gen\":4,\"document\":{\"fragments\":{\"1\":\"123\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"gen\":2},\"r\":{\"doc\":{\"fragments\":{\"1\":\"42\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"gen\":3}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:4");
+    gold.append("\nCPU:5");
     gold.append("\nMEMORY:888");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

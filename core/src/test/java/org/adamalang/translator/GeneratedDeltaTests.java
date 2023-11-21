@@ -2870,7 +2870,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef41 = tbl;");
     gold.append("\n      RTxM _AutoExpr43 = new RTxM(1);");
     gold.append("\n      RTxM _CreateRef42 = _AutoRef41.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef42.x = _AutoExpr43.x;");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -2878,7 +2878,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef44 = tbl;");
     gold.append("\n      RTxM _AutoExpr46 = new RTxM(2);");
     gold.append("\n      RTxM _CreateRef45 = _AutoRef44.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef45.x = _AutoExpr46.x;");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
@@ -2886,7 +2886,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef47 = tbl;");
     gold.append("\n      RTxM _AutoExpr49 = new RTxM(3);");
     gold.append("\n      RTxM _CreateRef48 = _AutoRef47.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef48.x = _AutoExpr49.x;");
     gold.append("\n    }");
     gold.append("\n    __track(4);");
@@ -4404,7 +4404,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef9 = tbl;");
     gold.append("\n      RTxM _AutoExpr11 = new RTxM(1);");
     gold.append("\n      RTxM _CreateRef10 = _AutoRef9.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef10.x = _AutoExpr11.x;");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -4412,7 +4412,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef12 = tbl;");
     gold.append("\n      RTxM _AutoExpr14 = new RTxM(2);");
     gold.append("\n      RTxM _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef13.x = _AutoExpr14.x;");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
@@ -4420,7 +4420,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      NtTable<RTxM> _AutoRef15 = tbl;");
     gold.append("\n      RTxM _AutoExpr17 = new RTxM(3);");
     gold.append("\n      RTxM _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef16.x = _AutoExpr17.x;");
     gold.append("\n    }");
     gold.append("\n    __track(4);");
@@ -5487,7 +5487,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef15 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr17 = new RTx_AnonObjConvert_0(4);");
     gold.append("\n      RTxR _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef16.x.set(_AutoExpr17.x);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
@@ -5495,7 +5495,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef18 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr20 = new RTx_AnonObjConvert_0(5);");
     gold.append("\n      RTxR _CreateRef19 = _AutoRef18.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef19.x.set(_AutoExpr20.x);");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -5503,7 +5503,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef21 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr23 = new RTx_AnonObjConvert_0(6);");
     gold.append("\n      RTxR _CreateRef22 = _AutoRef21.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef22.x.set(_AutoExpr23.x);");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
@@ -5516,7 +5516,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef24 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr26 = new RTx_AnonObjConvert_0(7);");
     gold.append("\n      RTxR _CreateRef25 = _AutoRef24.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef25.x.set(_AutoExpr26.x);");
     gold.append("\n    }");
     gold.append("\n    __track(5);");
@@ -5524,7 +5524,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef27 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr29 = new RTx_AnonObjConvert_0(8);");
     gold.append("\n      RTxR _CreateRef28 = _AutoRef27.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef28.x.set(_AutoExpr29.x);");
     gold.append("\n    }");
     gold.append("\n    __track(6);");
@@ -5532,7 +5532,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef30 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr32 = new RTx_AnonObjConvert_0(9);");
     gold.append("\n      RTxR _CreateRef31 = _AutoRef30.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef31.x.set(_AutoExpr32.x);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -5591,7 +5591,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef33 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr35 = new RTx_AnonObjConvert_0(1);");
     gold.append("\n      RTxR _CreateRef34 = _AutoRef33.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef34.x.set(_AutoExpr35.x);");
     gold.append("\n    }");
     gold.append("\n    __track(8);");
@@ -5599,7 +5599,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef36 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr38 = new RTx_AnonObjConvert_0(2);");
     gold.append("\n      RTxR _CreateRef37 = _AutoRef36.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef37.x.set(_AutoExpr38.x);");
     gold.append("\n    }");
     gold.append("\n    __track(9);");
@@ -5607,7 +5607,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef39 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr41 = new RTx_AnonObjConvert_0(3);");
     gold.append("\n      RTxR _CreateRef40 = _AutoRef39.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef40.x.set(_AutoExpr41.x);");
     gold.append("\n    }");
     gold.append("\n    __track(10);");
@@ -5632,7 +5632,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"two\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"x\":1},\"2\":{\"id\":2,\"x\":2},\"3\":{\"id\":3,\"x\":3},\"4\":{\"x\":4,\"id\":4},\"5\":{\"x\":5,\"id\":5},\"6\":{\"x\":6,\"id\":6}},\"__messages\":null,\"__seq\":1} need:true in:25");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"id\":7,\"x\":7},\"8\":{\"id\":8,\"x\":8},\"9\":{\"id\":9,\"x\":9}}} need:false in:0");
-    gold.append("\nCPU:23");
+    gold.append("\nCPU:32");
     gold.append("\nMEMORY:1952");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -6566,7 +6566,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef15 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr17 = new RTx_AnonObjConvert_0(4);");
     gold.append("\n      RTxR _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef16.x.set(_AutoExpr17.x);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
@@ -6574,7 +6574,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef18 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr20 = new RTx_AnonObjConvert_0(5);");
     gold.append("\n      RTxR _CreateRef19 = _AutoRef18.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef19.x.set(_AutoExpr20.x);");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -6582,7 +6582,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef21 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr23 = new RTx_AnonObjConvert_0(6);");
     gold.append("\n      RTxR _CreateRef22 = _AutoRef21.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef22.x.set(_AutoExpr23.x);");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
@@ -6595,7 +6595,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef24 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr26 = new RTx_AnonObjConvert_0(7);");
     gold.append("\n      RTxR _CreateRef25 = _AutoRef24.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef25.x.set(_AutoExpr26.x);");
     gold.append("\n    }");
     gold.append("\n    __track(5);");
@@ -6603,7 +6603,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef27 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr29 = new RTx_AnonObjConvert_0(8);");
     gold.append("\n      RTxR _CreateRef28 = _AutoRef27.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef28.x.set(_AutoExpr29.x);");
     gold.append("\n    }");
     gold.append("\n    __track(6);");
@@ -6611,7 +6611,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef30 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr32 = new RTx_AnonObjConvert_0(9);");
     gold.append("\n      RTxR _CreateRef31 = _AutoRef30.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef31.x.set(_AutoExpr32.x);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -6670,7 +6670,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef33 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr35 = new RTx_AnonObjConvert_0(1);");
     gold.append("\n      RTxR _CreateRef34 = _AutoRef33.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef34.x.set(_AutoExpr35.x);");
     gold.append("\n    }");
     gold.append("\n    __track(8);");
@@ -6678,7 +6678,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef36 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr38 = new RTx_AnonObjConvert_0(2);");
     gold.append("\n      RTxR _CreateRef37 = _AutoRef36.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef37.x.set(_AutoExpr38.x);");
     gold.append("\n    }");
     gold.append("\n    __track(9);");
@@ -6686,7 +6686,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxR> _AutoRef39 = t;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr41 = new RTx_AnonObjConvert_0(3);");
     gold.append("\n      RTxR _CreateRef40 = _AutoRef39.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef40.x.set(_AutoExpr41.x);");
     gold.append("\n    }");
     gold.append("\n    __track(10);");
@@ -6711,7 +6711,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"two\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"x\":1},\"2\":{\"id\":2,\"x\":2},\"3\":{\"id\":3,\"x\":3},\"4\":{\"x\":4,\"id\":4},\"5\":{\"x\":5,\"id\":5},\"6\":{\"x\":6,\"id\":6}},\"__messages\":null,\"__seq\":1} need:true in:25");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"id\":7,\"x\":7},\"8\":{\"id\":8,\"x\":8},\"9\":{\"id\":9,\"x\":9}}} need:false in:0");
-    gold.append("\nCPU:23");
+    gold.append("\nCPU:32");
     gold.append("\nMEMORY:1952");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

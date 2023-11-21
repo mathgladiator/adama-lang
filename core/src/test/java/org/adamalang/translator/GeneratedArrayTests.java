@@ -1654,7 +1654,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef6 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr8 = new RTx_AnonObjConvert_0(100, 3);");
     gold.append("\n      RTxX _CreateRef7 = _AutoRef6.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef7.x.set(_AutoExpr8.x);");
     gold.append("\n      _CreateRef7.y.set(_AutoExpr8.y);");
     gold.append("\n    }");
@@ -1663,7 +1663,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef9 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr11 = new RTx_AnonObjConvert_0(2, 2);");
     gold.append("\n      RTxX _CreateRef10 = _AutoRef9.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef10.x.set(_AutoExpr11.x);");
     gold.append("\n      _CreateRef10.y.set(_AutoExpr11.y);");
     gold.append("\n    }");
@@ -1672,7 +1672,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef12 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr14 = new RTx_AnonObjConvert_0(100, 1);");
     gold.append("\n      RTxX _CreateRef13 = _AutoRef12.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef13.x.set(_AutoExpr14.x);");
     gold.append("\n      _CreateRef13.y.set(_AutoExpr14.y);");
     gold.append("\n    }");
@@ -1681,7 +1681,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef15 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr17 = new RTx_AnonObjConvert_0(4, 2);");
     gold.append("\n      RTxX _CreateRef16 = _AutoRef15.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef16.x.set(_AutoExpr17.x);");
     gold.append("\n      _CreateRef16.y.set(_AutoExpr17.y);");
     gold.append("\n    }");
@@ -1690,7 +1690,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef18 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr20 = new RTx_AnonObjConvert_0(5, 2);");
     gold.append("\n      RTxX _CreateRef19 = _AutoRef18.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef19.x.set(_AutoExpr20.x);");
     gold.append("\n      _CreateRef19.y.set(_AutoExpr20.y);");
     gold.append("\n    }");
@@ -1699,7 +1699,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef21 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr23 = new RTx_AnonObjConvert_0(1, 2);");
     gold.append("\n      RTxX _CreateRef22 = _AutoRef21.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef22.x.set(_AutoExpr23.x);");
     gold.append("\n      _CreateRef22.y.set(_AutoExpr23.y);");
     gold.append("\n    }");
@@ -1757,7 +1757,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"tbl\":{\"1\":{\"id\":1,\"x\":100,\"y\":3},\"2\":{\"id\":2,\"x\":2,\"y\":2},\"3\":{\"id\":3,\"x\":100,\"y\":1},\"4\":{\"id\":4,\"x\":4,\"y\":2},\"5\":{\"id\":5,\"x\":5,\"y\":2},\"6\":{\"id\":6,\"x\":1,\"y\":2}},\"sum\":103,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:43");
+    gold.append("\nCPU:49");
     gold.append("\nMEMORY:1820");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

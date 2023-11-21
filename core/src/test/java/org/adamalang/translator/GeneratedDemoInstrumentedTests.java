@@ -2916,7 +2916,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n          RxTable<RTxCard> _AutoRef39 = deck;");
     gold.append("\n          RTx_AnonObjConvert_2 _AutoExpr41 = new RTx_AnonObjConvert_2(1, r, s);");
     gold.append("\n          RTxCard _CreateRef40 = _AutoRef39.make();");
-    gold.append("\n          __code_cost += 3;");
+    gold.append("\n          __code_cost += 4;");
     gold.append("\n          _CreateRef40.place.set(_AutoExpr41.place);");
     gold.append("\n          _CreateRef40.rank.set(_AutoExpr41.rank);");
     gold.append("\n          _CreateRef40.suit.set(_AutoExpr41.suit);");
@@ -3402,7 +3402,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n        RxTable<RTxPlayer> _AutoRef97 = players;");
     gold.append("\n        RTx_AnonObjConvert_0 _AutoExpr99 = new RTx_AnonObjConvert_0(true, __who, 0, true, 0);");
     gold.append("\n        RTxPlayer _CreateRef98 = _AutoRef97.make();");
-    gold.append("\n        __code_cost += 5;");
+    gold.append("\n        __code_cost += 6;");
     gold.append("\n        _CreateRef98.leader.set(_AutoExpr99.leader);");
     gold.append("\n        _CreateRef98.link.set(_AutoExpr99.link);");
     gold.append("\n        _CreateRef98.play_order.set(_AutoExpr99.play_order);");
@@ -3426,7 +3426,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n        RxTable<RTxPlayer> _AutoRef100 = players;");
     gold.append("\n        RTx_AnonObjConvert_0 _AutoExpr102 = new RTx_AnonObjConvert_0(false, __who, players.size(), false, 0);");
     gold.append("\n        RTxPlayer _CreateRef101 = _AutoRef100.make();");
-    gold.append("\n        __code_cost += 5;");
+    gold.append("\n        __code_cost += 6;");
     gold.append("\n        _CreateRef101.leader.set(_AutoExpr102.leader);");
     gold.append("\n        _CreateRef101.link.set(_AutoExpr102.link);");
     gold.append("\n        _CreateRef101.play_order.set(_AutoExpr102.play_order);");
@@ -5643,7 +5643,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxLine> _AutoRef13 = _chat;");
     gold.append("\n      RTx_AnonObjConvert_2 _AutoExpr15 = new RTx_AnonObjConvert_2(what.what, __timeNow(), __who);");
     gold.append("\n      RTxLine _CreateRef14 = _AutoRef13.make();");
-    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      __code_cost += 4;");
     gold.append("\n      _CreateRef14.what.set(_AutoExpr15.what);");
     gold.append("\n      _CreateRef14.when.set(_AutoExpr15.when);");
     gold.append("\n      _CreateRef14.who.set(_AutoExpr15.who);");

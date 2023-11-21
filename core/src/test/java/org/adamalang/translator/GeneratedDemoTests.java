@@ -1825,7 +1825,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxPublish> _AutoRef7 = _publishes;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr9 = new RTx_AnonObjConvert_0(message.payload, __timeNow(), __who);");
     gold.append("\n      RTxPublish _CreateRef8 = _AutoRef7.make();");
-    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      __code_cost += 4;");
     gold.append("\n      _CreateRef8.payload.set(_AutoExpr9.payload);");
     gold.append("\n      _CreateRef8.when.set(_AutoExpr9.when);");
     gold.append("\n      _CreateRef8.who.set(_AutoExpr9.who);");
@@ -3907,7 +3907,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxLine> _AutoRef7 = _chat;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr9 = new RTx_AnonObjConvert_0(what.what, __timeNow(), __who);");
     gold.append("\n      RTxLine _CreateRef8 = _AutoRef7.make();");
-    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      __code_cost += 4;");
     gold.append("\n      _CreateRef8.what.set(_AutoExpr9.what);");
     gold.append("\n      _CreateRef8.when.set(_AutoExpr9.when);");
     gold.append("\n      _CreateRef8.who.set(_AutoExpr9.who);");
@@ -7122,7 +7122,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n            RxTable<RTxCard> _AutoRef42 = deck;");
     gold.append("\n            RTx_AnonObjConvert_6 _AutoExpr44 = new RTx_AnonObjConvert_6(NtPrincipal.NO_ONE, k);");
     gold.append("\n            RTxCard _CreateRef43 = _AutoRef42.make();");
-    gold.append("\n            __code_cost += 2;");
+    gold.append("\n            __code_cost += 3;");
     gold.append("\n            _CreateRef43.owner.set(_AutoExpr44.owner);");
     gold.append("\n            _CreateRef43.value.set(_AutoExpr44.value);");
     gold.append("\n          }");
@@ -7224,7 +7224,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n          RxTable<RTxCard> _AutoRef45 = deck;");
     gold.append("\n          RTx_AnonObjConvert_6 _AutoExpr47 = new RTx_AnonObjConvert_6(NtPrincipal.NO_ONE, k);");
     gold.append("\n          RTxCard _CreateRef46 = _AutoRef45.make();");
-    gold.append("\n          __code_cost += 2;");
+    gold.append("\n          __code_cost += 3;");
     gold.append("\n          _CreateRef46.owner.set(_AutoExpr47.owner);");
     gold.append("\n          _CreateRef46.value.set(_AutoExpr47.value);");
     gold.append("\n        }");
@@ -7380,7 +7380,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"bump\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":52,\"deck\":{\"1\":{\"id\":1,\"value\":0,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":13},\"2\":{\"id\":2,\"value\":1,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":31},\"3\":{\"id\":3,\"value\":2,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":38},\"4\":{\"id\":4,\"value\":3,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":0},\"5\":{\"id\":5,\"value\":4,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":4},\"6\":{\"id\":6,\"value\":5,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":46},\"7\":{\"id\":7,\"value\":6,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":16},\"8\":{\"id\":8,\"value\":7,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":14},\"9\":{\"id\":9,\"value\":8,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":11},\"10\":{\"id\":10,\"value\":9,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":5},\"11\":{\"id\":11,\"value\":10,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":17},\"12\":{\"id\":12,\"value\":11,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":44},\"13\":{\"id\":13,\"value\":12,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":27},\"14\":{\"id\":14,\"value\":13,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":18},\"15\":{\"id\":15,\"value\":14,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":45},\"16\":{\"id\":16,\"value\":15,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":49},\"17\":{\"id\":17,\"value\":16,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":8},\"18\":{\"id\":18,\"value\":17,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":35},\"19\":{\"id\":19,\"value\":18,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":23},\"20\":{\"id\":20,\"value\":19,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":34},\"21\":{\"id\":21,\"value\":20,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":21},\"22\":{\"id\":22,\"value\":21,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":19},\"23\":{\"id\":23,\"value\":22,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":43},\"24\":{\"id\":24,\"value\":23,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":36},\"25\":{\"id\":25,\"value\":24,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":26},\"26\":{\"id\":26,\"value\":25,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":39},\"27\":{\"id\":27,\"value\":26,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":3},\"28\":{\"id\":28,\"value\":27,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":1},\"29\":{\"id\":29,\"value\":28,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":30},\"30\":{\"id\":30,\"value\":29,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":41},\"31\":{\"id\":31,\"value\":30,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":47},\"32\":{\"id\":32,\"value\":31,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":15},\"33\":{\"id\":33,\"value\":32,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":7},\"34\":{\"id\":34,\"value\":33,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":12},\"35\":{\"id\":35,\"value\":34,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":25},\"36\":{\"id\":36,\"value\":35,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":6},\"37\":{\"id\":37,\"value\":36,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":37},\"38\":{\"id\":38,\"value\":37,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":22},\"39\":{\"id\":39,\"value\":38,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":42},\"40\":{\"id\":40,\"value\":39,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":28},\"41\":{\"id\":41,\"value\":40,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":20},\"42\":{\"id\":42,\"value\":41,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":10},\"43\":{\"id\":43,\"value\":42,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":2},\"44\":{\"id\":44,\"value\":43,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":9},\"45\":{\"id\":45,\"value\":44,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":51},\"46\":{\"id\":46,\"value\":45,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":50},\"47\":{\"id\":47,\"value\":46,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":32},\"48\":{\"id\":48,\"value\":47,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":29},\"49\":{\"id\":49,\"value\":48,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":33},\"50\":{\"id\":50,\"value\":49,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":40},\"51\":{\"id\":51,\"value\":50,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":48},\"52\":{\"id\":52,\"value\":51,\"owner\":{\"agent\":\"?\",\"authority\":\"?\"},\"ordering\":24}},\"countdown\":9,\"__messages\":null,\"__next_time\":\"60000\",\"__seq\":1} need:true in:60000");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"30000\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"30000\"} need:true in:30000");
-    gold.append("\nCPU:276");
+    gold.append("\nCPU:328");
     gold.append("\nMEMORY:15930");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"45000\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"45000\"} need:true in:15000");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -10306,7 +10306,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n          RxTable<RTxCard> _AutoRef39 = deck;");
     gold.append("\n          RTx_AnonObjConvert_2 _AutoExpr41 = new RTx_AnonObjConvert_2(1, r, s);");
     gold.append("\n          RTxCard _CreateRef40 = _AutoRef39.make();");
-    gold.append("\n          __code_cost += 3;");
+    gold.append("\n          __code_cost += 4;");
     gold.append("\n          _CreateRef40.place.set(_AutoExpr41.place);");
     gold.append("\n          _CreateRef40.rank.set(_AutoExpr41.rank);");
     gold.append("\n          _CreateRef40.suit.set(_AutoExpr41.suit);");
@@ -10792,7 +10792,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        RxTable<RTxPlayer> _AutoRef97 = players;");
     gold.append("\n        RTx_AnonObjConvert_0 _AutoExpr99 = new RTx_AnonObjConvert_0(true, __who, 0, true, 0);");
     gold.append("\n        RTxPlayer _CreateRef98 = _AutoRef97.make();");
-    gold.append("\n        __code_cost += 5;");
+    gold.append("\n        __code_cost += 6;");
     gold.append("\n        _CreateRef98.leader.set(_AutoExpr99.leader);");
     gold.append("\n        _CreateRef98.link.set(_AutoExpr99.link);");
     gold.append("\n        _CreateRef98.play_order.set(_AutoExpr99.play_order);");
@@ -10816,7 +10816,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        RxTable<RTxPlayer> _AutoRef100 = players;");
     gold.append("\n        RTx_AnonObjConvert_0 _AutoExpr102 = new RTx_AnonObjConvert_0(false, __who, players.size(), false, 0);");
     gold.append("\n        RTxPlayer _CreateRef101 = _AutoRef100.make();");
-    gold.append("\n        __code_cost += 5;");
+    gold.append("\n        __code_cost += 6;");
     gold.append("\n        _CreateRef101.leader.set(_AutoExpr102.leader);");
     gold.append("\n        _CreateRef101.link.set(_AutoExpr102.link);");
     gold.append("\n        _CreateRef101.play_order.set(_AutoExpr102.play_order);");
@@ -12946,7 +12946,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxAddOn> _AutoRef6 = _addons;");
     gold.append("\n      RTxAddAddOn _AutoExpr8 = arg;");
     gold.append("\n      RTxAddOn _CreateRef7 = _AutoRef6.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef7.description.set(_AutoExpr8.description);");
     gold.append("\n      _CreateRef7.name.set(_AutoExpr8.name);");
     gold.append("\n    }");
@@ -19381,7 +19381,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              RxTable<RTxSquare> _AutoRef13 = _squares;");
     gold.append("\n              RTx_AnonObjConvert_1 _AutoExpr15 = new RTx_AnonObjConvert_1(0, x, y);");
     gold.append("\n              RTxSquare _CreateRef14 = _AutoRef13.make();");
-    gold.append("\n              __code_cost += 3;");
+    gold.append("\n              __code_cost += 4;");
     gold.append("\n              _CreateRef14.state.set(_AutoExpr15.state);");
     gold.append("\n              _CreateRef14.x.set(_AutoExpr15.x);");
     gold.append("\n              _CreateRef14.y.set(_AutoExpr15.y);");
@@ -19542,7 +19542,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":9,\"_squares\":{\"1\":{\"id\":1,\"x\":0,\"y\":0,\"state\":0},\"2\":{\"id\":2,\"x\":1,\"y\":0,\"state\":0},\"3\":{\"id\":3,\"x\":2,\"y\":0,\"state\":0},\"4\":{\"id\":4,\"x\":0,\"y\":1,\"state\":0},\"5\":{\"id\":5,\"x\":1,\"y\":1,\"state\":0},\"6\":{\"id\":6,\"x\":2,\"y\":1,\"state\":0},\"7\":{\"id\":7,\"x\":0,\"y\":2,\"state\":0},\"8\":{\"id\":8,\"x\":1,\"y\":2,\"state\":0},\"9\":{\"id\":9,\"x\":2,\"y\":2,\"state\":0}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:56");
+    gold.append("\nCPU:65");
     gold.append("\nMEMORY:3166");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -20588,7 +20588,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxLine> _AutoRef7 = _chat;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr9 = new RTx_AnonObjConvert_0(what.what, __timeNow(), __who);");
     gold.append("\n      RTxLine _CreateRef8 = _AutoRef7.make();");
-    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      __code_cost += 4;");
     gold.append("\n      _CreateRef8.what.set(_AutoExpr9.what);");
     gold.append("\n      _CreateRef8.when.set(_AutoExpr9.when);");
     gold.append("\n      _CreateRef8.who.set(_AutoExpr9.who);");

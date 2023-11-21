@@ -915,7 +915,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      RTxR _AutoRef3 = r7;");
     gold.append("\n      RTx_AnonObjConvert_1 _AutoExpr5 = new RTx_AnonObjConvert_1(1);");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _AutoRef3.x.set(_AutoExpr5.x);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -2695,7 +2695,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n          RxTable<RTxR> _AutoRef7 = t;");
     gold.append("\n          RTx_AnonObjConvert_0 _AutoExpr9 = new RTx_AnonObjConvert_0(k);");
     gold.append("\n          RTxR _CreateRef8 = _AutoRef7.make();");
-    gold.append("\n          __code_cost += 1;");
+    gold.append("\n          __code_cost += 2;");
     gold.append("\n          _CreateRef8.x.set(_AutoExpr9.x);");
     gold.append("\n        }");
     gold.append("\n      }");
@@ -2772,7 +2772,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":10,\"t\":{\"2\":{\"id\":2,\"x\":1},\"3\":{\"id\":3,\"x\":2},\"5\":{\"id\":5,\"x\":4},\"6\":{\"id\":6,\"x\":5},\"8\":{\"id\":8,\"x\":7}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:70");
+    gold.append("\nCPU:80");
     gold.append("\nMEMORY:1320");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -9994,7 +9994,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef31 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr33 = new RTx_AnonObjConvert_0(1, 2);");
     gold.append("\n      RTxX _CreateRef32 = _AutoRef31.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef32.x.set(_AutoExpr33.x);");
     gold.append("\n      _CreateRef32.y.set(_AutoExpr33.y);");
     gold.append("\n    }");
@@ -10003,7 +10003,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef34 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr36 = new RTx_AnonObjConvert_0(2, 3);");
     gold.append("\n      RTxX _CreateRef35 = _AutoRef34.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef35.x.set(_AutoExpr36.x);");
     gold.append("\n      _CreateRef35.y.set(_AutoExpr36.y);");
     gold.append("\n    }");
@@ -10012,7 +10012,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef37 = tbl;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr39 = new RTx_AnonObjConvert_0(5, 1);");
     gold.append("\n      RTxX _CreateRef38 = _AutoRef37.make();");
-    gold.append("\n      __code_cost += 2;");
+    gold.append("\n      __code_cost += 3;");
     gold.append("\n      _CreateRef38.x.set(_AutoExpr39.x);");
     gold.append("\n      _CreateRef38.y.set(_AutoExpr39.y);");
     gold.append("\n    }");
@@ -10060,7 +10060,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":3,\"maybe_open_int2\":123,\"maybe_open_bool2\":true,\"maybe_open_string2\":\"Cake\",\"maybe_open_double2\":3.14,\"x\":{\"x\":13,\"y\":42},\"tbl\":{\"1\":{\"id\":1,\"x\":1,\"y\":2},\"2\":{\"id\":2,\"x\":2,\"y\":3},\"3\":{\"id\":3,\"x\":5,\"y\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:16");
+    gold.append("\nCPU:19");
     gold.append("\nMEMORY:2988");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");

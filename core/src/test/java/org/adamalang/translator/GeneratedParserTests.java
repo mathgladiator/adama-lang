@@ -22525,7 +22525,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef65 = x;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr67 = new RTx_AnonObjConvert_0(\"J\");");
     gold.append("\n      RTxX _CreateRef66 = _AutoRef65.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef66.name.set(_AutoExpr67.name);");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
@@ -22533,7 +22533,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef68 = x;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr70 = new RTx_AnonObjConvert_0(\"B\");");
     gold.append("\n      RTxX _CreateRef69 = _AutoRef68.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef69.name.set(_AutoExpr70.name);");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
@@ -22541,7 +22541,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef71 = x;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr73 = new RTx_AnonObjConvert_0(\"S\");");
     gold.append("\n      RTxX _CreateRef72 = _AutoRef71.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef72.name.set(_AutoExpr73.name);");
     gold.append("\n    }");
     gold.append("\n    __track(4);");
@@ -22549,7 +22549,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef74 = x;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr76 = new RTx_AnonObjConvert_0(\"E\");");
     gold.append("\n      RTxX _CreateRef75 = _AutoRef74.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef75.name.set(_AutoExpr76.name);");
     gold.append("\n    }");
     gold.append("\n    __track(5);");
@@ -22557,7 +22557,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      RxTable<RTxX> _AutoRef77 = x;");
     gold.append("\n      RTx_AnonObjConvert_0 _AutoExpr79 = new RTx_AnonObjConvert_0(\"R\");");
     gold.append("\n      RTxX _CreateRef78 = _AutoRef77.make();");
-    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef78.name.set(_AutoExpr79.name);");
     gold.append("\n    }");
     gold.append("\n  }");
@@ -22637,7 +22637,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":5,\"x\":{\"1\":{\"id\":1,\"name\":\"J\",\"by\":0},\"2\":{\"id\":2,\"name\":\"B\",\"by\":0},\"3\":{\"id\":3,\"name\":\"S\",\"by\":0},\"4\":{\"id\":4,\"name\":\"E\",\"by\":0},\"5\":{\"id\":5,\"name\":\"R\",\"by\":0}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:11");
+    gold.append("\nCPU:16");
     gold.append("\nMEMORY:1980");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
