@@ -357,7 +357,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
         System.err.println("domain needs certificate:" + domain);
       }
     };
-    GlobalAuthenticator authenticator = new GlobalAuthenticator(dataBase, masterKey, clientExecutor);
+    GlobalAuthenticator authenticator = new GlobalAuthenticator(dataBase, clientExecutor);
     this.nexus = new GlobalExternNexus(frontendConfig, this, dataBase, adama, authenticator, assets, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp, masterKey, webBase, "test-region", "test-machine", hostKeyPair.getPrivate(), keyId, new String[] {}, new String[] {}, signalControl, globalFinder, new PrivateKeyWithId(0, hostKeyPair.getPrivate()));
     this.frontend = BootstrapGlobalServiceBase.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null, null);

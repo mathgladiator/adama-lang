@@ -66,7 +66,7 @@ public class GlobalFrontend {
     RxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, em.system, new GlobalRxHtmlFetcher(db.database, em.environment));
     int publicKeyId = Hosts.initializeHost(db.database, em.region, em.machine, "web", em.publicKey);
     GlobalFinder globalFinder = new GlobalFinder(db.database, em.region, em.machine);
-    GlobalAuthenticator globalAuthenticator = new GlobalAuthenticator(db.database, masterKey, em.system);
+    GlobalAuthenticator globalAuthenticator = new GlobalAuthenticator(db.database, em.system);
     CachedAuthenticator cachedAuthenticator = new CachedAuthenticator(TimeSource.REAL_TIME, 4096, 120 * 1000, em.system, globalAuthenticator);
     cachedAuthenticator.startSweeping(em.alive, 10000, 20000);
 

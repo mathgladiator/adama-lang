@@ -36,8 +36,6 @@ public class SecretsTests {
         Assert.assertEquals("private-key1", Secrets.getPrivateKey(dataBase, "space", key1));
         Assert.assertEquals("private-key2", Secrets.getPrivateKey(dataBase, "space", key2));
         String masterKey = MasterKey.generateMasterKey();
-        Secrets.getOrCreateDocumentSigningKey(dataBase, masterKey,"space", "doc-1");
-        Secrets.getOrCreateDocumentSigningKey(dataBase, masterKey,"space", "doc-1");
       } finally {
         installer.uninstall();
       }

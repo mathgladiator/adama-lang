@@ -63,7 +63,7 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void anonymous() throws Exception {
-    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, "masterkey", SimpleExecutor.NOW);
+    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, SimpleExecutor.NOW);
     GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] {}, new String[] {});
     Assert.assertEquals("D", authenticator.getTransportAssetKey());
     authenticator.updateTransportAssetKey("E");
@@ -88,7 +88,7 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void superUser() throws Exception {
-    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, "masterkey", SimpleExecutor.NOW);
+    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, SimpleExecutor.NOW);
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("super").setIssuer("super").signWith(pair.getPrivate()).compact();
@@ -113,7 +113,7 @@ public class GlobalPerSessionAuthenticatorTests {
 
   @Test
   public void regionalKey() throws Exception {
-    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, "masterkey", SimpleExecutor.NOW);
+    GlobalAuthenticator gAuth = new GlobalAuthenticator(null, SimpleExecutor.NOW);
     KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("xyz").setIssuer("region").signWith(pair.getPrivate()).compact();

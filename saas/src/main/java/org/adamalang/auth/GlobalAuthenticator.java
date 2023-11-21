@@ -23,14 +23,12 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.contracts.data.ParsedToken;
 import org.adamalang.impl.common.FastAuth;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Authorities;
 import org.adamalang.mysql.model.Hosts;
-import org.adamalang.mysql.model.Secrets;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.security.Keystore;
@@ -39,16 +37,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.PublicKey;
-import java.util.regex.Pattern;
 
 public class GlobalAuthenticator implements Authenticator {
   private static final Logger LOGGER = LoggerFactory.getLogger(GlobalAuthenticator.class);
   private final DataBase database;
-  private final String masterKey;
   private final SimpleExecutor executor;
 
-  public GlobalAuthenticator(DataBase database, String masterKey, SimpleExecutor executor) {
-    this.masterKey = masterKey;
+  public GlobalAuthenticator(DataBase database, SimpleExecutor executor) {
     this.database = database;
     this.executor = executor;
   }
@@ -56,14 +51,8 @@ public class GlobalAuthenticator implements Authenticator {
   private void authDocument(String identity, ParsedToken parsedToken, ConnectionContext context, Callback<AuthenticatedUser> callback) {
     final Runnable auth;
     try {
-      if (parsedToken.key_id > 0) {
-        PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
-        auth = () -> Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(identity);
-      } else {
-        String[] docSpaceKey = parsedToken.iss.split(Pattern.quote("/"));
-        SigningKeyPair skp = Secrets.getOrCreateDocumentSigningKey(database, masterKey, docSpaceKey[1], docSpaceKey[2]);
-        auth = () -> skp.validateTokenThrows(identity);
-      }
+      PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
+      auth = () -> Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(identity);
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
       return;

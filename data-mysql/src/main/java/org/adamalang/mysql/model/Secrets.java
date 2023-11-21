@@ -30,39 +30,6 @@ import java.sql.Statement;
 import java.util.TreeMap;
 
 public class Secrets {
-  /** This is fundamentally unsafe as it puts both the public and private key (granted, encrypted) in the datbase. Instead, we should only put the public key in, store private keys in memory, and then index the keys so public keys can be looked up by id */
-  @Deprecated
-  public static SigningKeyPair getOrCreateDocumentSigningKey(DataBase dataBase, String masterKey, String space, String key) throws Exception {
-    return dataBase.transactSimple((connection) -> {
-      String resultSecret = null;
-      {
-        String sql = "SELECT `secret` FROM `" + dataBase.databaseName + "`.`document_secrets` WHERE `space`=? AND `key`=? AND `name`='signing'";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-          statement.setString(1, space);
-          statement.setString(2, key);
-          try (ResultSet rs = statement.executeQuery()) {
-            if (rs.next()) {
-              return new SigningKeyPair(masterKey, rs.getString(1));
-            }
-          }
-        }
-      }
-      resultSecret = SigningKeyPair.generate(masterKey);
-      {
-        String sql = "INSERT INTO `" + dataBase.databaseName + "`.`document_secrets` (`space`, `key`, `name`, `secret`) VALUES (?,?, 'signing', ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-          statement.setString(1, space);
-          statement.setString(2, key);
-          statement.setString(3, resultSecret);
-          statement.execute();
-        }
-      }
-
-      return new SigningKeyPair(masterKey, resultSecret);
-    });
-  }
-
-
   /** insert a secret key */
   public static int insertSecretKey(DataBase dataBase, String space, String privateKeyEncrypted) throws Exception {
     return dataBase.transactSimple((connection) -> {
