@@ -1988,6 +1988,7 @@ var RxHTML = (function () {
   };
 
   var setupSubscription = function (registration, vapidPublicKey, identity, identityName, version) {
+    connection.bump("wps");
     var pushKeyLocal = "push_endpoint_" + identityName;
     registration.pushManager
     .getSubscription().then(async function (subscription) {

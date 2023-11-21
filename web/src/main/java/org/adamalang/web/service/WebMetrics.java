@@ -72,9 +72,14 @@ public class WebMetrics {
 
   public final CallbackMonitor web_asset_upload;
 
+  public final Runnable websockets_timed_out;
+  public final Runnable websockets_decode_exception;
+
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
     this.websockets_active_child_connections = factory.inflight("websockets_active_child_connections");
+    this.websockets_timed_out = factory.counter("websockets_timed_out");
+    this.websockets_decode_exception = factory.counter("websockets_decode_exception");
     this.websockets_send_heartbeat = factory.counter("websockets_send_heartbeat");
     this.websockets_heartbeat_failure = factory.counter("websockets_heartbeat_failure");
     this.websockets_server_heartbeat = factory.counter("websockets_server_heartbeat");

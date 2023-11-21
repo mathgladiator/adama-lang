@@ -20,7 +20,7 @@ package org.adamalang.web.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
@@ -31,7 +31,6 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.common.Platform;
-import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -40,10 +39,10 @@ import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Pattern;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
   private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", "assetKey", null);
@@ -80,6 +79,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
   @Override
   public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+    metrics.websockets_active.down();
     metrics.websockets_end.run();
     end(ctx);
     super.channelInactive(ctx);
@@ -91,7 +91,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         return;
       }
       closed = true;
-      metrics.websockets_active.down();
       if (future != null) {
         future.cancel(false);
         future = null;
@@ -103,8 +102,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       }
       ctx.close();
     } catch (Exception ex) {
+      LOG.error("end-exception", ex);
       metrics.websockets_end_exception.run();
-      LOGGER.convertedToErrorCode(ex, -1);
     }
   }
 
@@ -147,10 +146,19 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-    super.exceptionCaught(ctx, cause);
-    metrics.websockets_uncaught_exception.run();
-    LOG.error("exception", cause);
-    end(ctx);
+    try {
+      super.exceptionCaught(ctx, cause);
+      if (cause instanceof IOException && "Connection timed out".equals(cause.getMessage())) {
+        metrics.websockets_timed_out.run();
+      } else if (cause instanceof DecoderException) {
+        metrics.websockets_decode_exception.run();
+      } else {
+        metrics.websockets_uncaught_exception.run();
+        LOG.error("exception", cause);
+      }
+    } finally {
+      end(ctx);
+    }
   }
 
   @Override
