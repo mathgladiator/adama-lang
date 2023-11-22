@@ -21,6 +21,8 @@ import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 
+import java.util.TreeMap;
+
 public class WebMetrics {
   public final Inflight websockets_active;
   public final Inflight websockets_active_child_connections;
@@ -57,23 +59,14 @@ public class WebMetrics {
   public final Runnable webhandler_assets_failed_start;
   public final Runnable webhandler_firewall;
   public final Runnable webhandler_asset_failed;
-
   public final Runnable websockets_start;
   public final Runnable websockets_end;
-
-  public final Runnable webclient_retry;
-  public final Runnable webclient_disconnect_force;
-  public final Runnable webclient_rxhtml;
   public final Runnable webclient_pushack;
-
-  public final Runnable webclient_webpush_denial;
-  public final Runnable webclient_webpush_setup;
-  public final Runnable webclient_webpush_avail;
-
   public final CallbackMonitor web_asset_upload;
-
   public final Runnable websockets_timed_out;
   public final Runnable websockets_decode_exception;
+
+  public final TreeMap<String, Runnable> client_metrics;
 
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
@@ -116,13 +109,17 @@ public class WebMetrics {
     this.webhandler_options_failure = factory.counter("webhandler_options_failure");
     this.web_asset_upload = factory.makeCallbackMonitor("web_asset_upload");
     factory.section("public web client");
-    this.webclient_retry = factory.counter("webclient_retry");
-    this.webclient_rxhtml = factory.counter("webclient_rxhtml");
-    this.webclient_disconnect_force = factory.counter("webclient_disconnect_force");
+    client_metrics = new TreeMap<>();
+    client_metrics.put("r", factory.counter("webclient_retry"));
+    client_metrics.put("rxhtml", factory.counter("webclient_rxhtml"));
+    client_metrics.put("d", factory.counter("webclient_disconnect_force"));
     factory.section("web push");
     this.webclient_pushack = factory.counter("webclient_pushack");
-    this.webclient_webpush_setup = factory.counter("webclient_webpush_setup");
-    this.webclient_webpush_denial = factory.counter("webclient_webpush_denial");
-    this.webclient_webpush_avail = factory.counter("webclient_webpush_avail");
+    client_metrics.put("wps", factory.counter("webclient_webpush_setup"));
+    client_metrics.put("wpa", factory.counter("webclient_webpush_avail"));
+    client_metrics.put("wpd", factory.counter("webclient_webpush_denial"));
+    client_metrics.put("wpi1", factory.counter("webclient_webpush_impossible_1"));
+    client_metrics.put("wpi2", factory.counter("webclient_webpush_impossible_2"));
+    client_metrics.put("wpf", factory.counter("webclient_webpush_fail"));
   }
 }

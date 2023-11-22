@@ -2029,10 +2029,14 @@ var RxHTML = (function () {
               localStorage.setItem("webpush_status", "success");
               setPushStatus("success");
             },
-            failure: function() {}
+            failure: function() {
+              connection.bump("wpf");
+            }
           });
         },
-        failure: function() {}
+        failure: function() {
+          connection.bump("wpf");
+        }
       })
     }, function(err) {
       setPushStatus("failed");
@@ -2068,9 +2072,13 @@ var RxHTML = (function () {
         });
       } catch (ex) {
         console.error("failed to register service worker", ex);
+        setPushStatus("impossible");
+        connection.bump("wpi2");
       }
     } else {
       console.log("no service worker available");
+      setPushStatus("impossible");
+      connection.bump("wpi1");
     }
   }
 

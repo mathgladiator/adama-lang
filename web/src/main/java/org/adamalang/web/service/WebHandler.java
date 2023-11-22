@@ -626,25 +626,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       return true;
     } else if (req.uri().startsWith("/~bm/") && req.uri().length() >= 6) { // bump a metric
       String metricName = req.uri().substring(5);
-      switch (metricName) {
-        case "r":
-          metrics.webclient_retry.run();
-          break;
-        case "d":
-          metrics.webclient_disconnect_force.run();
-          break;
-        case "rxhtml":
-          metrics.webclient_rxhtml.run();
-          break;
-        case "wps":
-          metrics.webclient_webpush_setup.run();
-          break;
-        case "wpa":
-          metrics.webclient_webpush_avail.run();
-          break;
-        case "wpd":
-          metrics.webclient_webpush_denial.run();
-          break;
+      Runnable counter = metrics.client_metrics.get(metricName);
+      if (counter != null) {
+        counter.run();
       }
       ok(ctx, req);
       return true;
