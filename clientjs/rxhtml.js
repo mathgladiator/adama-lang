@@ -2069,11 +2069,15 @@ var RxHTML = (function () {
               setupSubscription(registration, vapidPublicKey, identity, identityName, version);
             });
           }
+        }, function(ex) {
+          connection.bump("wpi3");
+          connection.log("worker-find", "" + ex);
         });
       } catch (ex) {
         console.error("failed to register service worker", ex);
         setPushStatus("impossible");
         connection.bump("wpi2");
+        connection.log("worker-install", "" + ex);
       }
     } else {
       console.log("no service worker available");

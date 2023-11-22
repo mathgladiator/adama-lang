@@ -120,6 +120,7 @@ public class WebMetrics {
     client_metrics.put("wpd", factory.counter("webclient_webpush_denial"));
     client_metrics.put("wpi1", factory.counter("webclient_webpush_impossible_1"));
     client_metrics.put("wpi2", factory.counter("webclient_webpush_impossible_2"));
+    client_metrics.put("wpi3", factory.counter("webclient_webpush_impossible_3"));
     client_metrics.put("wpf", factory.counter("webclient_webpush_fail"));
   }
 }
