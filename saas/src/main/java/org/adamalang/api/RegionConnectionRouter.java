@@ -66,6 +66,7 @@ public class RegionConnectionRouter {
       ObjectNode _accessLogItem = Json.newJsonObject();
       long requestId = request.id();
       String method = request.method();
+      _accessLogItem.put("handler", "websocket");
       _accessLogItem.put("method", method);
       _accessLogItem.put("region", nexus.region);
       _accessLogItem.put("machine", nexus.machine);

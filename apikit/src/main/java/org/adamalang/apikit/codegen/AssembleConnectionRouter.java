@@ -89,6 +89,7 @@ public class AssembleConnectionRouter {
     router.append("      ObjectNode _accessLogItem = Json.newJsonObject();\n");
     router.append("      long requestId = request.id();\n");
     router.append("      String method = request.method();\n");
+    router.append("      _accessLogItem.put(\"handler\", \"websocket\");\n");
     router.append("      _accessLogItem.put(\"method\", method);\n");
     router.append("      _accessLogItem.put(\"region\", nexus.region);\n");
     router.append("      _accessLogItem.put(\"machine\", nexus.machine);\n");
