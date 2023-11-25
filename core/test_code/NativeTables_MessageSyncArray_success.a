@@ -1,0 +1,18 @@
+message M {
+  int id unique;
+  int x;
+}
+
+message N {
+  M[] m;
+}
+
+procedure foo() -> N readonly {
+  table<M> tbl;
+  tbl <- {id:1, x:4};
+  tbl <- {id:2, x:8};
+  tbl <- {id:3, x:16};
+  return { m : @convert<M>(iterate tbl) };
+}
+
+bubble fooz = foo();

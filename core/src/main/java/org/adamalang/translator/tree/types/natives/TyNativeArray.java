@@ -111,6 +111,9 @@ public class TyNativeArray extends TyType implements //
     if (resolved instanceof TyReactiveRecord) {
       return "DRecordList<" + ((TyReactiveRecord) resolved).getDeltaType(environment) + ">";
     }
+    if (resolved instanceof TyNativeMessage && ((TyNativeMessage) resolved).hasUniqueId()) {
+      return "DRecordList<" + ((TyNativeMessage) resolved).getDeltaType(environment) + ">";
+    }
     return "DList<" + ((DetailHasDeltaType) resolved).getDeltaType(environment) + ">";
   }
 
