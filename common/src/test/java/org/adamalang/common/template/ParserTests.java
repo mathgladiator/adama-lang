@@ -31,7 +31,7 @@ public class ParserTests {
   }
 
   public String eval(T template, String... args) {
-    Settings settings = new Settings();
+    Settings settings = new Settings(true);
     ObjectNode node = new ObjectMapper().createObjectNode();
     for (int k = 0; k + 1 < args.length; k += 2) {
       String value = args[k + 1];

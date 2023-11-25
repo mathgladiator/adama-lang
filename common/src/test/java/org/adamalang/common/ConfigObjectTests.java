@@ -46,6 +46,17 @@ public class ConfigObjectTests {
   }
 
   @Test
+  public void boolOf() {
+    ObjectNode root = Json.newJsonObject();
+    root.put("x", true);
+    ConfigObject config = new ConfigObject(root);
+    Assert.assertTrue(config.boolOf("x", false));
+    Assert.assertTrue(config.boolOf("x", true));
+    Assert.assertTrue(config.boolOf("u", true));
+    Assert.assertFalse(config.boolOf("u", false));
+  }
+
+  @Test
   public void strings() {
     try {
       ConfigObject config = new ConfigObject(Json.newJsonObject());

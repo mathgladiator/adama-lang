@@ -18,7 +18,7 @@
 package org.adamalang.common.template;
 
 public class Settings {
-  public boolean html;
+  public final boolean html;
 
   public Settings() {
     this.html = true;

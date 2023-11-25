@@ -19,6 +19,7 @@ package org.adamalang.common.cache;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.gossip.MockTime;
 import org.junit.Assert;
@@ -27,10 +28,69 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AsyncSharedLRUCacheTests {
+  @Test
+  public void sweep() throws Exception {
+    MockTime time = new MockTime();
+    ArrayList<String> evictions = new ArrayList<>();
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 50, (key, ms) -> evictions.add(key));
+    SimpleExecutor executor = SimpleExecutor.create("test");
+    try {
+      AtomicInteger calls = new AtomicInteger(0);
+      CountDownLatch latchFinish = new CountDownLatch(1);
+      AtomicReference<Callback<MeasuredString>> cbRef = new AtomicReference<>();
+      AtomicBoolean alive = new AtomicBoolean(true);
+      AsyncSharedLRUCache<String, MeasuredString> async = new AsyncSharedLRUCache<String, MeasuredString>(executor, cache, (key, cb) -> {
+        calls.incrementAndGet();
+        try {
+          cbRef.set(cb);
+          latchFinish.countDown();
+        } catch (Exception ex) {
+        }
+      });
+      async.startSweeping(alive, 10, 20);
+      CountDownLatch allIn = new CountDownLatch(10);
+      for (int k = 0; k < 10; k++) {
+        Callback<MeasuredString> cb = new Callback<MeasuredString>() {
+          @Override
+          public void success(MeasuredString value) {
+            allIn.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+          }
+        };
+        async.get("X", cb);
+      }
+      Assert.assertTrue(latchFinish.await(10000, TimeUnit.MILLISECONDS));
+      cbRef.get().success(new MeasuredString("XYZ"));
+      time.currentTime += 10000;
+      CountDownLatch emptied = new CountDownLatch(1);
+      boolean finished = false;
+      for (int k = 0; k < 100 && !finished; k++) {
+        executor.execute(new NamedRunnable("probe") {
+          @Override
+          public void execute() throws Exception {
+            System.out.println(cache.size());
+            if (cache.size() == 0) {
+              emptied.countDown();
+            }
+            time.currentTime += 10;
+          }
+        });
+        finished = emptied.await(100, TimeUnit.MILLISECONDS);
+      }
+      Assert.assertTrue(finished);
+    } finally {
+      executor.shutdown();
+    }
+  }
+
   @Test
   public void herd_success() throws Exception {
     MockTime time = new MockTime();
@@ -41,6 +101,7 @@ public class AsyncSharedLRUCacheTests {
       AtomicInteger calls = new AtomicInteger(0);
       CountDownLatch latchFinish = new CountDownLatch(1);
       AtomicReference<Callback<MeasuredString>> cbRef = new AtomicReference<>();
+      AtomicBoolean alive = new AtomicBoolean(true);
       AsyncSharedLRUCache<String, MeasuredString> async = new AsyncSharedLRUCache<String, MeasuredString>(executor, cache, (key, cb) -> {
         calls.incrementAndGet();
         try {
@@ -49,6 +110,7 @@ public class AsyncSharedLRUCacheTests {
         } catch (Exception ex) {
         }
       });
+      async.startSweeping(alive, 10, 20);
       CountDownLatch allIn = new CountDownLatch(10);
       for (int k = 0; k < 10; k++) {
         Callback<MeasuredString> cb = new Callback<MeasuredString>() {

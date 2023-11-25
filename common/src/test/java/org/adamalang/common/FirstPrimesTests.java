@@ -15,18 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.html;
+package org.adamalang.common;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class InjectCoordInlineTests {
+public class FirstPrimesTests {
   @Test
-  public void foo() {
-    Assert.assertEquals("<element ln:ch=\"0;0;0;9;name\">", InjectCoordInline.execute("<element>", "name"));
-    Assert.assertEquals("<element ln:ch=\"0;0;0;10;name\" />", InjectCoordInline.execute("<element/>", "name"));
-    Assert.assertEquals("<element ln:ch=\"0;0;0;18;name\">", InjectCoordInline.execute("<element         >", "name"));
-
-    Assert.assertEquals("<!--comment-->HI", InjectCoordInline.execute("<!--comment-->HI", "name"));
+  public void flow() {
+    new FirstPrimes();
+    Assert.assertEquals(1000, FirstPrimes.PRIMES_1000.length);
   }
 }

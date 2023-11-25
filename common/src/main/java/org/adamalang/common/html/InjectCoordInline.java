@@ -17,8 +17,6 @@
 */
 package org.adamalang.common.html;
 
-import org.adamalang.common.Escaping;
-
 import java.util.Iterator;
 
 /** inject coordinates into HTML */

@@ -15,18 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.html;
+package org.adamalang.common.keys;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-public class InjectCoordInlineTests {
+public class PrivateKeyWithIdTests {
   @Test
-  public void foo() {
-    Assert.assertEquals("<element ln:ch=\"0;0;0;9;name\">", InjectCoordInline.execute("<element>", "name"));
-    Assert.assertEquals("<element ln:ch=\"0;0;0;10;name\" />", InjectCoordInline.execute("<element/>", "name"));
-    Assert.assertEquals("<element ln:ch=\"0;0;0;18;name\">", InjectCoordInline.execute("<element         >", "name"));
-
-    Assert.assertEquals("<!--comment-->HI", InjectCoordInline.execute("<!--comment-->HI", "name"));
+  public void flow() throws Exception {
+    String mk = MasterKey.generateMasterKey();
+    String kp = SigningKeyPair.generate(mk);;
+    SigningKeyPair skp = new SigningKeyPair(mk, kp);
+    PrivateKeyWithId pkid = new PrivateKeyWithId(1, skp.privateKey);
+    pkid.signDocumentIdentity("agent", "space", "key", -1);
   }
 }

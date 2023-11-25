@@ -32,7 +32,7 @@ public class HMACSHA256 {
       final Mac mac = Mac.getInstance("HmacSHA256");
       mac.init(keySpec);
       return mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-    } catch (final NoSuchAlgorithmException | InvalidKeyException e) {
+    } catch (final Exception e) {
       throw new IllegalArgumentException(e);
     }
   }

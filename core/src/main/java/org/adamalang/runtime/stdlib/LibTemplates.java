@@ -33,7 +33,7 @@ public class LibTemplates {
     data.put("reset_url", resetUrl);
     data.put("instant_url", instantUrl);
     StringBuilder output = new StringBuilder();
-    TemplateAccountRecoveryTemplateHtml.TEMPLATE.render(new Settings(), data, output);
+    TemplateAccountRecoveryTemplateHtml.TEMPLATE.render(new Settings(true), data, output);
     return output.toString();
   }
 
@@ -47,7 +47,7 @@ public class LibTemplates {
     data.put("button", button);
     data.put("final_line", final_line);
     StringBuilder output = new StringBuilder();
-    TemplateMultiLineEmailTemplateHtml.TEMPLATE.render(new Settings(), data, output);
+    TemplateMultiLineEmailTemplateHtml.TEMPLATE.render(new Settings(true), data, output);
     return output.toString();
   }
 }

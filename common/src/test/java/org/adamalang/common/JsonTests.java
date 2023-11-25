@@ -66,6 +66,19 @@ public class JsonTests {
   }
 
   @Test
+  public void just_parse() {
+    Json.parse("1");
+    Json.parse("[]");
+    Json.parse("{}");
+    try {
+      Json.parse("x");
+      Assert.fail();
+    } catch (Exception ex) {
+
+    }
+  }
+
+  @Test
   public void subfield_bool() {
     Assert.assertNull(Json.readBool(Json.parseJsonObject("{\"x\":\"1234\"}"), "x"));
     Assert.assertNull(Json.readBool(Json.parseJsonObject("{\"x\":123}"), "x"));

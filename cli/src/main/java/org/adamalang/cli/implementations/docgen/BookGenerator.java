@@ -79,7 +79,7 @@ public class BookGenerator {
     input.put("body", md2html(markdown));
     input.put("nav", navHtml);
     StringBuilder output = new StringBuilder();
-    template.render(new Settings(), input, output);
+    template.render(new Settings(true), input, output);
     return output.toString();
   }
 

@@ -32,10 +32,11 @@ public class MachineHeat {
   }
 
   public static double cpu() {
+    double cpu = -1;
     if (os != null) {
-      return os.getProcessCpuLoad();
+      cpu = os.getProcessCpuLoad();
     }
-    return -1;
+    return cpu;
   }
 
   public static double memory() {

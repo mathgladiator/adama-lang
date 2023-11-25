@@ -31,5 +31,12 @@ public class HMACSHA256Tests {
     } catch (IllegalArgumentException iae) {
 
     }
+    try {
+      HMACSHA256.of(null, "OK");
+      Assert.fail();
+    } catch (IllegalArgumentException iae) {
+
+    }
   }
+
 }
