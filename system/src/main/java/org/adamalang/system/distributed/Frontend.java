@@ -37,6 +37,7 @@ import org.adamalang.runtime.sys.web.rxhtml.CachedRxHtmlFetcher;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.service.CertificateBoot;
 import org.adamalang.web.service.RedirectAndWellknownServiceRunnable;
 import org.adamalang.web.service.ServiceRunnable;
@@ -63,15 +64,16 @@ public class Frontend {
     GlobalAuthenticator globalAuthenticator = new GlobalAuthenticator(init.database, init.em.system);
     CachedAuthenticator cachedAuthenticator = new CachedAuthenticator(TimeSource.REAL_TIME, 4096, 120 * 1000, init.em.system, globalAuthenticator);
     cachedAuthenticator.startSweeping(init.em.alive, 10000, 20000);
-    FrontendHttpHandler http = new FrontendHttpHandler(init.alive, init.system, init.webConfig, domainFinder, rxHtmlFetcher, cachedAuthenticator, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
-    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
+    JsonLogger accessLogger = (item) -> {
+      accessLog.debug(item.toString());
+    };
+    FrontendHttpHandler http = new FrontendHttpHandler(init.alive, init.system, init.webConfig, domainFinder, rxHtmlFetcher, cachedAuthenticator, adama, new PrivateKeyWithId(init.publicKeyId, init.hostKey), accessLogger);
+    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, cachedAuthenticator, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
-    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, cachedAuthenticator, assets, init.metricsFactory, new File("inflight"), (item) -> {
-      accessLog.debug(item.toString());
-    }, init.masterKey, init.webBase, init.region, init.machine, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
+    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, cachedAuthenticator, assets, init.metricsFactory, new File("inflight"), accessLogger, init.masterKey, init.webBase, init.region, init.machine, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
     System.err.println("ExternNexus constructed");
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();

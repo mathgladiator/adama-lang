@@ -42,6 +42,7 @@ import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.service.CertificateBoot;
 import org.adamalang.web.service.RedirectAndWellknownServiceRunnable;
 import org.adamalang.web.service.ServiceRunnable;
@@ -72,17 +73,18 @@ public class GlobalFrontend {
 
     // public MultiRegionClient(LocalRegionClient local, String region, PrivateKey privateKey, int keyId, SimpleFinderService finder, TreeMap<String, SelfClient> remoteRegions) {
     MultiRegionClient adama = null; // TODO: create the multi-region client
-
-    FrontendHttpHandler http = new FrontendHttpHandler(em.alive, em.system, em.webConfig, domainFinder, rxHtmlFetcher, cachedAuthenticator, adama, new PrivateKeyWithId(publicKeyId, em.hostKey));
-    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
+    JsonLogger accessLogger = (item) -> {
+      accessLog.debug(item.toString());
+    };
+
+    FrontendHttpHandler http = new FrontendHttpHandler(em.alive, em.system, em.webConfig, domainFinder, rxHtmlFetcher, cachedAuthenticator, adama, new PrivateKeyWithId(publicKeyId, em.hostKey), accessLogger);
+    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     GlobalAssetSystem assets = new GlobalAssetSystem(db.database, masterKey, cachedAuthenticator, adama, cb.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
 
-    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, cb.ses, db.database, adama, cachedAuthenticator, assets, em.metricsFactory, new File("inflight"), (item) -> {
-      accessLog.debug(item.toString());
-    }, masterKey, em.webBase, em.region, em.machine, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
+    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, cb.ses, db.database, adama, cachedAuthenticator, assets, em.metricsFactory, new File("inflight"), accessLogger, masterKey, em.webBase, em.region, em.machine, em.hostKey, publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), cb.sqs, globalFinder, new PrivateKeyWithId(publicKeyId, em.hostKey));
     System.out.println("[GlobalFrontend:ExternNexus constructed]");
 
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);

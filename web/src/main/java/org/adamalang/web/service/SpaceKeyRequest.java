@@ -17,6 +17,7 @@
 */
 package org.adamalang.web.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Validators;
 
 /** simple parser for a /SPACE/KEY/URI... request */
@@ -47,6 +48,12 @@ public class SpaceKeyRequest {
       }
     }
     return null;
+  }
+
+  public void logInto(ObjectNode logItem) {
+    logItem.put("space", space);
+    logItem.put("uri", uri);
+    logItem.put("key", key);
   }
 
   public String cacheKey(String parameters) {

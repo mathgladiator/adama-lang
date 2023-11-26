@@ -17,6 +17,7 @@
 */
 package org.adamalang.web.contracts;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.io.ConnectionContext;
@@ -29,7 +30,8 @@ public interface HttpHandler {
   public enum Method {
     OPTIONS,
     GET,
-    DELETE, PUT
+    DELETE,
+    PUT
   };
 
 
@@ -103,6 +105,15 @@ public interface HttpHandler {
       this.location = location;
       this.redirectStatus = code;
       this.cacheTimeSeconds = null;
+    }
+
+    public void logInto(ObjectNode logItem) {
+      if (asset != null) {
+        logItem.put("asset", asset.id);
+      }
+      if (contentType != null) {
+        logItem.put("content-type", contentType);
+      }
     }
   }
 }
