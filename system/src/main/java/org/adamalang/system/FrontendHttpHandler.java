@@ -440,10 +440,12 @@ public class FrontendHttpHandler implements HttpHandler {
       @Override
       public void success(LiveSiteRxHtmlResult result) {
         if (result.test(uri)) {
+          logInfo.put("rxhtml", true);
           callback.success(new HttpResult("text/html", result.html, false));
-          return;
+        } else {
+          logInfo.put("rxhtml", false);
+          get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
         }
-        get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
 
       @Override
