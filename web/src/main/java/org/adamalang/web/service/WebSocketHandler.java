@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -150,6 +151,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       super.exceptionCaught(ctx, cause);
       if (cause instanceof IOException && "Connection timed out".equals(cause.getMessage())) {
         metrics.websockets_timed_out.run();
+      } else if (cause instanceof SocketException) {
+        metrics.websockets_socket_exception.run();
       } else if (cause instanceof DecoderException) {
         metrics.websockets_decode_exception.run();
       } else {
