@@ -67,8 +67,9 @@ public class DevBoxServiceBase implements ServiceBase {
   private final boolean debuggerAvailable;
   private final ConcurrentHashMap<Integer, DevBoxAdama> inflight;
   private final AtomicInteger inflightId;
+  private final RxPubSub rxPubSub;
 
-  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable) throws Exception {
+  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -81,6 +82,7 @@ public class DevBoxServiceBase implements ServiceBase {
     this.debuggerAvailable = debuggerAvailable;
     this.inflight = new ConcurrentHashMap<>();
     this.inflightId = new AtomicInteger(1);
+    this.rxPubSub = rxPubSub;
   }
 
   public String diagnostics() {
@@ -99,7 +101,7 @@ public class DevBoxServiceBase implements ServiceBase {
     int id = inflightId.incrementAndGet();
     DevBoxAdama devbox = new DevBoxAdama(executor, context, this.control, this.io, verse, () -> {
       inflight.remove(id);
-    });
+    }, rxPubSub);
     inflight.put(id, devbox);
     return devbox;
   }

@@ -3697,6 +3697,7 @@ public class Arguments {
 		public String debugger = "true";
 		public String localLibadamaPath = null;
 		public String environment = "test";
+		public String preserveView = "true";
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
 			try {
@@ -3772,6 +3773,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-pv":
+					case "--preserve-view": {
+						if (k+1 < args.length) {
+							returnArgs.preserveView = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3800,6 +3812,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-dbg, --debugger", Util.ANSI.Green) + " " + Util.prefix("<debugger>", Util.ANSI.White) + " : Is the online debugger available");
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
+			System.out.println("    " + Util.prefix("-pv, --preserve-view", Util.ANSI.Green) + " " + Util.prefix("<preserve-view>", Util.ANSI.White) + " : Whether or not to preserve (take a snapshot) of the viewstate before automatically reloading (default 'true').");
 		}
 	}
 	public static class FrontendMake200Args {
@@ -4635,6 +4648,7 @@ public class Arguments {
 		public String debugger = "true";
 		public String localLibadamaPath = null;
 		public String environment = "test";
+		public String preserveView = "true";
 		public static DevboxArgs from(String[] args, int start) {
 			DevboxArgs returnArgs = new DevboxArgs();
 			try {
@@ -4710,6 +4724,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-pv":
+					case "--preserve-view": {
+						if (k+1 < args.length) {
+							returnArgs.preserveView = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -4738,6 +4763,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-dbg, --debugger", Util.ANSI.Green) + " " + Util.prefix("<debugger>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-pv, --preserve-view", Util.ANSI.Green) + " " + Util.prefix("<preserve-view>", Util.ANSI.White));
 		}
 	}
 	public static class DumpenvArgs {
