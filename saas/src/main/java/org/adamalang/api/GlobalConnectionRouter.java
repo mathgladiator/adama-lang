@@ -54,6 +54,7 @@ public class GlobalConnectionRouter {
       ObjectNode _accessLogItem = Json.newJsonObject();
       long requestId = request.id();
       String method = request.method();
+      final long started = System.currentTimeMillis();
       _accessLogItem.put("handler", "websocket");
       _accessLogItem.put("method", method);
       _accessLogItem.put("region", nexus.region);
@@ -71,12 +72,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(InitSetupAccountRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -89,12 +91,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(InitConvertGoogleUserRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -107,12 +110,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(InitCompleteAccountRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -125,12 +129,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(DeinitRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -143,12 +148,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AccountSetPasswordRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -161,12 +167,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AccountGetPaymentPlanRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new PaymentResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new PaymentResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -179,12 +186,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AccountLoginRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -197,12 +205,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(ProbeRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -215,12 +224,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AuthorityCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new ClaimResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new ClaimResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -233,12 +243,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AuthoritySetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -251,12 +262,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AuthorityGetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -269,12 +281,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AuthorityListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new AuthorityListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AuthorityListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -287,12 +300,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(AuthorityDestroyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -305,12 +319,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(SpaceCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -327,12 +342,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new KeyPairResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeyPairResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -349,12 +365,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -371,12 +388,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -393,12 +411,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -415,12 +434,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -437,12 +457,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new RxhtmlResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new RxhtmlResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -459,12 +480,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -481,12 +503,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new AccessPolicyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AccessPolicyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -503,12 +526,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new MetricsAggregateResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new MetricsAggregateResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -525,12 +549,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -547,12 +572,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -569,12 +595,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new DeveloperResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new DeveloperResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -591,12 +618,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -609,12 +637,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(SpaceListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SpaceListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SpaceListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -627,12 +656,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(PushRegisterRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -649,12 +679,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -667,12 +698,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(DomainReflectRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -689,12 +721,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -707,12 +740,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(DomainListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new DomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new DomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -729,12 +763,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new DomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new DomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -747,12 +782,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(DomainGetVapidPublicKeyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new DomainVapidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new DomainVapidResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -765,12 +801,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(DomainUnmapRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -783,12 +820,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(DomainGetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new DomainPolicyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new DomainPolicyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -805,12 +843,13 @@ public class GlobalConnectionRouter {
                     return;
                   }
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -823,12 +862,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(SuperCheckInRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -841,12 +881,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(SuperListAutomaticDomainsRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new AutomaticDomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AutomaticDomainListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -859,12 +900,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(SuperSetDomainCertificateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -877,12 +919,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalDomainLookupRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new DomainRawResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new DomainRawResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -895,12 +938,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalEmitMetricsRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -913,12 +957,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalInitHostRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new HostInitResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new HostInitResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -931,12 +976,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderFindRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new FinderResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new FinderResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -949,12 +995,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderFreeRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -967,12 +1014,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderBindRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -985,12 +1033,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderDeleteMarkRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1003,12 +1052,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderDeleteCommitRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1021,12 +1071,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderBackUpRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1039,12 +1090,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new KeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1057,12 +1109,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalFinderDeletionListRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new KeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new KeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1075,12 +1128,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalAuthRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new AuthResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AuthResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1093,12 +1147,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalGetPlanRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new PlanWithKeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new PlanWithKeysResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1111,12 +1166,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityAddRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1129,12 +1185,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityRemoveRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1147,12 +1204,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityNukeRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1165,12 +1223,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityListSpaceRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new CapacityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new CapacityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1183,12 +1242,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityListMachineRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new CapacityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new CapacityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1201,12 +1261,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityListRegionRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new CapacityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new CapacityListResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1219,12 +1280,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityPickSpaceHostRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new CapacityHostResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new CapacityHostResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -1237,12 +1299,13 @@ public class GlobalConnectionRouter {
                 @Override
                 public void success(RegionalCapacityPickSpaceHostNewRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new CapacityHostResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new CapacityHostResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);

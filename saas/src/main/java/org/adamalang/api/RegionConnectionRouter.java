@@ -66,6 +66,7 @@ public class RegionConnectionRouter {
       ObjectNode _accessLogItem = Json.newJsonObject();
       long requestId = request.id();
       String method = request.method();
+      final long started = System.currentTimeMillis();
       _accessLogItem.put("handler", "websocket");
       _accessLogItem.put("method", method);
       _accessLogItem.put("region", nexus.region);
@@ -83,12 +84,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(StatsRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new StatsResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new StatsResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -101,12 +103,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(IdentityHashRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new IdentityHashResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new IdentityHashResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -119,12 +122,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(IdentityStashRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -137,12 +141,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentAuthorizationRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -155,12 +160,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentAuthorizationDomainRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -173,12 +179,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentAuthorizeRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -191,12 +198,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentAuthorizeDomainRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -209,12 +217,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentAuthorizeWithResetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -227,12 +236,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentAuthorizeDomainWithResetRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -245,12 +255,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentCreateRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -263,12 +274,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentDeleteRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -281,12 +293,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(MessageDirectSendRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -299,12 +312,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(MessageDirectSendOnceRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -327,6 +341,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -349,6 +364,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -364,9 +380,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 457745);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(457745);
@@ -377,6 +394,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -392,9 +410,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 462832);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(462832);
@@ -405,6 +424,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -420,9 +440,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 410619);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(410619);
@@ -433,6 +454,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -448,9 +470,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new YesResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new YesResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 494559);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(494559);
@@ -461,6 +484,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -476,9 +500,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 442363);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(442363);
@@ -489,6 +514,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -504,9 +530,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 438302);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(438302);
@@ -517,6 +544,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -532,9 +560,10 @@ public class RegionConnectionRouter {
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.remove(resolved.connection);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 474128);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(474128);
@@ -545,6 +574,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -557,12 +587,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(DocumentsHashPasswordRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new HashedPasswordResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new HashedPasswordResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -585,6 +616,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -597,12 +629,13 @@ public class RegionConnectionRouter {
                 @Override
                 public void success(ConfigureMakeOrGetAssetKeyRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  handler.handle(session, resolved, new AssetKeyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                  handler.handle(session, resolved, new AssetKeyResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -625,6 +658,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -647,6 +681,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -662,9 +697,10 @@ public class RegionConnectionRouter {
                   AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.get(resolved.upload);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 477201);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(477201);
@@ -675,6 +711,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);
@@ -690,9 +727,10 @@ public class RegionConnectionRouter {
                   AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.remove(resolved.upload);
                   if (handlerToUse != null) {
                     handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new AssetIdResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                    handlerToUse.handle(resolved, new AssetIdResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
                   } else {
                     _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
                     _accessLogItem.put("failure-code", 478227);
                     nexus.logger.log(_accessLogItem);
                     mInstance.failure(478227);
@@ -703,6 +741,7 @@ public class RegionConnectionRouter {
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
                   _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
                   _accessLogItem.put("failure-code", ex.code);
                   nexus.logger.log(_accessLogItem);
                   responder.error(ex);

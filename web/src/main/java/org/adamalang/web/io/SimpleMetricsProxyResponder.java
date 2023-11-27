@@ -26,12 +26,14 @@ public class SimpleMetricsProxyResponder implements JsonResponder {
   private final JsonResponder responder;
   private final ObjectNode itemToLog;
   private final JsonLogger logger;
+  private final long started;
 
-  public SimpleMetricsProxyResponder(RequestResponseMonitor.RequestResponseMonitorInstance metrics, JsonResponder responder, ObjectNode itemToLog, JsonLogger logger) {
+  public SimpleMetricsProxyResponder(RequestResponseMonitor.RequestResponseMonitorInstance metrics, JsonResponder responder, ObjectNode itemToLog, JsonLogger logger, long started) {
     this.metrics = metrics;
     this.responder = responder;
     this.itemToLog = itemToLog;
     this.logger = logger;
+    this.started = started;
   }
 
   @Override
@@ -45,6 +47,7 @@ public class SimpleMetricsProxyResponder implements JsonResponder {
     metrics.success();
     responder.finish(json);
     itemToLog.put("success", true);
+    itemToLog.put("latency", System.currentTimeMillis() - started);
     logger.log(itemToLog);
   }
 
@@ -53,6 +56,7 @@ public class SimpleMetricsProxyResponder implements JsonResponder {
     metrics.failure(ex.code);
     responder.error(ex);
     itemToLog.put("success", false);
+    itemToLog.put("latency", System.currentTimeMillis() - started);
     itemToLog.put("failure-code", ex.code);
     logger.log(itemToLog);
   }

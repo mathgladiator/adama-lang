@@ -51,7 +51,7 @@ public class SimpleMetricsProxyResponderTests {
   public void flow() {
     MockMetricsRR metrics = new MockMetricsRR();
     MockJsonResponder responder = new MockJsonResponder();
-    SimpleMetricsProxyResponder proxy = new SimpleMetricsProxyResponder(metrics, responder, Json.newJsonObject(), JsonLogger.NoOp);
+    SimpleMetricsProxyResponder proxy = new SimpleMetricsProxyResponder(metrics, responder, Json.newJsonObject(), JsonLogger.NoOp, 0);
     proxy.stream("X");
     proxy.stream("X");
     proxy.stream("X");

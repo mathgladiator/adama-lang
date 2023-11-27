@@ -89,6 +89,7 @@ public class AssembleConnectionRouter {
     router.append("      ObjectNode _accessLogItem = Json.newJsonObject();\n");
     router.append("      long requestId = request.id();\n");
     router.append("      String method = request.method();\n");
+    router.append("      final long started = System.currentTimeMillis();\n");
     router.append("      _accessLogItem.put(\"handler\", \"websocket\");\n");
     router.append("      _accessLogItem.put(\"method\", method);\n");
     router.append("      _accessLogItem.put(\"region\", nexus.region);\n");
@@ -121,9 +122,10 @@ public class AssembleConnectionRouter {
         router.append("                  ").append(method.handler).append("Handler handlerToUse = inflight").append(method.handler).append(method.destroy ? ".remove" : ".get").append("(resolved.").append(method.findBy).append(");\n");
         router.append("                  if (handlerToUse != null) {\n");
         router.append("                    handlerToUse.logInto(_accessLogItem);\n");
-        router.append("                    handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
+        router.append("                    handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));\n");
         router.append("                  } else {\n");
         router.append("                    _accessLogItem.put(\"success\", false);\n");
+        router.append("                    _accessLogItem.put(\"latency\", System.currentTimeMillis() - started);\n");
         router.append("                    _accessLogItem.put(\"failure-code\", ").append(method.errorCantFindBy).append(");\n");
         router.append("                    nexus.logger.log(_accessLogItem);\n");
         router.append("                    mInstance.failure(").append(method.errorCantFindBy).append(");\n");
@@ -137,7 +139,7 @@ public class AssembleConnectionRouter {
           router.append("                    ").append("handlerMade.bind();\n");
           router.append("                  }\n");
         } else {
-          router.append("                  handler.handle(session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
+          router.append("                  handler.handle(session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));\n");
         }
       }
       router.append("                }\n");
@@ -145,6 +147,7 @@ public class AssembleConnectionRouter {
       router.append("                public void failure(ErrorCodeException ex) {\n");
       router.append("                  mInstance.failure(ex.code);\n");
       router.append("                  _accessLogItem.put(\"success\", false);\n");
+      router.append("                  _accessLogItem.put(\"latency\", System.currentTimeMillis() - started);\n");
       router.append("                  _accessLogItem.put(\"failure-code\", ex.code);\n");
       router.append("                  nexus.logger.log(_accessLogItem);\n");
       router.append("                  responder.error(ex);\n");
