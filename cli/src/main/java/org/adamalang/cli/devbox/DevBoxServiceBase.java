@@ -67,9 +67,9 @@ public class DevBoxServiceBase implements ServiceBase {
   private final boolean debuggerAvailable;
   private final ConcurrentHashMap<Integer, DevBoxAdama> inflight;
   private final AtomicInteger inflightId;
-  private final AtomicReference<RxPubSub> rxPubSub;
+  private final RxPubSub rxPubSub;
 
-  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable, AtomicReference<RxPubSub> rxPubSub) throws Exception {
+  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;

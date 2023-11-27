@@ -62,9 +62,9 @@ public class RxHTMLScanner implements AutoCloseable {
   private final AtomicBoolean scheduled;
   private final AtomicBoolean again;
   private final String env;
-  private final AtomicReference<RxPubSub> rxPubSub;
+  private final RxPubSub rxPubSub;
 
-  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, AtomicReference<RxPubSub> rxPubSub) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, RxPubSub rxPubSub) throws Exception {
     this.alive = alive;
     this.io = io;
     this.scanRoot = scanRoot;
@@ -184,11 +184,8 @@ public class RxHTMLScanner implements AutoCloseable {
                 }
                 onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
-                RxPubSub rxPubSub = RxHTMLScanner.this.rxPubSub.get();
-                if (rxPubSub != null) {
-                  rxPubSub.notifyReload();
-                  io.notice("rxhtml|responders; count=" + rxPubSub.responders.size());
-                }
+                rxPubSub.notifyReload();
+                io.notice("rxhtml|responders; count=" + rxPubSub.responders.size());
                 try {
                   Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
                   Files.writeString(new File("view.schema.json").toPath(), updated.viewSchema.toPrettyString());

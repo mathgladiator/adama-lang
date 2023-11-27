@@ -190,7 +190,7 @@ public class DevBoxStart {
     }
 
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-    AtomicReference<RxPubSub> pubSub = new AtomicReference<>(new RxPubSub(preserveView));
+    RxPubSub pubSub = new RxPubSub(preserveView);
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub)) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
       terminal.notice("devbox|starting webserver on port " + webConfig.port);

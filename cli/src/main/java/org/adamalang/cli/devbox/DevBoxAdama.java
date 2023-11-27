@@ -55,7 +55,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final ConcurrentHashMap<Long, LocalStream> streams;
   private final DevBoxAdamaMicroVerse verse;
   private final Runnable death;
-  private final AtomicReference<RxPubSub> rxPubSub;
+  private final RxPubSub rxPubSub;
 
   private class LocalStream {
     public final Key key;
@@ -67,7 +67,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
-  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death, AtomicReference<RxPubSub> rxPubSub) {
+  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
     this.executor = executor;
     this.context = context;
     this.control = control;
@@ -276,10 +276,7 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
         if (delta > 10000) {
           io.error("adama|connection; It took over " + Math.round((delta / 100.0)) / 10.0 + " seconds to establish a connection");
         }
-        RxPubSub pubsub = rxPubSub.get();
-        if (rxPubSub != null) {
-          this.unsub = pubsub.subscribe(responder);
-        }
+        this.unsub = rxPubSub.subscribe(responder);
         PERF_LOG.error(entry.toString());
       }
 

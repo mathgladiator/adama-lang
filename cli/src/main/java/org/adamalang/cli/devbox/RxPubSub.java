@@ -26,9 +26,7 @@ public class RxPubSub {
         Integer id = currentId.getAndIncrement();
         responders.put(id, responder);
         return () -> {
-            if (responders.containsKey(id)) {
-                responders.remove(id);
-            }
+            responders.remove(id);
         };
     }
 
