@@ -2159,9 +2159,7 @@ var RxHTML = (function () {
       const viewstate = localStorage.getItem('rxviewstate');
       if (null !== viewstate) {
         localStorage.removeItem('rxviewstate');
-        console.log(Object.assign({}, init));
-        Object.assign(init, JSON.parse(viewstate));
-        console.log(Object.assign({}, init));
+        init = Object.assign({}, init, JSON.parse(viewstate));
       }
 
       state.view.init = init;
