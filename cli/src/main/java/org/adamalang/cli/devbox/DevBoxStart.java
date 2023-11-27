@@ -66,6 +66,7 @@ public class DevBoxStart {
     public final String debugger;
     public final String localLibadamaPath;
     public final String environment;
+    public final String preserveView;
 
     public DevBoxInputs(Arguments.FrontendDevServerArgs args) {
       this.config = args.config;
@@ -75,6 +76,7 @@ public class DevBoxStart {
       this.debugger = args.debugger;
       this.localLibadamaPath = args.localLibadamaPath;
       this.environment = args.environment;
+      this.preserveView = args.preserveView;
     }
 
     public DevBoxInputs(Arguments.DevboxArgs args) {
@@ -85,6 +87,7 @@ public class DevBoxStart {
       this.debugger = args.debugger;
       this.localLibadamaPath = args.localLibadamaPath;
       this.environment = args.environment;
+      this.preserveView = args.preserveView;
     }
   }
 
@@ -179,13 +182,21 @@ public class DevBoxStart {
     }
     String env = args.environment;
 
+    boolean preserveView = "true".equals(args.preserveView);
+    if (preserveView) {
+      terminal.info("devbox|preserving viewstate on auto-reload");
+    } else {
+      terminal.info("devbox|not preserving viewstate on auto-reload");
+    }
+
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
-    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b))) {
+    RxPubSub pubSub = new RxPubSub(preserveView);
+    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub)) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
       attachmentsPath.mkdirs();
-      DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable);
+      DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub);
       Thread webServerThread = base.start();
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());

@@ -38,6 +38,7 @@ public class RxObject {
     this.env = env;
     this.attributes = new ArrayList<>();
     rxObj = env.pool.ask();
+    env.writeElementDebugIfTest();
     env.writer.tab().append("var ").append(rxObj).append("=$.RX([");
     ArrayList<String> attrToRemove = new ArrayList<>();
     boolean addedUnder = false;

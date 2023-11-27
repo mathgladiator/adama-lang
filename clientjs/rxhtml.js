@@ -2155,6 +2155,13 @@ var RxHTML = (function () {
       window.scrollTo(0, 0);
       var state = { service: connection, data: null, view: fresh(where), current: "view" };
       self.__current = state;
+
+      const viewstate = localStorage.getItem('rxviewstate');
+      if (null !== viewstate) {
+        localStorage.removeItem('rxviewstate');
+        init = Object.assign({}, init, JSON.parse(viewstate));
+      }
+
       state.view.init = init;
       self.gates = [];
       self.resume_uri = path;
@@ -2375,6 +2382,12 @@ var RxHTML = (function () {
         }
         if ('log' in payload.delta) {
           console.log(payload.delta.log);
+        }
+        if ('reload' in payload.delta) {
+          if (payload.delta.reload['preserve-view']) {
+            localStorage.setItem('rxviewstate', JSON.stringify(co.viewstatetree.raw()));
+          }
+          window.location.reload();
         }
         if ('viewport' in payload.delta && 'message' in payload.delta) {
           var viewport = payload.delta.viewport;
