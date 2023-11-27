@@ -95,6 +95,7 @@ public class FrontendHttpHandler implements HttpHandler {
   private void handleWithPrincipal(Method method, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
     ObjectNode logItem = Json.newJsonObject();
     logBasics(logItem, method, uri, headers, parametersJson, body);
+    final long started = System.currentTimeMillis();
     logItem.put("agent", who.agent);
     logItem.put("authority", who.authority);
     Callback<HttpResult> wrapped = new Callback<HttpResult>() {
@@ -107,6 +108,7 @@ public class FrontendHttpHandler implements HttpHandler {
           logItem.put("success", false);
         }
         callback.success(result);
+        logItem.put("latency", System.currentTimeMillis() - started);
         accessLogger.log(logItem);
       }
 
