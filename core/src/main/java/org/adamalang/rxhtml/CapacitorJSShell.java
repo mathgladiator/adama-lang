@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class CapacitorJSShell {
 
-  public static String makeMobileShell(String forest, String domainOverride, Feedback feedback) throws Exception {
+  public static String makeMobileShell(String forest, String domainOverride, boolean devMode, Feedback feedback) throws Exception {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
     Document document = Jsoup.parse(forest);
@@ -58,7 +58,14 @@ public class CapacitorJSShell {
     for (Element element : mobileShell.getElementsByTag("script")) {
       scripts.append(element.toString()).append("\n");
     }
-    sb.append("<script src=\"https://aws-us-east-2.adama-platform.com/libadama.js\"></script>").append("\n");
+    if (devMode) {
+      sb.append("<script src=\"/connection.js\"></script>").append("\n");
+      sb.append("<script src=\"/tree.js\"></script>").append("\n");
+      sb.append("<script src=\"/rxhtml.js\"></script>").append("\n");
+    } else {
+      sb.append("<script src=\"/libadama.js\"></script>").append("\n");
+    }
+    sb.append("<script src=\"/capacitor.js\"></script>").append("\n");
     Environment env = Environment.fresh(feedback, "mobile");
     Root.start(env, RxHtmlTool.buildCustomJavaScript(document));
     for (Element element : document.getElementsByTag("template")) {
@@ -70,17 +77,14 @@ public class CapacitorJSShell {
       // TODO: discriminate for a mobile page (and also, get a dependency tree of templates)
       Root.page(env.element(element, true), defaultRedirects);
     }
-    String javascript = Root.finish(env);
-    sb.append("<script>\n\n").append(javascript).append("\n\n</script>\n");
-    sb.append("<style>\n\n").append(RxHtmlTool.buildInternStyle(document)).append("\n\n</style>\n");
+    String javascript = Root.finish(env).trim();
+    sb.append("<script>\n").append(javascript).append("\n</script>\n");
+    sb.append("<style>\n").append(RxHtmlTool.buildInternStyle(document).trim()).append("\n</style>\n");
     sb.append("</body><script>\n");
-    sb.append("  RxHTML.init();\n");
     if (domainOverride != null) {
       sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
     }
-    if (worker) {
-      sb.append("  RxHTML.worker(\""+workerIdentity+"\",\"/libadama-worker.js\",'").append(Platform.JS_VERSION).append("');\n");
-    }
+    sb.append("  RxHTML.init();\n");
     sb.append("</script></html>");
     return sb.toString();
   }

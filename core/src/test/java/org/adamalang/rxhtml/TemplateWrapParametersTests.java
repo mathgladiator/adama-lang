@@ -49,6 +49,8 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'y',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
+    gold.append("\n");
+    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
     gold.append("\n    var h=$.RX(['b']);");
     gold.append("\n    h.a='123';");
     gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
@@ -83,6 +85,8 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'y',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
+    gold.append("\n");
+    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
     gold.append("\n    var h=$.RX(['b']);");
     gold.append("\n    h.a='123';");
     gold.append("\n    $.Y2(a,h,'b','y',function(i) {");

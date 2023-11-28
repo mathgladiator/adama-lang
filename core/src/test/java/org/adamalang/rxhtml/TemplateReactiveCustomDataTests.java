@@ -36,6 +36,8 @@ public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <customdata parameter:one=\"one\" parameter:two=\"{var}\" parameter:three=\"{var1}{var2}\" parameter:present=\"\">");
     gold.append("\n    var d=$.RX(['two','three']);");
     gold.append("\n    d.one='one';");
     gold.append("\n    $.Y2(a,d,'two','var',function(e) {");
@@ -65,6 +67,8 @@ public class TemplateReactiveCustomDataTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <customdata parameter:one=\"one\" parameter:two=\"{var}\" parameter:three=\"{var1}{var2}\" parameter:present=\"\">");
     gold.append("\n    var d=$.RX(['two','three']);");
     gold.append("\n    d.one='one';");
     gold.append("\n    $.Y2(a,d,'two','var',function(e) {");

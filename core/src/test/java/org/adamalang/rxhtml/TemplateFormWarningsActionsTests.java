@@ -70,6 +70,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"adama:sign-in\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"adama:sign-in\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.rx_forward='/';");
     gold.append("\n    $.aSO(d,a,'default',e);");
@@ -88,6 +90,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"document:sign-in\" rx:failure-variable=\"docnope\" rx:forward=\"/w00t\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"document:sign-in\" rx:failure-variable=\"docnope\" rx:forward=\"/w00t\" rx:failure=\"set:docnope=true\" rx:success=\"set:docnope=false\">");
     gold.append("\n    var h=$.RX([]);");
     gold.append("\n    h.rx_forward='/w00t';");
     gold.append("\n    $.aDSO(d,a,'default',h);");
@@ -186,6 +190,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"adama:sign-in\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"adama:sign-in\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var s=$.RX([]);");
     gold.append("\n    s.rx_forward='/';");
     gold.append("\n    $.aSO(d,a,'default',s);");
@@ -214,6 +220,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"document:sign-in\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"document:sign-in\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var v=$.RX([]);");
     gold.append("\n    v.rx_forward='/';");
     gold.append("\n    $.aDSO(d,a,'default',v);");
@@ -243,6 +251,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"document:sign-in-reset\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"document:sign-in-reset\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var y=$.RX([]);");
     gold.append("\n    y.rx_forward='/';");
     gold.append("\n    $.aDSOr(d,a,'default',y);");
@@ -256,6 +266,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"domain:sign-in-reset\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"domain:sign-in-reset\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var bb=$.RX([]);");
     gold.append("\n    bb.rx_forward='/';");
     gold.append("\n    $.adDSOr(d,a,'default',bb);");
@@ -358,6 +370,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"adama:upload-asset\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"adama:upload-asset\" rx:failure=\"set:asset_upload_failed=true\" rx:success=\"set:asset_upload_failed=false\">");
     gold.append("\n    var mb=$.RX([]);");
     gold.append("\n    mb.rx_forward=true;");
     gold.append("\n    $.aUP(d,a,'default',mb);");
@@ -394,6 +408,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"adama:sign-in\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"adama:sign-in\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.rx_forward='/';");
     gold.append("\n    $.aSO(d,a,'default',e);");
@@ -412,6 +428,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"document:sign-in\" rx:failure-variable=\"docnope\" rx:forward=\"/w00t\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"document:sign-in\" rx:failure-variable=\"docnope\" rx:forward=\"/w00t\" rx:failure=\"set:docnope=true\" rx:success=\"set:docnope=false\">");
     gold.append("\n    var h=$.RX([]);");
     gold.append("\n    h.rx_forward='/w00t';");
     gold.append("\n    $.aDSO(d,a,'default',h);");
@@ -510,6 +528,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"adama:sign-in\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"adama:sign-in\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var s=$.RX([]);");
     gold.append("\n    s.rx_forward='/';");
     gold.append("\n    $.aSO(d,a,'default',s);");
@@ -538,6 +558,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"document:sign-in\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"document:sign-in\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var v=$.RX([]);");
     gold.append("\n    v.rx_forward='/';");
     gold.append("\n    $.aDSO(d,a,'default',v);");
@@ -567,6 +589,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"document:sign-in-reset\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"document:sign-in-reset\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var y=$.RX([]);");
     gold.append("\n    y.rx_forward='/';");
     gold.append("\n    $.aDSOr(d,a,'default',y);");
@@ -580,6 +604,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"domain:sign-in-reset\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"domain:sign-in-reset\" rx:forward=\"/\" rx:failure=\"set:sign_in_failed=true\" rx:success=\"set:sign_in_failed=false\">");
     gold.append("\n    var bb=$.RX([]);");
     gold.append("\n    bb.rx_forward='/';");
     gold.append("\n    $.adDSOr(d,a,'default',bb);");
@@ -682,6 +708,8 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"adama:upload-asset\">");
     gold.append("\n    var d=$.E('form');");
+    gold.append("\n");
+    gold.append("\n    // <form rx:action=\"adama:upload-asset\" rx:failure=\"set:asset_upload_failed=true\" rx:success=\"set:asset_upload_failed=false\">");
     gold.append("\n    var mb=$.RX([]);");
     gold.append("\n    mb.rx_forward=true;");
     gold.append("\n    $.aUP(d,a,'default',mb);");

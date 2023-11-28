@@ -39,6 +39,8 @@ public class TemplateWrapSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:wrap=\"custom_wrapper\">");
     gold.append("\n    var d=$.E('div');");
+    gold.append("\n");
+    gold.append("\n    // <div rx:wrap=\"custom_wrapper\">");
     gold.append("\n    var h=$.RX([]);");
     gold.append("\n    $.WP(d,a,'custom_wrapper',h,function(f,e,g) {");
     gold.append("\n      if (g == 'a') {");
@@ -87,6 +89,8 @@ public class TemplateWrapSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:wrap=\"custom_wrapper\">");
     gold.append("\n    var d=$.E('div');");
+    gold.append("\n");
+    gold.append("\n    // <div rx:wrap=\"custom_wrapper\">");
     gold.append("\n    var h=$.RX([]);");
     gold.append("\n    $.WP(d,a,'custom_wrapper',h,function(f,e,g) {");
     gold.append("\n      if (g == 'a') {");

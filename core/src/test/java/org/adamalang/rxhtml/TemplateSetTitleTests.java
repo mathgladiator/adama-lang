@@ -36,6 +36,8 @@ public class TemplateSetTitleTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <title value=\"{val} - YO\">");
     gold.append("\n    var d=$.RX(['value']);");
     gold.append("\n    $.Y2(a,d,'value','val',function(e) {");
     gold.append("\n      d.value=$.F(e,'val') + \" - YO\"");
@@ -54,6 +56,8 @@ public class TemplateSetTitleTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <title value=\"{val} - YO\">");
     gold.append("\n    var d=$.RX(['value']);");
     gold.append("\n    $.Y2(a,d,'value','val',function(e) {");
     gold.append("\n      d.value=$.F(e,'val') + \" - YO\"");

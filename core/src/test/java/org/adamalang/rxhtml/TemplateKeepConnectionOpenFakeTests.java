@@ -36,6 +36,8 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" keep-open=\"\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='default';");
     gold.append("\n    d.space='space';");
@@ -44,6 +46,8 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n    d.redirect='/sign-in';");
     gold.append("\n    $.CONNECT(a,d);");
     gold.append("\n    d.__();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" keep-open=\"\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    var g=$.E('div');");
@@ -52,6 +56,8 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n    },function(g,f) {");
     gold.append("\n    },true);");
     gold.append("\n    e.__();");
+    gold.append("\n");
+    gold.append("\n    // <pick keep-open=\"\" name=\"default\">");
     gold.append("\n    var f=$.RX([]);");
     gold.append("\n    f.name='default';");
     gold.append("\n    var i=$.E('div');");
@@ -77,6 +83,8 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" keep-open=\"\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='default';");
     gold.append("\n    d.space='space';");
@@ -85,6 +93,8 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n    d.redirect='/sign-in';");
     gold.append("\n    $.CONNECT(a,d);");
     gold.append("\n    d.__();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" keep-open=\"\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    var g=$.E('div');");
@@ -93,6 +103,8 @@ public class TemplateKeepConnectionOpenFakeTests extends BaseRxHtmlTest {
     gold.append("\n    },function(g,f) {");
     gold.append("\n    },true);");
     gold.append("\n    e.__();");
+    gold.append("\n");
+    gold.append("\n    // <pick keep-open=\"\" name=\"default\">");
     gold.append("\n    var f=$.RX([]);");
     gold.append("\n    f.name='default';");
     gold.append("\n    var i=$.E('div');");

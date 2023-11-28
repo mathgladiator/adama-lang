@@ -36,6 +36,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <connection name=\"myname\" space=\"space{suffix}\" key=\"{view:/key}\" redirect=\"/sign-in\">");
     gold.append("\n    var d=$.RX(['space','key']);");
     gold.append("\n    d.name='myname';");
     gold.append("\n    $.Y2(a,d,'space','suffix',function(e) {");
@@ -49,6 +51,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    d.identity=true;");
     gold.append("\n    d.redirect='/sign-in';");
     gold.append("\n    $.CONNECT(a,d);");
+    gold.append("\n");
+    gold.append("\n    // <connection name=\"myname\" space=\"space{suffix}\" key=\"{view:/key}\" redirect=\"/sign-in\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='myname';");
     gold.append("\n    var g=$.E('div');");
@@ -57,6 +61,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    },function(g,f) {");
     gold.append("\n    },false);");
     gold.append("\n    e.__();");
+    gold.append("\n");
+    gold.append("\n    // <pick name=\"myname\">");
     gold.append("\n    var f=$.RX([]);");
     gold.append("\n    f.name='myname';");
     gold.append("\n    var i=$.E('div');");
@@ -77,6 +83,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <connection name=\"myname\" space=\"space{suffix}\" key=\"{view:/key}\" redirect=\"/sign-in\">");
     gold.append("\n    var d=$.RX(['space','key']);");
     gold.append("\n    d.name='myname';");
     gold.append("\n    $.Y2(a,d,'space','suffix',function(e) {");
@@ -90,6 +98,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    d.identity=true;");
     gold.append("\n    d.redirect='/sign-in';");
     gold.append("\n    $.CONNECT(a,d);");
+    gold.append("\n");
+    gold.append("\n    // <connection name=\"myname\" space=\"space{suffix}\" key=\"{view:/key}\" redirect=\"/sign-in\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='myname';");
     gold.append("\n    var g=$.E('div');");
@@ -98,6 +108,8 @@ public class TemplateReactiveConnectionTests extends BaseRxHtmlTest {
     gold.append("\n    },function(g,f) {");
     gold.append("\n    },false);");
     gold.append("\n    e.__();");
+    gold.append("\n");
+    gold.append("\n    // <pick name=\"myname\">");
     gold.append("\n    var f=$.RX([]);");
     gold.append("\n    f.name='myname';");
     gold.append("\n    var i=$.E('div');");

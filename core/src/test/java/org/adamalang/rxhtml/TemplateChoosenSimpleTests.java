@@ -36,6 +36,8 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='default';");
     gold.append("\n    d.space='space';");
@@ -44,6 +46,8 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    d.redirect='/sign-in';");
     gold.append("\n    $.CONNECT(a,d);");
     gold.append("\n    d.__();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    $.P(b,a,e,function(b,f) {");
@@ -101,6 +105,8 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var d=$.RX([]);");
     gold.append("\n    d.name='default';");
     gold.append("\n    d.space='space';");
@@ -109,6 +115,8 @@ public class TemplateChoosenSimpleTests extends BaseRxHtmlTest {
     gold.append("\n    d.redirect='/sign-in';");
     gold.append("\n    $.CONNECT(a,d);");
     gold.append("\n    d.__();");
+    gold.append("\n");
+    gold.append("\n    // <connection space=\"space\" key=\"key\" name=\"default\" redirect=\"/sign-in\">");
     gold.append("\n    var e=$.RX([]);");
     gold.append("\n    e.name='default';");
     gold.append("\n    $.P(b,a,e,function(b,f) {");

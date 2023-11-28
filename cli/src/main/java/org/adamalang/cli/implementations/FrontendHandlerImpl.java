@@ -34,7 +34,9 @@ import org.adamalang.rxhtml.template.config.ShellConfig;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
@@ -58,15 +60,54 @@ public class FrontendHandlerImpl implements FrontendHandler {
     output.out();
   }
 
+  private void copyAssets(File source, File dest) throws Exception {
+    for (File child : source.listFiles()) {
+      if (child.isDirectory()) {
+        File newDest = new File(dest, child.getName());
+        newDest.mkdirs();
+        if (newDest.isDirectory()) {
+          copyAssets(child, newDest);
+        }
+      } else {
+        Files.copy(child.toPath(), new File(dest, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+      }
+    }
+  }
+
   @Override
   public void mobileCapacitor(Arguments.FrontendMobileCapacitorArgs args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.rxhtmlPath), files);
     String result = Bundler.bundle(files, false);
-    String shell = CapacitorJSShell.makeMobileShell(result, args.domain, (el, w) -> {
+    boolean devmode = "true".equalsIgnoreCase(args.devmode);
+    String shell = CapacitorJSShell.makeMobileShell(result, args.domain, devmode, (el, w) -> {
       System.err.println("warning:" + w);
     });
-    Files.writeString(new File(args.output).toPath(), shell);
+    File root = new File(args.output);
+    root.mkdirs();
+    if (!(root.exists() && root.isDirectory())) {
+      throw new Exception(args.output + " must be a directory");
+    }
+    Files.writeString(new File(root, "index.html").toPath(), shell);
+    File assetsPath = new File(args.assetPath);
+    if (!(assetsPath.exists() && assetsPath.isDirectory())) {
+      throw new Exception(args.assetPath + " must be a directory");
+    }
+    copyAssets(assetsPath, root);
+    if (devmode) {
+      for (String f : new String[] {"connection.js", "tree.js", "rxhtml.js", "capacitor.js"}) {
+        File libAdama = new File(args.localLibadamaPath, f);
+        File destLibAdama = new File(root, f);
+        Files.copy(libAdama.toPath(), destLibAdama.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      }
+    } else {
+      for (String f : new String[] {"libadama.js", "capacitor.js"}) {
+        File libAdama = new File(args.localLibadamaPath, f);
+        File destLibAdama = new File(root, f);
+        Files.copy(libAdama.toPath(), destLibAdama.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      }
+    }
+    output.out();
   }
 
   @Override

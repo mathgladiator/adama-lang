@@ -38,6 +38,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="devmode" type="bool" short="dm">
+        <documentation>
+            Developer mode.
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="asset-path" type="string" short="a">
         <documentation>
             The path to map for static assets.
@@ -136,7 +142,7 @@
 
     <arg-definition name="output" type="string" short="o">
         <documentation>
-            A file to output to.
+            A file (or directory) to output to.
         </documentation>
     </arg-definition>
 
@@ -830,8 +836,11 @@
                 Create a shell for https://capacitorjs.com/
             </documentation>
             <arg name="rxhtml-path" default="frontend" />
+            <arg name="asset-path" default="assets" />
+            <arg name="local-libadama-path" />
             <arg name="domain" />
-            <arg name="output" default="mobile.html" />
+            <arg name="output" />
+            <arg name="devmode" default="false" />
         </command>
         <command name="wrap-css">
             <documentation>

@@ -529,7 +529,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space get", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
 	public static class SpaceGetPolicyArgs {
@@ -600,7 +600,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space get-policy", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
 	public static class SpaceGetRxhtmlArgs {
@@ -671,7 +671,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space get-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
 	public static class SpaceListArgs {
@@ -886,7 +886,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama space reflect", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-s, --space", Util.ANSI.Green) + " " + Util.prefix("<space>", Util.ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-k, --key", Util.ANSI.Green) + " " + Util.prefix("<key>", Util.ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
 		}
@@ -1861,7 +1861,7 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama code bundle-plan", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + Util.prefix("-m, --main", Util.ANSI.Green) + " " + Util.prefix("<main>", Util.ANSI.White) + " : The main/primary adama file.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-in, --instrument", Util.ANSI.Green) + " " + Util.prefix("<instrument>", Util.ANSI.White) + " : Instrument the plan");
@@ -2022,7 +2022,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama code diagram", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + Util.prefix("-tt, --title", Util.ANSI.Green) + " " + Util.prefix("<title>", Util.ANSI.White) + " : The title of the diagram");
 		}
 	}
@@ -2459,7 +2459,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama contrib make-book", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + Util.prefix("-bt, --book-template", Util.ANSI.Green) + " " + Util.prefix("<book-template>", Util.ANSI.White) + " : Template for generating the book");
 			System.out.println("    " + Util.prefix("-bm, --book-merge", Util.ANSI.Green) + " " + Util.prefix("<book-merge>", Util.ANSI.White) + " : Files to merge into the book");
 		}
@@ -2704,7 +2704,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama contrib tests-adama", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + Util.prefix("-e, --errors", Util.ANSI.Green) + " " + Util.prefix("<errors>", Util.ANSI.White) + " : Placeholder");
 		}
 	}
@@ -2766,7 +2766,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama contrib tests-rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
 	public static class ContribVersionArgs {
@@ -3686,7 +3686,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama frontend bundle", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
 	public static class FrontendDevServerArgs {
@@ -3885,15 +3885,18 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama frontend make-200", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
 		}
 	}
 	public static class FrontendMobileCapacitorArgs {
 		public Config config;
 		public String rxhtmlPath = "frontend";
+		public String assetPath = "assets";
+		public String localLibadamaPath;
 		public String domain;
-		public String output = "mobile.html";
+		public String output;
+		public String devmode = "false";
 		public static FrontendMobileCapacitorArgs from(String[] args, int start) {
 			FrontendMobileCapacitorArgs returnArgs = new FrontendMobileCapacitorArgs();
 			try {
@@ -3901,7 +3904,7 @@ public class Arguments {
 			} catch (Exception er) {
 				System.out.println("Error creating default config file.");
 			}
-			String[] missing = new String[]{"--domain", };
+			String[] missing = new String[]{"--local-libadama-path", "--domain", "--output", };
 			for (int k = start; k < args.length; k++) {
 				switch(args[k]) {
 					case "-r":
@@ -3915,12 +3918,35 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-a":
+					case "--asset-path": {
+						if (k+1 < args.length) {
+							returnArgs.assetPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-lap":
+					case "--local-libadama-path": {
+						if (k+1 < args.length) {
+							returnArgs.localLibadamaPath = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 					case "-d":
 					case "--domain": {
 						if (k+1 < args.length) {
 							returnArgs.domain = args[k+1];
 							k++;
-							missing[0] = null;
+							missing[1] = null;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -3931,6 +3957,18 @@ public class Arguments {
 					case "--output": {
 						if (k+1 < args.length) {
 							returnArgs.output = args[k+1];
+							k++;
+							missing[2] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-dm":
+					case "--devmode": {
+						if (k+1 < args.length) {
+							returnArgs.devmode = args[k+1];
 							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
@@ -3967,10 +4005,13 @@ public class Arguments {
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama frontend mobile-capacitor", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
 			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White) + " : The domain name");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White) + " : The path to map for static assets.");
+			System.out.println("    " + Util.prefix("-dm, --devmode", Util.ANSI.Green) + " " + Util.prefix("<devmode>", Util.ANSI.White) + " : Developer mode.");
 		}
 	}
 	public static class FrontendPushGenerateArgs {
@@ -4087,7 +4128,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama frontend rxhtml", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
 		}
@@ -4294,7 +4335,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama frontend wrap-css", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-i, --input", Util.ANSI.Green) + " " + Util.prefix("<input>", Util.ANSI.White) + " : An input file");
-			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file to output to.");
+			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
 	public static class ServicesAutoArgs {

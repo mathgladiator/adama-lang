@@ -36,6 +36,8 @@ public class TemplateDomainGetTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <domain-get url=\"/foo/path/blah\" search:v=\"{x}\">");
     gold.append("\n    var e=$.RX(['v']);");
     gold.append("\n    e.url='/foo/path/blah';");
     gold.append("\n    e.identity=true;");
@@ -60,6 +62,8 @@ public class TemplateDomainGetTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <domain-get url=\"/foo/path/blah\" search:v=\"{x}\">");
     gold.append("\n    var e=$.RX(['v']);");
     gold.append("\n    e.url='/foo/path/blah';");
     gold.append("\n    e.identity=true;");
