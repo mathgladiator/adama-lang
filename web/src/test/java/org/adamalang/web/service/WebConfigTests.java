@@ -37,7 +37,7 @@ public class WebConfigTests {
     Assert.assertEquals("/~health_check_lb", webConfig.healthCheckPath);
     Assert.assertEquals(4 * 1024 * 1024, webConfig.maxWebSocketFrameSize);
     Assert.assertEquals(2500, webConfig.timeoutWebsocketHandshake);
-    Assert.assertEquals(4194304, webConfig.maxContentLengthSize);
+    Assert.assertEquals(12582912, webConfig.maxContentLengthSize);
     Assert.assertEquals(1000, webConfig.heartbeatTimeMilliseconds);
     Assert.assertEquals(8080, webConfig.port);
   }

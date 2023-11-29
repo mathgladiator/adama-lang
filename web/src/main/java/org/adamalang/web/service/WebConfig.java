@@ -53,7 +53,7 @@ public class WebConfig {
     // HTTP properties
     this.port = config.intOf("http-port", 8080);
     this.redirectPort = config.intOf("http-redirect-port", 8085);
-    this.maxContentLengthSize = config.intOf("http-max-content-length-size", 4194304);
+    this.maxContentLengthSize = config.intOf("http-max-content-length-size", 12582912);
     this.healthCheckPath = config.strOf("http-health-check-path", "/~health_check_lb");
     this.deepHealthCheckPath = config.strOf("http-deep-health-check-path", "/~deep_health_check_status_page");
     // WebSocket properties
