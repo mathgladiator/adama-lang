@@ -44,7 +44,7 @@ public abstract class BaseRxHtmlTest {
       Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
       Document useDoc = Jsoup.parse(source());
       String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), "");
-      cachedResult = RxHtmlTool.convertStringToTemplateForest(partial, ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
+      cachedResult = RxHtmlTool.convertStringToTemplateForest(partial, null, ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
     }
     return cachedResult;
   }

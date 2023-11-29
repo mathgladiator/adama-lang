@@ -26,13 +26,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
-  public static RxHtmlResult convertStringToTemplateForest(String str, ShellConfig config) {
+  public static RxHtmlResult convertStringToTemplateForest(String str, File types, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback, config.environment);
-    TypeChecker.typecheck(str, config.feedback);
+    TypeChecker.typecheck(str, types, config.feedback);
     Document document = Jsoup.parse(str);
     Root.start(env, buildCustomJavaScript(document));
     String style = buildInternStyle(document);

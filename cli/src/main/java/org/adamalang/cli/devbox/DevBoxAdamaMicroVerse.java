@@ -65,8 +65,9 @@ public class DevBoxAdamaMicroVerse {
     private final DeploymentFactoryBase base;
     public String lastDeployedPlan;
     public String lastReflection;
+    private final File reflectFile;
 
-    public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, DeploymentFactoryBase base) {
+    public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, File reflectFile, DeploymentFactoryBase base) {
       this.watchService = watchService;
       this.spaceName = spaceName;
       this.mainFile = mainFile;
@@ -74,6 +75,7 @@ public class DevBoxAdamaMicroVerse {
       this.watchKeyCache = new HashMap<>();
       this.base = base;
       this.lastDeployedPlan = "";
+      this.reflectFile = reflectFile;
     }
 
     private File scan(File f) throws Exception {
@@ -179,6 +181,7 @@ public class DevBoxAdamaMicroVerse {
                });
               defn.lastReflection = newReflection;
               defn.lastDeployedPlan = plan;
+              Files.writeString(defn.reflectFile.toPath(), Json.parseJsonObject(newReflection).toPrettyString());
               awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
               io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
             } else {
@@ -244,7 +247,7 @@ public class DevBoxAdamaMicroVerse {
     Thread.sleep(1000);
   }
 
-  public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase) throws Exception {
+  public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -260,6 +263,9 @@ public class DevBoxAdamaMicroVerse {
     File cloudPath = new File(cloudLocation);
     if (!cloudPath.exists()) {
       cloudPath.mkdirs();
+    }
+    if (!types.exists()) {
+      types.mkdirs();
     }
     Key domainKeyToUse = null;
 
@@ -294,7 +300,12 @@ public class DevBoxAdamaMicroVerse {
       if (importNode != null) {
         importPath = importNode.textValue();
       }
-      localSpaces.add(new LocalSpaceDefn(watchService, name, mainFile, importPath, factory.base));
+      String reflectFileName = name + ".json";
+      JsonNode reflectNode = space.get("reflect");
+      if (reflectNode != null) {
+        reflectFileName = reflectNode.textValue();
+      }
+      localSpaces.add(new LocalSpaceDefn(watchService, name, mainFile, importPath, new File(types, reflectFileName), factory.base));
     }
 
     if (domainKeyToUse != null) {

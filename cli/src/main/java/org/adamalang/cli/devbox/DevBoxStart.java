@@ -67,6 +67,7 @@ public class DevBoxStart {
     public final String localLibadamaPath;
     public final String environment;
     public final String preserveView;
+    public final String types;
 
     public DevBoxInputs(Arguments.FrontendDevServerArgs args) {
       this.config = args.config;
@@ -77,6 +78,7 @@ public class DevBoxStart {
       this.localLibadamaPath = args.localLibadamaPath;
       this.environment = args.environment;
       this.preserveView = args.preserveView;
+      this.types = args.types;
     }
 
     public DevBoxInputs(Arguments.DevboxArgs args) {
@@ -88,6 +90,7 @@ public class DevBoxStart {
       this.localLibadamaPath = args.localLibadamaPath;
       this.environment = args.environment;
       this.preserveView = args.preserveView;
+      this.types = args.types;
     }
   }
 
@@ -159,7 +162,7 @@ public class DevBoxStart {
           }
         }
         DevBoxServices.install(defn, webClientBase, offload, (line) -> terminal.info(line));
-        verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn, webClientBase);
+        verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types));
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
@@ -191,7 +194,7 @@ public class DevBoxStart {
 
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     RxPubSub pubSub = new RxPubSub(preserveView);
-    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub)) {
+    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub, new File(args.types))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");

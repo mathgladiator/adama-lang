@@ -28,7 +28,7 @@ public class SimpleTests {
   }
 
   private static void drive(String rxhtml) {
-    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, ShellConfig.start().withFeedback((e, x) -> System.err.println(x)).end()));
+    System.err.println(RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withFeedback((e, x) -> System.err.println(x)).end()));
   }
 
   @Test

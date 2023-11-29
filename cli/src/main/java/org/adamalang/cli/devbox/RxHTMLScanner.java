@@ -63,8 +63,9 @@ public class RxHTMLScanner implements AutoCloseable {
   private final AtomicBoolean again;
   private final String env;
   private final RxPubSub rxPubSub;
+  private final File types;
 
-  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, RxPubSub rxPubSub) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, RxPubSub rxPubSub, File types) throws Exception {
     this.alive = alive;
     this.io = io;
     this.scanRoot = scanRoot;
@@ -74,6 +75,7 @@ public class RxHTMLScanner implements AutoCloseable {
     this.rxPubSub = rxPubSub;
     this.service = FileSystems.getDefault().newWatchService();
     this.watchKeyCache = new HashMap<>();
+    this.types = types;
     sync(scanRoot);
     this.executor = SimpleExecutor.create("build");
     this.scheduled = new AtomicBoolean(false);
@@ -172,7 +174,8 @@ public class RxHTMLScanner implements AutoCloseable {
               };
               try {
                 long started = System.currentTimeMillis();
-                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(rxhtml(scanRoot), true), "test"), ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                // TODO: bring the new type checker in here such that devbox can run type checking every change
+                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(rxhtml(scanRoot), true), "test"), types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;

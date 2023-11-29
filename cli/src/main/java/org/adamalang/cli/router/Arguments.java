@@ -3698,6 +3698,7 @@ public class Arguments {
 		public String localLibadamaPath = null;
 		public String environment = "test";
 		public String preserveView = "true";
+		public String types = "types";
 		public static FrontendDevServerArgs from(String[] args, int start) {
 			FrontendDevServerArgs returnArgs = new FrontendDevServerArgs();
 			try {
@@ -3784,6 +3785,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-ty":
+					case "--types": {
+						if (k+1 < args.length) {
+							returnArgs.types = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3813,6 +3825,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White) + " : The path to the libadama.js source code for direct linkage.");
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
 			System.out.println("    " + Util.prefix("-pv, --preserve-view", Util.ANSI.Green) + " " + Util.prefix("<preserve-view>", Util.ANSI.White) + " : Whether or not to preserve (take a snapshot) of the viewstate before automatically reloading (default 'true').");
+			System.out.println("    " + Util.prefix("-ty, --types", Util.ANSI.Green) + " " + Util.prefix("<types>", Util.ANSI.White) + " : The path for RxHTML to scan for reflected types.");
 		}
 	}
 	public static class FrontendMake200Args {
@@ -3820,6 +3833,7 @@ public class Arguments {
 		public String rxhtmlPath = ".";
 		public String output = "200.html";
 		public String environment = "production";
+		public String types = "types";
 		public static FrontendMake200Args from(String[] args, int start) {
 			FrontendMake200Args returnArgs = new FrontendMake200Args();
 			try {
@@ -3862,6 +3876,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-ty":
+					case "--types": {
+						if (k+1 < args.length) {
+							returnArgs.types = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -3887,6 +3912,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
+			System.out.println("    " + Util.prefix("-ty, --types", Util.ANSI.Green) + " " + Util.prefix("<types>", Util.ANSI.White) + " : The path for RxHTML to scan for reflected types.");
 		}
 	}
 	public static class FrontendMobileCapacitorArgs {
@@ -3897,6 +3923,7 @@ public class Arguments {
 		public String domain;
 		public String output;
 		public String devmode = "false";
+		public String types = "types";
 		public static FrontendMobileCapacitorArgs from(String[] args, int start) {
 			FrontendMobileCapacitorArgs returnArgs = new FrontendMobileCapacitorArgs();
 			try {
@@ -3976,6 +4003,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-ty":
+					case "--types": {
+						if (k+1 < args.length) {
+							returnArgs.types = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -4012,6 +4050,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
 			System.out.println("    " + Util.prefix("-a, --asset-path", Util.ANSI.Green) + " " + Util.prefix("<asset-path>", Util.ANSI.White) + " : The path to map for static assets.");
 			System.out.println("    " + Util.prefix("-dm, --devmode", Util.ANSI.Green) + " " + Util.prefix("<devmode>", Util.ANSI.White) + " : Developer mode.");
+			System.out.println("    " + Util.prefix("-ty, --types", Util.ANSI.Green) + " " + Util.prefix("<types>", Util.ANSI.White) + " : The path for RxHTML to scan for reflected types.");
 		}
 	}
 	public static class FrontendPushGenerateArgs {
@@ -4053,6 +4092,7 @@ public class Arguments {
 		public String input;
 		public String output;
 		public String environment = "production";
+		public String types = "types";
 		public static FrontendRxhtmlArgs from(String[] args, int start) {
 			FrontendRxhtmlArgs returnArgs = new FrontendRxhtmlArgs();
 			try {
@@ -4098,6 +4138,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-ty":
+					case "--types": {
+						if (k+1 < args.length) {
+							returnArgs.types = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -4131,6 +4182,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-o, --output", Util.ANSI.Green) + " " + Util.prefix("<output>", Util.ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White) + " : The environment label for filtering things out.");
+			System.out.println("    " + Util.prefix("-ty, --types", Util.ANSI.Green) + " " + Util.prefix("<types>", Util.ANSI.White) + " : The path for RxHTML to scan for reflected types.");
 		}
 	}
 	public static class FrontendSetLibadamaArgs {
@@ -4232,6 +4284,7 @@ public class Arguments {
 	public static class FrontendValidateArgs {
 		public Config config;
 		public String rxhtmlPath = "frontend";
+		public String types = "types";
 		public static FrontendValidateArgs from(String[] args, int start) {
 			FrontendValidateArgs returnArgs = new FrontendValidateArgs();
 			try {
@@ -4245,6 +4298,17 @@ public class Arguments {
 					case "--rxhtml-path": {
 						if (k+1 < args.length) {
 							returnArgs.rxhtmlPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-ty":
+					case "--types": {
+						if (k+1 < args.length) {
+							returnArgs.types = args[k+1];
 							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
@@ -4275,6 +4339,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("adama frontend validate", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
 			System.out.println(Util.prefixBold("OPTIONAL FLAGS:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("-r, --rxhtml-path", Util.ANSI.Green) + " " + Util.prefix("<rxhtml-path>", Util.ANSI.White) + " : The path to scan for RxHTML files.");
+			System.out.println("    " + Util.prefix("-ty, --types", Util.ANSI.Green) + " " + Util.prefix("<types>", Util.ANSI.White) + " : The path for RxHTML to scan for reflected types.");
 		}
 	}
 	public static class FrontendWrapCssArgs {
@@ -4690,6 +4755,7 @@ public class Arguments {
 		public String localLibadamaPath = null;
 		public String environment = "test";
 		public String preserveView = "true";
+		public String types = "types";
 		public static DevboxArgs from(String[] args, int start) {
 			DevboxArgs returnArgs = new DevboxArgs();
 			try {
@@ -4776,6 +4842,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-ty":
+					case "--types": {
+						if (k+1 < args.length) {
+							returnArgs.types = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -4805,6 +4882,7 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-lap, --local-libadama-path", Util.ANSI.Green) + " " + Util.prefix("<local-libadama-path>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-e, --environment", Util.ANSI.Green) + " " + Util.prefix("<environment>", Util.ANSI.White));
 			System.out.println("    " + Util.prefix("-pv, --preserve-view", Util.ANSI.Green) + " " + Util.prefix("<preserve-view>", Util.ANSI.White));
+			System.out.println("    " + Util.prefix("-ty, --types", Util.ANSI.Green) + " " + Util.prefix("<types>", Util.ANSI.White));
 		}
 	}
 	public static class DumpenvArgs {

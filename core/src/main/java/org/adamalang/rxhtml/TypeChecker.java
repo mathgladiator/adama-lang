@@ -19,20 +19,26 @@ package org.adamalang.rxhtml;
 
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
+import org.adamalang.rxhtml.typing.RxRootEnvironment;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.File;
 import java.util.TreeSet;
 
 /** entry point for the type checker */
 public class TypeChecker {
   /** Given a bundled forest, produce feedback for the developer */
-  public static void typecheck(String forest, Feedback feedback) {
+  public static void typecheck(String forest, File input, Feedback feedback) {
     Document document = Jsoup.parse(forest);
     warnDuplicatePages(document, feedback);
     warnDuplicateTemplates(document, feedback);
     warnTemplateNotFound(document, feedback);
+    if (input != null && input.exists() && input.isDirectory()) {
+      // hard-core type checking requires an input directory containing the types. This should be devbox only (for now).
+      RxRootEnvironment env = new RxRootEnvironment(forest, input, feedback);
+    }
   }
 
   public static void warnDuplicatePages(Document document, Feedback feedback) {

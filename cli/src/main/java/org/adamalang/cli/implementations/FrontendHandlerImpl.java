@@ -124,7 +124,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.rxhtmlPath), files);
     String result = Bundler.bundle(files, false);
-    TypeChecker.typecheck(result, (el, w) -> {
+    TypeChecker.typecheck(result,  new File(args.types), (el, w) -> {
       System.err.println("warning:" + w);
     });
     output.out();
@@ -139,7 +139,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
   public void make200(Arguments.FrontendMake200Args args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.rxhtmlPath), files);
-    RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
+    RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
     Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(updated));
     output.out();
   }
@@ -148,7 +148,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
   public void rxhtml(Arguments.FrontendRxhtmlArgs args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.input), files);
-    Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
+    Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
     output.out();
   }
 

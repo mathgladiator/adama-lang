@@ -14,6 +14,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="types" type="string" short="ty">
+        <documentation>
+            The path for RxHTML to scan for reflected types.
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="environment" type="string" short="e">
         <documentation>
             The environment label for filtering things out.
@@ -791,6 +797,7 @@
             <arg name="input" />
             <arg name="output" />
             <arg name="environment" default="production" />
+            <arg name="types" default="types" />
         </command>
         <command name="dev-server">
             <documentation>
@@ -803,6 +810,7 @@
             <arg name="local-libadama-path" default="null" />
             <arg name="environment" default="test" />
             <arg name="preserve-view" default="true" />
+            <arg name="types" default="types" />
         </command>
         <command name="set-libadama">
             <documentation>
@@ -817,6 +825,7 @@
             <arg name="rxhtml-path" default="." />
             <arg name="output" default="200.html" />
             <arg name="environment" default="production" />
+            <arg name="types" default="types" />
         </command>
         <command name="bundle">
             <documentation>
@@ -830,6 +839,7 @@
                 (Temporary) Runs a deeper check on an RxHTML forest
             </documentation>
             <arg name="rxhtml-path" default="frontend" />
+            <arg name="types" default="types" />
         </command>
         <command name="mobile-capacitor">
             <documentation>
@@ -841,6 +851,7 @@
             <arg name="domain" />
             <arg name="output" />
             <arg name="devmode" default="false" />
+            <arg name="types" default="types" />
         </command>
         <command name="wrap-css">
             <documentation>
@@ -952,6 +963,7 @@
         <arg name="local-libadama-path" default="null" />
         <arg name="environment" default="test" />
         <arg name="preserve-view" default="true" />
+        <arg name="types" default="types" />
     </command>
 
 </cli>
