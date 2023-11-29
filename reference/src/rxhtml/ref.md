@@ -495,6 +495,8 @@ Sinces spaces delineate commands, the single quote character is used to open a s
 | change     | the input field changed      |
 | blur       | the input field lost focus   |
 | focus      | the input field gained focus |
+| check      | input checkbox is checked    |
+| uncheck    | input checkbox is unchecked  |
 
 
 ### Custom Events
