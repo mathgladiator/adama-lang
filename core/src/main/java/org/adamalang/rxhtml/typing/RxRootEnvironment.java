@@ -62,8 +62,9 @@ public class RxRootEnvironment {
     };
     for (Element element : this.document.getElementsByTag("shell")) {
       if (element.hasAttr("default-backend")) {
-        if (load.apply(element, _defaultBackend)) {
-          _defaultBackend = element.attr("default-backend");
+        String candidate = element.attr("default-backend");
+        if (load.apply(element, candidate)) {
+          _defaultBackend = candidate;
         }
       }
     }
