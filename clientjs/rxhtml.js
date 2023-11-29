@@ -1069,9 +1069,9 @@ var RxHTML = (function () {
       var out = priorState.data.connection.outstanding[channel];
       if (!(out)) return;
       var arr = make_choice_array(priorState, channel);
-      var eval = ('min' in out && 'max' in out) ? (out.min <= arr.length && arr.length <= out.max) : true;
-      if (finalize.eval != eval) {
-        finalize.eval = eval;
+      var result = ('min' in out && 'max' in out) ? (out.min <= arr.length && arr.length <= out.max) : true;
+      if (finalize.eval != result) {
+        finalize.eval = result;
         change(finalize.eval);
       }
     };
@@ -1470,9 +1470,9 @@ var RxHTML = (function () {
         choices[channel] = {};
       }
       var choice = choices[channel];
-      var eval = chosen.value in choice;
-      if (chosen.eval != eval) {
-        chosen.eval = eval;
+      var result = chosen.value in choice;
+      if (chosen.eval != result) {
+        chosen.eval = result;
         change(chosen.eval);
       }
     };
@@ -1509,9 +1509,9 @@ var RxHTML = (function () {
     };
 
     decide.update = function () {
-      var eval = find(priorState, channel, key, decide.value) != null;
-      if (decide.eval != eval) {
-        decide.eval = eval;
+      var result = find(priorState, channel, key, decide.value) != null;
+      if (decide.eval != result) {
+        decide.eval = result;
         change(decide.eval);
       }
     };
