@@ -20,18 +20,27 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.keys.PrivateKeyBundle;
+import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.env2.Scope;
+import org.adamalang.translator.jvm.ByteArrayClassLoader;
+import org.adamalang.translator.jvm.ByteArrayJavaFileManager;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -49,6 +58,7 @@ public class SyncCompiler {
    * @param plan - the plan to compile
    * @throws ErrorCodeException
    */
+  @Deprecated
   public static DeploymentFactory forge(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     HashMap<String, LivingDocumentFactory> factories = new HashMap<>();
     long _memoryUsed = 0L;
@@ -70,7 +80,29 @@ public class SyncCompiler {
     return new DeploymentFactory(name, plan, _memoryUsed, factories);
   }
 
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, HashMap<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, boolean instrument) throws ErrorCodeException {
+  public static CachedByteCode compile(final String spaceName, final String className, final String javaSource, String reflection) throws ErrorCodeException {
+    final var compiler = ToolProvider.getSystemJavaCompiler();
+    final var diagnostics = new DiagnosticCollector<JavaFileObject>();
+    final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
+    final var task = compiler.getTask(null, fileManager, diagnostics, null, null, ByteArrayJavaFileManager.turnIntoCompUnits(className + ".java", javaSource));
+    if (task.call() == false) {
+      StringBuilder report = new StringBuilder();
+      for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
+        report.append(diagnostic.toString() + "\n");
+      }
+      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
+    }
+    try {
+      final var classBytes = fileManager.getClasses();
+      fileManager.close();
+      return new CachedByteCode(spaceName, className, reflection, classBytes);
+    } catch (final Exception ex) {
+      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
+    }
+  }
+
+  @Deprecated
+  public static LivingDocumentFactory compile(String spaceName, String className, final String code, Map<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, boolean instrument) throws ErrorCodeException {
     try {
       CompilerOptions.Builder builder = CompilerOptions.start();
       if (instrument) {

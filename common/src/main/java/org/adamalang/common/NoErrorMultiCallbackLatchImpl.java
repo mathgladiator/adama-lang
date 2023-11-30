@@ -17,7 +17,26 @@
 */
 package org.adamalang.common;
 
-public class Platform {
-  public static final String VERSION = "20231130172809";
-  public static final String JS_VERSION = "5f1bf2ad69cf46d1952611707e5310be";
+/** if there are no errors possible, then this provides a simple approach */
+public class NoErrorMultiCallbackLatchImpl implements Callback<Void> {
+  private final Runnable finished;
+
+  public NoErrorMultiCallbackLatchImpl(Runnable finished) {
+    this.finished = finished;
+  }
+
+  @Override
+  public void success(Void value) {
+    finished.run();
+  }
+
+  @Override
+  public void failure(ErrorCodeException ex) {
+    // ignored
+  }
+
+  public static Runnable WRAP(Runnable finished, int count) {
+    MultiVoidCallbackLatch latch = new MultiVoidCallbackLatch(new NoErrorMultiCallbackLatchImpl(finished), count, -1);
+    return () -> latch.success();
+  }
 }

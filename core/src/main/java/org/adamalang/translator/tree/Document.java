@@ -139,7 +139,7 @@ public class Document implements TopLevelDocumentHandler {
     authPipes = new ArrayList<>();
   }
 
-  public void setIncludes(HashMap<String, String> include) {
+  public void setIncludes(Map<String, String> include) {
     this.includes.putAll(include);
   }
 

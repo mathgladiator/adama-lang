@@ -15,9 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.deploy;
 
-public class Platform {
-  public static final String VERSION = "20231130172809";
-  public static final String JS_VERSION = "5f1bf2ad69cf46d1952611707e5310be";
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+
+public interface AsyncByteCodeCache {
+  public void fetchOrCompile(final String spaceName, final String className, final String javaSource, String reflection, Callback<CachedByteCode> callback);
+
+  public static AsyncByteCodeCache DIRECT = (spaceName, className, javaSource, reflection, callback) -> {
+    try {
+      callback.success(SyncCompiler.compile(spaceName, className, javaSource, reflection));
+    } catch (ErrorCodeException ex) {
+      callback.failure(ex);
+    }
+  };
 }

@@ -17,7 +17,23 @@
 */
 package org.adamalang.common;
 
-public class Platform {
-  public static final String VERSION = "20231130172809";
-  public static final String JS_VERSION = "5f1bf2ad69cf46d1952611707e5310be";
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class NoErrorMultiCallbackLatchImplTests {
+  @Test
+  public void flow() {
+    AtomicInteger x = new AtomicInteger(0);
+    Runnable r = NoErrorMultiCallbackLatchImpl.WRAP(() -> x.incrementAndGet(), 3);
+    r.run();
+    r.run();
+    r.run();
+    r.run();
+    r.run();
+    r.run();
+    Assert.assertEquals(1, x.get());
+    new NoErrorMultiCallbackLatchImpl(() -> {}).failure(new ErrorCodeException(1));
+  }
 }

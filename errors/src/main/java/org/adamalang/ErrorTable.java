@@ -344,6 +344,12 @@ public class ErrorTable {
     descriptions.put(114384, "no description of error (yet)");
     names.put(133371, "PLAN_FETCH_LOOKUP_FAILURE");
     descriptions.put(133371, "no description of error (yet)");
+    names.put(127736, "ASYNC_COMPLEX_DEPLOYMENT_FAILURE");
+    descriptions.put(127736, "no description of error (yet)");
+    names.put(162036, "CACHED_BYTE_CODE_FAILED_PACK");
+    descriptions.put(162036, "no description of error (yet)");
+    names.put(127732, "CACHED_BYTE_CODE_FAILED_UNPACK");
+    descriptions.put(127732, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");

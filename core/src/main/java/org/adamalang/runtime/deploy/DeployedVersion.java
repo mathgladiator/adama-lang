@@ -21,15 +21,16 @@ import org.adamalang.runtime.json.JsonStreamReader;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.TreeMap;
 
 /** a version of an Adama script with imports included */
 public class DeployedVersion {
   public final String main;
-  public final HashMap<String, String> includes;
+  public final TreeMap<String, String> includes;
 
   public DeployedVersion(JsonStreamReader reader) {
     String _main = "";
-    includes = new HashMap<>();
+    includes = new TreeMap<>();
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         switch (reader.fieldName()) {

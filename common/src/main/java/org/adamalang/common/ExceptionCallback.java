@@ -17,7 +17,19 @@
 */
 package org.adamalang.common;
 
-public class Platform {
-  public static final String VERSION = "20231130172809";
-  public static final String JS_VERSION = "5f1bf2ad69cf46d1952611707e5310be";
+/**
+ * A variant of Callback that throws an exception and which can be passed back int
+ */
+public abstract class ExceptionCallback<T> implements Callback<T>  {
+  /** the action happened successfully, and the result is value */
+  public abstract void invoke(T value) throws ErrorCodeException;
+
+  @Override
+  public void success(T value) {
+    try {
+      invoke(value);
+    } catch (ErrorCodeException ex) {
+      failure(ex);
+    }
+  }
 }

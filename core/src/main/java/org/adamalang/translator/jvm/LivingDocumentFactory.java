@@ -22,6 +22,8 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.deploy.CachedByteCode;
+import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -41,6 +43,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 /** responsible for compiling java code into a LivingDocumentFactory */
@@ -58,30 +61,16 @@ public class LivingDocumentFactory {
   public final Deliverer deliverer;
   public final long memoryUsage;
 
-  public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
-    final var compiler = ToolProvider.getSystemJavaCompiler();
-    final var diagnostics = new DiagnosticCollector<JavaFileObject>();
-    final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
-    final var task = compiler.getTask(null, fileManager, diagnostics, null, null, ByteArrayJavaFileManager.turnIntoCompUnits(className + ".java", javaSource));
-    if (task.call() == false) {
-      StringBuilder report = new StringBuilder();
-      for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
-        report.append(diagnostic.toString() + "\n");
-      }
-      LOG.error("failure-compile:" + report.toString());
-      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
-    }
+  public LivingDocumentFactory(CachedByteCode code, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     try {
       this.deliverer = deliverer;
-      final var classBytes = fileManager.getClasses();
-      fileManager.close();
       long _memory = 0;
-      for (byte[] bytes : classBytes.values()) {
+      for (byte[] bytes : code.classBytes.values()) {
         _memory += bytes.length;
       }
       this.memoryUsage = _memory + 65536;
-      final var loader = new ByteArrayClassLoader(classBytes);
-      final Class<?> clazz = Class.forName(className, true, loader);
+      final var loader = new ByteArrayClassLoader(code.classBytes);
+      final Class<?> clazz = Class.forName(code.className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);
       creationPolicyMethod = clazz.getMethod("__onCanCreate", CoreRequestContext.class);
       inventionPolicyMethod = clazz.getMethod("__onCanInvent", CoreRequestContext.class);
@@ -89,12 +78,17 @@ public class LivingDocumentFactory {
       HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
       maximum_history = extractMaximumHistory(config);
       delete_on_close = extractDeleteOnClose(config);
-      this.reflection = reflection;
+      this.reflection = code.reflection;
       this.registry = new ServiceRegistry();
-      this.registry.resolve(spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)), keys);
+      this.registry.resolve(code.spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)), keys);
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }
+  }
+
+  @Deprecated
+  public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
+    this(SyncCompiler.compile(spaceName, className, javaSource, reflection), deliverer, keys);
   }
 
   public boolean canInvent(CoreRequestContext context) throws ErrorCodeException {
