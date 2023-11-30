@@ -20,6 +20,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 
+/** just an interface to wrap how byte code can be cached */
 public interface AsyncByteCodeCache {
   public void fetchOrCompile(final String spaceName, final String className, final String javaSource, String reflection, Callback<CachedByteCode> callback);
 

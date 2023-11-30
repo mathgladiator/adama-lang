@@ -41,6 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+/** the async compiler all unified into one big thing */
 public class AsyncCompiler {
   public static void forge(String name, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, AsyncByteCodeCache cache, Callback<DeploymentFactory> callback) {
     ConcurrentHashMap<String, LivingDocumentFactory> factories = new ConcurrentHashMap<>();

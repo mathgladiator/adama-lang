@@ -26,16 +26,16 @@ import org.slf4j.Logger;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class StringCallbackHttpResponder implements SimpleHttpResponder {
+public class ByteArrayCallbackHttpResponder implements SimpleHttpResponder {
   private final Logger logger;
   private final RequestResponseMonitor.RequestResponseMonitorInstance monitor;
-  private final Callback<String> callback;
+  private final Callback<byte[]> callback;
   private ByteArrayOutputStream memory;
   private boolean invokeSuccess;
   private boolean emissionPossible;
   private boolean logBody;
 
-  public StringCallbackHttpResponder(Logger logger, RequestResponseMonitor.RequestResponseMonitorInstance monitor, Callback<String> callback) {
+  public ByteArrayCallbackHttpResponder(Logger logger, RequestResponseMonitor.RequestResponseMonitorInstance monitor, Callback<byte[]> callback) {
     this.logger = logger;
     this.monitor = monitor;
     this.callback = callback;
@@ -81,7 +81,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   @Override
   public void bodyEnd() {
     if (invokeSuccess && emissionPossible) {
-      callback.success(new String(memory.toByteArray(), StandardCharsets.UTF_8));
+      callback.success(memory.toByteArray());
       monitor.success();
     }
     if (logBody) {
@@ -93,7 +93,7 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
   public void failure(ErrorCodeException ex) {
     if (emissionPossible) {
       emissionPossible = false;
-      logger.error("string-callback-failure:", ex);
+      logger.error("bytearray-callback-failure:", ex);
       monitor.failure(ex.code);
       callback.failure(ex);
     }
