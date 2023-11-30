@@ -24,6 +24,8 @@ import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.runtime.data.ColdAssetSystem;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.PostDocumentDelete;
+import org.adamalang.runtime.deploy.AsyncByteCodeCache;
+import org.adamalang.runtime.deploy.CachedByteCode;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
@@ -34,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
@@ -303,5 +306,35 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
         callback.failure(ex);
       }
     });
+  }
+
+  public void fetchByteCode(String className, Callback<CachedByteCode> callback) {
+    String s3key = "bytecode/" + className + "/" + Platform.VERSION;
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
+    base.executeShared(request, new ByteArrayCallbackHttpResponder(LOGGER, metrics.fetch_byte_code.start(), new Callback<byte[]>() {
+      @Override
+      public void success(byte[] value) {
+        try {
+          callback.success(CachedByteCode.unpack(value));
+        } catch (ErrorCodeException ex) {
+          failure(ex);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }));
+  }
+
+  public void storeByteCode(String className, CachedByteCode code, Callback<Void> callback) {
+    try {
+      String s3key = "bytecode/" + className + "/" + Platform.VERSION;
+      SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "PUT", s3key, null).buildWithBytesAsBody(code.pack());
+      base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.store_byte_code.start(), callback));
+    } catch (ErrorCodeException ex) {
+      callback.failure(ex);
+    }
   }
 }
