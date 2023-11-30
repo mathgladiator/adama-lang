@@ -24,20 +24,22 @@ public class DedupeTemplateCheckTests {
 
   @Test
   public void sanity() {
-    DedupeTemplateCheck a = new DedupeTemplateCheck("a", "b");
-    DedupeTemplateCheck b = new DedupeTemplateCheck("c", "d");
-    DedupeTemplateCheck c = new DedupeTemplateCheck("a", "e");
-    Assert.assertEquals(4066, a.hashCode());
-    Assert.assertEquals(4130, b.hashCode());
-    Assert.assertEquals(4069, c.hashCode());
+    DedupeTemplateCheck a = new DedupeTemplateCheck("a", "b", "x");
+    DedupeTemplateCheck b = new DedupeTemplateCheck("c", "d", "x");
+    DedupeTemplateCheck c = new DedupeTemplateCheck("a", "e", "x");
+    Assert.assertEquals(126166, a.hashCode());
+    Assert.assertEquals(128150, b.hashCode());
+    Assert.assertEquals(126259, c.hashCode());
     Assert.assertEquals(a, a);
     Assert.assertNotEquals(a, b);
     Assert.assertNotEquals(a, c);
-    Assert.assertEquals(a, new DedupeTemplateCheck("a", "b"));
+    Assert.assertEquals(a, new DedupeTemplateCheck("a", "b", "x"));
+    Assert.assertNotEquals(a, new DedupeTemplateCheck("a", "b", "y"));
     Assert.assertNotEquals(a, null);
     Assert.assertNotEquals(a, "xyz");
     Assert.assertEquals(-2, a.compareTo(b));
     Assert.assertEquals(2, b.compareTo(c));
     Assert.assertEquals(3, c.compareTo(a));
+    Assert.assertEquals(-1, a.compareTo(new DedupeTemplateCheck("a", "b", "y")));
   }
 }

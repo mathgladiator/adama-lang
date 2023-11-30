@@ -36,8 +36,7 @@ public class TypeChecker {
     warnDuplicateTemplates(document, feedback);
     warnTemplateNotFound(document, feedback);
     if (input != null && input.exists() && input.isDirectory()) {
-      // hard-core type checking requires an input directory containing the types. This should be devbox only (for now).
-      RxRootEnvironment env = new RxRootEnvironment(forest, input, feedback);
+      new RxRootEnvironment(forest, input, feedback).check();
     }
   }
 

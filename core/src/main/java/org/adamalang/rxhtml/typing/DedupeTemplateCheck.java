@@ -23,10 +23,12 @@ import java.util.Objects;
 public class DedupeTemplateCheck implements Comparable<DedupeTemplateCheck> {
   public final String templateName;
   public final String structureName;
+  public final String privacySet;
 
-  public DedupeTemplateCheck(String templateName, String structureName) {
+  public DedupeTemplateCheck(String templateName, String structureName, String privacySet) {
     this.templateName = templateName;
     this.structureName = structureName;
+    this.privacySet = privacySet;
   }
 
   @Override
@@ -34,12 +36,12 @@ public class DedupeTemplateCheck implements Comparable<DedupeTemplateCheck> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     DedupeTemplateCheck that = (DedupeTemplateCheck) o;
-    return Objects.equals(templateName, that.templateName) && Objects.equals(structureName, that.structureName);
+    return Objects.equals(templateName, that.templateName) && Objects.equals(structureName, that.structureName) && Objects.equals(privacySet, that.privacySet);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(templateName, structureName);
+    return Objects.hash(templateName, structureName, privacySet);
   }
 
   @Override
@@ -47,6 +49,9 @@ public class DedupeTemplateCheck implements Comparable<DedupeTemplateCheck> {
     int delta = templateName.compareTo(o.templateName);
     if (delta == 0) {
       delta = structureName.compareTo(o.structureName);
+    }
+    if (delta == 0) {
+      delta = privacySet.compareTo(o.privacySet);
     }
     return delta;
   }
