@@ -6,6 +6,10 @@ var RxHTML = (function () {
   // This strange escaping is for developer mode to proxy to localhost.
   var connection = new Adama.Connection(/*ENDPOINT=[*/Adama.Production/*]*/);
   var connections = {};
+  self.connection = connection;
+  self.bump = function(m) {
+    connection.bump(m);
+  };
 
   var connectionMonitorDom = document.createElement("div");
   connection.onstatuschange = function (status) {
@@ -1981,7 +1985,8 @@ var RxHTML = (function () {
   var setPushStatus = function(status) {
     localStorage.setItem("webpush_status", status);
     self.currentPushEvent();
-  }
+  };
+  self.setPushStatus = setPushStatus;
 
   var setPushEvent = function(foo) {
     self.currentPushEvent = foo;
@@ -2037,7 +2042,7 @@ var RxHTML = (function () {
         failure: function() {
           connection.bump("wpf");
         }
-      })
+      });
     }, function(err) {
       setPushStatus("failed");
       localStorage.removeItem(pushKeyLocal);
@@ -2237,6 +2242,7 @@ var RxHTML = (function () {
   var afterHaveIdentity = function(identityName, callback) {
     identityEvents[identityName] = callback;
   };
+  self.afterHaveIdentity = afterHaveIdentity;
 
   /** for custom elements to learn of the identity */
   self.ID = function (identityName, redirectToFunc) {

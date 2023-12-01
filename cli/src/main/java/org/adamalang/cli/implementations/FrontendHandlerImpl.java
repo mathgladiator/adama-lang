@@ -95,13 +95,13 @@ public class FrontendHandlerImpl implements FrontendHandler {
     }
     copyAssets(assetsPath, root);
     if (devmode) {
-      for (String f : new String[] {"connection.js", "tree.js", "rxhtml.js", "capacitor.js"}) {
+      for (String f : new String[] {"connection.js", "tree.js", "rxhtml.js", "rxcapacitor.js"}) {
         File libAdama = new File(args.localLibadamaPath, f);
         File destLibAdama = new File(root, f);
         Files.copy(libAdama.toPath(), destLibAdama.toPath(), StandardCopyOption.REPLACE_EXISTING);
       }
     } else {
-      for (String f : new String[] {"libadama.js", "capacitor.js"}) {
+      for (String f : new String[] {"libadama.js", "rxcapacitor.js"}) {
         File libAdama = new File(args.localLibadamaPath, f);
         File destLibAdama = new File(root, f);
         Files.copy(libAdama.toPath(), destLibAdama.toPath(), StandardCopyOption.REPLACE_EXISTING);

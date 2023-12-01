@@ -124,5 +124,16 @@ public class WebMetrics {
     client_metrics.put("wpi2", factory.counter("webclient_webpush_impossible_2"));
     client_metrics.put("wpi3", factory.counter("webclient_webpush_impossible_3"));
     client_metrics.put("wpf", factory.counter("webclient_webpush_fail"));
+
+    factory.section("native push");
+    client_metrics.put("nps", factory.counter("webclient_nativepush_setup"));
+    client_metrics.put("npg", factory.counter("webclient_nativepush_granted"));
+    client_metrics.put("npf1", factory.counter("webclient_nativepush_failure_1"));
+    client_metrics.put("npf2", factory.counter("webclient_nativepush_failure_2"));
+    client_metrics.put("npf3", factory.counter("webclient_nativepush_failure_3"));
+    client_metrics.put("npf4", factory.counter("webclient_nativepush_failure_4"));
+    client_metrics.put("npf5", factory.counter("webclient_nativepush_failure_5"));
+    client_metrics.put("npr", factory.counter("webclient_nativepush_ready"));
+    client_metrics.put("npa", factory.counter("webclient_nativepush_available"));
   }
 }
