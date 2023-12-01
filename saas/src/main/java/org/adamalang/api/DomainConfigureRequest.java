@@ -23,9 +23,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
-import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
-import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
 /** Configure a domain with internal guts that are considered secret. */
@@ -34,35 +32,27 @@ public class DomainConfigureRequest {
   public final AuthenticatedUser who;
   public final String domain;
   public final DomainWithPolicy resolvedDomain;
-  public final String space;
-  public final SpacePolicy policy;
   public final ObjectNode productConfig;
 
-  public DomainConfigureRequest(final String identity, final AuthenticatedUser who, final String domain, final DomainWithPolicy resolvedDomain, final String space, final SpacePolicy policy, final ObjectNode productConfig) {
+  public DomainConfigureRequest(final String identity, final AuthenticatedUser who, final String domain, final DomainWithPolicy resolvedDomain, final ObjectNode productConfig) {
     this.identity = identity;
     this.who = who;
     this.domain = domain;
     this.resolvedDomain = resolvedDomain;
-    this.space = space;
-    this.policy = policy;
     this.productConfig = productConfig;
   }
 
   public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<DomainConfigureRequest> callback) {
     try {
-      final BulkLatch<DomainConfigureRequest> _latch = new BulkLatch<>(nexus.executor, 3, callback);
+      final BulkLatch<DomainConfigureRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String domain = request.getString("domain", true, 488444);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
-      final String space = request.getStringNormalize("space", true, 461828);
-      ValidateSpace.validate(space);
-      final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final ObjectNode productConfig = request.getObject("product-config", true, 453621);
-      _latch.with(() -> new DomainConfigureRequest(identity, who.get(), domain, resolvedDomain.get(), space, policy.get(), productConfig));
+      _latch.with(() -> new DomainConfigureRequest(identity, who.get(), domain, resolvedDomain.get(), productConfig));
       nexus.identityService.execute(session, identity, who);
       nexus.domainService.execute(session, domain, resolvedDomain);
-      nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("domainconfigure-error") {
         @Override
@@ -77,7 +67,5 @@ public class DomainConfigureRequest {
     org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("domain", domain);
     org.adamalang.contracts.DomainWithPolicyResolver.logInto(resolvedDomain, _node);
-    _node.put("space", space);
-    org.adamalang.contracts.SpacePolicyLocator.logInto(policy, _node);
   }
 }

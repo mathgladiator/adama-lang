@@ -1064,7 +1064,6 @@
     <method name="domain/configure" responder="simple" scope="global" policy-manual="true" gen-service="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
-        <parameter name="space"/>
         <parameter name="product-config"/>
         <documentation>
             Configure a domain with internal guts that are considered secret.

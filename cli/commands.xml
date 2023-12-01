@@ -176,6 +176,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="product" type="string" short="p">
+        <documentation>
+            Product configuration for native apps on the platform
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="agent" type="string" short="ag">
         <documentation>
             The user id or agent part of a principal.
@@ -769,6 +775,14 @@
             <arg name="key" default="null" />
             <arg name="route" default="false" />
             <arg name="auto" default="true" />
+        </command>
+
+        <command name="configure">
+            <documentation>
+                Provide a product configuration to define various aspects of a product by domain
+            </documentation>
+            <arg name="domain" />
+            <arg name="product" />
         </command>
 
         <command name="list" output="json">

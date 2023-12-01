@@ -340,7 +340,6 @@ private final MultiWebClientRetryPool pool;
     node.put("method", "domain/configure");
     node.put("identity", request.identity);
     node.put("domain", request.domain);
-    node.put("space", request.space);
     node.set("product-config", request.productConfig);
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }

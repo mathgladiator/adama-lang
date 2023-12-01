@@ -3413,6 +3413,77 @@ public class Arguments {
 			System.out.println("    " + Util.prefix("-l, --limit", Util.ANSI.Green) + " " + Util.prefix("<limit>", Util.ANSI.White) + " : Limit the returned items.");
 		}
 	}
+	public static class DomainConfigureArgs {
+		public Config config;
+		public String domain;
+		public String product;
+		public static DomainConfigureArgs from(String[] args, int start) {
+			DomainConfigureArgs returnArgs = new DomainConfigureArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--domain", "--product", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-d":
+					case "--domain": {
+						if (k+1 < args.length) {
+							returnArgs.domain = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-p":
+					case "--product": {
+						if (k+1 < args.length) {
+							returnArgs.product = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Provide a product configuration to define various aspects of a product by domain", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama domain configure", Util.ANSI.Green)+ " " + Util.prefix("[FLAGS]", Util.ANSI.Magenta));
+			System.out.println(Util.prefixBold("FLAGS:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("-d, --domain", Util.ANSI.Green) + " " + Util.prefix("<domain>", Util.ANSI.White) + " : The domain name");
+			System.out.println("    " + Util.prefix("-p, --product", Util.ANSI.Green) + " " + Util.prefix("<product>", Util.ANSI.White) + " : Product configuration for native apps on the platform");
+		}
+	}
 	public static class DomainListArgs {
 		public Config config;
 		public static DomainListArgs from(String[] args, int start) {

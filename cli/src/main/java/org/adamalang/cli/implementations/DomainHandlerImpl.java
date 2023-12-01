@@ -46,6 +46,22 @@ public class DomainHandlerImpl implements DomainHandler {
   }
 
   @Override
+  public void configure(Arguments.DomainConfigureArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "domain/configure");
+        request.put("identity", identity);
+        request.put("domain", args.domain);
+        request.put("product-config", Json.parseJsonObject(Files.readString(new File(args.product).toPath())).toString());
+        connection.execute(request);
+        output.out();
+      }
+    }
+  }
+
+  @Override
   public void map(Arguments.DomainMapArgs args, Output.YesOrError output) throws Exception {
     String identity = args.config.get_string("identity", null);
     String autoStr = args.auto.toLowerCase();

@@ -713,6 +713,16 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "configure": {
+              DomainConfigureArgs domainArgs = DomainConfigureArgs.from(args, 2);
+              if (domainArgs == null) {
+                DomainConfigureArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               domainHandler.configure(domainArgs, out);
+               return 0;
+            }
             case "list": {
               DomainListArgs domainArgs = DomainListArgs.from(args, 2);
               if (domainArgs == null) {

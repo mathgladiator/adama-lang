@@ -23,6 +23,5 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class ClientDomainConfigureRequest {
   public String identity;
   public String domain;
-  public String space;
   public ObjectNode productConfig;
 }

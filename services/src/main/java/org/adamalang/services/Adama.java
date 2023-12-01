@@ -53,7 +53,7 @@ public class Adama extends SimpleService {
     sb.append("message _AdamaReflectionRes { dynamic reflection }\n");
     sb.append("message _AdamaDomainMapReq { string domain; string space; maybe<string> certificate; }\n");
     sb.append("message _AdamaSimpleRes {  }\n");
-    sb.append("message _AdamaDomainConfigureReq { string domain; string space; dynamic productConfig; }\n");
+    sb.append("message _AdamaDomainConfigureReq { string domain; dynamic productConfig; }\n");
     sb.append("message _AdamaDomainMapDocumentReq { string domain; string space; string key; maybe<bool> route; maybe<string> certificate; }\n");
     sb.append("message _AdamaDocumentCreateReq { string space; string key; maybe<string> entropy; dynamic arg; }\n");
     sb.append("message _AdamaDocumentDeleteReq { string space; string key; }\n");
@@ -117,7 +117,6 @@ public class Adama extends SimpleService {
         ClientDomainConfigureRequest req = new ClientDomainConfigureRequest();
         req.identity = identity;
         req.domain = Json.readString(requestNode, "domain");
-        req.space = Json.readString(requestNode, "space");
         req.productConfig = Json.readObject(requestNode, "productConfig");
         client.domainConfigure(req, new Callback<>() {
           @Override

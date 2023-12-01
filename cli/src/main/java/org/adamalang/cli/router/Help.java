@@ -177,6 +177,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("DOMAINSUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix(Util.justifyLeft("configure", 15), Util.ANSI.Green) + "Provide a product configuration to define various aspects of a product by domain");
     System.out.println("    " + Util.prefix(Util.justifyLeft("list", 15), Util.ANSI.Green) + "List domains");
     System.out.println("    " + Util.prefix(Util.justifyLeft("map", 15), Util.ANSI.Green) + "Map a domain to a space");
     System.out.println("    " + Util.prefix(Util.justifyLeft("unmap", 15), Util.ANSI.Green) + "Unmap a domain from a space");

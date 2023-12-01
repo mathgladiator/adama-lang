@@ -871,13 +871,12 @@ Configure a domain with internal guts that are considered secret.
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
 | domain | yes | String | A domain name. |
-| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | product-config | yes | ObjectNode | Product config for various native app and integrated features. |
 
 
 ### Template
 ```js
-connection.DomainConfigure(identity, domain, space, product-config, {
+connection.DomainConfigure(identity, domain, product-config, {
   success: function() {
   },
   failure: function(reason) {
