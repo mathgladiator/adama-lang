@@ -127,7 +127,7 @@ public class DevPush implements Pusher  {
       while (it.hasNext()) {
         JsonNode node = it.next();
         if (who.agent.equals(node.get("agent").textValue()) && who.authority.equals(node.get("authority").textValue())) {
-          push(new Subscription(node.get("subscription").toString()), payload);
+          push(new Subscription(Json.parseJsonObject(node.get("subscription").toString())), payload);
         }
       }
       callback.success(null);

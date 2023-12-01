@@ -17,6 +17,7 @@
 */
 package org.adamalang.services.push;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.VAPIDFactory;
@@ -63,6 +64,32 @@ public class GlobalPusher implements Pusher {
     this.webPushFactory128 = new WebPushRequestFactory128(email, random);
   }
 
+  private void webPush(ObjectNode rawSub, DeviceSubscription subscription, VAPIDPublicPrivateKeyPair pair, String payload, Callback<Void> callback) throws Exception {
+    Subscription sub = new Subscription(rawSub);
+    SimpleHttpRequest request = webPushFactory128.make(pair, sub, 14, payload.getBytes(StandardCharsets.UTF_8));
+    webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.webpush_send.start(), new Callback<Void>() {
+      int boundId = subscription.id;
+
+      @Override
+      public void success(Void value) {
+        callback.success(null);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        // track some metrics
+        if (ex.code == ErrorCodes.WEB_CALLBACK_RESOURCE_GONE) {
+          executor.execute(new NamedRunnable("delete-sub") {
+            @Override
+            public void execute() throws Exception {
+              PushSubscriptions.deleteSubscription(dataBase, boundId);
+            }
+          });
+        }
+      }
+    }));
+  }
+
   @Override
   public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
     executor.execute(new NamedRunnable("notify") {
@@ -70,31 +97,16 @@ public class GlobalPusher implements Pusher {
       public void execute() throws Exception {
         try {
           VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory);
+          // TODO: get FireBase auth for the domain
           var subs = PushSubscriptions.list(dataBase, domain, who);
           for (DeviceSubscription subscription : subs) {
-            // TODO: test if the subscription is webpush
-            Subscription sub = new org.adamalang.services.push.webpush.Subscription(subscription.subscription);
-            SimpleHttpRequest request = webPushFactory128.make(pair, sub, 14, payload.getBytes(StandardCharsets.UTF_8));
-            webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.webpush_send.start(), new Callback<Void>() {
-              int boundId = subscription.id;
-              @Override
-              public void success(Void value) {
-                callback.success(null);
-              }
+            ObjectNode raw = Json.parseJsonObject(subscription.subscription);
+            String method = raw.get("@method").textValue();
+            if ("webpush".equals(method)) {
+              webPush(raw, subscription, pair, payload, callback);
+            } else if ("capacitor".equals(method)) { // use firebase stuff
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                // track some metrics
-                if (ex.code == ErrorCodes.WEB_CALLBACK_RESOURCE_GONE) {
-                  executor.execute(new NamedRunnable("delete-sub") {
-                     @Override
-                     public void execute() throws Exception {
-                       PushSubscriptions.deleteSubscription(dataBase, boundId);
-                     }
-                   });
-                }
-              }
-            }));
+            }
           }
         } catch (Exception ex) {
           LOGGER.error("failed-notify", ex);

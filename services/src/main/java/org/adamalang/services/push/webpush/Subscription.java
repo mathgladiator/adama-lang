@@ -35,8 +35,7 @@ public class Subscription {
   public final byte[] user;
   public final ECPublicKey p256dh;
 
-  public Subscription(String payload) throws Exception {
-    ObjectNode node = Json.parseJsonObject(payload);
+  public Subscription(ObjectNode node) throws Exception {
     this.endpoint = node.get("endpoint").textValue();
     JsonNode keys = node.get("keys");
     this.user = Base64.getUrlDecoder().decode(keys.get("auth").textValue());
