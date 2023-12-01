@@ -113,7 +113,7 @@ public class CommonServiceInit {
 
     FirstPartyMetrics metrics = em.installServices(publicKeyId);
     // service overrides
-    new GlobalPusher(metrics, database, em.push, config.get_string("push-email", null), em.webBase).install();
+    new GlobalPusher(metrics, database, masterKey, em.push, config.get_string("push-email", null), em.webBase).install();
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {

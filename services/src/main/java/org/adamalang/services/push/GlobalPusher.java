@@ -17,11 +17,15 @@
 */
 package org.adamalang.services.push;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.auth.oauth2.GoogleCredentials;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.DeviceSubscription;
 import org.adamalang.mysql.model.Domains;
@@ -34,14 +38,19 @@ import org.adamalang.services.ServiceConfig;
 import org.adamalang.services.push.webpush.Subscription;
 import org.adamalang.services.push.webpush.WebPushRequestFactory128;
 import org.adamalang.services.sms.Twilio;
-import org.adamalang.web.client.SimpleHttpRequest;
-import org.adamalang.web.client.VoidCallbackHttpResponder;
-import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.crypto.Data;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class GlobalPusher implements Pusher {
@@ -49,19 +58,39 @@ public class GlobalPusher implements Pusher {
 
   private final FirstPartyMetrics metrics;
   private final DataBase dataBase;
+  private final String masterKey;
   private final VAPIDFactory factory;
   private final SimpleExecutor executor;
   private final WebClientBase webClientBase;
   private final WebPushRequestFactory128 webPushFactory128;
+  private final ConcurrentHashMap<String, FirebaseCachePayload> firebaseCache;
 
-  public GlobalPusher(FirstPartyMetrics metrics, DataBase dataBase, SimpleExecutor executor, String email, WebClientBase webClientBase) throws Exception {
+  private class FirebaseCachePayload {
+    private final String productId;
+    private final GoogleCredentials credentials;
+    private final long created;
+
+    public FirebaseCachePayload(String productId, GoogleCredentials credentials) {
+      this.productId = productId;
+      this.credentials = credentials;
+      this.created = System.currentTimeMillis();
+    }
+
+    public long age() {
+      return System.currentTimeMillis() - created;
+    }
+  }
+
+  public GlobalPusher(FirstPartyMetrics metrics, DataBase dataBase, String masterKey, SimpleExecutor executor, String email, WebClientBase webClientBase) throws Exception {
     this.metrics = metrics;
     this.dataBase = dataBase;
+    this.masterKey = masterKey;
     SecureRandom random = new SecureRandom();
     this.factory = new VAPIDFactory(random);
     this.executor = executor;
     this.webClientBase = webClientBase;
     this.webPushFactory128 = new WebPushRequestFactory128(email, random);
+    this.firebaseCache = new ConcurrentHashMap<>();
   }
 
   private void webPush(ObjectNode rawSub, DeviceSubscription subscription, VAPIDPublicPrivateKeyPair pair, String payload, Callback<Void> callback) throws Exception {
@@ -90,14 +119,78 @@ public class GlobalPusher implements Pusher {
     }));
   }
 
+  private void capacitorPush(String registrationToken, ObjectNode payload, FirebaseCachePayload cache) {
+    ObjectNode root = Json.newJsonObject();
+    ObjectNode message = root.putObject("message");
+    ObjectNode notif = message.putObject("notification");
+    if (payload.has("title")) {
+      notif.put("title", payload.get("title").textValue());
+    }
+    if (payload.has("body")) {
+      notif.put("body", payload.get("body").textValue());
+    }
+    ObjectNode data = message.putObject("data");
+    if (payload.has("url")) {
+      data.put("url", payload.get("url").textValue());
+    }
+    message.put("token", registrationToken);
+    ObjectNode android = message.putObject("android");
+    ObjectNode androidNotif = android.putObject("notification");
+    if (payload.has("icon")) {
+      androidNotif.put("icon", payload.get("icon").textValue());
+    }
+    try {
+      cache.credentials.refreshIfExpired();
+      String authToken = cache.credentials.getAccessToken().getTokenValue();
+      String postUrl = "https://fcm.googleapis.com/v1/projects/" + cache.productId + "/messages:send";
+      TreeMap<String, String> headers = new TreeMap<>();
+      headers.put("Authorization", "Bearer " + authToken);
+      headers.put("Content-Type", "application/json; UTF-8");
+      SimpleHttpRequest request = new SimpleHttpRequest("POST", postUrl, headers, SimpleHttpRequestBody.WRAP(root.toString().getBytes(StandardCharsets.UTF_8)));
+      webClientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, new NoOpMetricsFactory().makeRequestResponseMonitor("").start(), new Callback<>() {
+        @Override
+        public void success(String value) {
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          LOGGER.error("failed-firebase-notif:" + ex.code);
+        }
+      }));
+    } catch (Exception ex) {
+      LOGGER.error("send-firebase-notif", ex);
+    }
+  }
+
   @Override
   public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
     executor.execute(new NamedRunnable("notify") {
       @Override
       public void execute() throws Exception {
         try {
-          VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory);
-          // TODO: get FireBase auth for the domain
+          VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory); // TODO: cache under a 10 minute timer
+          ObjectNode payloadNode = Json.parseJsonObject(payload);
+          FirebaseCachePayload firebaseCachePayload = firebaseCache.get(domain);
+          if (firebaseCachePayload != null && firebaseCachePayload.age() > 5 * 60000) { // TODO: capture as a magic number
+            firebaseCachePayload = null;
+          }
+          if (firebaseCachePayload == null) {
+            try {
+              ObjectNode productConfig = Json.parseJsonObject(MasterKey.decrypt(masterKey, Domains.getNativeAppConfig(dataBase, domain)));
+              if (productConfig != null) {
+                JsonNode firebaseNode = productConfig.get("firebase");
+                GoogleCredentials credentials = GoogleCredentials //
+                    .fromStream(new ByteArrayInputStream(firebaseNode.toString().getBytes(StandardCharsets.UTF_8))) //
+                    .createScoped(Arrays.asList(new String[]{"https://www.googleapis.com/auth/firebase.messaging"}));
+                credentials.refresh();
+                firebaseCachePayload = new FirebaseCachePayload(firebaseNode.get("product_id").textValue(), credentials);
+                firebaseCache.put(domain, firebaseCachePayload);
+              }
+            } catch (Exception ex) {
+              LOGGER.error("create-firebase-cache", ex);
+            }
+          }
+
           var subs = PushSubscriptions.list(dataBase, domain, who);
           for (DeviceSubscription subscription : subs) {
             ObjectNode raw = Json.parseJsonObject(subscription.subscription);
@@ -105,7 +198,12 @@ public class GlobalPusher implements Pusher {
             if ("webpush".equals(method)) {
               webPush(raw, subscription, pair, payload, callback);
             } else if ("capacitor".equals(method)) { // use firebase stuff
-
+              if (firebaseCachePayload != null) {
+                String registrationToken = raw.get("token").textValue();
+                capacitorPush(registrationToken, payloadNode, firebaseCachePayload);
+              } else {
+                LOGGER.error("no-product-config:" + domain);
+              }
             }
           }
         } catch (Exception ex) {
