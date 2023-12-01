@@ -53,6 +53,7 @@ public class Installer {
             "  `key` VARCHAR(512) NOT NULL," + //
             "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //
             "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," + //
+            "  `last_backup` DATETIME NULL," + //
             "  `head_seq` INT(4) UNSIGNED NOT NULL," + //
             "  `need_gc` BOOLEAN DEFAULT TRUE," + //
             "  `type` INT(2) UNSIGNED NOT NULL," + //
@@ -205,6 +206,7 @@ public class Installer {
             "  `route` BOOLEAN DEFAULT FALSE," + //
             "  `domain` VARCHAR(254) NOT NULL," + //
             "  `certificate` LONGTEXT NOT NULL," + //
+            "  `config` LONGTEXT," + //
             "  `automatic` BOOLEAN DEFAULT FALSE," + //
             "  `automatic_timestamp` BIGINT UNSIGNED DEFAULT 0," + //
             "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //

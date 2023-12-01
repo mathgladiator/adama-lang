@@ -627,6 +627,15 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
     });
   }
+  DomainConfigure(identity, domain, space, productConfig, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/configure", "id":parId, "identity": identity, "domain": domain, "space": space, "product-config": productConfig}
+    });
+  }
   DomainReflect(identity, domain, responder) {
     var self = this;
     var parId = self.__id();

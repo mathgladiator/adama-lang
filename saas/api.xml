@@ -175,6 +175,12 @@
         <validate service="org.adamalang.validators.ValidatePlan" args="space"/>
     </parameter-definition>
 
+    <parameter-definition name="product-config" type="json-object" missing-error="453621">
+        <documentation>
+            Product config for various native app and integrated features.
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="limit" type="int" optional="true" logged="true">
         <documentation>
             Maximum number of items to return during a streaming list.
@@ -1052,6 +1058,16 @@
         <parameter name="certificate"/>
         <documentation>
             Map a domain to a space.
+        </documentation>
+    </method>
+
+    <method name="domain/configure" responder="simple" scope="global" policy-manual="true" gen-service="true">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="space"/>
+        <parameter name="product-config"/>
+        <documentation>
+            Configure a domain with internal guts that are considered secret.
         </documentation>
     </method>
 
@@ -2244,8 +2260,6 @@
 455668
 454644
 493556
-453621
-
 
 -->
 

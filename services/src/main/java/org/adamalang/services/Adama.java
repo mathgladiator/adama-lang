@@ -53,6 +53,7 @@ public class Adama extends SimpleService {
     sb.append("message _AdamaReflectionRes { dynamic reflection }\n");
     sb.append("message _AdamaDomainMapReq { string domain; string space; maybe<string> certificate; }\n");
     sb.append("message _AdamaSimpleRes {  }\n");
+    sb.append("message _AdamaDomainConfigureReq { string domain; string space; dynamic productConfig; }\n");
     sb.append("message _AdamaDomainMapDocumentReq { string domain; string space; string key; maybe<bool> route; maybe<string> certificate; }\n");
     sb.append("message _AdamaDocumentCreateReq { string space; string key; maybe<string> entropy; dynamic arg; }\n");
     sb.append("message _AdamaDocumentDeleteReq { string space; string key; }\n");
@@ -63,6 +64,7 @@ public class Adama extends SimpleService {
     sb.append("  class=\"adama\";\n");
     sb.append("  method secured<_AdamaSpaceReflectReq, _AdamaReflectionRes)> spaceReflect;\n");
     sb.append("  method secured<_AdamaDomainMapReq, _AdamaSimpleRes)> domainMap;\n");
+    sb.append("  method secured<_AdamaDomainConfigureReq, _AdamaSimpleRes)> domainConfigure;\n");
     sb.append("  method secured<_AdamaDomainMapDocumentReq, _AdamaSimpleRes)> domainMapDocument;\n");
     sb.append("  method secured<_AdamaDocumentCreateReq, _AdamaSimpleRes)> documentCreate;\n");
     sb.append("  method secured<_AdamaDocumentDeleteReq, _AdamaSimpleRes)> documentDelete;\n");
@@ -100,6 +102,24 @@ public class Adama extends SimpleService {
         req.space = Json.readString(requestNode, "space");
         req.certificate = Json.readString(requestNode, "certificate");
         client.domainMap(req, new Callback<>() {
+          @Override
+          public void success(ClientSimpleResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
+      case "domainConfigure": {
+        ClientDomainConfigureRequest req = new ClientDomainConfigureRequest();
+        req.identity = identity;
+        req.domain = Json.readString(requestNode, "domain");
+        req.space = Json.readString(requestNode, "space");
+        req.productConfig = Json.readObject(requestNode, "productConfig");
+        client.domainConfigure(req, new Callback<>() {
           @Override
           public void success(ClientSimpleResponse response) {
             callback.success(response.toInternalJson());

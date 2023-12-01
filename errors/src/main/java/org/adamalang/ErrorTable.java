@@ -484,6 +484,10 @@ public class ErrorTable {
     descriptions.put(904343, "no description of error (yet)");
     names.put(984111, "API_DOMAIN_MAP_UNKNOWN_EXCEPTION");
     descriptions.put(984111, "no description of error (yet)");
+    names.put(901421, "API_DOMAIN_CONFIGURE_UNKNOWN_EXCEPTION");
+    descriptions.put(901421, "no description of error (yet)");
+    names.put(982291, "API_DOMAIN_CONFIGURE_NOT_AUTHORIZED");
+    descriptions.put(982291, "no description of error (yet)");
     names.put(928991, "API_DOMAIN_LIST_NOT_AUTHORIZED");
     descriptions.put(928991, "no description of error (yet)");
     names.put(901251, "API_DOMAIN_LIST_UNKNOWN_EXCEPTION");
@@ -963,6 +967,8 @@ public class ErrorTable {
     descriptions.put(707651, "no description of error (yet)");
     names.put(792643, "VAPID_NOT_FOUND_FOR_DOMAIN");
     descriptions.put(792643, "no description of error (yet)");
+    names.put(736243, "CONFIG_NOT_FOUND_FOR_DOMAIN");
+    descriptions.put(736243, "no description of error (yet)");
     names.put(888888, "FIRST_PARTY_SERVICES_METHOD_NOT_FOUND");
     descriptions.put(888888, "no description of error (yet)");
     names.put(888889, "FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED");

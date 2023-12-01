@@ -80,6 +80,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder);
 
+  public void handle(Session session, DomainConfigureRequest request, SimpleResponder responder);
+
   public void handle(Session session, DomainReflectRequest request, ReflectionResponder responder);
 
   public void handle(Session session, DomainMapDocumentRequest request, SimpleResponder responder);
@@ -178,6 +180,7 @@ public interface RootGlobalHandler {
       case "space/list":
       case "push/register":
       case "domain/map":
+      case "domain/configure":
       case "domain/reflect":
       case "domain/map-document":
       case "domain/list":

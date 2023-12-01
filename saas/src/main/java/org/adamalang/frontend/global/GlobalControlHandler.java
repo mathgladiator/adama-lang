@@ -419,6 +419,20 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DomainConfigureRequest request, SimpleResponder responder) {
+    if (request.resolvedDomain.domain != null && request.resolvedDomain.policy != null && request.resolvedDomain.policy.checkPolicy("domain/configure", DefaultPolicyBehavior.OwnerAndDevelopers, request.who)) {
+      try {
+        Domains.putNativeAppConfig(nexus.database, request.domain, MasterKey.encrypt(nexus.masterKey, request.productConfig.toString()));
+        responder.complete();
+      } catch (Exception ex) {
+        responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DOMAIN_CONFIGURE_UNKNOWN_EXCEPTION, ex, LOGGER));
+      }
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.API_DOMAIN_CONFIGURE_NOT_AUTHORIZED));
+    }
+  }
+
+  @Override
   public void handle(Session session, DomainGetVapidPublicKeyRequest request, DomainVapidResponder responder) {
     try {
       VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(nexus.database, request.domain, nexus.vapidFactory);

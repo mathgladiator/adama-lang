@@ -17,6 +17,7 @@
 */
 package org.adamalang.mysql.model;
 
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.data.SystemUsageInventoryRecord;
@@ -36,9 +37,23 @@ public class DomainsTest {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
+        try {
+          Domains.getNativeAppConfig(dataBase, "www.domain.com");
+          Assert.fail();
+        } catch (ErrorCodeException ex) {
+          Assert.assertEquals(736243, ex.code);
+        }
         Domain result = Domains.get(dataBase, "www.domain.com");
         Assert.assertNull(result);
         Assert.assertTrue(Domains.map(dataBase, 141, "www.domain.com", "my-space", null, true, "certificate-yay"));
+        try {
+          Domains.getNativeAppConfig(dataBase, "www.domain.com");
+          Assert.fail();
+        } catch (ErrorCodeException ex) {
+          Assert.assertEquals(736243, ex.code);
+        }
+        Domains.putNativeAppConfig(dataBase, "www.domain.com", "some-config");
+        Assert.assertEquals("some-config", Domains.getNativeAppConfig(dataBase, "www.domain.com"));
         result = Domains.get(dataBase, "www.domain.com");
         Assert.assertEquals(1, Domains.listBySpace(dataBase, "my-space").size());
         Assert.assertEquals("www.domain.com", Domains.listBySpace(dataBase, "my-space").get(0).domain);

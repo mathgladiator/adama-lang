@@ -65,6 +65,35 @@ public class Domains {
     throw new ErrorCodeException(ErrorCodes.VAPID_NOT_FOUND_FOR_DOMAIN);
   }
 
+  public static String getNativeAppConfig(DataBase dataBase, String domain) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sqlGet = "SELECT `config`  FROM `" + dataBase.databaseName + "`.`domains` WHERE `domain`=?";
+      try (PreparedStatement statement = connection.prepareStatement(sqlGet)) {
+        statement.setString(1, domain);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            String result = rs.getString(1);
+            if (result != null) {
+              return result;
+            }
+          }
+        }
+      }
+    }
+    throw new ErrorCodeException(ErrorCodes.CONFIG_NOT_FOUND_FOR_DOMAIN);
+  }
+
+  public static void putNativeAppConfig(DataBase dataBase, String domain, String config) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String update = "UPDATE `" + dataBase.databaseName + "`.`domains` SET `config`=? WHERE `domain`=?";
+      try (PreparedStatement statement = connection.prepareStatement(update)) {
+        statement.setString(1, config);
+        statement.setString(2, domain);
+        statement.execute();
+      }
+    }
+  }
+
   public static boolean map(DataBase dataBase, int owner, String domain, String space, String key, boolean route, String certificate) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = "INSERT INTO `" + dataBase.databaseName + "`.`domains` (`owner`, `space`, `key`, `route`, `domain`, `certificate`, `automatic`, `automatic_timestamp`) VALUES (?,?,?,?,?,?,?,0)";

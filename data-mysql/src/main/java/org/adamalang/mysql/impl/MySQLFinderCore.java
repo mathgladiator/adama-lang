@@ -122,7 +122,9 @@ public class MySQLFinderCore {
               "SET `archive`=?" + ", `head_seq`=" + result.seq + //
               ", `need_gc` = (`need_gc` OR `asset_bytes` != " + result.assetBytes + ")" + //
               ", `delta_bytes`=" + result.deltaBytes + //
-              ", `asset_bytes`=" + result.assetBytes + " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
+              ", `asset_bytes`=" + result.assetBytes + //
+              ", `last_backup` = CURRENT_TIMESTAMP" + //
+              " WHERE `space`=? AND `key`=? AND `machine`=? AND `region`=? AND `type`=" + LocationType.Machine.type;
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, result.archiveKey);
         statementUpdate.setString(2, key.space);
