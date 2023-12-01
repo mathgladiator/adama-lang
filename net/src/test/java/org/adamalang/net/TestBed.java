@@ -17,6 +17,7 @@
 */
 package org.adamalang.net;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
@@ -47,13 +48,15 @@ import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.junit.Assert;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestBed implements AutoCloseable {
@@ -74,7 +77,7 @@ public class TestBed implements AutoCloseable {
   public final MockMetricsReporter metricsReporter;
 
   public TestBed(int port, String code) throws Exception {
-    SyncCompiler.compile("<direct>", "X", code, new HashMap<>(), Deliverer.FAILURE, new TreeMap<>(), true);
+    sanityCompileForTestbed(code);
     this.base = new NetBase(new NetMetrics(new NoOpMetricsFactory()), MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");
@@ -223,5 +226,31 @@ public class TestBed implements AutoCloseable {
     }
     base.shutdown();
     clientExecutor.shutdown();
+  }
+
+  public static void sanityCompileForTestbed(String code) throws Exception {
+    ObjectNode planNode = Json.newJsonObject();
+    planNode.putObject("versions").put("main", code);
+    planNode.put("default", "main");
+    DeploymentPlan plan = new DeploymentPlan(planNode.toString(), (c, t) -> {});
+    MessageDigest digest = Hashing.md5();
+    digest.update(code.getBytes(StandardCharsets.UTF_8));
+    AtomicBoolean success = new AtomicBoolean(false);
+    CountDownLatch latch = new CountDownLatch(1);
+    AsyncCompiler.forge("space", null, plan, Deliverer.FAILURE, new TreeMap<>(), AsyncByteCodeCache.DIRECT, new Callback<DeploymentFactory>() {
+      @Override
+      public void success(DeploymentFactory value) {
+        success.set(true);
+        latch.countDown();
+        System.out.println("success testbed deploy");
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.out.println("failed testbed deploy:" + ex.code);
+        latch.countDown();
+      }
+    });
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
   }
 }

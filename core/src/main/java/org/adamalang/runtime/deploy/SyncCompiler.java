@@ -102,7 +102,7 @@ public class SyncCompiler {
   }
 
   @Deprecated
-  public static LivingDocumentFactory compile(String spaceName, String className, final String code, Map<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, boolean instrument) throws ErrorCodeException {
+  private static LivingDocumentFactory compile(String spaceName, String className, final String code, Map<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, boolean instrument) throws ErrorCodeException {
     try {
       CompilerOptions.Builder builder = CompilerOptions.start();
       if (instrument) {
