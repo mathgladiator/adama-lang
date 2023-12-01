@@ -39,7 +39,7 @@ public class ConnectionContextFactory {
       ip = xForwardedFor;
     }
     String cookieHeader = headers.get(HttpHeaderNames.COOKIE);
-    TreeMap<String, String> identites = null;
+    TreeMap<String, String> identites = new TreeMap<>();
     if (cookieHeader != null) {
       for (Cookie cookie : ServerCookieDecoder.STRICT.decode(cookieHeader)) {
         if (cookie.name().startsWith("id_") && cookie.isHttpOnly() && cookie.isSecure()) {

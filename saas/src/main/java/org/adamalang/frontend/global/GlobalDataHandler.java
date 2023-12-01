@@ -124,6 +124,10 @@ public class GlobalDataHandler implements RootRegionHandler {
       responder.error(new ErrorCodeException(ErrorCodes.AUTH_COOKIE_CANT_STASH_COOKIE));
       return;
     }
+    if (request.who.context.identities == null) {
+      responder.error(new ErrorCodeException(ErrorCodes.AUTH_IDENTITIES_NOT_AVAILABLE));
+      return;
+    }
     request.who.context.identities.put(request.name, request.identity);
     responder.complete();
   }
