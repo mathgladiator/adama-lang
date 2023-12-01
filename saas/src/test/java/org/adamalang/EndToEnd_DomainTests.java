@@ -51,7 +51,7 @@ public class EndToEnd_DomainTests {
       Iterator<String> c6x = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/configure\",\"domain\":\"www.foo.com\",\"product-config\":{\"x\":true}}");
       Assert.assertEquals("FINISH:{}", c6x.next());
       Iterator<String> c6y = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/configure\",\"domain\":\"nope\",\"product-config\":{\"x\":true}}");
-      Assert.assertEquals("FINISH:{}", c6y.next());
+      Assert.assertEquals("ERROR:982291", c6y.next());
       Iterator<String> c7 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/unmap\",\"domain\":\"www.foo.com\"}");
       Assert.assertEquals("FINISH:{}", c7.next());
       Iterator<String> c8 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/list-by-space\",\"space\":\"newspace\"}");
