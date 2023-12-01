@@ -78,7 +78,7 @@ public class IdentitySigner extends SimpleService {
           if ("sign".equals(method)) {
             ObjectNode parsed = Json.parseJsonObject(request);
             String agent = parsed.get("agent").textValue();
-            String identity = Jwts.builder().setSubject(agent).setIssuer(authority).signWith(privateKey).compact();
+            String identity = Jwts.builder().subject(agent).issuer(authority).signWith(privateKey).compact();
             callback.success("{\"identity\":\"" + identity + "\"}");
           } else {
             callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));

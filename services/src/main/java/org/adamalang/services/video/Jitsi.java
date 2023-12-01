@@ -133,6 +133,6 @@ public class Jitsi extends SimpleService {
       claims.put("context", context);
     }
     claims.put("room", requestNode.get("room").textValue());
-    return Jwts.builder().setClaims(claims).setHeaderParam("kid", sub).setHeaderParam("typ", "JWT").signWith(privateKey).compact();
+    return Jwts.builder().claims(claims).header().add("kid", sub).add("typ", "JWT").and().signWith(privateKey).compact();
   }
 }

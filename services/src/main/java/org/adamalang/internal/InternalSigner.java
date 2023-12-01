@@ -40,6 +40,6 @@ public class InternalSigner {
       claims.put("puid", Integer.parseInt(who.agent));
     }
     claims.put("pa", who.authority);
-    return Jwts.builder().setClaims(claims).setIssuer("internal").setSubject(who.agent).signWith(privateKey).compact();
+    return Jwts.builder().claims(claims).issuer("internal").subject(who.agent).signWith(privateKey).compact();
   }
 }

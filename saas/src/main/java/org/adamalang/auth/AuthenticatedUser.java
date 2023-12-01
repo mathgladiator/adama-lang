@@ -59,7 +59,7 @@ public class AuthenticatedUser implements Measurable {
     claims.put("pip", context.remoteIp);
     claims.put("pak", context.assetKey);
     claims.put("pua", context.userAgent);
-    return Jwts.builder().setClaims(claims).setIssuer("host").setSubject(who.agent).signWith(key).compact();
+    return Jwts.builder().claims(claims).issuer("host").subject(who.agent).signWith(key).compact();
   }
 
   @Override

@@ -19,8 +19,6 @@ package org.adamalang.system;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.adamalang.api.ClientProbeRequest;
 import org.adamalang.api.ClientSimpleResponse;
 import org.adamalang.api.SelfClient;
@@ -85,12 +83,12 @@ public class TestEnvironment {
     this.port = 25000;
     // connect to database for global region
     {
-      KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+      KeyPair pair = Jwts.SIG.ES256.keyPair().build();
       superPublicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-      superIdentity = Jwts.builder().setSubject("super").setIssuer("super").signWith(pair.getPrivate()).compact();
+      superIdentity = Jwts.builder().subject("super").issuer("super").signWith(pair.getPrivate()).compact();
     }
     {
-      KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+      KeyPair pair = Jwts.SIG.ES256.keyPair().build();
       regionalPublicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
       regionalPrivateKey = new String(Base64.getEncoder().encode(pair.getPrivate().getEncoded()));
     }
@@ -243,7 +241,7 @@ public class TestEnvironment {
 
     byte[] rawPrivateKey = Base64.getDecoder().decode(regionalPrivateKey);
     PrivateKey regionalPrivateKey = KeyFactory.getInstance("EC").generatePrivate(new PKCS8EncodedKeySpec(rawPrivateKey));
-    config.put("regional-identity", Jwts.builder().setSubject("127.0.0.1").setIssuer("region").signWith(regionalPrivateKey).compact());
+    config.put("regional-identity", Jwts.builder().subject("127.0.0.1").issuer("region").signWith(regionalPrivateKey).compact());
     return new JsonConfig(config);
   }
 

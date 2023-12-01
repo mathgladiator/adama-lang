@@ -61,11 +61,11 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
 
   private void authHost(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
-    Jwts.parserBuilder()
-        .setSigningKey(publicKey)
+    Jwts.parser()
+        .verifyWith(publicKey)
         .requireIssuer("host")
         .build()
-        .parseClaimsJws(identity);
+        .parseSignedClaims(identity);
     ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key, null);
     AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
     session.identityCache.put(identity, user);
@@ -74,11 +74,11 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
 
   private void authInternal(Session session, String identity, ParsedToken parsedToken, Callback<AuthenticatedUser> callback) throws Exception {
     PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
-    Jwts.parserBuilder()
-        .setSigningKey(publicKey)
+    Jwts.parser()
+        .verifyWith(publicKey)
         .requireIssuer("internal")
         .build()
-        .parseClaimsJws(identity);
+        .parseSignedClaims(identity);
     ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null, null);
     AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
     session.identityCache.put(identity, user);
@@ -89,11 +89,11 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     for (String publicKey64 : superKeys) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
       try {
-        Jwts.parserBuilder()
-            .setSigningKey(publicKey)
+        Jwts.parser()
+            .verifyWith(publicKey)
             .requireIssuer("super")
             .build()
-            .parseClaimsJws(identity);
+            .parseSignedClaims(identity);
         AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("super", "super"), transportContext);
         session.identityCache.put(identity, user);
         callback.success(user);
@@ -109,11 +109,11 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
     for (String publicKey64 : regionalPublicKeys) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
       try {
-        Jwts.parserBuilder()
-            .setSigningKey(publicKey)
+        Jwts.parser()
+            .verifyWith(publicKey)
             .requireIssuer("region")
             .build()
-            .parseClaimsJws(identity);
+            .parseSignedClaims(identity);
         AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal(parsedToken.sub, "region"), transportContext);
         session.identityCache.put(identity, user);
         callback.success(user);

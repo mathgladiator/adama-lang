@@ -59,7 +59,7 @@ public class EndToEnd_AuthorityTests {
       Iterator<String> c10 = fe.execute("{\"id\":6,\"method\":\"authority/set\",\"identity\":\"" + devIdentity + "\",\"authority\":\""+authority+"\",\"key-store\":"+ks.persist()+"}");
       Assert.assertEquals("FINISH:{}", c10.next());
       PrivateKey key = Keystore.parsePrivateKey(Json.parseJsonObject(privateKeyFile));
-      String newIdentity = Jwts.builder().setSubject("me").setIssuer(authority).signWith(key).compact();
+      String newIdentity = Jwts.builder().subject("me").issuer(authority).signWith(key).compact();
       Iterator<String> c11 = fe.execute("{\"id\":3,\"method\":\"authority/create\",\"identity\":\"" + newIdentity + "\"}");
       Assert.assertEquals("ERROR:990208", c11.next());
       Iterator<String> c12 = fe.execute("{\"id\":3,\"method\":\"authority/list\",\"identity\":\"" + newIdentity + "\"}");

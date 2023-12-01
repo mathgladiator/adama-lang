@@ -93,7 +93,7 @@ public class EndToEnd_SpaceInfoTests {
       Iterator<String> c9 = fe.execute("{\"id\":6,\"method\":\"authority/set\",\"identity\":\"" + bob + "\",\"authority\":\""+authority+"\",\"key-store\":"+ks.persist()+"}");
       Assert.assertEquals("FINISH:{}", c9.next());
       PrivateKey key = Keystore.parsePrivateKey(Json.parseJsonObject(privateKeyFile));
-      String userIdentity = Jwts.builder().setSubject("me").setIssuer(authority).signWith(key).compact();
+      String userIdentity = Jwts.builder().subject("me").issuer(authority).signWith(key).compact();
       Iterator<String> c10 =
           fe.execute("{\"id\":7,\"identity\":\"" + userIdentity + "\",\"method\":\"space/list\"}");
       Assert.assertEquals("ERROR:920576", c10.next());

@@ -19,8 +19,6 @@ package org.adamalang.common.keys;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.adamalang.common.Json;
 
 import java.security.KeyFactory;
@@ -48,7 +46,7 @@ public class SigningKeyPair {
   }
 
   public static String generate(String masterKey) throws Exception {
-    KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+    KeyPair pair = Jwts.SIG.ES256.keyPair().build();
     ObjectNode localKeyFile = Json.newJsonObject();
     localKeyFile.put("algo", "ES256");
     localKeyFile.put("private", new String(Base64.getEncoder().encode(pair.getPrivate().getEncoded())));
@@ -61,6 +59,6 @@ public class SigningKeyPair {
   }
 
   public void validateTokenThrows(String token) {
-    Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token);
+    Jwts.parser().verifyWith(publicKey).build().parse(token);
   }
 }

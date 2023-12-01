@@ -52,7 +52,7 @@ public class GlobalAuthenticator implements Authenticator {
     final Runnable auth;
     try {
       PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
-      auth = () -> Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(identity);
+      auth = () -> Jwts.parser().verifyWith(publicKey).build().parseSignedClaims(identity);
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
       return;
@@ -68,11 +68,11 @@ public class GlobalAuthenticator implements Authenticator {
     for (String publicKey64 : Users.listKeys(database, userId)) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
       try {
-        Jwts.parserBuilder()
-            .setSigningKey(publicKey)
+        Jwts.parser()
+            .verifyWith(publicKey)
             .requireIssuer("adama")
             .build()
-            .parseClaimsJws(identity);
+            .parseSignedClaims(identity);
         AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), context);
         callback.success(user);
         return true;

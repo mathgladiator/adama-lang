@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
@@ -167,12 +165,12 @@ public class GlobalControlHandler implements RootGlobalHandler {
                 if (changedProfile) {
                   Users.setProfileIf(nexus.database, userId, profile.toString(), profileOld);
                 }
-                KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+                KeyPair pair = Jwts.SIG.ES256.keyPair().build();
                 String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
                 long expiry = System.currentTimeMillis() + 3 * 24 * 60 * 60000;
                 Users.addKey(nexus.database, userId, publicKey, expiry);
                 Users.validateUser(nexus.database, userId);
-                responder.complete(Jwts.builder().setSubject("" + userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
+                responder.complete(Jwts.builder().subject("" + userId).expiration(new Date(expiry)).issuer("adama").signWith(pair.getPrivate()).compact());
               } catch (Exception ex) {
                 responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));
               }
@@ -200,11 +198,11 @@ public class GlobalControlHandler implements RootGlobalHandler {
     try {
       String hash = Users.getPasswordHash(nexus.database, request.userId);
       if (SCryptUtil.check(request.password, hash)) {
-        KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+        KeyPair pair = Jwts.SIG.ES256.keyPair().build();
         String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
         long expiry = System.currentTimeMillis() + 14 * 24 * 60 * 60000;
         Users.addKey(nexus.database, request.userId, publicKey, expiry);
-        responder.complete(Jwts.builder().setSubject("" + request.userId).setExpiration(new Date(expiry)).setIssuer("adama").signWith(pair.getPrivate()).compact());
+        responder.complete(Jwts.builder().subject("" + request.userId).expiration(new Date(expiry)).issuer("adama").signWith(pair.getPrivate()).compact());
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
       }
@@ -271,13 +269,13 @@ public class GlobalControlHandler implements RootGlobalHandler {
     try {
       for (IdHashPairing idHash : Users.listInitiationPairs(nexus.database, request.userId)) {
         if (SCryptUtil.check(request.code, idHash.hash)) {
-          KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+          KeyPair pair = Jwts.SIG.ES256.keyPair().build();
           String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
           if (request.revoke != null && request.revoke) {
             Users.removeAllKeys(nexus.database, request.userId);
           }
           Users.addKey(nexus.database, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
-          responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+          responder.complete(Jwts.builder().subject("" + request.userId).issuer("adama").signWith(pair.getPrivate()).compact());
           Users.validateUser(nexus.database, request.userId);
           Users.deleteInitiationPairing(nexus.database, idHash.id);
           return;

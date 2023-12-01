@@ -37,7 +37,7 @@ public class KeystoreTests {
     Keystore.parsePrivateKey(Json.parseJsonObject(privateKey));
     Keystore ks2 = Keystore.parse(ks.persist());
     PrivateKey signingKey = Keystore.parsePrivateKey(Json.parseJsonObject(privateKey));
-    String token1 = Jwts.builder().setSubject("agent").setIssuer("a001").signWith(signingKey).compact();
+    String token1 = Jwts.builder().subject("agent").issuer("a001").signWith(signingKey).compact();
     ks.validate("a001", token1);
     try {
       ks.validate("a002", token1);

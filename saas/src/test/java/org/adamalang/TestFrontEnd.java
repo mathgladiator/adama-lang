@@ -18,8 +18,7 @@
 package org.adamalang;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts;
 import org.adamalang.auth.GlobalAuthenticator;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.CaravanMetrics;
@@ -316,7 +315,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
 
     this.webBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.parseJsonObject("{}"))));
-    this.hostKeyPair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+    this.hostKeyPair = Jwts.SIG.ES256.keyPair().build();
     int keyId = Hosts.initializeHost(dataBase, "test-region", "127.0.0.1:" + port, "web", PublicKeyCodec.encodePublicKey(hostKeyPair));
 
     MultiRegionClient adama = new MultiRegionClient(client, "test-region", hostKeyPair.getPrivate(), keyId, new TreeMap<>());

@@ -22,8 +22,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
@@ -75,7 +73,7 @@ public class Keystore {
   }
 
   public String generate(String authority) {
-    KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+    KeyPair pair = Jwts.SIG.ES256.keyPair().build();
     ObjectNode localKeyFile = Json.newJsonObject();
     localKeyFile.put("authority", authority);
     localKeyFile.put("algo", "ES256");
@@ -156,11 +154,11 @@ public class Keystore {
   public NtPrincipal validate(String authority, String identity) throws ErrorCodeException {
     for (PublicKey publicKey : keys) {
       try {
-        Jws<Claims> claims = Jwts.parserBuilder()
-            .setSigningKey(publicKey)
+        Jws<Claims> claims = Jwts.parser()
+            .verifyWith(publicKey)
             .requireIssuer(authority)
             .build()
-            .parseClaimsJws(identity);
+            .parseSignedClaims(identity);
         return new NtPrincipal(claims.getBody().getSubject(), authority);
       } catch (Exception ex) {
         // move on

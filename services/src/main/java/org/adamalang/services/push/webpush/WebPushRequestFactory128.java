@@ -19,7 +19,6 @@ package org.adamalang.services.push.webpush;
 
 import at.favre.lib.hkdf.HKDF;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.adamalang.common.keys.ECPublicKeyCodec;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.web.client.SimpleHttpRequest;
@@ -69,7 +68,7 @@ public class WebPushRequestFactory128 {
     headers.put("TTL", "" + (ttlDays * 86400));
     Date expiry = Date.from(LocalDateTime.now().plus(4, ChronoUnit.HOURS).atZone(ZoneId.systemDefault()).toInstant());
     URL url = new URL(subscription.endpoint);
-    String token = Jwts.builder().setExpiration(expiry).setSubject("mailto:" + email).setHeaderParam("typ", "JWT").setAudience(url.getProtocol() + "://" + url.getHost()).signWith(keyPair.privateKey, SignatureAlgorithm.ES256).compact();
+    String token = Jwts.builder().expiration(expiry).subject("mailto:" + email).header().add("typ", "JWT").and().audience().add(url.getProtocol() + "://" + url.getHost()).and().signWith(keyPair.privateKey).compact();
     headers.put("Authorization", "vapid t=" + token + ", k=" + Base64.getUrlEncoder().withoutPadding().encodeToString(ECPublicKeyCodec.encode(keyPair.publicKey)));
     return new SimpleHttpRequest("POST", subscription.endpoint, headers, SimpleHttpRequestBody.WRAP(body));
   }

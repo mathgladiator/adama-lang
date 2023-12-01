@@ -17,8 +17,7 @@
 */
 package org.adamalang.impl.common;
 
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -43,7 +42,7 @@ public class PublicKeyCodec {
 
   /** Invent a key pair for the host to bind to */
   public static KeyPair inventHostKey() {
-    return Keys.keyPairFor(SignatureAlgorithm.ES256);
+    return Jwts.SIG.ES256.keyPair().build();
   }
 
 }
