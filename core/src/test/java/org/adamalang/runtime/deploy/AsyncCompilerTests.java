@@ -34,7 +34,7 @@ public class AsyncCompilerTests {
     return pump(prior, plan, AsyncByteCodeCache.DIRECT);
   }
 
-  private Object pump(DeploymentFactory prior, DeploymentPlan plan, AsyncByteCodeCache cache) throws Exception {
+  public static Object pump(DeploymentFactory prior, DeploymentPlan plan, AsyncByteCodeCache cache) throws Exception {
     AtomicReference<Object> ref = new AtomicReference<>(null);
     CountDownLatch latch = new CountDownLatch(1);
     AsyncCompiler.forge("space", prior, plan, Deliverer.FAILURE, new TreeMap<>(), cache, new Callback<DeploymentFactory>() {

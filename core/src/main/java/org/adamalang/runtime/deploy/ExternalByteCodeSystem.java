@@ -15,9 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.deploy;
 
-public class Platform {
-  public static final String VERSION = "20231130182632";
-  public static final String JS_VERSION = "5f1bf2ad69cf46d1952611707e5310be";
+import org.adamalang.common.Callback;
+
+public interface ExternalByteCodeSystem {
+  /** store the byte code for a class; the class has the space and hash embedded in it */
+  public void fetchByteCode(String className, Callback<CachedByteCode> callback);
+
+  /** store the byte code for a class; the class has the space and hash embedded in it */
+  public void storeByteCode(String className, CachedByteCode code, Callback<Void> callback);
 }

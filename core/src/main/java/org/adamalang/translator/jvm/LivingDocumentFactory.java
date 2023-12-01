@@ -35,15 +35,9 @@ import org.adamalang.runtime.sys.LivingDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.security.PublicKey;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeMap;
 
 /** responsible for compiling java code into a LivingDocumentFactory */
@@ -69,7 +63,8 @@ public class LivingDocumentFactory {
         _memory += bytes.length;
       }
       this.memoryUsage = _memory + 65536;
-      final var loader = new ByteArrayClassLoader(code.classBytes);
+      // NOTE: we copy because the loader will destroy aspects of the hashmap, #wild
+      final var loader = new ByteArrayClassLoader(new HashMap<>(code.classBytes));
       final Class<?> clazz = Class.forName(code.className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);
       creationPolicyMethod = clazz.getMethod("__onCanCreate", CoreRequestContext.class);

@@ -26,6 +26,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.PostDocumentDelete;
 import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.CachedByteCode;
+import org.adamalang.runtime.deploy.ExternalByteCodeSystem;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
@@ -43,7 +44,7 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem {
+public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem, ExternalByteCodeSystem {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
@@ -308,6 +309,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     });
   }
 
+  @Override
   public void fetchByteCode(String className, Callback<CachedByteCode> callback) {
     String s3key = "bytecode/" + className + "/" + Platform.VERSION;
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
@@ -328,6 +330,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     }));
   }
 
+  @Override
   public void storeByteCode(String className, CachedByteCode code, Callback<Void> callback) {
     try {
       String s3key = "bytecode/" + className + "/" + Platform.VERSION;
