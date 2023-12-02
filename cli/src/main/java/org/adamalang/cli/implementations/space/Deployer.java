@@ -24,19 +24,13 @@ import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
-import org.adamalang.runtime.deploy.DeploymentFactory;
-import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.deploy.SyncCompiler;
-import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.validators.ValidatePlan;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/** the tool to deploy */
 public class Deployer {
-
   public static void deploy(Arguments.SpaceDeployArgs args, Output.YesOrError output) throws Exception {
     String identity = args.config.get_string("identity", null);
     final String planJson;
@@ -57,9 +51,7 @@ public class Deployer {
     if (!CodeHandlerImpl.sharedValidatePlan(planJson)) {
       throw new Exception("Failed to validate plan");
     }
-    DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
-    String spacePrefix = DeploymentFactoryBase.getSpaceClassNamePrefix(args.space);
-    SyncCompiler.forge(args.space, spacePrefix, new AtomicInteger(0), null, localPlan, Deliverer.FAILURE, new TreeMap<>());
+    ValidatePlan.validate(args.space, Json.parseJsonObject(planJson));
     try (WebSocketClient client = new WebSocketClient(args.config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
