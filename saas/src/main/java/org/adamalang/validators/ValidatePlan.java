@@ -20,6 +20,7 @@ package org.adamalang.validators;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Hashing;
 import org.adamalang.runtime.deploy.DeployedVersion;
 import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -35,6 +36,8 @@ import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -54,7 +57,15 @@ public class ValidatePlan {
       final var globals = GlobalObjectPool.createPoolWithStdLib();
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();
-      document.setClassName(space);
+
+      MessageDigest digest = Hashing.sha384();
+      digest.update( entry.getValue().main.getBytes(StandardCharsets.UTF_8));
+      for (Map.Entry<String, String> includeEntry : entry.getValue().includes.entrySet()) {
+        digest.update(includeEntry.getKey().getBytes(StandardCharsets.UTF_8));
+        digest.update(includeEntry.getValue().getBytes(StandardCharsets.UTF_8));
+      }
+      String className = "Test" + space + "_" + Hashing.finishAndEncodeHex(digest);
+      document.setClassName(className);
       document.setIncludes(entry.getValue().includes);
       final var tokenEngine = new TokenEngine("main", entry.getValue().main.codePoints().iterator());
       final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
@@ -66,6 +77,8 @@ public class ValidatePlan {
       if (!document.check(state.scope())) {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());
       }
+      final var java = document.compileJava(state);
+      SyncCompiler.compile(space, className, java, "");
     }
   }
 }
