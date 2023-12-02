@@ -63,10 +63,15 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
     deliverer.deliver(agent, key, id, result, firstParty, callback);
   }
 
-  public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
+  public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys, Callback<Void> callback){
     long started = System.currentTimeMillis();
     try {
-      spaces.put(space, SyncCompiler.forge(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
+      try {
+        spaces.put(space, SyncCompiler.forge(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
+        callback.success(null);
+      } catch (ErrorCodeException ex) {
+        callback.failure(ex);
+      }
     } finally {
       PerfTracker.writeDeploymentTime(space, System.currentTimeMillis() - started);
     }

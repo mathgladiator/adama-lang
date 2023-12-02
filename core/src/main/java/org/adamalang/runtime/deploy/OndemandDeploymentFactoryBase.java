@@ -50,13 +50,18 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
       fetcher.find(key.space, metrics.deploy_plan_fetch.wrap(new Callback<>() {
         @Override
         public void success(DeploymentBundle bundle) {
-          try {
-            base.deploy(key.space, bundle.plan, bundle.keys);
-            sync.watch(key.space);
-            base.fetch(key, callback);
-          } catch (ErrorCodeException ex) {
-            callback.failure(ex);
-          }
+          base.deploy(key.space, bundle.plan, bundle.keys, new Callback<Void>() {
+            @Override
+            public void success(Void value) {
+              sync.watch(key.space);
+              base.fetch(key, callback);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
         }
 
         @Override
@@ -72,13 +77,18 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
     fetcher.find(space, metrics.deploy_plan_push.wrap(new Callback<DeploymentBundle>() {
       @Override
       public void success(DeploymentBundle bundle) {
-        try {
-          base.deploy(space, bundle.plan, bundle.keys);
-          sync.watch(space);
-          callback.success(null);
-        } catch (ErrorCodeException ex) {
-          failure(ex);
-        }
+        base.deploy(space, bundle.plan, bundle.keys, new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            sync.watch(space);
+            callback.success(null);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
       }
 
       @Override

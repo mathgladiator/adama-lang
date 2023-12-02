@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.cli.implementations.CodeHandlerImpl;
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
@@ -155,10 +156,10 @@ public class DevBoxAdamaMicroVerse {
                 }
               }
               io.notice("adama|deploying: " + defn.spaceName);
+              CountDownLatch awaitDeployment = new CountDownLatch(2);
               defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
                 io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
-              }), new TreeMap<>());
-              CountDownLatch awaitDeployment = new CountDownLatch(1);
+              }), new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(awaitDeployment));
               service.deploy(new DeploymentMonitor() {
                  int documentsChanged;
                  @Override

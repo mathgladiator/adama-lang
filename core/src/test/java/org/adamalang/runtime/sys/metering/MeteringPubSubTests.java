@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.sys.metering;
 
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.mocks.MockTime;
@@ -41,7 +42,9 @@ public class MeteringPubSubTests {
               t.printStackTrace();
             });
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("space", plan, new TreeMap<>());
+    CountDownLatch latchDeploy = new CountDownLatch(1);
+    base.deploy("space", plan, new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(latchDeploy));
+    Assert.assertTrue(latchDeploy.await(5000, TimeUnit.MILLISECONDS));
     MeteringPubSub pubsub = new MeteringPubSub(new MockTime(), base);
     {
       AtomicInteger pubs = new AtomicInteger(0);

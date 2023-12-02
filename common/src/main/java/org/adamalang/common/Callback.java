@@ -17,6 +17,7 @@
 */
 package org.adamalang.common;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
 /**
@@ -44,6 +45,20 @@ public interface Callback<T> {
     public void failure(ErrorCodeException ex) {
     }
   };
+
+  public static Callback<Void> FINISHED_LATCH_DONT_CARE_VOID(CountDownLatch latch) {
+    return new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        latch.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        latch.countDown();
+      }
+    };
+  }
 
   static <In, Out> Callback<In> transform(Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
     return new Callback<>() {

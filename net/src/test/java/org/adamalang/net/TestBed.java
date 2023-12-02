@@ -95,7 +95,9 @@ public class TestBed implements AutoCloseable {
     DeploymentPlan plan = new DeploymentPlan(planWriter.toString(), (t, errorCode) -> {});
 
     DeploymentFactoryBase base = new DeploymentFactoryBase();
-    base.deploy("space", plan, new TreeMap<>());
+    CountDownLatch latch = new CountDownLatch(1);
+    base.deploy("space", plan, new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(latch));
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
 
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
     this.meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, base);
