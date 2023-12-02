@@ -212,10 +212,11 @@ public class Help {
     System.out.println();
     System.out.println(Util.prefix("SERVICESSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("auto", 15), Util.ANSI.Green) + "The config will decide the role");
-    System.out.println("    " + Util.prefix(Util.justifyLeft("backend", 15), Util.ANSI.Green) + "Spin up a gRPC back-end node");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("backend", 15), Util.ANSI.Green) + "Spin up a Adama back-end node");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dashboards", 15), Util.ANSI.Green) + "Produce dashboards for prometheus.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("frontend", 15), Util.ANSI.Green) + "Spin up a WebSocket front-end node");
     System.out.println("    " + Util.prefix(Util.justifyLeft("overlord", 15), Util.ANSI.Green) + "Spin up the cluster overlord");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("prepare", 15), Util.ANSI.Green) + "Run code that signals a deployment is coming");
     System.out.println("    " + Util.prefix(Util.justifyLeft("probe", 15), Util.ANSI.Green) + "Connect to the local Adama instance");
     System.out.println("    " + Util.prefix(Util.justifyLeft("solo", 15), Util.ANSI.Green) + "Spin up a solo machine");
   }

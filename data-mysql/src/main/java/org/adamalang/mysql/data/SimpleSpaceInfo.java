@@ -15,9 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.mysql.data;
 
-public class Platform {
-  public static final String VERSION = "20231202130439";
-  public static final String JS_VERSION = "75218bdf793d6c61809e928fe40f060b";
+/** a simplified view of a space for admin listing */
+public class SimpleSpaceInfo {
+  public final int id;
+  public final int owner;
+  public final String name;
+
+  public SimpleSpaceInfo(int id, int owner, String name) {
+    this.id = id;
+    this.owner = owner;
+    this.name = name;
+  }
 }

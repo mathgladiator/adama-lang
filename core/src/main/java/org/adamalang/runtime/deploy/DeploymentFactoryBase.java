@@ -26,6 +26,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
+import org.adamalang.runtime.sys.PerfTracker;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
@@ -63,7 +64,12 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
   }
 
   public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
-    spaces.put(space, SyncCompiler.forge(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
+    long started = System.currentTimeMillis();
+    try {
+      spaces.put(space, SyncCompiler.forge(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
+    } finally {
+      PerfTracker.writeDeploymentTime(space, System.currentTimeMillis() - started);
+    }
   }
 
   public boolean contains(String space) {

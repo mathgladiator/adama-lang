@@ -914,9 +914,14 @@
                 The config will decide the role
             </documentation>
         </command>
+        <command name="prepare">
+            <documentation>
+                Run code that signals a deployment is coming
+            </documentation>
+        </command>
         <command name="backend">
             <documentation>
-                Spin up a gRPC back-end node
+                Spin up a Adama back-end node
             </documentation>
         </command>
         <command name="frontend">

@@ -42,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem, ExternalByteCodeSystem {
@@ -311,7 +312,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
 
   @Override
   public void fetchByteCode(String className, Callback<CachedByteCode> callback) {
-    String s3key = "bytecode/" + className + "/" + Platform.VERSION;
+    String s3key = "bytecode/" + className.replaceAll(Pattern.quote("_"), Matcher.quoteReplacement("/")) + "/" + Platform.VERSION;
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new ByteArrayCallbackHttpResponder(LOGGER, metrics.fetch_byte_code.start(), new Callback<byte[]>() {
       @Override
@@ -333,7 +334,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   @Override
   public void storeByteCode(String className, CachedByteCode code, Callback<Void> callback) {
     try {
-      String s3key = "bytecode/" + className + "/" + Platform.VERSION;
+      String s3key = "bytecode/" + className.replaceAll(Pattern.quote("_"), Matcher.quoteReplacement("/")) + "/" + Platform.VERSION;
       SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "PUT", s3key, null).buildWithBytesAsBody(code.pack());
       base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.store_byte_code.start(), callback));
     } catch (ErrorCodeException ex) {

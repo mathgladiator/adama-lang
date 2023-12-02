@@ -21,7 +21,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.system.common.CloudBoot;
 import org.adamalang.system.common.EveryMachine;
-import org.adamalang.system.global.DataBaseBoot;
+import org.adamalang.system.common.DataBaseBoot;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
 import org.adamalang.common.net.NetBase;

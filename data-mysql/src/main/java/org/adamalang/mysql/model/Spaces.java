@@ -204,6 +204,18 @@ public class Spaces {
     });
   }
 
+  public static ArrayList<SimpleSpaceInfo> listAllSpaces(DataBase dataBase) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `id`, `owner`, `name` FROM `" + dataBase.databaseName + //
+          "`.`spaces` ORDER BY `id` ASC";
+      ArrayList<SimpleSpaceInfo> results = new ArrayList<>();
+      DataBase.walk(connection, (rs) -> {
+        results.add(new SimpleSpaceInfo(rs.getInt(1), rs.getInt(2), rs.getString(3)));
+      }, sql);
+      return results;
+    });
+  }
+
   public static ArrayList<DeletedSpace> listDeletedSpaces(DataBase dataBase) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT `id`,`name` FROM `" + dataBase.databaseName + "`.`spaces` WHERE `owner`=0";

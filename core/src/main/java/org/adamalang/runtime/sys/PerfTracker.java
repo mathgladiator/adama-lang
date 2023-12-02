@@ -50,6 +50,22 @@ public class PerfTracker {
     };
   }
 
+  public static void writeDeploymentTime(String space, long latency) {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("@timestamp");
+    writer.writeString(LogTimestamp.now());
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("deployment");
+    writer.writeObjectFieldIntro("space");
+    writer.writeString(space);
+    writer.writeObjectFieldIntro("latency");
+    writer.writeLong(latency);
+    writer.endObject();
+    String result = writer.toString();
+    LOG.error(result);
+  }
+
   public String dump() {
     if (samples.isEmpty()) {
       return null;

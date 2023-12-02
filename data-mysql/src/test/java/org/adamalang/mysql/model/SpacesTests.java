@@ -58,6 +58,16 @@ public class SpacesTests {
         Assert.assertEquals(2, names.size());
         Assert.assertEquals("space1", names.get(0));
         Assert.assertEquals("space2", names.get(1));
+
+        ArrayList<SimpleSpaceInfo> spaces = Spaces.listAllSpaces(dataBase);
+        Assert.assertEquals(2, spaces.size());
+        Assert.assertEquals("space1", spaces.get(0).name);
+        Assert.assertEquals("space2", spaces.get(1).name);
+        Assert.assertEquals(1, spaces.get(0).id);
+        Assert.assertEquals(2, spaces.get(1).id);
+        Assert.assertEquals(1, spaces.get(0).owner);
+        Assert.assertEquals(2, spaces.get(1).owner);
+
         try {
           Spaces.createSpace(dataBase, bob, "space1");
           Assert.fail();

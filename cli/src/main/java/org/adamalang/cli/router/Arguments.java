@@ -4537,7 +4537,7 @@ public class Arguments {
 			return returnArgs;
 		}
 		public static void help() {
-			System.out.println(Util.prefix("Spin up a gRPC back-end node", Util.ANSI.Green));
+			System.out.println(Util.prefix("Spin up a Adama back-end node", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama services backend", Util.ANSI.Green));
 		}
@@ -4642,6 +4642,40 @@ public class Arguments {
 			System.out.println(Util.prefix("Spin up the cluster overlord", Util.ANSI.Green));
 			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
 			System.out.println("    " + Util.prefix("adama services overlord", Util.ANSI.Green));
+		}
+	}
+	public static class ServicesPrepareArgs {
+		public Config config;
+		public static ServicesPrepareArgs from(String[] args, int start) {
+			ServicesPrepareArgs returnArgs = new ServicesPrepareArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(Util.prefix("Run code that signals a deployment is coming", Util.ANSI.Green));
+			System.out.println(Util.prefixBold("USAGE:", Util.ANSI.Yellow));
+			System.out.println("    " + Util.prefix("adama services prepare", Util.ANSI.Green));
 		}
 	}
 	public static class ServicesProbeArgs {

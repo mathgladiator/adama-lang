@@ -19,9 +19,12 @@ package org.adamalang.runtime.deploy;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** manages the relationship between compiling directly and using an external bytecode cache */
 public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
+  private static final Logger LOG = LoggerFactory.getLogger(ManagedAsyncByteCodeCache.class);
   private final ExternalByteCodeSystem extern;
 
   public ManagedAsyncByteCodeCache(ExternalByteCodeSystem extern) {
@@ -40,8 +43,18 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
       public void failure(ErrorCodeException ex) {
         try {
           CachedByteCode code = SyncCompiler.compile(spaceName, className, javaSource, reflection);
-          callback.success(code);
-          extern.storeByteCode(className, code, Callback.DONT_CARE_VOID);
+          extern.storeByteCode(className, code, new Callback<>() {
+            @Override
+            public void success(Void value) {
+              callback.success(code);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              LOG.error("failed-store-code:" + ex.code);
+              callback.success(code);
+            }
+          });
         } catch (ErrorCodeException problem) {
           callback.failure(problem);
         }

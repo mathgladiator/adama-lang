@@ -940,6 +940,16 @@ public class MainRouter {
                servicesHandler.overlord(servicesArgs, out);
                return 0;
             }
+            case "prepare": {
+              ServicesPrepareArgs servicesArgs = ServicesPrepareArgs.from(args, 2);
+              if (servicesArgs == null) {
+                ServicesPrepareArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               servicesHandler.prepare(servicesArgs, out);
+               return 0;
+            }
             case "probe": {
               ServicesProbeArgs servicesArgs = ServicesProbeArgs.from(args, 2);
               if (servicesArgs == null) {
