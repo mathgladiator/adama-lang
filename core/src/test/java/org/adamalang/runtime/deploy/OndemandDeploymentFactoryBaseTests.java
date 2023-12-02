@@ -37,7 +37,7 @@ public class OndemandDeploymentFactoryBaseTests {
         "{\"versions\":{\"x\":\"\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
         (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
@@ -97,7 +97,7 @@ public class OndemandDeploymentFactoryBaseTests {
         "{\"versions\":{\"x\":\"\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
         (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
@@ -154,7 +154,7 @@ public class OndemandDeploymentFactoryBaseTests {
         "{\"versions\":{\"x\":\"int x\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
         (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
@@ -185,7 +185,7 @@ public class OndemandDeploymentFactoryBaseTests {
         "{\"versions\":{\"x\":\"int x\",\"y\":\"\",\"z\":\"\"},\"default\":\"z\",\"plan\":[{\"version\":\"x\",\"percent\":0,\"keys\":[\"1\",\"2\"],\"prefix\":\"k\",\"seed\":\"a2\"},{\"version\":\"y\",\"percent\":50,\"prefix\":\"\",\"seed\":\"a2\"}]}",
         (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {
@@ -215,7 +215,7 @@ public class OndemandDeploymentFactoryBaseTests {
 
   @Test
   public void cant_find() throws Exception {
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     Assert.assertFalse(base.contains("space"));
     MockDeploySync sync = new MockDeploySync();
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), base, new PlanFetcher() {

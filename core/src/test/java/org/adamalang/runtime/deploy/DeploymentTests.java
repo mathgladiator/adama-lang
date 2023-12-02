@@ -51,7 +51,7 @@ public class DeploymentTests {
             (t, errorCode) -> {
               t.printStackTrace();
             });
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     {
       CountDownLatch latch = new CountDownLatch(1);
       base.deploy("MySpace", plan1, new TreeMap<>(), new Callback<Void>() {

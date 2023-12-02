@@ -27,6 +27,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -104,7 +105,7 @@ public class DevCoreServiceFactory {
       }
     });
     flusher.start();
-    this.base = new DeploymentFactoryBase();
+    this.base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
     }, new MetricsReporter() {
       @Override

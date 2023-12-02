@@ -37,7 +37,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":\"@con\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
       @Override
@@ -61,7 +61,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":\"public int x = true;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
 
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
@@ -85,7 +85,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
       @Override
@@ -108,7 +108,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"versions\":{\"x\":{\"main\":\"public int x = 123;\",\"rxhtml\":\"<forest><page uri=\\\"/\\\">Hello World</page></forest>\"}},\"default\":\"x\",\"plan\":[]}",
             (t, errorCode) -> {});
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
       @Override

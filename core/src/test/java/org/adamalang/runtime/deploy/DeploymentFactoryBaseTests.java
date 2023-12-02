@@ -29,7 +29,7 @@ import org.junit.Test;
 public class DeploymentFactoryBaseTests {
   @Test
   public void coverage_dumb() {
-    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     base.fetch(
         new Key("space", "key"),
         new Callback<LivingDocumentFactory>() {

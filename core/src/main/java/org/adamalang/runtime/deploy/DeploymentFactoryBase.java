@@ -36,11 +36,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** this is the base for all spaces to resolve against */
 public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deliverer, Undeploy {
+  private final AsyncByteCodeCache cache;
   private final AtomicInteger newClassId;
   private final ConcurrentHashMap<String, DeploymentFactory> spaces;
   private Deliverer deliverer;
 
-  public DeploymentFactoryBase() {
+  public DeploymentFactoryBase(AsyncByteCodeCache cache) {
+    this.cache = cache;
     this.newClassId = new AtomicInteger(0);
     this.spaces = new ConcurrentHashMap<>();
     this.deliverer = Deliverer.FAILURE;

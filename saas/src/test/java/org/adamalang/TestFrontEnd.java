@@ -42,9 +42,7 @@ import org.adamalang.mysql.impl.GlobalFinder;
 import org.adamalang.mysql.impl.GlobalPlanFetcher;
 import org.adamalang.mysql.model.*;
 import org.adamalang.runtime.data.BoundLocalFinderService;
-import org.adamalang.runtime.deploy.DeploySync;
-import org.adamalang.runtime.deploy.DeploymentMetrics;
-import org.adamalang.runtime.deploy.OndemandDeploymentFactoryBase;
+import org.adamalang.runtime.deploy.*;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
@@ -71,7 +69,6 @@ import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.ManagedDataService;
 import org.adamalang.runtime.data.managed.Base;
-import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
@@ -232,7 +229,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     });
     flusher.start();
 
-    deploymentFactoryBase = new DeploymentFactoryBase();
+    deploymentFactoryBase = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
     // TODO: test the
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, new GlobalPlanFetcher(dataBase, masterKey), new DeploySync() {
       @Override
