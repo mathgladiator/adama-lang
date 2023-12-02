@@ -47,7 +47,7 @@ public class DeploymentFactoryTests {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        Assert.assertEquals(117823, ex.code);
+        Assert.assertEquals(198174, ex.code);
         latch.countDown();
       }
     });
