@@ -67,16 +67,20 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
 
   public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys, Callback<Void> callback){
     long started = System.currentTimeMillis();
-    try {
-      try {
-        spaces.put(space, SyncCompiler.forge(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan, this, keys));
+    AsyncCompiler.forge(space, spaces.get(space), plan, this, keys, cache, new Callback<DeploymentFactory>() {
+      @Override
+      public void success(DeploymentFactory factory) {
+        spaces.put(space, factory);
+        PerfTracker.writeDeploymentTime(space, System.currentTimeMillis() - started, true);
         callback.success(null);
-      } catch (ErrorCodeException ex) {
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        PerfTracker.writeDeploymentTime(space, System.currentTimeMillis() - started, false);
         callback.failure(ex);
       }
-    } finally {
-      PerfTracker.writeDeploymentTime(space, System.currentTimeMillis() - started);
-    }
+    });
   }
 
   public boolean contains(String space) {

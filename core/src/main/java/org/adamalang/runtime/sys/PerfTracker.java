@@ -50,7 +50,7 @@ public class PerfTracker {
     };
   }
 
-  public static void writeDeploymentTime(String space, long latency) {
+  public static void writeDeploymentTime(String space, long latency, boolean success) {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.beginObject();
     writer.writeObjectFieldIntro("@timestamp");
@@ -61,6 +61,8 @@ public class PerfTracker {
     writer.writeString(space);
     writer.writeObjectFieldIntro("latency");
     writer.writeLong(latency);
+    writer.writeObjectFieldIntro("success");
+    writer.writeBoolean(success);
     writer.endObject();
     String result = writer.toString();
     LOG.error(result);
