@@ -781,6 +781,16 @@ public class MainRouter {
                frontendHandler.bundle(frontendArgs, out);
                return 0;
             }
+            case "decrypt-product-config": {
+              FrontendDecryptProductConfigArgs frontendArgs = FrontendDecryptProductConfigArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendDecryptProductConfigArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.decryptProductConfig(frontendArgs, out);
+               return 0;
+            }
             case "dev-server": {
               FrontendDevServerArgs frontendArgs = FrontendDevServerArgs.from(args, 2);
               if (frontendArgs == null) {
@@ -789,6 +799,26 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                frontendHandler.devServer(frontendArgs, out);
+               return 0;
+            }
+            case "enable-encryption": {
+              FrontendEnableEncryptionArgs frontendArgs = FrontendEnableEncryptionArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendEnableEncryptionArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.enableEncryption(frontendArgs, out);
+               return 0;
+            }
+            case "encrypt-product-config": {
+              FrontendEncryptProductConfigArgs frontendArgs = FrontendEncryptProductConfigArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendEncryptProductConfigArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.encryptProductConfig(frontendArgs, out);
                return 0;
             }
             case "make-200": {

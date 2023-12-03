@@ -91,7 +91,10 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"domain", "unmap", "--help"});
     Main.testMain(new String[]{"frontend", "--help"});
     Main.testMain(new String[]{"frontend", "bundle", "--help"});
+    Main.testMain(new String[]{"frontend", "decrypt-product-config", "--help"});
     Main.testMain(new String[]{"frontend", "dev-server", "--help"});
+    Main.testMain(new String[]{"frontend", "enable-encryption", "--help"});
+    Main.testMain(new String[]{"frontend", "encrypt-product-config", "--help"});
     Main.testMain(new String[]{"frontend", "make-200", "--help"});
     Main.testMain(new String[]{"frontend", "mobile-capacitor", "--help"});
     Main.testMain(new String[]{"frontend", "push-generate", "--help"});

@@ -192,7 +192,10 @@ public class Help {
     System.out.println();
     System.out.println(Util.prefix("FRONTENDSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix(Util.justifyLeft("bundle", 15), Util.ANSI.Green) + "Bundle many *.rx.html into one big one.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("decrypt-product-config", 15), Util.ANSI.Green) + "Decrypt product config");
     System.out.println("    " + Util.prefix(Util.justifyLeft("dev-server", 15), Util.ANSI.Green) + "Host the working directory as a webserver");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("enable-encryption", 15), Util.ANSI.Green) + "Encrypted product config encryption by generating a master key which");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("encrypt-product-config", 15), Util.ANSI.Green) + "Encrypt product config");
     System.out.println("    " + Util.prefix(Util.justifyLeft("make-200", 15), Util.ANSI.Green) + "Create a 200.html");
     System.out.println("    " + Util.prefix(Util.justifyLeft("mobile-capacitor", 15), Util.ANSI.Green) + "Create a shell for https://capacitorjs.com/");
     System.out.println("    " + Util.prefix(Util.justifyLeft("push-generate", 15), Util.ANSI.Green) + "Generate VAPID tokens for a devbox.");

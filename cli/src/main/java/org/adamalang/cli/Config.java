@@ -74,4 +74,12 @@ public class Config extends JsonConfig {
     ObjectNode cache = Json.parseJsonObject(Files.readString(_configFile.toPath()));
     return new Config(cache, argsToUse.toArray(new String[argsToUse.size()]), _configPath);
   }
+
+  public String getMasterKey() throws Exception {
+    File masterKeyFile = new File("master.key.json");
+    if (!masterKeyFile.exists()) {
+      throw new Exception(masterKeyFile.getName() + " doesn't exist, it must");
+    }
+    return Json.parseJsonObject(Files.readString(masterKeyFile.toPath())).get("mk").textValue();
+  }
 }

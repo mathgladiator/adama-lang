@@ -24,6 +24,7 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.DomainHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
+import org.adamalang.common.keys.MasterKey;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -54,7 +55,15 @@ public class DomainHandlerImpl implements DomainHandler {
         request.put("method", "domain/configure");
         request.put("identity", identity);
         request.put("domain", args.domain);
-        request.put("product-config", Json.parseJsonObject(Files.readString(new File(args.product).toPath())).toString());
+        String productConfig = Files.readString(new File(args.product).toPath());
+        ObjectNode productConfigObject;
+        try {
+          productConfigObject = Json.parseJsonObject(productConfig);
+        } catch (Exception ex) {
+          productConfig = MasterKey.decrypt(args.config.getMasterKey(), productConfig);
+          productConfigObject = Json.parseJsonObject(productConfig);
+        }
+        request.set("product-config", productConfigObject);
         connection.execute(request);
         output.out();
       }

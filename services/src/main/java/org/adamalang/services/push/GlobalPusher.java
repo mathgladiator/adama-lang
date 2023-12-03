@@ -93,7 +93,7 @@ public class GlobalPusher implements Pusher {
     this.firebaseCache = new ConcurrentHashMap<>();
   }
 
-  private void webPush(ObjectNode rawSub, DeviceSubscription subscription, VAPIDPublicPrivateKeyPair pair, String payload, Callback<Void> callback) throws Exception {
+  private void webPush(ObjectNode rawSub, DeviceSubscription subscription, VAPIDPublicPrivateKeyPair pair, String payload) throws Exception {
     Subscription sub = new Subscription(rawSub);
     SimpleHttpRequest request = webPushFactory128.make(pair, sub, 14, payload.getBytes(StandardCharsets.UTF_8));
     webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.webpush_send.start(), new Callback<Void>() {
@@ -101,7 +101,6 @@ public class GlobalPusher implements Pusher {
 
       @Override
       public void success(Void value) {
-        callback.success(null);
       }
 
       @Override
@@ -114,12 +113,14 @@ public class GlobalPusher implements Pusher {
               PushSubscriptions.deleteSubscription(dataBase, boundId);
             }
           });
+        } else {
+          LOGGER.error("webpush-failure:" + ex.code + ";sub-id=" + subscription.id);
         }
       }
     }));
   }
 
-  private void capacitorPush(String registrationToken, ObjectNode payload, FirebaseCachePayload cache) {
+  private void capacitorPush(int subId, String registrationToken, ObjectNode payload, FirebaseCachePayload cache) {
     ObjectNode root = Json.newJsonObject();
     ObjectNode message = root.putObject("message");
     ObjectNode notif = message.putObject("notification");
@@ -147,14 +148,14 @@ public class GlobalPusher implements Pusher {
       headers.put("Authorization", "Bearer " + authToken);
       headers.put("Content-Type", "application/json; UTF-8");
       SimpleHttpRequest request = new SimpleHttpRequest("POST", postUrl, headers, SimpleHttpRequestBody.WRAP(root.toString().getBytes(StandardCharsets.UTF_8)));
-      webClientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, new NoOpMetricsFactory().makeRequestResponseMonitor("").start(), new Callback<>() {
+      webClientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.capacitor_send.start(), new Callback<>() {
         @Override
         public void success(String value) {
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
-          LOGGER.error("failed-firebase-notif:" + ex.code);
+          LOGGER.error("failed-firebase-notif:" + ex.code + ";" + subId);
         }
       }));
     } catch (Exception ex) {
@@ -183,7 +184,7 @@ public class GlobalPusher implements Pusher {
                     .fromStream(new ByteArrayInputStream(firebaseNode.toString().getBytes(StandardCharsets.UTF_8))) //
                     .createScoped(Arrays.asList(new String[]{"https://www.googleapis.com/auth/firebase.messaging"}));
                 credentials.refresh();
-                firebaseCachePayload = new FirebaseCachePayload(firebaseNode.get("product_id").textValue(), credentials);
+                firebaseCachePayload = new FirebaseCachePayload(firebaseNode.get("project_id").textValue(), credentials);
                 firebaseCache.put(domain, firebaseCachePayload);
               }
             } catch (Exception ex) {
@@ -196,16 +197,17 @@ public class GlobalPusher implements Pusher {
             ObjectNode raw = Json.parseJsonObject(subscription.subscription);
             String method = raw.get("@method").textValue();
             if ("webpush".equals(method)) {
-              webPush(raw, subscription, pair, payload, callback);
+              webPush(raw, subscription, pair, payload);
             } else if ("capacitor".equals(method)) { // use firebase stuff
               if (firebaseCachePayload != null) {
                 String registrationToken = raw.get("token").textValue();
-                capacitorPush(registrationToken, payloadNode, firebaseCachePayload);
+                capacitorPush(subscription.id, registrationToken, payloadNode, firebaseCachePayload);
               } else {
                 LOGGER.error("no-product-config:" + domain);
               }
             }
           }
+          callback.success(null);
         } catch (Exception ex) {
           LOGGER.error("failed-notify", ex);
           callback.failure(new ErrorCodeException(ErrorCodes.GLOBAL_PUSHER_UNKNOWN_FAILURE));

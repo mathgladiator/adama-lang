@@ -14,6 +14,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="mobile-config" type="string" short="mc">
+        <documentation>
+            The configuration file for a mobile app
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="types" type="string" short="ty">
         <documentation>
             The path for RxHTML to scan for reflected types.
@@ -41,12 +47,6 @@
     <arg-definition name="debugger" type="bool" short="dbg">
         <documentation>
             Is the online debugger available
-        </documentation>
-    </arg-definition>
-
-    <arg-definition name="devmode" type="bool" short="dm">
-        <documentation>
-            Developer mode.
         </documentation>
     </arg-definition>
 
@@ -862,10 +862,27 @@
             <arg name="rxhtml-path" default="frontend" />
             <arg name="asset-path" default="assets" />
             <arg name="local-libadama-path" />
-            <arg name="domain" />
-            <arg name="output" />
-            <arg name="devmode" default="false" />
             <arg name="types" default="types" />
+            <arg name="mobile-config" />
+        </command>
+        <command name="enable-encryption">
+            <documentation>
+                Encrypted product config encryption by generating a master key which
+            </documentation>
+        </command>
+        <command name="encrypt-product-config">
+            <documentation>
+                Encrypt product config
+            </documentation>
+            <arg name="input" default="product.config.json" />
+            <arg name="output" default="product.config.json.encrypted" />
+        </command>
+        <command name="decrypt-product-config">
+            <documentation>
+                Decrypt product config
+            </documentation>
+            <arg name="input" default="product.config.json.encrypted" />
+            <arg name="output" default="product.config.json" />
         </command>
         <command name="wrap-css">
             <documentation>

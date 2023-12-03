@@ -22,7 +22,10 @@ import org.adamalang.cli.runtime.Output.*;
 
 public interface FrontendHandler {
   void bundle(FrontendBundleArgs args, YesOrError output) throws Exception;
+  void decryptProductConfig(FrontendDecryptProductConfigArgs args, YesOrError output) throws Exception;
   void devServer(FrontendDevServerArgs args, YesOrError output) throws Exception;
+  void enableEncryption(FrontendEnableEncryptionArgs args, YesOrError output) throws Exception;
+  void encryptProductConfig(FrontendEncryptProductConfigArgs args, YesOrError output) throws Exception;
   void make200(FrontendMake200Args args, YesOrError output) throws Exception;
   void mobileCapacitor(FrontendMobileCapacitorArgs args, YesOrError output) throws Exception;
   void pushGenerate(FrontendPushGenerateArgs args, YesOrError output) throws Exception;
