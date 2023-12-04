@@ -19,6 +19,7 @@ package org.adamalang.system.distributed;
 
 import org.adamalang.auth.CachedAuthenticator;
 import org.adamalang.auth.GlobalAuthenticator;
+import org.adamalang.runtime.deploy.ManagedAsyncByteCodeCache;
 import org.adamalang.system.CommonServiceInit;
 import org.adamalang.system.FrontendHttpHandler;
 import org.adamalang.system.Role;
@@ -73,7 +74,8 @@ public class Frontend {
     GlobalAssetSystem assets = new GlobalAssetSystem(init.database, init.masterKey, cachedAuthenticator, adama, init.s3);
     ArrayList<String> superKeys = config.get_str_list("super-public-keys");
     ArrayList<String> regionalKeys = config.get_str_list("regional-public-keys");
-    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, cachedAuthenticator, assets, init.metricsFactory, new File("inflight"), accessLogger, init.masterKey, init.webBase, init.region, init.machine, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey));
+    ManagedAsyncByteCodeCache byteCodeCache = new ManagedAsyncByteCodeCache(init.s3);
+    GlobalExternNexus nexus = new GlobalExternNexus(frontendConfig, init.ses, init.database, adama, cachedAuthenticator, assets, init.metricsFactory, new File("inflight"), accessLogger, init.masterKey, init.webBase, init.region, init.machine, init.hostKey, init.publicKeyId, superKeys.toArray(new String[superKeys.size()]), regionalKeys.toArray(new String[superKeys.size()]), init.sqs, init.globalFinder, new PrivateKeyWithId(init.publicKeyId, init.hostKey), byteCodeCache);
     System.err.println("ExternNexus constructed");
     ServiceBase serviceBase = BootstrapGlobalServiceBase.make(nexus, http);
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();

@@ -35,6 +35,8 @@ import org.adamalang.mysql.impl.GlobalFinder;
 import org.adamalang.mysql.impl.GlobalMetricsReporter;
 import org.adamalang.mysql.impl.MySQLFinderCore;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
+import org.adamalang.runtime.deploy.AsyncByteCodeCache;
+import org.adamalang.runtime.deploy.ManagedAsyncByteCodeCache;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.io.JsonLogger;
@@ -72,8 +74,9 @@ public class GlobalExternNexus {
   public final VAPIDFactory vapidFactory;
   public final Authenticator authenticator;
   public final SimpleExecutor crypto;
+  public final AsyncByteCodeCache byteCodeCache;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey, AsyncByteCodeCache byteCodeCache) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -103,6 +106,7 @@ public class GlobalExternNexus {
     attachmentRoot.mkdir();
     this.vapidFactory = new VAPIDFactory(new SecureRandom());
     this.crypto = SimpleExecutor.create("crypto");
+    this.byteCodeCache = byteCodeCache;
   }
 
   public void close() throws Exception {

@@ -72,12 +72,12 @@ public class LocalRegionClient {
     table.get(key, callback);
   }
 
-  public void getDeploymentTargets(String space, Consumer<String> stream) {
+  public void getDeploymentTargets(String space, Consumer<String> stream, int reserveCapacity) {
     table.list(space, targets -> clientFinder.findCapacity(targets, (set) -> {
       for (String target : set) {
         stream.accept(target);
       }
-    }, 3));
+    }, reserveCapacity));
   }
 
   public void waitForCapacity(String space, int timeout, Consumer<Boolean> done) {

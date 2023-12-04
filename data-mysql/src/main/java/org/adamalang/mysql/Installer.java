@@ -137,6 +137,7 @@ public class Installer {
             "  `plan` MEDIUMTEXT NOT NULL," +
             "  `rxhtml` MEDIUMTEXT," +
             "  `policy` MEDIUMTEXT," +
+            "  `capacity` MEDIUMTEXT NULL," +
             "  `hash` VARCHAR(256) NOT NULL," + //
             "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //
             "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," + //

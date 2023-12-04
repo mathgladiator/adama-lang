@@ -36,11 +36,15 @@ import org.adamalang.mysql.model.*;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.deploy.AsyncCompiler;
+import org.adamalang.runtime.deploy.DeploymentFactory;
+import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.contracts.SpacePolicyLocator;
 import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.contracts.data.SpacePolicy;
+import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.validators.ValidateEmail;
@@ -634,10 +638,11 @@ public class GlobalControlHandler implements RootGlobalHandler {
       String hash = Hashing.finishAndEncode(digest);
       // Change the master plan
       Spaces.setPlan(nexus.database, request.policy.id, planJson, hash);
-      // iterate the targets with this space loaded
+
       Callback<Integer> postDirectSend = new Callback<>() {
         @Override
         public void success(Integer value) {
+          // iterate the targets with this space loaded
           nexus.adama.deployLocal(request.space);
           nexus.adama.waitForCapacity(request.space, 30000, (found) -> {
             if (found) {
@@ -653,7 +658,19 @@ public class GlobalControlHandler implements RootGlobalHandler {
           responder.error(ex);
         }
       };
-      nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
+
+      DeploymentPlan plan = new DeploymentPlan(planJson, LOGGER);
+      AsyncCompiler.forge(request.space, null, plan, Deliverer.FAILURE, new TreeMap<>(), nexus.byteCodeCache, new Callback<>() {
+        @Override
+        public void success(DeploymentFactory value) {
+          nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
     } catch (Exception ex) {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }

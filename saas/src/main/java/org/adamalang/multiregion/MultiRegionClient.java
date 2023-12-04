@@ -69,7 +69,7 @@ public class MultiRegionClient {
       } catch (Exception ex) {
         LOG.error("failed-deployment-write", ex);
       }
-    });
+    }, 3);
   }
 
   private <T> SelfClient remoteForRegion(String region, Callback<T> callback) {

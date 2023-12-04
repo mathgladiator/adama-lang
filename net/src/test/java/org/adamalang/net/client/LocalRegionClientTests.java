@@ -61,7 +61,7 @@ public class LocalRegionClientTests {
                 Assert.assertEquals("127.0.0.1:12500", s);
                 latchGetDeployTargets.countDown();
               }
-            });
+            }, 3);
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         client.notifyDeployment("127.0.0.1:12500", "space");
         CountDownLatch latchFound = new CountDownLatch(1);
@@ -208,7 +208,7 @@ public class LocalRegionClientTests {
                 Assert.assertEquals("127.0.0.1:12700", s);
                 latchGetDeployTargets.countDown();
               }
-            });
+            }, 3);
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         client.notifyDeployment("127.0.0.1:12700", "space");
 
