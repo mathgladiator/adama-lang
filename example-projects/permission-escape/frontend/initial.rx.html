@@ -1,0 +1,67 @@
+<forest>
+    <page uri="/">
+        <a href="/register">Create a new account!</a>
+        <a href="/sign-in">Sign in</a>
+    </page>
+    <page uri="/product">
+        This is the product!
+        <connection use-domain name="product">
+            <ul rx:iterate="others">
+                <li><lookup path="email" /></li>
+            </ul>
+        </connection>
+    </page>
+    <page uri="/register">
+        <h2>Register for the product</h2>
+        <div rx:if="view:failed">
+            Failed to register: <lookup path="view:errormessage" />
+        </div>
+        <form rx:action="domain:put" path="register" rx:failure="raise:failed te:errormessage" rx:success="lower:failed" rx:forward="/product">
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email"/>
+            <br/>
+
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"/>
+            <br/>
+
+            <button type="submit">Register!</button>
+        </form>
+    </page>
+    <page uri="/sign-in" default-redirect-source>
+        <h2>Sign into the product</h2>
+        <form rx:action="domain:sign-in" class="space-y-6" rx:forward="/product">
+            <label for="username">Email: </label>
+            <input type="username" name="username" id="username"/>
+            <br/>
+
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"/>
+            <br/>
+
+            <button type="submit">Sign in!</button>
+        </form>
+    </page>
+    <page uri="/forgot">
+        TODO
+    </page>
+    <page uri="/demo">
+        <div rx:wrap="checkbox_hierarchy">
+        <div><input type="checkbox" check:group="g1"> <span  showhide:toggle="g1"> -- Group 1 <span group:summary="g1"></span></span></div>
+        <div showhide:target="g1">
+            <input type="checkbox" name="perm_a" part:of="g1"> - Permission A<br/>
+            <input type="checkbox" name="perm_b" part:of="g1"> - Permission B<br/>
+            <input type="checkbox" name="perm_c" part:of="g1"> - Permission C<br/>
+        </div>
+        <div><input type="checkbox" check:group="g2"> <span  showhide:toggle="g2"> -- Group 2 <span group:summary="g2"></span></span></div>
+        <div showhide:target="g2">
+            <input type="checkbox" name="perm_d" part:of="g2"> - Permission D<br/>
+            <input type="checkbox" name="perm_e" part:of="g2"> - Permission E<br/>
+            <input type="checkbox" name="perm_f" part:of="g2"> - Permission F<br/>
+        </div>
+        </div>
+    </page>
+    <shell>
+        <script src="/custom.js" type="text/javascript"></script>
+    </shell>
+</forest>

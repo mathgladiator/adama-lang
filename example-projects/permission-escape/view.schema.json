@@ -1,0 +1,11 @@
+{
+  "/" : { },
+  "/product" : { },
+  "/register" : {
+    "errormessage" : "error-message",
+    "failed" : "bool"
+  },
+  "/sign-in" : { },
+  "/forgot" : { },
+  "/demo" : { }
+}

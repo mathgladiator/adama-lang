@@ -40,9 +40,15 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** the async compiler all unified into one big thing */
 public class AsyncCompiler {
+  public static String normalizeSpaceNameForClass(String space) {
+    return space.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_"));
+  }
+
   public static void forge(String name, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, AsyncByteCodeCache cache, Callback<DeploymentFactory> callback) {
     ConcurrentHashMap<String, LivingDocumentFactory> factories = new ConcurrentHashMap<>();
     AtomicLong _memoryUsed = new AtomicLong();
@@ -77,7 +83,7 @@ public class AsyncCompiler {
             digest.update(includeEntry.getKey().getBytes(StandardCharsets.UTF_8));
             digest.update(includeEntry.getValue().getBytes(StandardCharsets.UTF_8));
           }
-          String className = name + "_" + Hashing.finishAndEncodeHex(digest);
+          String className = normalizeSpaceNameForClass(name) + "_" + Hashing.finishAndEncodeHex(digest);
           document.setClassName(className);
           document.setIncludes(version.includes);
           final var tokenEngine = new TokenEngine("main", version.main.codePoints().iterator());

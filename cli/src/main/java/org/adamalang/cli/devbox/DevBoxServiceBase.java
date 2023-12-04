@@ -122,17 +122,17 @@ public class DevBoxServiceBase implements ServiceBase {
         }
         switch (method) {
           case PUT:
-            handlePost(who, uri, headers, parametersJson, body, callback);
+            handlePost(context, who, uri, headers, parametersJson, body, callback);
             return;
           case OPTIONS:
-            handleOptions(who, uri, headers, parametersJson, callback);
+            handleOptions(context, who, uri, headers, parametersJson, callback);
             return;
           case DELETE:
-            handleDelete(who, uri, headers, parametersJson, callback);
+            handleDelete(context, who, uri, headers, parametersJson, callback);
             return;
           case GET:
           default:
-            handleGet(who, uri, headers, parametersJson, callback);
+            handleGet(context, who, uri, headers, parametersJson, callback);
         }
       }
 
@@ -141,15 +141,15 @@ public class DevBoxServiceBase implements ServiceBase {
         callback.success("DEVSERVER");
       }
 
-      public void handleOptions(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleOptions(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.failure(new ErrorCodeException(0));
       }
 
-      public void handleDelete(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleDelete(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         callback.failure(new ErrorCodeException(0));
       }
 
-      public void handleGet(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleGet(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         RxHTMLScanner.RxHTMLBundle current = bundle.get();
         if (current == null) {
           callback.failure(new ErrorCodeException(500));
@@ -161,7 +161,7 @@ public class DevBoxServiceBase implements ServiceBase {
             Key key = new Key(skr.space, skr.key);
             io.info("service|getting from document: " + skr.uri);
 
-            WebGet webGet = new WebGet(new WebContext(who, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson));
+            WebGet webGet = new WebGet(new WebContext(who, context.origin, context.remoteIp), skr.uri, headers, new NtDynamic(parametersJson));
             verse.service.webGet(key, webGet, route(skr, callback));
             return;
           }
@@ -297,7 +297,7 @@ public class DevBoxServiceBase implements ServiceBase {
         };
       }
 
-      public void handlePost(NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+      public void handlePost(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if (verse != null) {
           // TODO: differiate between a document/domain put
           final SpaceKeyRequest skr;
@@ -307,7 +307,7 @@ public class DevBoxServiceBase implements ServiceBase {
             skr = SpaceKeyRequest.parse(uri);
           }
           Key key = new Key(skr.space, skr.key);
-          WebPut webPut = new WebPut(new WebContext(who, "origin", "ip"), skr.uri, headers, new NtDynamic(parametersJson), body);
+          WebPut webPut = new WebPut(new WebContext(who, context.origin, context.remoteIp), skr.uri, headers, new NtDynamic(parametersJson), body);
           verse.service.webPut(key, webPut, route(skr, callback));
         } else {
           callback.failure(new ErrorCodeException(0));

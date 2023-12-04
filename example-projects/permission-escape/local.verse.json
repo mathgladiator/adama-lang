@@ -1,0 +1,12 @@
+{
+  "documents" : [ {
+    "space" : "permission-escape",
+    "key" : "demo",
+    "domain" : true
+  } ],
+  "spaces" : [ {
+    "name" : "permission-escape",
+    "main" : "backend.adama",
+    "import" : "backend"
+  } ]
+}

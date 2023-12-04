@@ -84,7 +84,7 @@ public formula others = iterate _users;
 }
 
 
-@authorize (email, password) {
+@authorize (email, password) { // TODO: do new world here
   if ((iterate _users where_as x: x.email == email)[0] as user) {
     if (user.password_hash.passwordCheck(password)) {
       return "" + user.id;
@@ -94,6 +94,19 @@ public formula others = iterate _users;
         return "" + user.id;
       }
     }
+  }
+  abort;
+}
+
+// TODO: test all this
+message AuthInvoke {
+  string email;
+}
+
+// TODO: test all this
+@authorization (AuthInvoke ai) {
+  if ((iterate _users where_as x: x.email == ai.email)[0] as user) {
+    return {agent:"" + user.id, hash:user.password_hash};
   }
   abort;
 }

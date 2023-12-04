@@ -36,6 +36,8 @@ import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -50,6 +52,7 @@ import java.util.regex.Pattern;
 
 /** the sync compiler */
 public class SyncCompiler {
+  private static final Logger LOGGER = LoggerFactory.getLogger(SyncCompiler.class);
 
   /**
    * @param spacePrefix - used for debugging by generating a relevant class name
@@ -90,7 +93,9 @@ public class SyncCompiler {
       for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
         report.append(diagnostic.toString() + "\n");
       }
-      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
+      ErrorCodeException ex = new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE, report.toString());
+      LOGGER.error("failed-java-compile", ex);
+      throw ex;
     }
     try {
       final var classBytes = fileManager.getClasses();
