@@ -15,9 +15,33 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.capacity;
 
-public class Platform {
-  public static final String VERSION = "20231204124234";
-  public static final String JS_VERSION = "75218bdf793d6c61809e928fe40f060b";
+import org.adamalang.common.cache.Measurable;
+import org.adamalang.runtime.json.JsonStreamReader;
+
+/** groundwork for specialized capacity settings */
+public class CapacityPlan implements Measurable {
+  public final int minimum;
+
+  public CapacityPlan(JsonStreamReader reader) {
+    int _minimum = 3;
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        switch (reader.fieldName()) {
+          case "min":
+            _minimum = reader.readInteger();
+            break;
+          default:
+            reader.skipValue();
+        }
+      }
+    }
+    this.minimum = _minimum;
+  }
+
+  @Override
+  public long measure() {
+    return 32;
+  }
 }

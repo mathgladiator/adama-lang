@@ -46,8 +46,7 @@ public class GlobalPlanFetcher implements PlanFetcher {
   @Override
   public void find(String space, Callback<DeploymentBundle> callback) {
     try {
-      SpaceInfo info = Spaces.getSpaceInfo(database, space);
-      String plan = Spaces.getPlan(database, info.id);
+      String plan = Spaces.getPlan(database, space);
       TreeMap<Integer, PrivateKeyBundle> keys = Secrets.getKeys(database, masterKey, space);
       DeploymentPlan deploymentPlan = new DeploymentPlan(plan, LOGGER);
       DeploymentBundle bundle = new DeploymentBundle(deploymentPlan, keys);

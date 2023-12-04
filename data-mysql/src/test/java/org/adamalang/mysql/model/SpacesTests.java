@@ -85,7 +85,8 @@ public class SpacesTests {
         Assert.assertEquals("{}", Spaces.getPlan(dataBase, 2));
         Spaces.setPlan(dataBase, 1, "{\"x\":1}", "h1");
         Spaces.setPlan(dataBase, 2, "{\"x\":2}", "h2");
-
+        Assert.assertEquals("{\"x\":1}", Spaces.getPlan(dataBase, "space1"));
+        Assert.assertEquals("{\"x\":2}", Spaces.getPlan(dataBase, "space2"));
         InternalDeploymentPlan iPlan = Spaces.getPlanByNameForInternalDeployment(dataBase, "space2");
         Assert.assertEquals("h2", iPlan.hash);
         Assert.assertEquals("{\"x\":2}", iPlan.plan);

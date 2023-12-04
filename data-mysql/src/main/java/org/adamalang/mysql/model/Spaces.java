@@ -129,6 +129,48 @@ public class Spaces {
     });
   }
 
+  public static String getPlan(DataBase dataBase, String space) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `plan` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return rs.getString(1);
+          }
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_PLAN_DOESNT_EXIST);
+        }
+      }
+    });
+  }
+
+  public static String getCapacity(DataBase dataBase, String space) throws Exception {
+    return dataBase.transactSimple((connection) -> {
+      String sql = "SELECT `capacity` FROM `" + dataBase.databaseName + "`.`spaces` WHERE name=?";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return rs.getString(1);
+          }
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_PLAN_DOESNT_EXIST);
+        }
+      }
+    });
+  }
+
+  public static void setCapacity(DataBase dataBase, String space, String capacity) throws Exception {
+    dataBase.transactSimple((connection) -> {
+      String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `capacity`=? WHERE `name`=? LIMIT 1";
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, capacity);
+        statement.setString(2, space);
+        statement.execute();
+      }
+      return null;
+    });
+  }
+
   public static void setRxHtml(DataBase dataBase, int spaceId, String rxhtml) throws Exception {
     dataBase.transactSimple((connection) -> {
       String sql = "UPDATE `" + dataBase.databaseName + "`.`spaces` SET `rxhtml`=? WHERE `id`=" + spaceId + " LIMIT 1";

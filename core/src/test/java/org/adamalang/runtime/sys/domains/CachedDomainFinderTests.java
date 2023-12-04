@@ -32,6 +32,7 @@ public class CachedDomainFinderTests {
   @Test
   public void passthrough() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("x");
+    AtomicBoolean alive = new AtomicBoolean(true);
     try {
       MockDomainFinder mock = new MockDomainFinder() //
           .with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
@@ -50,8 +51,10 @@ public class CachedDomainFinderTests {
 
         }
       });
+      finder.startSweeping(alive, 5, 10);
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     } finally {
+      alive.set(false);
       executor.shutdown();
     }
   }

@@ -344,6 +344,8 @@ public class ErrorTable {
     descriptions.put(114384, "no description of error (yet)");
     names.put(133371, "PLAN_FETCH_LOOKUP_FAILURE");
     descriptions.put(133371, "no description of error (yet)");
+    names.put(131825, "CAPACITY_FETCH_LOOKUP_FAILURE");
+    descriptions.put(131825, "no description of error (yet)");
     names.put(127736, "ASYNC_COMPLEX_DEPLOYMENT_FAILURE");
     descriptions.put(127736, "no description of error (yet)");
     names.put(162036, "CACHED_BYTE_CODE_FAILED_PACK");
