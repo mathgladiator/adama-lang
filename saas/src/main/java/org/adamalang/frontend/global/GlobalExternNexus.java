@@ -20,8 +20,8 @@ package org.adamalang.frontend.global;
 import org.adamalang.api.GlobalApiMetrics;
 import org.adamalang.api.RegionApiMetrics;
 import org.adamalang.auth.Authenticator;
-import org.adamalang.auth.GlobalAuthenticator;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.TimeSource;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.metrics.MetricsFactory;
@@ -31,12 +31,10 @@ import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.impl.GlobalFinder;
-import org.adamalang.mysql.impl.GlobalMetricsReporter;
-import org.adamalang.mysql.impl.MySQLFinderCore;
-import org.adamalang.mysql.impl.GlobalCapacityOverseer;
+import org.adamalang.mysql.impl.*;
 import org.adamalang.runtime.deploy.AsyncByteCodeCache;
-import org.adamalang.runtime.deploy.ManagedAsyncByteCodeCache;
+import org.adamalang.runtime.sys.capacity.CachedCapacityPlanFetcher;
+import org.adamalang.runtime.sys.capacity.CapacityPlanFetcher;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.io.JsonLogger;
@@ -66,7 +64,6 @@ public class GlobalExternNexus {
   public final SignalControl signalControl;
   public final GlobalFinder finder;
   public final MySQLFinderCore finderCore;
-  public final GlobalCapacityOverseer overseer;
   public final PrivateKeyWithId signingKey;
   public final GlobalMetricsReporter metricsReporter;
   public final SimpleExecutor metrics;
@@ -75,6 +72,10 @@ public class GlobalExternNexus {
   public final Authenticator authenticator;
   public final SimpleExecutor crypto;
   public final AsyncByteCodeCache byteCodeCache;
+
+  public final SimpleExecutor capacity;
+  public final GlobalCapacityOverseer overseer;
+  public final CapacityPlanFetcher capacityPlanFetcher;
 
   public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey, AsyncByteCodeCache byteCodeCache) {
     this.config = config;
@@ -99,6 +100,7 @@ public class GlobalExternNexus {
     this.signalControl = signalControl;
     this.finder = finder;
     this.finderCore = finder.core;
+    this.capacity = SimpleExecutor.create("capacity");
     this.overseer = new GlobalCapacityOverseer(database);
     this.signingKey = signingKey;
     this.metrics = SimpleExecutor.create("metrics-report");
@@ -107,6 +109,7 @@ public class GlobalExternNexus {
     this.vapidFactory = new VAPIDFactory(new SecureRandom());
     this.crypto = SimpleExecutor.create("crypto");
     this.byteCodeCache = byteCodeCache;
+    this.capacityPlanFetcher = new CachedCapacityPlanFetcher(TimeSource.REAL_TIME, 1024, 60000, capacity, new GlobalCapacityPlanFetcher(database));
   }
 
   public void close() throws Exception {
@@ -115,5 +118,6 @@ public class GlobalExternNexus {
     webBase.shutdown();
     metrics.shutdown();
     crypto.shutdown();
+    capacity.shutdown();
   }
 }
