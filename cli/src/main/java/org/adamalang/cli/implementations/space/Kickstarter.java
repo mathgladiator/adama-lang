@@ -81,7 +81,7 @@ public class Kickstarter {
     readme.append("# Local Development \n");
     readme.append("This command will (assuming you have adama.jar in your home directory). You can start the adama devbox where you just need to go to http://localhost:8080 to test the application. Running this in this path will start the devbox.\n\n");
     readme.append("```sh\n");
-    readme.append("java -jar ~/adama.jar frontend dev-server\n");
+    readme.append("java -jar ~/adama.jar devbox\n");
     readme.append("```\n");
     readme.append("# Production Backend \n");
     readme.append("Now, Deploying backend changes requires first bundling up the backend.adama and backend/*.adama via\n");
