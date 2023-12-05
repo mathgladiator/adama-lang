@@ -421,6 +421,15 @@ This will propagate to the server such that filters, searches, auto completes ha
 <input type="text" rx:sync="search_filter" />
 ```
 
+### &lt;option&gt; text within rx:iterate
+No children DOM elements are allowed within an &lt;option&gt; tag, so to use dynamic text, us label="{$path}" instead of
+&lt;lookup&gt; or any other DOM element
+```html
+<select rx:iterate="$path">
+    <option value="$path" label="$path" />
+</select>
+```
+
 ### &lt;exit-guard guard="$path" set="$path" &gt;
 
 The &lt;exit-guard&gt; will protect against data loss by preventing transition to a new page if the guard path is set to true. If the guard path is true while a page transition happens, then the set path is raised to true.
