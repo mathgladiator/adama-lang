@@ -700,8 +700,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         sendWithKeepAlive(webConfig, ctx, req, res);
       } catch (Exception ex) {
         sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
-        return true;
       }
+      return true;
     } else if (req.uri().startsWith("/~p")) { // set an asset key
       final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
       String value = req.uri().substring(3);

@@ -365,6 +365,7 @@ public class Attributes {
     return result;
   }
 
+  @Deprecated
   private void check_action_sign_in() {
     walkAndValidateAndCheck(env, (el) -> {
       String name = el.attr("name");
@@ -392,6 +393,27 @@ public class Attributes {
     }, "email", "password");
   }
 
+  private void check_authorization(boolean domain) {
+    String[] checks = domain ? new String[]{"password"} : new String[]{"password", "space", "key"};
+
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      String type = el.attr("type");
+      if ("password".equals(name)) {
+        return true;
+      }
+      if ("password".equals(type) && name.equals("confirm-password")) {
+        return true;
+      }
+      if ("password".equals(type)) {
+        env.feedback.warn(el, "The input '" + name + "' has a type of password which is not allowed beyond.");
+        return true;
+      }
+      return false;
+    }, checks);
+  }
+
+  @Deprecated
   private void check_action_document_sign_in(boolean domain) {
     String[] checks = domain ? new String[]{"username", "password"} : new String[]{"username", "password", "space", "key"};
     walkAndValidateAndCheck(env, (el) -> {
@@ -425,6 +447,7 @@ public class Attributes {
     }, checks);
   }
 
+  @Deprecated
   private void check_action_document_sign_in_reset(boolean domain) {
     String[] checks = domain ? new String[]{"username", "password", "new_password"} : new String[]{"username", "password", "new_password", "space", "key"};
     walkAndValidateAndCheck(env, (el) -> {
@@ -537,13 +560,28 @@ public class Attributes {
 
   public void _action() {
     String action = env.element.attr("rx:action").trim();
+    boolean isDocAuthorization = "document:authorize".equalsIgnoreCase(action);
+    boolean isDomainAuthorization = "domain:authorize".equalsIgnoreCase(action);
+
     boolean isSignIn = "document:sign-in".equalsIgnoreCase(action);
     boolean isDomainSignIn = "domain:sign-in".equalsIgnoreCase(action);
     boolean isSignInAndReset = "document:sign-in-reset".equalsIgnoreCase(action);
     boolean isDomainSignInAndReset = "domain:sign-in-reset".equalsIgnoreCase(action);
     boolean documentPut = "document:put".equalsIgnoreCase(action);
     boolean domainDocumentPut = "domain:put".equalsIgnoreCase(action);
-    if (isSignInAndReset || isDomainSignInAndReset) {
+
+    if (isDocAuthorization || isDomainAuthorization) {
+      check_authorization(isDomainAuthorization);
+      if (!env.element.hasAttr("rx:forward")) {
+        env.element.attr("rx:forward", "/");
+      }
+      RxObject obj = new RxObject(env, "rx:forward");
+      env.writer.tab().append(isDomainAuthorization ? "$.aDOM(" : "$.aDOC(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(env.val("rx:identity", "default")) //
+          .append("',").append(obj.rxObj) //
+          .append(");").newline();
+    } else if (isSignInAndReset || isDomainSignInAndReset) {
       check_action_document_sign_in_reset(isDomainSignInAndReset);
       if (!env.element.hasAttr("rx:forward")) {
         env.element.attr("rx:forward", "/");

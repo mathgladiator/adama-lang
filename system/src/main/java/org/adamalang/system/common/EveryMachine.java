@@ -79,6 +79,7 @@ public class EveryMachine {
   public final SimpleExecutor metrics;
   public final SimpleExecutor push;
   public final String environment;
+  public final SimpleExecutor compileOffload;
 
   public EveryMachine(JsonConfig config, Role role) throws Exception {
     MachineHeat.install();
@@ -130,6 +131,8 @@ public class EveryMachine {
     this.engine = netBase.startGossiping();
     this.metrics = SimpleExecutor.create("metrics");
     this.push = SimpleExecutor.create("push");
+    this.compileOffload = SimpleExecutor.create("compile");
+
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[EveryMachine-Shutdown]");
       alive.set(false);
@@ -155,6 +158,10 @@ public class EveryMachine {
       }
       try {
         push.shutdown().await(250, TimeUnit.MILLISECONDS);
+      } catch (Exception ex) {
+      }
+      try {
+        compileOffload.shutdown().await(500, TimeUnit.MILLISECONDS);
       } catch (Exception ex) {
       }
     })));

@@ -21,9 +21,19 @@
             <input type="email" name="email" id="email"/>
             <br/>
 
-            <label for="password">Password: </label>
-            <input type="password" name="password" id="password"/>
-            <br/>
+            <password-holder>
+                <label for="password">Password: </label>
+                <input type="password" name="password" id="password"/>
+                <br/>
+                <div type="button" rx:click="toggle-password">Toggle Password</div>
+            </password-holder>
+
+            <password-holder>
+                <label for="confirm-password">Confirm Password: </label>
+                <input type="password" name="confirm-password" id="confirm-password"/>
+                <br/>
+                <div type="button" rx:click="toggle-password">Toggle Password</div>
+            </password-holder>
 
             <button type="submit">Register!</button>
         </form>
@@ -33,6 +43,40 @@
         <form rx:action="domain:sign-in" class="space-y-6" rx:forward="/product">
             <label for="username">Email: </label>
             <input type="username" name="username" id="username"/>
+            <br/>
+
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"/>
+            <br/>
+
+            <button type="submit">Sign in!</button>
+        </form>
+    </page>
+
+    <page uri="/auth" default-redirect-source>
+        <h2>Sign into the product</h2>
+        <form rx:action="domain:authorize" class="space-y-6" rx:forward="/product">
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email"/>
+            <br/>
+
+            <password-holder>
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"/>
+                <div type="button" rx:click="toggle-password">Toggle Password</div>
+            </password-holder>
+            <br/>
+
+
+            <button type="submit">Sign in!</button>
+        </form>
+
+        <hr />
+        <form rx:action="document:authorize" class="space-y-6" rx:forward="/product">
+            <input type="hidden" name="space" value="permission-escape" />
+            <input type="hidden" name="key" value="demo" />
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email"/>
             <br/>
 
             <label for="password">Password: </label>

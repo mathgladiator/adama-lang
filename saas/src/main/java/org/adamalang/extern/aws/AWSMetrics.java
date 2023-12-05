@@ -42,6 +42,7 @@ public class AWSMetrics {
   public final RequestResponseMonitor enqueue;
   public final CallbackMonitor signal_control_domain;
   public final Inflight alarm_file_not_found;
+  public final Runnable retry_fetch_byte_code;
 
   public AWSMetrics(MetricsFactory factory) {
     restore_document = factory.makeRequestResponseMonitor("aws_restore_document");
@@ -62,5 +63,6 @@ public class AWSMetrics {
     alarm_file_not_found = factory.inflight("alarm_file_not_found");
     fetch_byte_code = factory.makeRequestResponseMonitor("aws_fetch_byte_code");
     store_byte_code = factory.makeRequestResponseMonitor("aws_store_byte_code");
+    retry_fetch_byte_code = factory.counter("aws_retry_fetch_byte_code");
   }
 }

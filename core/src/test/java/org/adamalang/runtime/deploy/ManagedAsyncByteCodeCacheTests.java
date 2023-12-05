@@ -20,6 +20,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Hashing;
+import org.adamalang.common.SimpleExecutor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -51,7 +52,7 @@ public class ManagedAsyncByteCodeCacheTests {
         callback.success(null);
       }
     };
-    ManagedAsyncByteCodeCache managed = new ManagedAsyncByteCodeCache(sys);
+    ManagedAsyncByteCodeCache managed = new ManagedAsyncByteCodeCache(sys, SimpleExecutor.NOW);
     DeploymentPlan plan = new DeploymentPlan("{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\"}", (t, errorCode) -> {});
     Assert.assertEquals(0, cache.size());
     Assert.assertTrue(AsyncCompilerTests.pump(null, plan, managed) instanceof DeploymentFactory);

@@ -310,8 +310,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     });
   }
 
-  @Override
-  public void fetchByteCode(String className, Callback<CachedByteCode> callback) {
+  private void attemptFetchByteCode(String className, int retriesLeft, int backoff, Callback<CachedByteCode> callback) {
     String s3key = "bytecode/" + className.replaceAll(Pattern.quote("_"), Matcher.quoteReplacement("/")) + "/" + Platform.VERSION;
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     base.executeShared(request, new ByteArrayCallbackHttpResponder(LOGGER, metrics.fetch_byte_code.start(), new Callback<byte[]>() {
@@ -326,9 +325,24 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
 
       @Override
       public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
+        if (retriesLeft > 0) {
+          metrics.retry_fetch_byte_code.run();
+          base.executor.schedule(new NamedRunnable("attempt-fetch-bytecode-retry") {
+            @Override
+            public void execute() throws Exception {
+              attemptFetchByteCode(className, retriesLeft - 1, (int) (backoff * (1 + Math.random())),  callback);
+            }
+          }, (int) (Math.random() + 1000 + backoff));
+        } else {
+          callback.failure(ex);
+        }
       }
     }));
+  }
+
+  @Override
+  public void fetchByteCode(String className, Callback<CachedByteCode> callback) {
+    attemptFetchByteCode(className, 4, 250, callback);
   }
 
   @Override

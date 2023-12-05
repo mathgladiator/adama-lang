@@ -6,6 +6,7 @@
     "failed" : "bool"
   },
   "/sign-in" : { },
+  "/auth" : { },
   "/forgot" : { },
   "/demo" : { }
 }

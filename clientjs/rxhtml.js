@@ -1008,7 +1008,7 @@ var RxHTML = (function () {
     form.addEventListener('submit', function (evt) {
       if (customCommandName in customs) {
         evt.preventDefault();
-        var obj = get_form(form, false);
+        var obj = get_form(form, {});
         customs[customCommandName](obj, state, signal, self);
         fire_success(form);
       } else {
@@ -1590,7 +1590,7 @@ var RxHTML = (function () {
   self.aCP = function (form, state, name) {
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var obj = get_form(form, false);
+      var obj = get_form(form, {});
       if (name != "." && name != "") {
         var no = {};
         no[name] = obj;
@@ -1688,7 +1688,7 @@ var RxHTML = (function () {
     }
   };
   // HELPER | extract all the inputs from the given element and build an object
-  var build_obj = function (el, objToInsertInto, allow_passwords, isRoot) {
+  var build_obj = function (el, objToInsertInto, passwords, isRoot) {
     if (el.tagName.toUpperCase() == "FORM" && !isRoot) {
       // don't care about nested forms
       return;
@@ -1752,14 +1752,15 @@ var RxHTML = (function () {
         var n = arr.length;
         for (var k = 0; k < n; k++) {
           var ch = el.children[k];
-          build_obj(ch, nextObject, allow_passwords, false);
+          build_obj(ch, nextObject, passwords, false);
         }
       }
       apply(nextObject);
     } else if (isInputBox) {
       var type = ("type" in el) ? el.type.toUpperCase() : "TEXT";
       if (type == "SUBMIT" || type == "RESET") return;
-      if ((type == "PASSWORD" || name == "password") && !allow_passwords) {
+      if ((type == "PASSWORD" || name == "password" || name == "confirm-password")) {
+        passwords[name] = el.value;
         return;
       }
       if (type == "CHECKBOX") {
@@ -1777,7 +1778,7 @@ var RxHTML = (function () {
         var n = arr.length;
         for (var k = 0; k < n; k++) {
           var ch = el.children[k];
-          build_obj(ch, objToInsertInto, allow_passwords, false);
+          build_obj(ch, objToInsertInto, passwords, false);
         }
       }
     }
@@ -1790,29 +1791,10 @@ var RxHTML = (function () {
   };
 
   // HELPER | return an object of all the inputs of the given form element
-  var get_form = function (form, allow_passwords) {
+  var get_form = function (form, passwords) {
     var obj = {};
-    build_obj(form, obj, allow_passwords, true);
+    build_obj(form, obj, passwords, true);
     return obj;
-  };
-
-  // HELPER | return a password from the given form
-  var get_password = function (el) {
-    if (el.tagName.toUpperCase() == "INPUT" && (el.type.toUpperCase() == "PASSWORD" || el.name == "password")) {
-      return [el.name, el.value];
-    }
-    if ("children" in el) {
-      var arr = el.children;
-      var n = arr.length;
-      for (var k = 0; k < n; k++) {
-        var ch = el.children[k];
-        var result = get_password(ch);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-    return null;
   };
 
   var wrappers = {};
@@ -2764,12 +2746,87 @@ var RxHTML = (function () {
     xhttp.send(JSON.stringify(req));
   };
 
+  var get_form_and_pw = function(form) {
+    var passwords = {};
+    var req = get_form(form, passwords);
+    if ('password' in passwords) {
+      req['password'] = passwords['password'];
+    }
+    return req;
+  }
+
+  var commonAuthorize = function(form, state, identityName, rxobj, nextStep) {
+    rxobj.__ = function () { };
+    form.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      var req = get_form_and_pw(form);
+      var sm = {attempts:0};
+      sm.responder = {
+        success: function (payload) {
+          identities[identityName] = payload.identity;
+          localStorage.setItem("identity_" + identityName, payload.identity);
+          stash_identity(identityName, payload.identity, connection);
+          // TODO: blow away connections
+          self.goto(rxobj.rx_forward, false);
+          fire_success(form);
+        },
+        failure: function (reason) {
+          fire_failure(form, "Failed signing into document:" + reason);
+        }
+      };
+      nextStep(req, sm.responder);
+    }, true);
+  }
+
+  // rx:action=document:authorize
+  self.aDOC = function (form, state, identityName, rxobj) {
+    commonAuthorize(form, state, identityName, rxobj, function(req, responder) {
+      connection.DocumentAuthorization(req.space, req.key, req, responder);
+    });
+  };
+
+  // rx:action=domain:authorize
+  self.aDOM = function (form, state, identityName, rxobj) {
+    commonAuthorize(form, state, identityName, rxobj, function(req, responder) {
+      connection.DocumentAuthorizationDomain(self.domain, req, responder);
+    });
+  };
+
+  // rx:event=toggle-password
+  self.onPWT = function(dom, state, type) {
+    reg_event(state, dom, type, function (event) {
+      var cur = dom;
+      while (cur.tagName.toUpperCase() != "PASSWORD-HOLDER") {
+        cur = cur.parentElement;
+      }
+      var hunt = function(node) {
+        if (node.tagName.toUpperCase() == "INPUT" && (node.name == "password" || node.name == "confirm-password")) {
+          if (node.type == "password") {
+            node.type = "text"
+          } else {
+            node.type = "password"
+          }
+        }
+        if ('children' in node) {
+          var ch = node.children;
+          var n = ch.length;
+          for (var k = 0; k < n; k++) {
+            hunt(ch[k]);
+          }
+        }
+      };
+      if (cur != null) {
+        hunt(cur);
+      }
+    });
+  };
+
   // RUNTIME | rx:action=domain:sign-in
   self.adDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, true);
+      var req = get_form_and_pw(form);
       var sm = {attempts:0};
       sm.responder = {
         success: function (payload) {
@@ -2789,11 +2846,11 @@ var RxHTML = (function () {
   }
 
   // RUNTIME | rx:action=document:sign-in
-  self.aDSO = function (form, state, identityName, rxobj) {
+  self.aDSO = function (form, state, identityName, rxobj) { // DEPRECATED
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, true);
+      var req = get_form_and_pw(form);
       connection.DocumentAuthorize(req.space, req.key, req.username, req.password, {
         success: function (payload) {
           identities[identityName] = payload.identity;
@@ -2810,11 +2867,11 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=domain:sign-in-reset
-  self.adDSOr = function (form, state, identityName, rxobj) {
+  self.adDSOr = function (form, state, identityName, rxobj) { // DEPRECATED
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, true);
+      var req = get_form_and_pw(form);
       connection.DocumentAuthorizeDomainWithReset(self.domain, req.username, req.password, req.new_password,{
         success: function (payload) {
           identities[identityName] = payload.identity;
@@ -2831,11 +2888,11 @@ var RxHTML = (function () {
   }
 
   // RUNTIME | rx:action=document:sign-in-reset
-  self.aDSOr = function (form, state, identityName, rxobj) {
+  self.aDSOr = function (form, state, identityName, rxobj) { // DEPRECATED
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, true);
+      var req = get_form_and_pw(form);
       connection.DocumentAuthorizeWithReset(req.space, req.key, req.username, req.password, req.new_password,{
         success: function (payload) {
           identities[identityName] = payload.identity;
@@ -3028,9 +3085,8 @@ var RxHTML = (function () {
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, false);
-      // TODO: this assumes exactly one password in the root message
-      var pws = get_password(form);
+      var passwords = {};
+      var req = get_form(form, passwords);
 
       var next = function () {
         var url = urlfactory(rxobj);
@@ -3062,16 +3118,20 @@ var RxHTML = (function () {
         xhttp.send(JSON.stringify(req));
       };
 
-      if (pws !== null) {
-        connection.DocumentsHashPassword(pws[1], {
-          success: function (hashed_pw) {
-            req[pws[0]] = hashed_pw.passwordHash;
-            next();
-          },
-          failed: function () {
-            fire_failure(form, "Failed to hash password");
-          }
-        });
+      if ('password' in passwords) {
+        if (!('confirm-password' in passwords) || passwords['password'] == passwords['confirm-password']) {
+          connection.DocumentsHashPassword(passwords['password'], {
+            success: function (hashed_pw) {
+              req['password'] = hashed_pw.passwordHash;
+              next();
+            },
+            failed: function () {
+              fire_failure(form, "Failed to hash password");
+            }
+          });
+        } else {
+          fire_failure(form, "Passwords don't match");
+        }
       } else {
         next();
       }
@@ -3097,7 +3157,7 @@ var RxHTML = (function () {
     // TODO: pull email out of thin air
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, true);
+      var req = get_form_and_pw(form);
       if (req.remember) {
         localStorage.setItem("email_remember", req.email);
       } else {
@@ -3121,7 +3181,7 @@ var RxHTML = (function () {
   self.aSU = function (form, state, forwardTo) {
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form);
+      var req = get_form(form, {});
       connection.InitSetupAccount(req.email, {
         success: function (/* payload */) {
           localStorage.setItem("email", req.email);
@@ -3139,7 +3199,7 @@ var RxHTML = (function () {
   self.aSP = function (form, state, forwardTo) {
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form(form, true);
+      var req = get_form_and_pw(form);
       if (!("email" in req)) {
         req.email = localStorage.getItem("email");
       }
@@ -3210,7 +3270,7 @@ var RxHTML = (function () {
   self.aCF = function(form, targetFormId) {
     form.addEventListener('submit', function(evt) {
       evt.preventDefault();
-      var input = get_form(form, false);
+      var input = get_form(form, {});
       var target = document.getElementById(targetFormId);
       if (target) {
         hydrate_form(target, input);
@@ -3225,7 +3285,9 @@ var RxHTML = (function () {
   self.aSD = function (form, state, channel) {
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var msg = get_form(form, false);
+      var passwords = {};
+      var msg = get_form(form, passwords);
+
       if (evt.submitter) {
         var s = evt.submitter;
         if (s.name && s.value) {
@@ -3234,15 +3296,36 @@ var RxHTML = (function () {
           msg[s.name] = s.value;
         }
       }
-      // TODO: pass through the debugger
-      state.data.connection.ptr.send(channel, msg, {
-        success: function (/* payload */) {
-          fire_success(form);
-        },
-        failure: function (reason) {
-          fire_failure(form, "Send failed:" + reason);
+
+      var after = function() {
+        // TODO: pass through the debugger
+        state.data.connection.ptr.send(channel, msg, {
+          success: function (/* payload */) {
+            fire_success(form);
+          },
+          failure: function (reason) {
+            fire_failure(form, "Send failed:" + reason);
+          }
+        });
+      };
+
+      if ('password' in passwords) {
+        if (!('confirm-password' in passwords) || passwords['password'] == passwords['confirm-password']) {
+          connection.DocumentsHashPassword(passwords['password'], {
+            success: function (hashed_pw) {
+              msg['password'] = hashed_pw.passwordHash;
+              after();
+            },
+            failed: function () {
+              fire_failure(form, "Failed to hash password");
+            }
+          });
+        } else {
+          fire_failure(form, "Passwords mismatch");
         }
-      });
+      } else {
+        after();
+      }
     }, true);
   };
   // <todotask>description</todotask>

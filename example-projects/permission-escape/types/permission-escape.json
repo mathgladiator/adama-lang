@@ -20,6 +20,13 @@
             }
           },
           "privacy" : "public"
+        },
+        "foo" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
         }
       }
     },
@@ -188,6 +195,27 @@
         }
       }
     },
+    "Foo" : {
+      "nature" : "native_message",
+      "name" : "Foo",
+      "anonymous" : false,
+      "fields" : {
+        "name" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "password" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
     "_AnonObjConvert_0" : {
       "nature" : "native_message",
       "name" : "_AnonObjConvert_0",
@@ -308,8 +336,15 @@
       }
     }
   },
-  "channels" : { },
-  "channels-privacy" : { },
+  "channels" : {
+    "set_foo" : "Foo"
+  },
+  "channels-privacy" : {
+    "set_foo" : {
+      "open" : false,
+      "privacy" : [ ]
+    }
+  },
   "constructors" : [ ],
   "labels" : [ ]
 }

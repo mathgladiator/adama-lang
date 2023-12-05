@@ -20,6 +20,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionSupplier;
+import org.adamalang.common.cache.Measurable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -27,17 +28,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** a cached artifact of compiled java byte code */
-public class CachedByteCode {
+public class CachedByteCode implements Measurable {
   public final String spaceName;
   public final String className;
   public final String reflection;
   public final Map<String, byte[]> classBytes;
+  private final long measure;
 
   public CachedByteCode(String spaceName, String className, String reflection, Map<String, byte[]> classBytes) {
     this.spaceName = spaceName;
     this.className = className;
     this.reflection = reflection;
     this.classBytes = classBytes;
+    long _measure = 0;
+    _measure += spaceName.length() + 32;
+    _measure += className.length() + 32;
+    _measure += reflection.length() + 32;
+    for (Map.Entry<String, byte[]> entry : classBytes.entrySet()) {
+      _measure += entry.getKey().length() + 32;
+      _measure += entry.getValue().length;
+    }
+    this.measure = _measure;
   }
 
   /** pack up the byte code */
@@ -109,5 +120,10 @@ public class CachedByteCode {
     } catch (Exception ex) {
       throw new ErrorCodeException(ErrorCodes.CACHED_BYTE_CODE_FAILED_UNPACK, ex);
     }
+  }
+
+  @Override
+  public long measure() {
+    return measure;
   }
 }

@@ -19,6 +19,8 @@ package org.adamalang.runtime.deploy;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +28,11 @@ import org.slf4j.LoggerFactory;
 public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
   private static final Logger LOG = LoggerFactory.getLogger(ManagedAsyncByteCodeCache.class);
   private final ExternalByteCodeSystem extern;
+  private final SimpleExecutor offload;
 
-  public ManagedAsyncByteCodeCache(ExternalByteCodeSystem extern) {
+  public ManagedAsyncByteCodeCache(ExternalByteCodeSystem extern, SimpleExecutor offload) {
     this.extern = extern;
+    this.offload = offload;
   }
 
   @Override
@@ -41,23 +45,28 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        try {
-          CachedByteCode code = SyncCompiler.compile(spaceName, className, javaSource, reflection);
-          extern.storeByteCode(className, code, new Callback<>() {
-            @Override
-            public void success(Void value) {
-              callback.success(code);
-            }
+        offload.execute(new NamedRunnable("compiler-offload") {
+          @Override
+          public void execute() throws Exception {
+            try {
+              CachedByteCode code = SyncCompiler.compile(spaceName, className, javaSource, reflection);
+              extern.storeByteCode(className, code, new Callback<>() {
+                @Override
+                public void success(Void value) {
+                  callback.success(code);
+                }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              LOG.error("failed-store-code:" + ex.code);
-              callback.success(code);
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  LOG.error("failed-store-code:" + ex.code);
+                  callback.success(code);
+                }
+              });
+            } catch (ErrorCodeException problem) {
+              callback.failure(problem);
             }
-          });
-        } catch (ErrorCodeException problem) {
-          callback.failure(problem);
-        }
+          }
+        });
       }
     });
   }

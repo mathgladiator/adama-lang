@@ -124,6 +124,8 @@ public class Parser {
           commands.add(new Nuke());
         } else if ("uncheck".equals(phrase)) {
           commands.add(new Uncheck());
+        } else if ("toggle-password".equals(phrase)) {
+          commands.add(new TogglePassword());
         } else if ("reload".equals(phrase)) {
           commands.add(new Reload());
         }

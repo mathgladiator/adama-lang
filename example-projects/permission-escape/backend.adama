@@ -106,7 +106,10 @@ message AuthInvoke {
 // TODO: test all this
 @authorization (AuthInvoke ai) {
   if ((iterate _users where_as x: x.email == ai.email)[0] as user) {
-    return {agent:"" + user.id, hash:user.password_hash};
+    return {
+      agent: "" + user.id,
+      hash: user.password_hash
+    };
   }
   abort;
 }

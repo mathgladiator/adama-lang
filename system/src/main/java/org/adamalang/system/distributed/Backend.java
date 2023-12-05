@@ -66,8 +66,10 @@ public class Backend {
 
     PlanFetcher fetcher = new GlobalPlanFetcher(init.database, init.masterKey);
 
-    ManagedAsyncByteCodeCache managedByteCodeCache = new ManagedAsyncByteCodeCache(init.s3);
-    DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase(managedByteCodeCache);
+    ManagedAsyncByteCodeCache managedByteCodeCache = new ManagedAsyncByteCodeCache(init.s3, init.em.compileOffload);
+    CachedAsyncByteCodeCache cachedAsyncByteCodeCache = new CachedAsyncByteCodeCache(TimeSource.REAL_TIME, 1024, 120000, init.system, managedByteCodeCache);
+    cachedAsyncByteCodeCache.startSweeping(init.alive, 30000, 90000);
+    DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase(cachedAsyncByteCodeCache);
     CapacityOverseer overseer = new GlobalCapacityOverseer(init.database);
 
     DelayedDeploy delayedDeploy = new DelayedDeploy();

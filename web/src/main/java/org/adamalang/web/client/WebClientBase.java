@@ -56,7 +56,7 @@ public class WebClientBase {
   private final AsyncPool<WebEndpoint, WebClientSharedConnection> pool;
   private final WebClientSharedConnectionActions actions;
   private final WebClientBaseMetrics metrics;
-  private final SimpleExecutor executor;
+  public final SimpleExecutor executor;
 
   public WebClientBase(WebClientBaseMetrics metrics, WebConfig config) {
     this.metrics = metrics;
