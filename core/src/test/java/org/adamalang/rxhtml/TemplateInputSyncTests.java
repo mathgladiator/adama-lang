@@ -55,7 +55,7 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <option value=\"foo\">");
     gold.append("\n    var e=$.E('option');");
-    gold.append("\n    e.value=\"foo\";");
+    gold.append("\n    $.SV(e,\"foo\");");
     gold.append("\n    e.append($.T('FOOO'));");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
@@ -91,7 +91,7 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <option value=\"foo\">");
     gold.append("\n    var e=$.E('option');");
-    gold.append("\n    e.value=\"foo\";");
+    gold.append("\n    $.SV(e,\"foo\");");
     gold.append("\n    e.append($.T('FOOO'));");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");

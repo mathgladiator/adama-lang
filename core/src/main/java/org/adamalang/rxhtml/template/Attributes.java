@@ -272,13 +272,9 @@ public class Attributes {
     } else if (key.equalsIgnoreCase("src")) {
       env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
-      if (isSelect) {
-        env.writer.tab().append("$.SV(").append(var).append(",").append(expr).append(");").newline();
-      } else {
-        env.writer.tab().append(var).append(".value=").append(expr).append(";").newline();
-      }
+      env.writer.tab().append("$.SV(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && isBooleanInputValue(key)) {
-      env.writer.tab().append(var).append(".").append(key).append("=").append(wrapBoolValue(expr)).append(";").newline();
+      env.writer.tab().append("$.FV(").append(var).append(",'").append(key).append("',").append(wrapBoolValue(expr)).append(");").newline();
     } else {
       env.writer.tab().append("$.SA(").append(var).append(",'").append(key).append("',").append(expr).append(");").newline();
     }

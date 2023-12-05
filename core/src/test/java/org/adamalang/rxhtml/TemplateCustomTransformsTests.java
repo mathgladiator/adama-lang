@@ -43,7 +43,7 @@ public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=($.TR('format_date_usa'))($.F(this,'x'));");
+    gold.append("\n        $.SV(this.__dom,($.TR('format_date_usa'))($.F(this,'x')));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");
@@ -73,7 +73,7 @@ public class TemplateCustomTransformsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=($.TR('format_date_usa'))($.F(this,'x'));");
+    gold.append("\n        $.SV(this.__dom,($.TR('format_date_usa'))($.F(this,'x')));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");

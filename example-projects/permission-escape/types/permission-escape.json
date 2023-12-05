@@ -20,6 +20,13 @@
             }
           },
           "privacy" : "public"
+        },
+        "perms" : {
+          "type" : {
+            "nature" : "reactive_ref",
+            "ref" : "Perms"
+          },
+          "privacy" : "public"
         }
       }
     },
@@ -202,6 +209,110 @@
         }
       }
     },
+    "Perms" : {
+      "nature" : "reactive_record",
+      "name" : "Perms",
+      "fields" : {
+        "id" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "int"
+          },
+          "privacy" : "private"
+        },
+        "a" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "b" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "c" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "d" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "e" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "f" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "UpdatePerms" : {
+      "nature" : "native_message",
+      "name" : "UpdatePerms",
+      "anonymous" : false,
+      "fields" : {
+        "a" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "b" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "c" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "d" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "e" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "f" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
     "_AnonObjConvert_0" : {
       "nature" : "native_message",
       "name" : "_AnonObjConvert_0",
@@ -323,10 +434,15 @@
     }
   },
   "channels" : {
-    "set_password" : "NewPassword"
+    "set_password" : "NewPassword",
+    "set_perms" : "UpdatePerms"
   },
   "channels-privacy" : {
     "set_password" : {
+      "open" : false,
+      "privacy" : [ ]
+    },
+    "set_perms" : {
       "open" : false,
       "privacy" : [ ]
     }

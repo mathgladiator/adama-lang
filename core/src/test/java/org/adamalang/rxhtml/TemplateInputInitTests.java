@@ -44,7 +44,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=$.F(this,'value');");
+    gold.append("\n        $.SV(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
@@ -58,7 +58,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=$.F(this,'value');");
+    gold.append("\n        $.SV(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
@@ -80,7 +80,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <option value=\"foo\">");
     gold.append("\n    var e=$.E('option');");
-    gold.append("\n    e.value=\"foo\";");
+    gold.append("\n    $.SV(e,\"foo\");");
     gold.append("\n    e.append($.T('FOOO'));");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
@@ -88,7 +88,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    // <input type=\"checkbox\" checked=\"\" rx:debounce=\"nope\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'type',\"checkbox\");");
-    gold.append("\n    d.checked=true;");
+    gold.append("\n    $.FV(d,'checked',true);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -110,7 +110,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=$.F(this,'value');");
+    gold.append("\n        $.SV(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
@@ -124,7 +124,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        this.__dom.value=$.F(this,'value');");
+    gold.append("\n        $.SV(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'value',f);");
     gold.append("\n      f();");
@@ -146,7 +146,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <option value=\"foo\">");
     gold.append("\n    var e=$.E('option');");
-    gold.append("\n    e.value=\"foo\";");
+    gold.append("\n    $.SV(e,\"foo\");");
     gold.append("\n    e.append($.T('FOOO'));");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
@@ -154,7 +154,7 @@ public class TemplateInputInitTests extends BaseRxHtmlTest {
     gold.append("\n    // <input type=\"checkbox\" checked=\"\" rx:debounce=\"nope\">");
     gold.append("\n    var d=$.E('input');");
     gold.append("\n    $.SA(d,'type',\"checkbox\");");
-    gold.append("\n    d.checked=true;");
+    gold.append("\n    $.FV(d,'checked',true);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

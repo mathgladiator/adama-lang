@@ -18,12 +18,7 @@ window.rxhtml.PRWP('checkbox_hierarchy', function (dom, state, rxobj, maker, fra
           c_false++;
         }
       }
-      if (c_true == 0) {
-        grp.all.checked = false;
-      }
-      if (c_false == 0) {
-        grp.all.checked = true;
-      }
+      grp.all.checked = c_false == 0;
       grp.summary.innerHTML = c_true + "/" + (c_true + c_false);
     }
   };
@@ -61,6 +56,9 @@ window.rxhtml.PRWP('checkbox_hierarchy', function (dom, state, rxobj, maker, fra
       dom.addEventListener('change', function() {
         sync();
       }.bind(grp));
+      dom.addEventListener('forced', function() {
+        sync();
+      });
     }
 
     var new_grp = grp;

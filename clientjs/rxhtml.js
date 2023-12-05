@@ -3344,8 +3344,19 @@ var RxHTML = (function () {
   // d.value=$value;
   // $.SV(d,$value);
   self.SV = function(dom, value) {
+    var prior = dom.value;
     dom.value = value;
     dom.rxvalue = value;
+    if (prior != value) {
+      dom.dispatchEvent(new Event("forced"));
+    }
+  };
+  self.FV = function(dom, field, value) {
+    var prior = dom[field];
+    dom[field] = value;
+    if (prior != value) {
+      dom.dispatchEvent(new Event("forced"));
+    }
   };
   self.mergeGoto = function(href, state) {
     var parts = (href.startsWith("/") ? href.substring(1) : href).split("/");

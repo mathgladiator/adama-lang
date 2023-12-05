@@ -112,25 +112,30 @@
         TODO
     </page>
     <page uri="/demo">
-        <div rx:wrap="checkbox_hierarchy">
-            <permission-group>
-                <div><input group:all type="checkbox"> <span group:header> -- Group 1 <span group:summary></span></span></div>
-                <div group:body>
-                    <input name="perm_a" group:child type="checkbox"> - Permission A<br/>
-                    <input name="perm_b" group:child type="checkbox"> - Permission B<br/>
-                    <input name="perm_c" group:child type="checkbox"> - Permission C<br/>
-                </div>
-            </permission-group>
+        <connection name="product" use-domain>
+        <form rx:action="send:set_perms">
+            <div rx:wrap="checkbox_hierarchy" rx:scope="perms">
+                <permission-group>
+                    <div><input group:all type="checkbox"> <span group:header> -- Group 1 <span group:summary></span></span></div>
+                    <div group:body>
+                        <input name="a" checked="{a}" group:child type="checkbox"> - Permission A<br/>
+                        <input name="b" checked="{b}" group:child type="checkbox"> - Permission B<br/>
+                        <input name="c" checked="{c}" group:child type="checkbox"> - Permission C<br/>
+                    </div>
+                </permission-group>
 
-            <permission-group>
-                <div><input group:all type="checkbox"> <span group:header> -- Group 2 <span group:summary></span></span></div>
-                <div group:body>
-                    <input name="perm_d" group:child type="checkbox"> - Permission D<br/>
-                    <input name="perm_e" group:child type="checkbox"> - Permission E<br/>
-                    <input name="perm_f" group:child type="checkbox"> - Permission F<br/>
-                </div>
-            </permission-group>
-        </div>
+                <permission-group>
+                    <div><input group:all type="checkbox"> <span group:header> -- Group 2 <span group:summary></span></span></div>
+                    <div group:body>
+                        <input name="d" checked="{d}" group:child type="checkbox"> - Permission D<br/>
+                        <input name="e" checked="{e}" group:child type="checkbox"> - Permission E<br/>
+                        <input name="f" checked="{f}" group:child type="checkbox"> - Permission F<br/>
+                    </div>
+                </permission-group>
+            </div>
+            <button type="submit">Save</button>
+        </form>
+        </connection>
     </page>
     <shell>
         <script src="/custom.js" type="text/javascript"></script>

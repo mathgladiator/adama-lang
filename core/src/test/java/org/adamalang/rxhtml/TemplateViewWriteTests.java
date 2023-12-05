@@ -69,7 +69,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
+    gold.append("\n          $.FV(this.__dom,'disabled',$.B($.F(this,'disable')));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -79,13 +79,13 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n      // <input type=\"text\" disabled=\"true\">");
     gold.append("\n      var g=$.E('input');");
     gold.append("\n      $.SA(g,'type',\"text\");");
-    gold.append("\n      g.disabled=true;");
+    gold.append("\n      $.FV(g,'disabled',true);");
     gold.append("\n      b.append(g);");
     gold.append("\n");
     gold.append("\n      // <input type=\"text\" disabled=\"false\">");
     gold.append("\n      var g=$.E('input');");
     gold.append("\n      $.SA(g,'type',\"text\");");
-    gold.append("\n      g.disabled=false;");
+    gold.append("\n      $.FV(g,'disabled',false);");
     gold.append("\n      b.append(g);");
     gold.append("\n");
     gold.append("\n      // <input type=\"text\" disabled=\"{view:disable}\" required=\"{view:required}\">");
@@ -95,7 +95,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
+    gold.append("\n          $.FV(this.__dom,'disabled',$.B($.F(this,'disable')));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -104,7 +104,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.required=$.B($.F(this,'required'));");
+    gold.append("\n          $.FV(this.__dom,'required',$.B($.F(this,'required')));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'required',i);");
     gold.append("\n        i();");
@@ -170,7 +170,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
+    gold.append("\n          $.FV(this.__dom,'disabled',$.B($.F(this,'disable')));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -180,13 +180,13 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n      // <input type=\"text\" disabled=\"true\">");
     gold.append("\n      var g=$.E('input');");
     gold.append("\n      $.SA(g,'type',\"text\");");
-    gold.append("\n      g.disabled=true;");
+    gold.append("\n      $.FV(g,'disabled',true);");
     gold.append("\n      b.append(g);");
     gold.append("\n");
     gold.append("\n      // <input type=\"text\" disabled=\"false\">");
     gold.append("\n      var g=$.E('input');");
     gold.append("\n      $.SA(g,'type',\"text\");");
-    gold.append("\n      g.disabled=false;");
+    gold.append("\n      $.FV(g,'disabled',false);");
     gold.append("\n      b.append(g);");
     gold.append("\n");
     gold.append("\n      // <input type=\"text\" disabled=\"{view:disable}\" required=\"{view:required}\">");
@@ -196,7 +196,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.disabled=$.B($.F(this,'disable'));");
+    gold.append("\n          $.FV(this.__dom,'disabled',$.B($.F(this,'disable')));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'disable',i);");
     gold.append("\n        i();");
@@ -205,7 +205,7 @@ public class TemplateViewWriteTests extends BaseRxHtmlTest {
     gold.append("\n        var h={};");
     gold.append("\n        h.__dom=g;");
     gold.append("\n        var i=(function() {");
-    gold.append("\n          this.__dom.required=$.B($.F(this,'required'));");
+    gold.append("\n          $.FV(this.__dom,'required',$.B($.F(this,'required')));");
     gold.append("\n        }).bind(h);");
     gold.append("\n        $.Y($.pV(f),h,'required',i);");
     gold.append("\n        i();");

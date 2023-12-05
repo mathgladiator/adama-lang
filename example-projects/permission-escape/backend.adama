@@ -153,3 +153,27 @@ channel set_password(NewPassword np) {
     user.password_hash = np.password;
   }
 }
+
+record Perms {
+  public bool a;
+  public bool b;
+  public bool c;
+  public bool d;
+  public bool e;
+  public bool f;
+}
+
+message UpdatePerms {
+  bool a;
+  bool b;
+  bool c;
+  bool d;
+  bool e;
+  bool f;
+}
+
+public Perms perms;
+
+channel set_perms(UpdatePerms up) {
+  perms <- up;
+}
