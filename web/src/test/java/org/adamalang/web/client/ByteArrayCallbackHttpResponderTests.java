@@ -38,7 +38,7 @@ public class ByteArrayCallbackHttpResponderTests {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        Assert.assertEquals(979143, ex.code);
+        Assert.assertEquals(924928, ex.code);
       }
     });
     responder.start(new SimpleHttpResponseHeader(400, new TreeMap<>()));
