@@ -629,10 +629,16 @@ public class ErrorTable {
     retry.add(928828);
     names.put(984312, "WEB_CALLBACK_RESOURCE_GONE");
     descriptions.put(984312, "no description of error (yet)");
+    names.put(986396, "WEB_CALLBACK_RESOURCE_NOT_FOUND");
+    descriptions.put(986396, "no description of error (yet)");
+    names.put(982272, "WEB_CALLBACK_RESOURCE_NOT_AUTHORIZED");
+    descriptions.put(982272, "no description of error (yet)");
     names.put(931015, "WEB_VOID_CALLBACK_NOT_200");
     descriptions.put(931015, "no description of error (yet)");
     names.put(979143, "WEB_STRING_CALLBACK_NOT_200");
     descriptions.put(979143, "no description of error (yet)");
+    names.put(924928, "WEB_BYTEARRAY_CALLBACK_NOT_200");
+    descriptions.put(924928, "no description of error (yet)");
     names.put(903364, "UPLOAD_SCAN_FILE_FAILURE");
     descriptions.put(903364, "no description of error (yet)");
     names.put(998599, "BACKUP_FILE_FAILURE");

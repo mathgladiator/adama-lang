@@ -53,10 +53,7 @@ public class ByteArrayCallbackHttpResponder implements SimpleHttpResponder {
         logger.error("get-callback-not-20x: {}, {}", header.status + ":" + header.headers.toString());
         emissionPossible = false;
         logBody = true;
-        int errorCode = ErrorCodes.WEB_STRING_CALLBACK_NOT_200;
-        if (header.status == 410) {
-          errorCode = ErrorCodes.WEB_CALLBACK_RESOURCE_GONE;
-        }
+        int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_BYTEARRAY_CALLBACK_NOT_200);
         monitor.failure(errorCode);
         callback.failure(new ErrorCodeException(errorCode, header.status + ""));
       }

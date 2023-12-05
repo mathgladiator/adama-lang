@@ -325,7 +325,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
 
       @Override
       public void failure(ErrorCodeException ex) {
-        if (retriesLeft > 0) {
+        if (retriesLeft > 0 && ex.code != ErrorCodes.WEB_CALLBACK_RESOURCE_NOT_FOUND) {
           metrics.retry_fetch_byte_code.run();
           base.executor.schedule(new NamedRunnable("attempt-fetch-bytecode-retry") {
             @Override

@@ -15,9 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.web.client;
 
-public class Platform {
-  public static final String VERSION = "20231205020134";
-  public static final String JS_VERSION = "878a084c49f167091d870bc7de98e7cf";
+import org.adamalang.ErrorCodes;
+
+/** convert standard HTTP Error codes into specialized error codes that are actionable */
+public class HttpError {
+  public static int translateHttpStatusCodeToError(int status, int given) {
+    if (status == 410) {
+      return ErrorCodes.WEB_CALLBACK_RESOURCE_GONE;
+    } else if (status == 404) {
+      return ErrorCodes.WEB_CALLBACK_RESOURCE_NOT_FOUND;
+    } else if (status == 403) {
+      return ErrorCodes.WEB_CALLBACK_RESOURCE_NOT_AUTHORIZED;
+    }
+    return given;
+  }
 }
