@@ -5,65 +5,87 @@
     </page>
     <page uri="/product">
         This is the product!
-        <connection use-domain name="product">
+        <connection name="product" use-domain>
             <ul rx:iterate="others">
-                <li><lookup path="email" /></li>
+                <li>
+                    <lookup path="email"/>
+                </li>
             </ul>
+
+            <form rx:action="send:set_password" rx:failure="raise:failed te:errormessage" rx:success="lower:failed goto:/auth">
+                <div rx:if="view:failed">
+                    Failed to set password:
+                    <lookup path="view:errormessage"/>
+                </div>
+                <password-holder>
+                New Password: <input name="password" type="password" />
+                    <div rx:click="toggle-password" type="button">[TP]</div>
+                <br/>
+                </password-holder>
+                <password-holder>
+                Confirm Password: <input name="confirm-password" type="password" />
+                    <div rx:click="toggle-password" type="button">[TP]</div>
+                <br/>
+                </password-holder>
+                <button type="submit">Change</button>
+            </form>
         </connection>
     </page>
     <page uri="/register">
         <h2>Register for the product</h2>
         <div rx:if="view:failed">
-            Failed to register: <lookup path="view:errormessage" />
+            Failed to register:
+            <lookup path="view:errormessage"/>
         </div>
-        <form rx:action="domain:put" path="register" rx:failure="raise:failed te:errormessage" rx:success="lower:failed" rx:forward="/product">
+        <form path="register" rx:action="domain:put" rx:failure="raise:failed te:errormessage" rx:forward="/product"
+              rx:success="lower:failed">
             <label for="email">Email: </label>
-            <input type="email" name="email" id="email"/>
+            <input id="email" name="email" type="email"/>
             <br/>
 
             <password-holder>
                 <label for="password">Password: </label>
-                <input type="password" name="password" id="password"/>
+                <input id="password" name="password" type="password"/>
                 <br/>
-                <div type="button" rx:click="toggle-password">Toggle Password</div>
+                <div rx:click="toggle-password" type="button">Toggle Password</div>
             </password-holder>
 
             <password-holder>
                 <label for="confirm-password">Confirm Password: </label>
-                <input type="password" name="confirm-password" id="confirm-password"/>
+                <input id="confirm-password" name="confirm-password" type="password"/>
                 <br/>
-                <div type="button" rx:click="toggle-password">Toggle Password</div>
+                <div rx:click="toggle-password" type="button">Toggle Password</div>
             </password-holder>
 
             <button type="submit">Register!</button>
         </form>
     </page>
-    <page uri="/sign-in" default-redirect-source>
+    <page default-redirect-source uri="/sign-in">
         <h2>Sign into the product</h2>
-        <form rx:action="domain:sign-in" class="space-y-6" rx:forward="/product">
+        <form class="space-y-6" rx:action="domain:sign-in" rx:forward="/product">
             <label for="username">Email: </label>
-            <input type="username" name="username" id="username"/>
+            <input id="username" name="username" type="username"/>
             <br/>
 
             <label for="password">Password: </label>
-            <input type="password" name="password" id="password"/>
+            <input id="password" name="password" type="password"/>
             <br/>
 
             <button type="submit">Sign in!</button>
         </form>
     </page>
 
-    <page uri="/auth" default-redirect-source>
+    <page default-redirect-source uri="/auth">
         <h2>Sign into the product</h2>
-        <form rx:action="domain:authorize" class="space-y-6" rx:forward="/product">
+        <form class="space-y-6" rx:action="domain:authorize" rx:forward="/product">
             <label for="email">Email: </label>
-            <input type="email" name="email" id="email"/>
+            <input id="email" name="email" type="email"/>
             <br/>
 
             <password-holder>
-            <label for="password">Password: </label>
-            <input type="password" name="password" id="password"/>
-                <div type="button" rx:click="toggle-password">Toggle Password</div>
+                <label for="password">Password: </label>
+                <input id="password" name="password" type="password"/>
+                <div rx:click="toggle-password" type="button">Toggle Password</div>
             </password-holder>
             <br/>
 
@@ -71,16 +93,16 @@
             <button type="submit">Sign in!</button>
         </form>
 
-        <hr />
-        <form rx:action="document:authorize" class="space-y-6" rx:forward="/product">
-            <input type="hidden" name="space" value="permission-escape" />
-            <input type="hidden" name="key" value="demo" />
+        <hr/>
+        <form class="space-y-6" rx:action="document:authorize" rx:forward="/product">
+            <input name="space" type="hidden" value="permission-escape"/>
+            <input name="key" type="hidden" value="demo"/>
             <label for="email">Email: </label>
-            <input type="email" name="email" id="email"/>
+            <input id="email" name="email" type="email"/>
             <br/>
 
             <label for="password">Password: </label>
-            <input type="password" name="password" id="password"/>
+            <input id="password" name="password" type="password"/>
             <br/>
 
             <button type="submit">Sign in!</button>
@@ -91,18 +113,23 @@
     </page>
     <page uri="/demo">
         <div rx:wrap="checkbox_hierarchy">
-        <div><input type="checkbox" check:group="g1"> <span  showhide:toggle="g1"> -- Group 1 <span group:summary="g1"></span></span></div>
-        <div showhide:target="g1">
-            <input type="checkbox" name="perm_a" part:of="g1"> - Permission A<br/>
-            <input type="checkbox" name="perm_b" part:of="g1"> - Permission B<br/>
-            <input type="checkbox" name="perm_c" part:of="g1"> - Permission C<br/>
-        </div>
-        <div><input type="checkbox" check:group="g2"> <span  showhide:toggle="g2"> -- Group 2 <span group:summary="g2"></span></span></div>
-        <div showhide:target="g2">
-            <input type="checkbox" name="perm_d" part:of="g2"> - Permission D<br/>
-            <input type="checkbox" name="perm_e" part:of="g2"> - Permission E<br/>
-            <input type="checkbox" name="perm_f" part:of="g2"> - Permission F<br/>
-        </div>
+            <permission-group>
+                <div><input group:all type="checkbox"> <span group:header> -- Group 1 <span group:summary></span></span></div>
+                <div group:body>
+                    <input name="perm_a" group:child type="checkbox"> - Permission A<br/>
+                    <input name="perm_b" group:child type="checkbox"> - Permission B<br/>
+                    <input name="perm_c" group:child type="checkbox"> - Permission C<br/>
+                </div>
+            </permission-group>
+
+            <permission-group>
+                <div><input group:all type="checkbox"> <span group:header> -- Group 2 <span group:summary></span></span></div>
+                <div group:body>
+                    <input name="perm_d" group:child type="checkbox"> - Permission D<br/>
+                    <input name="perm_e" group:child type="checkbox"> - Permission E<br/>
+                    <input name="perm_f" group:child type="checkbox"> - Permission F<br/>
+                </div>
+            </permission-group>
         </div>
     </page>
     <shell>

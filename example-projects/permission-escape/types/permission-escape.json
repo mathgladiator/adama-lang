@@ -20,13 +20,6 @@
             }
           },
           "privacy" : "public"
-        },
-        "foo" : {
-          "type" : {
-            "nature" : "reactive_value",
-            "type" : "string"
-          },
-          "privacy" : "public"
         }
       }
     },
@@ -195,18 +188,11 @@
         }
       }
     },
-    "Foo" : {
+    "NewPassword" : {
       "nature" : "native_message",
-      "name" : "Foo",
+      "name" : "NewPassword",
       "anonymous" : false,
       "fields" : {
-        "name" : {
-          "type" : {
-            "nature" : "native_value",
-            "type" : "string"
-          },
-          "privacy" : "public"
-        },
         "password" : {
           "type" : {
             "nature" : "native_value",
@@ -337,10 +323,10 @@
     }
   },
   "channels" : {
-    "set_foo" : "Foo"
+    "set_password" : "NewPassword"
   },
   "channels-privacy" : {
-    "set_foo" : {
+    "set_password" : {
       "open" : false,
       "privacy" : [ ]
     }

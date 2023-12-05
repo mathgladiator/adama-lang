@@ -1,6 +1,9 @@
 {
   "/" : { },
-  "/product" : { },
+  "/product" : {
+    "errormessage" : "error-message",
+    "failed" : "bool"
+  },
   "/register" : {
     "errormessage" : "error-message",
     "failed" : "bool"

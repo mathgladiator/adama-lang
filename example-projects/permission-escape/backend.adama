@@ -143,3 +143,13 @@ message WebForgot {
   }
   return {html:"NotOK", cors:true};
 }
+
+message NewPassword {
+  string password;
+}
+
+channel set_password(NewPassword np) {
+  if( (iterate _users where who == @who)[0] as user) {
+    user.password_hash = np.password;
+  }
+}
