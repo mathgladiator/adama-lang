@@ -93,6 +93,10 @@ public class MockStreamback implements Streamback {
     return dataList.get(k);
   }
 
+  public synchronized int size() {
+    return dataList.size();
+  }
+
   public synchronized Runnable latchAt(int count) {
     CountDownLatch latch = new CountDownLatch(count);
     latches.add(latch);

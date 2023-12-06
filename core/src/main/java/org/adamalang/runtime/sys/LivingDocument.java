@@ -362,7 +362,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.endObject();
     reverse.endObject();
     __graph.compute();
-    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList(BroadcastPathway.Invalidate, who);
+    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
     RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, __deltaTime(), 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null, shouldSignalBroadcast(BroadcastPathway.Invalidate, who));
   }
@@ -377,7 +377,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     boolean hasTimeouts = __timeouts.needsInvalidationAndUpdateNext(__next_time);
     forward.endObject();
     reverse.endObject();
-    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList(BroadcastPathway.Other, who);
+    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
     RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, __deltaTime(), assetBytes, UpdateType.AddUserData);
     return new LivingDocumentChange(update, broadcasts, response, shouldSignalBroadcast(BroadcastPathway.Other, who));
   }
@@ -552,6 +552,29 @@ public abstract class LivingDocument implements RxParent, Caller {
     return false;
   }
 
+  private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListFor(NtPrincipal who) {
+    Runnable perf = __perf.measure("ldf_build_broadcast_list");
+    __settle(__viewsById.keySet());
+    // build a broadcast task list
+    ArrayList<BroadcastTask> tasks = new ArrayList<>(__trackedViews.size());
+    final var itView = __trackedViews.get(who).iterator();
+    while (itView.hasNext()) {
+      final var pv = itView.next();
+      if (pv.isAlive()) {
+        tasks.add(new BroadcastTask(who, pv));
+      }
+    }
+    // convert the tasks to broadcasts
+    ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(tasks.size());
+    for (BroadcastTask task : tasks) {
+      Runnable viewPerf = __perf.measure("ld_broadcast_make");
+      broadcasts.add(task.convert());
+      viewPerf.run();
+    }
+    perf.run();
+    return broadcasts;
+  }
+
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListGameMode() {
     Runnable perf = __perf.measure("ld_build_broadcast_list");
     __settle(__viewsById.keySet());
@@ -580,8 +603,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** internal: we compute per client */
-  private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList(BroadcastPathway pathway, NtPrincipal sender) {
-    // TODO: introduce an app mode that uses pathway to decide who to broadcast to
+  /** internal: we compute per client */
+  private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListSend(NtPrincipal sender, final LivingDocumentFactory factory) {
+    if (factory.appMode) {
+      return __buildBroadcastListFor(sender);
+    }
     return __buildBroadcastListGameMode();
   }
 
@@ -1833,7 +1859,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         __preemptedStateOnNextComputeBlocked = null;
         return __invalidate_trailer(who, request, false);
       } else {
-        List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList(BroadcastPathway.Blocked, who);
+        List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
         __revert();
         __futures.restore();
         __reset_future_queues();
@@ -1967,8 +1993,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     __proxy_commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
-    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList(BroadcastPathway.Send, sender);
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), __deltaTime(), 0L, UpdateType.DirectMessageExecute);
+    int delay = __deltaTime();
+    if (delay <= 0 && factory.appMode) {
+      delay = factory.appDelay;
+    }
+    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListSend(sender, factory);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || factory.appMode, delay, 0L, UpdateType.DirectMessageExecute);
     return new LivingDocumentChange(update, broadcasts, null, shouldSignalBroadcast(BroadcastPathway.Send, who));
   }
 

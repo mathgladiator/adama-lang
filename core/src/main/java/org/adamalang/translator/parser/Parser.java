@@ -507,8 +507,8 @@ public class Parser {
 
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
-      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history", "delete_on_close", "app_mode", "app_delay")) {
-        throw new ParseException("Parser was expecting a static definition. Candidates are create, invent, send", tokens.getLastTokenIfAvailable());
+      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history", "delete_on_close", "frequency")) {
+        throw new ParseException("Parser was expecting a static definition. Candidates are create, invent, send, maximum_history, delete_on_close, frequency", tokens.getLastTokenIfAvailable());
       }
       switch (nextOrClose.text) {
         case "create":
@@ -522,8 +522,7 @@ public class Parser {
           break;
         case "maximum_history":
         case "delete_on_close":
-        case "app_mode":
-        case "app_delay":
+        case "frequency":
           definitions.add(define_config(staticScope, nextOrClose));
           break;
       }

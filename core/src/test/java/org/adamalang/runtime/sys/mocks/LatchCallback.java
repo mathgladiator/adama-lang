@@ -32,6 +32,8 @@ public class LatchCallback implements Callback<Integer> {
 
   public LatchCallback() {
     this.latch = new CountDownLatch(1);
+    this.value = 0;
+    this.ex = null;
   }
 
   public Callback<Boolean> toBool(int trueValue, int falseValue) {
@@ -64,6 +66,15 @@ public class LatchCallback implements Callback<Integer> {
     try {
       Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
       Assert.assertEquals(value, this.value);
+    } catch (InterruptedException ie) {
+      Assert.fail();
+    }
+  }
+
+  public void awaitJustSuccess() {
+    try {
+      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      Assert.assertNull(ex);
     } catch (InterruptedException ie) {
       Assert.fail();
     }

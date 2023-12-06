@@ -29,6 +29,7 @@ import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.lsp.LanguageServer;
+import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.services.FirstPartyServices;
@@ -324,7 +325,6 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   private static class KnownException extends Exception {
-
   }
 
   public static class CompileResult {
@@ -335,7 +335,7 @@ public class CodeHandlerImpl implements CodeHandler {
       this.code = code;
       this.reflection = reflection;
       try {
-        new LivingDocumentFactory("space", "TempClass", code, reflection, Deliverer.FAILURE, new TreeMap<>());
+        new LivingDocumentFactory(SyncCompiler.compile("space", "TempClass", code, reflection), Deliverer.FAILURE, new TreeMap<>());
       } catch (Exception ex) {
         ex.printStackTrace();
       }

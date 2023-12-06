@@ -54,6 +54,8 @@ public class LivingDocumentFactory {
   public final ServiceRegistry registry;
   public final Deliverer deliverer;
   public final long memoryUsage;
+  public final boolean appMode;
+  public final int appDelay;
 
   public LivingDocumentFactory(CachedByteCode code, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     try {
@@ -73,17 +75,15 @@ public class LivingDocumentFactory {
       HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
       maximum_history = extractMaximumHistory(config);
       delete_on_close = extractDeleteOnClose(config);
+      int freq = extractFrequency(config);
+      appMode = freq > 0;
+      appDelay = freq;
       this.reflection = code.reflection;
       this.registry = new ServiceRegistry();
       this.registry.resolve(code.spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)), keys);
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }
-  }
-
-  @Deprecated
-  public LivingDocumentFactory(final String spaceName, final String className, final String javaSource, String reflection, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
-    this(SyncCompiler.compile(spaceName, className, javaSource, reflection), deliverer, keys);
   }
 
   public boolean canInvent(CoreRequestContext context) throws ErrorCodeException {
@@ -125,6 +125,15 @@ public class LivingDocumentFactory {
       return ((Boolean) value).booleanValue();
     } else {
       return false;
+    }
+  }
+
+  private static int extractFrequency(HashMap<String, Object> config) {
+    Object value = config.get("frequency");
+    if (value != null && value instanceof Integer) {
+      return ((Integer) value).intValue();
+    } else {
+      return 0;
     }
   }
 

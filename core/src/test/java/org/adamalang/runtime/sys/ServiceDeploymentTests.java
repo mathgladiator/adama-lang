@@ -24,6 +24,7 @@ import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
@@ -242,7 +243,7 @@ public class ServiceDeploymentTests {
       }
       factoryFactory.set(
           new LivingDocumentFactory(
-              "space",
+              SyncCompiler.compile("space",
               "Foo",
               "import java.util.HashMap;\nimport org.adamalang.runtime.contracts.DocumentMonitor;" +
                   "import org.adamalang.runtime.natives.*;import org.adamalang.runtime.sys.*;\n" +
@@ -253,7 +254,7 @@ public class ServiceDeploymentTests {
                   "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
                   "public static HashMap<String, HashMap<String, Object>> __services() { return new HashMap<>(); }" +
                   "}",
-              "{}", Deliverer.FAILURE, new TreeMap<>()));
+              "{}"), Deliverer.FAILURE, new TreeMap<>()));
       CountDownLatch deployed = new CountDownLatch(1);
       service.deploy(
           new DeploymentMonitor() {

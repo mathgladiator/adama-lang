@@ -86,6 +86,7 @@ public class DurableLivingDocument implements Queryable {
   private long lastActivityMS;
   private boolean metricsScheduled;
   private boolean disableMetrics;
+  private boolean invalidationScheduled;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -105,6 +106,7 @@ public class DurableLivingDocument implements Queryable {
     this.observers = new ArrayList<>();
     this.metricsScheduled = false;
     this.disableMetrics = false;
+    this.invalidationScheduled = false;
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -347,12 +349,6 @@ public class DurableLivingDocument implements Queryable {
     return document;
   }
 
-  public Integer getAndCleanRequiresInvalidateMilliseconds() {
-    Integer result = requiresInvalidateMilliseconds;
-    requiresInvalidateMilliseconds = null;
-    return result;
-  }
-
   public void deploy(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
     LivingDocument newDocument = factory.create(document.__monitor);
     newDocument.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
@@ -416,13 +412,17 @@ public class DurableLivingDocument implements Queryable {
     this.inflightPatch = false;
     if (pending.size() == 0) {
       outstandingExecutionsWhichRequireDrain = 0;
-      if (requiresInvalidateMilliseconds != null && checkInvalidate) {
+      if (requiresInvalidateMilliseconds != null && checkInvalidate && !invalidationScheduled) {
+        invalidationScheduled = true;
+        int scheduledIn = Math.max(10, Math.min(requiresInvalidateMilliseconds, 300000));
+        requiresInvalidateMilliseconds = null;
         base.executor.schedule(new NamedRunnable("finish-success-patch") {
           @Override
           public void execute() throws Exception {
+            invalidationScheduled = false;
             invalidate(Callback.DONT_CARE_INTEGER);
           }
-        }, Math.max(10, Math.min(requiresInvalidateMilliseconds, 300000)));
+        }, scheduledIn);
       }
     } else {
       IngestRequest[] remaining = new IngestRequest[pending.size()];
@@ -527,6 +527,18 @@ public class DurableLivingDocument implements Queryable {
     return requestToFocus;
   }
 
+  private void integrate(LivingDocumentChange change) {
+    if (currentFactory.appMode) {
+      if (change.update.requiresFutureInvalidation) {
+        if (requiresInvalidateMilliseconds != null) {
+          requiresInvalidateMilliseconds = Math.min(change.update.whenToInvalidateMilliseconds, requiresInvalidateMilliseconds);
+        } else {
+          requiresInvalidateMilliseconds = change.update.whenToInvalidateMilliseconds;
+        }
+      }
+    }
+  }
+
   private void executeNow(IngestRequest[] requests) {
     inflightPatch = true;
     IngestRequest lastRequest = null;
@@ -558,6 +570,7 @@ public class DurableLivingDocument implements Queryable {
           lastRequest = request;
           request.change = document.__transact(request.request, currentFactory);
           if (request.change != null) {
+            integrate(request.change);
             changes.add(request.change);
             last = request.change;
             if (last.update.requiresFutureInvalidation) {
@@ -578,7 +591,7 @@ public class DurableLivingDocument implements Queryable {
         }
       }
       if (last == null) {
-        finishSuccessDataServicePatchWhileInExecutor(false);
+        finishSuccessDataServicePatchWhileInExecutor(currentFactory.appMode);
         return;
       }
       final boolean shouldCleanUp = requestsCleanUp;
@@ -596,6 +609,7 @@ public class DurableLivingDocument implements Queryable {
         limit--;
         try {
           last = document.__transact(forgeInvalidate(), currentFactory);
+          integrate(last);
           requireInvalidate = last.update.requiresFutureInvalidation;
           invalidateWaitTime = last.update.whenToInvalidateMilliseconds;
           changes.add(last);
@@ -607,7 +621,9 @@ public class DurableLivingDocument implements Queryable {
       if (limit == 0) {
         LOG.error("Reached internal invalidation limit:" + document.__getSpace() + "/" + document.__getKey());
       }
-      requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
+      if (!currentFactory.appMode) {
+        requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
+      }
       RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[changes.size()];
       int at = 0;
       for (LivingDocumentChange change : changes) {

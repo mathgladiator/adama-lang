@@ -19,10 +19,12 @@ package org.adamalang.runtime;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.template.tree.T;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.delta.secure.TestKey;
+import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -86,7 +88,7 @@ public class LivingDocumentTests {
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
     if (cached == null) {
-      cached = new LivingDocumentFactory("me", "MeCode", java, reflection.toString(), deliverer, new TreeMap<>());
+      cached = new LivingDocumentFactory(SyncCompiler.compile("me", "MeCode", java, reflection.toString()), deliverer, new TreeMap<>());
       compilerCache.put(java, cached);
     }
     return cached;
@@ -1782,20 +1784,25 @@ public class LivingDocumentTests {
     Assert.assertEquals("10", t);
   }
 
+  private int get_t(RealDocumentSetup setup) {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    setup.document.document().__dump(writer);
+    return Json.parseJsonObject(writer.toString()).get("t").intValue();
+  }
+
   @Test
   public void construct_over_time() throws Exception {
     final var setup =
         new RealDocumentSetup(
             "@connected { return @who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     setup.document.invalidate(Callback.DONT_CARE_INTEGER);
-    Integer bumpTimeMs;
     int k = 3;
-    while ((bumpTimeMs = setup.document.getAndCleanRequiresInvalidateMilliseconds()) != null) {
-      setup.time.time += bumpTimeMs;
+    while (get_t(setup) < 10) {
+      setup.time.time += 10;
       setup.document.invalidate(new RealDocumentSetup.AssertInt(k));
       k++;
     }
-    Assert.assertEquals(14, k);
+    Assert.assertEquals(253, k);
   }
 
   @Test

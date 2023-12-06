@@ -128,7 +128,7 @@ public class SyncCompiler {
       final var java = document.compileJava(state);
       JsonStreamWriter reflection = new JsonStreamWriter();
       document.writeTypeReflectionJson(reflection);
-      return new LivingDocumentFactory(spaceName, className, java, reflection.toString(), deliverer, keys);
+      return new LivingDocumentFactory(SyncCompiler.compile(spaceName, className, java, reflection.toString()), deliverer, keys);
     } catch (AdamaLangException ex) {
       throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_PARSE_LANGUAGE, ex);
     }

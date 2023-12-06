@@ -17,6 +17,7 @@
 */
 package org.adamalang.support.testgen;
 
+import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -31,7 +32,7 @@ public class PhaseCompile {
     final var ps = new PrintStream(memoryResultsCompiler);
     System.setErr(ps);
     outputFile.append("--=[LivingDocumentFactory COMPILING]=---").append("\n");
-    LivingDocumentFactory factory = new LivingDocumentFactory("test", className, java, "{}", Deliverer.FAILURE, new TreeMap<>());
+    LivingDocumentFactory factory = new LivingDocumentFactory(SyncCompiler.compile("test", className, java, "{}"), Deliverer.FAILURE, new TreeMap<>());
     if (factory != null) {
       outputFile.append("--=[LivingDocumentFactory MADE]=---\n");
     }
