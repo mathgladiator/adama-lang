@@ -84,4 +84,5 @@
   - [Single file infrastructure](./what/single-file-infrastructure.md)
 - [Cheatsheet](./cheatsheet.md)
 - [Deeper Tour](./deep-tour.md)
+- [Building and Contributing](./build.md)
 - [Roadmap](./road-map.md)

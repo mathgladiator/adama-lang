@@ -113,11 +113,17 @@ public class CapacityAgent implements HeatMonitor {
       resources.cpu(new LoadEvent("cpu", 0.99, rejectMessages::a));
     }
     {
-      resources.memory(new LoadEvent("mem", 0.80, add_capacity::b));
-      resources.memory(new LoadEvent("mem", 0.85, rebalance::b));
-      resources.memory(new LoadEvent("mem", 0.90, rejectNew::b));
-      resources.memory(new LoadEvent("mem", 0.92, rejectExisting::b));
-      resources.memory(new LoadEvent("mem", 0.95, rejectMessages::b));
+      resources.memory(new LoadEvent("mem", 0.80, (b) -> {
+        if (b) {
+          LOG.error("forcing-garbage-collection");
+          System.gc();
+        }
+      }));
+      resources.memory(new LoadEvent("mem", 0.85, add_capacity::b));
+      resources.memory(new LoadEvent("mem", 0.90, rebalance::b));
+      resources.memory(new LoadEvent("mem", 0.92, rejectNew::b));
+      resources.memory(new LoadEvent("mem", 0.95, rejectExisting::b));
+      resources.memory(new LoadEvent("mem", 0.98, rejectMessages::b));
     }
   }
 
