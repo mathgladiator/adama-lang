@@ -799,7 +799,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
       for (DocumentIndex item : FinderOperations.list(nexus.database, request.space, request.marker, request.limit != null ? request.limit : 100)) {
-        responder.next(item.key, item.created, item.updated, item.seq);
+        responder.next(item.key, item.created, item.updated, item.seq, item.backup != null ? item.backup : "never");
       }
       responder.finish();
     } catch (Exception ex) {

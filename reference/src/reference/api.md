@@ -1325,6 +1325,7 @@ connection.DocumentList(identity, space, marker, limit, {
     // payload.created
     // payload.updated
     // payload.seq
+    // payload.lastBackup
   },
   complete: function() {
   },
@@ -1341,6 +1342,7 @@ connection.DocumentList(identity, space, marker, limit, {
 | created | String | When the item was created. |
 | updated | String | When the item was last updated. |
 | seq | Integer | The sequencer for the item. |
+| last-backup | String | The time of the last internal backup. |
 
 ## Method: MessageDirectSend
 Send a message to a document without a connection

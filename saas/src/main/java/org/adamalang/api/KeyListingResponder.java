@@ -30,12 +30,13 @@ public class KeyListingResponder {
     this.responder = responder;
   }
 
-  public void next(String key, String created, String updated, Integer seq) {
+  public void next(String key, String created, String updated, Integer seq, String lastBackup) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("key", key);
     _obj.put("created", created);
     _obj.put("updated", updated);
     _obj.put("seq", seq);
+    _obj.put("lastBackup", lastBackup);
     responder.stream(_obj.toString());
   }
 

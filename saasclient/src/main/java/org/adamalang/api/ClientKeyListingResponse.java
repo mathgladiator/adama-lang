@@ -27,6 +27,7 @@ public class ClientKeyListingResponse {
   public final String created;
   public final String updated;
   public final Integer seq;
+  public final String lastBackup;
 
   public ClientKeyListingResponse(ObjectNode response) {
     this._original = response;
@@ -34,6 +35,7 @@ public class ClientKeyListingResponse {
     this.created = Json.readString(response, "created");
     this.updated = Json.readString(response, "updated");
     this.seq = Json.readInteger(response, "seq");
+    this.lastBackup = Json.readString(response, "last-backup");
   }
   public String toInternalJson() {
     ObjectNode _next = Json.newJsonObject();
@@ -41,6 +43,7 @@ public class ClientKeyListingResponse {
     _next.put("created", created);
     _next.put("updated", updated);
     _next.put("seq", seq);
+    _next.put("lastBackup", lastBackup);
     return _next.toString();
   }
 }

@@ -24,13 +24,15 @@ public class DocumentIndex {
   public final String updated;
   public final int seq;
   public final String archive;
+  public final String backup;
 
-  public DocumentIndex(String space, String key, String created, String updated, int seq, String archive) {
+  public DocumentIndex(String space, String key, String created, String updated, int seq, String archive, String backup) {
     this.space = space;
     this.key = key;
     this.created = created;
     this.updated = updated;
     this.seq = seq;
     this.archive = archive;
+    this.backup = backup;
   }
 }

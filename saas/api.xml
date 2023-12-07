@@ -454,6 +454,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="last-backup" type="string">
+        <documentation>
+            The time of the last internal backup.
+        </documentation>
+    </field-definition>
+
     <field-definition name="bandwidth" type="long">
         <documentation>
             Bytes used to transmit.
@@ -618,6 +624,7 @@
         <field name="created"/>
         <field name="updated"/>
         <field name="seq"/>
+        <field name="last-backup"/>
     </responder>
 
     <responder name="key-pair">
