@@ -66,7 +66,7 @@ public class LoadMonitor {
             e.at(sum_memory);
           }
           if (alive.get()) {
-            executor.schedule(this, 1000);
+            executor.schedule(this, 250);
           }
         }
       }, 10);
