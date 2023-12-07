@@ -30,7 +30,7 @@ Will produce a nice list of files which we will walk through now.
 With the directory organization available, run the devbox:
 
 ```shell
-java -jar ../adama.jar frontend dev-server
+java -jar ../adama.jar devbox
 ```
 
 Now navigate your browser to [http://localhost:8080](http://localhost:8080), and you'll have a local sandbox for changing the *.rx.html and *.adama files. Note, changes to the *.adama files are reflected instantly while changes to the *.rx.html files require a full screen refresh (F5) in the browser.
