@@ -245,13 +245,6 @@ public class CapacityAgent implements HeatMonitor {
     });
   }
 
-  private String hash(Key key, String machine) { // This is a fairly dumb approach, we should sync this up with how to pick a new host
-    MessageDigest digest = Hashing.md5();
-    digest.update(key.key.getBytes(StandardCharsets.UTF_8));
-    digest.update(machine.getBytes(StandardCharsets.UTF_8));
-    return Hashing.finishAndEncode(digest);
-  }
-
   @Override
   public void heat(String target, double cpu, double memory) {
     metrics.shield_heat.run();
