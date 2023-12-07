@@ -175,6 +175,7 @@ public class DocumentHandlerImpl implements DocumentHandler {
           // FUN progress token?
           latch.await(1000, TimeUnit.MILLISECONDS);
         }
+        output.out();
       }
     }
   }

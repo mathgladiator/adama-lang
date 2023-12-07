@@ -84,6 +84,11 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
+  public OpsHandler makeOpsHandler() {
+    return new OpsHandlerImpl();
+  }
+
+  @Override
   public void dumpenv(Arguments.DumpenvArgs args, Output.YesOrError output) throws Exception {
     for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
       System.err.println(entry.getKey() + "=" + entry.getValue());
@@ -92,7 +97,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void version(Arguments.VersionArgs args, Output.YesOrError output) throws Exception {
-      System.err.println("adama version " + Util.prefix(Platform.VERSION, Util.ANSI.Green));
+    System.err.println("adama version " + Util.prefix(Platform.VERSION, Util.ANSI.Green));
   }
 
   @Override

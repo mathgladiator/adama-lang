@@ -33,6 +33,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("contrib", 15), Util.ANSI.Cyan) + "Open source contributor tools");
     System.out.println("    " + Util.prefix(Util.justifyLeft("database", 15), Util.ANSI.Cyan) + "Work with production databases for the global service.");
     System.out.println("    " + Util.prefix(Util.justifyLeft("document", 15), Util.ANSI.Cyan) + "Interact with documents within a space.");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("ops", 15), Util.ANSI.Cyan) + "Operational tasks");
     System.out.println("    " + Util.prefix(Util.justifyLeft("domain", 15), Util.ANSI.Cyan) + "Manage custom domains");
     System.out.println("    " + Util.prefix(Util.justifyLeft("frontend", 15), Util.ANSI.Cyan) + "Frontend tools (rxhtml)");
     System.out.println("    " + Util.prefix(Util.justifyLeft("services", 15), Util.ANSI.Cyan) + "Launch a service");
@@ -168,6 +169,18 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("delete", 15), Util.ANSI.Green) + "Delete a document");
     System.out.println("    " + Util.prefix(Util.justifyLeft("download-archive", 15), Util.ANSI.Green) + "Download the latest archive backup");
     System.out.println("    " + Util.prefix(Util.justifyLeft("list", 15), Util.ANSI.Green) + "List documents");
+  }
+  public static void displayOpsHelp() {
+    System.out.println(Util.prefix("Operational tasks", Util.ANSI.Green));
+    System.out.println();
+    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("adama ops", Util.ANSI.Green) + " " + Util.prefix("[OPSSUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix(Util.justifyLeft("--config", 15), Util.ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
+    System.out.println();
+    System.out.println(Util.prefix("OPSSUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix(Util.justifyLeft("compact", 15), Util.ANSI.Green) + "Compact an archive to a single JSON file");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("explain", 15), Util.ANSI.Green) + "Explain the history of a value at a path");
   }
   public static void displayDomainHelp() {
     System.out.println(Util.prefix("Manage custom domains", Util.ANSI.Green));

@@ -28,6 +28,7 @@ public interface RootHandler {
   ContribHandler makeContribHandler();
   DatabaseHandler makeDatabaseHandler();
   DocumentHandler makeDocumentHandler();
+  OpsHandler makeOpsHandler();
   DomainHandler makeDomainHandler();
   FrontendHandler makeFrontendHandler();
   ServicesHandler makeServicesHandler();

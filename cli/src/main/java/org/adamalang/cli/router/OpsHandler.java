@@ -15,9 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.cli.router;
 
-public class Platform {
-  public static final String VERSION = "20231207164932";
-  public static final String JS_VERSION = "ff305e7dd88924cfe829a2a3ca36a76a";
+import org.adamalang.cli.router.Arguments.*;
+import org.adamalang.cli.runtime.Output.*;
+
+public interface OpsHandler {
+  void compact(OpsCompactArgs args, YesOrError output) throws Exception;
+  void explain(OpsExplainArgs args, YesOrError output) throws Exception;
 }

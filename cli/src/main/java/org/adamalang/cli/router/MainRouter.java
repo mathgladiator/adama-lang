@@ -715,6 +715,44 @@ public class MainRouter {
               System.err.println("See 'adama document help' for a list of subcommands.");
               return 1;
           }
+        case "ops":
+          OpsHandler opsHandler = handler.makeOpsHandler();
+          if (args.length == 1) {
+            displayOpsHelp();
+            return 1;
+          }
+          switch (args[1]) {
+            case "compact": {
+              OpsCompactArgs opsArgs = OpsCompactArgs.from(args, 2);
+              if (opsArgs == null) {
+                OpsCompactArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               opsHandler.compact(opsArgs, out);
+               return 0;
+            }
+            case "explain": {
+              OpsExplainArgs opsArgs = OpsExplainArgs.from(args, 2);
+              if (opsArgs == null) {
+                OpsExplainArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               opsHandler.explain(opsArgs, out);
+               return 0;
+            }
+            case "--help":
+            case "-h":
+            case "help": {
+              displayOpsHelp();
+              return 1;
+            }
+            default:
+              System.err.println("Invalid subcommand '" + args[1] + "' of command 'ops'");
+              System.err.println("See 'adama ops help' for a list of subcommands.");
+              return 1;
+          }
         case "domains":
         case "domain":
           DomainHandler domainHandler = handler.makeDomainHandler();

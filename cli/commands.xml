@@ -56,6 +56,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="jquery" type="string" short="j">
+        <documentation>
+            A json path (field0.field1....fieldN)
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="local-libadama-path" type="string" short="lap">
         <documentation>
             The path to the libadama.js source code for direct linkage.
@@ -768,6 +774,27 @@
             <arg name="type" default="null" />
         </command>
 
+    </group>
+
+    <group name="ops">
+        <documentation>
+            Operational tasks
+        </documentation>
+        <command name="compact">
+            <documentation>
+                Compact an archive to a single JSON file
+            </documentation>
+            <arg name="input" />
+            <arg name="output" />
+        </command>
+
+        <command name="explain">
+            <documentation>
+                Explain the history of a value at a path
+            </documentation>
+            <arg name="input" />
+            <arg name="jquery" />
+        </command>
     </group>
 
     <group name="domain" alt-name="domains">
