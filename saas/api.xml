@@ -1165,6 +1165,7 @@
     </method>
 
     <method name="document/download-archive" responder="backup-stream" scope="global" policy="true" policy-failure-code="913913" policy-default="Owner">
+        <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
         <documentation>

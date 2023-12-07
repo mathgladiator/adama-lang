@@ -414,6 +414,7 @@ private final MultiWebClientRetryPool pool;
   public void documentDownloadArchive(ClientDocumentDownloadArchiveRequest request, Stream<ClientBackupStreamResponse> streamback) {
     ObjectNode node = Json.newJsonObject();
     node.put("method", "document/download-archive");
+    node.put("identity", request.identity);
     node.put("space", request.space);
     node.put("key", request.key);
     pool.requestStream(node, (obj) -> new ClientBackupStreamResponse(obj), streamback);

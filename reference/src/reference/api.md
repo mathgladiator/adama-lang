@@ -1090,13 +1090,14 @@ Send an authorization request to the document
 ### Parameters
 | name | required | type | documentation |
 | --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 
 
 ### Template
 ```js
-connection.DocumentDownloadArchive(space, key, {
+connection.DocumentDownloadArchive(identity, space, key, {
   next: function(payload) {
     // payload.base64Bytes
     // payload.chunkMd5

@@ -18,6 +18,7 @@
 package org.adamalang.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -29,11 +30,15 @@ import org.adamalang.web.io.*;
 
 /** Send an authorization request to the document */
 public class DocumentDownloadArchiveRequest {
+  public final String identity;
+  public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
   public final String key;
 
-  public DocumentDownloadArchiveRequest(final String space, final SpacePolicy policy, final String key) {
+  public DocumentDownloadArchiveRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key) {
+    this.identity = identity;
+    this.who = who;
     this.space = space;
     this.policy = policy;
     this.key = key;
@@ -41,13 +46,16 @@ public class DocumentDownloadArchiveRequest {
 
   public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<DocumentDownloadArchiveRequest> callback) {
     try {
-      final BulkLatch<DocumentDownloadArchiveRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
+      final BulkLatch<DocumentDownloadArchiveRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
+      final String identity = request.getString("identity", true, 458759);
+      final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
-      _latch.with(() -> new DocumentDownloadArchiveRequest(space, policy.get(), key));
+      _latch.with(() -> new DocumentDownloadArchiveRequest(identity, who.get(), space, policy.get(), key));
+      nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(new NamedRunnable("documentdownloadarchive-error") {
@@ -60,6 +68,7 @@ public class DocumentDownloadArchiveRequest {
   }
 
   public void logInto(ObjectNode _node) {
+    org.adamalang.transforms.PerSessionAuthenticator.logInto(who, _node);
     _node.put("space", space);
     org.adamalang.contracts.SpacePolicyLocator.logInto(policy, _node);
     _node.put("key", key);

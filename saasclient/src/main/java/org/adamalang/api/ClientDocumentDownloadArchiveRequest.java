@@ -19,6 +19,7 @@ package org.adamalang.api;
 
 /** generated request type for document/download-archive */
 public class ClientDocumentDownloadArchiveRequest {
+  public String identity;
   public String space;
   public String key;
 }
