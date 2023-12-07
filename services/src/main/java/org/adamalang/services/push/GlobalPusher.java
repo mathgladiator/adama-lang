@@ -93,14 +93,10 @@ public class GlobalPusher implements Pusher {
     this.firebaseCache = new ConcurrentHashMap<>();
   }
 
-  private void webPush(ObjectNode rawSub, DeviceSubscription subscription, VAPIDPublicPrivateKeyPair pair, String payload) throws Exception {
-    Subscription sub = new Subscription(rawSub);
-    SimpleHttpRequest request = webPushFactory128.make(pair, sub, 14, payload.getBytes(StandardCharsets.UTF_8));
-    webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.webpush_send.start(), new Callback<Void>() {
-      int boundId = subscription.id;
-
+  private <T> Callback<T> pushFailure(int subscriptionId) {
+    return new Callback<T>() {
       @Override
-      public void success(Void value) {
+      public void success(T value) {
       }
 
       @Override
@@ -110,14 +106,20 @@ public class GlobalPusher implements Pusher {
           executor.execute(new NamedRunnable("delete-sub") {
             @Override
             public void execute() throws Exception {
-              PushSubscriptions.deleteSubscription(dataBase, boundId);
+              PushSubscriptions.deleteSubscription(dataBase, subscriptionId);
             }
           });
         } else {
-          LOGGER.error("webpush-failure:" + ex.code + ";sub-id=" + subscription.id);
+          LOGGER.error("push-failure:" + ex.code + ";sub-id=" + subscriptionId);
         }
       }
-    }));
+    };
+  }
+
+  private void webPush(ObjectNode rawSub, DeviceSubscription subscription, VAPIDPublicPrivateKeyPair pair, String payload) throws Exception {
+    Subscription sub = new Subscription(rawSub);
+    SimpleHttpRequest request = webPushFactory128.make(pair, sub, 14, payload.getBytes(StandardCharsets.UTF_8));
+    webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.webpush_send.start(), pushFailure(subscription.id)));
   }
 
   private void capacitorPush(int subId, String registrationToken, ObjectNode payload, FirebaseCachePayload cache) {
@@ -148,16 +150,7 @@ public class GlobalPusher implements Pusher {
       headers.put("Authorization", "Bearer " + authToken);
       headers.put("Content-Type", "application/json; UTF-8");
       SimpleHttpRequest request = new SimpleHttpRequest("POST", postUrl, headers, SimpleHttpRequestBody.WRAP(root.toString().getBytes(StandardCharsets.UTF_8)));
-      webClientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.capacitor_send.start(), new Callback<>() {
-        @Override
-        public void success(String value) {
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          LOGGER.error("failed-firebase-notif:" + ex.code + ";" + subId);
-        }
-      }));
+      webClientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.capacitor_send.start(), pushFailure(subId)));
     } catch (Exception ex) {
       LOGGER.error("send-firebase-notif", ex);
     }
@@ -188,7 +181,13 @@ public class GlobalPusher implements Pusher {
                 firebaseCache.put(domain, firebaseCachePayload);
               }
             } catch (Exception ex) {
-              LOGGER.error("create-firebase-cache", ex);
+              if ((ex instanceof ErrorCodeException)) {
+                if (((ErrorCodeException) ex).code != ErrorCodes.CONFIG_NOT_FOUND_FOR_DOMAIN) {
+                  LOGGER.error("create-firebase-cache: " + ((ErrorCodeException) ex).code);
+                }
+              } else {
+                LOGGER.error("unknown-create-firebase-cache", ex);
+              }
             }
           }
 

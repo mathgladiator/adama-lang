@@ -41,7 +41,7 @@ public class LoadEvent {
     if (active != next) {
       active = next;
       event.accept(active);
-      LOGGER.error("load-event:" + name + ";@" + threshold);
+      LOGGER.error("load-event:" + name + " @ " + metric + " > " + threshold);
     }
   }
 }
