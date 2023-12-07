@@ -810,7 +810,7 @@ public class GeneratedEventsTests extends GeneratedBase {
     gold.append("\nRANDO: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":6}");
     gold.append("\n+ RANDO DELTA:{\"data\":{\"last_who\":{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"},\"last_origin\":\"phase\",\"last_ip\":\"ip\"},\"seq\":6}");
-    gold.append("\n{\"command\":\"connect\",\"timestamp\":\"125\",\"who\":{\"agent\":\"rando\",\"authority\":\"random-place\"},\"key\":\"key\",\"origin\":\"phase\",\"ip\":\"ip\"}-->{\"__seq\":8,\"__entropy\":\"-4023469995120514721\",\"__connection_id\":2,\"__time\":\"125\",\"last_who\":{\"agent\":\"rando\",\"authority\":\"random-place\"},\"last_origin\":\"phase\",\"last_ip\":\"ip\",\"__clients\":{\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}},\"__messages\":null} need:false in:0");
+    gold.append("\n{\"command\":\"connect\",\"timestamp\":\"125\",\"who\":{\"agent\":\"rando\",\"authority\":\"random-place\"},\"key\":\"key\",\"origin\":\"phase\",\"ip\":\"ip\"}-->{\"__seq\":8,\"__entropy\":\"-4023469995120514721\",\"__connection_id\":2,\"__time\":\"125\",\"last_who\":{\"agent\":\"rando\",\"authority\":\"random-place\"},\"__clients\":{\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}},\"__messages\":null} need:false in:0");
     gold.append("\nRANDO|SUCCESS:7");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"last_who\":{\"@t\":1,\"agent\":\"rando\",\"authority\":\"random-place\"}},\"seq\":8}");
     gold.append("\n+ RANDO DELTA:{\"data\":{\"last_who\":{\"@t\":1,\"agent\":\"rando\",\"authority\":\"random-place\"}},\"seq\":8}");

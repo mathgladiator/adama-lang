@@ -86,6 +86,9 @@ public class RxString extends RxIndexableBase implements Comparable<RxString>, C
 
   @Override
   public void set(final String value) {
+    if (this.value != null && this.value.equals(value)) {
+      return;
+    }
     trigger();
     this.value = value;
     trigger();
