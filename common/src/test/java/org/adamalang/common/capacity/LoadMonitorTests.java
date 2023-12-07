@@ -35,8 +35,8 @@ public class LoadMonitorTests {
     try {
       LoadMonitor lm = new LoadMonitor(executor, b);
       CountDownLatch latch = new CountDownLatch(2);
-      lm.cpu(new LoadEvent(-1, (b1) -> latch.countDown()));
-      lm.memory(new LoadEvent(-1, (b2) -> latch.countDown()));
+      lm.cpu(new LoadEvent("cpu", -1, (b1) -> latch.countDown()));
+      lm.memory(new LoadEvent("mem", -1, (b2) -> latch.countDown()));
       Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
     } finally {
       b.set(false);

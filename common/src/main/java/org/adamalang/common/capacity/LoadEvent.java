@@ -17,13 +17,19 @@
 */
 package org.adamalang.common.capacity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** a load event fires when an associated metric is elevated */
 public class LoadEvent {
+  private final Logger LOGGER = LoggerFactory.getLogger(LoadEvent.class);
+  private final String name;
   private final BoolConsumer event;
   private final double threshold;
   private boolean active;
 
-  public LoadEvent(double threshold, BoolConsumer event) {
+  public LoadEvent(String name, double threshold, BoolConsumer event) {
+    this.name = name;
     this.threshold = threshold;
     this.event = event;
     this.active = false;
@@ -35,6 +41,7 @@ public class LoadEvent {
     if (active != next) {
       active = next;
       event.accept(active);
+      LOGGER.error("load-event:" + name + ";@" + threshold);
     }
   }
 }
