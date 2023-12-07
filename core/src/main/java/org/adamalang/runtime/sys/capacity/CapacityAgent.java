@@ -75,6 +75,7 @@ public class CapacityAgent implements HeatMonitor {
       executor.execute(new NamedRunnable("capacity-add-capacity") {
         @Override
         public void execute() throws Exception {
+          LOG.error("capacity request: add");
           addCapacity();
         }
       });
@@ -83,6 +84,7 @@ public class CapacityAgent implements HeatMonitor {
       executor.execute(new NamedRunnable("capacity-add-rebalance") {
         @Override
         public void execute() throws Exception {
+          LOG.error("capacity request: rebalance");
           rebalance();
         }
       });
