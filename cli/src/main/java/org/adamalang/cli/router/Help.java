@@ -166,6 +166,7 @@ public class Help {
     System.out.println("    " + Util.prefix(Util.justifyLeft("connect", 15), Util.ANSI.Green) + "Connect to a document");
     System.out.println("    " + Util.prefix(Util.justifyLeft("create", 15), Util.ANSI.Green) + "Create a document");
     System.out.println("    " + Util.prefix(Util.justifyLeft("delete", 15), Util.ANSI.Green) + "Delete a document");
+    System.out.println("    " + Util.prefix(Util.justifyLeft("download-archive", 15), Util.ANSI.Green) + "Download the latest archive backup");
     System.out.println("    " + Util.prefix(Util.justifyLeft("list", 15), Util.ANSI.Green) + "List documents");
   }
   public static void displayDomainHelp() {

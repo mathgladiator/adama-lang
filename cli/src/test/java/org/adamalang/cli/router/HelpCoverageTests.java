@@ -83,6 +83,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"document", "connect", "--help"});
     Main.testMain(new String[]{"document", "create", "--help"});
     Main.testMain(new String[]{"document", "delete", "--help"});
+    Main.testMain(new String[]{"document", "download-archive", "--help"});
     Main.testMain(new String[]{"document", "list", "--help"});
     Main.testMain(new String[]{"domain", "--help"});
     Main.testMain(new String[]{"domain", "configure", "--help"});

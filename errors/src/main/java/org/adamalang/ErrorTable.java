@@ -969,10 +969,6 @@ public class ErrorTable {
     descriptions.put(790544, "no description of error (yet)");
     names.put(725039, "DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO");
     descriptions.put(725039, "no description of error (yet)");
-    names.put(788607, "STORAGE_TIER_FAILED_TO_APPLY_GOTO");
-    descriptions.put(788607, "no description of error (yet)");
-    names.put(707651, "FINDER_SERVICE_MYSQL_CANT_UPDATE");
-    descriptions.put(707651, "no description of error (yet)");
     names.put(792643, "VAPID_NOT_FOUND_FOR_DOMAIN");
     descriptions.put(792643, "no description of error (yet)");
     names.put(736243, "CONFIG_NOT_FOUND_FOR_DOMAIN");
@@ -999,5 +995,9 @@ public class ErrorTable {
     descriptions.put(774130, "no description of error (yet)");
     names.put(783347, "JITSI_FAILED_SIGNING_TOKEN");
     descriptions.put(783347, "no description of error (yet)");
+    names.put(707651, "CUSTOMER_BACKUP_DOWNLOAD_NO_ARCHIVE_YET");
+    descriptions.put(707651, "no description of error (yet)");
+    names.put(788607, "CUSTOMER_BACKUP_DOWNLOAD_FAILED");
+    descriptions.put(788607, "no description of error (yet)");
   }
 }

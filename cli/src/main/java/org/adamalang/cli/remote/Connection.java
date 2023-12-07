@@ -38,6 +38,10 @@ public class Connection implements AutoCloseable {
     this.connection = connection;
   }
 
+  public WebClientConnection raw() {
+    return connection;
+  }
+
   public void stream(ObjectNode request, BiConsumer<Integer, ObjectNode> stream) throws Exception {
     CountDownLatch latch = new CountDownLatch(1);
     AtomicReference<Exception> failure = new AtomicReference<>(null);
@@ -58,7 +62,7 @@ public class Connection implements AutoCloseable {
         latch.countDown();
       }
     });
-    latch.await(60000, TimeUnit.MILLISECONDS);
+    latch.await(120000, TimeUnit.MILLISECONDS);
     if (failure.get() != null) {
       throw failure.get();
     }

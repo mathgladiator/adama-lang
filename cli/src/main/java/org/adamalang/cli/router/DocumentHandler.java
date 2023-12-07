@@ -25,5 +25,6 @@ public interface DocumentHandler {
   void connect(DocumentConnectArgs args, YesOrError output) throws Exception;
   void create(DocumentCreateArgs args, YesOrError output) throws Exception;
   void delete(DocumentDeleteArgs args, YesOrError output) throws Exception;
+  void downloadArchive(DocumentDownloadArchiveArgs args, YesOrError output) throws Exception;
   void list(DocumentListArgs args, JsonOrError output) throws Exception;
 }

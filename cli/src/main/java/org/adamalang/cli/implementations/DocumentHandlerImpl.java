@@ -23,18 +23,18 @@ import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.DocumentHandler;
 import org.adamalang.cli.runtime.Output;
-import org.adamalang.common.Hashing;
-import org.adamalang.common.Json;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
+import org.adamalang.web.contracts.WebJsonStream;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DocumentHandlerImpl implements DocumentHandler {
   @Override
@@ -113,6 +113,68 @@ public class DocumentHandlerImpl implements DocumentHandler {
           System.out.println(response.toPrettyString());
           // NOTE: due to the streaming nature, we really can't do much else
         });
+      }
+    }
+  }
+
+  @Override
+  public void downloadArchive(Arguments.DocumentDownloadArchiveArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/download-archive");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        request.put("key", args.key);
+
+        File archiveFileTemp = new File(args.output + ".temp");
+        File archiveFileFinal = new File(args.output);
+        FileOutputStream outputStream = new FileOutputStream(archiveFileTemp);
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicBoolean alive = new AtomicBoolean(true);
+        connection.raw().execute(request, new WebJsonStream() {
+          @Override
+          public void data(int cId, ObjectNode response) {
+            byte[] base64 = Base64.getDecoder().decode(response.get("base64Bytes").textValue());
+            String md5 = response.get("chunkMd5").textValue();
+            MessageDigest digest = Hashing.md5();
+            digest.update(base64);
+            if (!Hashing.finishAndEncode(digest).equals(md5)) {
+              throw new RuntimeException("corruption during transit");
+            }
+            try {
+              outputStream.write(base64);
+            } catch (IOException ex) {
+              throw new RuntimeException(ex);
+            }
+          }
+
+          @Override
+          public void complete() {
+            try {
+              outputStream.flush();
+              outputStream.close();
+              Files.move(archiveFileTemp.toPath(), archiveFileFinal.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException ex) {
+              throw new RuntimeException(ex);
+            } finally {
+              alive.set(false);
+              latch.countDown();
+            }
+          }
+
+          @Override
+          public void failure(int code) {
+            alive.set(false);
+            latch.countDown();
+            throw new RuntimeException("failed downloading:" + code);
+          }
+        });
+        while (alive.get()) {
+          // FUN progress token?
+          latch.await(1000, TimeUnit.MILLISECONDS);
+        }
       }
     }
   }

@@ -721,6 +721,15 @@
             <arg name="key" />
         </command>
 
+        <command name="download-archive">
+            <documentation>
+                Download the latest archive backup
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="output" />
+        </command>
+
         <command name="create">
             <documentation>
                 Create a document

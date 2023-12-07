@@ -684,6 +684,16 @@ public class MainRouter {
                documentHandler.delete(documentArgs, out);
                return 0;
             }
+            case "download-archive": {
+              DocumentDownloadArchiveArgs documentArgs = DocumentDownloadArchiveArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentDownloadArchiveArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.downloadArchive(documentArgs, out);
+               return 0;
+            }
             case "list": {
               DocumentListArgs documentArgs = DocumentListArgs.from(args, 2);
               if (documentArgs == null) {
