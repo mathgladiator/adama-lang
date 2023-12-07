@@ -306,6 +306,20 @@ public class LibDateTests {
   }
 
   @Test
+  public void formatting_usa_just_date() {
+    NtDate present = new NtDate(1999, 12, 17);
+    Assert.assertEquals("12/17/1999", LibDate.format(present, "MM/dd/yyyy").get());
+    Assert.assertFalse(LibDate.format(present, "pZ").has());
+  }
+
+  @Test
+  public void formatting_jp_just_date() {
+    NtDate present = new NtDate(1999, 12, 17);
+    Assert.assertEquals("12/17/1999", LibDate.format(present, "MM/dd/yyyy", "JP").get());
+    Assert.assertFalse(LibDate.format(present, "pZ").has());
+  }
+
+  @Test
   public void formatting_usa() {
     NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
     Assert.assertEquals("04/24/2023", LibDate.format(present, "MM/dd/yyyy").get());

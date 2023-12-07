@@ -228,6 +228,24 @@ public class LibDate {
   }
 
   @Extension
+  public static @HiddenType(clazz=String.class) NtMaybe<String> format(NtDate d, String pattern, String lang) {
+    NtMaybe<NtDateTime> dt = construct(d, new NtTime(0, 0), 0, "UTC");
+    if (dt.has()) {
+      return format(dt.get(), pattern, lang);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz=String.class) NtMaybe<String> format(NtDate d, String pattern) {
+    NtMaybe<NtDateTime> dt = construct(d, new NtTime(0, 0), 0, "UTC");
+    if (dt.has()) {
+      return format(dt.get(), pattern);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
   public static @HiddenType(clazz=String.class) NtMaybe<String> format(NtDateTime dt, String pattern, String lang) {
     try {
       return new NtMaybe<>(dt.dateTime.format(DateTimeFormatter.ofPattern(pattern, Locale.forLanguageTag(lang))));
