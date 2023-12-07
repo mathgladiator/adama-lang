@@ -699,6 +699,15 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/get", "id":parId, "identity": identity, "domain": domain}
     });
   }
+  DocumentDownloadArchive(space, key, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"document/download-archive", "id":parId, "space": space, "key": key}
+    });
+  }
   DocumentAuthorization(space, key, message, responder) {
     var self = this;
     var parId = self.__id();

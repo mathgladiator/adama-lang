@@ -59,6 +59,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_DomainGetVapidPublicKey;
   public final RequestResponseMonitor monitor_DomainUnmap;
   public final RequestResponseMonitor monitor_DomainGet;
+  public final RequestResponseMonitor monitor_DocumentDownloadArchive;
   public final RequestResponseMonitor monitor_DocumentList;
   public final RequestResponseMonitor monitor_SuperCheckIn;
   public final RequestResponseMonitor monitor_SuperListAutomaticDomains;
@@ -124,6 +125,7 @@ public class GlobalApiMetrics {
     this.monitor_DomainGetVapidPublicKey = factory.makeRequestResponseMonitor("domain/get-vapid-public-key");
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
     this.monitor_DomainGet = factory.makeRequestResponseMonitor("domain/get");
+    this.monitor_DocumentDownloadArchive = factory.makeRequestResponseMonitor("document/download-archive");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");
     this.monitor_SuperCheckIn = factory.makeRequestResponseMonitor("super/check-in");
     this.monitor_SuperListAutomaticDomains = factory.makeRequestResponseMonitor("super/list-automatic-domains");

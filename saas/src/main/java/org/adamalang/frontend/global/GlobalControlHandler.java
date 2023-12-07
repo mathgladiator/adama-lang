@@ -48,15 +48,14 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.validators.ValidateEmail;
-import org.adamalang.web.client.SimpleHttpRequest;
-import org.adamalang.web.client.SimpleHttpRequestBody;
-import org.adamalang.web.client.StringCallbackHttpResponder;
+import org.adamalang.web.client.*;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
@@ -74,6 +73,68 @@ public class GlobalControlHandler implements RootGlobalHandler {
     this.nexus = nexus;
     this.rng = new Random();
     this.policyLocator = policyLocator;
+  }
+
+  @Override
+  public void handle(Session session, DocumentDownloadArchiveRequest request, BackupStreamResponder responder) {
+    Key key = new Key(request.space, request.key);
+    nexus.finder.find(key, new Callback<>() {
+      @Override
+      public void success(DocumentLocation location) {
+        if (location.archiveKey == null) {
+          responder.error(new ErrorCodeException(ErrorCodes.CUSTOMER_BACKUP_DOWNLOAD_NO_ARCHIVE_YET));
+          return;
+        }
+        nexus.s3.streamBackupArchive(key, location.archiveKey, new SimpleHttpResponder() {
+          boolean good = false;
+          @Override
+          public void start(SimpleHttpResponseHeader header) {
+            good = header.status == 200;
+            if (!good) {
+              responder.error(new ErrorCodeException(ErrorCodes.CUSTOMER_BACKUP_DOWNLOAD_FAILED));
+            }
+          }
+
+          @Override
+          public void bodyStart(long size) {}
+
+          @Override
+          public void bodyFragment(byte[] chunk, int offset, int len) {
+            if (good) {
+              MessageDigest digest = Hashing.md5();
+              digest.update(chunk, offset, len);
+              String md5 = Hashing.finishAndEncode(digest);
+              final String b64;
+              if (offset == 0 && len == chunk.length) {
+                b64 = new String(Base64.getEncoder().encode(chunk), StandardCharsets.UTF_8);
+              } else {
+                byte[] clone = new byte[len];
+                System.arraycopy(chunk, offset, clone, 0, len);
+                b64 = new String(Base64.getEncoder().encode(clone), StandardCharsets.UTF_8);
+              }
+              responder.next(b64, md5);
+            }
+          }
+
+          @Override
+          public void bodyEnd() {
+            if (good) {
+              responder.finish();
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            good = false;
+            responder.error(ex);
+          }
+        });
+      }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override
@@ -794,6 +855,8 @@ public class GlobalControlHandler implements RootGlobalHandler {
       responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
+
+
 
   @Override
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {

@@ -27,6 +27,7 @@ import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.SignalControl;
+import org.adamalang.extern.aws.S3;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.frontend.FrontendMetrics;
 import org.adamalang.multiregion.MultiRegionClient;
@@ -76,8 +77,9 @@ public class GlobalExternNexus {
   public final SimpleExecutor capacity;
   public final GlobalCapacityOverseer overseer;
   public final CapacityPlanFetcher capacityPlanFetcher;
+  public final S3 s3;
 
-  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey, AsyncByteCodeCache byteCodeCache) {
+  public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey, AsyncByteCodeCache byteCodeCache, S3 s3) {
     this.config = config;
     this.email = email;
     this.database = database;
@@ -110,6 +112,7 @@ public class GlobalExternNexus {
     this.crypto = SimpleExecutor.create("crypto");
     this.byteCodeCache = byteCodeCache;
     this.capacityPlanFetcher = new CachedCapacityPlanFetcher(TimeSource.REAL_TIME, 1024, 60000, capacity, new GlobalCapacityPlanFetcher(database));
+    this.s3 = s3;
   }
 
   public void close() throws Exception {

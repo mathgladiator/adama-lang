@@ -15,9 +15,26 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20231207123238";
-  public static final String JS_VERSION = "6e76d3cf17b21058926e548a846cef76";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
+
+/** generated class for the responder: backup-stream */
+public class ClientBackupStreamResponse {
+  public final ObjectNode _original;
+  public final String base64Bytes;
+  public final String chunkMd5;
+
+  public ClientBackupStreamResponse(ObjectNode response) {
+    this._original = response;
+    this.base64Bytes = Json.readString(response, "base64-bytes");
+    this.chunkMd5 = Json.readString(response, "chunk-md5");
+  }
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("base64Bytes", base64Bytes);
+    _next.put("chunkMd5", chunkMd5);
+    return _next.toString();
+  }
 }

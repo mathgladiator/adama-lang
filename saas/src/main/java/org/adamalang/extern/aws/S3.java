@@ -190,6 +190,12 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, callback));
   }
 
+  public void streamBackupArchive(Key key, String archiveKey, SimpleHttpResponder responder) {
+    String s3key = "backups/" + key.space + "/" + key.key + "/#" + archiveKey;
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
+    base.executeShared(request, responder);
+  }
+
   @Override
   public void restore(Key key, String archiveKey, Callback<File> callback) {
     File root = new File(path(), key.space);

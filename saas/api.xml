@@ -302,6 +302,23 @@
         </documentation>
     </parameter-definition>
 
+    <field-definition name="base64-bytes" type="string">
+        <documentation>
+            Bytes encoded in base64.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="chunk-md5" type="string">
+        <documentation>
+            MD5 of a chunk
+        </documentation>
+    </field-definition>
+
+    <responder name="backup-stream" stream="true">
+        <field name="base64-bytes"/>
+        <field name="chunk-md5" />
+    </responder>
+
     <parameter-definition name="upload" type="long" missing-error="409609">
         <documentation>
             The id of the upload in progress.
@@ -1144,6 +1161,14 @@
         <parameter name="domain"/>
         <documentation>
             Get the domain mapping
+        </documentation>
+    </method>
+
+    <method name="document/download-archive" responder="backup-stream" scope="global" policy="true" policy-failure-code="913913" policy-default="Owner">
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <documentation>
+            Send an authorization request to the document
         </documentation>
     </method>
 

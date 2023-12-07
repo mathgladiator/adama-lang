@@ -410,6 +410,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientDomainPolicyResponse(obj), callback);
   }
 
+  /** document/download-archive */
+  public void documentDownloadArchive(ClientDocumentDownloadArchiveRequest request, Stream<ClientBackupStreamResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/download-archive");
+    node.put("space", request.space);
+    node.put("key", request.key);
+    pool.requestStream(node, (obj) -> new ClientBackupStreamResponse(obj), streamback);
+  }
+
   /** document/authorization */
   public void documentAuthorization(ClientDocumentAuthorizationRequest request, Callback<ClientInitiationResponse> callback) {
     ObjectNode node = Json.newJsonObject();

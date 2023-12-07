@@ -813,8 +813,6 @@ public class ErrorCodes {
   public static final int DISK_UNABLE_TO_COMPUTE_FILE_NOT_FOUND = 790544;
 
   public static final int DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO = 725039;
-  public static final int STORAGE_TIER_FAILED_TO_APPLY_GOTO = 788607;
-  public static final int FINDER_SERVICE_MYSQL_CANT_UPDATE = 707651;
 
   public static final int VAPID_NOT_FOUND_FOR_DOMAIN = 792643;
   public static final int CONFIG_NOT_FOUND_FOR_DOMAIN = 736243;
@@ -835,5 +833,8 @@ public class ErrorCodes {
 
   public static final int JITSI_FAILED_SIGNING_TOKEN = 783347;
 
+
+  public static final int CUSTOMER_BACKUP_DOWNLOAD_NO_ARCHIVE_YET = 707651;
+  public static final int CUSTOMER_BACKUP_DOWNLOAD_FAILED = 788607;
 
 }

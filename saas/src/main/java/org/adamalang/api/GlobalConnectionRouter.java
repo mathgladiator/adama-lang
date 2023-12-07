@@ -852,6 +852,29 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
+            case "document/download-archive": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentDownloadArchive.start();
+              DocumentDownloadArchiveRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentDownloadArchiveRequest resolved) {
+                  if (!resolved.policy.checkPolicy("document/download-archive", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(913913));
+                    return;
+                  }
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new BackupStreamResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "document/list": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentList.start();
               DocumentListRequest.resolve(session, nexus, request, new Callback<>() {

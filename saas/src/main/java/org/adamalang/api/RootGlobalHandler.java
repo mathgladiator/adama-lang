@@ -96,6 +96,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, DomainGetRequest request, DomainPolicyResponder responder);
 
+  public void handle(Session session, DocumentDownloadArchiveRequest request, BackupStreamResponder responder);
+
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder);
 
   public void handle(Session session, SuperCheckInRequest request, SimpleResponder responder);
@@ -188,6 +190,7 @@ public interface RootGlobalHandler {
       case "domain/get-vapid-public-key":
       case "domain/unmap":
       case "domain/get":
+      case "document/download-archive":
       case "document/list":
       case "super/check-in":
       case "super/list-automatic-domains":
