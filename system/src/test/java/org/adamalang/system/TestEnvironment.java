@@ -25,13 +25,17 @@ import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.template.tree.T;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.data.SpaceListingItem;
+import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.mysql.model.Users;
+import org.adamalang.net.client.InstanceClient;
+import org.adamalang.net.client.LocalRegionClient;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.system.distributed.Backend;
 import org.adamalang.system.distributed.Frontend;
@@ -50,7 +54,9 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -70,14 +76,16 @@ public class TestEnvironment {
   private final JsonConfig[] backendGlobalConfigs;
   public final DataBase db;
 
-  private Backend[] globalBackends;
-  private Frontend globalFrontend;
+  private final Backend[] globalBackends;
+  private final Frontend globalFrontend;
 
   private final SimpleExecutor clients;
   private final WebClientBase clientBase;
   private final MultiWebClientRetryPool globalClientPool;
 
   public final SelfClient globalClient;
+
+  public final List<String> backendHosts;
 
   public TestEnvironment() throws Exception {
     long started = System.currentTimeMillis();
@@ -140,16 +148,24 @@ public class TestEnvironment {
       for (int k = 0; k < globalBackends.length; k++) {
         globalBackends[k] = Backend.run(backendGlobalConfigs[k]);
       }
+      AtomicReference<Frontend> frontendRef = new AtomicReference<>(null);
+      CountDownLatch gotFrontend = new CountDownLatch(1);
       new Thread(new Runnable() {
         @Override
         public void run() {
           try {
-            Frontend.run(frontendGlobalConfig);
+            Frontend fe = Frontend.run(frontendGlobalConfig);
+            frontendRef.set(fe);
+            gotFrontend.countDown();
+            fe.run();
           } catch (Exception ex) {
-
+            ex.printStackTrace();
           }
         }
       }).start();
+
+      Assert.assertTrue(gotFrontend.await(100000, TimeUnit.MILLISECONDS));
+      globalFrontend = frontendRef.get();
 
       clients = SimpleExecutor.create("clients");
 
@@ -159,6 +175,45 @@ public class TestEnvironment {
       System.out.println("----------------------------------------------");
       System.out.println("GLOBAL ONLINE :http://127.0.0.1:" + globalWebPort);
       System.out.println("----------------------------------------------");
+
+      List<String> hosts = new ArrayList<>();
+      while (hosts.size() != 3) {
+        hosts = Hosts.listHosts(db, "central", "adama");
+        Thread.sleep(50);
+      }
+      backendHosts = hosts;
+
+      for (String host : hosts) {
+        AtomicBoolean success = new AtomicBoolean(false);
+        int attempts = 6;
+        while (!success.get() && attempts > 0) {
+          attempts--;
+          System.out.println("touching:" + host);
+          CountDownLatch latch = new CountDownLatch(1);
+          globalFrontend.local.find(host, new Callback<>() {
+            @Override
+            public void success(InstanceClient client) {
+              if (client != null) {
+                try {
+                  if (client.ping(500)) {
+                    success.set(true);
+                  }
+                } catch (Exception ex) {
+                  System.err.println("failed ping:" + host);
+                }
+              }
+              latch.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              latch.countDown();
+            }
+          });
+          latch.await(250, TimeUnit.MILLISECONDS);
+        }
+        Assert.assertTrue(attempts > 0);
+      }
 
       ClientProbeRequest cpr = new ClientProbeRequest();
       cpr.identity = "anonymous:hello_adama";

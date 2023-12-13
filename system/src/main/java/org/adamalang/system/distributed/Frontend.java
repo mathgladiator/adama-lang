@@ -56,8 +56,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Frontend {
   private static final Logger LOGGER = LoggerFactory.getLogger(Frontend.class);
   public final MultiRegionClient adama;
+  public final LocalRegionClient local;
+  private final ServiceRunnable service;
 
   public Frontend(JsonConfig config, CommonServiceInit init, LocalRegionClient client) throws Exception {
+    this.local = client;
     this.adama = init.makeGlobalClient(client);
     CachedDomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database, init.masterKey));
     domainFinder.startSweeping(init.alive, 1000, 2000);
@@ -95,11 +98,11 @@ public class Frontend {
     Thread redirectThread = new Thread(redirect);
     redirectThread.start();
     CertificateFinder certificateFinder = CertificateBoot.make(init.alive, init.webConfig, domainFinder, init.system);
-    final var runnable = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, certificateFinder, domainFinder, heartbeat.get());
+    this.service = new ServiceRunnable(init.webConfig, webMetrics, serviceBase, certificateFinder, domainFinder, heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       System.err.println("shutting down frontend");
       try {
-        runnable.shutdown();
+        service.shutdown();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -114,15 +117,18 @@ public class Frontend {
         ex.printStackTrace();
       }
     }));
+  }
+
+  public void run() {
     System.err.println("running frontend");
     LOGGER.error("Started");
-    runnable.run();
+    service.run();
     System.err.println("frontend finished");
   }
 
-  public static void run(JsonConfig config) throws Exception {
+  public static Frontend run(JsonConfig config) throws Exception {
     CommonServiceInit init = new CommonServiceInit(config, Role.Web);
     LocalRegionClient client = init.makeLocalClient(null);
-    new Frontend(config, init, client);
+    return new Frontend(config, init, client);
   }
 }

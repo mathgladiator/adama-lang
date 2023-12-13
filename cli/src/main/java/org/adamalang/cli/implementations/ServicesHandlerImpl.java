@@ -64,7 +64,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
         Overlord.run(config);
         return;
       case "frontend":
-        Frontend.run(config);
+        Frontend.run(config).run();
         return;
       case "solo":
         Solo.run(config);
@@ -131,7 +131,7 @@ public class ServicesHandlerImpl implements ServicesHandler {
 
   @Override
   public void frontend(Arguments.ServicesFrontendArgs args, Output.YesOrError output) throws Exception {
-    Frontend.run(args.config);
+    Frontend.run(args.config).run();
     output.out();
   }
 

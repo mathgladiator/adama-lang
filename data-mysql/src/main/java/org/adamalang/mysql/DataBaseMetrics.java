@@ -25,6 +25,7 @@ public class DataBaseMetrics {
   public final RequestResponseMonitor transaction;
   public final RequestResponseMonitor transaction_simple;
   public final Runnable valid_exception;
+  public final Runnable deadlock_exception;
   public final CallbackMonitor finder_find;
   public final CallbackMonitor finder_bind;
   public final CallbackMonitor finder_backup;
@@ -46,6 +47,8 @@ public class DataBaseMetrics {
     finder_delete = factory.makeCallbackMonitor("database_finder_delete");
     finder_list = factory.makeCallbackMonitor("database_finder_list");
     capacity_duplicate = factory.counter("database_capacity_duplicate");
+    deadlock_exception = factory.counter("database_deadlock_exception");
+    factory.section("Metric Submission");
     metrics_success = factory.counter("metrics_success");
     metrics_failure = factory.counter("metrics_failure");
   }

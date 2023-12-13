@@ -68,6 +68,10 @@ public class LocalRegionClient {
     return (targets) -> clientFinder.sync(new TreeSet<>(targets));
   }
 
+  public void find(String target, Callback<InstanceClient> action) {
+    clientFinder.find(target, action);
+  }
+
   public void getMachineFor(Key key, Callback<String> callback) {
     table.get(key, callback);
   }

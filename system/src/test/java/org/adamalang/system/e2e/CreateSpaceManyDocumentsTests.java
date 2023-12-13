@@ -24,16 +24,20 @@ import org.adamalang.api.SpaceCreateRequest;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.mysql.model.Capacity;
+import org.adamalang.mysql.model.Hosts;
+import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.system.BaseE2ETest;
 import org.adamalang.system.TestEnvironment;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
-  // @Test
+  @Test
   public void flow() throws Exception {
     TestEnvironment env = TestEnvironment.ENV;
     Assert.assertNotNull(env);
@@ -42,7 +46,7 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
       ClientSpaceCreateRequest scr = new ClientSpaceCreateRequest();
       scr.identity = identity;
       scr.space = "test-space-csmd1";
-      scr.template = "webapp";
+      scr.template = "pubsub";
       CountDownLatch latch = new CountDownLatch(1);
       env.globalClient.spaceCreate(scr, new Callback<ClientSimpleResponse>() {
         @Override
@@ -52,12 +56,19 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
 
         @Override
         public void failure(ErrorCodeException ex) {
-
+          System.err.println("spaceCreate; ERROR IN TEST:" + ex.code);
         }
       });
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     }
-
+    for (int k = 0; k < 10; k++) {
+      List<CapacityInstance> cap = Capacity.listAll(env.db, "test-space-csmd1");
+      System.err.println("CAPACITY:" + cap.size());
+      for (CapacityInstance ci : cap) {
+        System.err.println(ci.space + "->" + ci.machine);
+      }
+      Thread.sleep(100);
+    }
     CountDownLatch latch = new CountDownLatch(1);
     for (int k = 0; k < 100; k++) {
       ClientDocumentCreateRequest docCreate = new ClientDocumentCreateRequest();
@@ -73,7 +84,7 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
 
         @Override
         public void failure(ErrorCodeException ex) {
-
+          System.err.println("documentCreate; ERROR IN TEST:" + ex.code);
         }
       });
     }

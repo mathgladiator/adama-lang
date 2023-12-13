@@ -83,6 +83,7 @@ public class MySQLFinderCore {
           return null;
         }
       }
+      // This currently throws deadlocks, not sure why
       String insertSQL = //
           "INSERT INTO `" + database.databaseName + "`.`directory` (" + //
               "`space`, `key`, `type`, `head_seq`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`, `need_gc`) VALUES (?, ?, " + LocationType.Machine.type + ", 0, ?, ?, '', 0, 0, FALSE)" //

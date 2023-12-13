@@ -113,8 +113,13 @@ public class DataBase implements AutoCloseable {
           return;
         }
         boolean validException = ex instanceof java.sql.SQLIntegrityConstraintViolationException;
+
         if (!validException) {
-          LOG.error("database-exception", ex);
+          if (isDeadlock(ex)) {
+            metrics.deadlock_exception.run();
+          } else {
+            LOG.error("database-exception", ex);
+          }
         } else {
           metrics.valid_exception.run();
         }
@@ -136,6 +141,13 @@ public class DataBase implements AutoCloseable {
         }
       }
     }
+  }
+
+  public static boolean isDeadlock(Throwable ex) {
+    if (ex instanceof SQLTransactionRollbackException) {
+      return ("Deadlock found when trying to get lock; try restarting transaction".equals(ex.getMessage()));
+    }
+    return false;
   }
 
   public <R> R transactSimple(SQLTransact<R> transaction) throws Exception {
