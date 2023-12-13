@@ -30,6 +30,8 @@ public class DeploymentMetrics {
 
   public final Runnable deploy_bytecode_found;
   public final Runnable deploy_bytecode_compiled;
+  public final Runnable deploy_bytecode_stored;
+  public final Runnable deploy_bytecode_compile_failed;
 
   public DeploymentMetrics(MetricsFactory factory) {
     this.deploy_cache_hit = factory.counter("deploy_cache_hit");
@@ -37,9 +39,9 @@ public class DeploymentMetrics {
     this.deploy_plan_fetch = factory.makeCallbackMonitor("deploy_plan_fetch");
     this.deploy_plan_push = factory.makeCallbackMonitor("deploy_plan_push");
     this.deploy_undo = factory.counter("deploy_undo");
-
     this.deploy_bytecode_found = factory.counter("deploy_bytecode_found");
     this.deploy_bytecode_compiled = factory.counter("deploy_bytecode_compiled");
-
+    this.deploy_bytecode_stored = factory.counter("deploy_bytecode_stored");
+    this.deploy_bytecode_compile_failed = factory.counter("deploy_bytecode_compile_failed");
   }
 }

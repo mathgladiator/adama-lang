@@ -52,11 +52,12 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
           @Override
           public void execute() throws Exception {
             try {
-              metrics.deploy_bytecode_compiled.run();
               CachedByteCode code = SyncCompiler.compile(spaceName, className, javaSource, reflection);
+              metrics.deploy_bytecode_compiled.run();
               extern.storeByteCode(className, code, new Callback<>() {
                 @Override
                 public void success(Void value) {
+                  metrics.deploy_bytecode_stored.run();
                   callback.success(code);
                 }
 
@@ -67,6 +68,7 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
                 }
               });
             } catch (ErrorCodeException problem) {
+              metrics.deploy_bytecode_compile_failed.run();
               callback.failure(problem);
             }
           }
