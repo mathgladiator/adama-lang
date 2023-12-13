@@ -399,7 +399,16 @@ function AdamaTree() {
         }
         delta[k] = d;
       } else if (typeof (v) == "object") { // it's just an object, so recurse directly
-        delta[k] = make_delta(v);
+        if (Array.isArray(v)) {
+          var d = {};
+          for (var j = 0; j < v.length; j++) {
+            d["" + j] = make_delta(v[j]);
+          }
+          d["@s"] = v.length;
+          delta[k] = d;
+        } else {
+          delta[k] = make_delta(v);
+        }
       } else { // finally, it is a value so just set it
         delta[k] = v;
       }
