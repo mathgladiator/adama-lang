@@ -66,7 +66,7 @@ public class Backend {
 
     PlanFetcher fetcher = new GlobalPlanFetcher(init.database, init.masterKey);
 
-    ManagedAsyncByteCodeCache managedByteCodeCache = new ManagedAsyncByteCodeCache(init.s3, init.em.compileOffload);
+    ManagedAsyncByteCodeCache managedByteCodeCache = new ManagedAsyncByteCodeCache(init.s3, init.em.compileOffload, init.deploymentMetrics);
     CachedAsyncByteCodeCache cachedAsyncByteCodeCache = new CachedAsyncByteCodeCache(TimeSource.REAL_TIME, 1024, 120000, init.system, managedByteCodeCache);
     cachedAsyncByteCodeCache.startSweeping(init.alive, 30000, 90000);
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase(cachedAsyncByteCodeCache);
@@ -74,7 +74,7 @@ public class Backend {
 
     DelayedDeploy delayedDeploy = new DelayedDeploy();
     AdamaDeploymentSync sync = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(init.em.metricsFactory), init.em.adamaCurrentRegionClient, init.em.system, init.em.regionalIdentity, delayedDeploy, deploymentFactoryBase);
-    OndemandDeploymentFactoryBase factoryProxy = new OndemandDeploymentFactoryBase(new DeploymentMetrics(init.em.metricsFactory), deploymentFactoryBase, fetcher, sync);
+    OndemandDeploymentFactoryBase factoryProxy = new OndemandDeploymentFactoryBase(init.deploymentMetrics, deploymentFactoryBase, fetcher, sync);
 
     BoundLocalFinderService finder = new BoundLocalFinderService(init.system, init.globalFinder, init.region, init.machine);
     CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, finder, init.s3, init.s3);

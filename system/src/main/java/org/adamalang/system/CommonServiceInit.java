@@ -19,6 +19,7 @@ package org.adamalang.system;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.system.common.CloudBoot;
 import org.adamalang.system.common.EveryMachine;
 import org.adamalang.system.common.DataBaseBoot;
@@ -77,6 +78,7 @@ public class CommonServiceInit {
   public final String role;
   public final int servicePort;
   public final SES ses;
+  public final DeploymentMetrics deploymentMetrics;
 
   public CommonServiceInit(JsonConfig config, Role role) throws Exception {
     EveryMachine em = new EveryMachine(config, role);
@@ -114,6 +116,7 @@ public class CommonServiceInit {
     FirstPartyMetrics metrics = em.installServices(publicKeyId);
     // service overrides
     new GlobalPusher(metrics, database, masterKey, em.push, config.get_string("push-email", null), em.webBase).install();
+    this.deploymentMetrics = new DeploymentMetrics(em.metricsFactory);
   }
 
   public MultiRegionClient makeGlobalClient(LocalRegionClient client) {

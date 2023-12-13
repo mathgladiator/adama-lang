@@ -57,7 +57,7 @@ public class PrepareStep {
       System.out.print("\u001b[33mCompile[\u001b[37m" + space.name + "\u001b[33m]\u001b[39m.");
       try {
         DeploymentPlan plan = new DeploymentPlan(Spaces.getPlan(db.database, space.id), EXLOG);
-        ManagedAsyncByteCodeCache cache = new ManagedAsyncByteCodeCache(cb.s3, webClientBase.executor);
+        ManagedAsyncByteCodeCache cache = new ManagedAsyncByteCodeCache(cb.s3, webClientBase.executor, new DeploymentMetrics(metrics));
         CountDownLatch latch = new CountDownLatch(1);
         AsyncCompiler.forge(space.name, null, plan, Deliverer.FAILURE, new TreeMap<>(), cache, new Callback<>() {
           @Override

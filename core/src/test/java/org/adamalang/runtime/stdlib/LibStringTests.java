@@ -282,6 +282,14 @@ public class LibStringTests {
   }
 
   @Test
+  public void strOf() {
+    Assert.assertEquals("1", LibString.strOf(1));
+    Assert.assertEquals("1", LibString.strOf(1L));
+    Assert.assertEquals("1.5", LibString.strOf(1.5));
+    Assert.assertEquals("true", LibString.strOf(true));
+  }
+
+  @Test
   public void roman() {
     Assert.assertEquals("I", LibString.to_roman(1));
     Assert.assertEquals("CDLXIV", LibString.to_roman(464));

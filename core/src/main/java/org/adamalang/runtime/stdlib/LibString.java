@@ -554,6 +554,26 @@ public class LibString {
   }
 
   @Extension
+  public static String strOf(final boolean x) {
+    return String.valueOf(x);
+  }
+
+  @Extension
+  public static String strOf(final double x) {
+    return String.valueOf(x);
+  }
+
+  @Extension
+  public static String strOf(final int x) {
+    return String.valueOf(x);
+  }
+
+  @Extension
+  public static String strOf(final long x) {
+    return String.valueOf(x);
+  }
+
+  @Extension
   public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> intOf(final String x) {
     try {
       return new NtMaybe<>(Integer.parseInt(x));

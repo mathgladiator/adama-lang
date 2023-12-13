@@ -29,10 +29,12 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
   private static final Logger LOG = LoggerFactory.getLogger(ManagedAsyncByteCodeCache.class);
   private final ExternalByteCodeSystem extern;
   private final SimpleExecutor offload;
+  private final DeploymentMetrics metrics;
 
-  public ManagedAsyncByteCodeCache(ExternalByteCodeSystem extern, SimpleExecutor offload) {
+  public ManagedAsyncByteCodeCache(ExternalByteCodeSystem extern, SimpleExecutor offload, DeploymentMetrics metrics) {
     this.extern = extern;
     this.offload = offload;
+    this.metrics = metrics;
   }
 
   @Override
@@ -40,6 +42,7 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
     extern.fetchByteCode(className, new Callback<CachedByteCode>() {
       @Override
       public void success(CachedByteCode value) {
+        metrics.deploy_bytecode_found.run();
         callback.success(value);
       }
 
@@ -49,6 +52,7 @@ public class ManagedAsyncByteCodeCache implements AsyncByteCodeCache {
           @Override
           public void execute() throws Exception {
             try {
+              metrics.deploy_bytecode_compiled.run();
               CachedByteCode code = SyncCompiler.compile(spaceName, className, javaSource, reflection);
               extern.storeByteCode(className, code, new Callback<>() {
                 @Override

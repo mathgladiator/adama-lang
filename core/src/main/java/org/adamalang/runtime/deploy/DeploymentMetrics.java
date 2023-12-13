@@ -28,11 +28,18 @@ public class DeploymentMetrics {
   public final CallbackMonitor deploy_plan_push;
   public final Runnable deploy_undo;
 
+  public final Runnable deploy_bytecode_found;
+  public final Runnable deploy_bytecode_compiled;
+
   public DeploymentMetrics(MetricsFactory factory) {
     this.deploy_cache_hit = factory.counter("deploy_cache_hit");
     this.deploy_cache_miss = factory.counter("deploy_cache_miss");
     this.deploy_plan_fetch = factory.makeCallbackMonitor("deploy_plan_fetch");
     this.deploy_plan_push = factory.makeCallbackMonitor("deploy_plan_push");
     this.deploy_undo = factory.counter("deploy_undo");
+
+    this.deploy_bytecode_found = factory.counter("deploy_bytecode_found");
+    this.deploy_bytecode_compiled = factory.counter("deploy_bytecode_compiled");
+
   }
 }
