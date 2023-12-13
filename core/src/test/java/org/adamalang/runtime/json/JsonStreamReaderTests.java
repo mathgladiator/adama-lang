@@ -85,6 +85,24 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void false_to_zero() {
+    JsonStreamReader reader = new JsonStreamReader("false");
+    Assert.assertEquals(0, reader.readInteger());
+  }
+
+  @Test
+  public void true_to_one() {
+    JsonStreamReader reader = new JsonStreamReader("true");
+    Assert.assertEquals(1, reader.readInteger());
+  }
+
+  @Test
+  public void eos_to_zero() {
+    JsonStreamReader reader = new JsonStreamReader("[]");
+    Assert.assertEquals(0, reader.readInteger());
+  }
+
+  @Test
   public void obj_to_zero_int_2() {
     JsonStreamReader reader = new JsonStreamReader("\"X\"");
     Assert.assertEquals(0, reader.readInteger());

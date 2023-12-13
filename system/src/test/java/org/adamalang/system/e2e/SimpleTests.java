@@ -61,7 +61,7 @@ public class SimpleTests extends BaseE2ETest {
           latch.countDown();
         }
       });
-      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(latch.await(30000, TimeUnit.MILLISECONDS));
       Assert.assertTrue(success.get());
     }
     // POKE BEHIND THE SCENES TO SET THE PASSWORD

@@ -18,10 +18,9 @@
 package org.adamalang.system;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.lambdaworks.crypto.SCryptUtil;
 import io.jsonwebtoken.Jwts;
-import org.adamalang.api.ClientProbeRequest;
-import org.adamalang.api.ClientSimpleResponse;
-import org.adamalang.api.SelfClient;
+import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.metrics.MetricsFactory;
@@ -30,6 +29,7 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
+import org.adamalang.mysql.data.SpaceListingItem;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.system.contracts.JsonConfig;
@@ -42,6 +42,7 @@ import org.adamalang.web.client.socket.MultiWebClientRetryPool;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.adamalang.web.service.WebConfig;
+import org.junit.Assert;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -52,6 +53,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TestEnvironment {
   public static TestEnvironment ENV;
@@ -77,106 +80,107 @@ public class TestEnvironment {
   public final SelfClient globalClient;
 
   public TestEnvironment() throws Exception {
-    System.out.println("[test environment started]");
-    scrub();
-    this.masterKey = MasterKey.generateMasterKey();
-    this.port = 25000;
-    // connect to database for global region
-    {
-      KeyPair pair = Jwts.SIG.ES256.keyPair().build();
-      superPublicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-      superIdentity = Jwts.builder().subject("super").issuer("super").signWith(pair.getPrivate()).compact();
-    }
-    {
-      KeyPair pair = Jwts.SIG.ES256.keyPair().build();
-      regionalPublicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-      regionalPrivateKey = new String(Base64.getEncoder().encode(pair.getPrivate().getEncoded()));
-    }
-
-    frontendGlobalConfig = assembleConfig(Role.Web, "central");
-    int globalWebPort = frontendGlobalConfig.get_or_create_child("web").get("http-port").intValue();
-
-    metricsFactory = new NoOpMetricsFactory();
-
-    db = new DataBase(new DataBaseConfig(new ConfigObject(frontendGlobalConfig.read())), new DataBaseMetrics(metricsFactory));
-
+    long started = System.currentTimeMillis();
     try {
-      new Installer(db).uninstall();
-    } catch (Exception ex) {
-      System.err.println("failed uninstalling database");
-    }
-    new Installer(db).install();
-
-    int ownerId = Users.createUserId(db, "owner@adama.games");
-
-    System.err.println("CREATED OWNER:" + ownerId);
-    int ideId = Spaces.createSpace(db, ownerId, "ide");
-    {
-      ObjectNode plan = Json.newJsonObject();
-      plan.putObject("versions").put("file", getIDE());
-      plan.put("default", "file");
-      plan.putArray("plan");
-      String planJson = plan.toString();
-      Spaces.setPlan(db, ideId, planJson, "hash");
-    }
-    int billingId = Spaces.createSpace(db, ownerId, "billing");
-    {
-      ObjectNode plan = Json.newJsonObject();
-      plan.putObject("versions").put("file", getBilling());
-      plan.put("default", "file");
-      plan.putArray("plan");
-      String planJson = plan.toString();
-      Spaces.setPlan(db, billingId, planJson, "hash");
-    }
-
-    backendGlobalConfigs = new JsonConfig[] {
-        assembleConfig(Role.Adama, "central"),
-        assembleConfig(Role.Adama, "central"),
-        assembleConfig(Role.Adama, "central")
-    };
-
-    globalBackends = new Backend[backendGlobalConfigs.length];
-    for (int k = 0; k < globalBackends.length; k++) {
-      globalBackends[k] = Backend.run(backendGlobalConfigs[k]);
-    }
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          Frontend.run(frontendGlobalConfig);
-        } catch (Exception ex) {
-
-        }
+      System.out.println("[test environment started]");
+      scrub();
+      this.masterKey = MasterKey.generateMasterKey();
+      this.port = 25000;
+      // connect to database for global region
+      {
+        KeyPair pair = Jwts.SIG.ES256.keyPair().build();
+        superPublicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+        superIdentity = Jwts.builder().subject("super").issuer("super").signWith(pair.getPrivate()).compact();
       }
-    }).start();
+      {
+        KeyPair pair = Jwts.SIG.ES256.keyPair().build();
+        regionalPublicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+        regionalPrivateKey = new String(Base64.getEncoder().encode(pair.getPrivate().getEncoded()));
+      }
 
-    clients = SimpleExecutor.create("clients");
+      frontendGlobalConfig = assembleConfig(Role.Web, "central");
+      int globalWebPort = frontendGlobalConfig.get_or_create_child("web").get("http-port").intValue();
 
-    clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
-    globalClientPool = new MultiWebClientRetryPool(clients, clientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), ConnectionReady.TRIVIAL, "ws://127.0.0.1:" + globalWebPort + "/~s");
-    this.globalClient = new SelfClient(globalClientPool);
-    System.out.println("----------------------------------------------");
-    System.out.println("GLOBAL ONLINE :http://127.0.0.1:" + globalWebPort);
-    System.out.println("----------------------------------------------");
+      metricsFactory = new NoOpMetricsFactory();
 
-    ClientProbeRequest cpr = new ClientProbeRequest();
-    cpr.identity = "anonymous:hello_adama";
-    CountDownLatch pool = new CountDownLatch(1);
-    for (int k = 0; k < 5 && pool.getCount() > 0; k++) {
-      globalClient.probe(cpr, new Callback<ClientSimpleResponse>() {
+      db = new DataBase(new DataBaseConfig(new ConfigObject(frontendGlobalConfig.read())), new DataBaseMetrics(metricsFactory));
+
+      try {
+        new Installer(db).uninstall();
+      } catch (Exception ex) {
+        System.err.println("failed uninstalling database");
+      }
+      new Installer(db).install();
+
+      int ownerId = Users.createUserId(db, "owner@adama.games");
+
+      System.err.println("CREATED OWNER:" + ownerId);
+      int ideId = Spaces.createSpace(db, ownerId, "ide");
+      {
+        ObjectNode plan = Json.newJsonObject();
+        plan.putObject("versions").put("file", getIDE());
+        plan.put("default", "file");
+        plan.putArray("plan");
+        String planJson = plan.toString();
+        Spaces.setPlan(db, ideId, planJson, "hash");
+      }
+      int billingId = Spaces.createSpace(db, ownerId, "billing");
+      {
+        ObjectNode plan = Json.newJsonObject();
+        plan.putObject("versions").put("file", getBilling());
+        plan.put("default", "file");
+        plan.putArray("plan");
+        String planJson = plan.toString();
+        Spaces.setPlan(db, billingId, planJson, "hash");
+      }
+
+      backendGlobalConfigs = new JsonConfig[]{assembleConfig(Role.Adama, "central"), assembleConfig(Role.Adama, "central"), assembleConfig(Role.Adama, "central")};
+
+      globalBackends = new Backend[backendGlobalConfigs.length];
+      for (int k = 0; k < globalBackends.length; k++) {
+        globalBackends[k] = Backend.run(backendGlobalConfigs[k]);
+      }
+      new Thread(new Runnable() {
         @Override
-        public void success(ClientSimpleResponse value) {
-          pool.countDown();
-          System.out.println("---------------");
-          System.out.println("[PROBE SUCCESS]");
-          System.out.println("---------------");
-        }
+        public void run() {
+          try {
+            Frontend.run(frontendGlobalConfig);
+          } catch (Exception ex) {
 
-        @Override
-        public void failure(ErrorCodeException ex) {
+          }
         }
-      });
-      pool.await(1000, TimeUnit.MILLISECONDS);
+      }).start();
+
+      clients = SimpleExecutor.create("clients");
+
+      clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
+      globalClientPool = new MultiWebClientRetryPool(clients, clientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), ConnectionReady.TRIVIAL, "ws://127.0.0.1:" + globalWebPort + "/~s");
+      this.globalClient = new SelfClient(globalClientPool);
+      System.out.println("----------------------------------------------");
+      System.out.println("GLOBAL ONLINE :http://127.0.0.1:" + globalWebPort);
+      System.out.println("----------------------------------------------");
+
+      ClientProbeRequest cpr = new ClientProbeRequest();
+      cpr.identity = "anonymous:hello_adama";
+      CountDownLatch pool = new CountDownLatch(1);
+      for (int k = 0; k < 5 && pool.getCount() > 0; k++) {
+        globalClient.probe(cpr, new Callback<ClientSimpleResponse>() {
+          @Override
+          public void success(ClientSimpleResponse value) {
+            pool.countDown();
+            System.out.println("---------------");
+            System.out.println("[PROBE SUCCESS]");
+            System.out.println("---------------");
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+          }
+        });
+        pool.await(1000, TimeUnit.MILLISECONDS);
+      }
+    } finally {
+      System.out.println("[test environment took:" + (System.currentTimeMillis() - started) + "ms");
     }
   }
 
@@ -286,5 +290,63 @@ public class TestEnvironment {
       file = new File("internal/billing.adama");
     }
     return Files.readString(file.toPath());
+  }
+
+  public String getIdentity(String email) throws Exception {
+    long started = System.currentTimeMillis();
+    try {
+      ClientInitSetupAccountRequest cis = new ClientInitSetupAccountRequest();
+      cis.email = email;
+      {
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicBoolean success = new AtomicBoolean(false);
+        globalClient.initSetupAccount(cis, new Callback<ClientSimpleResponse>() {
+          @Override
+          public void success(ClientSimpleResponse value) {
+            System.err.println("-=[INIT ACCOUNT]=-");
+            latch.countDown();
+            success.set(true);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("FAILED:" + ex.code);
+            latch.countDown();
+          }
+        });
+        Assert.assertTrue(latch.await(60000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(success.get());
+      }
+
+      // POKE BEHIND THE SCENES TO SET THE PASSWORD
+      int userId = Users.getUserId(db, email);
+      Users.setPasswordHash(db, userId, SCryptUtil.scrypt("password", 16384, 8, 1));
+      AtomicReference<String> identity = new AtomicReference<>(null);
+      {
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicBoolean success = new AtomicBoolean(false);
+        ClientAccountLoginRequest calr = new ClientAccountLoginRequest();
+        calr.email = email;
+        calr.password = "password";
+        globalClient.accountLogin(calr, new Callback<ClientInitiationResponse>() {
+          @Override
+          public void success(ClientInitiationResponse value) {
+            latch.countDown();
+            identity.set(value.identity);
+            success.set(true);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            latch.countDown();
+          }
+        });
+        Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(success.get());
+      }
+      return identity.get();
+    } finally {
+      System.err.println("getIdentity(\"" + email + "\") took " + (System.currentTimeMillis() - started) + "ms");
+    }
   }
 }

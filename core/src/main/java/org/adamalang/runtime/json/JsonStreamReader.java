@@ -109,7 +109,13 @@ public class JsonStreamReader {
 
   private String readValueWithDefaultZeros() {
     JsonToken token = readValueToken();
-    if (token == null || token.type == JsonTokenType.Null || token.data.equals("")) {
+    if (token == null) {
+      return "0";
+    }
+    if (token.type == JsonTokenType.True) {
+      return "1";
+    }
+    if (token == null || token.type == JsonTokenType.Null || token.type == JsonTokenType.False || token.data == null || token.data.equals("")) {
       return "0";
     }
     return token.data;
