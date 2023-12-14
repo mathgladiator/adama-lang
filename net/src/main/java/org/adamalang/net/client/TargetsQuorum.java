@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
-/** Ensures that clients are available from gossip and the hosts databases */
+/** Ensures that clients are available from both gossip and the hosts databases */
 public class TargetsQuorum {
   private final LocalRegionClientMetrics metrics;
   private final Consumer<Collection<String>> destination;
@@ -50,20 +50,15 @@ public class TargetsQuorum {
   }
 
   public void reconcileAndShip() {
-    TreeSet<String> intersection = new TreeSet<>();
+    TreeSet<String> union = new TreeSet<>();
     for (String x : fromDatabase) {
-      if (fromGossip.contains(x)) {
-        intersection.add(x);
-      }
+      union.add(x);
+    }
+    for (String x : fromGossip) {
+      union.add(x);
     }
     metrics.client_host_set_database_size.set(fromDatabase.size());
     metrics.client_host_set_gossip_size.set(fromGossip.size());
-    if (intersection.size() * 2 < fromDatabase.size()) {
-      metrics.client_host_set_invalid.set((System.currentTimeMillis() - created) > 30000 ? 1 : 0);
-      destination.accept(fromDatabase);
-    } else {
-      metrics.client_host_set_invalid.set(0);
-      destination.accept(intersection);
-    }
+    destination.accept(union);
   }
 }

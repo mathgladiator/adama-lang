@@ -18,14 +18,11 @@
 package org.adamalang.system.distributed;
 
 import org.adamalang.caravan.CaravanBoot;
+import org.adamalang.mysql.impl.*;
 import org.adamalang.system.CommonServiceInit;
 import org.adamalang.system.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.net.ServerHandle;
-import org.adamalang.mysql.impl.GlobalBillingDocumentFinder;
-import org.adamalang.mysql.impl.GlobalCapacityOverseer;
-import org.adamalang.mysql.impl.GlobalMetricsReporter;
-import org.adamalang.mysql.impl.GlobalPlanFetcher;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -73,8 +70,9 @@ public class Backend {
     CapacityOverseer overseer = new GlobalCapacityOverseer(init.database);
 
     DelayedDeploy delayedDeploy = new DelayedDeploy();
-    AdamaDeploymentSync sync = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(init.em.metricsFactory), init.em.adamaCurrentRegionClient, init.em.system, init.em.regionalIdentity, delayedDeploy, deploymentFactoryBase);
-    OndemandDeploymentFactoryBase factoryProxy = new OndemandDeploymentFactoryBase(init.deploymentMetrics, deploymentFactoryBase, fetcher, sync);
+    AdamaDeploymentSync syncMonitor = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(init.em.metricsFactory), init.em.adamaCurrentRegionClient, init.em.system, init.em.regionalIdentity, delayedDeploy, deploymentFactoryBase);
+    GlobalCapacitySync syncWithDatabase = new GlobalCapacitySync(init.database, init.em.region, init.em.machine, init.system, syncMonitor);
+    OndemandDeploymentFactoryBase factoryProxy = new OndemandDeploymentFactoryBase(init.deploymentMetrics, deploymentFactoryBase, fetcher, syncWithDatabase);
 
     BoundLocalFinderService finder = new BoundLocalFinderService(init.system, init.globalFinder, init.region, init.machine);
     CaravanBoot caravan = new CaravanBoot(init.alive, config.get_string("caravan-root", "caravan"), init.metricsFactory, init.region, init.machine, finder, init.s3, init.s3);

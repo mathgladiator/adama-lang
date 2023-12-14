@@ -31,11 +31,13 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.Installer;
 import org.adamalang.mysql.data.SpaceListingItem;
+import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Hosts;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.LocalRegionClient;
+import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.system.distributed.Backend;
 import org.adamalang.system.distributed.Frontend;
@@ -142,7 +144,11 @@ public class TestEnvironment {
         Spaces.setPlan(db, billingId, planJson, "hash");
       }
 
-      backendGlobalConfigs = new JsonConfig[]{assembleConfig(Role.Adama, "central"), assembleConfig(Role.Adama, "central"), assembleConfig(Role.Adama, "central")};
+      backendGlobalConfigs = new JsonConfig[] {
+          assembleConfig(Role.Adama, "central"), //
+          assembleConfig(Role.Adama, "central"), //
+          assembleConfig(Role.Adama, "central"), //
+      };
 
       globalBackends = new Backend[backendGlobalConfigs.length];
       for (int k = 0; k < globalBackends.length; k++) {
@@ -164,11 +170,24 @@ public class TestEnvironment {
         }
       }).start();
 
+      System.out.println("------=[ WAITING FOR GOSSIP TABLES ]=------");
       Assert.assertTrue(gotFrontend.await(100000, TimeUnit.MILLISECONDS));
       globalFrontend = frontendRef.get();
-
+      CountDownLatch[] latches = new CountDownLatch[globalBackends.length];
+      for (int k = 0; k < globalBackends.length; k++) {
+        CountDownLatch latch = new CountDownLatch(1);
+        latches[k] = latch;
+        globalBackends[k].init.engine.subscribe("adama", (machines) -> {
+          if (machines.size() == globalBackends.length) {
+            latch.countDown();
+          }
+        });
+      }
+      for (int k = 0; k < globalBackends.length; k++) {
+        Assert.assertTrue(latches[k].await(30000, TimeUnit.MILLISECONDS));
+      }
+      System.out.println("------=[ GOSSIP TABLES BUILT ]=------");
       clients = SimpleExecutor.create("clients");
-
       clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
       globalClientPool = new MultiWebClientRetryPool(clients, clientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), new MultiWebClientRetryPoolConfig(new ConfigObject(Json.newJsonObject())), ConnectionReady.TRIVIAL, "ws://127.0.0.1:" + globalWebPort + "/~s");
       this.globalClient = new SelfClient(globalClientPool);
@@ -345,6 +364,17 @@ public class TestEnvironment {
       file = new File("internal/billing.adama");
     }
     return Files.readString(file.toPath());
+  }
+
+  public void waitForCapacityReady(String space) throws Exception {
+    for (int k = 0; k < 25; k++) {
+      List<CapacityInstance> cap = Capacity.listAll(db, space);
+      if (cap.size() == 3) {
+        return;
+      }
+      Thread.sleep(150);
+    }
+    throw new Exception("failed after many ms to acquire capacity from tables");
   }
 
   public String getIdentity(String email) throws Exception {

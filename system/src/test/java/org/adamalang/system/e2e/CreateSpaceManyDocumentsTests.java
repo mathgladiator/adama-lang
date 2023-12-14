@@ -17,21 +17,28 @@
 */
 package org.adamalang.system.e2e;
 
-import org.adamalang.api.ClientDocumentCreateRequest;
-import org.adamalang.api.ClientSimpleResponse;
-import org.adamalang.api.ClientSpaceCreateRequest;
-import org.adamalang.api.SpaceCreateRequest;
+import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.common.Stream;
+import org.adamalang.mysql.data.SpaceListingItem;
+import org.adamalang.mysql.impl.MySQLFinderCore;
 import org.adamalang.mysql.model.Capacity;
 import org.adamalang.mysql.model.Hosts;
+import org.adamalang.mysql.model.Spaces;
+import org.adamalang.mysql.model.Users;
+import org.adamalang.runtime.data.DocumentLocation;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.system.BaseE2ETest;
 import org.adamalang.system.TestEnvironment;
+import org.checkerframework.checker.units.qual.K;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -61,16 +68,10 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
       });
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     }
-    for (int k = 0; k < 10; k++) {
-      List<CapacityInstance> cap = Capacity.listAll(env.db, "test-space-csmd1");
-      System.err.println("CAPACITY:" + cap.size());
-      for (CapacityInstance ci : cap) {
-        System.err.println(ci.space + "->" + ci.machine);
-      }
-      Thread.sleep(100);
-    }
-    CountDownLatch latch = new CountDownLatch(1);
+    env.waitForCapacityReady("test-space-csmd1");
+    CountDownLatch latch = new CountDownLatch(100);
     for (int k = 0; k < 100; k++) {
+      CountDownLatch oneAtATime = new CountDownLatch(1);
       ClientDocumentCreateRequest docCreate = new ClientDocumentCreateRequest();
       docCreate.space = "test-space-csmd1";
       docCreate.arg = Json.newJsonObject();
@@ -80,6 +81,7 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
         @Override
         public void success(ClientSimpleResponse value) {
           latch.countDown();
+          oneAtATime.countDown();
         }
 
         @Override
@@ -87,8 +89,60 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
           System.err.println("documentCreate; ERROR IN TEST:" + ex.code);
         }
       });
+      Assert.assertTrue(oneAtATime.await(10000, TimeUnit.MILLISECONDS));
     }
     Assert.assertTrue(latch.await(60000, TimeUnit.MILLISECONDS));
+
+    {
+      ClientDocumentListRequest docsList = new ClientDocumentListRequest();
+      docsList.identity = identity;
+      docsList.space = "test-space-csmd1";
+      ArrayList<ClientKeyListingResponse> responses = new ArrayList<>();
+      CountDownLatch latchList = new CountDownLatch(1);
+      env.globalClient.documentList(docsList, new Stream<ClientKeyListingResponse>() {
+        @Override
+        public void next(ClientKeyListingResponse value) {
+          responses.add(value);
+        }
+
+        @Override
+        public void complete() {
+          latchList.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(latchList.await(60000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals(100, responses.size());
+    }
+
+    MySQLFinderCore core = new MySQLFinderCore(env.db);
+    HashMap<String, Integer> counts = new HashMap<>();
+    for (int k = 0; k < 100; k++) {
+      CountDownLatch latchX = new CountDownLatch(1);
+      core.find(new Key("test-space-csmd1", "key-" + k), new Callback<DocumentLocation>() {
+        @Override
+        public void success(DocumentLocation value) {
+          Integer prior = counts.get(value.machine);
+          if (prior == null) {
+            prior = 0;
+          }
+          counts.put(value.machine, prior + 1);
+          latchX.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(latchX.await(50000, TimeUnit.MILLISECONDS));
+    }
+    System.err.println(counts);
+
 
 
   }

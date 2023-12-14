@@ -109,6 +109,7 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
   public void undeploy(String space) {
     base.undeploy(space);
     metrics.deploy_undo.run();
+    sync.unwatch(space);
   }
 
   @Override
