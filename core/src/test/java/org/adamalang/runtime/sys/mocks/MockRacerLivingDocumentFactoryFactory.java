@@ -21,6 +21,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 
@@ -35,6 +36,10 @@ public class MockRacerLivingDocumentFactoryFactory implements LivingDocumentFact
   public MockRacerLivingDocumentFactoryFactory() {
     this.calls = new HashMap<>();
     this.latches = new ArrayList<>();
+  }
+
+  @Override
+  public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
   }
 
   @Override

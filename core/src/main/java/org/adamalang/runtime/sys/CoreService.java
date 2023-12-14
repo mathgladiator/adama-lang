@@ -91,6 +91,7 @@ public class CoreService implements Deliverer, Queryable {
         long started = System.currentTimeMillis();
         NamedRunnable self = this;
         MeteringStateMachine.estimate(bases, livingDocumentFactoryFactory, samples -> {
+          livingDocumentFactoryFactory.account(samples);
           meteringEvent.accept(samples);
           bases[rng.nextInt(bases.length)].executor.schedule(self, Math.max(1000 - (System.currentTimeMillis() - started), 100));
         });

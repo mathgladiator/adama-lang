@@ -21,10 +21,12 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class MockInstantLivingDocumentFactoryFactory implements LivingDocumentFactoryFactory {
   private LivingDocumentFactory factory;
@@ -44,6 +46,11 @@ public class MockInstantLivingDocumentFactoryFactory implements LivingDocumentFa
     } else {
       callback.failure(new ErrorCodeException(999));
     }
+  }
+
+  @Override
+  public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
+
   }
 
   @Override

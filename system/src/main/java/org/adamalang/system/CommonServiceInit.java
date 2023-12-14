@@ -126,17 +126,6 @@ public class CommonServiceInit {
   public LocalRegionClient makeLocalClient(HeatMonitor heat) {
     ClientConfig clientConfig = new ClientConfig();
     LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(metricsFactory);
-    MachinePicker fallback = (key, callback) -> {
-      try {
-        String machine = Hosts.pickStableHostFromRegion(database, region, "adama", key.space);
-        if (machine == null) {
-          throw new NullPointerException("no capacity available");
-        }
-        callback.success(machine);
-      } catch (Exception ex) {
-        callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE, ex, EXLOGGER));
-      }
-    };
     LocalRegionClient client = new LocalRegionClient(netBase, clientConfig, metrics, heat);
 
     TargetsQuorum targetsQuorum = new TargetsQuorum(metrics, client.getTargetPublisher());

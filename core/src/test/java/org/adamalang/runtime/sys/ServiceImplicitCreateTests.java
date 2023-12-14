@@ -34,6 +34,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServiceImplicitCreateTests {
@@ -116,6 +117,10 @@ public class ServiceImplicitCreateTests {
         } else {
           factoryFactoryReal.fetch(key, callback);
         }
+      }
+
+      @Override
+      public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
       }
 
       @Override

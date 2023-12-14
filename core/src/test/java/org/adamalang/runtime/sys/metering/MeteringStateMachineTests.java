@@ -78,7 +78,10 @@ public class MeteringStateMachineTests {
     MeteringStateMachine.estimate(bases, new LivingDocumentFactoryFactory() {
       @Override
       public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
+      }
 
+      @Override
+      public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
       }
 
       @Override
@@ -172,6 +175,11 @@ public class MeteringStateMachineTests {
             }
 
             @Override
+            public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
+
+            }
+
+            @Override
             public Collection<String> spacesAvailable() {
               return Collections.emptyList();
             }
@@ -257,6 +265,11 @@ public class MeteringStateMachineTests {
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(100, ex, (t, c) -> {}));
         }
+      }
+
+      @Override
+      public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
+
       }
 
       @Override

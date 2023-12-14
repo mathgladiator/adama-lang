@@ -23,6 +23,7 @@ import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.*;
@@ -51,6 +52,16 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
     String versionToUse = plan.pickVersion(key.key);
     callback.success(factories.get(versionToUse));
+  }
+
+  @Override
+  public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
+    PredictiveInventory.MeteringSample prior = sample.get(name);
+    if (prior == null) {
+      sample.put(name, PredictiveInventory.MeteringSample.justMemory(memoryUsed));
+    } else {
+      sample.put(name, PredictiveInventory.MeteringSample.add(prior, PredictiveInventory.MeteringSample.justMemory(memoryUsed)));
+    }
   }
 
   @Override

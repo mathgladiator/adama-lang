@@ -140,6 +140,10 @@ public class PredictiveInventory {
       this.third_party_service_calls = third_party_service_calls;
     }
 
+    public static MeteringSample justMemory(long memory) {
+      return new MeteringSample(memory, 0, 0, 0, 0, 0, 0, 0);
+    }
+
     public static MeteringSample add(MeteringSample a, MeteringSample b) {
       return new MeteringSample(a.memory + b.memory, //
           a.cpu + b.cpu, //

@@ -22,9 +22,11 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.contracts.PlanFetcher;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 /** ensures an instance is always alive by fetching plans... on demand  */
 public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFactory, Undeploy, Deploy {
@@ -70,6 +72,11 @@ public class OndemandDeploymentFactoryBase implements LivingDocumentFactoryFacto
         }
       }));
     }
+  }
+
+  @Override
+  public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
+    base.account(sample);
   }
 
   @Override

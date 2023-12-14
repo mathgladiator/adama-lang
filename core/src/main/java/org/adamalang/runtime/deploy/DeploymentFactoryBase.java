@@ -27,9 +27,11 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.PerfTracker;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -113,6 +115,13 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
       return;
     }
     factory.fetch(key, callback);
+  }
+
+  @Override
+  public void account(HashMap<String, PredictiveInventory.MeteringSample> sample) {
+    for (DeploymentFactory factory : spaces.values()) {
+      factory.account(sample);
+    }
   }
 
   @Override

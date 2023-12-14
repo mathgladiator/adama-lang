@@ -19,14 +19,19 @@ package org.adamalang.runtime.contracts;
 
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 /** This represents where scripts live such that deployments can pull versions based on the key */
 public interface LivingDocumentFactoryFactory {
   /** fetch the factory for the given key */
   void fetch(Key key, Callback<LivingDocumentFactory> callback);
+
+  /** account for the memory of the factory */
+  void account(HashMap<String, PredictiveInventory.MeteringSample> sample);
 
   /** fetch the available spaces */
   Collection<String> spacesAvailable();
