@@ -35,6 +35,6 @@ public class Solo {
       }
     });
     // spin up the frontend
-    new Frontend(config, backend.init, client);
+    new Frontend(config, backend.init, client).run();
   }
 }
