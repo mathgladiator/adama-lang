@@ -30,6 +30,7 @@ var RxHTML = (function () {
     }
   };
   connectionMonitorDom.style = "position:fixed; bottom:0px; right:0px";
+  connectionMonitorDom.className = "adama-debugger"
   if (Adama.Debugger) {
     connectionMonitorDom.onclick = Adama.Debugger.toggle;
   }
