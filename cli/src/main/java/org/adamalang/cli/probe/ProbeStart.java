@@ -28,6 +28,7 @@ import org.adamalang.common.net.NetMetrics;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 
@@ -81,6 +82,32 @@ public class ProbeStart {
           terminal.info("Wouldn't it be great if there was some like... help here?");
         } else if (command.is("ping")) {
           terminal.info("ping:" + client.ping(2500));
+        } else if (command.is("getload") || command.is("get-load")) {
+          terminal.info("asking for load...");
+          client.getCurrentLoad(new Callback<>() {
+            @Override
+            public void success(CurrentLoad load) {
+              terminal.notice("load: documents=" + load.documents + ", connections=" + load.connections);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              terminal.error("unable to compute load:" + ex.code);
+            }
+          });
+        } else if (command.is("drain")) {
+          terminal.info("draining...");
+          client.drain(new Callback<>() {
+            @Override
+            public void success(Void value) {
+              terminal.notice("drain was successful");
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              terminal.error("drain failure:" + ex.code);
+            }
+          });
         } else {
           terminal.notice("sending command '" + command.command + "' to adama, please wait...");
           client.probe(command.command, command.args, new Callback<InstanceClient.ProbeResponse>() {
