@@ -142,6 +142,9 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
       Assert.assertTrue(latchX.await(50000, TimeUnit.MILLISECONDS));
     }
     System.err.println(counts);
+    Assert.assertTrue((int) counts.get("127.0.0.1:25004") >= 25);
+    Assert.assertTrue((int) counts.get("127.0.0.1:25008") >= 25);
+    Assert.assertTrue((int) counts.get("127.0.0.1:25012") >= 25);
 
 
 
