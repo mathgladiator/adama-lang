@@ -26,6 +26,9 @@ import org.adamalang.runtime.data.managed.Base;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 /** a managed data source will convert and archiving data source into a dataservice such that the local state is managed by a finder. This lets data be uploaded/downloaded as needed. */
 public class ManagedDataService implements DataService {
   private final Logger LOG = LoggerFactory.getLogger(ManagedDataService.class);
@@ -154,6 +157,16 @@ public class ManagedDataService implements DataService {
   public void shed(Key key) {
     base.on(key, machine -> {
       machine.shed();
+    });
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    base.executor.execute(new NamedRunnable("inventory") {
+      @Override
+      public void execute() throws Exception {
+        callback.success(new TreeSet<>(base.documents.keySet()));
+      }
     });
   }
 

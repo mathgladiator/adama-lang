@@ -40,6 +40,7 @@ import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.TriggerDeployment;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.*;
 import org.slf4j.Logger;
@@ -71,6 +72,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     this.monitorStreamback = null;
     this.cancelWatch = null;
   }
+
 
   @Override
   public void request(int bytes) {
@@ -116,6 +118,47 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void error(int errorCode) {
     nexus.metrics.server_channel_error.run();
     completed();
+  }
+
+  @Override
+  public void handle(ClientMessage.DrainRequest payload) {
+    nexus.drain(new Callback<>() {
+      @Override
+      public void success(Void value) {
+        ByteBuf buf = upstream.create(32);
+        ServerMessage.DrainResponse response = new ServerMessage.DrainResponse();
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
+  @Override
+  public void handle(ClientMessage.LoadRequest payload) {
+    nexus.service.getLoad(new Callback<CurrentLoad>() {
+      @Override
+      public void success(CurrentLoad load) {
+        ByteBuf buf = upstream.create(32);
+        ServerMessage.LoadResponse response = new ServerMessage.LoadResponse();
+        response.documents = load.documents;
+        response.connections = load.connections;
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+
   }
 
   @Override
@@ -353,12 +396,15 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     nexus.meteringPubSub.subscribe((bills) -> {
       if (alive.get()) {
         ArrayList<String> spaces = new ArrayList<>();
-        for (MeterReading meterReading : bills) {
-          spaces.add(meterReading.space);
+        if (!nexus.isDrained()) {
+          // when we are draining, we signal to stop routing to this host via inventory
+          for (MeterReading meterReading : bills) {
+            spaces.add(meterReading.space);
+          }
         }
         ServerMessage.InventoryHeartbeat inventoryHeartbeat = new ServerMessage.InventoryHeartbeat();
         inventoryHeartbeat.spaces = spaces.toArray(new String[spaces.size()]);
-        ByteBuf buf = upstream.create(24);
+        ByteBuf buf = upstream.create(24 + spaces.size() * 32);
         ServerCodec.write(buf, inventoryHeartbeat);
         upstream.next(buf);
       }

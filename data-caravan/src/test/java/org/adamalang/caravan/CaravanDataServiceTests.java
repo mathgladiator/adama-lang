@@ -35,6 +35,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -134,6 +135,23 @@ public class CaravanDataServiceTests {
       SimpleMockCallback cb_InitSuccess = new SimpleMockCallback();
       setup.service.initialize(KEY1, UPDATE_1, cb_InitSuccess);
       cb_InitSuccess.assertSuccess();
+
+      {
+        CountDownLatch latchInventory = new CountDownLatch(1);
+        setup.service.inventory(new Callback<Set<Key>>() {
+          @Override
+          public void success(Set<Key> keys) {
+            Assert.assertTrue(keys.contains(KEY1));
+            latchInventory.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latchInventory.await(5000, TimeUnit.MILLISECONDS));
+      }
 
       SimpleDataCallback cb_GetWorksNow = new SimpleDataCallback();
       setup.service.get(KEY1, cb_GetWorksNow);

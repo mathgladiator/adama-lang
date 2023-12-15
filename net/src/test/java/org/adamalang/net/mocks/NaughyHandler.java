@@ -136,6 +136,17 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
     real.next(data);
   }
 
+
+  @Override
+  public void handle(ClientMessage.LoadRequest payload) {
+    real.failure(new ErrorCodeException(-1));
+  }
+
+  @Override
+  public void handle(ClientMessage.DrainRequest payload) {
+    real.failure(new ErrorCodeException(-2));
+  }
+
   @Override
   public void handle(ClientMessage.FindRequest payload) {
     real.failure(new ErrorCodeException(-12324));

@@ -17,15 +17,17 @@
 */
 package org.adamalang.net.server;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.runtime.data.BoundLocalFinderService;
-import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerNexus {
   public final NetBase base;
@@ -39,6 +41,7 @@ public class ServerNexus {
   public final int port;
   public final int handlerThreads;
   public final BoundLocalFinderService finder;
+  private final AtomicBoolean drained;
 
   public ServerNexus(NetBase base, MachineIdentity identity, CoreService service, ServerMetrics metrics, DeploymentFactoryBase deploymentFactoryBase, BoundLocalFinderService finder, Deploy deployer, MeteringPubSub meteringPubSub, DiskMeteringBatchMaker meteringBatchMaker, int port, int handlerThreads) {
     this.base = base;
@@ -52,5 +55,16 @@ public class ServerNexus {
     this.port = port;
     this.handlerThreads = handlerThreads;
     this.finder = finder;
+    this.drained = new AtomicBoolean(false);
+  }
+
+  public void drain(Callback<Void> callback) {
+    System.err.println("-=[Host Got Drain Signal]=-");
+    this.drained.set(true);
+    service.drainService(callback);
+  }
+
+  public boolean isDrained() {
+    return drained.get();
   }
 }

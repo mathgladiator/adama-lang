@@ -24,9 +24,7 @@ import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -209,6 +207,11 @@ public class MockArchiveDataSource implements ArchivingDataService {
   @Override
   public void shed(Key key) {
     println("SHED:" + key.space + "/" + key.key);
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    callback.success(new TreeSet<>());
   }
 
   @Override

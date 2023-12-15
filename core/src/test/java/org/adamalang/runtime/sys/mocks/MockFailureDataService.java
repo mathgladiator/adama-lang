@@ -22,6 +22,8 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
 
+import java.util.Set;
+
 public class MockFailureDataService implements DataService {
   public boolean crashScan = false;
 
@@ -58,6 +60,11 @@ public class MockFailureDataService implements DataService {
 
   @Override
   public void shed(Key key) {
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    callback.failure(new ErrorCodeException(123));
   }
 
   @Override

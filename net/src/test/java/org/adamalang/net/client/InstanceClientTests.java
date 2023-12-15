@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.TestBed;
 import org.adamalang.runtime.sys.AuthResponse;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.mocks.SimpleIntCallback;
@@ -34,6 +35,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstanceClientTests {
@@ -577,8 +579,78 @@ public class InstanceClientTests {
           });
           Assert.assertTrue(latchGotFailure.await(5000, TimeUnit.MILLISECONDS));
         }
+      }
+    }
+  }
 
 
+  @Test
+  public void drain_and_query_load() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10014,
+                 "@static { create { return true; } invent { return true; } } @connected { return true; } message M { bool fail; } @authorization (M m) { if (m.fail) abort; return {agent:\"1\", hash:\"h\"}; }")) {
+      bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        {
+          AtomicBoolean loadSuccess = new AtomicBoolean(false);
+          CountDownLatch gotLoad = new CountDownLatch(1);
+          client.getCurrentLoad(new Callback<CurrentLoad>() {
+            @Override
+            public void success(CurrentLoad inventory) {
+              System.err.println("pre-drain-load:" + inventory.documents + ", " + inventory.connections);
+              loadSuccess.set(true);
+              gotLoad.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              gotLoad.countDown();
+            }
+          });
+          Assert.assertTrue(gotLoad.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(loadSuccess.get());
+        }
+        {
+          AtomicBoolean drainSuccess = new AtomicBoolean(false);
+          CountDownLatch didDrain = new CountDownLatch(1);
+          client.drain(new Callback<Void>() {
+            @Override
+            public void success(Void value) {
+              drainSuccess.set(true);
+              didDrain.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              didDrain.countDown();
+            }
+          });
+          Assert.assertTrue(didDrain.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(drainSuccess.get());
+        }
+        {
+          AtomicBoolean loadSuccess = new AtomicBoolean(false);
+          CountDownLatch gotLoad = new CountDownLatch(1);
+          client.getCurrentLoad(new Callback<CurrentLoad>() {
+            @Override
+            public void success(CurrentLoad inventory) {
+              System.err.println("post-drain-load:" + inventory.documents + ", " + inventory.connections);
+              loadSuccess.set(true);
+              gotLoad.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              gotLoad.countDown();
+            }
+          });
+          Assert.assertTrue(gotLoad.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(loadSuccess.get());
+        }
       }
     }
   }

@@ -178,6 +178,8 @@ public class ErrorTable {
     retry.add(199883);
     names.put(146115, "DOCUMENT_SHEDDING_LOAD");
     descriptions.put(146115, "no description of error (yet)");
+    names.put(193265, "DOCUMENT_DRAINING_LOAD");
+    descriptions.put(193265, "no description of error (yet)");
     names.put(133308, "DOCUMENT_WEB_GET_NOT_FOUND");
     descriptions.put(133308, "The web get handler was not found.");
     userspace.add(133308);
@@ -839,6 +841,14 @@ public class ErrorTable {
     descriptions.put(793779, "no description of error (yet)");
     names.put(790732, "ADAMA_NET_AUTH_REJECTED");
     descriptions.put(790732, "no description of error (yet)");
+    names.put(722131, "ADAMA_NET_DRAIN_TIMEOUT");
+    descriptions.put(722131, "no description of error (yet)");
+    names.put(787692, "ADAMA_NET_DRAIN_REJECTED");
+    descriptions.put(787692, "no description of error (yet)");
+    names.put(787664, "ADAMA_NET_GETLOAD_TIMEOUT");
+    descriptions.put(787664, "no description of error (yet)");
+    names.put(774354, "ADAMA_NET_GETLOAD_REJECTED");
+    descriptions.put(774354, "no description of error (yet)");
     names.put(756928, "ADAMA_NET_PROBE_TIMEOUT");
     descriptions.put(756928, "no description of error (yet)");
     names.put(740544, "ADAMA_NET_PROBE_REJECTED");

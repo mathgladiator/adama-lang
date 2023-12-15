@@ -36,9 +36,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -550,6 +548,16 @@ public class CaravanDataService implements ArchivingDataService {
   @Override
   public void shed(Key key) {
     close(key, Callback.DONT_CARE_VOID);
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    executor.execute(new NamedRunnable("caravan-inventory") {
+      @Override
+      public void execute() throws Exception {
+        callback.success(new TreeSet<>(store.map().keySet()));
+      }
+    });
   }
 
   @Override

@@ -26,10 +26,7 @@ import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.natives.NtPrincipal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 /**
@@ -185,6 +182,11 @@ public class InMemoryDataService implements DataService {
   @Override
   public void shed(Key key) {
     close(key, Callback.DONT_CARE_VOID);
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    executor.execute(() -> callback.success(new TreeSet<>(datum.keySet())));
   }
 
   @Override

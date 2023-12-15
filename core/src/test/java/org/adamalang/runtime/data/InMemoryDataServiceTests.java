@@ -26,17 +26,36 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryDataServiceTests {
 
   @Test
-  public void flow() {
+  public void flow() throws Exception {
     MockTime time = new MockTime();
     InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
     AtomicInteger success = new AtomicInteger(0);
     Key key = new Key("space", "key");
     ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
+    {
+      CountDownLatch gotInventory = new CountDownLatch(1);
+      ds.inventory(new Callback<Set<Key>>() {
+        @Override
+        public void success(Set<Key> value) {
+          Assert.assertTrue(value.contains(new Key("space", "key")));
+          gotInventory.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(gotInventory.await(5000, TimeUnit.MILLISECONDS));
+    }
     ds.patch(key, new RemoteDocumentUpdate[] {update(2, "{\"x\":2}", "{\"x\":1}"), update(3, "{\"x\":3}", "{\"x\":2}")}, bumpSuccess(success));
     ds.get(
         key,

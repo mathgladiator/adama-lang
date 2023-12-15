@@ -41,9 +41,46 @@ import org.adamalang.net.codec.ServerMessage.DeleteResponse;
 import org.adamalang.net.codec.ServerMessage.CreateResponse;
 import org.adamalang.net.codec.ServerMessage.ProbeCommandResponse;
 import org.adamalang.net.codec.ServerMessage.FindResponse;
+import org.adamalang.net.codec.ServerMessage.LoadResponse;
+import org.adamalang.net.codec.ServerMessage.DrainResponse;
 import org.adamalang.net.codec.ServerMessage.PingResponse;
 
 public class ServerCodec {
+
+  public static abstract class StreamLoad implements ByteStream {
+    public abstract void handle(LoadResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 24326:
+          handle(readBody_24326(buf, new LoadResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerLoad {
+    public void handle(LoadResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerLoad handler) {
+    switch (buf.readIntLE()) {
+      case 24326:
+        handler.handle(readBody_24326(buf, new LoadResponse()));
+        return;
+    }
+  }
+
 
   public static abstract class StreamQuery implements ByteStream {
     public abstract void handle(QueryResult payload);
@@ -215,6 +252,41 @@ public class ServerCodec {
     switch (buf.readIntLE()) {
       case 6736:
         handler.handle(readBody_6736(buf, new ReflectResponse()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamDrain implements ByteStream {
+    public abstract void handle(DrainResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 24324:
+          handle(readBody_24324(buf, new DrainResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerDrain {
+    public void handle(DrainResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerDrain handler) {
+    switch (buf.readIntLE()) {
+      case 24324:
+        handler.handle(readBody_24324(buf, new DrainResponse()));
         return;
     }
   }
@@ -949,6 +1021,34 @@ public class ServerCodec {
     return o;
   }
 
+  public static LoadResponse read_LoadResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 24326:
+        return readBody_24326(buf, new LoadResponse());
+    }
+    return null;
+  }
+
+
+  private static LoadResponse readBody_24326(ByteBuf buf, LoadResponse o) {
+    o.documents = buf.readIntLE();
+    o.connections = buf.readIntLE();
+    return o;
+  }
+
+  public static DrainResponse read_DrainResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 24324:
+        return readBody_24324(buf, new DrainResponse());
+    }
+    return null;
+  }
+
+
+  private static DrainResponse readBody_24324(ByteBuf buf, DrainResponse o) {
+    return o;
+  }
+
   public static PingResponse read_PingResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 24322:
@@ -1159,6 +1259,24 @@ public class ServerCodec {
     Helper.writeString(buf, o.region);;
     Helper.writeString(buf, o.machine);;
     buf.writeBoolean(o.deleted);
+  }
+
+  public static void write(ByteBuf buf, LoadResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(24326);
+    buf.writeIntLE(o.documents);
+    buf.writeIntLE(o.connections);
+  }
+
+  public static void write(ByteBuf buf, DrainResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(24324);
   }
 
   public static void write(ByteBuf buf, PingResponse o) {

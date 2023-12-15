@@ -31,6 +31,7 @@ import org.adamalang.mysql.model.Users;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.system.BaseE2ETest;
 import org.adamalang.system.TestEnvironment;
 import org.checkerframework.checker.units.qual.K;
@@ -39,7 +40,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -120,7 +120,45 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
     }
 
     MySQLFinderCore core = new MySQLFinderCore(env.db);
+
+    HashMap<String, Integer> counts = counts100(core);
+    System.err.println(counts);
+    Assert.assertTrue((int) counts.get("127.0.0.1:25004") >= 25);
+    Assert.assertTrue((int) counts.get("127.0.0.1:25008") >= 25);
+    Assert.assertTrue((int) counts.get("127.0.0.1:25012") >= 25);
+
+    // TODO THE META GOAL HERE IS TO GET THE NUMBER STABLE!
+    /*
+    Assert.assertEquals(28, (int) counts.get("127.0.0.1:25004"));
+    Assert.assertEquals(36, (int) counts.get("127.0.0.1:25008"));
+    Assert.assertEquals(36, (int) counts.get("127.0.0.1:25012"));
+    */
+
+    CurrentLoad loadBeforeDrain = env.getCurrentLoad("127.0.0.1:25004");
+    System.err.println("Documents prior drain:" + loadBeforeDrain.documents);
+
+    env.drain("127.0.0.1:25004", Callback.DONT_CARE_VOID);
+
+    int attemptsToConverge = 10;
+    int countOfDrainedHost = 1;
+    while (attemptsToConverge > 0 && countOfDrainedHost > 0) {
+      attemptsToConverge--;
+      HashMap<String, Integer> countsPool = counts100(core);
+      countOfDrainedHost = countsPool.get("127.0.0.1:25004");
+      System.err.println("STATUS:" + countOfDrainedHost);
+      if (countOfDrainedHost > 0) {
+        Thread.sleep(1000);
+      }
+    }
+    Assert.assertEquals(0, countOfDrainedHost);
+    Assert.assertEquals(0, env.getCurrentLoad("127.0.0.1:25004").documents);
+  }
+
+  private static HashMap<String, Integer> counts100(MySQLFinderCore core) throws Exception {
     HashMap<String, Integer> counts = new HashMap<>();
+    counts.put("127.0.0.1:25004", 0);
+    counts.put("127.0.0.1:25008", 0);
+    counts.put("127.0.0.1:25012", 0);
     for (int k = 0; k < 100; k++) {
       CountDownLatch latchX = new CountDownLatch(1);
       core.find(new Key("test-space-csmd1", "key-" + k), new Callback<DocumentLocation>() {
@@ -141,12 +179,6 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
       });
       Assert.assertTrue(latchX.await(50000, TimeUnit.MILLISECONDS));
     }
-    System.err.println(counts);
-    Assert.assertTrue((int) counts.get("127.0.0.1:25004") >= 25);
-    Assert.assertTrue((int) counts.get("127.0.0.1:25008") >= 25);
-    Assert.assertTrue((int) counts.get("127.0.0.1:25012") >= 25);
-
-
-
+    return counts;
   }
 }

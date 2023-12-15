@@ -29,6 +29,7 @@ import org.adamalang.runtime.sys.DurableLivingDocument;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class DumbDataService implements DataService {
@@ -138,6 +139,11 @@ public class DumbDataService implements DataService {
 
   @Override
   public void shed(Key key) {
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    callback.failure(new ErrorCodeException(-123));
   }
 
   @Override

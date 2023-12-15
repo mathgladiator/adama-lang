@@ -30,6 +30,7 @@ import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.runtime.sys.AuthResponse;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
@@ -921,6 +922,86 @@ public class InstanceClient implements AutoCloseable {
           @Override
           protected void failure(int code) {
             events.error(code);
+          }
+        });
+      }
+    });
+  }
+
+  public void drain(Callback<Void> callback) {
+    executor.execute(new NamedRunnable("send-drain") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_DRAIN_TIMEOUT, ErrorCodes.ADAMA_NET_DRAIN_REJECTED, metrics.client_drain.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamDrain() {
+              @Override
+              public void handle(ServerMessage.DrainResponse payload) {
+                callback.success(null);
+              }
+
+              @Override
+              public void completed() {
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(64);
+                ClientCodec.write(toWrite, new ClientMessage.DrainRequest());
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  public void getCurrentLoad(Callback<CurrentLoad> callback) {
+    executor.execute(new NamedRunnable("send-drain") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_GETLOAD_TIMEOUT, ErrorCodes.ADAMA_NET_GETLOAD_REJECTED, metrics.client_loadget.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamLoad() {
+              @Override
+              public void handle(ServerMessage.LoadResponse payload) {
+                callback.success(new CurrentLoad(payload.documents, payload.connections));
+              }
+
+              @Override
+              public void completed() {
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(64);
+                ClientCodec.write(toWrite, new ClientMessage.LoadRequest());
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
           }
         });
       }

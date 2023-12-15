@@ -25,6 +25,7 @@ import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.AuthResponse;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -289,6 +290,34 @@ public class LocalRegionClient {
     Connection connection = new Connection(base, machineToAsk, ip, origin, agent, authority, space, key, viewerState, assetKey, 2500, events);
     connection.open();
     return connection;
+  }
+
+  public void drain(String machine, Callback<Void> callback) {
+    clientFinder.find(machine, new Callback<InstanceClient>() {
+      @Override
+      public void success(InstanceClient client) {
+        client.drain(callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public void getCurrentLoad(String machine, Callback<CurrentLoad> callback) {
+    clientFinder.find(machine, new Callback<InstanceClient>() {
+      @Override
+      public void success(InstanceClient client) {
+        client.getCurrentLoad(callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   public void shutdown() {

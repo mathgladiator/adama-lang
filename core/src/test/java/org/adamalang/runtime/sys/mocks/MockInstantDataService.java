@@ -27,9 +27,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -178,7 +176,14 @@ public class MockInstantDataService implements DataService {
 
   @Override
   public void shed(Key key) {
+    logByKey.remove(key);
     println("SHED:" + key.space + "/" + key.key);
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    println("INVENTORY");
+    callback.success(new TreeSet<>(logByKey.keySet()));
   }
 
   @Override

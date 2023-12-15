@@ -28,6 +28,8 @@ import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class ManagedDataServiceTests {
@@ -197,6 +199,24 @@ public class ManagedDataServiceTests {
         setup.managed.initialize(KEY1, UPDATE_1, cb_Init);
         cb_Init.assertSuccess();
       }
+
+      {
+        CountDownLatch gotInventory = new CountDownLatch(1);
+        setup.managed.inventory(new Callback<Set<Key>>() {
+          @Override
+          public void success(Set<Key> value) {
+            Assert.assertTrue(value.contains(KEY1));
+            gotInventory.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(gotInventory.await(5000, TimeUnit.MILLISECONDS));
+      }
+
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
         setup.managed.initialize(KEY1, UPDATE_1, cb_Init);

@@ -32,6 +32,16 @@ public class ClientMessage {
   public static class PingRequest {
   }
 
+  @TypeId(24323)
+  @Flow("Server")
+  public static class DrainRequest {
+  }
+
+  @TypeId(24325)
+  @Flow("Server")
+  public static class LoadRequest {
+  }
+
   @TypeId(9001)
   @Flow("Server")
   public static class FindRequest {

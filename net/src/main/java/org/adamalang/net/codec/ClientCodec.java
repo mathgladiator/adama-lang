@@ -48,6 +48,8 @@ import org.adamalang.net.codec.ClientMessage.DeleteRequest;
 import org.adamalang.net.codec.ClientMessage.CreateRequest;
 import org.adamalang.net.codec.ClientMessage.ProbeCommandRequest;
 import org.adamalang.net.codec.ClientMessage.FindRequest;
+import org.adamalang.net.codec.ClientMessage.LoadRequest;
+import org.adamalang.net.codec.ClientMessage.DrainRequest;
 import org.adamalang.net.codec.ClientMessage.PingRequest;
 
 public class ClientCodec {
@@ -104,6 +106,10 @@ public class ClientCodec {
     public abstract void handle(ProbeCommandRequest payload);
 
     public abstract void handle(FindRequest payload);
+
+    public abstract void handle(LoadRequest payload);
+
+    public abstract void handle(DrainRequest payload);
 
     public abstract void handle(PingRequest payload);
 
@@ -197,6 +203,12 @@ public class ClientCodec {
         case 9001:
           handle(readBody_9001(buf, new FindRequest()));
           return;
+        case 24325:
+          handle(readBody_24325(buf, new LoadRequest()));
+          return;
+        case 24323:
+          handle(readBody_24323(buf, new DrainRequest()));
+          return;
         case 24321:
           handle(readBody_24321(buf, new PingRequest()));
           return;
@@ -231,6 +243,8 @@ public class ClientCodec {
     public void handle(CreateRequest payload);
     public void handle(ProbeCommandRequest payload);
     public void handle(FindRequest payload);
+    public void handle(LoadRequest payload);
+    public void handle(DrainRequest payload);
     public void handle(PingRequest payload);
   }
 
@@ -313,6 +327,12 @@ public class ClientCodec {
         return;
       case 9001:
         handler.handle(readBody_9001(buf, new FindRequest()));
+        return;
+      case 24325:
+        handler.handle(readBody_24325(buf, new LoadRequest()));
+        return;
+      case 24323:
+        handler.handle(readBody_24323(buf, new DrainRequest()));
         return;
       case 24321:
         handler.handle(readBody_24321(buf, new PingRequest()));
@@ -818,6 +838,32 @@ public class ClientCodec {
     return o;
   }
 
+  public static LoadRequest read_LoadRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 24325:
+        return readBody_24325(buf, new LoadRequest());
+    }
+    return null;
+  }
+
+
+  private static LoadRequest readBody_24325(ByteBuf buf, LoadRequest o) {
+    return o;
+  }
+
+  public static DrainRequest read_DrainRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 24323:
+        return readBody_24323(buf, new DrainRequest());
+    }
+    return null;
+  }
+
+
+  private static DrainRequest readBody_24323(ByteBuf buf, DrainRequest o) {
+    return o;
+  }
+
   public static PingRequest read_PingRequest(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 24321:
@@ -1156,6 +1202,22 @@ public class ClientCodec {
     buf.writeIntLE(9001);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
+  }
+
+  public static void write(ByteBuf buf, LoadRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(24325);
+  }
+
+  public static void write(ByteBuf buf, DrainRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(24323);
   }
 
   public static void write(ByteBuf buf, PingRequest o) {

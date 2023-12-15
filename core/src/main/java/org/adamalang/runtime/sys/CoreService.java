@@ -31,6 +31,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.remote.RemoteResult;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -103,6 +104,99 @@ public class CoreService implements Deliverer, Queryable {
     for (int k = 0; k < bases.length; k++) {
       bases[k].shed(condition);
     }
+  }
+
+  public class DrainStateMachine extends NamedRunnable {
+    private final TreeSet<Key> inventory;
+    private final Callback<Void> callback;
+    private int at;
+
+    public DrainStateMachine(Set<Key> inventory, Callback<Void> callback) {
+      super("drain-state-machine");
+      this.inventory = new TreeSet<>(inventory);
+      this.callback = callback;
+      this.at = 0;
+    }
+
+    @Override
+    public void execute() throws Exception {
+      inventory.removeAll(bases[at].map.keySet());
+      bases[at].shedFromWithinExecutor((key) -> true);
+      bases[at].drain();
+      this.at++;
+      next();
+    }
+
+    public void next() {
+      if (at >= bases.length) {
+        for (Key key : inventory) {
+          // force everything in the data service to shed
+          dataService.shed(key);
+        }
+        callback.success(null);
+      } else {
+        bases[at].executor.execute(this);
+      }
+    }
+  }
+
+  public void drainService(Callback<Void> callback) {
+    dataService.inventory(new Callback<Set<Key>>() {
+      @Override
+      public void success(Set<Key> keys) {
+        new DrainStateMachine(keys, callback).next();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public class LoadGatherStateMachine extends NamedRunnable {
+    private final int documents;
+    private final Callback<CurrentLoad> callback;
+    private int connections;
+    private int at;
+
+    public LoadGatherStateMachine(int documents, Callback<CurrentLoad> callback) {
+      super("load-gather-state-machine");
+      this.documents = documents;
+      this.callback = callback;
+      this.at = 0;
+    }
+
+    @Override
+    public void execute() throws Exception {
+      for (Map.Entry<Key, DurableLivingDocument> documentEntry : bases[at].map.entrySet()) {
+        connections += documentEntry.getValue().getConnectionsCount();
+      }
+      this.at++;
+      next();
+    }
+
+    public void next() {
+      if (at >= bases.length) {
+        callback.success(new CurrentLoad(documents, connections));
+      } else {
+        bases[at].executor.execute(this);
+      }
+    }
+  }
+
+  public void getLoad(Callback<CurrentLoad> callback) {
+    dataService.inventory(new Callback<Set<Key>>() {
+      @Override
+      public void success(Set<Key> keys) {
+        new LoadGatherStateMachine(keys.size(), callback).next();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   public void shutdown() throws InterruptedException {
@@ -194,7 +288,11 @@ public class CoreService implements Deliverer, Queryable {
           callback.success(documentFetch);
           return;
         }
-
+        // we are draining, so don't event start with it
+        if (base.isDrained()) {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_DRAINING_LOAD));
+          return;
+        }
         if (enqueueForLaterWhileInExecutorReturnAbort(base, key, () -> load(key, callback))) {
           return;
         }
@@ -225,16 +323,22 @@ public class CoreService implements Deliverer, Queryable {
                     if (priorDocumentFound != null) {
                       metrics.document_collision.run();
                       CoreService.LOGGER.error("found-prior-value, using it: {}", key.key);
+                    } else {
+                      metrics.inflight_documents.up();
                     }
                     DurableLivingDocument document = priorDocumentFound == null ? documentToAttemptPut : priorDocumentFound;
-                    metrics.inflight_documents.up();
-                    callback.success(document);
-                    base.executor.schedule(new NamedRunnable("post-load-reconcile") {
-                      @Override
-                      public void execute() throws Exception {
-                        document.afterLoad();
-                      }
-                    }, base.getMillisecondsAfterLoadForReconciliation());
+                    if (base.isDrained()) {
+                      callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_DRAINING_LOAD));
+                      document.shedWhileInExecutor();
+                    } else {
+                      callback.success(document);
+                      base.executor.schedule(new NamedRunnable("post-load-reconcile") {
+                        @Override
+                        public void execute() throws Exception {
+                          document.afterLoad();
+                        }
+                      }, base.getMillisecondsAfterLoadForReconciliation());
+                    }
                     drain(base, key);
                   }
                 });
@@ -335,11 +439,21 @@ public class CoreService implements Deliverer, Queryable {
           callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
           return;
         }
+        // we are draining, so don't event start with it
+        if (base.isDrained()) {
+          callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_DRAINING_LOAD));
+          return;
+        }
         // let's make sure we block any additional creation/load attempts
         if (enqueueForLaterWhileInExecutorReturnAbort(base, key, () -> createInternal(context, key, arg, entropy, callback))) {
           return;
         }
-        Runnable afterExecuted = () -> drain(base, key);
+        Runnable afterExecuted = () -> {
+          if (base.isDrained()) { // the document was created while a drain operation was initiatied, so shed the document here
+            base.service.shed(key);
+          }
+          drain(base, key);
+        };
 
         // estimate the impact
         base.getOrCreateInventory(key.space).grow();

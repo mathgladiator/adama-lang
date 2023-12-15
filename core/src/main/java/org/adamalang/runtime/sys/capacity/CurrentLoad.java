@@ -15,9 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.capacity;
 
-public class Platform {
-  public static final String VERSION = "20231215153054";
-  public static final String JS_VERSION = "3b85b99d500d7affddbdeb6fb4efc5c6";
+/** represents the current load (or state that is important) within the service */
+public class CurrentLoad {
+  public final int documents;
+  public final int connections;
+
+  public CurrentLoad(int documents, int connections) {
+    this.documents = documents;
+    this.connections = connections;
+  }
 }

@@ -37,7 +37,10 @@ import org.adamalang.mysql.model.Spaces;
 import org.adamalang.mysql.model.Users;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.LocalRegionClient;
+import org.adamalang.runtime.data.DocumentLocation;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.system.distributed.Backend;
 import org.adamalang.system.distributed.Frontend;
@@ -48,6 +51,7 @@ import org.adamalang.web.client.socket.MultiWebClientRetryPool;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolConfig;
 import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.adamalang.web.service.WebConfig;
+import org.checkerframework.checker.units.qual.K;
 import org.junit.Assert;
 
 import java.io.File;
@@ -194,6 +198,43 @@ public class TestEnvironment {
       System.out.println("----------------------------------------------");
       System.out.println("GLOBAL ONLINE :http://127.0.0.1:" + globalWebPort);
       System.out.println("----------------------------------------------");
+
+
+      String[] waitForStability = new String[] {"space", "key", "127.0.0.1:25008", "space-1", "key", "127.0.0.1:25004", "space-yolo-again", "key", "127.0.0.1:25012"};
+      for (int k = 0; k + 2 < waitForStability.length; k += 3) {
+        int attempts = 12;
+        boolean done = false;
+        String value = null;
+        while (attempts > 0 && !done) {
+          attempts--;
+          AtomicReference<String> found = new AtomicReference<>(null);
+          CountDownLatch latch = new CountDownLatch(1);
+          globalFrontend.local.finder.find(new Key(waitForStability[k], waitForStability[k + 1]), new Callback<DocumentLocation>() {
+            @Override
+            public void success(DocumentLocation value) {
+              found.set(value.machine);
+              latch.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              latch.countDown();
+            }
+          });
+          Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+          if (found.get() != null) {
+            done = waitForStability[k+2].equals(found.get());
+            if (!done) {
+              System.err.println("not stable: expecting:" + waitForStability[k+2] + ", got:" + found.get());
+              Thread.sleep(250);
+            }
+          }
+          value = found.get();
+        }
+        Assert.assertEquals(waitForStability[k+2], value);
+        Assert.assertTrue(done);
+      }
+
 
       List<String> hosts = new ArrayList<>();
       while (hosts.size() != 3) {
@@ -377,6 +418,33 @@ public class TestEnvironment {
     throw new Exception("failed after many ms to acquire capacity from tables");
   }
 
+  public void drain(String target, Callback<Void> callback) {
+    globalFrontend.local.drain(target, callback);
+  }
+
+  public CurrentLoad getCurrentLoad(String target) throws Exception {
+    AtomicReference<CurrentLoad> load = new AtomicReference<>(null);
+    CountDownLatch gotIt = new CountDownLatch(1);
+    globalFrontend.local.getCurrentLoad(target, new Callback<CurrentLoad>() {
+      @Override
+      public void success(CurrentLoad value) {
+        load.set(value);
+        gotIt.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        gotIt.countDown();
+      }
+    });
+    Assert.assertTrue(gotIt.await(5000, TimeUnit.MILLISECONDS));
+    if (load.get() != null) {
+      return load.get();
+    }
+    Assert.fail("failed to get load");
+    return null;
+  }
+
   public String getIdentity(String email) throws Exception {
     long started = System.currentTimeMillis();
     try {
@@ -423,6 +491,7 @@ public class TestEnvironment {
 
           @Override
           public void failure(ErrorCodeException ex) {
+            System.err.println("FAILED:" + ex.code);
             latch.countDown();
           }
         });

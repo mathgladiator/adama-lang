@@ -48,6 +48,7 @@ public class DocumentThreadBase {
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
   private int millisecondsInactivityBeforeCleanup;
+  private boolean drained;
 
   public DocumentThreadBase(ServiceShield shield, MetricsReporter metricsReporter, DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.shield = shield;
@@ -65,6 +66,15 @@ public class DocumentThreadBase {
     this.millisecondsToPerformInventory = 30000;
     this.millisecondsToPerformInventoryJitter = 15000;
     this.millisecondsInactivityBeforeCleanup = 120000;
+    this.drained = false;
+  }
+
+  public void drain() {
+    this.drained = true;
+  }
+
+  public boolean isDrained() {
+    return drained;
   }
 
   public int getMillisecondsInactivityBeforeCleanup() {
@@ -106,15 +116,23 @@ public class DocumentThreadBase {
     });
   }
 
+  public void shedFromWithinExecutor(Function<Key, Boolean> condition) {
+    ArrayList<DurableLivingDocument> toShed = new ArrayList<>();
+    for (Map.Entry<Key, DurableLivingDocument> entry : map.entrySet()) {
+      if (condition.apply(entry.getKey())) {
+        toShed.add(entry.getValue());
+      }
+    }
+    for (DurableLivingDocument doc : toShed) {
+      doc.shedWhileInExecutor();
+    }
+  }
+
   public void shed(Function<Key, Boolean> condition) {
     executor.execute(new NamedRunnable("shed") {
       @Override
       public void execute() throws Exception {
-        for (Map.Entry<Key, DurableLivingDocument> entry : map.entrySet()) {
-          if (condition.apply(entry.getKey())) {
-            entry.getValue().shedWhileInExecutor();
-          }
-        }
+        shedFromWithinExecutor(condition);
       }
     });
   }

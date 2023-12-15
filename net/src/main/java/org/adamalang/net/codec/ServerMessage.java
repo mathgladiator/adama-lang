@@ -30,6 +30,21 @@ public class ServerMessage {
   public static class PingResponse {
   }
 
+
+  @TypeId(24324)
+  @Flow("Drain")
+  public static class DrainResponse {
+  }
+
+  @TypeId(24326)
+  @Flow("Load")
+  public static class LoadResponse {
+    @FieldOrder(1)
+    public int documents;
+    @FieldOrder(2)
+    public int connections;
+  }
+
   @TypeId(9001)
   @Flow("Finder")
   public static class FindResponse {

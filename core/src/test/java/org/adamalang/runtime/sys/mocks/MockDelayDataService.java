@@ -24,6 +24,7 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -127,6 +128,11 @@ public class MockDelayDataService implements DataService {
   @Override
   public void shed(Key key) {
     enqueue(() -> parent.shed(key));
+  }
+
+  @Override
+  public void inventory(Callback<Set<Key>> callback) {
+    enqueue(() -> parent.inventory(callback));
   }
 
   @Override

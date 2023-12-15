@@ -20,6 +20,8 @@ package org.adamalang.runtime.data;
 import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.DeleteTask;
 
+import java.util.Set;
+
 /** the contract for the data service */
 public interface DataService {
 
@@ -43,6 +45,9 @@ public interface DataService {
 
   /** a command from on-high to shed the key from the machine */
   void shed(Key key);
+
+  /** list all the keys in storage */
+  void inventory(Callback<Set<Key>> callback);
 
   /** close the storage */
   void close(Key key, Callback<Void> callback);
