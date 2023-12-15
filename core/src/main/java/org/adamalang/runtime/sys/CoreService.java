@@ -106,12 +106,13 @@ public class CoreService implements Deliverer, Queryable {
     }
   }
 
-  public class DrainStateMachine extends NamedRunnable {
+  /** this state machine will execute a drain over all the threads one at a time and signal each thread is being drained */
+  private class DrainStateMachine extends NamedRunnable {
     private final TreeSet<Key> inventory;
     private final Callback<Void> callback;
     private int at;
 
-    public DrainStateMachine(Set<Key> inventory, Callback<Void> callback) {
+    private DrainStateMachine(Set<Key> inventory, Callback<Void> callback) {
       super("drain-state-machine");
       this.inventory = new TreeSet<>(inventory);
       this.callback = callback;
@@ -127,7 +128,7 @@ public class CoreService implements Deliverer, Queryable {
       next();
     }
 
-    public void next() {
+    private void next() {
       if (at >= bases.length) {
         for (Key key : inventory) {
           // force everything in the data service to shed
@@ -154,13 +155,14 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
-  public class LoadGatherStateMachine extends NamedRunnable {
+  /** state machine for computing the load of the service in terms of documents and connections */
+  private class LoadGatherStateMachine extends NamedRunnable {
     private final int documents;
     private final Callback<CurrentLoad> callback;
     private int connections;
     private int at;
 
-    public LoadGatherStateMachine(int documents, Callback<CurrentLoad> callback) {
+    private LoadGatherStateMachine(int documents, Callback<CurrentLoad> callback) {
       super("load-gather-state-machine");
       this.documents = documents;
       this.callback = callback;
@@ -176,7 +178,7 @@ public class CoreService implements Deliverer, Queryable {
       next();
     }
 
-    public void next() {
+    private void next() {
       if (at >= bases.length) {
         callback.success(new CurrentLoad(documents, connections));
       } else {
