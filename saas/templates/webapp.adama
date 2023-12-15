@@ -83,17 +83,16 @@ public formula others = iterate _users;
   return {sign:"" + user_id, cors:true};
 }
 
+message AuthInvoke {
+  string email;
+}
 
-@authorize (email, password) {
-  if ((iterate _users where_as x: x.email == email)[0] as user) {
-    if (user.password_hash.passwordCheck(password)) {
-      return "" + user.id;
-    }
-    if (Time.datetime() <= user.temp_password_hash_expires) {
-      if (user.temp_password_hash.passwordCheck(password)) {
-        return "" + user.id;
-      }
-    }
+@authorization (AuthInvoke ai) {
+  if ((iterate _users where_as x: x.email == ai.email)[0] as user) {
+    return {
+      agent: "" + user.id,
+      hash: user.password_hash
+    };
   }
   abort;
 }
