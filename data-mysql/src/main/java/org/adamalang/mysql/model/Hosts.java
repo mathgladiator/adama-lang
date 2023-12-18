@@ -41,6 +41,27 @@ public class Hosts {
     });
   }
 
+  public static void decomissionHost(DataBase dataBase, String region, String machine) throws Exception {
+    dataBase.transactSimple((connection) -> {
+      try {
+        String deleteFromCapacity = "DELETE FROM `" + dataBase.databaseName + "`.`capacity` WHERE `region`=? AND `machine`=?";
+        try (PreparedStatement statement = connection.prepareStatement(deleteFromCapacity)) {
+          statement.setString(1, region);
+          statement.setString(2, machine);
+          statement.execute();
+        }
+      } finally {
+        String deleteFromHosts = "DELETE FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `machine`=?";
+        try (PreparedStatement statement = connection.prepareStatement(deleteFromHosts)) {
+          statement.setString(1, region);
+          statement.setString(2, machine);
+          statement.execute();
+        }
+      }
+      return true;
+    });
+  }
+
   public static List<String> listHosts(DataBase dataBase, String region, String role) throws Exception {
     return dataBase.transactSimple((connection) -> {
       String sql = "SELECT DISTINCT `machine` FROM `" + dataBase.databaseName + "`.`hosts` WHERE `region`=? AND `role`=? ORDER BY `machine`";

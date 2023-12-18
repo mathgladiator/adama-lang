@@ -84,7 +84,13 @@ public class CapacityTests {
         capacities = Capacity.listRegion(dataBase, "space", "region1");
         Assert.assertEquals(0, capacities.size());
 
-
+        Capacity.add(dataBase, "some-space", "new-region", "machine-x");
+        Hosts.initializeHost(dataBase, "new-region", "machine-x", "adama", "public-key");
+        Assert.assertEquals(1, Capacity.listRegion(dataBase, "some-space", "new-region").size());
+        Assert.assertEquals(1, Hosts.listHosts(dataBase, "new-region", "adama").size());
+        Hosts.decomissionHost(dataBase, "new-region", "machine-x");
+        Assert.assertEquals(0, Capacity.listRegion(dataBase, "some-space", "new-region").size());
+        Assert.assertEquals(0, Hosts.listHosts(dataBase, "new-region", "adama").size());
       } finally {
         installer.uninstall();
       }
