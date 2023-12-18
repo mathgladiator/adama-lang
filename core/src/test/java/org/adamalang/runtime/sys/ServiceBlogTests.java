@@ -90,6 +90,7 @@ public class ServiceBlogTests {
 
       MockStreamback streamback = new MockStreamback();
       Runnable got = streamback.latchAt(4);
+      Runnable gotInv = streamback.latchAt(5);
       service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
 
@@ -110,6 +111,10 @@ public class ServiceBlogTests {
       Assert.assertEquals("{\"data\":{\"max_db_seq\":0},\"seq\":4}", streamback.get(1));
       Assert.assertEquals("{\"data\":{\"max_db_seq\":4},\"seq\":5}", streamback.get(2));
       Assert.assertEquals("{\"data\":{\"max_db_seq\":6},\"seq\":6}", streamback.get(3));
+
+      service.invalidateAll();
+      gotInv.run();
+      Assert.assertEquals("{\"seq\":7}", streamback.get(4));
     } finally {
       service.shutdown();
     }

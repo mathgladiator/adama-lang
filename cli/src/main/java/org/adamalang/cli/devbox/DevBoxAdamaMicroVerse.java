@@ -25,6 +25,7 @@ import org.adamalang.cli.implementations.CodeHandlerImpl;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.common.TimeMachine;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
@@ -56,6 +57,7 @@ public class DevBoxAdamaMicroVerse {
   public final String vapidPublicKey;
   public final String vapidPrivateKey;
   public final DevPush devPush;
+  public final TimeMachine timeMachine;
 
   public static class LocalSpaceDefn {
     private final WatchService watchService;
@@ -201,6 +203,7 @@ public class DevBoxAdamaMicroVerse {
     this.factory = factory;
     this.dataService = factory.dataService;
     this.service = factory.service;
+    this.timeMachine = factory.timeMachine;
     this.domainKeyToUse = domainKeyToUse;
     this.spaces = spaces;
     this.watchService = watchService;

@@ -226,6 +226,9 @@ public class DevBoxStart {
           terminal.info("  `diagnostics` - get some useful diagnostics");
           terminal.info("  `flush` - force flush caravan");
           terminal.info("  `query $space $key` - execute an op query against a document");
+          terminal.info("  `timeslip $delta $unit [$timeframe-seconds]`");
+          terminal.info("                   $unit \\in {ms, sec, min, hr, day, week}");
+          terminal.info("      - change by $delta $unit over $timeframe-seconds (default is 5 seconds)");
         }
         if (command.is("viewer-updates")) {
           if (command.argIs(0, "slow")) {
@@ -360,6 +363,64 @@ public class DevBoxStart {
             }
           });
           terminal.info("base-diagnostics|" + base.diagnostics());
+        }
+        if (command.is("time-slip", "timeslip")) {
+          if (verse == null) {
+            terminal.error("time-slip|must have local verse");
+          } else if (command.requireArg(1)) {
+            Integer delta = command.argAtIsInt(0);
+            if (delta != null) {
+              Long deltaMs = null;
+              switch (command.argAt(1)) {
+                case "ms":
+                  deltaMs = (long) delta;
+                  break;
+                case "s":
+                case "sec":
+                case "second":
+                case "seconds":
+                  deltaMs = delta * 1000L;
+                  break;
+                case "m":
+                case "min":
+                case "mins":
+                case "minute":
+                case "minutes":
+                  deltaMs = delta * 1000L * 60L;
+                  break;
+                case "h":
+                case "hr":
+                case "hour":
+                case "hours":
+                  deltaMs = delta * 1000L * 60L * 60L;
+                  break;
+                case "d":
+                case "day":
+                case "days":
+                  deltaMs = delta * 1000L * 60L * 60L * 24L;
+                  break;
+                case "w":
+                case "wk":
+                case "week":
+                case "weeks":
+                  deltaMs = delta * 1000L * 60L * 60L * 24L * 7L;
+                  break;
+              }
+              if (deltaMs != null) {
+                Integer timeframeSeconds = command.argAtIsInt(2);
+                if (timeframeSeconds == null) {
+                  timeframeSeconds = 5;
+                }
+                verse.timeMachine.add(deltaMs, timeframeSeconds);
+              } else {
+                terminal.notice("time-slip delta unit [timeframe-sec]; unit must ms, sec, min, hr, day, week");
+              }
+            } else {
+              terminal.notice("time-slip delta unit [timeframe-sec]; delta must be an integer");
+            }
+          } else {
+            terminal.notice("time-slip delta unit [timeframe-sec]");
+          }
         }
         if (command.is("flush")) {
           verse.dataService.flush(true).await(1000, TimeUnit.MILLISECONDS);

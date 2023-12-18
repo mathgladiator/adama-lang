@@ -58,6 +58,16 @@ public class Command {
     return args[index];
   }
 
+  public Integer argAtIsInt(int index) {
+    try {
+      if (index < args.length) {
+        return Integer.parseInt(args[index]);
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return null;
+  }
+
   public static Command parse(String lnRaw) {
     String ln = lnRaw.trim();
     int firstSpace = ln.indexOf(' ');

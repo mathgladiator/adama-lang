@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
@@ -196,5 +197,16 @@ public class DocumentThreadBase {
   public void setInventoryMillisecondsSchedule(int period, int jitter) {
     this.millisecondsToPerformInventory = period;
     this.millisecondsToPerformInventoryJitter = jitter;
+  }
+
+  public void invalidateAll() {
+    executor.execute(new NamedRunnable("invalidate-all") {
+      @Override
+      public void execute() throws Exception {
+        for (DurableLivingDocument doc : new ArrayList<>(map.values())) {
+          doc.invalidate(Callback.DONT_CARE_INTEGER);
+        }
+      }
+    });
   }
 }

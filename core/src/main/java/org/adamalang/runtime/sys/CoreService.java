@@ -908,6 +908,12 @@ public class CoreService implements Deliverer, Queryable {
     load(key, metrics.document_load_startup.wrap(DONT_CARE_DOCUMENT));
   }
 
+  public void invalidateAll() {
+    for (int k = 0; k < bases.length; k++) {
+      bases[k].invalidateAll();
+    }
+  }
+
   public void directSend(CoreRequestContext context, Key key, String marker, String channel, String message, Callback<Integer> result) {
     loadOrCreate(context, key, new Callback<DurableLivingDocument>() {
       @Override

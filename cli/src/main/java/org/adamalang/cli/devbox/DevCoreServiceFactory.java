@@ -24,6 +24,7 @@ import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.common.Callback;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.TimeMachine;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.data.Key;
@@ -39,6 +40,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DevCoreServiceFactory {
   private static final Logger LOG = LoggerFactory.getLogger(DevCoreServiceFactory.class);
@@ -48,6 +50,7 @@ public class DevCoreServiceFactory {
   public final CaravanDataService dataService;
   public final DeploymentFactoryBase base;
   public final CoreService service;
+  public final TimeMachine timeMachine;
 
   public DevCoreServiceFactory(TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
     this.alive = alive;
@@ -106,13 +109,11 @@ public class DevCoreServiceFactory {
     });
     flusher.start();
     this.base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    AtomicReference<Runnable> sweep = new AtomicReference<>(() -> {});
+    this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run());
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
-    }, new MetricsReporter() {
-      @Override
-      public void emitMetrics(Key key, String metricsPayload) {
-        io.info("metrics:" + metricsPayload);
-      }
-    }, dataService, TimeSource.REAL_TIME, 2);
+    }, (key, metricsPayload) -> io.info("metrics:" + metricsPayload), dataService, timeMachine, 2);
+    sweep.set(() -> service.invalidateAll());
     base.attachDeliverer(service);
   }
 
