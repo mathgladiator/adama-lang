@@ -44,7 +44,6 @@ public class CapacityTests {
         Capacity.add(dataBase, "space", "region2", "machine3");
         Capacity.add(dataBase, "spacex", "region2", "machine4");
 
-
         capacities = Capacity.listAll(dataBase, "space");
         Assert.assertEquals(3, capacities.size());
         Assert.assertEquals("region1", capacities.get(0).region);
