@@ -191,4 +191,9 @@ public class FormatDocumentHandler implements TopLevelDocumentHandler{
   public void add(DefineTemplate dt) {
     dt.format(formatter);
   }
+
+  @Override
+  public void add(DefineCronTask dct) {
+    dct.format(formatter);
+  }
 }

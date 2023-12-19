@@ -156,18 +156,18 @@ public class Parser {
           }
         case "@date":
         {
-          Token year = tokens.pop();
+          Token year = consumeInteger();
           Token slash1 = consumeExpectedSymbol("/");
-          Token month = tokens.pop();
+          Token month = consumeInteger();
           Token slash2 = consumeExpectedSymbol("/");
-          Token day = tokens.pop();
+          Token day = consumeInteger();
           return new DateConstant(intval(year), intval(month), intval(day), token, year, slash1, month, slash2, day);
         }
         case "@time":
         {
-          Token hour = tokens.pop();
+          Token hour = consumeInteger();
           Token colon = consumeExpectedSymbol(":");
-          Token minute = tokens.pop();
+          Token minute = consumeInteger();
           return new TimeConstant(intval(hour), intval(minute), token, hour, colon, minute);
         }
         case "@timespan":
@@ -422,6 +422,19 @@ public class Parser {
     return arrow;
   }
 
+  private Token consumeInteger() throws AdamaLangException {
+    final var token = tokens.pop();
+    if (token == null) {
+      throw new ParseException("Parser was expecting an integer; got end of stream", tokens.getLastTokenIfAvailable());
+    }
+    try {
+      Integer.parseInt(token.text);
+      return token;
+    } catch (NumberFormatException nfe) {
+      throw new ParseException("Parser was expecting an integer; got '" + token.text + "'instead", token);
+    }
+  }
+
   private Token consumeExpectedSymbol(final String... symbols) throws AdamaLangException {
     final var token = tokens.pop();
     if (token != null && token.isSymbolWithTextEq(symbols)) {
@@ -596,6 +609,27 @@ public class Parser {
     }
   }
 
+  public Token[] cron_schedule() throws AdamaLangException {
+    ArrayList<Token> schedule = new ArrayList<>();
+    Token head = id();
+    schedule.add(head);
+    switch (head.text) {
+      case "daily":
+        schedule.add(consumeInteger());
+        schedule.add(consumeExpectedSymbol(":"));
+        schedule.add(consumeInteger());
+        break;
+    }
+    return schedule.toArray(new Token[schedule.size()]);
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_cron(Token cronToken) throws AdamaLangException {
+    Token name = id();
+    Token[] schedule = cron_schedule();
+    DefineCronTask dct = new DefineCronTask(cronToken, name, schedule, block(rootScope.makeCronTask()));
+    return (doc) -> doc.add(dct);
+  }
+
   public Consumer<TopLevelDocumentHandler> execute_import(Token includeToken) throws AdamaLangException {
     ArrayList<Token> resource = new ArrayList<>();
     resource.add(typesafe_id());
@@ -691,7 +725,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block(rootScope.makeStateMachineTransition()));
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load", "@cron"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
     }
@@ -744,6 +778,8 @@ public class Parser {
           return define_static(op);
         case "@web":
           return define_web(op);
+        case "@cron":
+          return define_cron(op);
         case "service":
           return define_service(op);
         case "view": {

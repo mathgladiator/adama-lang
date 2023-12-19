@@ -199,4 +199,8 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   @Override
   public void add(DefineTemplate dt) {
   }
+
+  @Override
+  public void add(DefineCronTask dct) {
+  }
 }

@@ -123,4 +123,8 @@ public class Scope {
   public Scope makeMessageType() {
     return new Scope(this);
   }
+
+  public Scope makeCronTask() {
+    return new Scope(this);
+  }
 }

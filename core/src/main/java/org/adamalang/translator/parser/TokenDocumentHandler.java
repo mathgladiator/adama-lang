@@ -185,4 +185,9 @@ public abstract class TokenDocumentHandler implements Consumer<Token>, TopLevelD
   public void add(DefineTemplate dt) {
     dt.emit(this);
   }
+
+  @Override
+  public void add(DefineCronTask dct) {
+    dct.emit(this);
+  }
 }

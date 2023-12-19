@@ -97,6 +97,7 @@ public class Document implements TopLevelDocumentHandler {
   public final LinkedHashMap<String, DefineAssoc> assocs;
   private short assocIdGen;
   public final LinkedHashMap<String, DefineTemplate> templates;
+  public final LinkedHashMap<String, DefineCronTask> cronTasks;
 
   public Document() {
     autoClassId = 0;
@@ -137,6 +138,7 @@ public class Document implements TopLevelDocumentHandler {
     assocIdGen = 0;
     templates = new LinkedHashMap<>();
     authPipes = new ArrayList<>();
+    cronTasks = new LinkedHashMap<>();
   }
 
   public void setIncludes(Map<String, String> include) {
@@ -445,6 +447,15 @@ public class Document implements TopLevelDocumentHandler {
     types.put(rpc.genMessageTypeName(), nativeMessageType);
     channelToMessageType.put(rpc.name.text, rpc.genMessageTypeName());
     rpc.typing(typeChecker);
+  }
+
+  @Override
+  public void add(DefineCronTask dct) {
+    if (defined.contains(dct.name.text) || root.storage.has(dct.name.text)) {
+      createError(dct, String.format("Cron task has a conflicting name", dct.name.text));
+      return;
+    }
+    defined.add(dct.name.text);
   }
 
   @Override
