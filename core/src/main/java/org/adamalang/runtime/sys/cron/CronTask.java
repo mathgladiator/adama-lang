@@ -15,9 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.cron;
 
-public class Platform {
-  public static final String VERSION = "20231219135130";
-  public static final String JS_VERSION = "3b85b99d500d7affddbdeb6fb4efc5c6";
+/** the results of a cron checking */
+public class CronTask {
+  public final boolean fire;
+  public final long next;
+
+  public CronTask(boolean fire, long next) {
+    this.fire = fire;
+    this.next = next;
+  }
+
+  public long integrate(long opt) {
+    return Math.min(opt, next);
+  }
 }

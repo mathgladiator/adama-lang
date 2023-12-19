@@ -19,12 +19,43 @@ package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineCronTask;
+
+import java.util.Map;
 
 public class CodeGenCron {
-  public static void writeCronExecution(final StringBuilderWithTabs sb, Environment raw) {
+  public static void writeCronExecution(final StringBuilderWithTabs sb, Environment env) {
     sb.append("@Override").writeNewline();
-    //if (raw.document.cronTasks.size() == 0) {
+    int countdown = env.document.cronTasks.size();
+    if (countdown == 0) {
       sb.append("public void __make_cron_progress() {}").writeNewline();
-    //}
+      return;
+    }
+    sb.append("public void __make_cron_progress() {").tabUp().writeNewline();
+    sb.append("CronTask __current;").writeNewline();
+    sb.append("__optimisticNextCronCheck = Long.MAX_VALUE;").writeNewline();
+    sb.append("long __now = __time.get();").writeNewline();
+    sb.append("ZoneId __fromTZ = ZoneId.systemDefault();");
+    sb.append("ZoneId __toTZ = __zoneId();");
+    for (Map.Entry<String, DefineCronTask> entry : env.document.cronTasks.entrySet()) {
+      DefineCronTask dct = entry.getValue();
+      switch (dct.schedule[0].text) {
+        case "daily":
+          sb.append("__current = CronChecker.daily(__").append(dct.name.text).append(", __now, ").append(dct.schedule[1].text).append(", ").append(dct.schedule[3].text).append(", __fromTZ, __toTZ);").writeNewline();
+          break;
+        default:
+           throw new RuntimeException("unknown schedule type:" + dct.schedule[0].text);
+      }
+      sb.append("if (__current.fire) ");
+      dct.code.writeJava(sb, env);
+      sb.writeNewline();
+      sb.append("__optimisticNextCronCheck = __current.integrate(__optimisticNextCronCheck);");
+      countdown--;
+      if (countdown == 0) {
+        sb.tabDown();
+      }
+      sb.writeNewline();
+    }
+    sb.append("}").writeNewline();
   }
 }

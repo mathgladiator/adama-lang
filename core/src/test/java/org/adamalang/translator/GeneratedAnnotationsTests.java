@@ -91,6 +91,7 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -806,6 +807,7 @@ public class GeneratedAnnotationsTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");

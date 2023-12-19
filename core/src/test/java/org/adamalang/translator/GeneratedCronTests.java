@@ -130,6 +130,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -591,7 +592,14 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  public void __make_cron_progress() {");
+    gold.append("\n    CronTask __current;");
+    gold.append("\n    __optimisticNextCronCheck = Long.MAX_VALUE;");
+    gold.append("\n    long __now = __time.get();");
+    gold.append("\n    ZoneId __fromTZ = ZoneId.systemDefault();ZoneId __toTZ = __zoneId();__current = CronChecker.daily(__foo, __now, 10, 00, __fromTZ, __toTZ);");
+    gold.append("\n    if (__current.fire) {}");
+    gold.append("\n    __optimisticNextCronCheck = __current.integrate(__optimisticNextCronCheck);");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");

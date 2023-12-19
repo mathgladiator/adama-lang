@@ -170,14 +170,18 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** exposed: get the document's timestamp as a datetime */
   protected NtDateTime __datetimeNow() {
-    if (__timezoneCachedZoneId == null) {
-      __timezoneCachedZoneId = ZoneId.of(__timeZone());
-    }
     // create a system instance
     Instant instant = Instant.ofEpochMilli(__time.get().longValue());
     ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
     // convert to the document
-    return new NtDateTime(pdt.withZoneSameInstant(__timezoneCachedZoneId));
+    return new NtDateTime(pdt.withZoneSameInstant(__zoneId()));
+  }
+
+  protected ZoneId __zoneId() {
+    if (__timezoneCachedZoneId == null) {
+      __timezoneCachedZoneId = ZoneId.of(__timeZone());
+    }
+    return __timezoneCachedZoneId;
   }
 
   /** exposed: get the document's time zone */
