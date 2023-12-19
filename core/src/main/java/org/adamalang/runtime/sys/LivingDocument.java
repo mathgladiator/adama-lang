@@ -105,6 +105,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
+  protected  long __optimisticNextCronCheck;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -158,6 +159,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __replication = new ReplicationEngine(this);
     __perf = new PerfTracker(this);
     __graph = new Graph();
+    __optimisticNextCronCheck = 0L;
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -942,6 +944,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   public abstract AuthResponse __authpipe(CoreRequestContext __context, String __messsage);
+
+  public abstract void __make_cron_progress();
 
   @Deprecated
   public abstract void __password(CoreRequestContext context, String password);
