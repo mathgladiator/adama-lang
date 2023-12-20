@@ -458,7 +458,7 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     defined.add(dct.name.text);
-    FieldDefinition lastTimeBreach = new FieldDefinition(new PrivatePolicy(dct.cron), dct.cron, new TyReactiveLong(dct.cron), dct.name.cloneWithNewText("__" + dct.name.text), null, null, null, null, null, null);
+    FieldDefinition lastTimeBreach = new FieldDefinition(new PrivatePolicy(dct.cron), dct.cron, new TyReactiveLong(false, dct.cron), dct.name.cloneWithNewText("__" + dct.name.text), null, null, null, null, null, null);
     root.storage.add(lastTimeBreach);
     cronTasks.put(dct.name.text, dct);
   }

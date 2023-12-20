@@ -19,9 +19,9 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -45,14 +45,16 @@ public class TyReactiveTable extends TyType implements //
     DetailNeedsSettle, //
     IsKillable, //
     DetailTypeHasMethods {
+  public final boolean readonly;
   public final String recordName;
   public final TokenizedItem<Token> recordNameToken;
   public final Token tableToken;
   private boolean hasPolicy;
 
 
-  public TyReactiveTable(final Token tableToken, final TokenizedItem<Token> recordNameToken) {
-    super(TypeBehavior.ReadWriteWithSetGet);
+  public TyReactiveTable(boolean readonly, final Token tableToken, final TokenizedItem<Token> recordNameToken) {
+    super(readonly ? TypeBehavior.ReadOnlyWithGet : TypeBehavior.ReadWriteWithSetGet);
+    this.readonly = readonly;
     this.tableToken = tableToken;
     this.recordNameToken = recordNameToken;
     recordName = recordNameToken.item.text;
@@ -66,15 +68,15 @@ public class TyReactiveTable extends TyType implements //
   }
 
   @Override
+  public void format(Formatter formatter) {
+  }
+
+  @Override
   public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(tableToken);
     recordNameToken.emitBefore(yielder);
     yielder.accept(recordNameToken.item);
     recordNameToken.emitAfter(yielder);
-  }
-
-  @Override
-  public void format(Formatter formatter) {
   }
 
   @Override
@@ -94,12 +96,12 @@ public class TyReactiveTable extends TyType implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveTable(tableToken, recordNameToken).withPosition(position);
+    return new TyReactiveTable(readonly, tableToken, recordNameToken).withPosition(position);
   }
 
   @Override
   public void typing(final Environment environment) {
-    environment.rules.Resolve(new TyReactiveRef(recordNameToken.item), false);
+    environment.rules.Resolve(new TyReactiveRef(readonly, recordNameToken.item), false);
     if (hasPolicy) {
       environment.document.createError(this, "Tables are not allowed to have a privacy policy as they default to private.");
     }
@@ -118,7 +120,7 @@ public class TyReactiveTable extends TyType implements //
 
   @Override
   public TyType getEmbeddedType(final Environment environment) {
-    TyType subtype = new TyReactiveRef(recordNameToken.item);
+    TyType subtype = new TyReactiveRef(readonly, recordNameToken.item);
     while (subtype instanceof DetailRequiresResolveCall) {
       subtype = ((DetailRequiresResolveCall) subtype).resolve(environment);
     }

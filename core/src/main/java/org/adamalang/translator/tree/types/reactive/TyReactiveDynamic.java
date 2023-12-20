@@ -32,8 +32,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
 
 public class TyReactiveDynamic extends TySimpleReactive implements //
     IsOrderable {
-  public TyReactiveDynamic(final Token token) {
-    super(token, "RxDynamic");
+  public TyReactiveDynamic(final boolean readonly, final Token token) {
+    super(readonly, token, "RxDynamic");
   }
 
   @Override
@@ -43,7 +43,7 @@ public class TyReactiveDynamic extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveDynamic(token).withPosition(position);
+    return new TyReactiveDynamic(readonly, token).withPosition(position);
   }
 
   @Override

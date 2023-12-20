@@ -33,8 +33,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
 /** Type for reactive time within a day at the precision of a minute */
 public class TyReactiveTime extends TySimpleReactive implements //
     IsOrderable {
-  public TyReactiveTime(final Token token) {
-    super(token, "RxTime");
+  public TyReactiveTime(final boolean readonly, final Token token) {
+    super(readonly, token, "RxTime");
   }
 
   @Override
@@ -44,7 +44,7 @@ public class TyReactiveTime extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveTime(token).withPosition(position);
+    return new TyReactiveTime(readonly, token).withPosition(position);
   }
 
   @Override

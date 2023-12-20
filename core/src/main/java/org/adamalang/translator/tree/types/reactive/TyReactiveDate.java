@@ -33,8 +33,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
 /** Type for a reactive single date in the typical gregorian calendar */
 public class TyReactiveDate extends TySimpleReactive implements //
     IsOrderable {
-  public TyReactiveDate(final Token token) {
-    super(token, "RxDate");
+  public TyReactiveDate(final boolean readonly, final Token token) {
+    super(readonly, token, "RxDate");
   }
 
   @Override
@@ -44,7 +44,7 @@ public class TyReactiveDate extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveDate(token).withPosition(position);
+    return new TyReactiveDate(readonly, token).withPosition(position);
   }
 
   @Override

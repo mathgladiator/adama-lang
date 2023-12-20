@@ -19,9 +19,9 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -49,6 +49,7 @@ public class TyReactiveMap extends TyType implements //
     IsKillable, //
     DetailContainsAnEmbeddedType, //
     DetailHasDeltaType {
+  public final boolean readonly;
   public final Token closeThing;
   public final Token commaToken;
   public final TyType domainType;
@@ -56,8 +57,9 @@ public class TyReactiveMap extends TyType implements //
   public final Token openThing;
   public final TyType rangeType;
 
-  public TyReactiveMap(final Token mapToken, final Token openThing, final TyType domainType, final Token commaToken, final TyType rangeType, final Token closeThing) {
-    super(TypeBehavior.ReadWriteWithSetGet);
+  public TyReactiveMap(boolean readonly, final Token mapToken, final Token openThing, final TyType domainType, final Token commaToken, final TyType rangeType, final Token closeThing) {
+    super(readonly ? TypeBehavior.ReadOnlyWithGet : TypeBehavior.ReadWriteWithSetGet);
+    this.readonly = readonly;
     this.mapToken = mapToken;
     this.openThing = openThing;
     this.domainType = domainType;
@@ -69,6 +71,12 @@ public class TyReactiveMap extends TyType implements //
   }
 
   @Override
+  public void format(Formatter formatter) {
+    domainType.format(formatter);
+    rangeType.format(formatter);
+  }
+
+  @Override
   public void emitInternal(Consumer<Token> yielder) {
     yielder.accept(mapToken);
     yielder.accept(openThing);
@@ -76,12 +84,6 @@ public class TyReactiveMap extends TyType implements //
     yielder.accept(commaToken);
     rangeType.emit(yielder);
     yielder.accept(closeThing);
-  }
-
-  @Override
-  public void format(Formatter formatter) {
-    domainType.format(formatter);
-    rangeType.format(formatter);
   }
 
   @Override
@@ -101,7 +103,7 @@ public class TyReactiveMap extends TyType implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
+    return new TyReactiveMap(readonly, mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
   }
 
   @Override

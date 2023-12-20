@@ -234,7 +234,7 @@ public class Environment {
     }
 
     if ("__time".equals(name)) {
-      return lookup_return(name, new TyReactiveLong(null));
+      return lookup_return(name, new TyReactiveLong(true, null));
     }
 
     if ("__today".equals(name)) {

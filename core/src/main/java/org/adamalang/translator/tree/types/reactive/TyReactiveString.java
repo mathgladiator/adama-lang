@@ -34,8 +34,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
 public class TyReactiveString extends TySimpleReactive implements //
     IsOrderable //
 {
-  public TyReactiveString(final Token token) {
-    super(token, "RxString");
+  public TyReactiveString(final boolean readonly, final Token token) {
+    super(readonly, token, "RxString");
   }
 
   @Override
@@ -45,7 +45,7 @@ public class TyReactiveString extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveString(token).withPosition(position);
+    return new TyReactiveString(readonly, token).withPosition(position);
   }
 
   @Override

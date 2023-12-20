@@ -19,9 +19,9 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -42,15 +42,22 @@ public class TyReactiveMaybe extends TyType implements //
     IsKillable, //
     AssignmentViaSetter //
 {
+  public final boolean readonly;
   public final Token maybeToken;
   public final TokenizedItem<TyType> tokenizedElementType;
 
-  public TyReactiveMaybe(final Token maybeToken, final TokenizedItem<TyType> elementType) {
-    super(TypeBehavior.ReadWriteWithSetGet);
+  public TyReactiveMaybe(boolean readonly, final Token maybeToken, final TokenizedItem<TyType> elementType) {
+    super(readonly ? TypeBehavior.ReadOnlyWithGet : TypeBehavior.ReadWriteWithSetGet);
+    this.readonly = readonly;
     this.maybeToken = maybeToken;
     tokenizedElementType = elementType;
     ingest(maybeToken);
     ingest(elementType.item);
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    tokenizedElementType.item.format(formatter);
   }
 
   @Override
@@ -59,11 +66,6 @@ public class TyReactiveMaybe extends TyType implements //
     tokenizedElementType.emitBefore(yielder);
     tokenizedElementType.item.emit(yielder);
     tokenizedElementType.emitAfter(yielder);
-  }
-
-  @Override
-  public void format(Formatter formatter) {
-    tokenizedElementType.item.format(formatter);
   }
 
   @Override
@@ -96,7 +98,7 @@ public class TyReactiveMaybe extends TyType implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveMaybe(maybeToken, tokenizedElementType).withPosition(position);
+    return new TyReactiveMaybe(readonly, maybeToken, tokenizedElementType).withPosition(position);
   }
 
   @Override

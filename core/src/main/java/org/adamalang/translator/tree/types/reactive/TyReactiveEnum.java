@@ -40,8 +40,8 @@ public class TyReactiveEnum extends TySimpleReactive implements //
   public final String name;
   public final EnumStorage storage;
 
-  public TyReactiveEnum(final Token nameToken, final EnumStorage storage) {
-    super(nameToken, "RxEnumInt32");
+  public TyReactiveEnum(boolean readonly, final Token nameToken, final EnumStorage storage) {
+    super(readonly, nameToken, "RxEnumInt32");
     name = nameToken.text;
     this.storage = storage;
   }
@@ -53,12 +53,7 @@ public class TyReactiveEnum extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveEnum(token, storage).withPosition(position);
-  }
-
-  @Override
-  public void format(Formatter formatter) {
-    super.format(formatter);
+    return new TyReactiveEnum(readonly, token, storage).withPosition(position);
   }
 
   @Override
@@ -74,6 +69,11 @@ public class TyReactiveEnum extends TySimpleReactive implements //
     writer.writeObjectFieldIntro("options");
     storage.writeTypeReflectionJson(writer);
     writer.endObject();
+  }
+
+  @Override
+  public void format(Formatter formatter) {
+    super.format(formatter);
   }
 
   @Override

@@ -35,8 +35,8 @@ import java.time.ZonedDateTime;
 /** Type for a reactive date and a time with the time zone in the typical gregorian calendar */
 public class TyReactiveDateTime extends TySimpleReactive implements //
     IsOrderable {
-  public TyReactiveDateTime(final Token token) {
-    super(token, "RxDateTime");
+  public TyReactiveDateTime(final boolean readonly, final Token token) {
+    super(readonly, token, "RxDateTime");
   }
 
   @Override
@@ -46,7 +46,7 @@ public class TyReactiveDateTime extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveDateTime(token).withPosition(position);
+    return new TyReactiveDateTime(readonly, token).withPosition(position);
   }
 
   @Override

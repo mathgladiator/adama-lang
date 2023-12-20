@@ -174,7 +174,7 @@ public class TyNativeEnum extends TySimpleNative implements //
 
   @Override
   public TyType typeAfterReactiveRefResolve(final Environment environment) {
-    return new TyReactiveEnum(nameToken, storage).withPosition(this);
+    return new TyReactiveEnum(false, nameToken, storage).withPosition(this);
   }
 
   @Override

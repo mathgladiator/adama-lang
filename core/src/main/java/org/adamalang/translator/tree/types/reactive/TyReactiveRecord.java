@@ -23,20 +23,20 @@ import org.adamalang.translator.codegen.CodeGenDynCompare;
 import org.adamalang.translator.codegen.CodeGenIndexing;
 import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
-import org.adamalang.translator.tree.types.structures.*;
-import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
+import org.adamalang.translator.tree.types.structures.*;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
 import org.adamalang.translator.tree.types.traits.IsKillable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -44,7 +44,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class TyReactiveRecord extends TyType implements //
@@ -198,15 +201,15 @@ public class TyReactiveRecord extends TyType implements //
   }
 
   @Override
+  public void format(Formatter formatter) {
+    storage.format(formatter);
+  }
+
+  @Override
   public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(recordToken);
     yielder.accept(nameToken);
     storage.emit(yielder);
-  }
-
-  @Override
-  public void format(Formatter formatter) {
-    storage.format(formatter);
   }
 
   @Override
@@ -231,15 +234,6 @@ public class TyReactiveRecord extends TyType implements //
 
   @Override
   public void typing(final Environment environment) {
-  }
-
-  @Override
-  public void typing(TypeCheckerRoot checker) {
-    final var fdId = storage.fields.get("id");
-    if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
-      checker.issueError(this, "id must be type int");
-    }
-    storage.typing(name, checker);
   }
 
   @Override
@@ -289,6 +283,15 @@ public class TyReactiveRecord extends TyType implements //
   @Override
   public StructureStorage storage() {
     return storage;
+  }
+
+  @Override
+  public void typing(TypeCheckerRoot checker) {
+    final var fdId = storage.fields.get("id");
+    if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
+      checker.issueError(this, "id must be type int");
+    }
+    storage.typing(name, checker);
   }
 
   public void transferIntoCyclicGraph(Map<String, Set<String>> graph) {

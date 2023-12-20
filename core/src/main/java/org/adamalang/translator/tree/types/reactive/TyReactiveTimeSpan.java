@@ -33,8 +33,8 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
 /** type for a reactive time span measured in seconds */
 public class TyReactiveTimeSpan extends TySimpleReactive implements //
     IsOrderable {
-  public TyReactiveTimeSpan(final Token token) {
-    super(token, "RxTimeSpan");
+  public TyReactiveTimeSpan(final boolean readonly, final Token token) {
+    super(readonly, token, "RxTimeSpan");
   }
 
   @Override
@@ -44,7 +44,7 @@ public class TyReactiveTimeSpan extends TySimpleReactive implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveTimeSpan(token).withPosition(position);
+    return new TyReactiveTimeSpan(readonly, token).withPosition(position);
   }
 
   @Override
