@@ -84,7 +84,7 @@ public class CapacitorJSShell {
       sb.append("  <style>\n").append(internStyle).append("\n </style>\n");
     }
     sb.append(" </head>\n");
-    sb.append("</body>\n<script>\n");
+    sb.append("<body></body>\n<script>\n");
     sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
     sb.append("  RxHTML.init();\n");
     sb.append("  LinkCapacitor(RxHTML, \"").append(workerIdentity).append("\");\n");
