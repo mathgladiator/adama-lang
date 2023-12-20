@@ -1,0 +1,8 @@
+
+record R { string name; }
+
+readonly table<R> _tbl;
+
+@construct {
+  _tbl <- {name:"Joker!"};
+}

@@ -47,9 +47,18 @@ public class LocalTypeAssignmentResult {
     return ltype == null || rtype == null;
   }
 
+  private void common(String op) {
+    ltype = environment.rules.Resolve(ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null), false);
+    rtype = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), false);
+    if (ltype != null && rtype != null) {
+      if (ltype.behavior.isReadOnly) {
+        environment.document.createError(DocumentPosition.sum(ltype, rtype), String.format("'%s' is unable to %s '%s' due to readonly left reference.", ltype.getAdamaType(), op, rtype.getAdamaType()));
+      }
+    }
+  }
+
   public void ingest() {
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    common("ingest");
     if (!environment.rules.CanAIngestB(ltype, rtype, false)) {
       environment.document.createError(ref, "Unable to  the right hand side");
     }
@@ -57,15 +66,7 @@ public class LocalTypeAssignmentResult {
   }
 
   public void set() {
-    ltype = environment.rules.Resolve(ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null), false);
-    rtype = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), false);
-
-    if (ltype != null && rtype != null) {
-      if (ltype.behavior.isReadOnly) {
-        environment.document.createError(DocumentPosition.sum(ltype, rtype), String.format("'%s' is unable to accept an set of '%s'.", ltype.getAdamaType(), rtype.getAdamaType()));
-      }
-    }
-
+    common("set");
     if (ltype instanceof TyReactiveComplex) {
       if (environment.rules.IsNumeric(rtype, true) || rtype instanceof TyNativeLong) {
         assignResult = CanAssignResult.YesWithSetter;
