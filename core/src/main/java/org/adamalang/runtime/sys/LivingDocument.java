@@ -1806,7 +1806,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     boolean againAgain = false;
     Integer sleepTime = null;
     if (!again) {
-      if (__optimisticNextCronCheck == 0L || __optimisticNextCronCheck < __time.get()) {
+      if (__optimisticNextCronCheck <= __time.get()) {
         // We set the cron check to MAX VALUE to find the minimum time of the next event
         __optimisticNextCronCheck = Long.MAX_VALUE;
         __make_cron_progress();
