@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.async;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 
@@ -32,5 +33,16 @@ public class EnqueuedTask {
     this.who = who;
     this.channel = channel;
     this.message = message;
+  }
+
+  public void writeTo(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("who");
+    writer.writeNtPrincipal(who);
+    writer.writeObjectFieldIntro("channel");
+    writer.writeString(channel);
+    writer.writeObjectFieldIntro("message");
+    writer.writeNtDynamic(message);
+    writer.endObject();
   }
 }

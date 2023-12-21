@@ -70,31 +70,28 @@ public class EnqueuedTaskManager {
           reader.skipValue();
         }
       }
+    } else {
+      reader.skipValue();
     }
   }
 
   public void commit(JsonStreamWriter forward, JsonStreamWriter reverse) {
-    forward.writeObjectFieldIntro("__enqueued");
-    forward.beginObject();
-    reverse.writeObjectFieldIntro("__enqueued");
-    reverse.beginObject();
-    for (EnqueuedTask task : pending) {
-      forward.writeObjectFieldIntro(task.messageId);
+    if (pending.size() > 0) {
+      forward.writeObjectFieldIntro("__enqueued");
       forward.beginObject();
-      forward.writeObjectFieldIntro("who");
-      forward.writeNtPrincipal(task.who);
-      forward.writeObjectFieldIntro("channel");
-      forward.writeString(task.channel);
-      forward.writeObjectFieldIntro("message");
-      forward.writeNtDynamic(task.message);
+      reverse.writeObjectFieldIntro("__enqueued");
+      reverse.beginObject();
+      for (EnqueuedTask task : pending) {
+        forward.writeObjectFieldIntro(task.messageId);
+        task.writeTo(forward);
+        reverse.writeObjectFieldIntro(task.messageId);
+        reverse.writeNull();
+        active.add(task);
+      }
+      pending.clear();
       forward.endObject();
-      reverse.writeObjectFieldIntro(task.messageId);
-      reverse.writeNull();
-      active.add(task);
+      reverse.endObject();
     }
-    pending.clear();
-    forward.endObject();
-    reverse.endObject();
   }
 
   public void revert() {
@@ -102,9 +99,15 @@ public class EnqueuedTaskManager {
   }
 
   public void dump(JsonStreamWriter writer) {
-    writer.writeObjectFieldIntro("__enqueued");
-    writer.beginObject();
-    writer.endObject();
+    if (active.size() > 0) {
+      writer.writeObjectFieldIntro("__enqueued");
+      writer.beginObject();
+      for (EnqueuedTask task : pending) {
+        writer.writeObjectFieldIntro(task.messageId);
+        task.writeTo(writer);
+      }
+      writer.endObject();
+    }
   }
 
   public void add(EnqueuedTask task) {
