@@ -15,9 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.async;
 
-public class Platform {
-  public static final String VERSION = "20231221133902";
-  public static final String JS_VERSION = "3b85b99d500d7affddbdeb6fb4efc5c6";
+import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtPrincipal;
+
+/** a task that has been enqueued to be converted once settled */
+public class EnqueuedTask {
+  public final int messageId;
+  public final NtPrincipal who;
+  public final String channel;
+  public final NtDynamic message;
+
+  public EnqueuedTask(int messageId, NtPrincipal who, String channel, NtDynamic message) {
+    this.messageId = messageId;
+    this.who = who;
+    this.channel = channel;
+    this.message = message;
+  }
 }

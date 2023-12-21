@@ -21,10 +21,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
-import org.adamalang.runtime.async.AsyncTask;
-import org.adamalang.runtime.async.EphemeralFuture;
-import org.adamalang.runtime.async.OutstandingFutureTracker;
-import org.adamalang.runtime.async.TimeoutTracker;
+import org.adamalang.runtime.async.*;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
@@ -106,6 +103,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
   protected  long __optimisticNextCronCheck;
+  private final EnqueuedTaskManager __enqueued;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -160,6 +158,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __perf = new PerfTracker(this);
     __graph = new Graph();
     __optimisticNextCronCheck = 0L;
+    __enqueued = new EnqueuedTaskManager();
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -236,6 +235,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** exposed: get the current time */
   protected long __timeNow() {
     return __time.get().longValue();
+  }
+
+  protected void enqueue(NtPrincipal who, String channel, NtDynamic message) {
+    final var msgId = __message_id.bumpUpPost();
+    __enqueued.add(new EnqueuedTask(msgId, who, channel, message));
   }
 
   /** exposed: set the document's time zone */
@@ -339,6 +343,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __timeouts.commit(forward, reverse);
     __webQueue.commit(forward, reverse);
     __replication.commit(forward, reverse);
+    __enqueued.commit(forward, reverse);
     __graph.compute();
   }
 
@@ -609,7 +614,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** internal: we compute per client */
-  /** internal: we compute per client */
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListSend(NtPrincipal sender, final LivingDocumentFactory factory) {
     if (factory.appMode) {
       return __buildBroadcastListFor(sender);
@@ -824,6 +828,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  /** parse the message for the channel, and cache the result */
+  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
+
   protected void __hydrateMessages(final JsonStreamReader reader) {
     if (reader.testLackOfNull()) {
       if (reader.startObject()) {
@@ -881,8 +888,13 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
-  /** parse the message for the channel, and cache the result */
-  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
+  protected void __hydrateEnqueuedTaskManager(final JsonStreamReader reader) {
+    __enqueued.hydrate(reader);
+  }
+
+  protected void __dumpEnqueuedTaskManager(JsonStreamWriter writer) {
+    __enqueued.dump(writer);
+  }
 
   public void __hydrateTimeouts(final JsonStreamReader reader) {
     __timeouts.hydrate(reader);
@@ -1124,6 +1136,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __commit(name, forward, reverse);
     __timeouts.commit(forward, reverse);
     __replication.commit(forward, reverse);
+    __enqueued.commit(forward, reverse);
     __graph.compute();
   }
 

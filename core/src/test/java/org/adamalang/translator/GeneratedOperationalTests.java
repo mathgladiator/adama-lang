@@ -198,6 +198,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -282,6 +285,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -339,6 +345,7 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -660,7 +667,7 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"__Root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"private\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"channels-privacy\":{},\"constructors\":[],\"labels\":[\"setup\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:true in:25");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__enqueued\":{},\"__seq\":1} need:true in:25");
     gold.append("\nCPU:200003");
     gold.append("\nMEMORY:432");
     gold.append("\nNO_ONE: FAILED PRIVATE VIEW DUE TO:950384");
@@ -670,12 +677,12 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\nRANDO|FAILURE:950384");
     gold.append("\nMEMORY:550");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__enqueued\":{},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{}");
     gold.append("\n--METRIC RESULTS-----------------------------------");
-    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
-    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__enqueued\":{},\"__webqueue\":{},\"__replication\":{}}");
+    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__enqueued\":{},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
