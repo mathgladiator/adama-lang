@@ -15,9 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.async;
 
-public class Platform {
-  public static final String VERSION = "20231221175057";
-  public static final String JS_VERSION = "3b85b99d500d7affddbdeb6fb4efc5c6";
+public class EnqueuedTaskTests {
 }
