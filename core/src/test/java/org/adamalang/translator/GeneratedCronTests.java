@@ -601,7 +601,6 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {");
     gold.append("\n    CronTask __current;");
-    gold.append("\n    __optimisticNextCronCheck = Long.MAX_VALUE;");
     gold.append("\n    long __now = __time.get();");
     gold.append("\n    ZoneId __fromTZ = ZoneId.systemDefault();");
     gold.append("\n    ZoneId __toTZ = __zoneId();");

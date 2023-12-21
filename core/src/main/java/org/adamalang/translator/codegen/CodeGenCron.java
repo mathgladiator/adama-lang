@@ -33,7 +33,6 @@ public class CodeGenCron {
     }
     sb.append("public void __make_cron_progress() {").tabUp().writeNewline();
     sb.append("CronTask __current;").writeNewline();
-    sb.append("__optimisticNextCronCheck = Long.MAX_VALUE;").writeNewline();
     sb.append("long __now = __time.get();").writeNewline();
     sb.append("ZoneId __fromTZ = ZoneId.systemDefault();").writeNewline();
     sb.append("ZoneId __toTZ = __zoneId();").writeNewline();

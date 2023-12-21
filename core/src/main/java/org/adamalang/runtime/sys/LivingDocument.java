@@ -1807,11 +1807,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     Integer sleepTime = null;
     if (!again) {
       if (__optimisticNextCronCheck == 0L || __optimisticNextCronCheck < __time.get()) {
+        // We set the cron check to MAX VALUE to find the minimum time of the next event
+        __optimisticNextCronCheck = Long.MAX_VALUE;
         __make_cron_progress();
-        if (__optimisticNextCronCheck == 0L) {
-          __optimisticNextCronCheck = 1; // disable this gate from running ever again
-        } else if (__optimisticNextCronCheck < Long.MAX_VALUE) {
-          sleepTime = (int) Math.min(Math.max(10000, (long) (__optimisticNextCronCheck - __time.get())), 12 * 60 * 60 * 1000);
+        if (__optimisticNextCronCheck < Long.MAX_VALUE) { // there are no next events if the optimistic next time is max long, and this will disable the function call in future steps
+          sleepTime = (int) Math.min(Math.max(10000, (__optimisticNextCronCheck - __time.get())), 12 * 60 * 60 * 1000);
         }
       }
     }
