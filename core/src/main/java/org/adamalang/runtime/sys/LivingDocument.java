@@ -351,7 +351,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return Math.max(__state.has() ? 25 : 0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
   }
 
-  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again) {
+  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again, Integer sleepTime) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -374,7 +374,17 @@ public abstract class LivingDocument implements RxParent, Caller {
     reverse.endObject();
     __graph.compute();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts || again, __deltaTime(), 0L, UpdateType.Invalidate);
+    int timeAgain = __deltaTime();
+    boolean goAgain = __state.has() || hasTimeouts || again;
+    if (sleepTime != null) {
+      if (goAgain) {
+        timeAgain = Math.min(timeAgain, sleepTime);
+      } else {
+        goAgain = true;
+        timeAgain = sleepTime;
+      }
+    }
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), goAgain, timeAgain, 0L, UpdateType.Invalidate);
     return new LivingDocumentChange(update, broadcasts, null, shouldSignalBroadcast(BroadcastPathway.Invalidate, who));
   }
 
@@ -1792,6 +1802,22 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __simple_commit(who, request, null, 0L);
   }
 
+  private LivingDocumentChange __transaction_invalidate_cron(NtPrincipal who, final String request, boolean again) {
+    boolean againAgain = false;
+    Integer sleepTime = null;
+    if (!again) {
+      if (__optimisticNextCronCheck == 0L || __optimisticNextCronCheck < __time.get()) {
+        __make_cron_progress();
+        if (__optimisticNextCronCheck == 0L) {
+          __optimisticNextCronCheck = 1; // disable this gate from running ever again
+        } else if (__optimisticNextCronCheck < Long.MAX_VALUE) {
+          sleepTime = (int) Math.min(Math.max(10000, (long) (__optimisticNextCronCheck - __time.get())), 12 * 60 * 60 * 1000);
+        }
+      }
+    }
+    return __invalidate_trailer(who, request, again || againAgain, sleepTime);
+  }
+
   /** transaction: an invalidation is happening on the document (no monitor) */
   private LivingDocumentChange __transaction_invalidate_body(NtPrincipal who, final String request) {
     __preemptedStateOnNextComputeBlocked = null;
@@ -1799,6 +1825,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     try {
       __random = new Random(seedUsed);
       boolean workDone = false;
+      // channel messages that have blocked the system
       for (final AsyncTask task : __queue) {
         __route(task);
       }
@@ -1864,7 +1891,7 @@ public abstract class LivingDocument implements RxParent, Caller {
             item.state = WebQueueState.Remove;
             __webQueue.dirty();
             __drive_webget_queue();
-            return __invalidate_trailer(who, request, dirtyLeft > 0);
+            return __transaction_invalidate_cron(who, request, dirtyLeft > 0);
           } catch (ComputeBlockedException cbe) {
             __revert();
             __time.set(timeBackup);
@@ -1872,13 +1899,13 @@ public abstract class LivingDocument implements RxParent, Caller {
         }
       }
       __drive_webget_queue();
-      return __invalidate_trailer(who, request, dirtyLeft > 0);
+      return __transaction_invalidate_cron(who, request, dirtyLeft > 0);
     } catch (final ComputeBlockedException blockedOn) {
       if (__preemptedStateOnNextComputeBlocked != null) {
         __state.set(__preemptedStateOnNextComputeBlocked);
         __next_time.set(__time.get());
         __preemptedStateOnNextComputeBlocked = null;
-        return __invalidate_trailer(who, request, false);
+        return __transaction_invalidate_cron(who, request, false);
       } else {
         List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
         __revert();

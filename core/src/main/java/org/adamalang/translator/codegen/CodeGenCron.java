@@ -35,8 +35,8 @@ public class CodeGenCron {
     sb.append("CronTask __current;").writeNewline();
     sb.append("__optimisticNextCronCheck = Long.MAX_VALUE;").writeNewline();
     sb.append("long __now = __time.get();").writeNewline();
-    sb.append("ZoneId __fromTZ = ZoneId.systemDefault();");
-    sb.append("ZoneId __toTZ = __zoneId();");
+    sb.append("ZoneId __fromTZ = ZoneId.systemDefault();").writeNewline();
+    sb.append("ZoneId __toTZ = __zoneId();").writeNewline();
     for (Map.Entry<String, DefineCronTask> entry : env.document.cronTasks.entrySet()) {
       DefineCronTask dct = entry.getValue();
       switch (dct.schedule[0].text) {

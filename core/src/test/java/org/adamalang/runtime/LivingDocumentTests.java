@@ -1759,6 +1759,32 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void daily_cron() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "@connected { return @who == @no_one; } @construct { Time.setZone(\"America/Chicago\"); } public int t = 0; @cron fooz daily 8:00 { t++; }");
+    setup.time.time = 1703189536059L; // ~ 2pm, only fire due to being the first
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(2));
+    Assert.assertEquals("1", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+
+    setup.time.time += 60 * 60 * 1000; // 3pm
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(3));
+    Assert.assertEquals("1", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+
+    setup.time.time += 12 * 60 * 60 * 1000; // 3 am
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
+    Assert.assertEquals("1", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+
+    setup.time.time += 4 * 60 * 60 * 1000; // 7 am
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
+    Assert.assertEquals("1", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+
+    setup.time.time += (3) * 60 * 60 * 1000 / 2; // 8:30 am
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(6));
+    Assert.assertEquals("2", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void state_machine_progress_over_time() throws Exception {
     final var setup =

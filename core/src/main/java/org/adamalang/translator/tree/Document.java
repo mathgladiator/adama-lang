@@ -461,6 +461,7 @@ public class Document implements TopLevelDocumentHandler {
     FieldDefinition lastTimeBreach = new FieldDefinition(new PrivatePolicy(dct.cron), dct.cron, new TyReactiveLong(false, dct.cron), dct.name.cloneWithNewText("__" + dct.name.text), null, null, null, null, null, null);
     root.storage.add(lastTimeBreach);
     cronTasks.put(dct.name.text, dct);
+    dct.typing(typeChecker);
   }
 
   @Override

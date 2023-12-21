@@ -17,9 +17,13 @@
 */
 package org.adamalang.translator.tree.definitions;
 
+import org.adamalang.translator.env.FreeEnvironment;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativePrincipal;
+import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 
 import java.util.function.Consumer;
 
@@ -51,5 +55,14 @@ public class DefineCronTask extends Definition {
   @Override
   public void format(Formatter formatter) {
     code.format(formatter);
+  }
+
+  public void typing(TypeCheckerRoot checker) {
+    FreeEnvironment fe = FreeEnvironment.root();
+    code.free(fe);
+    checker.register(fe.free, (environment) -> {
+      final var next = environment.scope();
+      code.typing(next);
+    });
   }
 }
