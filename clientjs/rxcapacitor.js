@@ -1,10 +1,53 @@
 /** whatever is needed to make capacitor work */
+
+var SafeArea = Capacitor.Plugins.SafeArea;
 var PushNotifications = Capacitor.Plugins.PushNotifications;
 var Network = Capacitor.Plugins.Network;
 
+var CapacitorApp = Capacitor.Plugins.CapacitorApp;
+
+
+// Prepared & separated this function for now as we have a configuration specific to iOS (see capacitor.config.js#21) although this will push all UI elements(bg, buttons etc) to the safe area content and will leave
+// the background design to be pushed as well
+// But once we need some code logic to perform certain fix for overlapping buttons or navigation bars then we will be using this.
+async function ExecSafeArea($){
+    var insets = await SafeArea.getSafeAreaInsets()
+    console.log('SafeArea called...', insets);
+    SafeArea.getSafeAreaInsets().then(({ insets }) => {
+      console.log(insets);
+    });
+
+    SafeArea.getStatusBarHeight().then(({ statusBarHeight }) => {
+      console.log(statusBarHeight, 'statusbarHeight');
+    });
+
+    await SafeArea.removeAllListeners();
+    // when safe-area changed
+    await SafeArea.addListener('safeAreaChanged', data => {
+      const { insets } = data;
+      for (const [key, value] of Object.entries(insets)) {
+        console.log("Safe Area Changed: Data " , key , value);
+        document.documentElement.style.setProperty(
+          `--safe-area-${key}`,
+          `${value}px`,
+        );
+      }
+    });
+}
+
 async function LinkCapacitor($, identityName) {
+  // this function is probably required because adding just the plugin itself will do the job but won't minimize the app.
+  CapacitorApp.addListener('backButton' , ({canGoBack})=> {
+    if(!canGoBack){
+        CapacitorApp.minimizeApp();
+    }else{
+      window.history.back();
+    }
+  });
+
   PushNotifications.requestPermissions().then(result => {
     $.bump("nps"); // setup
+    console.log("PushNot result: ", result);
     if (result.receive === 'granted') {
       console.log("granted push permission")
       $.bump("npg");
@@ -84,6 +127,7 @@ async function LinkCapacitor($, identityName) {
   });
 
   let status = await Network.getStatus();
+
 // TODO: feed into RxHTML
   console.log("Starting...");
   console.log(status);
