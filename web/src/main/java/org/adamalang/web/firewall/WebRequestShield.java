@@ -20,6 +20,7 @@ package org.adamalang.web.firewall;
 /** high level rules about dropping traffic before any logic */
 public class WebRequestShield {
   public static boolean block(String x) {
+    if (x.startsWith("/.well-known")) return false;
     if (x.startsWith("/.")) return true;
     if (x.startsWith("/CSS/")) return true;
     if (x.startsWith("/Portal/")) return true;
