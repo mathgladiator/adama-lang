@@ -1,0 +1,12 @@
+{
+  "documents" : [ {
+    "space" : "authfun",
+    "key" : "demo",
+    "domain" : true
+  } ],
+  "spaces" : [ {
+    "name" : "authfun",
+    "main" : "backend.adama",
+    "import" : "backend"
+  } ]
+}
