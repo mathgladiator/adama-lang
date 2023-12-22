@@ -126,7 +126,7 @@ public class SillyTypeIssues {
 
   @Test
   public void longcov() {
-    final var rl = new TyReactiveLong(null);
+    final var rl = new TyReactiveLong(false, null);
     final var nl = new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null);
     rl.makeCopyWithNewPosition(rl, TypeBehavior.ReadOnlyNativeValue);
     nl.makeCopyWithNewPosition(nl, TypeBehavior.ReadOnlyNativeValue);
@@ -146,7 +146,7 @@ public class SillyTypeIssues {
 
   @Test
   public void rxtable() {
-    final var rxt = new TyReactiveTable(null, new TokenizedItem<>(Token.WRAP("FOO")));
+    final var rxt = new TyReactiveTable(false, null, new TokenizedItem<>(Token.WRAP("FOO")));
     rxt.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
   }
 
@@ -174,22 +174,23 @@ public class SillyTypeIssues {
 
   @Test
   public void reactive() {
-    final var reactiveClient = new TyReactivePrincipal(Token.WRAP("X"));
+    final var reactiveClient = new TyReactivePrincipal(false, Token.WRAP("X"));
     reactiveClient.makeCopyWithNewPosition(reactiveClient, TypeBehavior.ReadOnlyNativeValue);
     reactiveClient.getAdamaType();
-    final var reactiveDouble = new TyReactiveDouble(Token.WRAP("X"));
+    final var reactiveDouble = new TyReactiveDouble(false, Token.WRAP("X"));
     reactiveDouble.getAdamaType();
-    final var reactiveEnum = new TyReactiveEnum(Token.WRAP("E"), new EnumStorage("E"));
+    final var reactiveEnum = new TyReactiveEnum(false, Token.WRAP("E"), new EnumStorage("E"));
     reactiveEnum.getAdamaType();
     reactiveEnum.makeCopyWithNewPosition(reactiveClient, TypeBehavior.ReadOnlyNativeValue);
     reactiveEnum.storage();
-    final var reactiveStateMachineRef = new TyReactiveStateMachineRef(Token.WRAP("X"));
+    final var reactiveStateMachineRef = new TyReactiveStateMachineRef(false, Token.WRAP("X"));
     reactiveStateMachineRef.getAdamaType();
     reactiveStateMachineRef.makeCopyWithNewPosition(
         reactiveStateMachineRef, TypeBehavior.ReadOnlyNativeValue);
     reactiveStateMachineRef.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
     final var reactiveMap =
         new TyReactiveMap(
+            false,
             Token.WRAP("X"),
             Token.WRAP("X"),
             reactiveStateMachineRef,
@@ -230,7 +231,7 @@ public class SillyTypeIssues {
 
   @Test
   public void ref2() {
-    final var ref = new TyReactiveRef(Token.WRAP("x"));
+    final var ref = new TyReactiveRef(false, Token.WRAP("x"));
     try {
       ref.getJavaBoxType(null);
       Assert.fail();
@@ -279,14 +280,14 @@ public class SillyTypeIssues {
     Assert.assertEquals("complex", new TyNativeComplex(null, null, null).getAdamaType());
     Assert.assertEquals(
         "r<complex>",
-        new TyReactiveComplex(null)
+        new TyReactiveComplex(false, null)
             .makeCopyWithNewPosition(DocumentPosition.ZERO, TypeBehavior.ReadWriteWithSetGet)
             .getAdamaType());
   }
 
   @Test
   public void dynamics() {
-    TyReactiveDynamic rdyn = new TyReactiveDynamic(Token.WRAP("dynamic"));
+    TyReactiveDynamic rdyn = new TyReactiveDynamic(false, Token.WRAP("dynamic"));
     rdyn.makeCopyWithNewPosition(rdyn, TypeBehavior.ReadWriteNative);
     rdyn.getAdamaType();
     TyNativeDynamic ndyn =
@@ -298,7 +299,7 @@ public class SillyTypeIssues {
   public void asset() {
     TyNativeAsset na =
         new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
-    TyReactiveAsset ra = new TyReactiveAsset(Token.WRAP("asset"));
+    TyReactiveAsset ra = new TyReactiveAsset(false, Token.WRAP("asset"));
     ra.makeCopyWithNewPosition(ra, TypeBehavior.ReadOnlyNativeValue);
     ra.getAdamaType();
     na.getAdamaType();

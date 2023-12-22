@@ -51,6 +51,9 @@ public class TyNativeChannel extends TyType implements //
     this.readonlyToken = readonlyToken;
     this.channelToken = channelToken;
     this.tokenizedType = tokenizedType;
+    ingest(readonlyToken);
+    ingest(channelToken);
+    ingest(tokenizedType.item);
   }
 
   @Override

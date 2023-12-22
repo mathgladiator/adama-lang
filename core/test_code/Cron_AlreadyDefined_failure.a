@@ -1,0 +1,7 @@
+@cron foo daily 8:00 {
+
+}
+
+@cron foo daily 8:00 {
+
+}

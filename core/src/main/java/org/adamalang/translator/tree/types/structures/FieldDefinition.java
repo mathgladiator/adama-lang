@@ -48,6 +48,7 @@ public class FieldDefinition extends StructureComponent {
   public final LinkedHashSet<String> variablesToWatch;
   public final LinkedHashSet<String> servicesToWatch;
   public final LinkedHashSet<String> tablesToInject;
+  public final boolean readonly;
 
   public Token lossyOrRequiredToken;
   public Token uniqueToken;
@@ -69,9 +70,12 @@ public class FieldDefinition extends StructureComponent {
     if (policy != null) {
       ingest(policy);
     }
+    boolean _readonly = false;
     if (introToken != null) {
       ingest(introToken);
+      _readonly = "readonly".equals(introToken.text);
     }
+    this.readonly = _readonly;
     if (type != null) {
       ingest(type);
     }
@@ -115,7 +119,7 @@ public class FieldDefinition extends StructureComponent {
   }
 
   public static FieldDefinition inventId(DocumentPosition dp) {
-    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(false, null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null);
     fd.ingest(dp);
     return fd;
   }

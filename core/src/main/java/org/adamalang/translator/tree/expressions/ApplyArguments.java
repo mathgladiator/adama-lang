@@ -266,6 +266,11 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
           CodeGenFunctions.writeArgsJava(sb, childEnv, true, args, functionInstance);
           sb.append(")");
           break;
+        case InjectNameThenArgsNoInitialParenthesis:
+          sb.append(functionInstance.javaFunction);
+          CodeGenFunctions.writeArgsJava(sb, childEnv, true, args, functionInstance);
+          sb.append(")");
+          break;
         case InjectNameThenExpressionAndArgs:
           sb.append(functionInstance.javaFunction);
           sb.append("(");

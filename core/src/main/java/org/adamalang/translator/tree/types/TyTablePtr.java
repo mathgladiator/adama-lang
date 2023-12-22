@@ -105,7 +105,7 @@ public class TyTablePtr extends TyType implements DetailRequiresResolveCall {
     if (subType != null && subType instanceof TyNativeMessage) {
       return new TyNativeTable(behavior, readonlyToken, tableToken, nameToken);
     } else {
-      return new TyReactiveTable(tableToken, nameToken);
+      return new TyReactiveTable(subType.behavior.isReadOnly, tableToken, nameToken);
     }
   }
 }

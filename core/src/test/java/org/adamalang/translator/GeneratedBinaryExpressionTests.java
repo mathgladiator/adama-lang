@@ -107,6 +107,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -206,6 +207,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -290,6 +294,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -347,6 +354,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -924,6 +932,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1146,6 +1156,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -1269,6 +1280,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -1359,6 +1373,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -1420,6 +1437,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -1698,6 +1716,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1935,6 +1955,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -2027,6 +2048,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -2108,6 +2132,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -2163,6 +2190,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -2382,6 +2410,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -2687,6 +2717,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -2791,6 +2822,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -2878,6 +2912,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -2937,6 +2974,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -3160,6 +3198,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -3520,6 +3560,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -3624,6 +3665,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -3705,6 +3749,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -3760,6 +3807,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -4011,6 +4059,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -4195,6 +4245,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -4287,6 +4338,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -4368,6 +4422,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -4423,6 +4480,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -4642,6 +4700,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");

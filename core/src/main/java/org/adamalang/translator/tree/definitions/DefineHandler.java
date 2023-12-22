@@ -26,6 +26,7 @@ import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyEnqueueChannel;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
@@ -140,7 +141,7 @@ public class DefineHandler extends Definition {
     if (code != null) {
       code.free(fe);
     }
-    checker.register(fe.free, (environment) -> {
+    checker.define(channelNameToken, fe.free, (environment) -> {
       final IsStructure messageType = environment.rules.FindMessageStructure(typeName, this, false);
       if (messageType == null) {
         return;
@@ -152,6 +153,9 @@ public class DefineHandler extends Definition {
       if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
         final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType)).withPosition(this);
         environment.define(channel, nativeChannel, false, nativeChannel);
+      } else {
+        final var enqueueChannel = new TyEnqueueChannel(channel, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType)).withPosition(this);
+        environment.define(channel, enqueueChannel, false, enqueueChannel);
       }
       if (guard != null) {
         for (TokenizedItem<String> policy : guard.policies) {

@@ -56,11 +56,11 @@ public class BinaryOperatorTable {
     TyType tyMaybeComplex = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyComplex));
     TyType tyMaybeString = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyString));
 
-    TyType tyRxInteger = new TyReactiveInteger(Token.WRAP("int"));
-    TyType tyRxLong = new TyReactiveLong(Token.WRAP("long"));
-    TyType tyRxDouble = new TyReactiveDouble(Token.WRAP("double"));
-    TyType tyRxString = new TyReactiveString(Token.WRAP("string"));
-    TyType tyRxComplex = new TyReactiveComplex(Token.WRAP("complex"));
+    TyType tyRxInteger = new TyReactiveInteger(false, Token.WRAP("int"));
+    TyType tyRxLong = new TyReactiveLong(false, Token.WRAP("long"));
+    TyType tyRxDouble = new TyReactiveDouble(false, Token.WRAP("double"));
+    TyType tyRxString = new TyReactiveString(false, Token.WRAP("string"));
+    TyType tyRxComplex = new TyReactiveComplex(false, Token.WRAP("complex"));
 
     TyType tyListRxInteger = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxInteger));
     TyType tyListRxLong = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxLong));

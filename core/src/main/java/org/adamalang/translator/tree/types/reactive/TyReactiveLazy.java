@@ -19,9 +19,9 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -46,12 +46,12 @@ public class TyReactiveLazy extends TyType implements //
   }
 
   @Override
-  public void emitInternal(final Consumer<Token> yielder) {
-    throw new UnsupportedOperationException();
+  public void format(Formatter formatter) {
   }
 
   @Override
-  public void format(Formatter formatter) {
+  public void emitInternal(final Consumer<Token> yielder) {
+    throw new UnsupportedOperationException();
   }
 
   @Override

@@ -21,7 +21,8 @@ public enum TypeBehavior {
   ReadOnlyGetNativeValue(true), // the type is native, and can be used natively
   ReadOnlyNativeValue(true), //
   ReadWriteNative(false), // the value is native, and can only be read from
-  ReadWriteWithSetGet(false); // the value is native, and can only be read from
+  ReadWriteWithSetGet(false), // the value is native, and can only be read from
+  ReadOnlyWithGet(true); // the value is native, and can only be read from
 
   public final boolean isReadOnly;
 

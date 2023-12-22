@@ -1,0 +1,5 @@
+public readonly string name;
+
+@construct {
+  name = "Joker!";
+}

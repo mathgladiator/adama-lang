@@ -30,8 +30,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeComplex;
 
 public class TyReactiveComplex extends TySimpleReactive {
-  public TyReactiveComplex(final Token token) {
-    super(token, "RxComplex");
+  public TyReactiveComplex(final boolean readonly, final Token token) {
+    super(readonly, token, "RxComplex");
   }
 
   @Override
@@ -41,7 +41,7 @@ public class TyReactiveComplex extends TySimpleReactive {
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveComplex(token).withPosition(position);
+    return new TyReactiveComplex(readonly, token).withPosition(position);
   }
 
   @Override

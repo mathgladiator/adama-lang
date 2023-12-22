@@ -19,9 +19,9 @@ package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -33,22 +33,24 @@ import java.util.function.Consumer;
 public class TyReactiveRef extends TyType implements //
     DetailRequiresResolveCall {
   public final String ref;
+  public final boolean readonly;
   public final Token refToken;
 
-  public TyReactiveRef(final Token refToken) {
-    super(TypeBehavior.ReadWriteWithSetGet);
+  public TyReactiveRef(final boolean readonly, final Token refToken) {
+    super(readonly ? TypeBehavior.ReadOnlyWithGet : TypeBehavior.ReadWriteWithSetGet);
+    this.readonly = readonly;
     this.refToken = refToken;
     ref = refToken.text;
     ingest(refToken);
   }
 
   @Override
-  public void emitInternal(final Consumer<Token> yielder) {
-    yielder.accept(refToken);
+  public void format(Formatter formatter) {
   }
 
   @Override
-  public void format(Formatter formatter) {
+  public void emitInternal(final Consumer<Token> yielder) {
+    yielder.accept(refToken);
   }
 
   @Override
@@ -68,7 +70,7 @@ public class TyReactiveRef extends TyType implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveRef(refToken).withPosition(position);
+    return new TyReactiveRef(readonly, refToken).withPosition(position);
   }
 
   @Override

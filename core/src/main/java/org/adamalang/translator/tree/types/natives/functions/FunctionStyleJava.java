@@ -23,6 +23,7 @@ public enum FunctionStyleJava {
   RemoteCall(true), //
   InjectName(true), //
   InjectNameThenArgs(true), //
+  InjectNameThenArgsNoInitialParenthesis(true), //
   InjectNameThenExpressionAndArgs(true), //
   None(false), //
   ;

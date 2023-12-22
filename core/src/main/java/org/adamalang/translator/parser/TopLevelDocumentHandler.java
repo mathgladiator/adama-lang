@@ -92,4 +92,6 @@ public interface TopLevelDocumentHandler {
   void add(JoinAssoc ja);
 
   void add(DefineTemplate dt);
+
+  void add(DefineCronTask dct);
 }

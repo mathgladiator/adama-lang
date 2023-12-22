@@ -436,6 +436,9 @@ public class CodeGenRecords {
       sb.append("case \"__messages\":").tabUp().writeNewline();
       sb.append("__hydrateMessages(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__enqueued\":").tabUp().writeNewline();
+      sb.append("__hydrateEnqueuedTaskManager(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
       sb.append("case \"__webqueue\":").tabUp().writeNewline();
       sb.append("__hydrateWebQueue(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
@@ -487,6 +490,9 @@ public class CodeGenRecords {
       sb.append("break;").tabDown().writeNewline();
       sb.append("case \"__messages\":").tabUp().writeNewline();
       sb.append("__hydrateMessages(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__enqueued\":").tabUp().writeNewline();
+      sb.append("__hydrateEnqueuedTaskManager(__reader);").writeNewline();
       sb.append("break;").tabDown().writeNewline();
       sb.append("case \"__webqueue\":").tabUp().writeNewline();
       sb.append("__hydrateWebQueue(__reader);").writeNewline();
@@ -557,6 +563,7 @@ public class CodeGenRecords {
       sb.append("__dumpDeduper(__writer);").writeNewline();
       sb.append("__dumpClients(__writer);").writeNewline();
       sb.append("__dumpMessages(__writer);").writeNewline();
+      sb.append("__dumpEnqueuedTaskManager(__writer);").writeNewline();
       sb.append("__dumpTimeouts(__writer);").writeNewline();
       sb.append("__dumpWebQueue(__writer);").writeNewline();
       sb.append("__dumpReplicationEngine(__writer);").writeNewline();

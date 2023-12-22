@@ -96,6 +96,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -195,6 +196,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -279,6 +283,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -336,6 +343,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -768,6 +776,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1010,6 +1020,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -1109,6 +1120,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -1193,6 +1207,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -1250,6 +1267,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -1667,6 +1685,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1894,6 +1914,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -2018,6 +2039,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -2114,6 +2138,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -2179,6 +2206,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -2768,6 +2796,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -3037,6 +3067,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -3145,6 +3176,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -3229,6 +3263,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -3286,6 +3323,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -3824,6 +3862,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -4051,6 +4091,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -4150,6 +4191,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -4234,6 +4278,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -4291,6 +4338,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -4720,6 +4768,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -4905,6 +4955,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -5004,6 +5055,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -5088,6 +5142,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -5145,6 +5202,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -5574,6 +5632,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -5719,7 +5779,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Aggregates_RecordAssignMaybeBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":2,\"byte\":106},\"end\":{\"line\":12,\"character\":25,\"byte\":129}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<r<int>>' is unable to accept an set of 'int'.\",\"file\":\"./test_code/Aggregates_RecordAssignMaybeBad_failure.a\"},{\"range\":{\"start\":{\"line\":13,\"character\":2,\"byte\":133},\"end\":{\"line\":13,\"character\":27,\"byte\":158}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<r<int>>' is unable to accept an assignment of 'int'.\",\"file\":\"./test_code/Aggregates_RecordAssignMaybeBad_failure.a\"},{\"range\":{\"start\":{\"line\":13,\"character\":2,\"byte\":133},\"end\":{\"line\":13,\"character\":27,\"byte\":158}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'maybe<r<int>>' += 'int'\",\"file\":\"./test_code/Aggregates_RecordAssignMaybeBad_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":2,\"byte\":106},\"end\":{\"line\":12,\"character\":25,\"byte\":129}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<r<int>>' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/Aggregates_RecordAssignMaybeBad_failure.a\"},{\"range\":{\"start\":{\"line\":13,\"character\":2,\"byte\":133},\"end\":{\"line\":13,\"character\":27,\"byte\":158}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<r<int>>' is unable to accept an assignment of 'int'.\",\"file\":\"./test_code/Aggregates_RecordAssignMaybeBad_failure.a\"},{\"range\":{\"start\":{\"line\":13,\"character\":2,\"byte\":133},\"end\":{\"line\":13,\"character\":27,\"byte\":158}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'maybe<r<int>>' += 'int'\",\"file\":\"./test_code/Aggregates_RecordAssignMaybeBad_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -5805,6 +5865,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -5913,6 +5974,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -5997,6 +6061,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -6054,6 +6121,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -6884,6 +6952,8 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");

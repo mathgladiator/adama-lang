@@ -156,18 +156,18 @@ public class Parser {
           }
         case "@date":
         {
-          Token year = tokens.pop();
+          Token year = consumeInteger();
           Token slash1 = consumeExpectedSymbol("/");
-          Token month = tokens.pop();
+          Token month = consumeInteger();
           Token slash2 = consumeExpectedSymbol("/");
-          Token day = tokens.pop();
+          Token day = consumeInteger();
           return new DateConstant(intval(year), intval(month), intval(day), token, year, slash1, month, slash2, day);
         }
         case "@time":
         {
-          Token hour = tokens.pop();
+          Token hour = consumeInteger();
           Token colon = consumeExpectedSymbol(":");
-          Token minute = tokens.pop();
+          Token minute = consumeInteger();
           return new TimeConstant(intval(hour), intval(minute), token, hour, colon, minute);
         }
         case "@timespan":
@@ -422,6 +422,19 @@ public class Parser {
     return arrow;
   }
 
+  private Token consumeInteger() throws AdamaLangException {
+    final var token = tokens.pop();
+    if (token == null) {
+      throw new ParseException("Parser was expecting an integer; got end of stream", tokens.getLastTokenIfAvailable());
+    }
+    try {
+      Integer.parseInt(token.text);
+      return token;
+    } catch (NumberFormatException nfe) {
+      throw new ParseException("Parser was expecting an integer; got '" + token.text + "'instead", token);
+    }
+  }
+
   private Token consumeExpectedSymbol(final String... symbols) throws AdamaLangException {
     final var token = tokens.pop();
     if (token != null && token.isSymbolWithTextEq(symbols)) {
@@ -596,6 +609,27 @@ public class Parser {
     }
   }
 
+  public Token[] cron_schedule() throws AdamaLangException {
+    ArrayList<Token> schedule = new ArrayList<>();
+    Token head = id();
+    schedule.add(head);
+    switch (head.text) {
+      case "daily":
+        schedule.add(consumeInteger());
+        schedule.add(consumeExpectedSymbol(":"));
+        schedule.add(consumeInteger());
+        break;
+    }
+    return schedule.toArray(new Token[schedule.size()]);
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_cron(Token cronToken) throws AdamaLangException {
+    Token name = id();
+    Token[] schedule = cron_schedule();
+    DefineCronTask dct = new DefineCronTask(cronToken, name, schedule, block(rootScope.makeCronTask()));
+    return (doc) -> doc.add(dct);
+  }
+
   public Consumer<TopLevelDocumentHandler> execute_import(Token includeToken) throws AdamaLangException {
     ArrayList<Token> resource = new ArrayList<>();
     resource.add(typesafe_id());
@@ -691,7 +725,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block(rootScope.makeStateMachineTransition()));
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load", "@cron"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
     }
@@ -744,6 +778,8 @@ public class Parser {
           return define_static(op);
         case "@web":
           return define_web(op);
+        case "@cron":
+          return define_cron(op);
         case "service":
           return define_service(op);
         case "view": {
@@ -1029,7 +1065,8 @@ public class Parser {
       return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
     } else {
       // we allow a superfluous privacy policy as that is the same as absent
-      final var type = reactive_type(policy instanceof PrivatePolicy ? false : (policy != null));
+      final var readonly = tokens.popIf((t) -> t.isIdentifier("readonly"));
+      final var type = reactive_type(readonly != null, policy instanceof PrivatePolicy ? false : (policy != null));
       final var id = id();
       final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
       Expression defaultValue = null;
@@ -1037,7 +1074,7 @@ public class Parser {
         defaultValue = expression(scope.makeConstant());
       }
       Token required = tokens.popIf(t -> t.isIdentifier("required"));
-      return new FieldDefinition(policy, null, type, id, equalsToken, null, defaultValue, required, null, consumeExpectedSymbol(";"));
+      return new FieldDefinition(policy, readonly, type, id, equalsToken, null, defaultValue, required, null, consumeExpectedSymbol(";"));
     }
   }
 
@@ -1220,7 +1257,7 @@ public class Parser {
     Scope scope = rootScope.makeRecordType();
     final var name = id();
     final var storage = new StructureStorage(name, StorageSpecialization.Record, false, false, consumeExpectedSymbol("{"));
-    storage.setSelf(new TyReactiveRef(name));
+    storage.setSelf(new TyReactiveRef(false, name));
     while (true) {
       var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join"));
       while (op != null) {
@@ -1800,82 +1837,80 @@ public class Parser {
     }
   }
 
-  public TokenizedItem<TyType> reactive_parameter_type() throws AdamaLangException {
+  public TokenizedItem<TyType> reactive_parameter_type(boolean readonly) throws AdamaLangException {
     final var before = consumeExpectedSymbol("<");
-    final var token = new TokenizedItem<>(reactive_type(false));
+    final var token = new TokenizedItem<>(reactive_type(readonly, false));
     token.before(before);
     token.after(consumeExpectedSymbol(">"));
     return token;
   }
 
-  public TyReactiveMap reactive_map(final Token mapToken) throws AdamaLangException {
+  public TyReactiveMap reactive_map(boolean readonly, final Token mapToken) throws AdamaLangException {
     final var openThing = consumeExpectedSymbol("<");
     final var domainType = native_type(false);
     final var commaToken = consumeExpectedSymbol(",");
-    final var rangeType = reactive_type(false);
+    final var rangeType = reactive_type(readonly, false);
     final var closeThing = consumeExpectedSymbol(">");
-    return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing);
+    return new TyReactiveMap(readonly, mapToken, openThing, domainType, commaToken, rangeType, closeThing);
   }
 
-  private TyType reactive_type(boolean has_policy) throws AdamaLangException {
-    return enrich(reactive_type_intern(has_policy));
+  private TyType reactive_type(boolean readonly, boolean has_policy) throws AdamaLangException {
+    return enrich(reactive_type_intern(readonly, has_policy));
   }
 
-  private TyType reactive_type_intern(boolean has_policy) throws AdamaLangException {
+  private TyType reactive_type_intern(boolean readonly, boolean has_policy) throws AdamaLangException {
     final var token = tokens.pop();
     if (token == null) {
       throw new ParseException("Parser was expecting a reactive type, but got an end of stream instead.", tokens.getLastTokenIfAvailable());
     }
     switch (token.text) {
       case "bool":
-        return new TyReactiveBoolean(token);
+        return new TyReactiveBoolean(readonly, token);
       case "client":
       case "principal":
-        return new TyReactivePrincipal(token);
+        return new TyReactivePrincipal(readonly, token);
       case "asset":
-        return new TyReactiveAsset(token);
+        return new TyReactiveAsset(readonly, token);
       case "dynamic":
-        return new TyReactiveDynamic(token);
+        return new TyReactiveDynamic(readonly, token);
       case "double":
-        return new TyReactiveDouble(token);
+        return new TyReactiveDouble(readonly, token);
       case "complex":
-        return new TyReactiveComplex(token);
+        return new TyReactiveComplex(readonly, token);
       case "date":
-        return new TyReactiveDate(token);
+        return new TyReactiveDate(readonly, token);
       case "datetime":
-        return new TyReactiveDateTime(token);
+        return new TyReactiveDateTime(readonly, token);
       case "time":
-        return new TyReactiveTime(token);
+        return new TyReactiveTime(readonly, token);
       case "timespan":
-        return new TyReactiveTimeSpan(token);
+        return new TyReactiveTimeSpan(readonly, token);
       case "int":
-        return new TyReactiveInteger(token);
+        return new TyReactiveInteger(readonly, token);
       case "long":
-        return new TyReactiveLong(token);
+        return new TyReactiveLong(readonly, token);
       case "string":
-        return new TyReactiveString(token);
+        return new TyReactiveString(readonly, token);
       case "label":
-        return new TyReactiveStateMachineRef(token);
+        return new TyReactiveStateMachineRef(readonly, token);
       case "text":
-        return new TyReactiveText(token);
+        return new TyReactiveText(readonly, token);
       case "table": {
         final var typeParameter = type_parameter();
-        Token under = tokens.popIf((t) -> t.isIdentifier("within"));
-        TyReactiveTable table =  new TyReactiveTable(token, typeParameter);
+        TyReactiveTable table =  new TyReactiveTable(readonly, token, typeParameter);
         if (has_policy) {
           // the reason we do it this way is because want to let typing throw the error such that multiple errors can happen
           table.raiseHasPolicy();
         }
-        // TODO: detect graph associations
         return table;
       }
       case "map":
-        return reactive_map(token);
+        return reactive_map(readonly, token);
       case "maybe":
-        return new TyReactiveMaybe(token, reactive_parameter_type());
+        return new TyReactiveMaybe(readonly, token, reactive_parameter_type(readonly));
       default:
         testId(token);
-        return new TyReactiveRef(token);
+        return new TyReactiveRef(readonly, token);
     }
   }
 

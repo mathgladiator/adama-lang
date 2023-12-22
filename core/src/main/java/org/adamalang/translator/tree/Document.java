@@ -39,10 +39,12 @@ import org.adamalang.translator.tree.definitions.config.DocumentConfig;
 import org.adamalang.translator.tree.definitions.web.UriTable;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeTemplate;
+import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
 import org.adamalang.translator.tree.types.structures.*;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
@@ -60,7 +62,6 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class Document implements TopLevelDocumentHandler {
-  public final HashSet<String> channelsThatAreFutures;
   public final HashMap<String, String> channelToMessageType;
   public final ArrayList<DefineDocumentEvent> events;
   public final ArrayList<DefineConstructor> constructors;
@@ -97,6 +98,7 @@ public class Document implements TopLevelDocumentHandler {
   public final LinkedHashMap<String, DefineAssoc> assocs;
   private short assocIdGen;
   public final LinkedHashMap<String, DefineTemplate> templates;
+  public final LinkedHashMap<String, DefineCronTask> cronTasks;
 
   public Document() {
     autoClassId = 0;
@@ -109,7 +111,6 @@ public class Document implements TopLevelDocumentHandler {
     tests = new ArrayList<>();
     events = new ArrayList<>();
     channelToMessageType = new HashMap<>();
-    channelsThatAreFutures = new HashSet<>();
     searchPaths = new ArrayList<>();
     constructors = new ArrayList<>();
     latentCodeSnippets = new ArrayList<>();
@@ -137,6 +138,7 @@ public class Document implements TopLevelDocumentHandler {
     assocIdGen = 0;
     templates = new LinkedHashMap<>();
     authPipes = new ArrayList<>();
+    cronTasks = new LinkedHashMap<>();
   }
 
   public void setIncludes(Map<String, String> include) {
@@ -362,9 +364,6 @@ public class Document implements TopLevelDocumentHandler {
   public void add(final DefineHandler handler) {
     handlers.add(handler);
     channelToMessageType.put(handler.channel, handler.typeName);
-    if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      channelsThatAreFutures.add(handler.channel);
-    }
     if (functionsDefines.contains(handler.channel) || defined.contains(handler.channel)) {
       typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel));
     }
@@ -445,6 +444,19 @@ public class Document implements TopLevelDocumentHandler {
     types.put(rpc.genMessageTypeName(), nativeMessageType);
     channelToMessageType.put(rpc.name.text, rpc.genMessageTypeName());
     rpc.typing(typeChecker);
+  }
+
+  @Override
+  public void add(DefineCronTask dct) {
+    if (defined.contains(dct.name.text) || root.storage.has("__" + dct.name.text)) {
+      createError(dct, String.format("Cron task has a conflicting name", dct.name.text));
+      return;
+    }
+    defined.add(dct.name.text);
+    FieldDefinition lastTimeBreach = new FieldDefinition(new PrivatePolicy(dct.cron), dct.cron, new TyReactiveLong(false, dct.cron), dct.name.cloneWithNewText("__" + dct.name.text), null, null, null, null, null, null);
+    root.storage.add(lastTimeBreach);
+    cronTasks.put(dct.name.text, dct);
+    dct.typing(typeChecker);
   }
 
   @Override
@@ -699,6 +711,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenMetrics.writeMetricsDump(sb, environment);
     CodeGenDebug.writeDebugInfo(sb, environment);
     CodeGenAuth.writeAuth(sb, environment);
+    CodeGenCron.writeCronExecution(sb, environment);
     CodeGenWeb.writeWebHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
     CodeGenEventHandlers.writeEventHandlers(sb, environment);

@@ -34,9 +34,11 @@ public abstract class TySimpleReactive extends TyType implements DetailComputeRe
 {
   public final String reactiveTreeType;
   public final Token token;
+  public final boolean readonly;
 
-  public TySimpleReactive(final Token token, final String reactiveTreeType) {
-    super(TypeBehavior.ReadWriteWithSetGet);
+  public TySimpleReactive(final boolean readonly, final Token token, final String reactiveTreeType) {
+    super(readonly ? TypeBehavior.ReadOnlyWithGet : TypeBehavior.ReadWriteWithSetGet);
+    this.readonly = readonly;
     this.token = token;
     this.reactiveTreeType = reactiveTreeType;
     ingest(token);

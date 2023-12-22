@@ -140,368 +140,408 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleBool_4 = null;
-  private String get_SimpleBool_4() {
-    if (cached_SimpleBool_4 != null) {
-      return cached_SimpleBool_4;
+  private String cached_RootFieldWrite_4 = null;
+  private String get_RootFieldWrite_4() {
+    if (cached_RootFieldWrite_4 != null) {
+      return cached_RootFieldWrite_4;
     }
-    cached_SimpleBool_4 = generateTestOutput(false, "SimpleBool_4", "./test_code/ReadOnly_SimpleBool_failure.a");
-    return cached_SimpleBool_4;
+    cached_RootFieldWrite_4 = generateTestOutput(false, "RootFieldWrite_4", "./test_code/ReadOnly_RootFieldWrite_failure.a");
+    return cached_RootFieldWrite_4;
+  }
+
+  @Test
+  public void testRootFieldWriteFailure() {
+    assertLiveFail(get_RootFieldWrite_4());
+  }
+
+  @Test
+  public void testRootFieldWriteNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_RootFieldWrite_4());
+  }
+
+  @Test
+  public void testRootFieldWriteExceptionFree() {
+    assertExceptionFree(get_RootFieldWrite_4());
+  }
+
+  @Test
+  public void testRootFieldWriteTODOFree() {
+    assertTODOFree(get_RootFieldWrite_4());
+  }
+
+  @Test
+  public void stable_RootFieldWrite_4() {
+    String live = get_RootFieldWrite_4();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:ReadOnly_RootFieldWrite_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":3,\"character\":17,\"byte\":60}},\"severity\":1,\"source\":\"error\",\"message\":\"'r<string>' is unable to set 'string' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_RootFieldWrite_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_SimpleBool_5 = null;
+  private String get_SimpleBool_5() {
+    if (cached_SimpleBool_5 != null) {
+      return cached_SimpleBool_5;
+    }
+    cached_SimpleBool_5 = generateTestOutput(false, "SimpleBool_5", "./test_code/ReadOnly_SimpleBool_failure.a");
+    return cached_SimpleBool_5;
   }
 
   @Test
   public void testSimpleBoolFailure() {
-    assertLiveFail(get_SimpleBool_4());
+    assertLiveFail(get_SimpleBool_5());
   }
 
   @Test
   public void testSimpleBoolNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleBool_4());
+    assertNotTerribleLineNumbers(get_SimpleBool_5());
   }
 
   @Test
   public void testSimpleBoolExceptionFree() {
-    assertExceptionFree(get_SimpleBool_4());
+    assertExceptionFree(get_SimpleBool_5());
   }
 
   @Test
   public void testSimpleBoolTODOFree() {
-    assertTODOFree(get_SimpleBool_4());
+    assertTODOFree(get_SimpleBool_5());
   }
 
   @Test
-  public void stable_SimpleBool_4() {
-    String live = get_SimpleBool_4();
+  public void stable_SimpleBool_5() {
+    String live = get_SimpleBool_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleBool_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":57},\"end\":{\"line\":4,\"character\":3,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"},{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":42},\"end\":{\"line\":4,\"character\":10,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"'bool' is unable to accept an set of 'bool'.\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":85},\"end\":{\"line\":6,\"character\":3,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":69},\"end\":{\"line\":6,\"character\":11,\"byte\":94}},\"severity\":1,\"source\":\"error\",\"message\":\"'bool' is unable to accept an set of 'bool'.\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":57},\"end\":{\"line\":4,\"character\":3,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"},{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":42},\"end\":{\"line\":4,\"character\":10,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"'bool' is unable to set 'bool' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":85},\"end\":{\"line\":6,\"character\":3,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":69},\"end\":{\"line\":6,\"character\":11,\"byte\":94}},\"severity\":1,\"source\":\"error\",\"message\":\"'bool' is unable to set 'bool' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleBool_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleClient_5 = null;
-  private String get_SimpleClient_5() {
-    if (cached_SimpleClient_5 != null) {
-      return cached_SimpleClient_5;
+  private String cached_SimpleClient_6 = null;
+  private String get_SimpleClient_6() {
+    if (cached_SimpleClient_6 != null) {
+      return cached_SimpleClient_6;
     }
-    cached_SimpleClient_5 = generateTestOutput(false, "SimpleClient_5", "./test_code/ReadOnly_SimpleClient_failure.a");
-    return cached_SimpleClient_5;
+    cached_SimpleClient_6 = generateTestOutput(false, "SimpleClient_6", "./test_code/ReadOnly_SimpleClient_failure.a");
+    return cached_SimpleClient_6;
   }
 
   @Test
   public void testSimpleClientFailure() {
-    assertLiveFail(get_SimpleClient_5());
+    assertLiveFail(get_SimpleClient_6());
   }
 
   @Test
   public void testSimpleClientNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleClient_5());
+    assertNotTerribleLineNumbers(get_SimpleClient_6());
   }
 
   @Test
   public void testSimpleClientExceptionFree() {
-    assertExceptionFree(get_SimpleClient_5());
+    assertExceptionFree(get_SimpleClient_6());
   }
 
   @Test
   public void testSimpleClientTODOFree() {
-    assertTODOFree(get_SimpleClient_5());
+    assertTODOFree(get_SimpleClient_6());
   }
 
   @Test
-  public void stable_SimpleClient_5() {
-    String live = get_SimpleClient_5();
+  public void stable_SimpleClient_6() {
+    String live = get_SimpleClient_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleClient_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":50},\"end\":{\"line\":3,\"character\":3,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":13,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"'principal' is unable to accept an set of 'principal'.\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":84},\"end\":{\"line\":5,\"character\":3,\"byte\":85}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":65},\"end\":{\"line\":5,\"character\":13,\"byte\":95}},\"severity\":1,\"source\":\"error\",\"message\":\"'principal' is unable to accept an set of 'principal'.\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":50},\"end\":{\"line\":3,\"character\":3,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":13,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"'principal' is unable to set 'principal' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":84},\"end\":{\"line\":5,\"character\":3,\"byte\":85}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":65},\"end\":{\"line\":5,\"character\":13,\"byte\":95}},\"severity\":1,\"source\":\"error\",\"message\":\"'principal' is unable to set 'principal' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleClient_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleDouble_6 = null;
-  private String get_SimpleDouble_6() {
-    if (cached_SimpleDouble_6 != null) {
-      return cached_SimpleDouble_6;
+  private String cached_SimpleDouble_7 = null;
+  private String get_SimpleDouble_7() {
+    if (cached_SimpleDouble_7 != null) {
+      return cached_SimpleDouble_7;
     }
-    cached_SimpleDouble_6 = generateTestOutput(false, "SimpleDouble_6", "./test_code/ReadOnly_SimpleDouble_failure.a");
-    return cached_SimpleDouble_6;
+    cached_SimpleDouble_7 = generateTestOutput(false, "SimpleDouble_7", "./test_code/ReadOnly_SimpleDouble_failure.a");
+    return cached_SimpleDouble_7;
   }
 
   @Test
   public void testSimpleDoubleFailure() {
-    assertLiveFail(get_SimpleDouble_6());
+    assertLiveFail(get_SimpleDouble_7());
   }
 
   @Test
   public void testSimpleDoubleNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleDouble_6());
+    assertNotTerribleLineNumbers(get_SimpleDouble_7());
   }
 
   @Test
   public void testSimpleDoubleExceptionFree() {
-    assertExceptionFree(get_SimpleDouble_6());
+    assertExceptionFree(get_SimpleDouble_7());
   }
 
   @Test
   public void testSimpleDoubleTODOFree() {
-    assertTODOFree(get_SimpleDouble_6());
+    assertTODOFree(get_SimpleDouble_7());
   }
 
   @Test
-  public void stable_SimpleDouble_6() {
-    String live = get_SimpleDouble_6();
+  public void stable_SimpleDouble_7() {
+    String live = get_SimpleDouble_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleDouble_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":44},\"end\":{\"line\":3,\"character\":3,\"byte\":45}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":10,\"byte\":52}},\"severity\":1,\"source\":\"error\",\"message\":\"'double' is unable to accept an set of 'double'.\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":72},\"end\":{\"line\":5,\"character\":3,\"byte\":73}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":56},\"end\":{\"line\":5,\"character\":10,\"byte\":80}},\"severity\":1,\"source\":\"error\",\"message\":\"'double' is unable to accept an set of 'double'.\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":44},\"end\":{\"line\":3,\"character\":3,\"byte\":45}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":10,\"byte\":52}},\"severity\":1,\"source\":\"error\",\"message\":\"'double' is unable to set 'double' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":72},\"end\":{\"line\":5,\"character\":3,\"byte\":73}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":56},\"end\":{\"line\":5,\"character\":10,\"byte\":80}},\"severity\":1,\"source\":\"error\",\"message\":\"'double' is unable to set 'double' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleDouble_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleEnum_7 = null;
-  private String get_SimpleEnum_7() {
-    if (cached_SimpleEnum_7 != null) {
-      return cached_SimpleEnum_7;
+  private String cached_SimpleEnum_8 = null;
+  private String get_SimpleEnum_8() {
+    if (cached_SimpleEnum_8 != null) {
+      return cached_SimpleEnum_8;
     }
-    cached_SimpleEnum_7 = generateTestOutput(false, "SimpleEnum_7", "./test_code/ReadOnly_SimpleEnum_failure.a");
-    return cached_SimpleEnum_7;
+    cached_SimpleEnum_8 = generateTestOutput(false, "SimpleEnum_8", "./test_code/ReadOnly_SimpleEnum_failure.a");
+    return cached_SimpleEnum_8;
   }
 
   @Test
   public void testSimpleEnumFailure() {
-    assertLiveFail(get_SimpleEnum_7());
+    assertLiveFail(get_SimpleEnum_8());
   }
 
   @Test
   public void testSimpleEnumNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleEnum_7());
+    assertNotTerribleLineNumbers(get_SimpleEnum_8());
   }
 
   @Test
   public void testSimpleEnumExceptionFree() {
-    assertExceptionFree(get_SimpleEnum_7());
+    assertExceptionFree(get_SimpleEnum_8());
   }
 
   @Test
   public void testSimpleEnumTODOFree() {
-    assertTODOFree(get_SimpleEnum_7());
+    assertTODOFree(get_SimpleEnum_8());
   }
 
   @Test
-  public void stable_SimpleEnum_7() {
-    String live = get_SimpleEnum_7();
+  public void stable_SimpleEnum_8() {
+    String live = get_SimpleEnum_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleEnum_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":64},\"end\":{\"line\":4,\"character\":3,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"},{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":50},\"end\":{\"line\":4,\"character\":10,\"byte\":72}},\"severity\":1,\"source\":\"error\",\"message\":\"'E' is unable to accept an set of 'E'.\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":92},\"end\":{\"line\":6,\"character\":3,\"byte\":93}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":76},\"end\":{\"line\":6,\"character\":10,\"byte\":100}},\"severity\":1,\"source\":\"error\",\"message\":\"'E' is unable to accept an set of 'E'.\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":64},\"end\":{\"line\":4,\"character\":3,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"},{\"range\":{\"start\":{\"line\":3,\"character\":11,\"byte\":50},\"end\":{\"line\":4,\"character\":10,\"byte\":72}},\"severity\":1,\"source\":\"error\",\"message\":\"'E' is unable to set 'E' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"},{\"range\":{\"start\":{\"line\":6,\"character\":2,\"byte\":92},\"end\":{\"line\":6,\"character\":3,\"byte\":93}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":76},\"end\":{\"line\":6,\"character\":10,\"byte\":100}},\"severity\":1,\"source\":\"error\",\"message\":\"'E' is unable to set 'E' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleEnum_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleInteger_8 = null;
-  private String get_SimpleInteger_8() {
-    if (cached_SimpleInteger_8 != null) {
-      return cached_SimpleInteger_8;
+  private String cached_SimpleInteger_9 = null;
+  private String get_SimpleInteger_9() {
+    if (cached_SimpleInteger_9 != null) {
+      return cached_SimpleInteger_9;
     }
-    cached_SimpleInteger_8 = generateTestOutput(false, "SimpleInteger_8", "./test_code/ReadOnly_SimpleInteger_failure.a");
-    return cached_SimpleInteger_8;
+    cached_SimpleInteger_9 = generateTestOutput(false, "SimpleInteger_9", "./test_code/ReadOnly_SimpleInteger_failure.a");
+    return cached_SimpleInteger_9;
   }
 
   @Test
   public void testSimpleIntegerFailure() {
-    assertLiveFail(get_SimpleInteger_8());
+    assertLiveFail(get_SimpleInteger_9());
   }
 
   @Test
   public void testSimpleIntegerNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleInteger_8());
+    assertNotTerribleLineNumbers(get_SimpleInteger_9());
   }
 
   @Test
   public void testSimpleIntegerExceptionFree() {
-    assertExceptionFree(get_SimpleInteger_8());
+    assertExceptionFree(get_SimpleInteger_9());
   }
 
   @Test
   public void testSimpleIntegerTODOFree() {
-    assertTODOFree(get_SimpleInteger_8());
+    assertTODOFree(get_SimpleInteger_9());
   }
 
   @Test
-  public void stable_SimpleInteger_8() {
-    String live = get_SimpleInteger_8();
+  public void stable_SimpleInteger_9() {
+    String live = get_SimpleInteger_9();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":38},\"end\":{\"line\":3,\"character\":3,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":7,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"'int' is unable to accept an set of 'int'.\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":60},\"end\":{\"line\":5,\"character\":3,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":47},\"end\":{\"line\":5,\"character\":7,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"'int' is unable to accept an set of 'int'.\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":38},\"end\":{\"line\":3,\"character\":3,\"byte\":39}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":7,\"byte\":43}},\"severity\":1,\"source\":\"error\",\"message\":\"'int' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":60},\"end\":{\"line\":5,\"character\":3,\"byte\":61}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":47},\"end\":{\"line\":5,\"character\":7,\"byte\":65}},\"severity\":1,\"source\":\"error\",\"message\":\"'int' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleInteger_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleLong_9 = null;
-  private String get_SimpleLong_9() {
-    if (cached_SimpleLong_9 != null) {
-      return cached_SimpleLong_9;
+  private String cached_SimpleLong_10 = null;
+  private String get_SimpleLong_10() {
+    if (cached_SimpleLong_10 != null) {
+      return cached_SimpleLong_10;
     }
-    cached_SimpleLong_9 = generateTestOutput(false, "SimpleLong_9", "./test_code/ReadOnly_SimpleLong_failure.a");
-    return cached_SimpleLong_9;
+    cached_SimpleLong_10 = generateTestOutput(false, "SimpleLong_10", "./test_code/ReadOnly_SimpleLong_failure.a");
+    return cached_SimpleLong_10;
   }
 
   @Test
   public void testSimpleLongFailure() {
-    assertLiveFail(get_SimpleLong_9());
+    assertLiveFail(get_SimpleLong_10());
   }
 
   @Test
   public void testSimpleLongNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleLong_9());
+    assertNotTerribleLineNumbers(get_SimpleLong_10());
   }
 
   @Test
   public void testSimpleLongExceptionFree() {
-    assertExceptionFree(get_SimpleLong_9());
+    assertExceptionFree(get_SimpleLong_10());
   }
 
   @Test
   public void testSimpleLongTODOFree() {
-    assertTODOFree(get_SimpleLong_9());
+    assertTODOFree(get_SimpleLong_10());
   }
 
   @Test
-  public void stable_SimpleLong_9() {
-    String live = get_SimpleLong_9();
+  public void stable_SimpleLong_10() {
+    String live = get_SimpleLong_10();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleLong_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":39},\"end\":{\"line\":3,\"character\":3,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":7,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"'long' is unable to accept an set of 'int'.\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":62},\"end\":{\"line\":5,\"character\":3,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":48},\"end\":{\"line\":5,\"character\":7,\"byte\":67}},\"severity\":1,\"source\":\"error\",\"message\":\"'long' is unable to accept an set of 'int'.\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":39},\"end\":{\"line\":3,\"character\":3,\"byte\":40}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":7,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"'long' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":62},\"end\":{\"line\":5,\"character\":3,\"byte\":63}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":48},\"end\":{\"line\":5,\"character\":7,\"byte\":67}},\"severity\":1,\"source\":\"error\",\"message\":\"'long' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleLong_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleMaybe_10 = null;
-  private String get_SimpleMaybe_10() {
-    if (cached_SimpleMaybe_10 != null) {
-      return cached_SimpleMaybe_10;
+  private String cached_SimpleMaybe_11 = null;
+  private String get_SimpleMaybe_11() {
+    if (cached_SimpleMaybe_11 != null) {
+      return cached_SimpleMaybe_11;
     }
-    cached_SimpleMaybe_10 = generateTestOutput(false, "SimpleMaybe_10", "./test_code/ReadOnly_SimpleMaybe_failure.a");
-    return cached_SimpleMaybe_10;
+    cached_SimpleMaybe_11 = generateTestOutput(false, "SimpleMaybe_11", "./test_code/ReadOnly_SimpleMaybe_failure.a");
+    return cached_SimpleMaybe_11;
   }
 
   @Test
   public void testSimpleMaybeFailure() {
-    assertLiveFail(get_SimpleMaybe_10());
+    assertLiveFail(get_SimpleMaybe_11());
   }
 
   @Test
   public void testSimpleMaybeNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleMaybe_10());
+    assertNotTerribleLineNumbers(get_SimpleMaybe_11());
   }
 
   @Test
   public void testSimpleMaybeExceptionFree() {
-    assertExceptionFree(get_SimpleMaybe_10());
+    assertExceptionFree(get_SimpleMaybe_11());
   }
 
   @Test
   public void testSimpleMaybeTODOFree() {
-    assertTODOFree(get_SimpleMaybe_10());
+    assertTODOFree(get_SimpleMaybe_11());
   }
 
   @Test
-  public void stable_SimpleMaybe_10() {
-    String live = get_SimpleMaybe_10();
+  public void stable_SimpleMaybe_11() {
+    String live = get_SimpleMaybe_11();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleMaybe_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":47},\"end\":{\"line\":3,\"character\":3,\"byte\":48}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":8,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<int>' is unable to accept an set of 'int'.\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":80},\"end\":{\"line\":5,\"character\":3,\"byte\":81}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":57},\"end\":{\"line\":5,\"character\":8,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<int>' is unable to accept an set of 'int'.\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":47},\"end\":{\"line\":3,\"character\":3,\"byte\":48}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":8,\"byte\":53}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<int>' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":80},\"end\":{\"line\":5,\"character\":3,\"byte\":81}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":57},\"end\":{\"line\":5,\"character\":8,\"byte\":86}},\"severity\":1,\"source\":\"error\",\"message\":\"'maybe<int>' is unable to set 'int' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleMaybe_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SimpleString_11 = null;
-  private String get_SimpleString_11() {
-    if (cached_SimpleString_11 != null) {
-      return cached_SimpleString_11;
+  private String cached_SimpleString_12 = null;
+  private String get_SimpleString_12() {
+    if (cached_SimpleString_12 != null) {
+      return cached_SimpleString_12;
     }
-    cached_SimpleString_11 = generateTestOutput(false, "SimpleString_11", "./test_code/ReadOnly_SimpleString_failure.a");
-    return cached_SimpleString_11;
+    cached_SimpleString_12 = generateTestOutput(false, "SimpleString_12", "./test_code/ReadOnly_SimpleString_failure.a");
+    return cached_SimpleString_12;
   }
 
   @Test
   public void testSimpleStringFailure() {
-    assertLiveFail(get_SimpleString_11());
+    assertLiveFail(get_SimpleString_12());
   }
 
   @Test
   public void testSimpleStringNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SimpleString_11());
+    assertNotTerribleLineNumbers(get_SimpleString_12());
   }
 
   @Test
   public void testSimpleStringExceptionFree() {
-    assertExceptionFree(get_SimpleString_11());
+    assertExceptionFree(get_SimpleString_12());
   }
 
   @Test
   public void testSimpleStringTODOFree() {
-    assertTODOFree(get_SimpleString_11());
+    assertTODOFree(get_SimpleString_12());
   }
 
   @Test
-  public void stable_SimpleString_11() {
-    String live = get_SimpleString_11();
+  public void stable_SimpleString_12() {
+    String live = get_SimpleString_12();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_SimpleString_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":43},\"end\":{\"line\":3,\"character\":3,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":9,\"byte\":50}},\"severity\":1,\"source\":\"error\",\"message\":\"'string' is unable to accept an set of 'string'.\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":69},\"end\":{\"line\":5,\"character\":3,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":54},\"end\":{\"line\":5,\"character\":9,\"byte\":76}},\"severity\":1,\"source\":\"error\",\"message\":\"'string' is unable to accept an set of 'string'.\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":105},\"end\":{\"line\":7,\"character\":3,\"byte\":106}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'k' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":6,\"character\":24,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"'string' is unable to accept an set of 'string'.\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":2,\"byte\":43},\"end\":{\"line\":3,\"character\":3,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'y' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":3,\"character\":9,\"byte\":50}},\"severity\":1,\"source\":\"error\",\"message\":\"'string' is unable to set 'string' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":5,\"character\":2,\"byte\":69},\"end\":{\"line\":5,\"character\":3,\"byte\":70}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'z' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":54},\"end\":{\"line\":5,\"character\":9,\"byte\":76}},\"severity\":1,\"source\":\"error\",\"message\":\"'string' is unable to set 'string' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":7,\"character\":2,\"byte\":105},\"end\":{\"line\":7,\"character\":3,\"byte\":106}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'k' is readonly\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":11,\"byte\":25},\"end\":{\"line\":6,\"character\":24,\"byte\":102}},\"severity\":1,\"source\":\"error\",\"message\":\"'string' is unable to set 'string' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_SimpleString_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Simples_12 = null;
-  private String get_Simples_12() {
-    if (cached_Simples_12 != null) {
-      return cached_Simples_12;
+  private String cached_Simples_13 = null;
+  private String get_Simples_13() {
+    if (cached_Simples_13 != null) {
+      return cached_Simples_13;
     }
-    cached_Simples_12 = generateTestOutput(true, "Simples_12", "./test_code/ReadOnly_Simples_success.a");
-    return cached_Simples_12;
+    cached_Simples_13 = generateTestOutput(true, "Simples_13", "./test_code/ReadOnly_Simples_success.a");
+    return cached_Simples_13;
   }
 
   @Test
   public void testSimplesEmission() {
-    assertEmissionGood(get_Simples_12());
+    assertEmissionGood(get_Simples_13());
   }
 
   @Test
   public void testSimplesSuccess() {
-    assertLivePass(get_Simples_12());
+    assertLivePass(get_Simples_13());
   }
 
   @Test
   public void testSimplesNoFormatException() {
-    assertNoFormatException(get_Simples_12());
+    assertNoFormatException(get_Simples_13());
   }
 
   @Test
   public void testSimplesGoodWillHappy() {
-    assertGoodWillHappy(get_Simples_12());
+    assertGoodWillHappy(get_Simples_13());
   }
 
   @Test
   public void testSimplesExceptionFree() {
-    assertExceptionFree(get_Simples_12());
+    assertExceptionFree(get_Simples_13());
   }
 
   @Test
   public void testSimplesTODOFree() {
-    assertTODOFree(get_Simples_12());
+    assertTODOFree(get_Simples_13());
   }
 
   @Test
-  public void stable_Simples_12() {
-    String live = get_Simples_12();
+  public void stable_Simples_13() {
+    String live = get_Simples_13();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ReadOnly_Simples_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -551,6 +591,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.remote.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
     gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport org.adamalang.runtime.text.*;");
     gold.append("\nimport java.time.*;");
@@ -562,13 +603,13 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Simples_12 extends LivingDocument {");
+    gold.append("\npublic class Simples_13 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Simples_12(DocumentMonitor __monitor) {");
+    gold.append("\n  public Simples_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -642,6 +683,9 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
@@ -724,6 +768,9 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n          case \"__messages\":");
     gold.append("\n            __hydrateMessages(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__enqueued\":");
+    gold.append("\n            __hydrateEnqueuedTaskManager(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__webqueue\":");
     gold.append("\n            __hydrateWebQueue(__reader);");
     gold.append("\n            break;");
@@ -779,6 +826,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __dumpEnqueuedTaskManager(__writer);");
     gold.append("\n    __dumpTimeouts(__writer);");
     gold.append("\n    __dumpWebQueue(__writer);");
     gold.append("\n    __dumpReplicationEngine(__writer);");
@@ -826,9 +874,9 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSimples_12 implements DeltaNode {");
+    gold.append("\n  private class DeltaSimples_13 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSimples_12() {");
+    gold.append("\n    private DeltaSimples_13() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -836,7 +884,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public boolean show(Simples_12 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Simples_13 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -867,8 +915,8 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Simples_12 __self = this;");
-    gold.append("\n    DeltaSimples_12 __state = new DeltaSimples_12();");
+    gold.append("\n    Simples_13 __self = this;");
+    gold.append("\n    DeltaSimples_13 __state = new DeltaSimples_13();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
     gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
@@ -1095,6 +1143,8 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1240,6 +1290,46 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
+    assertStable(live, gold);
+  }
+  private String cached_TableIngest_14 = null;
+  private String get_TableIngest_14() {
+    if (cached_TableIngest_14 != null) {
+      return cached_TableIngest_14;
+    }
+    cached_TableIngest_14 = generateTestOutput(false, "TableIngest_14", "./test_code/ReadOnly_TableIngest_failure.a");
+    return cached_TableIngest_14;
+  }
+
+  @Test
+  public void testTableIngestFailure() {
+    assertLiveFail(get_TableIngest_14());
+  }
+
+  @Test
+  public void testTableIngestNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_TableIngest_14());
+  }
+
+  @Test
+  public void testTableIngestExceptionFree() {
+    assertExceptionFree(get_TableIngest_14());
+  }
+
+  @Test
+  public void testTableIngestTODOFree() {
+    assertTODOFree(get_TableIngest_14());
+  }
+
+  @Test
+  public void stable_TableIngest_14() {
+    String live = get_TableIngest_14();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:ReadOnly_TableIngest_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":9,\"byte\":37},\"end\":{\"line\":6,\"character\":25,\"byte\":91}},\"severity\":1,\"source\":\"error\",\"message\":\"'table<R>' is unable to ingest '_AnonObjConvert_0' due to readonly left reference.\",\"file\":\"./test_code/ReadOnly_TableIngest_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
 }
