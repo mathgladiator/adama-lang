@@ -1785,6 +1785,23 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void enqueue_and_transfer() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "@connected { return @who == @no_one; } @construct { Time.setZone(\"America/Chicago\"); } public int t = 0; @cron fooz daily 8:00 { foo.enqueue(@no_one, {t:123}); } message M { int t; } channel foo(M m) { t += m.t; }");
+    setup.time.time = 1703189536059L; // ~ 2pm, only fire due to being the first
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(2));
+    Assert.assertEquals("0", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(3));
+    Assert.assertEquals("123", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+    setup.time.time = 1803189536059L; // ~ 2pm, only fire due to being the first
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
+    Assert.assertEquals("123", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(6));
+    Assert.assertEquals("246", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString());
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void state_machine_progress_over_time() throws Exception {
     final var setup =

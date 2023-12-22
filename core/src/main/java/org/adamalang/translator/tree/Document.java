@@ -62,7 +62,6 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class Document implements TopLevelDocumentHandler {
-  public final HashSet<String> channelsThatAreFutures;
   public final HashMap<String, String> channelToMessageType;
   public final ArrayList<DefineDocumentEvent> events;
   public final ArrayList<DefineConstructor> constructors;
@@ -112,7 +111,6 @@ public class Document implements TopLevelDocumentHandler {
     tests = new ArrayList<>();
     events = new ArrayList<>();
     channelToMessageType = new HashMap<>();
-    channelsThatAreFutures = new HashSet<>();
     searchPaths = new ArrayList<>();
     constructors = new ArrayList<>();
     latentCodeSnippets = new ArrayList<>();
@@ -366,9 +364,6 @@ public class Document implements TopLevelDocumentHandler {
   public void add(final DefineHandler handler) {
     handlers.add(handler);
     channelToMessageType.put(handler.channel, handler.typeName);
-    if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      channelsThatAreFutures.add(handler.channel);
-    }
     if (functionsDefines.contains(handler.channel) || defined.contains(handler.channel)) {
       typeChecker.issueError(handler, String.format("Handler '%s' was already defined.", handler.channel));
     }

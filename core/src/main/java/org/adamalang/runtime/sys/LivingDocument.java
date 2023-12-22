@@ -237,9 +237,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __time.get().longValue();
   }
 
-  protected void enqueue(NtPrincipal who, String channel, NtDynamic message) {
+  protected void __enqueue(String channel, NtPrincipal who, NtMessageBase message) {
     final var msgId = __message_id.bumpUpPost();
-    __enqueued.add(new EnqueuedTask(msgId, who, channel, message));
+    __enqueued.add(new EnqueuedTask(msgId, who, channel, message.to_dynamic()));
   }
 
   /** exposed: set the document's time zone */
@@ -391,6 +391,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private LivingDocumentChange __invalidation_queue_transfer(NtPrincipal who, long timestamp, final String request) {
     EnqueuedTask enqueuedTask = __enqueued.transfer();
     AsyncTask asyncLiveTask = new AsyncTask(enqueuedTask.messageId, enqueuedTask.who, 0, enqueuedTask.channel, timestamp, "adama", "0.0.0.0", __parse_message(enqueuedTask.channel, new JsonStreamReader(enqueuedTask.message.json)));
+    __queue.add(asyncLiveTask);
 
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
