@@ -113,4 +113,12 @@ public class EnqueuedTaskManager {
   public void add(EnqueuedTask task) {
     pending.add(task);
   }
+
+  public boolean readyForTransfer() {
+    return pending.size() == 0 && !active.isEmpty();
+  }
+
+  public EnqueuedTask transfer() {
+    return active.removeFirst();
+  }
 }

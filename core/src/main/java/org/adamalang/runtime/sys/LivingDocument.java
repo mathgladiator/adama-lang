@@ -388,6 +388,54 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null, shouldSignalBroadcast(BroadcastPathway.Invalidate, who));
   }
 
+  private LivingDocumentChange __invalidation_queue_transfer(NtPrincipal who, long timestamp, final String request) {
+    EnqueuedTask enqueuedTask = __enqueued.transfer();
+    AsyncTask asyncLiveTask = new AsyncTask(enqueuedTask.messageId, enqueuedTask.who, 0, enqueuedTask.channel, timestamp, "adama", "0.0.0.0", __parse_message(enqueuedTask.channel, new JsonStreamReader(enqueuedTask.message.json)));
+
+    final var forward = new JsonStreamWriter();
+    final var reverse = new JsonStreamWriter();
+    forward.beginObject();
+    reverse.beginObject();
+
+    {
+      forward.writeObjectFieldIntro("__messages");
+      forward.beginObject();
+      forward.writeObjectFieldIntro(enqueuedTask.messageId);
+      asyncLiveTask.dump(forward);
+      forward.endObject();
+    }
+
+    forward.writeObjectFieldIntro("__enqueued");
+    {
+      forward.beginObject();
+      forward.writeObjectFieldIntro(enqueuedTask.messageId);
+      forward.writeNull();
+      forward.endObject();
+    }
+
+    reverse.writeObjectFieldIntro("__messages");
+    {
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro(enqueuedTask.messageId);
+      reverse.writeNull();
+      reverse.endObject();
+    }
+
+    reverse.writeObjectFieldIntro("__enqueued");
+    {
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro(enqueuedTask.messageId);
+      enqueuedTask.writeTo(reverse);
+      reverse.endObject();
+    }
+    __seq.bumpUpPre();
+    __commit(null, forward, reverse);
+    forward.endObject();
+    reverse.endObject();
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.Invalidate);
+    return new LivingDocumentChange(update, null, null, false);
+  }
+
   private LivingDocumentChange __simple_commit(NtPrincipal who, final String request, Object response, long assetBytes) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -1802,7 +1850,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __simple_commit(who, request, null, 0L);
   }
 
-  private LivingDocumentChange __transaction_invalidate_cron(NtPrincipal who, final String request, boolean again) {
+  private LivingDocumentChange __transaction_invalidate_cron(NtPrincipal who, final String request, long timestamp, boolean didWork, boolean again) {
     boolean againAgain = false;
     Integer sleepTime = null;
     if (!again) {
@@ -1812,7 +1860,11 @@ public abstract class LivingDocument implements RxParent, Caller {
         __make_cron_progress();
         if (__optimisticNextCronCheck < Long.MAX_VALUE) { // there are no next events if the optimistic next time is max long, and this will disable the function call in future steps
           sleepTime = (int) Math.min(Math.max(10000, (__optimisticNextCronCheck - __time.get())), 12 * 60 * 60 * 1000);
+          againAgain = true;
         }
+      }
+      if (!againAgain && !didWork && __enqueued.readyForTransfer()) {
+        return __invalidation_queue_transfer(who, timestamp, request);
       }
     }
     return __invalidate_trailer(who, request, again || againAgain, sleepTime);
@@ -1822,6 +1874,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private LivingDocumentChange __transaction_invalidate_body(NtPrincipal who, final String request) {
     __preemptedStateOnNextComputeBlocked = null;
     final var seedUsed = Long.parseLong(__entropy.get());
+    final long timeBackup = __time.get();
     try {
       __random = new Random(seedUsed);
       boolean workDone = false;
@@ -1829,7 +1882,6 @@ public abstract class LivingDocument implements RxParent, Caller {
       for (final AsyncTask task : __queue) {
         __route(task);
       }
-      final long timeBackup = __time.get();
       Runnable taskPerf = __perf.measure("tasks");
       try {
         for (final AsyncTask task : __queue) {
@@ -1891,7 +1943,7 @@ public abstract class LivingDocument implements RxParent, Caller {
             item.state = WebQueueState.Remove;
             __webQueue.dirty();
             __drive_webget_queue();
-            return __transaction_invalidate_cron(who, request, dirtyLeft > 0);
+            return __transaction_invalidate_cron(who, request, timeBackup, true, dirtyLeft > 0);
           } catch (ComputeBlockedException cbe) {
             __revert();
             __time.set(timeBackup);
@@ -1899,13 +1951,13 @@ public abstract class LivingDocument implements RxParent, Caller {
         }
       }
       __drive_webget_queue();
-      return __transaction_invalidate_cron(who, request, dirtyLeft > 0);
+      return __transaction_invalidate_cron(who, request, timeBackup, workDone, dirtyLeft > 0);
     } catch (final ComputeBlockedException blockedOn) {
       if (__preemptedStateOnNextComputeBlocked != null) {
         __state.set(__preemptedStateOnNextComputeBlocked);
         __next_time.set(__time.get());
         __preemptedStateOnNextComputeBlocked = null;
-        return __transaction_invalidate_cron(who, request, false);
+        return __transaction_invalidate_cron(who, request, timeBackup, true, false);
       } else {
         List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
         __revert();
