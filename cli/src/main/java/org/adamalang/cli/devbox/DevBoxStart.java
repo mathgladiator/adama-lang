@@ -443,7 +443,7 @@ public class DevBoxStart {
               }
             });
           } else {
-            terminal.notice("load $space $key $file");
+            terminal.notice("query $space $key");
           }
         }
       }
