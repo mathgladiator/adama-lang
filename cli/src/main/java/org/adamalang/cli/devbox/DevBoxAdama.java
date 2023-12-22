@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
+import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
@@ -110,7 +111,22 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
       public void success(AuthResponse response) {
         if (response != null) {
           if (SCryptUtil.check(pw, response.hash)) {
-            responder.complete("document/" + key.space + "/" + key.key + "/" + response.agent);
+            if (response.channel != null && response.success != null) {
+              CoreRequestContext newUser = new CoreRequestContext(new NtPrincipal(response.agent, "doc/" + key.space + "/" + key.key), context.origin, context.remoteIp, key.key);
+              verse.service.directSend(newUser, key, null, response.channel, response.success, new Callback<Integer>() {
+                @Override
+                public void success(Integer value) {
+                  responder.complete("document/" + key.space + "/" + key.key + "/" + response.agent);
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  responder.error(ex);
+                }
+              });
+            } else {
+              responder.complete("document/" + key.space + "/" + key.key + "/" + response.agent);
+            }
             return;
           }
         }

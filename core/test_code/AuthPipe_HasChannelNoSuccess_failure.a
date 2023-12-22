@@ -1,0 +1,10 @@
+message M {
+}
+
+@authorization (M m) {
+  return {
+    agent: "1",
+    hash: "2",
+    channel: "foo"
+  };
+}

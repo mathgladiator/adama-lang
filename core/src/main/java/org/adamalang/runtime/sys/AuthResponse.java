@@ -17,9 +17,21 @@
 */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtMessageBase;
+
 public class AuthResponse {
   public String hash;
   public String agent;
+  public String channel;
+  public String success;
+
+  public AuthResponse() {
+    this.hash = null;
+    this.agent = null;
+    this.channel = null;
+    this.success = null;
+  }
 
   public AuthResponse hash(String hash) {
     this.hash = hash;
@@ -28,6 +40,18 @@ public class AuthResponse {
 
   public AuthResponse agent(String agent) {
     this.agent = agent;
+    return this;
+  }
+
+  public AuthResponse channel(String channel) {
+    this.channel = channel;
+    return this;
+  }
+
+  public AuthResponse success(NtMessageBase message) {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    message.__writeOut(writer);
+    this.success = writer.toString();
     return this;
   }
 }
