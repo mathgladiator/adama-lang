@@ -27,10 +27,10 @@ async function ExecSafeArea($){
       const { insets } = data;
       for (const [key, value] of Object.entries(insets)) {
         console.log("Safe Area Changed: Data " , key , value);
-        document.documentElement.style.setProperty(
-          `--safe-area-${key}`,
-          `${value}px`,
-        );
+//        document.documentElement.style.setProperty(
+//          `--safe-area-${key}`,
+//          `${value}px`,
+//        );
       }
     });
 }
@@ -47,7 +47,6 @@ async function LinkCapacitor($, identityName) {
 
   PushNotifications.requestPermissions().then(result => {
     $.bump("nps"); // setup
-    console.log("PushNot result: ", result);
     if (result.receive === 'granted') {
       console.log("granted push permission")
       $.bump("npg");
