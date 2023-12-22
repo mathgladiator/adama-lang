@@ -121,4 +121,8 @@ public class EnqueuedTaskManager {
   public EnqueuedTask transfer() {
     return active.removeFirst();
   }
+
+  public int size() {
+    return pending.size() + active.size();
+  }
 }

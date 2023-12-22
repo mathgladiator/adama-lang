@@ -35,8 +35,13 @@ public class EnqueuedTaskManagerTests {
       etm.dump(writer);
       etm.commit(writer, writer);
       Assert.assertEquals("", writer.toString());
+      Assert.assertEquals(0, etm.size());
     }
+    Assert.assertEquals(0, etm.size());
+    Assert.assertFalse(etm.readyForTransfer());
     etm.add(new EnqueuedTask(40, new NtPrincipal("agent", "auth"), "ch", new NtDynamic("[1,2]")));
+    Assert.assertFalse(etm.readyForTransfer());
+    Assert.assertEquals(1, etm.size());
     {
       JsonStreamWriter forward = new JsonStreamWriter();
       JsonStreamWriter reverse = new JsonStreamWriter();
@@ -47,5 +52,9 @@ public class EnqueuedTaskManagerTests {
       etm.dump(dump);
       Assert.assertEquals("\"__enqueued\":{}", dump.toString());
     }
+    Assert.assertTrue(etm.readyForTransfer());
+    EnqueuedTask pulled = etm.transfer();
+    Assert.assertNotNull(pulled);
+    Assert.assertEquals(0, etm.size());
   }
 }
