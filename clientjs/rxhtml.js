@@ -1760,7 +1760,7 @@ var RxHTML = (function () {
     } else if (isInputBox) {
       var type = ("type" in el) ? el.type.toUpperCase() : "TEXT";
       if (type == "SUBMIT" || type == "RESET") return;
-      if ((type == "PASSWORD" || name == "password" || name == "confirm-password")) {
+      if ((type == "PASSWORD" || name == "password" || name == "confirm-password" || name == "new_password" || name == "confirm-new_password")) {
         passwords[name] = el.value;
         return;
       }
@@ -2753,6 +2753,9 @@ var RxHTML = (function () {
     if ('password' in passwords) {
       req['password'] = passwords['password'];
     }
+    if ('new_password' in passwords) {
+      req['new_password'] = passwords['new_password'];
+    }
     return req;
   }
 
@@ -2801,7 +2804,7 @@ var RxHTML = (function () {
         cur = cur.parentElement;
       }
       var hunt = function(node) {
-        if (node.tagName.toUpperCase() == "INPUT" && (node.name == "password" || node.name == "confirm-password")) {
+        if (node.tagName.toUpperCase() == "INPUT" && (node.name == "password" || node.name == "confirm-password" || name == "new_password" || name == "confirm-new_password")) {
           if (node.type == "password") {
             node.type = "text"
           } else {
