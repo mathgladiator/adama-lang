@@ -36,12 +36,12 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
   private boolean good;
   private long left;
   private boolean checkSize;
-  private final Inflight alarm;
+  private final Inflight notFoundAlarm;
 
-  public FileWriterHttpResponder(File fileToWrite, Inflight alarm, Callback<Void> callback) throws ErrorCodeException {
+  public FileWriterHttpResponder(File fileToWrite, Inflight notFoundAlarm, Callback<Void> callback) throws ErrorCodeException {
     try {
       this.fileToWrite = fileToWrite;
-      this.alarm = alarm;
+      this.notFoundAlarm = notFoundAlarm;
       this.output = new FileOutputStream(fileToWrite);
       this.callback = callback;
       this.good = true;
@@ -55,7 +55,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
     if (good && header.status != 200) {
       this.good = false;
       if (header.status == 404) {
-        alarm.up();
+        notFoundAlarm.up();
       }
       LOGGER.error("failed-to-write: {} status:{} headers:{}", fileToWrite.toString(), header.status, header.headers.toString());
       callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_NOT_200));
