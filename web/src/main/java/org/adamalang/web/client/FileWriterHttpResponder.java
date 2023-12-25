@@ -54,7 +54,9 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
   public void start(SimpleHttpResponseHeader header) {
     if (good && header.status != 200) {
       this.good = false;
-      alarm.up();
+      if (header.status == 404) {
+        alarm.up();
+      }
       LOGGER.error("failed-to-write: {} status:{} headers:{}", fileToWrite.toString(), header.status, header.headers.toString());
       callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_NOT_200));
     }
