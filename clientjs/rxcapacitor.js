@@ -4,7 +4,7 @@ var SafeArea = Capacitor.Plugins.SafeArea;
 var PushNotifications = Capacitor.Plugins.PushNotifications;
 var Network = Capacitor.Plugins.Network;
 
-var CapacitorApp = Capacitor.Plugins.CapacitorApp;
+var CapacitorApp = Capacitor.Plugins.App;
 
 
 // Prepared & separated this function for now as we have a configuration specific to iOS (see capacitor.config.js#21) although this will push all UI elements(bg, buttons etc) to the safe area content and will leave
@@ -38,6 +38,7 @@ async function ExecSafeArea($){
 async function LinkCapacitor($, identityName) {
   // this function is probably required because adding just the plugin itself will do the job but won't minimize the app.
   CapacitorApp.addListener('backButton' , ({canGoBack})=> {
+    console.log("BackButton called ... ", canGoBack);
     if(!canGoBack){
         CapacitorApp.minimizeApp();
     }else{
@@ -117,11 +118,11 @@ async function LinkCapacitor($, identityName) {
 
 // Method called when tapping on a notification
   PushNotifications.addListener('pushNotificationActionPerformed', function (action) {
-    // TODO: feed the URL into RxHTML
     console.log('Push action performed: ' + JSON.stringify(action));
+    window.rxhtml.goto(action.notification.data.url, true);
   });
 
-  Network.addListener('networkStatusChange', (status) => {
+  Network.addListener('networkStatusChange', status => {
     // TODO: pump this into RxHTML
   });
 
