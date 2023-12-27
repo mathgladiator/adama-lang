@@ -16,40 +16,41 @@ The current story for developers is "meh", so these items help improve and moder
 | lib-react             |     | library to use Adama with React                                                                                                                                          |
 | lib-vue               |     | library to use Adama with Vue                                                                                                                                            |
 | lib-svelte            |     | library to use Adama with svelte                                                                                                                                         |
-| js-client-retry       | X   | Individual retries per document                                                                                                                                          |
 
 ## Documentation
 
-| project              | IP | description                                                                                                   |
-|----------------------|----|---------------------------------------------------------------------------------------------------------------|
-| kickoff demos        | X  | See [https://asciinema.org/](https://asciinema.org/) for more information                                     |
-| client-walk          |    | A detailed walkthough about how to use the client library, the expectations, and core APIs                    |
-| improve overview     |    | Make the overview easier to understand, more details, etc                                                     |
-| cheat-sheet          |    | document the vital aspects of the language and provide copy-pasta examples                                    |
-| micro-examples       |    | a mini stack-overflow of sorts                                                                                |
-| tutorial-app         |    | walk through the basics of building an Adama with just Adama and RxHTML                                       |
-| tutorial-twilio      |    | build a twilio bot as an example with details on calling services                                             |
-| tutorial-web         |    | a HOWTO host a static website with Adama                                                                      |
-| tutorial-domain      |    | a HOWTO use Adama's domain hosting support                                                                    |
-| zero-hero            |    | a breakdown of using the bootstrap tooling to build a complete app                                            |
-| feature-complex      |    | Write about complex number support                                                                            |
-| feature-maybe        |    | (1) write about how maybes work, (2) write about maybe field deref, (3) write about math and maybe            |
-| feature-lists        |    | write more lists                                                                                              |
-| feature-map          |    | write about map transforms                                                                                    |
-| feature-dynamic      |    | write about dynamic types                                                                                     |
-| feature-viewer       |    | write about @viewer                                                                                           |
-| feature-context      |    | write about @context                                                                                          |
-| feature-web          |    | write about @headers / @parameters                                                                            |
-| map/reduce-love      | X  | reduce love along with maps                                                                                   |
-| functions            |    | procedure, aborts, functions, methods                                                                         |
-| enumeration/dispatch |    | talk about dispatch                                                                                           |
-| feature-services     |    | talk about services and linkage to first party                                                                |
-| feature-async        |    | talk about async await,decide,fetch, choose, and result                                                       |
-| result type          |    | talk about the result type                                                                                    |
-| feature-sm           |    | talk about the state machine, invoke, transition, transition-in                                               |
-| web-put              |    | talk about the web processing                                                                                 |
-| stdlib code-gen      |    | generate documentation from the stdlib (i.e. embed docs in java as annotations) (embed documentation in type) |
-| document or kill rpc |    | The rpc helper is an interesting way of making channels, but it isn't used right now... kill or document      |
+| project              | IP  | description                                                                                                   |
+|----------------------|-----|---------------------------------------------------------------------------------------------------------------|
+| kickoff demos        | X   | See [https://asciinema.org/](https://asciinema.org/) for more information                                     |
+| client-walk          |     | A detailed walkthough about how to use the client library, the expectations, and core APIs                    |
+| improve overview     |     | Make the overview easier to understand, more details, etc                                                     |
+| cheat-sheet          |     | document the vital aspects of the language and provide copy-pasta examples                                    |
+| micro-examples       |     | a mini stack-overflow of sorts                                                                                |
+| tutorial-app         |     | walk through the basics of building an Adama with just Adama and RxHTML                                       |
+| tutorial-twilio      |     | build a twilio bot as an example with details on calling services                                             |
+| tutorial-web         |     | a HOWTO host a static website with Adama                                                                      |
+| tutorial-domain      |     | a HOWTO use Adama's domain hosting support                                                                    |
+| zero-hero            |     | a breakdown of using the bootstrap tooling to build a complete app                                            |
+| feature-complex      |     | Write about complex number support                                                                            |
+| feature-maybe        |     | (1) write about how maybes work, (2) write about maybe field deref, (3) write about math and maybe            |
+| feature-lists        |     | write more lists                                                                                              |
+| feature-map          |     | write about map transforms                                                                                    |
+| feature-dynamic      |     | write about dynamic types                                                                                     |
+| feature-viewer       |     | write about @viewer                                                                                           |
+| feature-context      |     | write about @context                                                                                          |
+| feature-web          |     | write about @headers / @parameters                                                                            |
+| map/reduce-love      | X   | reduce love along with maps                                                                                   |
+| functions            |     | procedure, aborts, functions, methods                                                                         |
+| enumeration/dispatch |     | talk about dispatch                                                                                           |
+| feature-services     |     | talk about services and linkage to first party along with third party http (and encryption of secrets)        |
+| feature-async        |     | talk about async await,decide,fetch, choose, and result                                                       |
+| result type          |     | talk about the result type                                                                                    |
+| feature-sm           |     | talk about the state machine, invoke, transition, transition-in                                               |
+| web-put              |     | talk about the web processing                                                                                 |
+| stdlib code-gen      |     | generate documentation from the stdlib (i.e. embed docs in java as annotations) (embed documentation in type) |
+| document or kill rpc |     | The rpc helper is an interesting way of making channels, but it isn't used right now... kill or document      |
+| assets               |     |                                                                                                               |
+| rxhtml auth stuff    |     |                                                                                                               |
 
 ## Standard Library
 | project         | IP  | description                                                                                                                             |

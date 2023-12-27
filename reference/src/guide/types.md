@@ -19,17 +19,18 @@ Adama has many built-in primal types! The following tables outline which types a
 
 The above built-in types are building blocks for richer types, and the below table provides callouts to other type mechanisms. Not all types are valid at the document level.
 
-| Type | Quick call out                                                                                                                                     | Applicable to document/record |
-|  --- |----------------------------------------------------------------------------------------------------------------------------------------------------| --- |
-| [enum](./enumerations.md) | An **enum**eration is a type that consists of a finite set of named constants. | yes |
-| [messages](./messages.md) | A **message** is a collection of variables grouped under one name used for [communication via channels.](./async.md) | only via a formula |
-| [records](./records.md) | A **record** is a collection of variables grouped under one name used for persistence. | yes |
-| [maybe](./maybe.md) | Sometimes things didn't or can't happen, and we use **maybe** to express that absence rather than null. Monads for the win! | yes (only for applicable types) |
-| [table](./tables-linq.md) | A **table** forms the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. | yes |
-| [channel](./async.md) | Channels enable communication between the document and people via handlers and **future**s. | only root document |
-| [future](./async.md) | A future is a result that will arrive in the **future**. | no |
-| [maps](./map-reduce.md) | A **map** enables associating keys to values, but they can also be the result of a reduction. | yes |
-| [lists](./tables-linq.md) | A **list** is created by using language integrated query on a table | yes |
-| [arrays](./anonymous.md#arrays) | An array is a read-only finite collection of a adjacent items | only via a formula |
-| [result](./services.md) | A result is the ongoing progress of a service call made to a remote service | only via a formula |
-| [service](./services.md) | A service is a way to reach beyond the document to a remote resources | only root document |
+| Type                            | Quick call out                                                                                                                                     | Applicable to document/record   |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| [assets](./assets.md)           | An **asset** is an externally stored byte blob                                                                                                     | yes                             |
+| [enum](./enumerations.md)       | An **enum**eration is a type that consists of a finite set of named constants.                                                                     | yes                             |
+| [messages](./messages.md)       | A **message** is a collection of variables grouped under one name used for [communication via channels.](./async.md)                               | only via a formula              |
+| [records](./records.md)         | A **record** is a collection of variables grouped under one name used for persistence.                                                             | yes                             |
+| [maybe](./maybe.md)             | Sometimes things didn't or can't happen, and we use **maybe** to express that absence rather than null. Monads for the win!                        | yes (only for applicable types) |
+| [table](./tables-linq.md)       | A **table** forms the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. | yes                             |
+| [channel](./async.md)           | Channels enable communication between the document and people via handlers and **future**s.                                                        | only root document              |
+| [future](./async.md)            | A future is a result that will arrive in the **future**.                                                                                           | no                              |
+| [maps](./map-reduce.md)         | A **map** enables associating keys to values, but they can also be the result of a reduction.                                                      | yes                             |
+| [lists](./tables-linq.md)       | A **list** is created by using language integrated query on a table                                                                                | yes                             |
+| [arrays](./anonymous.md#arrays) | An array is a read-only finite collection of a adjacent items                                                                                      | only via a formula              |
+| [result](./services.md)         | A result is the ongoing progress of a service call made to a remote service                                                                        | only via a formula              |
+| [service](./services.md)        | A service is a way to reach beyond the document to a remote resources                                                                              | only root document              |
