@@ -51,6 +51,7 @@ The current story for developers is "meh", so these items help improve and moder
 | document or kill rpc |     | The rpc helper is an interesting way of making channels, but it isn't used right now... kill or document      |
 | assets               |     |                                                                                                               |
 | rxhtml auth stuff    |     |                                                                                                               |
+| auto ids in RxHTML   |     |                                                                                                               |
 
 ## Standard Library
 | project         | IP  | description                                                                                                                             |
