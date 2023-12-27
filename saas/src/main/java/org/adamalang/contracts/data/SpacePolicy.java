@@ -50,13 +50,41 @@ public class SpacePolicy {
           return true;
         }
       }
-      JsonNode authorities = node.get("allowed-authorities");
-      if (authorities != null && authorities.isArray()) {
-        for (int k = 0; k < authorities.size(); k++) {
-          JsonNode authority = authorities.get(k);
-          if (authority != null && authority.isTextual()) {
-            if (user.who.authority.equals(authority.textValue())) {
-              return true;
+      {
+        JsonNode authorities = node.get("allowed-authorities");
+        if (authorities != null && authorities.isArray()) {
+          for (int k = 0; k < authorities.size(); k++) {
+            JsonNode authority = authorities.get(k);
+            if (authority != null && authority.isTextual()) {
+              if (user.who.authority.equals(authority.textValue())) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      {
+        JsonNode documents = node.get("allowed-documents");
+        if (documents != null && documents.isArray()) {
+          for (int k = 0; k < documents.size(); k++) {
+            JsonNode document = documents.get(k);
+            if (document != null && document.isTextual()) {
+              if (user.who.authority.equals("doc/" + document.textValue())) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      {
+        JsonNode documentSpaces = node.get("allowed-document-spaces");
+        if (documentSpaces != null && documentSpaces.isArray()) {
+          for (int k = 0; k < documentSpaces.size(); k++) {
+            JsonNode document = documentSpaces.get(k);
+            if (document != null && document.isTextual()) {
+              if (user.who.authority.startsWith("doc/" + document.textValue() + "/")) {
+                return true;
+              }
             }
           }
         }
