@@ -1,8 +1,65 @@
 /** whatever is needed to make capacitor work */
+
+var SafeArea = Capacitor.Plugins.SafeArea;
 var PushNotifications = Capacitor.Plugins.PushNotifications;
 var Network = Capacitor.Plugins.Network;
 
+var CapacitorApp = Capacitor.Plugins.App;
+
+
+// Prepared & separated this function for now as we have a configuration specific to iOS (see capacitor.config.js#21) although this will push all UI elements(bg, buttons etc) to the safe area content and will leave
+// the background design to be pushed as well
+// But once we need some code logic to perform certain fix for overlapping buttons or navigation bars then we will be using this.
+async function ExecSafeArea($){
+    var insets = await SafeArea.getSafeAreaInsets()
+    console.log('SafeArea called...', insets);
+    SafeArea.getSafeAreaInsets().then(({ insets }) => {
+      console.log(insets);
+    });
+
+    SafeArea.getStatusBarHeight().then(({ statusBarHeight }) => {
+      console.log(statusBarHeight, 'statusbarHeight');
+    });
+
+    await SafeArea.removeAllListeners();
+    // when safe-area changed
+    await SafeArea.addListener('safeAreaChanged', data => {
+      const { insets } = data;
+      for (const [key, value] of Object.entries(insets)) {
+        console.log("Safe Area Changed: Data " , key , value);
+//        document.documentElement.style.setProperty(
+//          `--safe-area-${key}`,
+//          `${value}px`,
+//        );
+      }
+    });
+}
+
 async function LinkCapacitor($, identityName) {
+  // this function is probably required because adding just the plugin itself will do the job but won't minimize the app.
+  // TODO: to test iOS devices
+  CapacitorApp.addListener('backButton' , ({canGoBack})=> {
+    // TODO : add logger
+    console.log("BackButton called ... ", canGoBack);
+    if(!canGoBack){
+        CapacitorApp.minimizeApp();
+    }else{
+      window.history.back();
+    }
+  });
+
+  // handles email deep linking or any types of url links that points to our app launcher
+  // this only works on simple format(e.g, www.google.com/search?/page) the target for this are the sub-folders, paths and pages
+  // TODO: to test iOS devices i doubt this works with iOS but if it doesn't then will add new condition for platform specific codes
+  CapacitorApp.addListener('appUrlOpen', data => {
+    // TODO : add logger
+    console.log('App opened with URL:', data);
+    const navigation = data.url.split(".com");
+    if(navigation.length > 1){
+        window.rxhtml.goto(navigation[1], true);
+    }
+  });
+
   PushNotifications.requestPermissions().then(result => {
     $.bump("nps"); // setup
     if (result.receive === 'granted') {
@@ -75,15 +132,18 @@ async function LinkCapacitor($, identityName) {
 
 // Method called when tapping on a notification
   PushNotifications.addListener('pushNotificationActionPerformed', function (action) {
-    // TODO: feed the URL into RxHTML
     console.log('Push action performed: ' + JSON.stringify(action));
+    // TODO: to test iOS devices
+    // TODO : add logger
+    window.rxhtml.goto(action.notification.data.url, true);
   });
 
-  Network.addListener('networkStatusChange', (status) => {
+  Network.addListener('networkStatusChange', status => {
     // TODO: pump this into RxHTML
   });
 
   let status = await Network.getStatus();
+
 // TODO: feed into RxHTML
   console.log("Starting...");
   console.log(status);
