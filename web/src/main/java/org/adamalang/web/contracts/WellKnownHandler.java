@@ -21,4 +21,12 @@ import org.adamalang.common.Callback;
 
 public interface WellKnownHandler {
   public void handle(String uri, Callback<String> callback);
+
+  public static boolean DONT_HANDLE(String uri) {
+    switch (uri) {
+      case "/.well-known/assetlinks.json":
+        return true;
+    }
+    return false;
+  }
 }

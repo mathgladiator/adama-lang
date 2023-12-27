@@ -792,6 +792,8 @@ public class ServerCodec {
   private static AuthorizationResponse readBody_2125(ByteBuf buf, AuthorizationResponse o) {
     o.agent = Helper.readString(buf);
     o.hash = Helper.readString(buf);
+    o.channel = Helper.readString(buf);
+    o.success = Helper.readString(buf);
     return o;
   }
 
@@ -1108,6 +1110,8 @@ public class ServerCodec {
     buf.writeIntLE(2125);
     Helper.writeString(buf, o.agent);;
     Helper.writeString(buf, o.hash);;
+    Helper.writeString(buf, o.channel);;
+    Helper.writeString(buf, o.success);;
   }
 
   public static void write(ByteBuf buf, AuthResponse o) {

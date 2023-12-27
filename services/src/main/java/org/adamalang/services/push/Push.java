@@ -22,7 +22,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 
 import java.util.HashSet;
 import java.util.function.Consumer;

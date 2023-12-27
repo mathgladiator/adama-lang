@@ -103,7 +103,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private boolean __raisedDirtyCalled;
   private int __nextViewId;
   protected  long __optimisticNextCronCheck;
-  private final EnqueuedTaskManager __enqueued;
+  protected final EnqueuedTaskManager __enqueued;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;

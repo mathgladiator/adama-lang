@@ -15,18 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.services.push.webpush;
+package org.adamalang.web.contracts;
 
-/** urgency of a push notification */
-public enum Urgency {
-  VERY_LOW("very-low"),
-  LOW("low"),
-  NORMAL("normal"),
-  HIGH("high");
+import org.junit.Assert;
+import org.junit.Test;
 
-  public final String header;
-
-  private Urgency(String header) {
-    this.header = header;
+public class WellKnownHandlerTests {
+  @Test
+  public void flow() {
+    Assert.assertFalse(WellKnownHandler.DONT_HANDLE("/"));
+    Assert.assertTrue(WellKnownHandler.DONT_HANDLE("/.well-known/assetlinks.json"));
   }
 }

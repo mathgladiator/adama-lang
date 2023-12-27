@@ -861,38 +861,118 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_MissingReturn_3 = null;
-  private String get_MissingReturn_3() {
-    if (cached_MissingReturn_3 != null) {
-      return cached_MissingReturn_3;
+  private String cached_HasChannelNoSuccess_3 = null;
+  private String get_HasChannelNoSuccess_3() {
+    if (cached_HasChannelNoSuccess_3 != null) {
+      return cached_HasChannelNoSuccess_3;
     }
-    cached_MissingReturn_3 = generateTestOutput(false, "MissingReturn_3", "./test_code/AuthPipe_MissingReturn_failure.a");
-    return cached_MissingReturn_3;
+    cached_HasChannelNoSuccess_3 = generateTestOutput(false, "HasChannelNoSuccess_3", "./test_code/AuthPipe_HasChannelNoSuccess_failure.a");
+    return cached_HasChannelNoSuccess_3;
+  }
+
+  @Test
+  public void testHasChannelNoSuccessFailure() {
+    assertLiveFail(get_HasChannelNoSuccess_3());
+  }
+
+  @Test
+  public void testHasChannelNoSuccessNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_HasChannelNoSuccess_3());
+  }
+
+  @Test
+  public void testHasChannelNoSuccessExceptionFree() {
+    assertExceptionFree(get_HasChannelNoSuccess_3());
+  }
+
+  @Test
+  public void testHasChannelNoSuccessTODOFree() {
+    assertTODOFree(get_HasChannelNoSuccess_3());
+  }
+
+  @Test
+  public void stable_HasChannelNoSuccess_3() {
+    String live = get_HasChannelNoSuccess_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:AuthPipe_HasChannelNoSuccess_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":40},\"end\":{\"line\":8,\"character\":4,\"byte\":103}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement within a @authorization expects both a channel and a success field\",\"file\":\"./test_code/AuthPipe_HasChannelNoSuccess_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_HasSuccessNoChannel_4 = null;
+  private String get_HasSuccessNoChannel_4() {
+    if (cached_HasSuccessNoChannel_4 != null) {
+      return cached_HasSuccessNoChannel_4;
+    }
+    cached_HasSuccessNoChannel_4 = generateTestOutput(false, "HasSuccessNoChannel_4", "./test_code/AuthPipe_HasSuccessNoChannel_failure.a");
+    return cached_HasSuccessNoChannel_4;
+  }
+
+  @Test
+  public void testHasSuccessNoChannelFailure() {
+    assertLiveFail(get_HasSuccessNoChannel_4());
+  }
+
+  @Test
+  public void testHasSuccessNoChannelNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_HasSuccessNoChannel_4());
+  }
+
+  @Test
+  public void testHasSuccessNoChannelExceptionFree() {
+    assertExceptionFree(get_HasSuccessNoChannel_4());
+  }
+
+  @Test
+  public void testHasSuccessNoChannelTODOFree() {
+    assertTODOFree(get_HasSuccessNoChannel_4());
+  }
+
+  @Test
+  public void stable_HasSuccessNoChannel_4() {
+    String live = get_HasSuccessNoChannel_4();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:AuthPipe_HasSuccessNoChannel_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":2,\"byte\":40},\"end\":{\"line\":9,\"character\":4,\"byte\":105}},\"severity\":1,\"source\":\"error\",\"message\":\"The return statement within a @authorization expects both a channel and a success field\",\"file\":\"./test_code/AuthPipe_HasSuccessNoChannel_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_MissingReturn_5 = null;
+  private String get_MissingReturn_5() {
+    if (cached_MissingReturn_5 != null) {
+      return cached_MissingReturn_5;
+    }
+    cached_MissingReturn_5 = generateTestOutput(false, "MissingReturn_5", "./test_code/AuthPipe_MissingReturn_failure.a");
+    return cached_MissingReturn_5;
   }
 
   @Test
   public void testMissingReturnFailure() {
-    assertLiveFail(get_MissingReturn_3());
+    assertLiveFail(get_MissingReturn_5());
   }
 
   @Test
   public void testMissingReturnNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_MissingReturn_3());
+    assertNotTerribleLineNumbers(get_MissingReturn_5());
   }
 
   @Test
   public void testMissingReturnExceptionFree() {
-    assertExceptionFree(get_MissingReturn_3());
+    assertExceptionFree(get_MissingReturn_5());
   }
 
   @Test
   public void testMissingReturnTODOFree() {
-    assertTODOFree(get_MissingReturn_3());
+    assertTODOFree(get_MissingReturn_5());
   }
 
   @Test
-  public void stable_MissingReturn_3() {
-    String live = get_MissingReturn_3();
+  public void stable_MissingReturn_5() {
+    String live = get_MissingReturn_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:AuthPipe_MissingReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -901,38 +981,38 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_NoReturn_4 = null;
-  private String get_NoReturn_4() {
-    if (cached_NoReturn_4 != null) {
-      return cached_NoReturn_4;
+  private String cached_NoReturn_6 = null;
+  private String get_NoReturn_6() {
+    if (cached_NoReturn_6 != null) {
+      return cached_NoReturn_6;
     }
-    cached_NoReturn_4 = generateTestOutput(false, "NoReturn_4", "./test_code/AuthPipe_NoReturn_failure.a");
-    return cached_NoReturn_4;
+    cached_NoReturn_6 = generateTestOutput(false, "NoReturn_6", "./test_code/AuthPipe_NoReturn_failure.a");
+    return cached_NoReturn_6;
   }
 
   @Test
   public void testNoReturnFailure() {
-    assertLiveFail(get_NoReturn_4());
+    assertLiveFail(get_NoReturn_6());
   }
 
   @Test
   public void testNoReturnNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_NoReturn_4());
+    assertNotTerribleLineNumbers(get_NoReturn_6());
   }
 
   @Test
   public void testNoReturnExceptionFree() {
-    assertExceptionFree(get_NoReturn_4());
+    assertExceptionFree(get_NoReturn_6());
   }
 
   @Test
   public void testNoReturnTODOFree() {
-    assertTODOFree(get_NoReturn_4());
+    assertTODOFree(get_NoReturn_6());
   }
 
   @Test
-  public void stable_NoReturn_4() {
-    String live = get_NoReturn_4();
+  public void stable_NoReturn_6() {
+    String live = get_NoReturn_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:AuthPipe_NoReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -941,38 +1021,38 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_TooMany_5 = null;
-  private String get_TooMany_5() {
-    if (cached_TooMany_5 != null) {
-      return cached_TooMany_5;
+  private String cached_TooMany_7 = null;
+  private String get_TooMany_7() {
+    if (cached_TooMany_7 != null) {
+      return cached_TooMany_7;
     }
-    cached_TooMany_5 = generateTestOutput(false, "TooMany_5", "./test_code/AuthPipe_TooMany_failure.a");
-    return cached_TooMany_5;
+    cached_TooMany_7 = generateTestOutput(false, "TooMany_7", "./test_code/AuthPipe_TooMany_failure.a");
+    return cached_TooMany_7;
   }
 
   @Test
   public void testTooManyFailure() {
-    assertLiveFail(get_TooMany_5());
+    assertLiveFail(get_TooMany_7());
   }
 
   @Test
   public void testTooManyNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TooMany_5());
+    assertNotTerribleLineNumbers(get_TooMany_7());
   }
 
   @Test
   public void testTooManyExceptionFree() {
-    assertExceptionFree(get_TooMany_5());
+    assertExceptionFree(get_TooMany_7());
   }
 
   @Test
   public void testTooManyTODOFree() {
-    assertTODOFree(get_TooMany_5());
+    assertTODOFree(get_TooMany_7());
   }
 
   @Test
-  public void stable_TooMany_5() {
-    String live = get_TooMany_5();
+  public void stable_TooMany_7() {
+    String live = get_TooMany_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:AuthPipe_TooMany_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");

@@ -48,7 +48,7 @@ public class RedirectHandler extends SimpleChannelInboundHandler<FullHttpRequest
       sendImmediate(req, ctx, HttpResponseStatus.OK, ("YES").getBytes(StandardCharsets.UTF_8), "text/plain; charset=UTF-8", true);
       return;
     }
-    if (req.uri().startsWith("/.well-known/")) {
+    if (req.uri().startsWith("/.well-known/") && !WellKnownHandler.DONT_HANDLE(req.uri())) {
       wellKnownHandler.handle(req.uri(), new Callback<String>() {
         @Override
         public void success(String response) {

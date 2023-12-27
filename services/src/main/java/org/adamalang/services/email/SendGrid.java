@@ -18,14 +18,16 @@
 package org.adamalang.services.email;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.aws.Credential;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
-import org.adamalang.services.ServiceConfig;
-import org.adamalang.web.client.*;
+import org.adamalang.web.client.SimpleHttpRequest;
+import org.adamalang.web.client.SimpleHttpRequestBody;
+import org.adamalang.web.client.VoidCallbackHttpResponder;
+import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,27 +69,25 @@ public class SendGrid extends SimpleService {
 
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    switch (method) {
-      case "sendMail": {
-        TreeMap<String, String> headers = new TreeMap<>();
-        headers.put("Authorization", "Bearer " + apiKey);
-        headers.put("Content-Type", "application/json");
-        SimpleHttpRequest get = new SimpleHttpRequest("POST", "https://api.sendgrid.com/v3/mail/send", headers, SimpleHttpRequestBody.WRAP(request.getBytes(StandardCharsets.UTF_8)));
-        base.execute(get, new VoidCallbackHttpResponder(LOGGER, metrics.sendgrid_sendmail.start(), new Callback<>() {
-          @Override
-          public void success(Void value) {
-            callback.success("{}");
-          }
+    if ("sendMail".equals(method)) {
+      TreeMap<String, String> headers = new TreeMap<>();
+      headers.put("Authorization", "Bearer " + apiKey);
+      headers.put("Content-Type", "application/json");
+      SimpleHttpRequest get = new SimpleHttpRequest("POST", "https://api.sendgrid.com/v3/mail/send", headers, SimpleHttpRequestBody.WRAP(request.getBytes(StandardCharsets.UTF_8)));
+      base.execute(get, new VoidCallbackHttpResponder(LOGGER, metrics.sendgrid_sendmail.start(), new Callback<>() {
+        @Override
+        public void success(Void value) {
+          callback.success("{}");
+        }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        }));
-        return;
-      }
-      default:
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      }));
+      return;
+    } else {
+      callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
     }
   }
 }

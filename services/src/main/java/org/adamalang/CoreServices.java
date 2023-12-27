@@ -15,19 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.services;
+package org.adamalang;
 
 import org.adamalang.api.SelfClient;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.internal.InternalSigner;
 import org.adamalang.runtime.remote.Service;
+import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.services.Adama;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
+import org.adamalang.services.entropy.Delay;
 import org.adamalang.services.entropy.SafeRandom;
+import org.adamalang.services.external.SimpleHttpJson;
 import org.adamalang.services.logging.Logzio;
 import org.adamalang.services.push.NoOpPusher;
 import org.adamalang.services.push.Push;
@@ -36,96 +37,103 @@ import org.adamalang.services.security.IdentitySigner;
 import org.adamalang.services.sms.Twilio;
 import org.adamalang.services.social.Discord;
 import org.adamalang.services.video.Jitsi;
-import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** These are the first party services; please keep in sync with org.adamalang.cli.devbox.DevBoxServices */
 
-public class FirstPartyServices {
-  private static final Logger LOGGER = LoggerFactory.getLogger(FirstPartyServices.class);
+public class CoreServices {
+  private static final Logger LOGGER = LoggerFactory.getLogger(CoreServices.class);
 
-  public static FirstPartyMetrics install(SimpleExecutor executor, SimpleExecutor offload, MetricsFactory factory, WebClientBase webClientBase, SelfClient adamaClientRaw, InternalSigner signer) {
-    FirstPartyMetrics metrics = new FirstPartyMetrics(factory);
-    final SelfClient adamaClient = adamaClientRaw;
+  public static void install(CoreServicesNexus nexus) {
+    final SelfClient adamaClient = nexus.adamaClientRaw;
     ServiceRegistry.add("adama", Adama.class, (space, configRaw, keys) -> { // TODO
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return new Adama(metrics, adamaClient, signer, config);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("adama", space, configRaw, keys);
+        return new Adama(nexus.fpMetrics, adamaClient, nexus.signer, config);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-adama", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("twilio", Twilio.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return Twilio.build(metrics, config, webClientBase);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("twilio", space, configRaw, keys);
+        return Twilio.build(nexus.fpMetrics, config, nexus.webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-twilio", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return Stripe.build(metrics, config, webClientBase);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("stripe", space, configRaw, keys);
+        return Stripe.build(nexus.fpMetrics, config, nexus.webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-stripe", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("amazonses", AmazonSES.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return AmazonSES.build(metrics, config, webClientBase);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("amazonses", space, configRaw, keys);
+        return AmazonSES.build(nexus.fpMetrics, config, nexus.webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-amazonses", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return SendGrid.build(metrics, config, webClientBase);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("sendgrid", space, configRaw, keys);
+        return SendGrid.build(nexus.fpMetrics, config, nexus.webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-sendgrid", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("discord", Discord.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return Discord.build(metrics, config, webClientBase);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("discord", space, configRaw, keys);
+        return Discord.build(nexus.fpMetrics, config, nexus.webClientBase);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-discord", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return IdentitySigner.build(metrics, config, executor);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("identitysigner", space, configRaw, keys);
+        return IdentitySigner.build(nexus.fpMetrics, config, nexus.executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-identitysigner", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("logzio", Logzio.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return Logzio.build(metrics, webClientBase, config, executor);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("logzio", space, configRaw, keys);
+        return Logzio.build(nexus.fpMetrics, nexus.webClientBase, config, nexus.executor);
       } catch (ErrorCodeException ex) {
         LOGGER.error("failed-logzio", ex);
         return Service.FAILURE;
       }
     });
     ServiceRegistry.add("jitsi", Jitsi.class, (space, configRaw, keys) -> {
-      ServiceConfig config = new ServiceConfig(space, configRaw, keys);
       try {
-        return Jitsi.build(metrics, config, webClientBase, offload);
+        ServiceConfig config = nexus.serviceConfigFactory.cons("jitsi", space, configRaw, keys);
+        return Jitsi.build(nexus.fpMetrics, config, nexus.webClientBase, nexus.offload);
       } catch (Exception ex) {
         LOGGER.error("failed-jitsi", ex);
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("httpjson", SimpleHttpJson.class, (space, configRaw, keys) -> {
+      try {
+        ServiceConfig config = nexus.serviceConfigFactory.cons("httpjson", space, configRaw, keys);
+        return SimpleHttpJson.build(nexus.tpMetrics, nexus.webClientBase, config);
+      } catch (Exception ex) {
+        LOGGER.error("failed-http", ex);
         return Service.FAILURE;
       }
     });
@@ -134,9 +142,9 @@ public class FirstPartyServices {
     ServiceRegistry.add("twittervalidator", TwitterValidator.class, (space, configRaw, keys) -> TwitterValidator.build(metrics, webClientBase));
     ServiceRegistry.add("githubvalidator", GithubValidator.class, (space, configRaw, keys) -> GithubValidator.build(metrics, webClientBase));
      */
-    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(metrics, executor, webClientBase));
-    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(offload));
-    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, new NoOpPusher()));
-    return metrics;
+    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(nexus.fpMetrics, nexus.executor, nexus.webClientBase));
+    ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(nexus.offload));
+    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(nexus.fpMetrics, new NoOpPusher()));
+    ServiceRegistry.add("delay", Delay.class, (space, configRaw, keys) -> new Delay(nexus.fpMetrics, nexus.executor));
   }
 }

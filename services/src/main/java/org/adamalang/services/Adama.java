@@ -18,20 +18,19 @@
 package org.adamalang.services;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.internal.InternalSigner;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.SimpleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.security.PrivateKey;
 import java.util.HashSet;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class Adama extends SimpleService {

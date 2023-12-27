@@ -22,7 +22,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
 import org.adamalang.web.client.StringCallbackHttpResponder;

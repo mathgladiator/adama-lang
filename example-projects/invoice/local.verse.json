@@ -1,0 +1,12 @@
+{
+  "documents" : [ {
+    "space" : "invoice",
+    "key" : "demo",
+    "domain" : true
+  } ],
+  "spaces" : [ {
+    "name" : "invoice",
+    "main" : "backend.adama",
+    "import" : "backend"
+  } ]
+}

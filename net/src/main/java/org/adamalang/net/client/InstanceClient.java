@@ -277,6 +277,8 @@ public class InstanceClient implements AutoCloseable {
                 AuthResponse response = new AuthResponse();
                 response.hash = payload.hash;
                 response.agent = payload.agent;
+                response.success = payload.success;
+                response.channel = payload.channel;
                 callback.success(response);
               }
 

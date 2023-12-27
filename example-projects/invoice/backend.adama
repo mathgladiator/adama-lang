@@ -1,0 +1,159 @@
+@link saferandom {}
+
+/*
+@link amazonses {
+  access_id = // your encrypted access id
+  secret_key = // your encrypted secret key
+  region = "us-east-2";
+}
+*/
+
+@static {
+  create {
+    return true;
+  }
+  invent {
+    return true;
+  }
+}
+
+@connected {
+  return true;
+}
+
+@disconnected {
+}
+
+@construct {
+
+}
+
+
+message WebRegister {
+  string email;
+  string password;
+}
+
+@web options /register {
+  return {cors:true};
+}
+
+record User {
+  public int id;
+  private principal who;
+  public string email required;
+  private string password_hash;
+  private string temp_password_hash;
+  private datetime temp_password_hash_expires;
+}
+
+table<User> _users;
+
+public formula others = iterate _users;
+
+@web put /register (WebRegister register) {
+  bool email_available = (iterate _users where email == register.email).size() == 0;
+
+  if (!email_available) {
+    return {
+      error: "Email already registered",
+      cors: true
+    };
+  }
+
+  _users <- {
+    email: register.email,
+    password_hash: register.password,
+  } as user_id;
+
+  if((iterate _users where id == user_id)[0] as user) {
+    user.who = Principal.principalOf("" + user_id);
+  }
+
+  /*
+  var result = amazonses.send(@who, {
+    from: "no-reply@YOURDOMAIN",
+    replyTo: "no-reply@YOURDOMAIN",
+    subject: "Welcome!",
+    to: register.email,
+    text: "Welcome to YOURSOFTWARE",
+    html: "Welcome to YOURSOFTWARE"
+  });
+  */
+  return {sign:"" + user_id, cors:true};
+}
+
+message AuthInvoke {
+  string email;
+}
+
+@authorization (AuthInvoke ai) {
+  if ((iterate _users where_as x: x.email == ai.email)[0] as user) {
+    return {
+      agent: "" + user.id,
+      hash: user.password_hash
+    };
+  }
+  abort;
+}
+
+message WebForgot {
+  string email;
+}
+
+@web options /forgot {
+  return {cors:true};
+}
+
+@web put /forgot (WebForgot forgot) {
+  if ((iterate _users where email == forgot.email)[0] as user) {
+    if (saferandom.askWithHash(@who, {pool:"0123456789AZ", count:8}).await() as result) {
+      string temp_password = result.result;
+      user.temp_password_hash = result.hash;
+      user.temp_password_hash_expires = Time.datetime().future(@timespan 15 min);
+      /*
+      amazonses.send(@who, {
+        from: "no-reply@your-domain",
+        replyTo: "no-reply@your-domain",
+        subject: "Welcome to YOURSOFTWARE",
+        to: forgot.email,
+        text: "Temp password:" + temp_password,
+        html: "Temp password:" + temp_password
+      });
+      */
+      return {html:"OK", cors:true};
+    }
+  }
+  return {html:"NotOK", cors:true};
+}
+
+record Invoice {
+  public int id;
+  public int user_id;
+  public datetime cut_at;
+  public double price;
+  public bool status;
+}
+
+table<Invoice> _invoices;
+
+public formula invoices = iterate _invoices;
+
+message InvoiceId {
+  int id;
+}
+
+channel process_invoice(InvoiceId iid) {
+  if ((iterate _invoices where id == iid.id)[0] as invoice) {
+    invoice.status = true;
+  }
+}
+
+@cron cut_invoices daily 8:00 {
+  var cut_at = Time.datetime();
+  foreach (user in iterate _users) {
+    _invoices <- {user_id: user.id, cut_at: cut_at, price:1.5, status:false} as invoice_id;
+    InvoiceId iid = {id: invoice_id};
+    process_invoice.enqueue(@no_one, iid);
+  }
+}

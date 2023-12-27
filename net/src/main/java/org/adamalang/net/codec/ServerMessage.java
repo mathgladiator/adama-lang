@@ -189,6 +189,10 @@ public class ServerMessage {
     public String agent;
     @FieldOrder(2)
     public String hash;
+    @FieldOrder(3)
+    public String channel;
+    @FieldOrder(4)
+    public String success;
   }
 
   @TypeId(2001)

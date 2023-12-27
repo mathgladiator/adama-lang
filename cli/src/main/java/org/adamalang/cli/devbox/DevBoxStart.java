@@ -33,8 +33,6 @@ import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.deploy.Undeploy;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.services.FirstPartyMetrics;
-import org.adamalang.services.push.Push;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
@@ -166,6 +164,7 @@ public class DevBoxStart {
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
+          terminal.info("verse|installing push notifications");
           verse.devPush.install();
           for (DevBoxAdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
             terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
@@ -443,7 +442,7 @@ public class DevBoxStart {
               }
             });
           } else {
-            terminal.notice("load $space $key $file");
+            terminal.notice("query $space $key");
           }
         }
       }

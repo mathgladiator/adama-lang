@@ -40,6 +40,6 @@ public class PrivateKeyWithId {
     if (expiry > 0) {
       // TODO
     }
-    return builder.setIssuer("doc/" + space + "/" + key).signWith(privateKey).compact();
+    return builder.issuer("doc/" + space + "/" + key).signWith(privateKey).compact();
   }
 }

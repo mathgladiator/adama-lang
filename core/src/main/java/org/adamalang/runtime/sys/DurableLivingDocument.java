@@ -291,6 +291,10 @@ public class DurableLivingDocument implements Queryable {
         writer.writeInteger(document.__timeouts.size());
         writer.writeObjectFieldIntro("queue_size");
         writer.writeInteger(document.__queue.size());
+        writer.writeObjectFieldIntro("enqueue_size");
+        writer.writeInteger(document.__enqueued.size());
+        writer.writeObjectFieldIntro("memory");
+        writer.writeLong(document.__memory());
         document.__debug(writer);
         writer.endObject();
         callback.success(writer.toString());

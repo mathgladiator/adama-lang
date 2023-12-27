@@ -274,6 +274,8 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
         ServerMessage.AuthorizationResponse response = new ServerMessage.AuthorizationResponse();
         response.hash = fromCore.hash;
         response.agent = fromCore.agent;
+        response.success = fromCore.success;
+        response.channel = fromCore.channel;
         ByteBuf buf = upstream.create(response.agent.length() + 32);
         ServerCodec.write(buf, response);
         upstream.next(buf);

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 /** constructor for a service */
+@FunctionalInterface
 public interface ServiceConstructor {
 
   public Service cons(String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys);

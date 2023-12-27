@@ -1,0 +1,357 @@
+{
+  "types" : {
+    "__Root" : {
+      "nature" : "reactive_record",
+      "name" : "Root",
+      "fields" : {
+        "_users" : {
+          "type" : {
+            "nature" : "reactive_table",
+            "record_name" : "User"
+          },
+          "privacy" : "private"
+        },
+        "others" : {
+          "type" : {
+            "nature" : "native_list",
+            "type" : {
+              "nature" : "reactive_ref",
+              "ref" : "User"
+            }
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "__ViewerType" : {
+      "nature" : "native_message",
+      "name" : "__ViewerType",
+      "anonymous" : true,
+      "fields" : { }
+    },
+    "_SafeRandom_Empty" : {
+      "nature" : "native_message",
+      "name" : "_SafeRandom_Empty",
+      "anonymous" : false,
+      "fields" : { }
+    },
+    "_SafeRandom_AskStr" : {
+      "nature" : "native_message",
+      "name" : "_SafeRandom_AskStr",
+      "anonymous" : false,
+      "fields" : {
+        "pool" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "count" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "int"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_SafeRandom_Result" : {
+      "nature" : "native_message",
+      "name" : "_SafeRandom_Result",
+      "anonymous" : false,
+      "fields" : {
+        "result" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_SafeRandom_ResultWithHash" : {
+      "nature" : "native_message",
+      "name" : "_SafeRandom_ResultWithHash",
+      "anonymous" : false,
+      "fields" : {
+        "result" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "hash" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "WebRegister" : {
+      "nature" : "native_message",
+      "name" : "WebRegister",
+      "anonymous" : false,
+      "fields" : {
+        "email" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "password" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "User" : {
+      "nature" : "reactive_record",
+      "name" : "User",
+      "fields" : {
+        "id" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "int"
+          },
+          "privacy" : "public"
+        },
+        "who" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "principal"
+          },
+          "privacy" : "private"
+        },
+        "email" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "password_hash" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "string"
+          },
+          "privacy" : "private"
+        },
+        "temp_password_hash" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "string"
+          },
+          "privacy" : "private"
+        },
+        "temp_password_hash_expires" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "datetime"
+          },
+          "privacy" : "private"
+        },
+        "auth_success_calls" : {
+          "type" : {
+            "nature" : "reactive_value",
+            "type" : "int"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "AuthInvoke" : {
+      "nature" : "native_message",
+      "name" : "AuthInvoke",
+      "anonymous" : false,
+      "fields" : {
+        "email" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "AuthSuccess" : {
+      "nature" : "native_message",
+      "name" : "AuthSuccess",
+      "anonymous" : false,
+      "fields" : {
+        "new_thing" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "int"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "WebForgot" : {
+      "nature" : "native_message",
+      "name" : "WebForgot",
+      "anonymous" : false,
+      "fields" : {
+        "email" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_AnonObjConvert_0" : {
+      "nature" : "native_message",
+      "name" : "_AnonObjConvert_0",
+      "anonymous" : true,
+      "fields" : {
+        "cors" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_AnonObjConvert_1" : {
+      "nature" : "native_message",
+      "name" : "_AnonObjConvert_1",
+      "anonymous" : true,
+      "fields" : {
+        "cors" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "error" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_AnonObjConvert_2" : {
+      "nature" : "native_message",
+      "name" : "_AnonObjConvert_2",
+      "anonymous" : true,
+      "fields" : {
+        "email" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "password_hash" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_AnonObjConvert_3" : {
+      "nature" : "native_message",
+      "name" : "_AnonObjConvert_3",
+      "anonymous" : true,
+      "fields" : {
+        "cors" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "sign" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_AnonObjConvert_4" : {
+      "nature" : "native_message",
+      "name" : "_AnonObjConvert_4",
+      "anonymous" : true,
+      "fields" : {
+        "agent" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "channel" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "hash" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        },
+        "success" : {
+          "type" : {
+            "nature" : "native_ref",
+            "ref" : "AuthSuccess"
+          },
+          "privacy" : "public"
+        }
+      }
+    },
+    "_AnonObjConvert_8" : {
+      "nature" : "native_message",
+      "name" : "_AnonObjConvert_8",
+      "anonymous" : true,
+      "fields" : {
+        "cors" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "bool"
+          },
+          "privacy" : "public"
+        },
+        "html" : {
+          "type" : {
+            "nature" : "native_value",
+            "type" : "string"
+          },
+          "privacy" : "public"
+        }
+      }
+    }
+  },
+  "channels" : {
+    "auth_success" : "AuthSuccess"
+  },
+  "channels-privacy" : {
+    "auth_success" : {
+      "open" : true,
+      "privacy" : [ ]
+    }
+  },
+  "constructors" : [ ],
+  "labels" : [ ]
+}

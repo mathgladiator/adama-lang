@@ -17,7 +17,12 @@
 */
 package org.adamalang.web.client;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
+import org.adamalang.common.LogTimestamp;
+
 import java.util.Map;
+import java.util.TreeSet;
 
 /** a simplified http request */
 public class SimpleHttpRequest {
@@ -31,5 +36,20 @@ public class SimpleHttpRequest {
     this.url = url;
     this.headers = headers;
     this.body = body;
+  }
+
+  public ObjectNode toJsonLongEntry(TreeSet<String> secretHeadersToIgnore) {
+    ObjectNode result = Json.newJsonObject();
+    result.put("@timestamp", LogTimestamp.now());
+    result.put("method", method);
+    result.put("url", url);
+    ObjectNode headersNode = result.putObject("headers");
+    for (Map.Entry<String, String> headerEntry : headers.entrySet()) {
+      if (!secretHeadersToIgnore.contains(headerEntry.getKey())) {
+        headersNode.put(headerEntry.getKey(), headerEntry.getValue());
+      }
+    }
+    body.pumpLogEntry(result.putObject("body"));
+    return result;
   }
 }

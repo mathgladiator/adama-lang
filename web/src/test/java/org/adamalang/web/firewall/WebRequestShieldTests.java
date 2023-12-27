@@ -23,6 +23,7 @@ import org.junit.Test;
 public class WebRequestShieldTests {
   @Test
   public void coverage() {
+    Assert.assertFalse(WebRequestShield.block("/.well-known"));
     Assert.assertTrue(WebRequestShield.block("/.git/"));
     Assert.assertTrue(WebRequestShield.block("/CSS/"));
     Assert.assertTrue(WebRequestShield.block("/Portal/"));
@@ -35,7 +36,6 @@ public class WebRequestShieldTests {
     Assert.assertTrue(WebRequestShield.block("/scripts/"));
     Assert.assertTrue(WebRequestShield.block("/vendor/"));
     Assert.assertFalse(WebRequestShield.block("/my/name/is/ninja/"));
-
     Assert.assertTrue(WebRequestShield.block("/d/"));
     Assert.assertTrue(WebRequestShield.block("/portal/"));
     Assert.assertTrue(WebRequestShield.block("/remote/"));

@@ -1011,5 +1011,7 @@ public class ErrorTable {
     descriptions.put(707651, "no description of error (yet)");
     names.put(788607, "CUSTOMER_BACKUP_DOWNLOAD_FAILED");
     descriptions.put(788607, "no description of error (yet)");
+    names.put(728051, "DEVBOX_NO_SECRET_FOR_KEY");
+    descriptions.put(728051, "no description of error (yet)");
   }
 }

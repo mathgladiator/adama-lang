@@ -23,10 +23,10 @@ import org.adamalang.aws.Credential;
 import org.adamalang.aws.SignatureV4;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.RequestResponseMonitor;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
-import org.adamalang.services.ServiceConfig;
 import org.adamalang.web.client.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,12 +81,11 @@ public class AmazonSES extends SimpleService {
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     ObjectNode requestNode = Json.parseJsonObject(request);
-    switch (method) {
-      case "send":
-        send(requestNode, callback);
-        return;
-      default:
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+    if ("send".equals(method)) {
+      send(requestNode, callback);
+      return;
+    } else {
+      callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
     }
   }
 

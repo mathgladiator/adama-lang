@@ -1,0 +1,50 @@
+<forest>
+    <page uri="/">
+        <a href="/register">Create a new account!</a>
+        <a href="/sign-in">Sign in</a>
+    </page>
+    <page uri="/product">
+        This is the product!
+        <connection use-domain name="product">
+            <ul rx:iterate="others">
+                <li><lookup path="email" /> == <lookup path="auth_success_calls" /></li>
+            </ul>
+        </connection>
+    </page>
+    <page uri="/register">
+        <h2>Register for the product</h2>
+        <div rx:if="view:failed">
+            Failed to register: <lookup path="view:errormessage" />
+        </div>
+        <form rx:action="domain:put" path="register" rx:failure="raise:failed te:errormessage" rx:success="lower:failed" rx:forward="/product">
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email"/>
+            <br/>
+
+            <label for="password">Password: </label>
+            <input type="password" name="password" id="password"/>
+            <br/>
+
+            <button type="submit">Register!</button>
+        </form>
+    </page>
+    <page uri="/sign-in" default-redirect-source>
+        <h2>Sign into the product</h2>
+        <form rx:action="domain:authorize" class="space-y-6" rx:forward="/product">
+            <label for="email">Email: </label>
+            <input type="email" name="email" id="email"/>
+            <br/>
+
+            <password-holder>
+                <label for="password">Password: </label>
+                <input type="password" name="password" id="password"/>
+                <div type="button" rx:click="toggle-password">Toggle Password</div>
+            </password-holder>
+            <br/>
+            <button type="submit">Sign in!</button>
+        </form>
+    </page>
+    <page uri="/forgot">
+        TODO
+    </page>
+</forest>

@@ -93,17 +93,31 @@ public class Return extends Statement {
         authorizationReturnType = (TyNativeMessage) givenReturnType;
         boolean hasHash = false;
         boolean hasAgent = false;
+        boolean hasChannel = false;
+        boolean hasSuccess = false;
+
         if (consider("hash", authorizationReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
           hasHash = true;
         }
         if (consider("agent", authorizationReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
           hasAgent = true;
         }
+        if (consider("channel", authorizationReturnType, (ty) -> environment.rules.IsString(ty, false), authorizationFields)) {
+          hasChannel = true;
+        }
+        if (consider("success", authorizationReturnType, (ty) -> environment.rules. IsNativeMessage(ty, false), authorizationFields)) {
+          hasSuccess = true;
+        }
         if (!hasHash) {
           environment.document.createError(this, String.format("The return statement within a @authorization expects a hash"));
         }
         if (!hasAgent) {
           environment.document.createError(this, String.format("The return statement within a @authorization expects an agent"));
+        }
+        boolean hasOne = hasSuccess || hasChannel;
+        boolean hasBoth = hasSuccess && hasChannel;
+        if (hasOne && !hasBoth) {
+          environment.document.createError(this, String.format("The return statement within a @authorization expects both a channel and a success field"));
         }
       } else {
         environment.document.createError(this, String.format("The return statement within a @authorization expects a message type"));
