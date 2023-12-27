@@ -37,12 +37,26 @@ async function ExecSafeArea($){
 
 async function LinkCapacitor($, identityName) {
   // this function is probably required because adding just the plugin itself will do the job but won't minimize the app.
+  // TODO: to test iOS devices
   CapacitorApp.addListener('backButton' , ({canGoBack})=> {
+    // TODO : add logger
     console.log("BackButton called ... ", canGoBack);
     if(!canGoBack){
         CapacitorApp.minimizeApp();
     }else{
       window.history.back();
+    }
+  });
+
+  // handles email deep linking or any types of url links that points to our app launcher
+  // this only works on simple format(e.g, www.google.com/search?/page) the target for this are the sub-folders, paths and pages
+  // TODO: to test iOS devices i doubt this works with iOS but if it doesn't then will add new condition for platform specific codes
+  CapacitorApp.addListener('appUrlOpen', data => {
+    // TODO : add logger
+    console.log('App opened with URL:', data);
+    const navigation = data.url.split(".com");
+    if(navigation.length > 1){
+        window.rxhtml.goto(navigation[1], true);
     }
   });
 
@@ -119,6 +133,8 @@ async function LinkCapacitor($, identityName) {
 // Method called when tapping on a notification
   PushNotifications.addListener('pushNotificationActionPerformed', function (action) {
     console.log('Push action performed: ' + JSON.stringify(action));
+    // TODO: to test iOS devices
+    // TODO : add logger
     window.rxhtml.goto(action.notification.data.url, true);
   });
 
