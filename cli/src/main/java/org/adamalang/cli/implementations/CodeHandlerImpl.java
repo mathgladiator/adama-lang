@@ -32,7 +32,7 @@ import org.adamalang.lsp.LanguageServer;
 import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
-import org.adamalang.services.FirstPartyServices;
+import org.adamalang.CoreServices;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -123,7 +123,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
+    CoreServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.code);
@@ -148,7 +148,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
+    CoreServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.reflection);

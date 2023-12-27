@@ -15,55 +15,65 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.services.social;
+package org.adamalang.services.entropy;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.metrics.FirstPartyMetrics;
-import org.adamalang.services.ServiceConfig;
-import org.adamalang.web.client.WebClientBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.function.Consumer;
 
-public class Discord extends SimpleService {
-  private static final Logger LOGGER = LoggerFactory.getLogger(Discord.class);
+public class Delay extends SimpleService {
   private final FirstPartyMetrics metrics;
-  private final WebClientBase base;
+  private final SimpleExecutor executor;
 
-  public Discord(FirstPartyMetrics metrics, WebClientBase base) {
-    super("discord", new NtPrincipal("discord", "service"), true);
+  public Delay(FirstPartyMetrics metrics, SimpleExecutor executor) {
+    super("delay", new NtPrincipal("delay", "service"), true);
     this.metrics = metrics;
-    this.base = base;
-  }
-
-  public static Discord build(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
-    return new Discord(metrics, base);
+    this.executor = executor;
   }
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("service discord {\n");
-    sb.append("  class=\"discord\";\n");
-    sb.append("  ").append(params).append("\n");
-    sb.append("  method<dynamic, dynamic> GetMessage;\n");
+    sb.append("message _Delay_Request { int count; }\n");
+    sb.append("message _Delay_Empty { }\n");
+    sb.append("service delay {\n");
+    sb.append("  class=\"delay\";\n");
+    sb.append("  method<_Delay_Request, _Delay_Empty> milli;\n");
+    sb.append("  method<_Delay_Request, _Delay_Empty> ms;\n");
+    sb.append("  method<_Delay_Request, _Delay_Empty> sec;\n");
+    sb.append("  method<_Delay_Request, _Delay_Empty> seconds;\n");
+    sb.append("  method<_Delay_Request, _Delay_Empty> min;\n");
+    sb.append("  method<_Delay_Request, _Delay_Empty> minutes;\n");
     sb.append("}\n");
     return sb.toString();
   }
 
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    ObjectNode requestNode = Json.parseJsonObject(request);
+    ObjectNode node = Json.parseJsonObject(request);
+    int ms = node.get("count").intValue();
     switch (method) {
-      default:
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+      case "sec":
+      case "seconds":
+        ms *= 1000;
+        break;
+      case "min":
+      case "minutes":
+        ms *= 60000;
+        break;
     }
+    executor.schedule(new NamedRunnable("delay") {
+      @Override
+      public void execute() throws Exception {
+        callback.success("{}");
+      }
+    }, ms);
   }
 }

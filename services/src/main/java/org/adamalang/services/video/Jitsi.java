@@ -24,7 +24,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.keys.RSAPemKey;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.services.ServiceConfig;
 import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;

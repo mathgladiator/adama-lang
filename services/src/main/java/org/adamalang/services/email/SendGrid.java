@@ -18,12 +18,11 @@
 package org.adamalang.services.email;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.aws.Credential;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.services.ServiceConfig;
 import org.adamalang.web.client.*;
 import org.slf4j.Logger;

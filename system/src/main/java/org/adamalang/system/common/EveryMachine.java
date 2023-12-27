@@ -34,8 +34,8 @@ import org.adamalang.region.MeteringBatchSubmitMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.metering.BillingDocumentFinder;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
-import org.adamalang.services.FirstPartyMetrics;
-import org.adamalang.services.FirstPartyServices;
+import org.adamalang.metrics.FirstPartyMetrics;
+import org.adamalang.CoreServices;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
@@ -179,7 +179,7 @@ public class EveryMachine {
   public FirstPartyMetrics installServices(int publicKeyId) {
     SimpleExecutor services = SimpleExecutor.create("services-executor-prime");
     SimpleExecutor offload = SimpleExecutor.create("services-executor-offload");
-    FirstPartyMetrics metrics = FirstPartyServices.install(services, offload, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey));
+    FirstPartyMetrics metrics = CoreServices.install(services, offload, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey));
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[Services-Shutdown]");
       alive.set(false);

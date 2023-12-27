@@ -27,7 +27,9 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.model.Secrets;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 /** a service config for a space */
@@ -41,6 +43,10 @@ public class ServiceConfig {
     this.space = space;
     this.config = config;
     this.keys = keys;
+  }
+
+  public Set<String> getKeys() {
+    return new TreeSet<>(config.keySet());
   }
 
   public int getInteger(String key, int defaultValue) throws ErrorCodeException {

@@ -26,6 +26,7 @@ import org.adamalang.cli.probe.ProbeStart;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ServicesHandler;
 import org.adamalang.cli.runtime.Output;
+import org.adamalang.metrics.ThirdPartyMetrics;
 import org.adamalang.system.distributed.Backend;
 import org.adamalang.system.distributed.Frontend;
 import org.adamalang.system.distributed.Overlord;
@@ -43,7 +44,7 @@ import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.deploy.DeploymentMetrics;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.system.distributed.PrepareStep;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.service.WebMetrics;
@@ -125,6 +126,8 @@ public class ServicesHandlerImpl implements ServicesHandler {
     new WebClientBaseMetrics(metricsFactory);
     metricsFactory.page("fp", "First Party");
     new FirstPartyMetrics(metricsFactory);
+    metricsFactory.page("thirdparty", "ThirdParty");
+    new ThirdPartyMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
     output.out();
   }

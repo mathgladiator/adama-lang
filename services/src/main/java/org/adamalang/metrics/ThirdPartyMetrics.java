@@ -15,9 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.metrics;
 
-public class Platform {
-  public static final String VERSION = "20231226181917";
-  public static final String JS_VERSION = "47806e4366f8f0593bf3c0975173f1c4";
+import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.RequestResponseMonitor;
+
+public class ThirdPartyMetrics {
+  public final RequestResponseMonitor tpm_json_http;
+
+  public ThirdPartyMetrics(MetricsFactory factory) {
+    tpm_json_http = factory.makeRequestResponseMonitor("tpm_json_http");
+  }
 }

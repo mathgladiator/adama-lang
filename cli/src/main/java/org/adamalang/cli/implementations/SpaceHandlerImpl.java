@@ -31,7 +31,7 @@ import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.services.FirstPartyServices;
+import org.adamalang.CoreServices;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -95,7 +95,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
 
   @Override
   public void deploy(Arguments.SpaceDeployArgs args, Output.YesOrError output) throws Exception {
-    FirstPartyServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
+    CoreServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
     Deployer.deploy(args, output);
   }
 

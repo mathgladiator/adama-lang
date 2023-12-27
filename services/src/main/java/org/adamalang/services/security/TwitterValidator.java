@@ -17,23 +17,14 @@
 */
 package org.adamalang.services.security;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.adamalang.web.client.SimpleHttpRequest;
-import org.adamalang.web.client.SimpleHttpRequestBody;
-import org.adamalang.web.client.StringCallbackHttpResponder;
 import org.adamalang.web.client.WebClientBase;
-
-import java.util.HashMap;
 
 public class TwitterValidator extends SimpleService {
     private static final Logger LOG = LoggerFactory.getLogger(TwitterValidator.class);

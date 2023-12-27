@@ -17,7 +17,6 @@
 */
 package org.adamalang.cli.devbox;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.Json;
@@ -29,10 +28,11 @@ import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.services.Adama;
-import org.adamalang.services.FirstPartyMetrics;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
+import org.adamalang.services.entropy.Delay;
 import org.adamalang.services.entropy.SafeRandom;
 import org.adamalang.services.logging.Logzio;
 import org.adamalang.services.security.GoogleValidator;
@@ -113,10 +113,12 @@ public class DevBoxServices {
   }
 
   public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
+    FirstPartyMetrics firstPartyMetrics = new FirstPartyMetrics(new NoOpMetricsFactory());;
     logger.accept("devservices|installing overrides");
     ServiceRegistry.add("amazonses", DevBoxAmazonSES.class, (space, configRaw, keys) -> new DevBoxAmazonSES(space, logger));
     ServiceRegistry.add("logzio", Logzio.class, (space, configRaw, keys) -> new DevBoxLogzio(space, logger));
     ServiceRegistry.add("saferandom", SafeRandom.class, (space, configRaw, keys) -> new SafeRandom(executor));
+    ServiceRegistry.add("delay", Delay.class, (space, configRaw, keys) -> new Delay(firstPartyMetrics, executor));
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
     if (servicesDefn != null && servicesDefn.has("adama")) {
       // TODO: define how to do the Adama service (it could be a loop back?)
@@ -138,13 +140,13 @@ public class DevBoxServices {
     }
     if (servicesDefn != null && servicesDefn.has("stripe")) {
       String apiKeyStripe = servicesDefn.get("stripe").textValue();
-      ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> new Stripe(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKeyStripe));
+      ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> new Stripe(firstPartyMetrics, webClientBase, apiKeyStripe));
     } else {
       ServiceRegistry.add("stripe", Stripe.class, (space, configRaw, keys) -> Service.FAILURE);
     }
     if (servicesDefn != null && servicesDefn.has("sendgrid")) {
       String apiKeySendGrid = servicesDefn.get("sendgrid").textValue();
-      ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new SendGrid(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, apiKeySendGrid));
+      ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new SendGrid(firstPartyMetrics, webClientBase, apiKeySendGrid));
     } else {
       ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new DevBoxSendGrid(space, logger));
     }
@@ -154,13 +156,13 @@ public class DevBoxServices {
     } else {
       ServiceRegistry.add("identitysigner", IdentitySigner.class, (space, configRaw, keys) -> Service.FAILURE);
     }
-    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(new FirstPartyMetrics(new NoOpMetricsFactory()), executor, webClientBase));
+    ServiceRegistry.add("googlevalidator", GoogleValidator.class, (space, configRaw, keys) -> GoogleValidator.build(firstPartyMetrics, executor, webClientBase));
 
     if (servicesDefn != null && servicesDefn.has("jitsi")) {
       String privateKeyDev = servicesDefn.get("jitsi").textValue();
       ServiceRegistry.add("jitsi", Jitsi.class, (space, configRaw, keys) -> {
         try {
-          return new Jitsi(new FirstPartyMetrics(new NoOpMetricsFactory()), webClientBase, executor, RSAPemKey.privateFrom(privateKeyDev), configRaw.get("sub").toString());
+          return new Jitsi(firstPartyMetrics, webClientBase, executor, RSAPemKey.privateFrom(privateKeyDev), configRaw.get("sub").toString());
         } catch (Exception ex) {
           ex.printStackTrace();
           return Service.FAILURE;
