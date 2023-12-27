@@ -164,6 +164,7 @@ public class DevBoxStart {
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
+          terminal.info("verse|installing push notifications");
           verse.devPush.install();
           for (DevBoxAdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
             terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
