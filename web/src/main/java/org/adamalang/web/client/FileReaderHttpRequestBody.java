@@ -17,6 +17,7 @@
 */
 package org.adamalang.web.client;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Hashing;
 import org.adamalang.common.Hex;
 
@@ -28,10 +29,11 @@ import java.security.MessageDigest;
 public class FileReaderHttpRequestBody implements SimpleHttpRequestBody {
   public final String sha256;
   public final long size;
-
+  private final File file;
   private final BufferedInputStream input;
 
   public FileReaderHttpRequestBody(File file) throws Exception {
+    this.file = file;
     BufferedInputStream inputDigest = null;
     MessageDigest digest = Hashing.sha256();
     long _size = 0;
@@ -66,5 +68,13 @@ public class FileReaderHttpRequestBody implements SimpleHttpRequestBody {
   @Override
   public void finished(boolean success) throws Exception {
     this.input.close();
+  }
+
+  @Override
+  public void pumpLogEntry(ObjectNode body) {
+    body.put("type", "file");
+    body.put("size", size);
+    body.put("filename", file.getName());
+    body.put("sha256", sha256);
   }
 }

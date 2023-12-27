@@ -28,51 +28,75 @@ import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
-import org.adamalang.web.client.StringCallbackHttpResponder;
 import org.adamalang.web.client.WebClientBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SimpleHttpJson extends SimpleService {
-  private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpJson.class);
+  private static final TreeMap<String, String> METHOD_INFER = buildMethodInferenceTable(new String[] { "GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"});
+
+  private static TreeMap<String, String> buildMethodInferenceTable(String[] methods) {
+    TreeMap<String, String> map = new TreeMap<>();
+    for (String method : methods) {
+      map.put(method, method);
+      map.put(method.toLowerCase(Locale.ENGLISH), method);
+      map.put(method + "_", method);
+      map.put(method.toLowerCase(Locale.ENGLISH) + "_", method);
+    }
+    return map;
+  }
+
   private final WebClientBase webClientBase;
   private final ThirdPartyMetrics metrics;
   private final TreeMap<String, String> headers;
   private final String endpoint;
+  private final TreeSet<String> secretHeaders;
 
-  public SimpleHttpJson(ThirdPartyMetrics metrics, WebClientBase webClientBase, TreeMap<String, String> headers, String endpoint) {
+  public SimpleHttpJson(ThirdPartyMetrics metrics, WebClientBase webClientBase, TreeMap<String, String> headers, TreeSet<String> secretHeaders, String endpoint) {
     super("httpjson", new NtPrincipal("httpjson", "service"), true);
     this.headers = headers;
     this.webClientBase = webClientBase;
     this.endpoint = endpoint;
     this.metrics = metrics;
+    this.secretHeaders = secretHeaders;
   }
 
   public static SimpleHttpJson build(ThirdPartyMetrics metrics, WebClientBase webClientBase, ServiceConfig config) throws ErrorCodeException {
     TreeMap<String, String> headers = new TreeMap<>();
+    TreeSet<String> secretHeaders = new TreeSet<>();
     String endpoint = config.getString("endpoint", null);
     headers.put("Content-Type", "application/json");
     for (String key : config.getKeys()) {
       if (key.startsWith("secret_header_")) {
-        headers.put(key.substring("secret_header_".length()), config.getDecryptedSecret(key));
+        String headerName = key.substring("secret_header_".length());
+        headers.put(headerName, config.getDecryptedSecret(key));
+        secretHeaders.add(headerName);
       } else if (key.startsWith("header_")) {
         headers.put(key.substring("header_".length()), config.getString(key, null));
       }
     }
-    return new SimpleHttpJson(metrics, webClientBase, headers, endpoint);
+    return new SimpleHttpJson(metrics, webClientBase, headers, secretHeaders, endpoint);
   }
 
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    ObjectNode node = Json.newJsonObject();
+    ObjectNode node = Json.parseJsonObject(request);
     String httpMethod = Json.readString(node, "method");
     if (httpMethod == null) {
       httpMethod = "GET";
+    }
+    int kUnder = method.indexOf('_');
+    if (kUnder > 0) {
+      String infer = METHOD_INFER.get(method.substring(0, kUnder + 1));
+      if (infer != null) {
+        httpMethod = infer;
+      }
+    } else {
+      String infer = METHOD_INFER.get(method);
+      if (infer != null) {
+        httpMethod = infer;
+      }
     }
     String httpUri = Json.readString(node, "uri");
     if (httpUri == null) {
@@ -93,6 +117,6 @@ public class SimpleHttpJson extends SimpleService {
       body = nodeBody.toString().getBytes(StandardCharsets.UTF_8);
     }
     SimpleHttpRequest httpRequest = new SimpleHttpRequest(httpMethod, endpoint + httpUri, httpHeaders, body == null ? SimpleHttpRequestBody.EMPTY : SimpleHttpRequestBody.WRAP(body));
-    webClientBase.executeShared(httpRequest, new StringCallbackHttpResponder(LOGGER, metrics.tpm_json_http.start(), callback));
+    webClientBase.executeShared(httpRequest, new SimpleHttpJsonResponder(metrics.tpm_json_http.start(), callback));
   }
 }

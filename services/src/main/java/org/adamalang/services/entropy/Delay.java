@@ -18,15 +18,15 @@
 package org.adamalang.services.entropy;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.lambdaworks.crypto.SCryptUtil;
-import org.adamalang.ErrorCodes;
-import org.adamalang.common.*;
+import org.adamalang.common.Callback;
+import org.adamalang.common.Json;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.SimpleService;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.function.Consumer;
 
 public class Delay extends SimpleService {
@@ -40,19 +40,18 @@ public class Delay extends SimpleService {
   }
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("message _Delay_Request { int count; }\n");
-    sb.append("message _Delay_Empty { }\n");
-    sb.append("service delay {\n");
-    sb.append("  class=\"delay\";\n");
-    sb.append("  method<_Delay_Request, _Delay_Empty> milli;\n");
-    sb.append("  method<_Delay_Request, _Delay_Empty> ms;\n");
-    sb.append("  method<_Delay_Request, _Delay_Empty> sec;\n");
-    sb.append("  method<_Delay_Request, _Delay_Empty> seconds;\n");
-    sb.append("  method<_Delay_Request, _Delay_Empty> min;\n");
-    sb.append("  method<_Delay_Request, _Delay_Empty> minutes;\n");
-    sb.append("}\n");
-    return sb.toString();
+    String sb = "message _Delay_Request { int count; int id; }\n" + //
+        "message _Delay_Empty { }\n" + //
+        "service delay {\n" + //
+        "  class=\"delay\";\n" + //
+        "  method<_Delay_Request, _Delay_Empty> milli;\n" + //
+        "  method<_Delay_Request, _Delay_Empty> ms;\n" + //
+        "  method<_Delay_Request, _Delay_Empty> sec;\n" + //
+        "  method<_Delay_Request, _Delay_Empty> seconds;\n" + //
+        "  method<_Delay_Request, _Delay_Empty> min;\n" + //
+        "  method<_Delay_Request, _Delay_Empty> minutes;\n" + //
+        "}\n";
+    return sb;
   }
 
   @Override

@@ -17,6 +17,8 @@
 */
 package org.adamalang.web.client;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.ByteArrayInputStream;
 
 /** a simplified http body */
@@ -34,6 +36,13 @@ public interface SimpleHttpRequestBody {
 
     @Override
     public void finished(boolean success) throws Exception {
+    }
+
+
+    @Override
+    public void pumpLogEntry(ObjectNode body) {
+      body.put("type", "empty");
+      body.put("size", 0);
     }
   };
 
@@ -54,6 +63,12 @@ public interface SimpleHttpRequestBody {
       public void finished(boolean success) throws Exception {
         memory.close();
       }
+
+      @Override
+      public void pumpLogEntry(ObjectNode body) {
+        body.put("type", "byte-array");
+        body.put("size", bytes.length);
+      }
     };
   }
 
@@ -65,4 +80,7 @@ public interface SimpleHttpRequestBody {
 
   /** the body is finished being read */
   void finished(boolean success) throws Exception;
+
+  /** fill a log entry */
+  void pumpLogEntry(ObjectNode body);
 }
