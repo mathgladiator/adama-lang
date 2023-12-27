@@ -18,6 +18,7 @@
 package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.CoreServicesNexus;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.implementations.space.Deployer;
@@ -95,7 +96,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
 
   @Override
   public void deploy(Arguments.SpaceDeployArgs args, Output.YesOrError output) throws Exception {
-    CoreServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
+    CoreServices.install(CoreServicesNexus.NOOP());
     Deployer.deploy(args, output);
   }
 

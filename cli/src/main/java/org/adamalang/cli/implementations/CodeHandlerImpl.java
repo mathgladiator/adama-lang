@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.CoreServicesNexus;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.implementations.code.Diagram;
 import org.adamalang.cli.router.Arguments;
@@ -123,7 +124,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
-    CoreServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
+    CoreServices.install(CoreServicesNexus.NOOP());
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.code);
@@ -148,7 +149,7 @@ public class CodeHandlerImpl implements CodeHandler {
 
   @Override
   public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
-    CoreServices.install(null, null, new NoOpMetricsFactory(), null, null, null);
+    CoreServices.install(CoreServicesNexus.NOOP());
     CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.reflection);

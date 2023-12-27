@@ -15,18 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.services.push.webpush;
+package org.adamalang.runtime.remote;
 
-/** urgency of a push notification */
-public enum Urgency {
-  VERY_LOW("very-low"),
-  LOW("low"),
-  NORMAL("normal"),
-  HIGH("high");
+import org.adamalang.common.keys.PrivateKeyBundle;
 
-  public final String header;
+import java.util.HashMap;
+import java.util.TreeMap;
 
-  private Urgency(String header) {
-    this.header = header;
-  }
+@FunctionalInterface
+public interface ServiceConfigFactory {
+  /** create the service config */
+  public ServiceConfig cons(String service, String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys);
 }

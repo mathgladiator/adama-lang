@@ -39,10 +39,10 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.metrics.FirstPartyMetrics;
-import org.adamalang.services.ServiceConfig;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.ServiceConfig;
+import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.web.client.WebClientBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class Twilio extends SimpleService {
   private final String username;
   private final String password;
 
-  public Twilio(FirstPartyMetrics metrics, WebClientBase base, String username, String password)  {
+  public Twilio(FirstPartyMetrics metrics, WebClientBase base, String username, String password) {
     super("twilio", new NtPrincipal("twilio", "service"), true);
     this.metrics = metrics;
     this.base = base;
@@ -72,12 +72,11 @@ public class Twilio extends SimpleService {
   @Override
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     ObjectNode node = Json.parseJsonObject(request);
-    switch (method) {
-      case "send":
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED));
-        return;
-      default:
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+    if ("send".equals(method)) {
+      callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED));
+      return;
+    } else {
+      callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
     }
     /*
     if ("send".equals(method)) {

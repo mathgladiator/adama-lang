@@ -15,16 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote;
+package org.adamalang.config;
 
 import org.adamalang.common.keys.PrivateKeyBundle;
+import org.adamalang.runtime.remote.ServiceConfig;
+import org.adamalang.runtime.remote.ServiceConfigFactory;
 
 import java.util.HashMap;
 import java.util.TreeMap;
 
-/** constructor for a service */
-@FunctionalInterface
-public interface ServiceConstructor {
-
-  public Service cons(String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys);
+/** build a ServiceConfig for production */
+public class ProductionServiceConfigFactory implements ServiceConfigFactory {
+  @Override
+  public ServiceConfig cons(String service, String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys) {
+    return new ProductionServiceConfig(space, params, keys);
+  }
 }

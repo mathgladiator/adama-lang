@@ -17,9 +17,11 @@
 */
 package org.adamalang.system.common;
 
+import org.adamalang.CoreServicesNexus;
 import org.adamalang.api.SelfClient;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.config.ProductionServiceConfigFactory;
 import org.adamalang.system.Role;
 import org.adamalang.common.*;
 import org.adamalang.common.gossip.Engine;
@@ -179,7 +181,8 @@ public class EveryMachine {
   public FirstPartyMetrics installServices(int publicKeyId) {
     SimpleExecutor services = SimpleExecutor.create("services-executor-prime");
     SimpleExecutor offload = SimpleExecutor.create("services-executor-offload");
-    FirstPartyMetrics metrics = CoreServices.install(services, offload, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey));
+    CoreServicesNexus coreServicesNexus = new CoreServicesNexus(services, offload, metricsFactory, webBase, adamaCurrentRegionClient, new InternalSigner(publicKeyId, hostKey), new ProductionServiceConfigFactory());
+    CoreServices.install(coreServicesNexus);
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
       System.out.println("[Services-Shutdown]");
       alive.set(false);
@@ -192,7 +195,7 @@ public class EveryMachine {
       } catch (Exception ex) {
       }
     })));
-    return metrics;
+    return coreServicesNexus.fpMetrics;
   }
 
   public MeteringBatchReady makeMeteringBatchReady(BillingDocumentFinder billingDocumentFinder, int publicKeyId) {

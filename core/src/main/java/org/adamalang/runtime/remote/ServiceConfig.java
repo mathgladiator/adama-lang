@@ -17,14 +17,19 @@
 */
 package org.adamalang.runtime.remote;
 
-import org.adamalang.common.keys.PrivateKeyBundle;
+import org.adamalang.common.ErrorCodeException;
 
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.Set;
 
-/** constructor for a service */
-@FunctionalInterface
-public interface ServiceConstructor {
+/** configuration for a service per space */
+public interface ServiceConfig {
+  public String getSpace();
 
-  public Service cons(String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys);
+  public Set<String> getKeys();
+
+  public int getInteger(String key, int defaultValue) throws ErrorCodeException;
+
+  public String getString(String key, String defaultValue) throws ErrorCodeException;
+
+  public String getDecryptedSecret(String key) throws ErrorCodeException;
 }

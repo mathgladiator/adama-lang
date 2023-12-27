@@ -21,10 +21,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.metrics.FirstPartyMetrics;
-import org.adamalang.services.ServiceConfig;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.ServiceConfig;
+import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.web.client.*;
 import org.adamalang.web.service.WebConfig;
 import org.slf4j.Logger;
@@ -71,18 +71,6 @@ public class Logzio extends SimpleService {
     return new Logzio(metrics, base, offload, config.getDecryptedSecret("token"), config.getString("log_type", ""));
   }
 
-  @Override
-  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    switch (method) {
-      case "log": {
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
-      }
-      break;
-      default:
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
-    }
-  }
-
   public static void main(String[] args) throws Exception {
     WebClientBase base = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
     String token = "<<THE TOKEN>>";
@@ -92,9 +80,7 @@ public class Logzio extends SimpleService {
     event.put("au", "foo");
     event.put("message", "the token was created");
 
-    StringBuilder sb = new StringBuilder();
-    sb.append(event.toString()).append("\n");
-    SimpleHttpRequest request = new SimpleHttpRequest("POST", "https://listener.logz.io:8071/?token=" + token, new TreeMap<>(), SimpleHttpRequestBody.WRAP(sb.toString().getBytes()));
+    SimpleHttpRequest request = new SimpleHttpRequest("POST", "https://listener.logz.io:8071/?token=" + token, new TreeMap<>(), SimpleHttpRequestBody.WRAP((event + "\n").getBytes()));
     CountDownLatch latch = new CountDownLatch(1);
     base.executeShared(request, new VoidCallbackHttpResponder(LOG, new NoOpMetricsFactory().makeRequestResponseMonitor("x").start(), new Callback<Void>() {
       @Override
@@ -110,5 +96,14 @@ public class Logzio extends SimpleService {
       }
     }));
     latch.await(1000, TimeUnit.MILLISECONDS);
+  }
+
+  @Override
+  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+    if ("log".equals(method)) {
+      callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+    } else {
+      callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+    }
   }
 }

@@ -24,6 +24,7 @@ import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.config.ProductionServiceConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
@@ -39,7 +40,7 @@ import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.TreeMap;
 
-public class ServiceConfigTests {
+public class ProductionServiceConfigTests {
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
     File file = new File("test.mysql.json");
     Assume.assumeTrue(file.exists());
@@ -78,7 +79,7 @@ public class ServiceConfigTests {
         configMap1.put("secret_fail4", "100;z;z");
 
         configMap1.put("int", 3);
-        ServiceConfig config1 = new ServiceConfig("space", configMap1, keys);
+        ProductionServiceConfig config1 = new ProductionServiceConfig("space", configMap1, keys);
         Assert.assertEquals("plain-text-secret", config1.getDecryptedSecret("secret"));
 
         try {

@@ -17,6 +17,7 @@
 */
 package org.adamalang.system.distributed;
 
+import org.adamalang.CoreServicesNexus;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -52,7 +53,7 @@ public class PrepareStep {
     DataBaseBoot db = new DataBaseBoot(alive, config, metrics, executor);
     CloudBoot cb = new CloudBoot(alive, metrics, webClientBase, config.get_or_create_child("aws"), "prepare-step", executor);
     ArrayList<SimpleSpaceInfo> spaces = Spaces.listAllSpaces(db.database);
-    CoreServices.install(executor, executor, metrics, webClientBase, null, null);
+    CoreServices.install(CoreServicesNexus.NOOP());
     for (SimpleSpaceInfo space : spaces) {
       System.out.print("\u001b[33mCompile[\u001b[37m" + space.name + "\u001b[33m]\u001b[39m.");
       try {

@@ -23,8 +23,6 @@ import org.adamalang.common.keys.ECPublicKeyCodec;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpRequestBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyAgreement;
@@ -34,32 +32,34 @@ import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.*;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.SecureRandom;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECGenParameterSpec;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.TreeMap;
 
 /** produce WebPush requests */
 public class WebPushRequestFactory128 {
   private static final byte[] WEBPUSHINFO = "WebPush: info\u0000".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ENC_4096 = make4096();
-  private static final byte[] PADDING = new byte[] { 0x02 };
+  private static final byte[] PADDING = new byte[]{0x02};
+  private final String email;
+  private final SecureRandom random;
+  public WebPushRequestFactory128(String email, SecureRandom random) {
+    this.email = email;
+    this.random = random;
+  }
 
   private static byte[] make4096() {
     ByteBuffer buffer = ByteBuffer.allocate(4);
     buffer.putInt(4096);
     return buffer.array();
-  }
-
-  private final String email;
-  private final SecureRandom random;
-
-  public WebPushRequestFactory128(String email, SecureRandom random) {
-    this.email = email;
-    this.random = random;
   }
 
   public SimpleHttpRequest make(VAPIDPublicPrivateKeyPair keyPair, Subscription subscription, int ttlDays, byte[] payload) throws Exception {
@@ -110,7 +110,7 @@ public class WebPushRequestFactory128 {
     GCMParameterSpec params = new GCMParameterSpec(128, nonce);
     cipher.init(1, new SecretKeySpec(key, "AES"), params);
     byte[] keyIdBytes = ECPublicKeyCodec.encode((ECPublicKey) sender.getPublic());
-    byte[] idlen = new byte[]{(byte)keyIdBytes.length};
+    byte[] idlen = new byte[]{(byte) keyIdBytes.length};
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     output.write(salt);
     output.write(ENC_4096);

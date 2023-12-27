@@ -26,6 +26,7 @@ import org.adamalang.common.Json;
 import org.adamalang.internal.InternalSigner;
 import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.SimpleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
