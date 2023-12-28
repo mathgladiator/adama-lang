@@ -261,10 +261,11 @@ public class Attributes {
   private void writeDomSetter(String stateVar, String var, String key, String expr, TreeSet<String> features) {
     String tagName = env.element.tagName();
     boolean isSelect = tagName.equalsIgnoreCase("select");
+    boolean isOption = tagName.equalsIgnoreCase("option");
     boolean hasValue = tagName.equalsIgnoreCase("textarea") ||
                        tagName.equalsIgnoreCase("input") ||
                        isSelect ||
-                       tagName.equalsIgnoreCase("option");
+                       isOption;
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(stateVar).append(",").append(expr).append(",").append(features.contains("merge") ? "true" : "false").append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
@@ -276,7 +277,11 @@ public class Attributes {
     } else if (hasValue && isBooleanInputValue(key)) {
       env.writer.tab().append("$.FV(").append(var).append(",'").append(key).append("',").append(wrapBoolValue(expr)).append(");").newline();
     } else {
-      env.writer.tab().append("$.SA(").append(var).append(",'").append(key).append("',").append(expr).append(");").newline();
+      if (isOption && "label".equalsIgnoreCase(key)) {
+        env.writer.tab().append("$.SL(").append(var).append(",").append(expr).append(");").newline();
+      } else {
+        env.writer.tab().append("$.SA(").append(var).append(",'").append(key).append("',").append(expr).append(");").newline();
+      }
     }
   }
 

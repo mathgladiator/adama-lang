@@ -3344,6 +3344,12 @@ var RxHTML = (function () {
   self.SA = function(dom, attr, value) {
     dom.setAttribute(attr, value);
   };
+  // RUNTIME: set the label of an option
+  self.SL = function(dom, value) {
+    dom.label = value;
+    dom.innerText = value;
+  };
+
   // for selects
   // d.value=$value;
   // $.SV(d,$value);
