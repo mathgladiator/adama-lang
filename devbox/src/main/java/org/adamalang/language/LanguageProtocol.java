@@ -91,9 +91,12 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
     switch (method) {
       case "initialize": {
         ObjectNode response = craftResponse(request, true);
-        ObjectNode sync = response.putObject("result").putObject("capabilities").putObject("textDocumentSync");
-        sync.put("openClose", true);
-        sync.put("change", 0);
+        ObjectNode caps = response.putObject("result").putObject("capabilities");
+        ObjectNode textDocumentSync = caps.putObject("textDocumentSync");
+        textDocumentSync.put("openClose", true);
+        textDocumentSync.put("change", 0);
+        // caps.put("hoverProvider", true);
+        // caps.put("documentFormattingProvider", true);
         return response;
       }
       case "initialized": {
@@ -123,6 +126,24 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         }
         return null;
       }
+      case "textDocument/hover": {
+        ObjectNode textDocument = (ObjectNode) request.get("params").get("textDocument");
+        String uri = textDocument.get("uri").textValue();
+        int line = textDocument.get("position").get("line").intValue();
+        int ch = textDocument.get("position").get("character").intValue();
+        ObjectNode response = craftResponse(request, true);
+        // TODO: query the built index of interesting things
+        return null;
+      }
+      case "textDocument/formatting": {
+        ObjectNode textDocument = (ObjectNode) request.get("params").get("textDocument");
+        String uri = textDocument.get("uri").textValue();
+        ObjectNode response = craftResponse(request, true);
+        // TODO: find the file, format it,
+        return null;
+      }
+      default:
+        System.err.println(request);
     }
     return null;
   }
@@ -252,10 +273,5 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
       }
       return null;
     }
-  }
-
-  public class WinningPair {
-    public String key;
-
   }
 }
