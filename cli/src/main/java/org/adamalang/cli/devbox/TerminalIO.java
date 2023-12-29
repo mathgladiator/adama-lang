@@ -17,6 +17,7 @@
 */
 package org.adamalang.cli.devbox;
 
+import org.adamalang.common.ANSI;
 import org.adamalang.cli.Util;
 import org.jline.reader.*;
 import org.jline.utils.AttributedString;
@@ -33,19 +34,19 @@ public class TerminalIO {
   }
 
   public synchronized void notice(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix("     NOTICE:" + ln, Util.ANSI.Yellow)));
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix("     NOTICE:" + ln, ANSI.Yellow)));
   }
 
   public synchronized void important(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix(">IMPORTANT<:" + ln, Util.ANSI.Cyan)));
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix(">IMPORTANT<:" + ln, ANSI.Cyan)));
   }
 
   public synchronized void info(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix("       INFO:" + ln, Util.ANSI.Green)));
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix("       INFO:" + ln, ANSI.Green)));
   }
 
   public synchronized void error(String ln) {
-    reader.printAbove(AttributedString.fromAnsi(Util.prefix("      ERROR:" + ln, Util.ANSI.Red)));
+    reader.printAbove(AttributedString.fromAnsi(Util.prefix("      ERROR:" + ln, ANSI.Red)));
   }
 
   public String readline() {

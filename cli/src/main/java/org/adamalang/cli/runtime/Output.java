@@ -19,6 +19,7 @@ package org.adamalang.cli.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ANSI;
 import org.adamalang.cli.Util;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class Output {
 
     public class YesOrError {
         public void out() {
-            System.out.println(Util.prefix("\u2705", Util.ANSI.Green));
+            System.out.println(Util.prefix("\u2705", ANSI.Green));
         }
     }
 
@@ -82,11 +83,11 @@ public class Output {
                 System.out.println("]");
                 return;
             }
-            Util.ANSI headingColor = Util.ANSI.Normal;
-            Util.ANSI valueColor = Util.ANSI.Normal;
+            ANSI headingColor = ANSI.Normal;
+            ANSI valueColor = ANSI.Normal;
             if (color) {
-                headingColor = Util.ANSI.Yellow;
-                valueColor = Util.ANSI.Green;
+                headingColor = ANSI.Yellow;
+                valueColor = ANSI.Green;
             }
             ArrayList<StringBuilder> table = new ArrayList<>();
             for (int i = 0; i < 3 + (2*objList.size()); i++) {
@@ -134,7 +135,7 @@ public class Output {
                  if ((spaces) % 2 == 1) {
                     rightPad++;
                 }
-                 table.get(1).append(" ".repeat(leftPad)).append(Util.prefixBold(headers[i], Util.ANSI.Normal)).append(" ".repeat(rightPad)).append(Util.prefix("\u2502", headingColor));
+                 table.get(1).append(" ".repeat(leftPad)).append(Util.prefixBold(headers[i], ANSI.Normal)).append(" ".repeat(rightPad)).append(Util.prefix("\u2502", headingColor));
              }
              for (int i = 0; i < values.length ; i++) {
                 for (int j = 0; j < values[i].length ; j++) {

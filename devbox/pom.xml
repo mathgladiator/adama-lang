@@ -8,7 +8,7 @@
         <version>MAIN</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cli</artifactId>
+    <artifactId>devbox</artifactId>
     <properties>
         <jdk.version>17</jdk.version>
         <maven.compiler.target>17</maven.compiler.target>
@@ -16,6 +16,11 @@
         <maven.compiler.release>17</maven.compiler.release>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>system</artifactId>
+            <version>MAIN</version>
+        </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>apikit</artifactId>
@@ -28,8 +33,13 @@
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>devbox</artifactId>
+            <artifactId>lsp</artifactId>
             <version>MAIN</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jline</groupId>
+            <artifactId>jline-reader</artifactId>
+            <version>3.24.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -52,27 +62,6 @@
                 <configuration>
                     <workingDirectory>${project.basedir}</workingDirectory>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.adamalang.cli.Main</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

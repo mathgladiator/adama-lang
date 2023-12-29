@@ -19,6 +19,7 @@ package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.ANSI;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.router.Arguments;
@@ -40,34 +41,34 @@ public class DatabaseHandlerImpl implements DatabaseHandler {
     System.out.println();
     while (!("frontend".equals(_role) || "backend".equals(_role) || "deployed".equals(_role) || "any".equals(_role))) {
       System.out.println("Role may be 'frontend', 'backend', 'deployed', or 'any'");
-      System.out.print(Util.prefix("    Role:", Util.ANSI.Yellow));
+      System.out.print(Util.prefix("    Role:", ANSI.Yellow));
       _role = System.console().readLine();
     }
     String role = _role;
 
     System.out.println();
-    System.out.print(Util.prefix("    Host:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("    Host:", ANSI.Yellow));
     String host = System.console().readLine();
 
     System.out.println();
-    System.out.print(Util.prefix("    Port[3306]:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("    Port[3306]:", ANSI.Yellow));
     String portStr = System.console().readLine();
     int port = portStr.trim().equals("") ? 3306 : Integer.parseInt(portStr);
 
     System.out.println();
     String _username = "";
     while ("".equals(_username)) {
-      System.out.print(Util.prefix("Username:", Util.ANSI.Yellow));
+      System.out.print(Util.prefix("Username:", ANSI.Yellow));
       _username = System.console().readLine().trim();
     }
     String username = _username;
 
     System.out.println();
-    System.out.print(Util.prefix("Password:", Util.ANSI.Red));
+    System.out.print(Util.prefix("Password:", ANSI.Red));
     String password = new String(System.console().readPassword());
 
     System.out.println();
-    System.out.print(Util.prefix("Database:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("Database:", ANSI.Yellow));
     String dbname = System.console().readLine();
 
     // TODO: validate by connecting to the database

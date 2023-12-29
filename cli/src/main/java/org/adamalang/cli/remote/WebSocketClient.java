@@ -17,6 +17,7 @@
 */
 package org.adamalang.cli.remote;
 
+import org.adamalang.common.ANSI;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.ConfigObject;
@@ -54,7 +55,7 @@ public class WebSocketClient implements AutoCloseable {
       @Override
       public void connected(WebClientConnection connection, String version) {
         if (!Platform.VERSION.equals(version)) {
-          System.err.println(Util.prefix("Remote platform has a different version of your jar; yours=" + Platform.VERSION + "; remote=" + version, Util.ANSI.Yellow));
+          System.err.println(Util.prefix("Remote platform has a different version of your jar; yours=" + Platform.VERSION + "; remote=" + version, ANSI.Yellow));
         }
         connectionRef.set(connection);
         gotConnectionRef.countDown();

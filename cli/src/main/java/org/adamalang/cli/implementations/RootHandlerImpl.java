@@ -19,6 +19,7 @@ package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.canary.Canary;
+import org.adamalang.common.ANSI;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.devbox.DevBoxStart;
@@ -97,30 +98,30 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void version(Arguments.VersionArgs args, Output.YesOrError output) throws Exception {
-    System.err.println("adama version " + Util.prefix(Platform.VERSION, Util.ANSI.Green));
+    System.err.println("adama version " + Util.prefix(Platform.VERSION, ANSI.Green));
   }
 
   @Override
   public void init(Arguments.InitArgs args, Output.YesOrError output) throws Exception {
-    System.out.println("Hello, and welcome to the " + Util.prefix("Adama Tool", Util.ANSI.Green) + " account on-boarding experience!");
+    System.out.println("Hello, and welcome to the " + Util.prefix("Adama Tool", ANSI.Green) + " account on-boarding experience!");
     System.out.println();
-    System.out.println(Util.prefix("WARNING!! ", Util.ANSI.Red) + "Please be advised that this is alpha software available as an early release. For more details, please see:");
+    System.out.println(Util.prefix("WARNING!! ", ANSI.Red) + "Please be advised that this is alpha software available as an early release. For more details, please see:");
     System.out.println();
-    System.out.println(Util.prefix("  https://www.adama-platform.com/2022/02/25/early-access-launch-and-confession.html", Util.ANSI.Green));
+    System.out.println(Util.prefix("  https://www.adama-platform.com/2022/02/25/early-access-launch-and-confession.html", ANSI.Green));
     System.out.println();
-    System.out.println("Before you begin, you should read " + Util.prefix("terms & conditions", Util.ANSI.Yellow) + " on the website:");
+    System.out.println("Before you begin, you should read " + Util.prefix("terms & conditions", ANSI.Yellow) + " on the website:");
     System.out.println();
-    System.out.println(Util.prefix("  https://www.adama-platform.com/terms-and-conditions.html", Util.ANSI.Green));
+    System.out.println(Util.prefix("  https://www.adama-platform.com/terms-and-conditions.html", ANSI.Green));
     System.out.println();
-    System.out.println("Also, you should read the " + Util.prefix("privacy policy", Util.ANSI.Yellow) + " on the website as well:");
+    System.out.println("Also, you should read the " + Util.prefix("privacy policy", ANSI.Yellow) + " on the website as well:");
     System.out.println();
-    System.out.println(Util.prefix("  https://www.adama-platform.com/privacy.html", Util.ANSI.Green));
+    System.out.println(Util.prefix("  https://www.adama-platform.com/privacy.html", ANSI.Green));
     System.out.println();
-    System.out.println("This tool is about to ask for your email, and that is used as your developer account." + " As of March 3rd 2022 the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) + " We will never share with third parties beyond tools to distribute updates about the service." + " Heck! we haven't yet written the code to dump emails into software which will handle that for us, and if we are successful enough with traction then we will not need to.");
+    System.out.println("This tool is about to ask for your email, and that is used as your developer account." + " As of March 3rd 2022 the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", ANSI.Yellow) + " We will never share with third parties beyond tools to distribute updates about the service." + " Heck! we haven't yet written the code to dump emails into software which will handle that for us, and if we are successful enough with traction then we will not need to.");
     System.out.println();
     System.out.print("So, look, go tell your friends about how neat this software is and then we will be too busy with feature requests to even hire a marketing person.");
     System.out.println();
-    System.out.println(Util.prefix("As such, providing your email constitutes a binding agreement to both the privacy policy and our terms of conditions.", Util.ANSI.Yellow));
+    System.out.println(Util.prefix("As such, providing your email constitutes a binding agreement to both the privacy policy and our terms of conditions.", ANSI.Yellow));
     System.out.println();
     String email = readEmail(args.config);
     try (WebSocketClient client = new WebSocketClient(args.config)) {
@@ -133,7 +134,7 @@ public class RootHandlerImpl implements RootHandler {
         System.out.println();
         System.out.println("At this point, an email has been sent to the address that you just provided. So, go find the email (remember to check spam) and copy and paste the code into this prompt.");
         System.out.println();
-        System.out.print(Util.prefix("Code:", Util.ANSI.Yellow));
+        System.out.print(Util.prefix("Code:", ANSI.Yellow));
         String code = System.console().readLine();
 
         ObjectNode requestGenerateIdentity = Json.newJsonObject();
@@ -155,14 +156,14 @@ public class RootHandlerImpl implements RootHandler {
 
   private static String readEmail(Config config) {
     System.out.println();
-    System.out.print(Util.prefix("Email:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("Email:", ANSI.Yellow));
     String email = System.console().readLine();
     return email;
   }
 
   private static boolean revokePrior(Config config) {
     System.out.println();
-    System.out.print(Util.prefix("Revoke other machines[y/N]:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("Revoke other machines[y/N]:", ANSI.Yellow));
     String revokeYesNo = System.console().readLine();
     return revokeYesNo.trim().equalsIgnoreCase("Y");
   }
@@ -178,7 +179,7 @@ public class RootHandlerImpl implements RootHandler {
 
   private static String confirm(Config config) {
     System.out.println();
-    System.out.print(Util.prefix("Are you sure? [Yes/No]:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("Are you sure? [Yes/No]:", ANSI.Yellow));
     return System.console().readLine().trim().toLowerCase();
   }
 
@@ -193,7 +194,7 @@ public class RootHandlerImpl implements RootHandler {
     System.out.println();
     System.out.println("Now, before you deinit yourself, you need to delete your spaces, authorities, and domains or the command will fail. This is a safety mechanism to prevent massive data loss.");
     System.out.println();
-    System.out.println(Util.prefix("WARNING! ", Util.ANSI.Red) + "This is going to delete the account for " + Util.prefix(email, Util.ANSI.Cyan));
+    System.out.println(Util.prefix("WARNING! ", ANSI.Red) + "This is going to delete the account for " + Util.prefix(email, ANSI.Cyan));
     System.out.println();
     String confirmation = confirm(args.config).trim();
     if ("yes".equals(confirmation)) {
