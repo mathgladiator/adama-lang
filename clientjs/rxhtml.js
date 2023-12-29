@@ -3064,6 +3064,29 @@ var RxHTML = (function () {
     }
   };
 
+  transforms['date'] = function(format, d) {
+    if (typeof (d) == "string") {
+      // if date is not set, return empty string
+      if (d == "1-01-01") return ""
+
+      const p = format.toLowerCase().split("/");
+      const opts = {};
+      p.forEach(f => {
+        const val = f.length > 2 ? "numeric" : "2-digit";
+        const keys = {"y": "year", "m": "month", "d": "day"}
+        opts[keys[f.charAt(0)]] = val;
+      })
+
+      // if not datetime, converting to one here to prevent timezone issues
+      const datetime = d.includes("T") ? d : d + "T00:00:00";
+      return new Date(datetime).toLocaleDateString('en-US', opts);
+    } else {
+      // do nothing
+      return d;
+    }
+  }
+  
+
   self.RTR = function(name, transform) {
     transforms[name] = transform;
   };
@@ -3073,6 +3096,11 @@ var RxHTML = (function () {
   self.TR = function(name) {
     if (name in transforms) {
       return transforms[name];
+    } 
+    // check for date format
+    if (name.startsWith("date-format:")){
+      const [_, format]  = name.split(":");
+      return x => transforms["date"](format, x);
     }
     return function(x) { return x; };
   };
