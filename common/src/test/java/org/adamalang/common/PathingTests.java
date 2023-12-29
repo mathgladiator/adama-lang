@@ -52,6 +52,7 @@ public class PathingTests {
 
   @Test
   public void remove_common() {
-    Assert.assertEquals("z", Pathing.removeCommonRootFromB("x/y", "x/y/z"));
+    Assert.assertEquals("/z", Pathing.removeCommonRootFromB("x/y", "x/y/z"));
+    Assert.assertEquals("x/y/z", Pathing.removeCommonRootFromB("z", "x/y/z")); // nothing in common
   }
 }
