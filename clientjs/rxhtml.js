@@ -3098,7 +3098,7 @@ var RxHTML = (function () {
       return transforms[name];
     } 
     // check for date format
-    if (name.startsWith("date-format")){
+    if (name.startsWith("date-format:")){
       const [_, format]  = name.split(":");
       return x => transforms["date"](format, x);
     }
