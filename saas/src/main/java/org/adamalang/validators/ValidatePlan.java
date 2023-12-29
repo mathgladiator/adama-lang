@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.deploy.DeployedVersion;
-import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -38,6 +37,7 @@ import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
+import org.adamalang.translator.tree.SymbolIndex;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -78,7 +78,7 @@ public class ValidatePlan {
       document.setClassName(className);
       document.setIncludes(entry.getValue().includes);
       final var tokenEngine = new TokenEngine("main", entry.getValue().main.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+      final var parser = new Parser(tokenEngine, document.getSymbolIndex(), Scope.makeRootDocument());
       try {
         parser.document().accept(document);
       } catch (AdamaLangException ex) {
@@ -92,7 +92,7 @@ public class ValidatePlan {
     }
   }
 
-  public static String sharedValidatePlanGetLastReflection(String plan, String mainName, File includePath, Consumer<String> log, Consumer<ArrayNode> diagnostics) {
+  public static String sharedValidatePlanGetLastReflection(String plan, String mainName, File includePath, Consumer<String> log, Consumer<ArrayNode> diagnostics, Consumer<SymbolIndex> index) {
     ObjectNode node = Json.parseJsonObject(plan);
     JsonNode versionsNode = node.get("versions");
     JsonNode defaultNode = node.get("default");
@@ -112,7 +112,7 @@ public class ValidatePlan {
           success = false;
         } else if (entry.getValue().isTextual()) {
           try {
-            sharedCompileCode(mainName, includePath, entry.getValue().textValue(), new HashMap<>(), log, diagnostics);
+            sharedCompileCode(mainName, includePath, entry.getValue().textValue(), new HashMap<>(), log, diagnostics, index);
           } catch (Exception e) {
             reportVersionFailure(entry.getKey(), e, log);
             success = false;
@@ -144,7 +144,7 @@ public class ValidatePlan {
               }
             }
             try {
-              lastReflection = sharedCompileCode(mainName, includePath, main.textValue(), includes, log, diagnostics).reflection;
+              lastReflection = sharedCompileCode(mainName, includePath, main.textValue(), includes, log, diagnostics, index).reflection;
             } catch (Exception e) {
               reportVersionFailure(entry.getKey(), e, log);
               success = false;
@@ -206,7 +206,7 @@ public class ValidatePlan {
   private static class KnownException extends Exception {
   }
 
-  public static CompileResult sharedCompileCode(String filename, File includePath, String code, HashMap<String, String> includes, Consumer<String> log, Consumer<ArrayNode> diagnostics) throws Exception {
+  public static CompileResult sharedCompileCode(String filename, File includePath, String code, HashMap<String, String> includes, Consumer<String> log, Consumer<ArrayNode> diagnostics, Consumer<SymbolIndex> index) throws Exception {
     final var options = CompilerOptions.start().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
@@ -214,12 +214,13 @@ public class ValidatePlan {
     document.setIncludeRoot(includePath);
     document.setClassName("TempClass");
     final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
-    final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+    final var parser = new Parser(tokenEngine, document.getSymbolIndex(), Scope.makeRootDocument());
     document.setIncludes(includes);
     parser.document().accept(document);
     boolean result = document.check(state);
     if (result) {
       diagnostics.accept(Json.newJsonArray());
+      index.accept(document.getSymbolIndex());
       String javaCode = document.compileJava(state);
       JsonStreamWriter reflect = new JsonStreamWriter();
       document.writeTypeReflectionJson(reflect);

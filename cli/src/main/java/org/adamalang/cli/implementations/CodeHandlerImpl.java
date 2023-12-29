@@ -31,6 +31,7 @@ import org.adamalang.CoreServices;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.*;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.SymbolIndex;
 import org.adamalang.validators.ValidatePlan;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class CodeHandlerImpl implements CodeHandler {
     }
     String input = Files.readString(file.toPath());
     final var tokenEngine = new TokenEngine(file.getName(), input.codePoints().iterator());
-    final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+    final var parser = new Parser(tokenEngine, new SymbolIndex(), Scope.makeRootDocument());
     Consumer<TopLevelDocumentHandler> play = parser.document();
     Formatter formatter = new Formatter();
     play.accept(new WhiteSpaceNormalizeTokenDocumentHandler());
@@ -167,10 +168,10 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   public static boolean sharedValidatePlan(String plan, String mainName) {
-    return ValidatePlan.sharedValidatePlanGetLastReflection(plan, mainName, null, (ln) -> System.err.println(ln), (diag) -> {}) != null;
+    return ValidatePlan.sharedValidatePlanGetLastReflection(plan, mainName, null, (ln) -> System.err.println(ln), (diag) -> {}, (index) -> {}) != null;
   }
 
   public static ValidatePlan.CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
-    return ValidatePlan.sharedCompileCode(filename, null, code, includes, (String ln) -> System.err.println(ColorUtilTools.prefix(ln, ANSI.Red)), (diag) -> {});
+    return ValidatePlan.sharedCompileCode(filename, null, code, includes, (String ln) -> System.err.println(ColorUtilTools.prefix(ln, ANSI.Red)), (diag) -> {}, (index) -> {});
   }
 }

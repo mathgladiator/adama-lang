@@ -25,6 +25,7 @@ import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
+import org.adamalang.translator.tree.SymbolIndex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ public class LinterTests {
       final var document = new Document();
       document.setClassName("MeCode");
       final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+      final var parser = new Parser(tokenEngine, new SymbolIndex(), Scope.makeRootDocument());
       parser.document().accept(document);
       if (!document.check(state)) {
         throw new Exception("Failed to check:" + document.errorsJson());

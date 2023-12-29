@@ -15,9 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree;
 
-public class Platform {
-  public static final String VERSION = "20231229134237";
-  public static final String JS_VERSION = "269835c271ad024baac586ff35623473";
+import org.adamalang.translator.parser.token.Token;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/** compiling will yield a symbol index for advanced IDE support */
+public class SymbolIndex {
+  public final ArrayList<Token> definitions;
+  public final ArrayList<Token> usages;
+  public final HashMap<String, Token> perfHover;
+
+  public SymbolIndex() {
+    this.definitions = new ArrayList<>();
+    this.usages = new ArrayList<>();
+    this.perfHover = new HashMap<>();
+  }
 }

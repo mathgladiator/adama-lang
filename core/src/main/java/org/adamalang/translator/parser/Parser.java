@@ -24,6 +24,7 @@ import org.adamalang.translator.parser.token.MajorTokenType;
 import org.adamalang.translator.parser.token.MinorTokenType;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.SymbolIndex;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
@@ -69,10 +70,12 @@ import java.util.function.Consumer;
 public class Parser {
   private final TokenEngine tokens;
   private final Scope rootScope;
+  private final SymbolIndex index;
 
-  public Parser(final TokenEngine tokens, Scope rootScope) {
+  public Parser(final TokenEngine tokens, SymbolIndex index, Scope rootScope) {
     this.tokens = tokens;
     this.rootScope = rootScope;
+    this.index = index;
   }
 
   public Expression additive(Scope scope) throws AdamaLangException {
@@ -123,6 +126,7 @@ public class Parser {
       }
     }
     if (token.isLabel()) {
+      index.usages.add(token);
       return new StateMachineConstant(token);
     }
     if (token.isIdentifier() || token.isKeyword()) {
@@ -245,12 +249,15 @@ public class Parser {
         if (value == null) {
           throw new ParseException("Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead.", doubleColon);
         } else if (value.isSymbolWithTextEq("*")) {
+          index.usages.add(token);
           return new EnumValuesArray(token, doubleColon, null, value);
         } else if (value.isIdentifier()) {
           final var valueMaybeTisPrefix = tokens.peek();
           if (valueMaybeTisPrefix.isSymbolWithTextEq("*")) {
+            index.usages.add(token);
             return new EnumValuesArray(token, doubleColon, value, tokens.pop());
           } else {
+            index.usages.add(token);
             return new EnumConstant(token, doubleColon, value);
           }
         } else {
@@ -722,6 +729,7 @@ public class Parser {
     // define a state machine transition
     var op = tokens.popIf(Token::isLabel);
     if (op != null) {
+      index.definitions.add(op);
       final var dst = new DefineStateTransition(op, block(rootScope.makeStateMachineTransition()));
       return doc -> doc.add(dst);
     }
@@ -951,6 +959,7 @@ public class Parser {
   public Consumer<TopLevelDocumentHandler> define_authorization(final Token authorizeToken) throws AdamaLangException {
     Token openParen = consumeExpectedSymbol("(");
     Token messageType = id();
+    index.usages.add(messageType);
     Token messageValue = id();
     Token closeParen = consumeExpectedSymbol(")");
     Block code = block(rootScope.makeAuthorize());
@@ -973,10 +982,11 @@ public class Parser {
   public Consumer<TopLevelDocumentHandler> define_constructor_trailer(final Token constructorToken) throws AdamaLangException {
     final var openParenToken = tokens.popIf(t -> t.isSymbolWithTextEq("("));
     if (openParenToken != null) {
-      final var identA = id();
-      final var identB = id();
+      final var consType = id();
+      index.usages.add(consType);
+      final var consVar = id();
       final var endParenToken = consumeExpectedSymbol(")");
-      final var dc = new DefineConstructor(constructorToken, openParenToken, identA, identB, endParenToken, block(rootScope.makeConstructor()));
+      final var dc = new DefineConstructor(constructorToken, openParenToken, consType, consVar, endParenToken, block(rootScope.makeConstructor()));
       return doc -> doc.add(dc);
     } else {
       final var dc = new DefineConstructor(constructorToken,  null, null, null, null, block(rootScope.makeConstructor()));
@@ -986,6 +996,7 @@ public class Parser {
 
   public Consumer<TopLevelDocumentHandler> define_dispatch(final Token dispatchToken) throws AdamaLangException {
     final var enumNameToken = id();
+    index.usages.add(enumNameToken);
     final var doubleColonToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("::"));
     if (doubleColonToken == null) {
       final var next = tokens.pop();
@@ -1020,6 +1031,7 @@ public class Parser {
   public Consumer<TopLevelDocumentHandler> define_enum_trailer(final Token enumToken) throws AdamaLangException {
     var autoId = 0;
     final var enumName = id();
+    index.definitions.add(enumName);
     final var es = new EnumStorage(enumName.text);
     final var openBrace = consumeExpectedSymbol("{");
     blackhole_commas(openBrace);
@@ -1107,11 +1119,11 @@ public class Parser {
     final var name = id();
     final var handler = new DefineHandler(channelToken, name);
     final var openParen = consumeExpectedSymbol("(");
-    final var nextType = tokens.pop();
-    if (nextType == null) {
+    final var messageType = tokens.pop();
+    if (messageType == null) {
       throw new ParseException("Parser expected a type, but instead got end of stream", openParen);
     }
-    final var messageType = nextType;
+    index.usages.add(messageType);
     testId(messageType);
     final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
     final var messageVarToken = id();
@@ -1122,6 +1134,7 @@ public class Parser {
       Token openGuard = consumeExpectedSymbol("<");
       handler.setGuard(requires, define_guard(openGuard));
     }
+    index.perfHover.put("sd_" + name.text, name);
     handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, isOpen, block(rootScope.makeMessageHandler()));
     return doc -> doc.add(handler);
   }
@@ -1155,6 +1168,7 @@ public class Parser {
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(messageToken);
     final var name = id();
+    index.definitions.add(name);
     final var storage = new StructureStorage(name, StorageSpecialization.Message, false, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyNativeRef(TypeBehavior.ReadOnlyNativeValue, null, name));
     var endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
@@ -1256,6 +1270,7 @@ public class Parser {
   public Consumer<TopLevelDocumentHandler> define_record_trailer(final Token recordToken) throws AdamaLangException {
     Scope scope = rootScope.makeRecordType();
     final var name = id();
+    index.definitions.add(name);
     final var storage = new StructureStorage(name, StorageSpecialization.Record, false, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyReactiveRef(false, name));
     while (true) {
@@ -1741,6 +1756,8 @@ public class Parser {
       case "tuple":
         return native_tuple(behavior, readonlyToken, token);
       default:
+        testId(token);
+        index.usages.add(token);
         return new TyNativeRef(behavior, readonlyToken, token);
     }
   }
@@ -1910,6 +1927,7 @@ public class Parser {
         return new TyReactiveMaybe(readonly, token, reactive_parameter_type(readonly));
       default:
         testId(token);
+        index.usages.add(token);
         return new TyReactiveRef(readonly, token);
     }
   }

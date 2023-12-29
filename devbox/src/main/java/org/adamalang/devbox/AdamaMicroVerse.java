@@ -102,6 +102,8 @@ public class AdamaMicroVerse {
           io.notice("adama|validating: " + defn.spaceName);
           String newReflection = ValidatePlan.sharedValidatePlanGetLastReflection(plan, new File(defn.mainFile).getAbsolutePath(), defn.includePath != null ? new File(defn.includePath) : null, (ln) -> io.error(ln), (d) -> {
             diagnostics.updated(d);
+          }, (in) -> {
+            diagnostics.indexed(in);
           });
           if (newReflection != null) {
             if (defn.lastReflection != null) {

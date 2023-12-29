@@ -27,6 +27,7 @@ import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
+import org.adamalang.translator.tree.SymbolIndex;
 
 public class LibAdama {
   public static NtDynamic validate(String code) {
@@ -37,7 +38,7 @@ public class LibAdama {
       final var document = new Document();
       document.setClassName("Validate");
       final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+      final var parser = new Parser(tokenEngine, new SymbolIndex(), Scope.makeRootDocument());
       parser.document().accept(document);
       if (!document.check(state)) {
         return new NtDynamic(document.errorsJson());
@@ -57,7 +58,7 @@ public class LibAdama {
       final var document = new Document();
       document.setClassName("Validate");
       final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+      final var parser = new Parser(tokenEngine, new SymbolIndex(), Scope.makeRootDocument());
       parser.document().accept(document);
       if (document.check(state)) {
         JsonStreamWriter writer = new JsonStreamWriter();

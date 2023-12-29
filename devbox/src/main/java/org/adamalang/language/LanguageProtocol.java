@@ -23,6 +23,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Pathing;
 import org.adamalang.devbox.DiagnosticsSubscriber;
 import org.adamalang.devbox.TerminalIO;
+import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.SymbolIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,18 +34,21 @@ import java.util.HashMap;
 
 /** an implementation of the language protocl built for establishing a connection between the devbox and an editor */
 public class LanguageProtocol implements DiagnosticsSubscriber {
+  private static final Logger LOGGER = LoggerFactory.getLogger(LanguageProtocol.class);
   private final InputStream input;
   private final OutputStream output;
   private final HashMap<String, Binding> bindings;
   private final TerminalIO io;
-  private ArrayNode last;
+  private ArrayNode lastDiagnostics;
+  private SymbolIndex lastIndex;
 
   public LanguageProtocol(InputStream input, OutputStream output, TerminalIO io) {
     this.input = input;
     this.output = output;
     this.io = io;
     this.bindings = new HashMap<>();
-    this.last = null;
+    this.lastDiagnostics = null;
+    this.lastIndex = null;
   }
 
   public void drive() throws Exception {
@@ -71,6 +78,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
           }
         } catch (Exception ex) {
           io.error("lsp|core-failure! " + ex.getMessage());
+          LOGGER.error("lsp-failed", ex);
         }
       } else {
         int kColon = line.indexOf(":");
@@ -96,6 +104,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         textDocumentSync.put("openClose", true);
         textDocumentSync.put("change", 0);
         // caps.put("hoverProvider", true);
+        caps.put("definitionProvider", true);
         // caps.put("documentFormattingProvider", true);
         return response;
       }
@@ -111,7 +120,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         }
         ArrayNode fireOnThis = null;
         synchronized (this) {
-          fireOnThis = last;
+          fireOnThis = lastDiagnostics;
         }
         if (fireOnThis != null) {
           fire(fireOnThis, uri);
@@ -135,11 +144,58 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         // TODO: query the built index of interesting things
         return null;
       }
+      case "textDocument/definition": {
+        ObjectNode textDocument = (ObjectNode) request.get("params").get("textDocument");
+        String uri = textDocument.get("uri").textValue();
+        ObjectNode position = (ObjectNode) request.get("params").get("position");
+        int ln = position.get("line").intValue();
+        int ch = position.get("character").intValue();
+        ObjectNode response = craftResponse(request, true);
+        ObjectNode result = response.putObject("result");
+        SymbolIndex indexCopy = null;
+        synchronized (this) {
+          indexCopy = lastIndex;
+        }
+        boolean found = false;
+        if (indexCopy != null) {
+          BuiltSymbolsIndex index = new BuiltSymbolsIndex(indexCopy);
+          String foundSource = index.findBestMatch(uri);
+          if (foundSource != null) {
+            Token token = index.tokenAt(foundSource, ln, ch);
+            if (token != null) {
+              String commonSuffix = Pathing.maxSharedSuffix(foundSource, uri);
+              Token defn = index.findDefinition(token);
+              if (defn != null) {
+                String whatIsShared = Pathing.maxSharedPrefix(foundSource, defn.sourceName);
+                String newPrefix = uri.substring(0, uri.length() - commonSuffix.length());;
+                int trim = foundSource.substring(0, foundSource.length() - commonSuffix.length()).length();
+                String finalFile = newPrefix + whatIsShared.substring(trim) + defn.sourceName.substring(whatIsShared.length());
+                result.put("uri", finalFile);
+                ObjectNode range = result.putObject("range");
+                ObjectNode start = range.putObject("start");
+                start.put("line", defn.lineStart);
+                start.put("character", defn.charStart);
+                ObjectNode end = range.putObject("end");
+                end.put("line", defn.lineEnd);
+                end.put("character", defn.charEnd);
+                found = true;
+              }
+            }
+          }
+        }
+        if (!found) {
+          response.putNull("result");
+        }
+        return response;
+      }
       case "textDocument/formatting": {
         ObjectNode textDocument = (ObjectNode) request.get("params").get("textDocument");
         String uri = textDocument.get("uri").textValue();
         ObjectNode response = craftResponse(request, true);
         // TODO: find the file, format it,
+        return null;
+      }
+      case "$/setTrace": {
         return null;
       }
       default:
@@ -211,6 +267,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
       }
     } catch (Exception ex) {
       io.error("lsp|failed publishing '" + ex.getMessage() + "'");
+      LOGGER.error("lsp-failed-publish", ex);
     }
   }
 
@@ -240,9 +297,16 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
   @Override
   public void updated(ArrayNode diagnostics) {
     synchronized (this) {
-      last = diagnostics;
+      lastDiagnostics = diagnostics;
     }
     fire(diagnostics, null);
+  }
+
+  @Override
+  public void indexed(SymbolIndex index) {
+    synchronized (this) {
+      lastIndex = index;
+    }
   }
 
   class Binding {

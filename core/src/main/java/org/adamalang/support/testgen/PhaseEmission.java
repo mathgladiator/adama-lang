@@ -20,6 +20,7 @@ package org.adamalang.support.testgen;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.*;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.SymbolIndex;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -33,7 +34,7 @@ public class PhaseEmission {
     final var esb = new StringBuilderDocumentHandler();
     final var readIn = Files.readString(path);
     final var tokenEngine = new TokenEngine(filename, readIn.codePoints().iterator());
-    final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+    final var parser = new Parser(tokenEngine, new SymbolIndex(), Scope.makeRootDocument());
     Consumer<TopLevelDocumentHandler> play = parser.document();
     play.accept(esb);
     report(readIn, esb.builder.toString(), outputFile);

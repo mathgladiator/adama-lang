@@ -19,6 +19,7 @@ package org.adamalang.language;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.adamalang.devbox.DiagnosticsSubscriber;
+import org.adamalang.translator.tree.SymbolIndex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,18 +28,24 @@ import java.util.HashMap;
 public class DiagnosticsPubSub implements DiagnosticsSubscriber {
   private final HashMap<Integer, DiagnosticsSubscriber> subscribers;
   private int id;
-  private ArrayNode last = null;
+  private ArrayNode lastDiagnostics = null;
+  private SymbolIndex lastIndex = null;
 
   public DiagnosticsPubSub() {
     this.id = 1;
     this.subscribers = new HashMap<>();
+    this.lastDiagnostics = null;
+    this.lastIndex = null;
   }
 
   public synchronized Runnable create(DiagnosticsSubscriber subscriber) {
     int boundTo = id++;
     subscribers.put(boundTo, subscriber);
-    if (last != null) {
-      subscriber.updated(last);
+    if (lastDiagnostics != null) {
+      subscriber.updated(lastDiagnostics);
+    }
+    if (lastIndex != null) {
+      subscriber.indexed(lastIndex);
     }
     return () -> {
       remove(boundTo);
@@ -51,9 +58,17 @@ public class DiagnosticsPubSub implements DiagnosticsSubscriber {
 
   @Override
   public synchronized void updated(ArrayNode report) {
-    last = report;
+    lastDiagnostics = report;
     for (DiagnosticsSubscriber subscriber : new ArrayList<>(subscribers.values())) {
       subscriber.updated(report);
+    }
+  }
+
+  @Override
+  public synchronized void indexed(SymbolIndex index) {
+    lastIndex = index;
+    for (DiagnosticsSubscriber subscriber : new ArrayList<>(subscribers.values())) {
+      subscriber.indexed(index);
     }
   }
 }
