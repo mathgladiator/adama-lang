@@ -7,18 +7,20 @@ The DevBox (java -jar ~/adama.jar devbox) allows projects to run entirely locall
 ## Features
 
 * Syntax highlighting
-* Langauge Server Integration (diagnostics)
-* A UI to configure LSP support (> Show Adama Configuration)
+* Language server protocol integration: diagnostics, go to definition, find references
+* A configuration screen to configure LSP support (> Show Adama Configuration)
 
 ## Contributor Build Instructions
 
 1. Build extension
-    ```
-    npm install -g vsce
-    vsce package
-    ```
 
-    `adama-language-support-#.#.#.vsix` should have been created
+```
+npm install
+npm install -g vsce
+vsce package
+```
+
+`adama-language-support-#.#.#.vsix` should have been created
 
 2. In VS Code, Navigate to Extensions
 3. Click the ... menu, select "Install from VISIX", select vsix file
