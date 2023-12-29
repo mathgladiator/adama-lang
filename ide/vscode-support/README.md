@@ -1,16 +1,19 @@
-# vscode support for the Adama Language README
+# Adama Language Support
+
+Hello! This vscode extension will allow you to seamless work with the Adama DevBox.
+Adama is a next generation document store and platform as a service that provides developers a low latency differentiable data store using WebSockets.
+The DevBox (java -jar ~/adama.jar devbox) allows projects to run entirely locally, and this extension brings syntax highlighting and language server support (i.e. red squiggles) to vscode for a great experience.
 
 ## Features
 
-* Simple syntax highlighting
-* Works with the Java LSP Server
+* Syntax highlighting
+* Langauge Server Integration (diagnostics)
+* A UI to configure LSP support (> Show Adama Configuration)
 
-## Instructions
+## Contributor Build Instructions
 
 1. Build extension
     ```
-    npm install
-    npm run compile
     npm install -g vsce
     vsce package
     ```

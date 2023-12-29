@@ -1,8 +1,9 @@
 {
     "name": "adama-language-support",
     "displayName": "Adama Language Support",
-    "description": "Adama Language Extension",
-    "version": "0.8.5",
+    "description": "Use Adama's DevBox to the MAX!",
+    "icon": "adama.png",
+    "version": "0.9.5",
     "repository": {
         "type": "git",
         "url": "https://github.com/mathgladiator/adama-lang"
@@ -76,16 +77,15 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run compile",
+        "vscode:prepublish": "npm run esbuild-base -- --minify",
+        "esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
         "compile": "tsc -b",
         "watch": "tsc -b -w",
         "lint": "eslint ./client/src --ext .ts,.tsx",
-        "postinstall": "cd client && npm install && cd ..",
-        "test": "sh ./scripts/e2e.sh"
+        "postinstall": "cd client && npm install && cd .."
     },
     "dependencies": {
-        "vscode-languageclient": "^8.1.0",
-        "vscode-languageserver-textdocument": "^1.0.8"
+        "vscode-languageclient": "^8.1.0"
     },
     "devDependencies": {
         "@types/mocha": "^9.1.0",
@@ -93,6 +93,7 @@
         "@typescript-eslint/eslint-plugin": "^5.54.0",
         "@typescript-eslint/parser": "^5.54.0",
         "chai": "^4.3.8",
+        "esbuild": "^0.19.10",
         "eslint": "^8.35.0",
         "mocha": "^9.2.2",
         "typescript": "^5.1.3",
