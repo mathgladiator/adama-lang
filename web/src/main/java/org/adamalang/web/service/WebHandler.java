@@ -586,7 +586,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     } else if (req.uri().equalsIgnoreCase("/adama.jar") && host.endsWith(webConfig.adamaJarDomain)) {
       sendJar(ctx, req);
       return true;
-    } else if (req.uri().equals("/~version")) { // in-memory JavaScript library for the client
+    } else if (req.uri().equals("/~version")) { // get the version of the platform
       sendImmediate(metrics.webhandler_version, req, ctx, HttpResponseStatus.OK, Platform.VERSION.getBytes(), "text/plain", true);
       return true;
     } else if (req.uri().startsWith("/libadama.js")) { // in-memory JavaScript library for the client
