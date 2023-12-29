@@ -143,7 +143,6 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         return null;
       }
       default:
-        System.err.println(request);
     }
     return null;
   }
