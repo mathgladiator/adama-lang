@@ -35,6 +35,10 @@ public class TerminalIO {
     reader.printAbove(AttributedString.fromAnsi(ColorUtilTools.prefix("     NOTICE:" + ln, ANSI.Yellow)));
   }
 
+  public synchronized void witness(String ln) {
+    reader.printAbove(AttributedString.fromAnsi(ColorUtilTools.prefix("    WITNESS:" + ln, ANSI.Magenta)));
+  }
+
   public synchronized void important(String ln) {
     reader.printAbove(AttributedString.fromAnsi(ColorUtilTools.prefix(">IMPORTANT<:" + ln, ANSI.Cyan)));
   }

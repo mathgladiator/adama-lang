@@ -101,7 +101,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
       }
       case "textDocument/didOpen": {
         String uri = request.get("params").get("textDocument").get("uri").textValue();
-        io.notice("ide|open=" + uri);
+        io.witness("ide|open=" + uri);
         Binding binding = new Binding(uri, craftResponse(request, true));
         synchronized (bindings) {
           bindings.put(uri, binding);
@@ -117,7 +117,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
       }
       case "textDocument/didClose": {
         String uri = request.get("params").get("textDocument").get("uri").textValue();
-        io.notice("ide|close=" + uri);
+        io.witness("ide|close=" + uri);
         synchronized (bindings) {
           bindings.remove(uri);
         }
