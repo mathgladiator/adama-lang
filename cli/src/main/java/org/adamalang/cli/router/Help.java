@@ -216,7 +216,6 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("push-generate", 15), ANSI.Green) + "Generate VAPID tokens for a devbox.");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("rxhtml", 15), ANSI.Green) + "Compile an rxhtml template set");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("set-libadama", 15), ANSI.Green) + "Update your config to have a local-libadama-path-default which will be used in 'dev-server' when --local-libadama-path is not specified.");
-    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("study-css", 15), ANSI.Green) + "Tool to study CSS");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("validate", 15), ANSI.Green) + "(Temporary) Runs a deeper check on an RxHTML forest");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("wrap-css", 15), ANSI.Green) + "Wrap a CSS file in a rx.html script to be picked up during build");
   }

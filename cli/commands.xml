@@ -927,12 +927,6 @@
             <arg name="input" default="style.css" />
             <arg name="output" default="css.rx.html" />
         </command>
-        <command name="study-css">
-            <documentation>
-                Tool to study CSS
-            </documentation>
-            <arg name="input" default="style.css" />
-        </command>
         <command name="push-generate">
             <documentation>
                 Generate VAPID tokens for a devbox.

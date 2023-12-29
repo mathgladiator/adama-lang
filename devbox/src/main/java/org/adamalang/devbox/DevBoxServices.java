@@ -25,9 +25,11 @@ import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.devbox.DevBoxServiceConfig;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.remote.*;
+import org.adamalang.runtime.remote.ServiceConfig;
+import org.adamalang.runtime.remote.ServiceConfigFactory;
+import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.runtime.remote.SimpleService;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
 import org.adamalang.services.logging.Logzio;
@@ -40,89 +42,6 @@ import java.util.function.Consumer;
 
 /** services for the devbox; this don't help test the services, but they provide a great experience for developers */
 public class DevBoxServices {
-
-  public static class DevBoxAmazonSES extends SimpleService {
-    private final String space;
-    private final Consumer<String> logger;
-
-    public DevBoxAmazonSES(String space, Consumer<String> logger) {
-      super("amazonses", new NtPrincipal("amazonses", "service"), true);
-      this.space = space;
-      this.logger = logger;
-    }
-
-    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
-      return AmazonSES.definition(uniqueId, params, names, error);
-    }
-
-    @Override
-    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-      logger.accept("devservices|service[AmazonSES/ " + space+ "]::" + method + "(" + request + ")");
-      callback.success("{}");
-    }
-  }
-
-
-  public static class DevBoxLogzio extends SimpleService {
-    private final String space;
-    private final Consumer<String> logger;
-
-    public DevBoxLogzio(String space, Consumer<String> logger) {
-      super("logzio", new NtPrincipal("logzio", "service"), true);
-      this.space = space;
-      this.logger = logger;
-    }
-
-    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
-      return Logzio.definition(uniqueId, params, names, error);
-    }
-
-    @Override
-    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-      logger.accept("devservices|service[logzio/ " + space+ "]::" + method + "(" + request + ")");
-      callback.success("{}");
-    }
-  }
-
-  public static class DevBoxSendGrid extends SimpleService {
-    private final String space;
-    private final Consumer<String> logger;
-
-    public DevBoxSendGrid(String space, Consumer<String> logger) {
-      super("sendgrid", new NtPrincipal("sendgrid", "service"), true);
-      this.space = space;
-      this.logger = logger;
-    }
-
-    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
-      return AmazonSES.definition(uniqueId, params, names, error);
-    }
-
-    @Override
-    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-      logger.accept("devservices|service[SendGrid/ " + space+ "]::" + method + "(" + request + ")");
-      callback.success("{}");
-    }
-  }
-
-  public static class DevBoxServiceConfigFactory implements ServiceConfigFactory {
-    private final ObjectNode services;
-    private final Consumer<String> logger;
-
-    public DevBoxServiceConfigFactory(ObjectNode services, Consumer<String> logger) {
-      this.services = services;
-      this.logger = logger;
-    }
-
-    @Override
-    public ServiceConfig cons(String service, String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys) {
-      ObjectNode secrets = Json.readObject(services, service);
-      if (secrets == null) {
-        secrets = Json.newJsonObject();
-      }
-      return new DevBoxServiceConfig(space, params, secrets, service, logger);
-    }
-  }
 
   public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
@@ -144,5 +63,87 @@ public class DevBoxServices {
       ServiceRegistry.add("sendgrid", SendGrid.class, (space, configRaw, keys) -> new DevBoxSendGrid(space, logger));
     }
     logger.accept("devservices|finished installing");
+  }
+
+  public static class DevBoxAmazonSES extends SimpleService {
+    private final String space;
+    private final Consumer<String> logger;
+
+    public DevBoxAmazonSES(String space, Consumer<String> logger) {
+      super("amazonses", new NtPrincipal("amazonses", "service"), true);
+      this.space = space;
+      this.logger = logger;
+    }
+
+    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
+      return AmazonSES.definition(uniqueId, params, names, error);
+    }
+
+    @Override
+    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+      logger.accept("devservices|service[AmazonSES/ " + space + "]::" + method + "(" + request + ")");
+      callback.success("{}");
+    }
+  }
+
+  public static class DevBoxLogzio extends SimpleService {
+    private final String space;
+    private final Consumer<String> logger;
+
+    public DevBoxLogzio(String space, Consumer<String> logger) {
+      super("logzio", new NtPrincipal("logzio", "service"), true);
+      this.space = space;
+      this.logger = logger;
+    }
+
+    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
+      return Logzio.definition(uniqueId, params, names, error);
+    }
+
+    @Override
+    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+      logger.accept("devservices|service[logzio/ " + space + "]::" + method + "(" + request + ")");
+      callback.success("{}");
+    }
+  }
+
+  public static class DevBoxSendGrid extends SimpleService {
+    private final String space;
+    private final Consumer<String> logger;
+
+    public DevBoxSendGrid(String space, Consumer<String> logger) {
+      super("sendgrid", new NtPrincipal("sendgrid", "service"), true);
+      this.space = space;
+      this.logger = logger;
+    }
+
+    public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
+      return AmazonSES.definition(uniqueId, params, names, error);
+    }
+
+    @Override
+    public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+      logger.accept("devservices|service[SendGrid/ " + space + "]::" + method + "(" + request + ")");
+      callback.success("{}");
+    }
+  }
+
+  public static class DevBoxServiceConfigFactory implements ServiceConfigFactory {
+    private final ObjectNode services;
+    private final Consumer<String> logger;
+
+    public DevBoxServiceConfigFactory(ObjectNode services, Consumer<String> logger) {
+      this.services = services;
+      this.logger = logger;
+    }
+
+    @Override
+    public ServiceConfig cons(String service, String space, HashMap<String, Object> params, TreeMap<Integer, PrivateKeyBundle> keys) {
+      ObjectNode secrets = Json.readObject(services, service);
+      if (secrets == null) {
+        secrets = Json.newJsonObject();
+      }
+      return new DevBoxServiceConfig(space, params, secrets, service, logger);
+    }
   }
 }

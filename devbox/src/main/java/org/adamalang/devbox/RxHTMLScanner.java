@@ -23,10 +23,10 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.Bundler;
-import org.adamalang.rxhtml.template.Task;
-import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.template.Task;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
@@ -93,6 +93,24 @@ public class RxHTMLScanner implements AutoCloseable {
     this.scanner.start();
   }
 
+  /** rebuild the files that are .rx.html */
+  private static void scanRxHtml(File root, ArrayList<File> files) {
+    for (File file : root.listFiles()) {
+      if (file.isDirectory()) {
+        scanRxHtml(file, files);
+      }
+      if (file.getName().endsWith(".rx.html")) {
+        files.add(file);
+      }
+    }
+  }
+
+  private static ArrayList<File> rxhtml(File root) {
+    ArrayList<File> files = new ArrayList<>();
+    scanRxHtml(root, files);
+    return files;
+  }
+
   @Override
   public void close() throws Exception {
     alive.set(false);
@@ -133,20 +151,6 @@ public class RxHTMLScanner implements AutoCloseable {
         rebuild();
       }
       wk.reset();
-    }
-  }
-
-  public class RxHTMLBundle {
-    public final RxHtmlResult result;
-    public final String shell;
-    public final String forestJavaScript;
-    public final String forestStyle;
-
-    public RxHTMLBundle(RxHtmlResult result, String shell, String forestJavaScript, String forestStyle) {
-      this.result = result;
-      this.shell = shell;
-      this.forestJavaScript = forestJavaScript;
-      this.forestStyle = forestStyle;
     }
   }
 
@@ -215,7 +219,7 @@ public class RxHTMLScanner implements AutoCloseable {
                 }
                 summary.append("</table>\n");
                 summary.append("<h1>Errors (").append(errorCount.get()).append(")</h1>\n");
-                summary.append("<ul>\n").append(errors.toString()).append("\n</ul>\n");
+                summary.append("<ul>\n").append(errors).append("\n</ul>\n");
                 summary.append("</body>\n</html>\n");
                 try {
                   Files.writeString(new File("summary.html").toPath(), summary.toString());
@@ -238,22 +242,17 @@ public class RxHTMLScanner implements AutoCloseable {
     }
   }
 
+  public class RxHTMLBundle {
+    public final RxHtmlResult result;
+    public final String shell;
+    public final String forestJavaScript;
+    public final String forestStyle;
 
-  /** rebuild the files that are .rx.html */
-  private static void scanRxHtml(File root, ArrayList<File> files) {
-    for (File file : root.listFiles()) {
-      if (file.isDirectory()) {
-        scanRxHtml(file, files);
-      }
-      if (file.getName().endsWith(".rx.html")) {
-        files.add(file);
-      }
+    public RxHTMLBundle(RxHtmlResult result, String shell, String forestJavaScript, String forestStyle) {
+      this.result = result;
+      this.shell = shell;
+      this.forestJavaScript = forestJavaScript;
+      this.forestStyle = forestStyle;
     }
-  }
-
-  private static ArrayList<File> rxhtml(File root) {
-    ArrayList<File> files = new ArrayList<>();
-    scanRxHtml(root, files);
-    return files;
   }
 }

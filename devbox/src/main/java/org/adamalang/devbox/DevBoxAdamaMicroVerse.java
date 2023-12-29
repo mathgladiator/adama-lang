@@ -15,22 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.devbox;
+package org.adamalang.devbox;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.CaravanDataService;
-import org.adamalang.cli.implementations.CodeHandlerImpl;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.TimeMachine;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.devbox.DevCoreServiceFactory;
-import org.adamalang.devbox.DevPush;
-import org.adamalang.devbox.TerminalIO;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -49,157 +45,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a microverse is a local cosmos of an Adama machine that outlines everything needed to run Adama locally without a DB */
 public class DevBoxAdamaMicroVerse {
-  private final TerminalIO io;
-  private final AtomicBoolean alive;
   public final DevCoreServiceFactory factory;
   public final CaravanDataService dataService;
   public final CoreService service;
   public final ArrayList<LocalSpaceDefn> spaces;
-  private final WatchService watchService;
-  private final Thread scanner;
   public final Key domainKeyToUse;
   public final String vapidPublicKey;
   public final String vapidPrivateKey;
   public final DevPush devPush;
   public final TimeMachine timeMachine;
-
-  public static class LocalSpaceDefn {
-    private final WatchService watchService;
-    public final String spaceName;
-    public final String mainFile;
-    public final String includePath;
-    private HashMap<String, WatchKey> watchKeyCache;
-    private final DeploymentFactoryBase base;
-    public String lastDeployedPlan;
-    public String lastReflection;
-    private final File reflectFile;
-
-    public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, File reflectFile, DeploymentFactoryBase base) {
-      this.watchService = watchService;
-      this.spaceName = spaceName;
-      this.mainFile = mainFile;
-      this.includePath = includePath;
-      this.watchKeyCache = new HashMap<>();
-      this.base = base;
-      this.lastDeployedPlan = "";
-      this.reflectFile = reflectFile;
-    }
-
-    private File scan(File f) throws Exception {
-      if (f.isDirectory()) {
-        if (!watchKeyCache.containsKey(f.getPath())) {
-          WatchKey rootWK = f.toPath().register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
-          watchKeyCache.put(f.getPath(), rootWK);
-        }
-      }
-      return f;
-    }
-
-    public void fillImports(File imports, String prefix, HashMap<String, String> map) throws Exception {
-      if (imports.exists() && imports.isDirectory()) {
-        for (File f : imports.listFiles()) {
-          if (f.getName().endsWith(".adama")) {
-            String name = prefix + f.getName().substring(0, f.getName().length() - 6);
-            map.put(name, Files.readString(f.toPath()));
-          } else if (f.isDirectory()) {
-            fillImports(scan(f), prefix + f.getName() + "/", map);
-          }
-        }
-      }
-    }
-
-    public HashMap<String, String> getImports(String imports) throws Exception {
-      HashMap<String, String> map = new HashMap<>();
-      File fileImports = scan(new File(imports));
-      fillImports(fileImports, "", map);
-      return map;
-    }
-
-    public String bundle(TerminalIO io) throws Exception {
-      ObjectNode plan = Json.newJsonObject();
-      plan.put("instrument", true);
-      ObjectNode version = plan.putObject("versions").putObject("file");
-      String main = Files.readString(new File(mainFile).toPath());
-      if (main.trim().equals("")) {
-        io.notice("adama|bundled failed due to empty main for '" + spaceName + "'");
-        return null;
-      }
-      version.put("main", main);
-      scan(new File("."));
-      ObjectNode includes = version.putObject("includes");
-      if (includePath != null) {
-        for (Map.Entry<String, String> entry : getImports(includePath).entrySet()) {
-          includes.put(entry.getKey(), entry.getValue());
-        }
-      }
-      plan.put("default", "file");
-      plan.putArray("plan");
-      return plan.toString();
-    }
-  }
-
-  private void rebuild() {
-      for (LocalSpaceDefn defn : spaces) {
-        try {
-          String plan = defn.bundle(io);
-          if (plan == null) {
-            continue;
-          }
-          if (!defn.lastDeployedPlan.equals(plan)) {
-            long start = System.currentTimeMillis();
-            io.notice("adama|validating: " + defn.spaceName);
-            String newReflection = ValidatePlan.sharedValidatePlanGetLastReflection(plan, (ln) -> io.error(ln));
-            if (newReflection != null) {
-              if (defn.lastReflection != null) {
-                List<String> issues = Linter.compare(defn.lastReflection, newReflection);
-                if (issues.size() == 0) {
-                  io.notice("adama|no lint issues: " + defn.spaceName);
-                } else {
-                  io.notice("adama|" + issues.size() + " lint issues: " + defn.spaceName);
-                }
-                for (String issue : issues) {
-                  io.notice("adama|lint-issue[" + defn.spaceName +"] := " + issue);
-                }
-              }
-              io.notice("adama|deploying: " + defn.spaceName);
-              CountDownLatch awaitDeployment = new CountDownLatch(2);
-              defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
-                io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
-              }), new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(awaitDeployment));
-              service.deploy(new DeploymentMonitor() {
-                 int documentsChanged;
-                 @Override
-                 public void bumpDocument(boolean changed) {
-                   if (changed) {
-                     documentsChanged++;
-                   }
-                 }
-
-                 @Override
-                 public void witnessException(ErrorCodeException ex) {
-                   io.error("adama|deploy-exception:" + ex.getMessage());
-                 }
-
-                 @Override
-                 public void finished(int ms) {
-                   io.notice("adama:deployment-finished: " + documentsChanged + " changed; time=" + ms + "ms");
-                   awaitDeployment.countDown();
-                 }
-               });
-              defn.lastReflection = newReflection;
-              defn.lastDeployedPlan = plan;
-              Files.writeString(defn.reflectFile.toPath(), Json.parseJsonObject(newReflection).toPrettyString());
-              awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
-              io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
-            } else {
-              io.error("adama|failure: " + defn.spaceName);
-            }
-          }
-        } catch (Exception ex) {
-          io.error("adama|failed-bundling: " + defn.spaceName + "; reason=" + ex.getMessage());
-        }
-      }
-  }
+  private final TerminalIO io;
+  private final AtomicBoolean alive;
+  private final WatchService watchService;
+  private final Thread scanner;
 
   private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush) throws Exception {
     this.io = io;
@@ -230,10 +88,68 @@ public class DevBoxAdamaMicroVerse {
     this.devPush = devPush;
   }
 
-  public void shutdown() throws Exception {
-    alive.set(false);
-    scanner.interrupt();
-    factory.shutdown();
+  private void rebuild() {
+    for (LocalSpaceDefn defn : spaces) {
+      try {
+        String plan = defn.bundle(io);
+        if (plan == null) {
+          continue;
+        }
+        if (!defn.lastDeployedPlan.equals(plan)) {
+          long start = System.currentTimeMillis();
+          io.notice("adama|validating: " + defn.spaceName);
+          String newReflection = ValidatePlan.sharedValidatePlanGetLastReflection(plan, (ln) -> io.error(ln));
+          if (newReflection != null) {
+            if (defn.lastReflection != null) {
+              List<String> issues = Linter.compare(defn.lastReflection, newReflection);
+              if (issues.size() == 0) {
+                io.notice("adama|no lint issues: " + defn.spaceName);
+              } else {
+                io.notice("adama|" + issues.size() + " lint issues: " + defn.spaceName);
+              }
+              for (String issue : issues) {
+                io.notice("adama|lint-issue[" + defn.spaceName + "] := " + issue);
+              }
+            }
+            io.notice("adama|deploying: " + defn.spaceName);
+            CountDownLatch awaitDeployment = new CountDownLatch(2);
+            defn.base.deploy(defn.spaceName, new DeploymentPlan(plan, (t, ec) -> {
+              io.error("adama|deployment-issue[Code-" + ec + "]: " + t.getMessage());
+            }), new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(awaitDeployment));
+            service.deploy(new DeploymentMonitor() {
+              int documentsChanged;
+
+              @Override
+              public void bumpDocument(boolean changed) {
+                if (changed) {
+                  documentsChanged++;
+                }
+              }
+
+              @Override
+              public void witnessException(ErrorCodeException ex) {
+                io.error("adama|deploy-exception:" + ex.getMessage());
+              }
+
+              @Override
+              public void finished(int ms) {
+                io.notice("adama:deployment-finished: " + documentsChanged + " changed; time=" + ms + "ms");
+                awaitDeployment.countDown();
+              }
+            });
+            defn.lastReflection = newReflection;
+            defn.lastDeployedPlan = plan;
+            Files.writeString(defn.reflectFile.toPath(), Json.parseJsonObject(newReflection).toPrettyString());
+            awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
+            io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
+          } else {
+            io.error("adama|failure: " + defn.spaceName);
+          }
+        }
+      } catch (Exception ex) {
+        io.error("adama|failed-bundling: " + defn.spaceName + "; reason=" + ex.getMessage());
+      }
+    }
   }
 
   private void poll() throws Exception {
@@ -343,5 +259,86 @@ public class DevBoxAdamaMicroVerse {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
     return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase));
+  }
+
+  public void shutdown() throws Exception {
+    alive.set(false);
+    scanner.interrupt();
+    factory.shutdown();
+  }
+
+  public static class LocalSpaceDefn {
+    public final String spaceName;
+    public final String mainFile;
+    public final String includePath;
+    private final WatchService watchService;
+    private final DeploymentFactoryBase base;
+    private final File reflectFile;
+    public String lastDeployedPlan;
+    public String lastReflection;
+    private final HashMap<String, WatchKey> watchKeyCache;
+
+    public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, File reflectFile, DeploymentFactoryBase base) {
+      this.watchService = watchService;
+      this.spaceName = spaceName;
+      this.mainFile = mainFile;
+      this.includePath = includePath;
+      this.watchKeyCache = new HashMap<>();
+      this.base = base;
+      this.lastDeployedPlan = "";
+      this.reflectFile = reflectFile;
+    }
+
+    private File scan(File f) throws Exception {
+      if (f.isDirectory()) {
+        if (!watchKeyCache.containsKey(f.getPath())) {
+          WatchKey rootWK = f.toPath().register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+          watchKeyCache.put(f.getPath(), rootWK);
+        }
+      }
+      return f;
+    }
+
+    public void fillImports(File imports, String prefix, HashMap<String, String> map) throws Exception {
+      if (imports.exists() && imports.isDirectory()) {
+        for (File f : imports.listFiles()) {
+          if (f.getName().endsWith(".adama")) {
+            String name = prefix + f.getName().substring(0, f.getName().length() - 6);
+            map.put(name, Files.readString(f.toPath()));
+          } else if (f.isDirectory()) {
+            fillImports(scan(f), prefix + f.getName() + "/", map);
+          }
+        }
+      }
+    }
+
+    public HashMap<String, String> getImports(String imports) throws Exception {
+      HashMap<String, String> map = new HashMap<>();
+      File fileImports = scan(new File(imports));
+      fillImports(fileImports, "", map);
+      return map;
+    }
+
+    public String bundle(TerminalIO io) throws Exception {
+      ObjectNode plan = Json.newJsonObject();
+      plan.put("instrument", true);
+      ObjectNode version = plan.putObject("versions").putObject("file");
+      String main = Files.readString(new File(mainFile).toPath());
+      if (main.trim().equals("")) {
+        io.notice("adama|bundled failed due to empty main for '" + spaceName + "'");
+        return null;
+      }
+      version.put("main", main);
+      scan(new File("."));
+      ObjectNode includes = version.putObject("includes");
+      if (includePath != null) {
+        for (Map.Entry<String, String> entry : getImports(includePath).entrySet()) {
+          includes.put(entry.getKey(), entry.getValue());
+        }
+      }
+      plan.put("default", "file");
+      plan.putArray("plan");
+      return plan.toString();
+    }
   }
 }

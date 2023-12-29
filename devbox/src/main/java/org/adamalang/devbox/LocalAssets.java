@@ -15,11 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.devbox;
+package org.adamalang.devbox;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.devbox.TerminalIO;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -38,7 +37,7 @@ import org.adamalang.web.io.ConnectionContext;
 import java.io.File;
 import java.nio.file.Files;
 
-public class LocalAssets implements AssetSystem  {
+public class LocalAssets implements AssetSystem {
   private final TerminalIO io;
   private final File root;
   private final CoreService service;

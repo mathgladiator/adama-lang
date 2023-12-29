@@ -30,49 +30,11 @@ public class Command {
     this.args = args;
   }
 
-  public boolean is(String... candidates) {
-    for (String candidate : candidates) {
-      if (command.equals(candidate)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public boolean argIs(int index, String... candidates) {
-    if (args.length > index) {
-      for (String candidate : candidates) {
-        if (args[index].equals(candidate)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  public boolean requireArg(int index) {
-    return args.length > index;
-  }
-
-  public String argAt(int index) {
-    return args[index];
-  }
-
-  public Integer argAtIsInt(int index) {
-    try {
-      if (index < args.length) {
-        return Integer.parseInt(args[index]);
-      }
-    } catch (NumberFormatException nfe) {
-    }
-    return null;
-  }
-
   public static Command parse(String lnRaw) {
     String ln = lnRaw.trim();
     int firstSpace = ln.indexOf(' ');
     if (firstSpace < 0) {
-      return new Command(ln.toLowerCase(), new String[] {});
+      return new Command(ln.toLowerCase(), new String[]{});
     }
     String command = ln.substring(0, firstSpace).toLowerCase();
     ln = ln.substring(firstSpace).trim();
@@ -126,5 +88,43 @@ public class Command {
       args.add(sb.toString());
     }
     return new Command(command, args.toArray(new String[args.size()]));
+  }
+
+  public boolean is(String... candidates) {
+    for (String candidate : candidates) {
+      if (command.equals(candidate)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean argIs(int index, String... candidates) {
+    if (args.length > index) {
+      for (String candidate : candidates) {
+        if (args[index].equals(candidate)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public boolean requireArg(int index) {
+    return args.length > index;
+  }
+
+  public String argAt(int index) {
+    return args[index];
+  }
+
+  public Integer argAtIsInt(int index) {
+    try {
+      if (index < args.length) {
+        return Integer.parseInt(args[index]);
+      }
+    } catch (NumberFormatException nfe) {
+    }
+    return null;
   }
 }

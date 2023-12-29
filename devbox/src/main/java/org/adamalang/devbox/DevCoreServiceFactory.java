@@ -43,13 +43,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class DevCoreServiceFactory {
   private static final Logger LOG = LoggerFactory.getLogger(DevCoreServiceFactory.class);
-  private final AtomicBoolean alive;
-  private final SimpleExecutor caravanExecutor;
-  private final Thread flusher;
   public final CaravanDataService dataService;
   public final DeploymentFactoryBase base;
   public final CoreService service;
   public final TimeMachine timeMachine;
+  private final AtomicBoolean alive;
+  private final SimpleExecutor caravanExecutor;
+  private final Thread flusher;
 
   public DevCoreServiceFactory(TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
     this.alive = alive;
@@ -108,7 +108,8 @@ public class DevCoreServiceFactory {
     });
     flusher.start();
     this.base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
-    AtomicReference<Runnable> sweep = new AtomicReference<>(() -> {});
+    AtomicReference<Runnable> sweep = new AtomicReference<>(() -> {
+    });
     this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run());
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
     }, (key, metricsPayload) -> io.info("metrics:" + metricsPayload), dataService, timeMachine, 2);

@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.devbox;
+package org.adamalang.devbox;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,9 +23,6 @@ import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
-import org.adamalang.devbox.DynamicControl;
-import org.adamalang.devbox.RxPubSub;
-import org.adamalang.devbox.TerminalIO;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
@@ -57,16 +54,6 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final DevBoxAdamaMicroVerse verse;
   private final Runnable death;
   private final RxPubSub rxPubSub;
-
-  private class LocalStream {
-    public final Key key;
-    public final CoreStream ref;
-
-    public LocalStream(Key key, CoreStream ref) {
-      this.key = key;
-      this.ref = ref;
-    }
-  }
 
   public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
     this.executor = executor;
@@ -102,6 +89,81 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     // TODO: parse identity and then resolve against a table
     return NtPrincipal.NO_ONE;
   }
+
+  @Override
+  public void handle_Stats(long requestId, StatsResponder responder) {
+    responder.next("stream-count", streams.size() + "", "int");
+    for (Map.Entry<String, String> entry : LOCALHOST_COOKIES.entrySet()) {
+      responder.next("identity-" + entry.getKey(), entry.getValue(), "string");
+    }
+    responder.finish();
+  }
+
+  @Override
+  public void handle_IdentityHash(long requestId, String identity, IdentityHashResponder responder) {
+    NtPrincipal p = principalOf(identity);
+    String stringToHash = p.agent + ":" + p.authority + "/" + p.agent;
+    MessageDigest digest = Hashing.sha384();
+    digest.update(stringToHash.getBytes(StandardCharsets.UTF_8));
+    responder.complete(Hashing.finishAndEncode(digest));
+  }
+
+  @Override
+  public void handle_IdentityStash(long requestId, String identity, String name, SimpleResponder responder) {
+    if (identity.startsWith("cookie:")) {
+      responder.error(new ErrorCodeException(ErrorCodes.AUTH_COOKIE_CANT_STASH_COOKIE));
+      return;
+    }
+    LOCALHOST_COOKIES.put(name, identity);
+    responder.complete();
+  }
+
+  @Override
+  public void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder) {
+    verse.service.reflect(new Key(space, key), new Callback<>() {
+      @Override
+      public void success(String value) {
+        responder.complete(Json.parseJsonObject(value));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle_PushRegister(long requestId, String identity, String domain, ObjectNode subscription, ObjectNode deviceInfo, SimpleResponder responder) {
+    verse.devPush.register(principalOf(identity), domain, subscription, deviceInfo);
+    responder.complete();
+  }
+
+  @Override
+  public void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder) {
+    verse.service.reflect(verse.domainKeyToUse, new Callback<>() {
+      @Override
+      public void success(String value) {
+        responder.complete(Json.parseJsonObject(value));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder) {
+    responder.complete(verse.vapidPublicKey);
+  }
+
+  @Override
+  public void handle_DocumentAuthorization(long requestId, String space, String key, JsonNode message, InitiationResponder responder) {
+    commonAuthorizatiopn(new Key(space, key), message, responder);
+  }
+
   // public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
   private void commonAuthorizatiopn(Key key, JsonNode payload, InitiationResponder responder) {
     ObjectNode message = (ObjectNode) payload;
@@ -141,11 +203,6 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   @Override
-  public void handle_DocumentAuthorization(long requestId, String space, String key, JsonNode message, InitiationResponder responder) {
-    commonAuthorizatiopn(new Key(space, key), message, responder);
-  }
-
-  @Override
   public void handle_DocumentAuthorizationDomain(long requestId, String domain, JsonNode message, InitiationResponder responder) {
     if (verse.domainKeyToUse != null) {
       commonAuthorizatiopn(verse.domainKeyToUse, message, responder);
@@ -155,77 +212,8 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   @Override
-  public void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder) {
-    responder.complete(SecureAssetUtil.makeAssetKeyHeader());
-  }
-
-  @Override
-  public void handle_IdentityHash(long requestId, String identity, IdentityHashResponder responder) {
-    NtPrincipal p = principalOf(identity);
-    String stringToHash = p.agent + ":" + p.authority + "/" + p.agent;
-    MessageDigest digest = Hashing.sha384();
-    digest.update(stringToHash.getBytes(StandardCharsets.UTF_8));
-    responder.complete(Hashing.finishAndEncode(digest));
-  }
-
-  @Override
-  public void handle_IdentityStash(long requestId, String identity, String name, SimpleResponder responder) {
-    if (identity.startsWith("cookie:")) {
-      responder.error(new ErrorCodeException(ErrorCodes.AUTH_COOKIE_CANT_STASH_COOKIE));
-      return;
-    }
-    LOCALHOST_COOKIES.put(name, identity);
-    responder.complete();
-  }
-
-  @Override
-  public void handle_Stats(long requestId, StatsResponder responder) {
-    responder.next("stream-count", streams.size() + "", "int");
-    for (Map.Entry<String, String> entry : LOCALHOST_COOKIES.entrySet()) {
-      responder.next("identity-" + entry.getKey(), entry.getValue(), "string");
-    }
-    responder.finish();
-  }
-
-  @Override
-  public void handle_SpaceReflect(long requestId, String identity, String space, String key, ReflectionResponder responder) {
-    verse.service.reflect(new Key(space, key), new Callback<>() {
-      @Override
-      public void success(String value) {
-        responder.complete(Json.parseJsonObject(value));
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        responder.error(ex);
-      }
-    });
-  }
-
-  @Override
-  public void handle_DomainGetVapidPublicKey(long requestId, String identity, String domain, DomainVapidResponder responder) {
-    responder.complete(verse.vapidPublicKey);
-  }
-
-  @Override
-  public void handle_PushRegister(long requestId, String identity, String domain, ObjectNode subscription, ObjectNode deviceInfo, SimpleResponder responder) {
-    verse.devPush.register(principalOf(identity), domain, subscription, deviceInfo);
-    responder.complete();
-  }
-
-  @Override
-  public void handle_DomainReflect(long requestId, String identity, String domain, ReflectionResponder responder) {
-    verse.service.reflect(verse.domainKeyToUse, new Callback<>() {
-      @Override
-      public void success(String value) {
-        responder.complete(Json.parseJsonObject(value));
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        responder.error(ex);
-      }
-    });
+  public void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder) {
+    commonAuthorize(new Key(space, key), username, password, null, responder);
   }
 
   // public void authorize(String origin, String ip, Key key, String username, String password, Callback<String> callback) {
@@ -241,11 +229,6 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
         responder.error(ex);
       }
     });
-  }
-
-  @Override
-  public void handle_DocumentAuthorize(long requestId, String space, String key, String username, String password, InitiationResponder responder) {
-    commonAuthorize(new Key(space, key), username, password, null, responder);
   }
 
   @Override
@@ -271,60 +254,6 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
-  private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
-    long started = System.currentTimeMillis();
-    CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
-
-    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
-      private CoreStream got = null;
-      Runnable unsub = null;
-
-      @Override
-      public void onSetupComplete(CoreStream stream) {
-        this.got = stream;
-        streams.put(requestId, new LocalStream(key, stream));
-        io.info("adama|connected to " + key.space + "/" +key.key);
-        ObjectNode entry = Json.newJsonObject();
-        entry.put("type", "devbox");
-        entry.put("task", "connect");
-        long delta = (System.currentTimeMillis() - started);
-        entry.put("time", delta);
-        if (delta > 10000) {
-          io.error("adama|connection; It took over " + Math.round((delta / 100.0)) / 10.0 + " seconds to establish a connection");
-        }
-        this.unsub = rxPubSub.subscribe(responder);
-        PERF_LOG.error(entry.toString());
-      }
-
-      @Override
-      public void status(StreamStatus status) {
-      }
-
-      @Override
-      public void next(String data) {
-        io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
-        ObjectNode delta = Json.parseJsonObject(data);
-        responder.next(delta);
-        JsonNode force = delta.get("force-disconnect");
-        if (force != null && force.isBoolean() && force.booleanValue()) {
-          responder.error(new ErrorCodeException(ErrorCodes.AUTH_DISCONNECTED));
-          if (got != null) {
-            io.info("adama|forced disconnect");
-            got.close();
-            if (unsub != null) {
-              unsub.run();
-            }
-          }
-        }
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        responder.error(ex);
-      }
-    });
-  }
-
   @Override
   public void handle_ConnectionCreate(long requestId, String identity, String space, String key, ObjectNode viewerState, DataResponder responder) {
     internalConnect(requestId, identity, new Key(space, key), viewerState, responder);
@@ -336,6 +265,16 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
       internalConnect(requestId, identity, verse.domainKeyToUse, viewerState, responder);
     } else {
       responder.error(new ErrorCodeException(10023));
+    }
+  }
+
+  @Override
+  public void handle_ConnectionSend(long requestId, Long connection, String channel, JsonNode message, SeqResponder responder) {
+    LocalStream stream = streams.get(connection);
+    if (stream != null) {
+      stream.ref.send(channel, null, message.toString(), wrap("send", responder));
+    } else {
+      responder.error(new ErrorCodeException(-1));
     }
   }
 
@@ -357,16 +296,6 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
         responder.error(ex);
       }
     };
-  }
-
-  @Override
-  public void handle_ConnectionSend(long requestId, Long connection, String channel, JsonNode message, SeqResponder responder) {
-    LocalStream stream = streams.get(connection);
-    if (stream != null) {
-      stream.ref.send(channel, null, message.toString(), wrap("send", responder));
-    } else {
-      responder.error(new ErrorCodeException(-1));
-    }
   }
 
   @Override
@@ -471,6 +400,65 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   }
 
   @Override
+  public void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder) {
+    responder.complete(SecureAssetUtil.makeAssetKeyHeader());
+  }
+
+  private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
+    long started = System.currentTimeMillis();
+    CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
+
+    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
+      Runnable unsub = null;
+      private CoreStream got = null;
+
+      @Override
+      public void onSetupComplete(CoreStream stream) {
+        this.got = stream;
+        streams.put(requestId, new LocalStream(key, stream));
+        io.info("adama|connected to " + key.space + "/" + key.key);
+        ObjectNode entry = Json.newJsonObject();
+        entry.put("type", "devbox");
+        entry.put("task", "connect");
+        long delta = (System.currentTimeMillis() - started);
+        entry.put("time", delta);
+        if (delta > 10000) {
+          io.error("adama|connection; It took over " + Math.round((delta / 100.0)) / 10.0 + " seconds to establish a connection");
+        }
+        this.unsub = rxPubSub.subscribe(responder);
+        PERF_LOG.error(entry.toString());
+      }
+
+      @Override
+      public void status(StreamStatus status) {
+      }
+
+      @Override
+      public void next(String data) {
+        io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
+        ObjectNode delta = Json.parseJsonObject(data);
+        responder.next(delta);
+        JsonNode force = delta.get("force-disconnect");
+        if (force != null && force.isBoolean() && force.booleanValue()) {
+          responder.error(new ErrorCodeException(ErrorCodes.AUTH_DISCONNECTED));
+          if (got != null) {
+            io.info("adama|forced disconnect");
+            got.close();
+            if (unsub != null) {
+              unsub.run();
+            }
+          }
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
   public void execute(JsonRequest request, JsonResponder responder) {
     if (verse != null) {
       route(request, responder);
@@ -484,16 +472,26 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
     return true;
   }
 
-  public void diagnostics(ObjectNode dump) {
-    dump.put("connections", streams.size());
-  }
-
   @Override
   public void kill() {
-    for(LocalStream stream : streams.values()) {
+    for (LocalStream stream : streams.values()) {
       stream.ref.close();
     }
     streams.clear();
     death.run();
+  }
+
+  public void diagnostics(ObjectNode dump) {
+    dump.put("connections", streams.size());
+  }
+
+  private class LocalStream {
+    public final Key key;
+    public final CoreStream ref;
+
+    public LocalStream(Key key, CoreStream ref) {
+      this.key = key;
+      this.ref = ref;
+    }
   }
 }

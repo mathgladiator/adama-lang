@@ -24,34 +24,35 @@ import org.adamalang.api.DataResponder;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/** for back-channel communications that allow the devbox to inject data s */
 public class RxPubSub {
-    private final AtomicInteger currentId;
-    public final ConcurrentHashMap<Integer, DataResponder> responders;
-    public final Boolean preserveViewstate;
+  public final ConcurrentHashMap<Integer, DataResponder> responders;
+  public final Boolean preserveViewstate;
+  private final AtomicInteger currentId;
 
-    public RxPubSub(Boolean preserveViewstate) {
-        currentId = new AtomicInteger(1);
-        this.responders = new ConcurrentHashMap<>();
-        this.preserveViewstate = preserveViewstate;
-    }
+  public RxPubSub(Boolean preserveViewstate) {
+    currentId = new AtomicInteger(1);
+    this.responders = new ConcurrentHashMap<>();
+    this.preserveViewstate = preserveViewstate;
+  }
 
-    public Integer getNextId() {
-        return currentId.getAndIncrement();
-    }
+  public Integer getNextId() {
+    return currentId.getAndIncrement();
+  }
 
-    public Runnable subscribe(DataResponder responder) {
-        Integer id = currentId.getAndIncrement();
-        responders.put(id, responder);
-        return () -> {
-            responders.remove(id);
-        };
-    }
+  public Runnable subscribe(DataResponder responder) {
+    Integer id = currentId.getAndIncrement();
+    responders.put(id, responder);
+    return () -> {
+      responders.remove(id);
+    };
+  }
 
-    public void notifyReload() {
-        ObjectNode _obj = new JsonMapper().createObjectNode();
-        ObjectNode _reload = new JsonMapper().createObjectNode();
-        _reload.put("preserve-view", preserveViewstate);
-        _obj.set("reload", _reload);
-        responders.forEach((id, responder) -> responder.next(_obj));
-    }
+  public void notifyReload() {
+    ObjectNode _obj = new JsonMapper().createObjectNode();
+    ObjectNode _reload = new JsonMapper().createObjectNode();
+    _reload.put("preserve-view", preserveViewstate);
+    _obj.set("reload", _reload);
+    responders.forEach((id, responder) -> responder.next(_obj));
+  }
 }

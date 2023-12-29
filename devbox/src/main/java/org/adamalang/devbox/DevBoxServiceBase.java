@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.devbox;
+package org.adamalang.devbox;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
@@ -23,7 +23,6 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.devbox.*;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -38,7 +37,7 @@ import org.adamalang.web.assets.ContentType;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
-import org.adamalang.web.io.*;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.SpaceKeyRequest;
 import org.adamalang.web.service.WebConfig;
@@ -107,10 +106,6 @@ public class DevBoxServiceBase implements ServiceBase {
     return devbox;
   }
 
-  public void shutdown() {
-    executor.shutdown();
-  }
-
   @Override
   public HttpHandler http() {
     return new HttpHandler() {
@@ -140,6 +135,23 @@ public class DevBoxServiceBase implements ServiceBase {
       @Override
       public void handleDeepHealth(Callback<String> callback) {
         callback.success("DEVSERVER");
+      }
+
+      public void handlePost(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
+        if (verse != null) {
+          // TODO: differiate between a document/domain put
+          final SpaceKeyRequest skr;
+          if (verse.domainKeyToUse != null) {
+            skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri);
+          } else {
+            skr = SpaceKeyRequest.parse(uri);
+          }
+          Key key = new Key(skr.space, skr.key);
+          WebPut webPut = new WebPut(new WebContext(who, context.origin, context.remoteIp), skr.uri, headers, new NtDynamic(parametersJson), body);
+          verse.service.webPut(key, webPut, route(skr, callback));
+        } else {
+          callback.failure(new ErrorCodeException(0));
+        }
       }
 
       public void handleOptions(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
@@ -297,29 +309,16 @@ public class DevBoxServiceBase implements ServiceBase {
           }
         };
       }
-
-      public void handlePost(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        if (verse != null) {
-          // TODO: differiate between a document/domain put
-          final SpaceKeyRequest skr;
-          if (verse.domainKeyToUse != null) {
-            skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri);
-          } else {
-            skr = SpaceKeyRequest.parse(uri);
-          }
-          Key key = new Key(skr.space, skr.key);
-          WebPut webPut = new WebPut(new WebContext(who, context.origin, context.remoteIp), skr.uri, headers, new NtDynamic(parametersJson), body);
-          verse.service.webPut(key, webPut, route(skr, callback));
-        } else {
-          callback.failure(new ErrorCodeException(0));
-        }
-      }
     };
   }
 
   @Override
   public AssetSystem assets() {
     return assets;
+  }
+
+  public void shutdown() {
+    executor.shutdown();
   }
 
   public Thread start() throws Exception {
@@ -332,7 +331,7 @@ public class DevBoxServiceBase implements ServiceBase {
           callback.failure(new ErrorCodeException(-404));
         }
       }
-     }, () -> {
+    }, () -> {
     });
     Thread serviceThread = new Thread(webServer);
     serviceThread.start();

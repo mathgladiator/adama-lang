@@ -25,9 +25,9 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceRegistry;
-import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.services.push.Push;
 import org.adamalang.services.push.Pusher;
 import org.adamalang.services.push.webpush.Subscription;
@@ -44,10 +44,10 @@ import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.Iterator;
 
-public class DevPush implements Pusher  {
+public class DevPush implements Pusher {
   private final static Logger LOGGER = LoggerFactory.getLogger(Pusher.class);
-  private final TerminalIO io;
   public final File path;
+  private final TerminalIO io;
   private final VAPIDPublicPrivateKeyPair keypair;
   private final WebClientBase webClientBase;
   private final WebPushRequestFactory128 webPushFactory128;
@@ -58,14 +58,6 @@ public class DevPush implements Pusher  {
     this.keypair = keypair;
     this.webClientBase = webClientBase;
     this.webPushFactory128 = new WebPushRequestFactory128(email, new SecureRandom());
-  }
-
-  public ObjectNode load() throws Exception {
-    if (path.exists()) {
-      return Json.parseJsonObject(Files.readString(path.toPath()));
-    } else {
-      return Json.newJsonObject();
-    }
   }
 
   public void register(NtPrincipal who, String domain, ObjectNode subscription, ObjectNode deviceInfo) {
@@ -82,9 +74,37 @@ public class DevPush implements Pusher  {
       sub.put("authority", who.authority);
       sub.set("subscription", subscription);
       sub.set("device-info", deviceInfo);
-      Files.writeString(path.toPath(), push.toPrettyString());;
+      Files.writeString(path.toPath(), push.toPrettyString());
     } catch (Exception ex) {
       LOGGER.error("push-register-failure", ex);
+    }
+  }
+
+  public ObjectNode load() throws Exception {
+    if (path.exists()) {
+      return Json.parseJsonObject(Files.readString(path.toPath()));
+    } else {
+      return Json.newJsonObject();
+    }
+  }
+
+  @Override
+  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
+    io.notice("devpush|" + pushTrackToken + " to " + who.agent + "@" + who.authority + " : " + payload);
+    try {
+      ObjectNode push = load();
+      ArrayNode subscriptions = (ArrayNode) push.get(domain);
+      Iterator<JsonNode> it = subscriptions.iterator();
+      while (it.hasNext()) {
+        JsonNode node = it.next();
+        if (who.agent.equals(node.get("agent").textValue()) && who.authority.equals(node.get("authority").textValue())) {
+          push(new Subscription(Json.parseJsonObject(node.get("subscription").toString())), payload);
+        }
+      }
+      callback.success(null);
+    } catch (Exception ex) {
+      LOGGER.error("push-notify-failure", ex);
+      callback.failure(new ErrorCodeException(-5000));
     }
   }
 
@@ -111,26 +131,6 @@ public class DevPush implements Pusher  {
       }));
     } catch (Exception ex) {
       LOGGER.error("failed-push", ex);
-    }
-  }
-
-  @Override
-  public void notify(String pushTrackToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
-    io.notice("devpush|" + pushTrackToken + " to " + who.agent + "@" + who.authority + " : " + payload);
-    try {
-      ObjectNode push = load();
-      ArrayNode subscriptions = (ArrayNode) push.get(domain);
-      Iterator<JsonNode> it = subscriptions.iterator();
-      while (it.hasNext()) {
-        JsonNode node = it.next();
-        if (who.agent.equals(node.get("agent").textValue()) && who.authority.equals(node.get("authority").textValue())) {
-          push(new Subscription(Json.parseJsonObject(node.get("subscription").toString())), payload);
-        }
-      }
-      callback.success(null);
-    } catch (Exception ex) {
-      LOGGER.error("push-notify-failure", ex);
-      callback.failure(new ErrorCodeException(-5000));
     }
   }
 

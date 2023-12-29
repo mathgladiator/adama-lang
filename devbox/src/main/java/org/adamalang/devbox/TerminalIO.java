@@ -19,7 +19,8 @@ package org.adamalang.devbox;
 
 import org.adamalang.common.ANSI;
 import org.adamalang.common.ColorUtilTools;
-import org.jline.reader.*;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
 import org.jline.utils.AttributedString;
 
 /** a thin wrapper around LineReader */
@@ -27,10 +28,7 @@ public class TerminalIO {
   private final LineReader reader;
 
   public TerminalIO() {
-    this.reader = LineReaderBuilder
-        .builder()
-        .appName("Adama DevBox")
-        .build();
+    this.reader = LineReaderBuilder.builder().appName("Adama DevBox").build();
   }
 
   public synchronized void notice(String ln) {

@@ -920,16 +920,6 @@ public class MainRouter {
                frontendHandler.setLibadama(frontendArgs, out);
                return 0;
             }
-            case "study-css": {
-              FrontendStudyCssArgs frontendArgs = FrontendStudyCssArgs.from(args, 2);
-              if (frontendArgs == null) {
-                FrontendStudyCssArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               frontendHandler.studyCss(frontendArgs, out);
-               return 0;
-            }
             case "validate": {
               FrontendValidateArgs frontendArgs = FrontendValidateArgs.from(args, 2);
               if (frontendArgs == null) {
