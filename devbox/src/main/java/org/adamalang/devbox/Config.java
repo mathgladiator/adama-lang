@@ -26,12 +26,12 @@ import org.adamalang.config.AbstractServiceConfig;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class DevBoxServiceConfig extends AbstractServiceConfig {
+public class Config extends AbstractServiceConfig {
   private final ObjectNode secrets;
   private final String service;
   private final Consumer<String> logger;
 
-  public DevBoxServiceConfig(String space, Map<String, Object> config, ObjectNode secrets, String service, Consumer<String> logger) {
+  public Config(String space, Map<String, Object> config, ObjectNode secrets, String service, Consumer<String> logger) {
     super(space, config);
     this.secrets = secrets;
     this.service = service;

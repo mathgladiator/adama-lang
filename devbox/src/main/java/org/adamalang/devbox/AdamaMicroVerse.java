@@ -44,8 +44,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a microverse is a local cosmos of an Adama machine that outlines everything needed to run Adama locally without a DB */
-public class DevBoxAdamaMicroVerse {
-  public final DevCoreServiceFactory factory;
+public class AdamaMicroVerse {
+  public final LocalServiceFactory factory;
   public final CaravanDataService dataService;
   public final CoreService service;
   public final ArrayList<LocalSpaceDefn> spaces;
@@ -59,7 +59,7 @@ public class DevBoxAdamaMicroVerse {
   private final WatchService watchService;
   private final Thread scanner;
 
-  private DevBoxAdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, DevCoreServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush) throws Exception {
+  private AdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush) throws Exception {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
@@ -171,7 +171,7 @@ public class DevBoxAdamaMicroVerse {
     Thread.sleep(1000);
   }
 
-  public static DevBoxAdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types) throws Exception {
+  public static AdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -206,7 +206,7 @@ public class DevBoxAdamaMicroVerse {
         }
       }
     }
-    DevCoreServiceFactory factory = new DevCoreServiceFactory(io, alive, caravanPath, cloudPath, new NoOpMetricsFactory());
+    LocalServiceFactory factory = new LocalServiceFactory(io, alive, caravanPath, cloudPath, new NoOpMetricsFactory());
     JsonNode spacesNode = defn.get("spaces");
     if (spacesNode == null || !spacesNode.isArray()) {
       io.notice("verse|lacked a spaces array in microverse config");
@@ -258,7 +258,7 @@ public class DevBoxAdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new DevBoxAdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase));
+    return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase));
   }
 
   public void shutdown() throws Exception {

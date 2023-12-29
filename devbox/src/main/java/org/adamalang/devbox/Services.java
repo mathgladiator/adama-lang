@@ -41,7 +41,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /** services for the devbox; this don't help test the services, but they provide a great experience for developers */
-public class DevBoxServices {
+public class Services {
 
   public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
@@ -143,7 +143,7 @@ public class DevBoxServices {
       if (secrets == null) {
         secrets = Json.newJsonObject();
       }
-      return new DevBoxServiceConfig(space, params, secrets, service, logger);
+      return new Config(space, params, secrets, service, logger);
     }
   }
 }

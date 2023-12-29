@@ -34,7 +34,7 @@ public class BundleRawJavaScriptForDevBox {
     String worker = Files.readString(new File(root, "worker.js").toPath());
     StringBuilder sb = new StringBuilder();
     sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
-    sb.append("package org.adamalang.cli.devbox;\n\n");
+    sb.append("package org.adamalang.devbox;\n\n");
     sb.append("import java.nio.charset.StandardCharsets;\n");
     sb.append("import java.util.Base64;\n\n");
     sb.append("public class JavaScriptResourcesRaw {\n");

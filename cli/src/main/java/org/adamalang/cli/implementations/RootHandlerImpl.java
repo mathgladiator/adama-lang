@@ -22,7 +22,7 @@ import org.adamalang.canary.Canary;
 import org.adamalang.common.ANSI;
 import org.adamalang.cli.Config;
 import org.adamalang.common.ColorUtilTools;
-import org.adamalang.cli.devbox.DevBoxStart;
+import org.adamalang.cli.devbox.DevBoxInputTranslator;
 import org.adamalang.cli.implementations.space.Kickstarter;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
@@ -30,6 +30,7 @@ import org.adamalang.cli.router.*;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.Json;
 import org.adamalang.common.Platform;
+import org.adamalang.devbox.Start;
 
 import java.util.Map;
 
@@ -220,6 +221,6 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void devbox(Arguments.DevboxArgs args, Output.YesOrError output) throws Exception {
-    DevBoxStart.start(new DevBoxStart.DevBoxInputs(args));
+    Start.start(DevBoxInputTranslator.from(args));
   }
 }

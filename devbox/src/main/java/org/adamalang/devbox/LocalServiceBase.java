@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DevBoxServiceBase implements ServiceBase {
+public class LocalServiceBase implements ServiceBase {
   private final SimpleExecutor executor;
   private final DynamicControl control;
   private final TerminalIO io;
@@ -62,14 +62,14 @@ public class DevBoxServiceBase implements ServiceBase {
   private final AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle;
   private final File staticAssetRoot;
   private final File localLibAdamaJS;
-  private final DevBoxAdamaMicroVerse verse;
+  private final AdamaMicroVerse verse;
   private final LocalAssets assets;
   private final boolean debuggerAvailable;
-  private final ConcurrentHashMap<Integer, DevBoxAdama> inflight;
+  private final ConcurrentHashMap<Integer, LocalAdama> inflight;
   private final AtomicInteger inflightId;
   private final RxPubSub rxPubSub;
 
-  public DevBoxServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, DevBoxAdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub) throws Exception {
+  public LocalServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -89,7 +89,7 @@ public class DevBoxServiceBase implements ServiceBase {
     ObjectNode diag = Json.newJsonObject();
     diag.put("active-sockets", inflight.size());
     ObjectNode sockets = diag.putObject("sockets");
-    for (Map.Entry<Integer, DevBoxAdama> entry : inflight.entrySet()) {
+    for (Map.Entry<Integer, LocalAdama> entry : inflight.entrySet()) {
       entry.getValue().diagnostics(sockets.putObject("" + entry.getKey()));
     }
     return diag.toString();
@@ -99,7 +99,7 @@ public class DevBoxServiceBase implements ServiceBase {
   public ServiceConnection establish(ConnectionContext context) {
     // if we have a service and a table, then let's use it!
     int id = inflightId.incrementAndGet();
-    DevBoxAdama devbox = new DevBoxAdama(executor, context, this.control, this.io, verse, () -> {
+    LocalAdama devbox = new LocalAdama(executor, context, this.control, this.io, verse, () -> {
       inflight.remove(id);
     }, rxPubSub);
     inflight.put(id, devbox);
@@ -114,7 +114,7 @@ public class DevBoxServiceBase implements ServiceBase {
       public void handle(ConnectionContext context, Method method, String identity, String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         NtPrincipal who = NtPrincipal.NO_ONE;
         if (identity != null) {
-          who = DevBoxAdama.principalOf(identity);
+          who = LocalAdama.principalOf(identity);
         }
         switch (method) {
           case PUT:

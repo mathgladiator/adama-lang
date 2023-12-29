@@ -18,7 +18,7 @@
 package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.cli.devbox.DevBoxStart;
+import org.adamalang.cli.devbox.DevBoxInputTranslator;
 import org.adamalang.cli.implementations.mobile.MobileCapacitor;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
@@ -27,6 +27,7 @@ import org.adamalang.common.Json;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
+import org.adamalang.devbox.Start;
 import org.adamalang.rxhtml.*;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
@@ -107,7 +108,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
 
   @Override
   public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
-    DevBoxStart.start(new DevBoxStart.DevBoxInputs(args));
+    Start.start(DevBoxInputTranslator.from(args));
   }
 
   @Override

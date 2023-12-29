@@ -15,16 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.devbox;
+package org.adamalang.devbox;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.SelfClient;
-import org.adamalang.cli.Config;
-import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.devbox.*;
 import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.region.AdamaDeploymentSyncMetrics;
 import org.adamalang.runtime.data.Key;
@@ -55,47 +52,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DevBoxStart {
-
-  public static class DevBoxInputs {
-    public final Config config;
-    public final String rxhtmlPath;
-    public final String assetPath;
-    public final String microverse;
-    public final String debugger;
-    public final String localLibadamaPath;
-    public final String environment;
-    public final String preserveView;
-    public final String types;
-
-    public DevBoxInputs(Arguments.FrontendDevServerArgs args) {
-      this.config = args.config;
-      this.rxhtmlPath = args.rxhtmlPath;
-      this.assetPath = args.assetPath;
-      this.microverse = args.microverse;
-      this.debugger = args.debugger;
-      this.localLibadamaPath = args.localLibadamaPath;
-      this.environment = args.environment;
-      this.preserveView = args.preserveView;
-      this.types = args.types;
-    }
-
-    public DevBoxInputs(Arguments.DevboxArgs args) {
-      this.config = args.config;
-      this.rxhtmlPath = args.rxhtmlPath;
-      this.assetPath = args.assetPath;
-      this.microverse = args.microverse;
-      this.debugger = args.debugger;
-      this.localLibadamaPath = args.localLibadamaPath;
-      this.environment = args.environment;
-      this.preserveView = args.preserveView;
-      this.types = args.types;
-    }
-  }
-
-  public static void start(DevBoxInputs args) throws Exception {
+public class Start {
+  public static void start(Inputs args) throws Exception {
     TerminalIO terminal = new TerminalIO();
-    String developerIdentity = args.config.get_string("identity", null);
+    String developerIdentity = args.developerIdentity;
     SimpleExecutor offload = SimpleExecutor.create("executor");
     WebClientBase webClientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
@@ -129,7 +89,7 @@ public class DevBoxStart {
     String localLibAdamaJSPath = "".equals(args.localLibadamaPath) ? null : args.localLibadamaPath;
     File localLibAdamaJSFile = null;
     if (localLibAdamaJSPath == null) {
-      localLibAdamaJSPath = args.config.get_nullable_string("local-libadama-path-default");
+      localLibAdamaJSPath = args.localPathForLibAdamaOverride;
       if (localLibAdamaJSPath == null) {
         terminal.info("js|using built-in libadama");
       } else {
@@ -145,7 +105,7 @@ public class DevBoxStart {
         localLibAdamaJSFile = null;
       }
     }
-    DevBoxAdamaMicroVerse verse = null;
+    AdamaMicroVerse verse = null;
     if (args.microverse != null) {
       File microverseDef = new File(args.microverse);
       if (microverseDef.exists() && microverseDef.isFile()) {
@@ -160,14 +120,14 @@ public class DevBoxStart {
             defn.set(v.getKey(), v.getValue());
           }
         }
-        DevBoxServices.install(defn, webClientBase, offload, (line) -> terminal.info(line));
-        verse = DevBoxAdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types));
+        Services.install(defn, webClientBase, offload, (line) -> terminal.info(line));
+        verse = AdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types));
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
           terminal.info("verse|installing push notifications");
           verse.devPush.install();
-          for (DevBoxAdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
+          for (AdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
             terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
             sync.watch(space.spaceName);
           }
@@ -195,11 +155,11 @@ public class DevBoxStart {
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     RxPubSub pubSub = new RxPubSub(preserveView);
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub, new File(args.types))) {
-      WebConfig webConfig = new WebConfig(new ConfigObject(args.config.get_or_create_child("web")));
+      WebConfig webConfig = new WebConfig(new ConfigObject(args.webConfig));
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
       attachmentsPath.mkdirs();
-      DevBoxServiceBase base = new DevBoxServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub);
+      LocalServiceBase base = new LocalServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub);
       Thread webServerThread = base.start();
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());

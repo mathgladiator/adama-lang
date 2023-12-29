@@ -15,23 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.logging;
+package org.adamalang.devbox;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.LayoutBase;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.common.Json;
-import org.adamalang.common.LogTimestamp;
 
-/** experimental logger layout for sending to another service */
-public class JsonLayout extends LayoutBase<ILoggingEvent> {
-  @Override
-  public String doLayout(ILoggingEvent e) {
-    ObjectNode obj = Json.newJsonObject();
-    obj.put("@timestamp", LogTimestamp.now());
-    obj.put("thread", e.getThreadName());
-    obj.put("level", e.getLevel().toString());
-    obj.put("message", e.getMessage());
-    return obj.toString();
-  }
+public class Inputs {
+  public String developerIdentity;
+  public String rxhtmlPath;
+  public String assetPath;
+  public String microverse;
+  public String debugger;
+  public String localLibadamaPath;
+  public String environment;
+  public String preserveView;
+  public String types;
+  public String localPathForLibAdamaOverride;
+  public ObjectNode webConfig;
 }

@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
+public class LocalAdama extends DevBoxRouter implements ServiceConnection {
   private static final Logger PERF_LOG = LoggerFactory.getLogger("perf");
   private final static ConcurrentHashMap<String, String> LOCALHOST_COOKIES = new ConcurrentHashMap<>();
   private final SimpleExecutor executor;
@@ -51,11 +51,11 @@ public class DevBoxAdama extends DevBoxRouter implements ServiceConnection {
   private final DynamicControl control;
   private final TerminalIO io;
   private final ConcurrentHashMap<Long, LocalStream> streams;
-  private final DevBoxAdamaMicroVerse verse;
+  private final AdamaMicroVerse verse;
   private final Runnable death;
   private final RxPubSub rxPubSub;
 
-  public DevBoxAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, DevBoxAdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
+  public LocalAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, AdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
     this.executor = executor;
     this.context = context;
     this.control = control;

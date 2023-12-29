@@ -17,7 +17,6 @@
 */
 package org.adamalang.extern.prometheus;
 
-import com.helger.commons.state.ESuccess;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;

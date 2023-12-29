@@ -88,7 +88,7 @@ public class LocalAssets implements AssetSystem {
 
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, String channel, String message, Callback<Integer> callback) {
-    NtPrincipal who = DevBoxAdama.principalOf(identity);
+    NtPrincipal who = LocalAdama.principalOf(identity);
     service.connect(new CoreRequestContext(who, context.origin, context.remoteIp, key.key), key, "{}", null, new Streamback() {
       CoreStream _stream;
       boolean _responded = false;

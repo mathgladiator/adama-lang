@@ -41,8 +41,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DevCoreServiceFactory {
-  private static final Logger LOG = LoggerFactory.getLogger(DevCoreServiceFactory.class);
+public class LocalServiceFactory {
+  private static final Logger LOG = LoggerFactory.getLogger(LocalServiceFactory.class);
   public final CaravanDataService dataService;
   public final DeploymentFactoryBase base;
   public final CoreService service;
@@ -51,7 +51,7 @@ public class DevCoreServiceFactory {
   private final SimpleExecutor caravanExecutor;
   private final Thread flusher;
 
-  public DevCoreServiceFactory(TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
+  public LocalServiceFactory(TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
     this.alive = alive;
     this.caravanExecutor = SimpleExecutor.create("caravan");
     File walRoot = new File(caravanPath, "wal");
