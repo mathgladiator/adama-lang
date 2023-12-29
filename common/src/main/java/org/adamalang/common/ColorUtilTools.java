@@ -15,11 +15,9 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli;
+package org.adamalang.common;
 
-import org.adamalang.common.ANSI;
-
-public class Util {
+public class ColorUtilTools {
   private static Boolean NO_COLOR;
 
   private static boolean nocolor() {
@@ -32,6 +30,10 @@ public class Util {
 
   public static void setNoColor() {
     NO_COLOR = true;
+  }
+
+  public static void lowerNoColor() {
+    NO_COLOR = false;
   }
 
   public static String prefix(String x, ANSI c) {
@@ -54,5 +56,4 @@ public class Util {
   public static String justifyRight(String string, int spacing) {
     return String.format("%" + spacing + "s", string);
   }
-
 }

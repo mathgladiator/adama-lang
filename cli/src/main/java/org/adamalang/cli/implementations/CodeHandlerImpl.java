@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.CoreServicesNexus;
 import org.adamalang.common.ANSI;
-import org.adamalang.cli.Util;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.cli.implementations.code.Diagram;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
@@ -292,7 +292,7 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
-    return sharedCompileCode(filename, code, includes, (String ln) -> System.err.println(Util.prefix(ln, ANSI.Red)));
+    return sharedCompileCode(filename, code, includes, (String ln) -> System.err.println(ColorUtilTools.prefix(ln, ANSI.Red)));
   }
 
   public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes, Consumer<String> println) throws Exception {

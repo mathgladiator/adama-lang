@@ -17,7 +17,18 @@
 */
 package org.adamalang.common;
 
-public class Platform {
-  public static final String VERSION = "20231228204015";
-  public static final String JS_VERSION = "78c857db6bf7da5c3d41a199123a114d";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ColorUtilToolsTests {
+  @Test
+  public void coverage() {
+    ColorUtilTools.lowerNoColor();
+    Assert.assertEquals("\u001B[31mXYZ\u001B[0m", ColorUtilTools.prefix("XYZ", ANSI.Red));
+    Assert.assertEquals("\u001B[1m\u001B[31mXYZ\u001B[0m", ColorUtilTools.prefixBold("XYZ", ANSI.Red));
+    ColorUtilTools.setNoColor();
+    Assert.assertEquals("XYZ", ColorUtilTools.prefix("XYZ", ANSI.Red));
+    Assert.assertEquals("XYZ", ColorUtilTools.prefixBold("XYZ", ANSI.Red));
+    Assert.assertEquals("xyz           ", ColorUtilTools.justifyLeft("xyz", 14));
+  }
 }

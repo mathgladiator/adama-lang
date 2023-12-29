@@ -15,13 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli;
+package org.adamalang.common;
 
 import org.junit.Test;
 
-public class UtilTests {
+public class ANSITests {
   @Test
   public void coverage() {
-
+    System.out.println(ANSI.HighIntensityBackgroundGreen + "OK" + ANSI.Reset);
+    System.out.println(ANSI.BackgroundGreen + "OK" + ANSI.Reset);
+    System.out.println(ANSI.Green + "OK" + ANSI.Reset);
   }
 }

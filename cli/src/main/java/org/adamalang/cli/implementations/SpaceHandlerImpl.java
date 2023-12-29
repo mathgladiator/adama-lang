@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.CoreServicesNexus;
 import org.adamalang.common.ANSI;
 import org.adamalang.cli.Config;
-import org.adamalang.cli.Util;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.cli.implementations.space.Deployer;
 import org.adamalang.cli.implementations.space.Uploader;
 import org.adamalang.cli.remote.Connection;
@@ -132,7 +132,7 @@ public class SpaceHandlerImpl implements SpaceHandler {
   @Override
   public void encryptSecret(Arguments.SpaceEncryptSecretArgs args, Output.YesOrError output) throws Exception {
     encrypt(args.config, args.space, () -> {
-      System.out.print(Util.prefix("Secret/Token:", ANSI.Red));
+      System.out.print(ColorUtilTools.prefix("Secret/Token:", ANSI.Red));
       return new String(System.console().readPassword());
     }, output);
   }

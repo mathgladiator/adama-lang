@@ -19,8 +19,8 @@ package org.adamalang.cli.router;
 
 import org.adamalang.ErrorTable;
 import org.adamalang.common.ANSI;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.cli.Config;
-import org.adamalang.cli.Util;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.cli.runtime.Output.*;
 import org.adamalang.common.ErrorCodeException;
@@ -1137,10 +1137,10 @@ public class MainRouter {
       }
     } catch (Exception ex) {
       if (ex instanceof Config.BadException) {
-        System.err.println(Util.prefix("[CONFIG ERROR]", ANSI.Red));
+        System.err.println(ColorUtilTools.prefix("[CONFIG ERROR]", ANSI.Red));
         System.err.println(ex.getMessage());
       } else if (ex instanceof ErrorCodeException) {
-        System.err.println(Util.prefix("[ERROR]", ANSI.Red));
+        System.err.println(ColorUtilTools.prefix("[ERROR]", ANSI.Red));
         System.err.println("#:" + ((ErrorCodeException) ex).code);
         System.err.println("Name:" + ErrorTable.INSTANCE.names.get(((ErrorCodeException) ex).code));
         System.err.println("Description:" + ErrorTable.INSTANCE.descriptions.get(((ErrorCodeException) ex).code));

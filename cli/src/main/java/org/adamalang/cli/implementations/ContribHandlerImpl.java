@@ -20,7 +20,7 @@ package org.adamalang.cli.implementations;
 import org.adamalang.GenerateTables;
 import org.adamalang.caravan.events.Events;
 import org.adamalang.common.ANSI;
-import org.adamalang.cli.Util;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.cli.devbox.BundleRawJavaScriptForDevBox;
 import org.adamalang.cli.implementations.docgen.BookGenerator;
 import org.adamalang.cli.router.Arguments;
@@ -83,23 +83,23 @@ public class ContribHandlerImpl implements ContribHandler {
 
   @Override
   public void bundleJs(Arguments.ContribBundleJsArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Bundling JavaScript for Web", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Bundling JavaScript for Web", ANSI.Cyan));
     Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), BundleJavaScript.bundle("./release/libadama.js", "./release/libadama-worker.js"));
-    System.out.println(Util.prefix("Bundling JavaScript for DevBox", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Bundling JavaScript for DevBox", ANSI.Cyan));
     Files.writeString(new File("cli/src/main/java/org/adamalang/cli/devbox/JavaScriptResourcesRaw.java").toPath(), BundleRawJavaScriptForDevBox.bundle(new File("./clientjs")));
     output.out();
   }
 
   @Override
   public void copyright(Arguments.ContribCopyrightArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Ensuring all files have copyright notice", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Ensuring all files have copyright notice", ANSI.Cyan));
     copyrightScan(new File("."));
     output.out();
   }
 
   @Override
   public void makeApi(Arguments.ContribMakeApiArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Assembling Public API", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Assembling Public API", ANSI.Cyan));
     org.adamalang.apikit.Tool.build("saas/api.xml", new File("."));
     output.out();
   }
@@ -111,29 +111,29 @@ public class ContribHandlerImpl implements ContribHandler {
 
   @Override
   public void makeCli(Arguments.ContribMakeCliArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Building CLI Router", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Building CLI Router", ANSI.Cyan));
     org.adamalang.clikit.Tool.buildFileSystem("./cli/commands.xml");
     output.out();
   }
 
   @Override
   public void makeEmbed(Arguments.ContribMakeEmbedArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Building CLI Router", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Building CLI Router", ANSI.Cyan));
     EmbedTemplates.doit();
     output.out();
   }
 
   @Override
   public void makeCodec(Arguments.ContribMakeCodecArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Creating Network Codec between Web to Adama", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Creating Network Codec between Web to Adama", ANSI.Cyan));
     String client = CodecCodeGen.assembleCodec("org.adamalang.net.codec", "ClientCodec", ClientMessage.class.getDeclaredClasses());
     String server = CodecCodeGen.assembleCodec("org.adamalang.net.codec", "ServerCodec", ServerMessage.class.getDeclaredClasses());
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ClientCodec.java").toPath(), client);
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ServerCodec.java").toPath(), server);
-    System.out.println(Util.prefix("Creating Gossip Codec", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Creating Gossip Codec", ANSI.Cyan));
     String gossipCodec = CodecCodeGen.assembleCodec("org.adamalang.common.gossip.codec", "GossipProtocolCodec", GossipProtocol.class.getDeclaredClasses());
     Files.writeString(new File("./common/src/main/java/org/adamalang/common/gossip/codec/GossipProtocolCodec.java").toPath(), gossipCodec);
-    System.out.println(Util.prefix("Creating Disk Codec", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Creating Disk Codec", ANSI.Cyan));
     String diskCodec = CodecCodeGen.assembleCodec("org.adamalang.caravan.events", "EventCodec", Events.class.getDeclaredClasses());
     Files.writeString(new File("./data-caravan/src/main/java/org/adamalang/caravan/events/EventCodec.java").toPath(), diskCodec);
     output.out();
@@ -141,14 +141,14 @@ public class ContribHandlerImpl implements ContribHandler {
 
   @Override
   public void makeEt(Arguments.ContribMakeEtArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Making Error Table", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Making Error Table", ANSI.Cyan));
     Files.writeString(new File("errors/src/main/java/org/adamalang/ErrorTable.java").toPath(), GenerateTables.generate());
     output.out();
   }
 
   @Override
   public void strTemp(Arguments.ContribStrTempArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Converting string templates to code!", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Converting string templates to code!", ANSI.Cyan));
     for (File template : new File("core/string_templates").listFiles()) {
       String str = Files.readString(template.toPath());
       String[] parts = template.getName().replaceAll("[\\.-]", "_").split(Pattern.quote("_"));
@@ -164,14 +164,14 @@ public class ContribHandlerImpl implements ContribHandler {
 
   @Override
   public void testsAdama(Arguments.ContribTestsAdamaArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Generate Adama Tests", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Generate Adama Tests", ANSI.Cyan));
     GenerateLanguageTests.generate(args.input, args.output, args.errors);
     output.out();
   }
 
   @Override
   public void testsRxhtml(Arguments.ContribTestsRxhtmlArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(Util.prefix("Generating RxHTML Tests", ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Generating RxHTML Tests", ANSI.Cyan));
     GenerateTemplateTests.generate(args.input, args.output);
     output.out();
   }
@@ -183,7 +183,7 @@ public class ContribHandlerImpl implements ContribHandler {
     md5.update(Files.readAllBytes(new File("release/libadama.js").toPath()));
     md5.update(Files.readAllBytes(new File("release/libadama-worker.js").toPath()));
     String jsver = Hashing.finishAndEncodeHex(md5);
-    System.out.println(Util.prefix("Generating a version number: " + versionCode, ANSI.Cyan));
+    System.out.println(ColorUtilTools.prefix("Generating a version number: " + versionCode, ANSI.Cyan));
     String versionFile = "package org.adamalang.common;\n" + //
         "\n" + "public class Platform {\n" + //
         "  public static final String VERSION = \"" + versionCode + "\";\n" + //
