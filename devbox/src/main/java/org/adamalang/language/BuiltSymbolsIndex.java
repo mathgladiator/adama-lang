@@ -28,18 +28,31 @@ public class BuiltSymbolsIndex {
   private final HashSet<String> sources;
   private final HashMap<String, TreeMap<StartPoint, Token>> tokens;
   private final HashMap<String, Token> definitions;
+  private final HashMap<String, ArrayList<Token>> usages;
 
   public BuiltSymbolsIndex(SymbolIndex index) {
     this.sources = new HashSet<>();
     this.tokens = new HashMap<>();
     this.definitions = new HashMap<>();
+    this.usages = new HashMap<>();
     for (Token token : index.usages) {
       ingest(token);
+      use(token);
     }
     for (Token token : index.definitions) {
       definitions.put(token.text, token);
+      use(token);
       ingest(token);
     }
+  }
+
+  private void use(Token token) {
+    ArrayList<Token> usage = usages.get(token.text);
+    if (usage == null) {
+      usage = new ArrayList<>();
+      usages.put(token.text, usage);
+    }
+    usage.add(token);
   }
 
   private void ingest(Token token) {
@@ -119,5 +132,9 @@ public class BuiltSymbolsIndex {
       return definitions.get(token.text);
     }
     return null;
+  }
+
+  public ArrayList<Token> findUsages(Token token) {
+    return usages.get(token.text);
   }
 }

@@ -105,6 +105,7 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         textDocumentSync.put("change", 0);
         // caps.put("hoverProvider", true);
         caps.put("definitionProvider", true);
+        caps.put("referencesProvider", true);
         // caps.put("documentFormattingProvider", true);
         return response;
       }
@@ -143,6 +144,53 @@ public class LanguageProtocol implements DiagnosticsSubscriber {
         ObjectNode response = craftResponse(request, true);
         // TODO: query the built index of interesting things
         return null;
+      }
+      case "textDocument/references": {
+        ObjectNode textDocument = (ObjectNode) request.get("params").get("textDocument");
+        String uri = textDocument.get("uri").textValue();
+        ObjectNode position = (ObjectNode) request.get("params").get("position");
+        int ln = position.get("line").intValue();
+        int ch = position.get("character").intValue();
+        ObjectNode response = craftResponse(request, true);
+        ArrayNode result = response.putArray("result");
+        SymbolIndex indexCopy = null;
+        synchronized (this) {
+          indexCopy = lastIndex;
+        }
+        boolean foundAny = false;
+        if (indexCopy != null) {
+          BuiltSymbolsIndex index = new BuiltSymbolsIndex(indexCopy);
+          String foundSource = index.findBestMatch(uri);
+          if (foundSource != null) {
+            Token token = index.tokenAt(foundSource, ln, ch);
+            if (token != null) {
+              String commonSuffix = Pathing.maxSharedSuffix(foundSource, uri);
+              ArrayList<Token> usages = index.findUsages(token);
+              if (usages != null) {
+                foundAny = true;
+                for (Token usage : usages) {
+                  String whatIsShared = Pathing.maxSharedPrefix(foundSource, usage.sourceName);
+                  String newPrefix = uri.substring(0, uri.length() - commonSuffix.length());
+                  int trim = foundSource.substring(0, foundSource.length() - commonSuffix.length()).length();
+                  String finalFile = newPrefix + whatIsShared.substring(trim) + usage.sourceName.substring(whatIsShared.length());
+                  ObjectNode location = result.addObject();
+                  location.put("uri", finalFile);
+                  ObjectNode range = location.putObject("range");
+                  ObjectNode start = range.putObject("start");
+                  start.put("line", usage.lineStart);
+                  start.put("character", usage.charStart);
+                  ObjectNode end = range.putObject("end");
+                  end.put("line", usage.lineEnd);
+                  end.put("character", usage.charEnd);
+                }
+              }
+            }
+          }
+        }
+        if (!foundAny) {
+          response.putNull("result");
+        }
+        return response;
       }
       case "textDocument/definition": {
         ObjectNode textDocument = (ObjectNode) request.get("params").get("textDocument");

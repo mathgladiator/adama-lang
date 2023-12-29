@@ -688,6 +688,7 @@ public class Parser {
       if (nextOrClose.isIdentifier("replication")) {
         Token pairOpen = consumeExpectedSymbol("<");
         Token inputTypeName = typesafe_id();
+        index.usages.add(inputTypeName);
         Token pairClose = consumeExpectedSymbol(">");
         Token methodName = id();
         Token semicolon = consumeExpectedSymbol(";");
@@ -700,8 +701,10 @@ public class Parser {
         Token secured = tokens.popIf((t) -> t.isIdentifier("secured"));
         Token pairOpen = consumeExpectedSymbol("<");
         Token inputTypeName = typesafe_id();
+        index.usages.add(inputTypeName);
         Token comma = consumeExpectedSymbol(",");
         Token outputTypeName = typesafe_id();
+        index.usages.add(outputTypeName);
         Token outputArrayExt = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
         Token pairClose = consumeExpectedSymbol(">");
         Token methodName = id();
@@ -1092,6 +1095,7 @@ public class Parser {
 
   public Consumer<TopLevelDocumentHandler> define_function_trailer(final Token functionToken) throws AdamaLangException {
     final var name = id();
+    index.definitions.add(name);
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
     final var closeParen = consumeExpectedSymbol(")");
@@ -1248,11 +1252,13 @@ public class Parser {
 
   public DefineCustomPolicy define_policy_trailer(Scope scope, final Token definePolicy) throws AdamaLangException {
     final var id = id();
+    index.definitions.add(id);
     return new DefineCustomPolicy(definePolicy, id, block(scope));
   }
 
   public Consumer<TopLevelDocumentHandler> define_procedure_trailer(final Token procedureToken) throws AdamaLangException {
     final var name = id();
+    index.definitions.add(name);
     final var openParen = consumeExpectedSymbol("(");
     final var args = arg_list();
     final var closeParen = consumeExpectedSymbol(")");
@@ -1385,7 +1391,11 @@ public class Parser {
           return new ViewerIsPolicy(policy, open, token, close);
         }
         case "use_policy":
-          return new UseCustomPolicy(policy, policy_list());
+          TokenizedItem<Token>[] policies = policy_list();
+          for (TokenizedItem<Token> token : policies) {
+            index.usages.add(token.item);
+          }
+          return new UseCustomPolicy(policy, policies);
       }
     }
     return null;
@@ -1441,7 +1451,7 @@ public class Parser {
     return tokens.popIf(t -> t.isSymbolWithTextEq(args));
   }
 
-  private Token forwardScaRelate() throws AdamaLangException {
+  private Token forwardScanRelate() throws AdamaLangException {
     final var scan = tokens.peek();
     if (scan == null) {
       return null;
@@ -1938,7 +1948,7 @@ public class Parser {
     if (op != null) {
       return new BinaryExpression(left, op, additive(scope));
     }
-    op = forwardScaRelate();
+    op = forwardScanRelate();
     if (op != null) {
       return new BinaryExpression(left, op, additive(scope));
     }
@@ -2153,7 +2163,9 @@ public class Parser {
 
   public TokenizedItem<Token> type_parameter() throws AdamaLangException {
     final var before = consumeExpectedSymbol("<");
-    final var token = new TokenizedItem<>(typesafe_id());
+    Token type = typesafe_id();
+    index.usages.add(type);
+    final var token = new TokenizedItem<>(type);
     token.before(before);
     token.after(consumeExpectedSymbol(">"));
     return token;
