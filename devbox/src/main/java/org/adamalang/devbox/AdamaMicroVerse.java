@@ -58,8 +58,9 @@ public class AdamaMicroVerse {
   private final AtomicBoolean alive;
   private final WatchService watchService;
   private final Thread scanner;
+  private final DiagnosticsSubscriber diagnostics;
 
-  private AdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush) throws Exception {
+  private AdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics) throws Exception {
     this.io = io;
     this.alive = alive;
     this.factory = factory;
@@ -69,6 +70,7 @@ public class AdamaMicroVerse {
     this.domainKeyToUse = domainKeyToUse;
     this.spaces = spaces;
     this.watchService = watchService;
+    this.diagnostics = diagnostics;
     this.scanner = new Thread(() -> {
       try {
         rebuild();
@@ -98,7 +100,9 @@ public class AdamaMicroVerse {
         if (!defn.lastDeployedPlan.equals(plan)) {
           long start = System.currentTimeMillis();
           io.notice("adama|validating: " + defn.spaceName);
-          String newReflection = ValidatePlan.sharedValidatePlanGetLastReflection(plan, (ln) -> io.error(ln));
+          String newReflection = ValidatePlan.sharedValidatePlanGetLastReflection(plan, new File(defn.mainFile).getAbsolutePath(), defn.includePath != null ? new File(defn.includePath) : null, (ln) -> io.error(ln), (d) -> {
+            diagnostics.updated(d);
+          });
           if (newReflection != null) {
             if (defn.lastReflection != null) {
               List<String> issues = Linter.compare(defn.lastReflection, newReflection);
@@ -171,7 +175,7 @@ public class AdamaMicroVerse {
     Thread.sleep(1000);
   }
 
-  public static AdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types) throws Exception {
+  public static AdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -258,7 +262,7 @@ public class AdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase));
+    return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase), diagnostics);
   }
 
   public void shutdown() throws Exception {

@@ -156,7 +156,7 @@ public class CodeHandlerImpl implements CodeHandler {
     }
     {
       try {
-        if (!sharedValidatePlan(Files.readString(planFile.toPath()))) {
+        if (!sharedValidatePlan(Files.readString(planFile.toPath()), planFile.toString())) {
           throw new Exception("Plan file failed to validate");
         }
       } catch (Exception ex) {
@@ -166,11 +166,11 @@ public class CodeHandlerImpl implements CodeHandler {
     output.out();
   }
 
-  public static boolean sharedValidatePlan(String plan) {
-    return ValidatePlan.sharedValidatePlanGetLastReflection(plan, (ln) -> System.err.println(ln)) != null;
+  public static boolean sharedValidatePlan(String plan, String mainName) {
+    return ValidatePlan.sharedValidatePlanGetLastReflection(plan, mainName, null, (ln) -> System.err.println(ln), (diag) -> {}) != null;
   }
 
   public static ValidatePlan.CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes) throws Exception {
-    return ValidatePlan.sharedCompileCode(filename, code, includes, (String ln) -> System.err.println(ColorUtilTools.prefix(ln, ANSI.Red)));
+    return ValidatePlan.sharedCompileCode(filename, null, code, includes, (String ln) -> System.err.println(ColorUtilTools.prefix(ln, ANSI.Red)), (diag) -> {});
   }
 }

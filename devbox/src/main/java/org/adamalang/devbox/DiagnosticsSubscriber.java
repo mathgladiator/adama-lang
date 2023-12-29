@@ -17,23 +17,9 @@
 */
 package org.adamalang.devbox;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
-public class Inputs {
-  public String developerIdentity;
-  public String rxhtmlPath;
-  public String assetPath;
-  public String microverse;
-  public String debugger;
-  public String localLibadamaPath;
-  public String environment;
-  public String preserveView;
-  public String types;
-  public String localPathForLibAdamaOverride;
-  public ObjectNode webConfig;
-  public int lspPort;
-
-  public Inputs() {
-    this.lspPort = 2423;
-  }
+/** since diagnostics flow indirectly and optionally, we use a subscriber model */
+public interface DiagnosticsSubscriber {
+  public void updated(ArrayNode report);
 }

@@ -214,13 +214,19 @@
 
     <arg-definition name="dump-to" type="string" short="d">
         <documentation>
-            Placeholder
+            Dump the output/result to the given file
         </documentation>
     </arg-definition>
 
     <arg-definition name="port" type="string" short="p">
         <documentation>
-            Placeholder
+            Port for a server
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="language-port" type="string" short="p">
+        <documentation>
+            Port for the language server
         </documentation>
     </arg-definition>
 
@@ -1030,6 +1036,7 @@
         <arg name="environment" default="test" />
         <arg name="preserve-view" default="true" />
         <arg name="types" default="types" />
+        <arg name="language-port" default="2423"/>
     </command>
 
 </cli>

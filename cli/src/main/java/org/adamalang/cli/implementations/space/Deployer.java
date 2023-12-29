@@ -37,7 +37,9 @@ public class Deployer {
     if (args.file == null && args.plan == null) {
       throw new Exception("require either --file or --plan");
     }
+    final String filename;
     if (args.file != null) {
+      filename = args.file;
       String singleScript = Files.readString(new File(args.file).toPath());
       ObjectNode plan = Json.newJsonObject();
       ObjectNode version = plan.putObject("versions").putObject("file");
@@ -46,9 +48,10 @@ public class Deployer {
       plan.putArray("plan");
       planJson = plan.toString();
     } else {
+      filename = args.plan;
       planJson = Files.readString(new File(args.plan).toPath());
     }
-    if (!CodeHandlerImpl.sharedValidatePlan(planJson)) {
+    if (!CodeHandlerImpl.sharedValidatePlan(planJson, filename)) {
       throw new Exception("Failed to validate plan");
     }
     ValidatePlan.validate(args.space, Json.parseJsonObject(planJson));

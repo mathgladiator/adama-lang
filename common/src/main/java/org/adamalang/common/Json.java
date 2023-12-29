@@ -30,6 +30,10 @@ public class Json {
     return MAPPER.createObjectNode();
   }
 
+  public static ArrayNode newJsonArray() {
+    return MAPPER.createArrayNode();
+  }
+
   public static ObjectNode parseJsonObject(final String json) {
     try {
       return parseJsonObjectThrows(json);

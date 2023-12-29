@@ -1950,7 +1950,7 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-f, --file", ANSI.Green) + " " + ColorUtilTools.prefix("<file>", ANSI.White) + " : A file.");
 			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
 			System.out.println("    " + ColorUtilTools.prefix("-i, --imports", ANSI.Green) + " " + ColorUtilTools.prefix("<imports>", ANSI.White) + " : A directory containing adama files to import into the main");
-			System.out.println("    " + ColorUtilTools.prefix("-d, --dump-to", ANSI.Green) + " " + ColorUtilTools.prefix("<dump-to>", ANSI.White) + " : Placeholder");
+			System.out.println("    " + ColorUtilTools.prefix("-d, --dump-to", ANSI.Green) + " " + ColorUtilTools.prefix("<dump-to>", ANSI.White) + " : Dump the output/result to the given file");
 		}
 	}
 	public static class CodeDiagramArgs {
@@ -2120,7 +2120,7 @@ public class Arguments {
 			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
 			System.out.println("    " + ColorUtilTools.prefix("adama code lsp", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
 			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
-			System.out.println("    " + ColorUtilTools.prefix("-p, --port", ANSI.Green) + " " + ColorUtilTools.prefix("<port>", ANSI.White) + " : Placeholder");
+			System.out.println("    " + ColorUtilTools.prefix("-p, --port", ANSI.Green) + " " + ColorUtilTools.prefix("<port>", ANSI.White) + " : Port for a server");
 		}
 	}
 	public static class CodeReflectDumpArgs {
@@ -2204,7 +2204,7 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-f, --file", ANSI.Green) + " " + ColorUtilTools.prefix("<file>", ANSI.White) + " : A file.");
 			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
 			System.out.println("    " + ColorUtilTools.prefix("-i, --imports", ANSI.Green) + " " + ColorUtilTools.prefix("<imports>", ANSI.White) + " : A directory containing adama files to import into the main");
-			System.out.println("    " + ColorUtilTools.prefix("-d, --dump-to", ANSI.Green) + " " + ColorUtilTools.prefix("<dump-to>", ANSI.White) + " : Placeholder");
+			System.out.println("    " + ColorUtilTools.prefix("-d, --dump-to", ANSI.Green) + " " + ColorUtilTools.prefix("<dump-to>", ANSI.White) + " : Dump the output/result to the given file");
 		}
 	}
 	public static class CodeValidatePlanArgs {
@@ -5170,6 +5170,7 @@ public class Arguments {
 		public String environment = "test";
 		public String preserveView = "true";
 		public String types = "types";
+		public String languagePort = "2423";
 		public static DevboxArgs from(String[] args, int start) {
 			DevboxArgs returnArgs = new DevboxArgs();
 			try {
@@ -5267,6 +5268,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-p":
+					case "--language-port": {
+						if (k+1 < args.length) {
+							returnArgs.languagePort = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -5297,6 +5309,7 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-e, --environment", ANSI.Green) + " " + ColorUtilTools.prefix("<environment>", ANSI.White));
 			System.out.println("    " + ColorUtilTools.prefix("-pv, --preserve-view", ANSI.Green) + " " + ColorUtilTools.prefix("<preserve-view>", ANSI.White));
 			System.out.println("    " + ColorUtilTools.prefix("-ty, --types", ANSI.Green) + " " + ColorUtilTools.prefix("<types>", ANSI.White));
+			System.out.println("    " + ColorUtilTools.prefix("-p, --language-port", ANSI.Green) + " " + ColorUtilTools.prefix("<language-port>", ANSI.White));
 		}
 	}
 	public static class DumpenvArgs {

@@ -92,7 +92,7 @@ public class ValidatePlan {
     }
   }
 
-  public static String sharedValidatePlanGetLastReflection(String plan, Consumer<String> log) {
+  public static String sharedValidatePlanGetLastReflection(String plan, String mainName, File includePath, Consumer<String> log, Consumer<ArrayNode> diagnostics) {
     ObjectNode node = Json.parseJsonObject(plan);
     JsonNode versionsNode = node.get("versions");
     JsonNode defaultNode = node.get("default");
@@ -112,7 +112,7 @@ public class ValidatePlan {
           success = false;
         } else if (entry.getValue().isTextual()) {
           try {
-            sharedCompileCode(entry.getKey(), entry.getValue().textValue(), new HashMap<>(), log);
+            sharedCompileCode(mainName, includePath, entry.getValue().textValue(), new HashMap<>(), log, diagnostics);
           } catch (Exception e) {
             reportVersionFailure(entry.getKey(), e, log);
             success = false;
@@ -144,7 +144,7 @@ public class ValidatePlan {
               }
             }
             try {
-              lastReflection = sharedCompileCode(entry.getKey(), main.textValue(), includes, log).reflection;
+              lastReflection = sharedCompileCode(mainName, includePath, main.textValue(), includes, log, diagnostics).reflection;
             } catch (Exception e) {
               reportVersionFailure(entry.getKey(), e, log);
               success = false;
@@ -206,11 +206,12 @@ public class ValidatePlan {
   private static class KnownException extends Exception {
   }
 
-  public static CompileResult sharedCompileCode(String filename, String code, HashMap<String, String> includes, Consumer<String> log) throws Exception {
+  public static CompileResult sharedCompileCode(String filename, File includePath, String code, HashMap<String, String> includes, Consumer<String> log, Consumer<ArrayNode> diagnostics) throws Exception {
     final var options = CompilerOptions.start().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
+    document.setIncludeRoot(includePath);
     document.setClassName("TempClass");
     final var tokenEngine = new TokenEngine(filename, code.codePoints().iterator());
     final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
@@ -218,12 +219,16 @@ public class ValidatePlan {
     parser.document().accept(document);
     boolean result = document.check(state);
     if (result) {
+      diagnostics.accept(Json.newJsonArray());
       String javaCode = document.compileJava(state);
       JsonStreamWriter reflect = new JsonStreamWriter();
       document.writeTypeReflectionJson(reflect);
       return new CompileResult(javaCode, reflect.toString());
     }
+    String potentialRoot = Pathing.removeLast(filename);
     ArrayNode parsed = (ArrayNode) (new JsonMapper().readTree(document.errorsJson()));
+    diagnostics.accept(parsed);
+    HashMap<String, String> normalized = new HashMap<>();
     for (int k = 0; k < parsed.size(); k++) {
       ObjectNode errorItem = (ObjectNode) parsed.get(k);
       int startLine = errorItem.get("range").get("start").get("line").intValue();
@@ -231,16 +236,25 @@ public class ValidatePlan {
       int startCharacter = errorItem.get("range").get("start").get("character").intValue();
       int endCharacter = errorItem.get("range").get("end").get("character").intValue();
       String file = errorItem.has("file") ? errorItem.get("file").textValue() : "unknown-file (bug)";
-      log.accept("[" + file + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "] :" + errorItem.get("message").textValue());
+      String nfile = normalized.get(file);
+      if (nfile == null) {
+        nfile = Pathing.removeCommonRootFromB(potentialRoot, file);
+        normalized.put(file, nfile);
+      }
+      log.accept("[" + nfile + ";start=" + startLine + ":" + startCharacter + ", end=" + endLine + ":" + endCharacter + "] :" + errorItem.get("message").textValue());
     }
     throw new KnownException();
   }
 
   private static void reportVersionFailure(String version, Exception e, Consumer<String> log) {
+    String prefix = "";
+    if (!"file".equals(version)) {
+      prefix = "version '" + version + "' ";
+    }
     if (!(e instanceof KnownException)) {
-      log.accept("version '" + version + "' failed to validate: " + e.getMessage());
+      log.accept( prefix + "failed to validate: " + e.getMessage());
     } else {
-      log.accept("version '" + version + "' failed to validate");
+      log.accept(prefix + "failed to validate");
     }
   }
 }

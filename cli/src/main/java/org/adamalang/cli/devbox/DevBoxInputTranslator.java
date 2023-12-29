@@ -52,6 +52,7 @@ public class DevBoxInputTranslator {
     inputs.types = args.types;
     inputs.localPathForLibAdamaOverride = args.config.get_nullable_string("local-libadama-path-default");
     inputs.webConfig = args.config.get_or_create_child("web");
+    inputs.lspPort = Integer.parseInt(args.languagePort);
     return inputs;
   }
 }

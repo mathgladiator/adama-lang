@@ -99,6 +99,7 @@ public class Document implements TopLevelDocumentHandler {
   private short assocIdGen;
   public final LinkedHashMap<String, DefineTemplate> templates;
   public final LinkedHashMap<String, DefineCronTask> cronTasks;
+  private File includeRoot;
 
   public Document() {
     autoClassId = 0;
@@ -139,10 +140,15 @@ public class Document implements TopLevelDocumentHandler {
     templates = new LinkedHashMap<>();
     authPipes = new ArrayList<>();
     cronTasks = new LinkedHashMap<>();
+    includeRoot = null;
   }
 
   public void setIncludes(Map<String, String> include) {
     this.includes.putAll(include);
+  }
+
+  public void setIncludeRoot(File includeRoot) {
+    this.includeRoot = includeRoot;
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -275,7 +281,7 @@ public class Document implements TopLevelDocumentHandler {
     if (codeToParseIntoDoc == null) {
       typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.import_name));
     } else {
-      final var tokenEngine = new TokenEngine(in.import_name, codeToParseIntoDoc.codePoints().iterator());
+      final var tokenEngine = new TokenEngine( includeRoot != null ? new File(includeRoot, in.import_name + ".adama").getAbsolutePath() : in.import_name + ".adama", codeToParseIntoDoc.codePoints().iterator());
       final var parser = new Parser(tokenEngine, rootScope);
       try {
         parser.document().accept(this);

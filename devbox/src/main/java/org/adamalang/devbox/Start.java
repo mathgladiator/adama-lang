@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.SelfClient;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.language.LanguageServer;
 import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.region.AdamaDeploymentSyncMetrics;
 import org.adamalang.runtime.data.Key;
@@ -43,10 +44,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -120,8 +118,9 @@ public class Start {
             defn.set(v.getKey(), v.getValue());
           }
         }
+        LanguageServer server = new LanguageServer(args.lspPort, terminal, alive);
         Services.install(defn, webClientBase, offload, (line) -> terminal.info(line));
-        verse = AdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types));
+        verse = AdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types), server.pubsub);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
@@ -131,6 +130,8 @@ public class Start {
             terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
             sync.watch(space.spaceName);
           }
+          terminal.info("lsp|starting language server on port " + args.lspPort);
+          server.spinup();
         }
       } else {
         terminal.error("verse|microverse: '" + args.microverse + "' is not present, using production");
