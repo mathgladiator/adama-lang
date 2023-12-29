@@ -28,6 +28,7 @@ import org.adamalang.common.Json;
 import org.adamalang.common.TimeMachine;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.devbox.DevCoreServiceFactory;
 import org.adamalang.devbox.DevPush;
 import org.adamalang.devbox.TerminalIO;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
@@ -36,6 +37,7 @@ import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.deploy.Linter;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.validators.ValidatePlan;
 import org.adamalang.web.client.WebClientBase;
 
 import java.io.File;
@@ -146,7 +148,7 @@ public class DevBoxAdamaMicroVerse {
           if (!defn.lastDeployedPlan.equals(plan)) {
             long start = System.currentTimeMillis();
             io.notice("adama|validating: " + defn.spaceName);
-            String newReflection = CodeHandlerImpl.sharedValidatePlanGetLastReflection(plan, (ln) -> io.error(ln));
+            String newReflection = ValidatePlan.sharedValidatePlanGetLastReflection(plan, (ln) -> io.error(ln));
             if (newReflection != null) {
               if (defn.lastReflection != null) {
                 List<String> issues = Linter.compare(defn.lastReflection, newReflection);

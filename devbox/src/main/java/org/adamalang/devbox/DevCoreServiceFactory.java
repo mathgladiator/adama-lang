@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.devbox;
+package org.adamalang.devbox;
 
 import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.CaravanMetrics;
@@ -27,7 +27,6 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeMachine;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.devbox.TerminalIO;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
