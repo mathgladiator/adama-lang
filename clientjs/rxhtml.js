@@ -3064,39 +3064,27 @@ var RxHTML = (function () {
     }
   };
 
-  transforms['dateFmt'] = function(format, d) {
+  transforms['date'] = function(format, d) {
     if (typeof (d) == "string") {
-      // only transform strings
+      // if date is not set, return empty string
       if (d == "1-01-01") return ""
 
-      // if datetime - strip out everything after the T
-      var s = d;
-      var k = s.indexOf('T');
-      if (k >= 0) {
-        s = s.substring(0, k);
-      }
+      const p = format.toLowerCase().split("/");
+      const opts = {};
+      p.forEach(f => {
+        const val = f.length > 2 ? "numeric" : "2-digit";
+        const keys = {"y": "year", "m": "month", "d": "day"}
+        opts[keys[f.charAt(0)]] = val;
+      })
 
-      let [year, month, day] = s.split("-");
-      let p = format.toLowerCase().split("/");
-      const yIndex = p.findIndex(x => x.includes("y"));
-      const mIndex = p.findIndex(x => x.includes("m"));
-      const dIndex = p.findIndex(x => x.includes("d"));
-
-      year = p[yIndex].length == 2 ? year.substring(2,4) : year;
-      month = p[mIndex].length == 1 ? parseInt(month) : month;
-      day = p[dIndex].length == 1 ? parseInt(day) : day;
-
-      const nd = new Array(p.length);
-      nd[yIndex] = year;
-      nd[mIndex] = month;
-      nd[dIndex] = day;
-
-      return nd.join("/");
+      // if not datetime, converting to one here to prevent timezone issues
+      const datetime = d.includes("T") ? d : d + "T00:00:00";
+      return new Date(datetime).toLocaleDateString('en-US', opts);
     } else {
       // do nothing
       return d;
     }
-  };
+  }
   
 
   self.RTR = function(name, transform) {
@@ -3110,8 +3098,9 @@ var RxHTML = (function () {
       return transforms[name];
     } 
     // check for date format
-    if (name.match(/^[mdy\/]{6,10}$/i)){
-      return x => transforms["dateFmt"](name, x);
+    if (name.startsWith("date-format")){
+      const [_, format]  = name.split(":");
+      return x => transforms["date"](format, x);
     }
     return function(x) { return x; };
   };
