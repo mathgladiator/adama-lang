@@ -18,7 +18,7 @@
 package org.adamalang.cli.probe;
 
 import org.adamalang.cli.devbox.Command;
-import org.adamalang.cli.devbox.TerminalIO;
+import org.adamalang.devbox.TerminalIO;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.MetricsFactory;

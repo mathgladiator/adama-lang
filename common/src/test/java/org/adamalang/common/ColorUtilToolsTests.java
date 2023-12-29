@@ -30,5 +30,6 @@ public class ColorUtilToolsTests {
     Assert.assertEquals("XYZ", ColorUtilTools.prefix("XYZ", ANSI.Red));
     Assert.assertEquals("XYZ", ColorUtilTools.prefixBold("XYZ", ANSI.Red));
     Assert.assertEquals("xyz           ", ColorUtilTools.justifyLeft("xyz", 14));
+    Assert.assertEquals("           xyz", ColorUtilTools.justifyRight("xyz", 14));
   }
 }

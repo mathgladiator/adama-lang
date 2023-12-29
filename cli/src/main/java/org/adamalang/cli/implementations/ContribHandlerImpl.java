@@ -21,7 +21,7 @@ import org.adamalang.GenerateTables;
 import org.adamalang.caravan.events.Events;
 import org.adamalang.common.ANSI;
 import org.adamalang.common.ColorUtilTools;
-import org.adamalang.cli.devbox.BundleRawJavaScriptForDevBox;
+import org.adamalang.devbox.BundleRawJavaScriptForDevBox;
 import org.adamalang.cli.implementations.docgen.BookGenerator;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
@@ -86,7 +86,7 @@ public class ContribHandlerImpl implements ContribHandler {
     System.out.println(ColorUtilTools.prefix("Bundling JavaScript for Web", ANSI.Cyan));
     Files.writeString(new File("web/src/main/java/org/adamalang/web/service/JavaScriptClient.java").toPath(), BundleJavaScript.bundle("./release/libadama.js", "./release/libadama-worker.js"));
     System.out.println(ColorUtilTools.prefix("Bundling JavaScript for DevBox", ANSI.Cyan));
-    Files.writeString(new File("cli/src/main/java/org/adamalang/cli/devbox/JavaScriptResourcesRaw.java").toPath(), BundleRawJavaScriptForDevBox.bundle(new File("./clientjs")));
+    Files.writeString(new File("devbox/src/main/java/org/adamalang/devbox/JavaScriptResourcesRaw.java").toPath(), BundleRawJavaScriptForDevBox.bundle(new File("./clientjs")));
     output.out();
   }
 
