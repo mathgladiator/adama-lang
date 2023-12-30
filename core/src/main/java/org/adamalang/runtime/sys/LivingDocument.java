@@ -351,7 +351,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return Math.max(__state.has() ? 25 : 0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
   }
 
-  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again, Integer sleepTime) {
+  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again, boolean againDueToDirtyWebQueue, Integer sleepTime) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -375,6 +375,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     __graph.compute();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
     int timeAgain = __deltaTime();
+    if (againDueToDirtyWebQueue) {
+      timeAgain = Math.max(timeAgain, 50);
+    }
     boolean goAgain = __state.has() || hasTimeouts || again;
     if (sleepTime != null) {
       if (goAgain) {
@@ -1851,10 +1854,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __simple_commit(who, request, null, 0L);
   }
 
-  private LivingDocumentChange __transaction_invalidate_cron(NtPrincipal who, final String request, long timestamp, boolean didWork, boolean again) {
+  private LivingDocumentChange __transaction_invalidate_cron(NtPrincipal who, final String request, long timestamp, boolean didWork, boolean againDueToDirtyWebQueue) {
     boolean againAgain = false;
     Integer sleepTime = null;
-    if (!again) {
+    if (!againDueToDirtyWebQueue) {
       if (__optimisticNextCronCheck <= __time.get()) {
         // We set the cron check to MAX VALUE to find the minimum time of the next event
         __optimisticNextCronCheck = Long.MAX_VALUE;
@@ -1868,7 +1871,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         return __invalidation_queue_transfer(who, timestamp, request);
       }
     }
-    return __invalidate_trailer(who, request, again || againAgain, sleepTime);
+    return __invalidate_trailer(who, request, againDueToDirtyWebQueue || againAgain, againDueToDirtyWebQueue, sleepTime);
   }
 
   /** transaction: an invalidation is happening on the document (no monitor) */

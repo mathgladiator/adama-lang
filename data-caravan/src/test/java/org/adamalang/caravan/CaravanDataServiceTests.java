@@ -284,15 +284,22 @@ public class CaravanDataServiceTests {
         Assert.assertEquals("{\"x\":4,\"y\":11}", cb_GetCompactedResults.value);
         Assert.assertEquals(5, cb_GetCompactedResults.reads);
       }
+
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
         setup.service.snapshot(KEY1, new DocumentSnapshot(5, "{\"x\":12,\"y\":12}", 1, 1234L), cb_CompactWorks);
+        cb_CompactWorks.assertFailure(729311);
+      }
+
+      {
+        SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
+        setup.service.snapshot(KEY1, new DocumentSnapshot(4, "{\"x\":12,\"y\":12}", 1, 1234L), cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
         Assert.assertEquals("{\"x\":12,\"y\":12}", cb_GetCompactedResults.value);
-        Assert.assertEquals(1, cb_GetCompactedResults.reads);
+        Assert.assertEquals(2, cb_GetCompactedResults.reads);
       }
 
       SimpleMockCallback cb_InitFailAlreadyExists = new SimpleMockCallback();
@@ -468,7 +475,6 @@ public class CaravanDataServiceTests {
       RestoreDebuggerStdErr.print(writes);
       RestoreDebuggerStdErr.print(filtered);
       Assert.assertEquals(writes.size(), filtered.size());
-
     });
   }
 }
