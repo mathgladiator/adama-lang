@@ -376,7 +376,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
     int timeAgain = __deltaTime();
     if (againDueToDirtyWebQueue) {
-      timeAgain = Math.max(timeAgain, 50);
+      timeAgain = Math.max(timeAgain, 10); // 100 web requests/second
     }
     boolean goAgain = __state.has() || hasTimeouts || again;
     if (sleepTime != null) {
@@ -1951,6 +1951,11 @@ public abstract class LivingDocument implements RxParent, Caller {
           } catch (ComputeBlockedException cbe) {
             __revert();
             __time.set(timeBackup);
+            // the web request got blocked, so we let the future delivery invalidate the system so
+            // we are not polling until the message arrives. We also signal that work was done (because it was to drive the queue)
+            // so we don't perform any other actions
+            dirtyLeft = 0;
+            workDone = true;
           }
         }
       }
