@@ -794,6 +794,14 @@
             <arg name="output" />
         </command>
 
+        <command name="forensics">
+            <documentation>
+                Dive into a data store and recover snapshots
+            </documentation>
+            <arg name="input" />
+            <arg name="output" />
+        </command>
+
         <command name="explain">
             <documentation>
                 Explain the history of a value at a path

@@ -23,4 +23,5 @@ import org.adamalang.cli.runtime.Output.*;
 public interface OpsHandler {
   void compact(OpsCompactArgs args, YesOrError output) throws Exception;
   void explain(OpsExplainArgs args, YesOrError output) throws Exception;
+  void forensics(OpsForensicsArgs args, YesOrError output) throws Exception;
 }

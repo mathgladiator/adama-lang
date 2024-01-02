@@ -743,6 +743,16 @@ public class MainRouter {
                opsHandler.explain(opsArgs, out);
                return 0;
             }
+            case "forensics": {
+              OpsForensicsArgs opsArgs = OpsForensicsArgs.from(args, 2);
+              if (opsArgs == null) {
+                OpsForensicsArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               opsHandler.forensics(opsArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {
