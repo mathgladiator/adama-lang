@@ -72,7 +72,7 @@ public class OpsHandlerImpl implements OpsHandler {
     return -1;
   }
 
-  private static void scan(File file, Function<ObjectNode, Boolean> criteria, String output) throws Exception {
+  private static void scan(File file, Function<ObjectNode, Boolean> criteria, int minSize, String output) throws Exception {
     RandomAccessFile store = new RandomAccessFile(file, "r");
     try {
       long size = file.length();
@@ -88,9 +88,11 @@ public class OpsHandlerImpl implements OpsHandler {
               store.readFully(found);
               String str = new String(found, StandardCharsets.UTF_8);
               ObjectNode recovered = Json.parseJsonObject(str);
-              if (recovered.has("__seq")) {
+              at = end - 1;
+              if (recovered.has("__seq") && found.length >= minSize) {
                 if (criteria.apply(recovered)) {
-                  System.out.println("Found:" + recovered.size() + " bytes at " + at);
+                  double percent = Math.round(10000.0 * at / size) / 100.0;
+                  System.out.println("Found:" + found.length + " bytes at " + at + "[" + percent + "]");
                   Files.writeString(new File(output + "." + at + ".json").toPath(), recovered.toPrettyString());
                 }
               }
@@ -106,7 +108,7 @@ public class OpsHandlerImpl implements OpsHandler {
 
   @Override
   public void forensics(Arguments.OpsForensicsArgs args, Output.YesOrError output) throws Exception {
-    scan(new File(args.input), (node) -> true, args.output);
+    scan(new File(args.input), (node) -> true, Integer.parseInt(args.minSize), args.output);
     output.out();
   }
 

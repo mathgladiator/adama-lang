@@ -97,8 +97,8 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected ZoneId __timezoneCachedZoneId;
   private int __currentViewId;
   private String __preemptedStateOnNextComputeBlocked = null;
-  private String __space;
-  private String __key;
+  protected String __space;
+  protected String __key;
   private Deliverer __deliverer;
   private boolean __raisedDirtyCalled;
   private int __nextViewId;

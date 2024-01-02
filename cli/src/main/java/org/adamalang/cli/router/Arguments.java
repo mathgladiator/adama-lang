@@ -3645,6 +3645,7 @@ public class Arguments {
 		public Config config;
 		public String input;
 		public String output;
+		public String minSize = "0";
 		public static OpsForensicsArgs from(String[] args, int start) {
 			OpsForensicsArgs returnArgs = new OpsForensicsArgs();
 			try {
@@ -3673,6 +3674,17 @@ public class Arguments {
 							returnArgs.output = args[k+1];
 							k++;
 							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-ms":
+					case "--min-size": {
+						if (k+1 < args.length) {
+							returnArgs.minSize = args[k+1];
+							k++;
 						} else {
 							System.err.println("Expected value for argument '" + args[k] + "'");
 							return null;
@@ -3710,6 +3722,8 @@ public class Arguments {
 			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
 			System.out.println("    " + ColorUtilTools.prefix("-i, --input", ANSI.Green) + " " + ColorUtilTools.prefix("<input>", ANSI.White) + " : An input file");
 			System.out.println("    " + ColorUtilTools.prefix("-o, --output", ANSI.Green) + " " + ColorUtilTools.prefix("<output>", ANSI.White) + " : A file (or directory) to output to.");
+			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-ms, --min-size", ANSI.Green) + " " + ColorUtilTools.prefix("<min-size>", ANSI.White) + " : Minimum size for considering a recovered json object.");
 		}
 	}
 	public static class DomainConfigureArgs {
