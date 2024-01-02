@@ -1915,6 +1915,8 @@ public abstract class LivingDocument implements RxParent, Caller {
         dirtyLeft = __webQueue.size();
         Iterator<Map.Entry<Integer, WebQueueItem>> it = __webQueue.iterator();
         while (it.hasNext()) {
+          dirtyLeft--;
+          workDone = true;
           WebQueueItem item = it.next().getValue();
           try {
             __random = new Random(seedUsed);
@@ -1943,7 +1945,6 @@ public abstract class LivingDocument implements RxParent, Caller {
                 }
               }
             }
-            dirtyLeft--;
             item.state = WebQueueState.Remove;
             __webQueue.dirty();
             __drive_webget_queue();
@@ -1953,14 +1954,12 @@ public abstract class LivingDocument implements RxParent, Caller {
             __time.set(timeBackup);
             // the web request got blocked, so we let the future delivery invalidate the system so
             // we are not polling until the message arrives. We also signal that work was done (because it was to drive the queue)
-            // so we don't perform any other actions
-            dirtyLeft = 0;
-            workDone = true;
+            // so we don't perform any other actions. This is why workDone = true
           }
         }
       }
       __drive_webget_queue();
-      return __transaction_invalidate_cron(who, request, timeBackup, workDone, dirtyLeft > 0);
+      return __transaction_invalidate_cron(who, request, timeBackup, workDone, false);
     } catch (final ComputeBlockedException blockedOn) {
       if (__preemptedStateOnNextComputeBlocked != null) {
         __state.set(__preemptedStateOnNextComputeBlocked);
