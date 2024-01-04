@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateWrapParametersTests extends BaseRxHtmlTest {
+public class TemplateCustomTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -37,17 +37,22 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\" port:y=\"my_error\">");
     gold.append("\n    var d=$.E('div');");
+    gold.append("\n    var h=$.WX(['y',$.pV(a),'my_error']);");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    gold.append("\n    var h=$.RX(['b']);");
-    gold.append("\n    h.a='123';");
-    gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
-    gold.append("\n      h.b=\"x \" + $.F(i,'y')");
-    gold.append("\n      h.__();");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\">");
+    gold.append("\n    var i=$.RX(['x']);");
+    gold.append("\n    $.Y2(a,i,'x','xyz',function(j) {");
+    gold.append("\n      i.x=\"hi \" + $.F(j,'xyz')");
+    gold.append("\n      i.__();");
     gold.append("\n    });");
-    gold.append("\n    $.WP(d,a,'param_wrapper',h,function(f,e,g) {");
+    gold.append("\n    $.C(d,a,'c',i,h,function(f,e,g) {");
+    gold.append("\n");
+    gold.append("\n      // <span>");
+    gold.append("\n      var j=$.E('span');");
+    gold.append("\n      j.append($.T('A child element'));");
+    gold.append("\n      f.append(j);");
     gold.append("\n    });");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -63,17 +68,22 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\" port:y=\"my_error\">");
     gold.append("\n    var d=$.E('div');");
+    gold.append("\n    var h=$.WX(['y',$.pV(a),'my_error']);");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    gold.append("\n    var h=$.RX(['b']);");
-    gold.append("\n    h.a='123';");
-    gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
-    gold.append("\n      h.b=\"x \" + $.F(i,'y')");
-    gold.append("\n      h.__();");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\">");
+    gold.append("\n    var i=$.RX(['x']);");
+    gold.append("\n    $.Y2(a,i,'x','xyz',function(j) {");
+    gold.append("\n      i.x=\"hi \" + $.F(j,'xyz')");
+    gold.append("\n      i.__();");
     gold.append("\n    });");
-    gold.append("\n    $.WP(d,a,'param_wrapper',h,function(f,e,g) {");
+    gold.append("\n    $.C(d,a,'c',i,h,function(f,e,g) {");
+    gold.append("\n");
+    gold.append("\n      // <span>");
+    gold.append("\n      var j=$.E('span');");
+    gold.append("\n      j.append($.T('A child element'));");
+    gold.append("\n      f.append(j);");
     gold.append("\n    });");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -94,7 +104,8 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
+    source.append("\n        <div rx:custom=\"c\" parameter:x=\"hi {xyz}\" port:y=\"my_error\">");
+    source.append("\n            <span>A child element</span>");
     source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");

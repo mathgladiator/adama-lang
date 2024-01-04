@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateWrapParametersTests extends BaseRxHtmlTest {
+public class TemplateManyViewPrefixTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -37,19 +37,22 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    // <connection name=\"myname\" use-domain=\"\" redirect=\"/sign-in\">");
+    gold.append("\n    var d=$.RX([]);");
+    gold.append("\n    d.name='myname';");
+    gold.append("\n    d.identity=true;");
+    gold.append("\n    d.redirect='/sign-in';");
+    gold.append("\n    $.DCONNECT(a,d);");
+    gold.append("\n    d.__();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    gold.append("\n    var h=$.RX(['b']);");
-    gold.append("\n    h.a='123';");
-    gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
-    gold.append("\n      h.b=\"x \" + $.F(i,'y')");
-    gold.append("\n      h.__();");
-    gold.append("\n    });");
-    gold.append("\n    $.WP(d,a,'param_wrapper',h,function(f,e,g) {");
-    gold.append("\n    });");
-    gold.append("\n    b.append(d);");
+    gold.append("\n    // <connection name=\"myname\" use-domain=\"\" redirect=\"/sign-in\">");
+    gold.append("\n    var e=$.RX([]);");
+    gold.append("\n    e.name='myname';");
+    gold.append("\n    $.P(b,a,e,function(b,f) {");
+    gold.append("\n      b.append($.L($.pV(f),'xyz'));");
+    gold.append("\n    },function(b,f) {");
+    gold.append("\n    },false);");
+    gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -63,19 +66,22 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    // <connection name=\"myname\" use-domain=\"\" redirect=\"/sign-in\">");
+    gold.append("\n    var d=$.RX([]);");
+    gold.append("\n    d.name='myname';");
+    gold.append("\n    d.identity=true;");
+    gold.append("\n    d.redirect='/sign-in';");
+    gold.append("\n    $.DCONNECT(a,d);");
+    gold.append("\n    d.__();");
     gold.append("\n");
-    gold.append("\n    // <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    gold.append("\n    var h=$.RX(['b']);");
-    gold.append("\n    h.a='123';");
-    gold.append("\n    $.Y2(a,h,'b','y',function(i) {");
-    gold.append("\n      h.b=\"x \" + $.F(i,'y')");
-    gold.append("\n      h.__();");
-    gold.append("\n    });");
-    gold.append("\n    $.WP(d,a,'param_wrapper',h,function(f,e,g) {");
-    gold.append("\n    });");
-    gold.append("\n    b.append(d);");
+    gold.append("\n    // <connection name=\"myname\" use-domain=\"\" redirect=\"/sign-in\">");
+    gold.append("\n    var e=$.RX([]);");
+    gold.append("\n    e.name='myname';");
+    gold.append("\n    $.P(b,a,e,function(b,f) {");
+    gold.append("\n      b.append($.L($.pV(f),'xyz'));");
+    gold.append("\n    },function(b,f) {");
+    gold.append("\n    },false);");
+    gold.append("\n    e.__();");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -94,8 +100,9 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:wrap=\"param_wrapper\" parameter:a=\"123\" parameter:b=\"x {y}\">");
-    source.append("\n        </div>");
+    source.append("\n        <connection name=\"myname\" use-domain>");
+    source.append("\n            <lookup path=\"view:view:view:data:view:xyz\" />");
+    source.append("\n        </connection>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
@@ -104,7 +111,9 @@ public class TemplateWrapParametersTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"xyz\" : \"lookup\"");
+    gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();
   }

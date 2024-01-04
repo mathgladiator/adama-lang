@@ -30,7 +30,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.adama",
-				"match": "\\b(if|while|for|return|abort|block|break|continue|for|do|foreach|transition|preempt|invoke|maximum_history|delete_on_close|rpc|as)\\b"
+				"match": "\\b(if|else|while|for|return|abort|block|break|continue|for|do|foreach|transition|preempt|invoke|maximum_history|delete_on_close|rpc|as)\\b"
 			},{
 				"name": "keyword.control.adama",
 				"match": "@[a-z]*"

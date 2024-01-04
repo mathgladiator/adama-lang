@@ -114,6 +114,14 @@ public class Attributes {
     env.element.removeAttr("rx:monitor");
   }
 
+  public void _behavior() {
+    String behavior = env.element.attr("rx:behavior");
+    if (behavior != null) {
+      env.element.removeAttr("rx:behavior");
+      env.writer.tab().append("$.BHV(").append(eVar).append(",'").append(behavior).append("');").newline();
+    }
+  }
+
   public void _repeat() {
     StatePath path = StatePath.resolve(env.element.attr("rx:repeat"), env.stateVar);
     String childStateVar = env.pool.ask();
@@ -175,6 +183,49 @@ public class Attributes {
     obj.finish();
   }
 
+  public void _custom() {
+    String childStateVar = env.pool.ask();
+    String parentVar = env.pool.ask();
+    String caseVar = env.pool.ask();
+    TreeMap<String, StatePath> ports = new TreeMap<>();
+    {
+      ArrayList<String> axe = new ArrayList<>();
+      for (Attribute attr : env.element.attributes()) {
+        if (attr.getKey().startsWith("port:")) {
+          axe.add(attr.getKey());
+          ports.put(attr.getKey().substring(5), StatePath.resolve("view:" + attr.getValue(), env.stateVar));
+        }
+      }
+      for (String attrNameToAxe : axe) {
+        env.element.removeAttr(attrNameToAxe);
+      }
+    }
+    String writerObj = "{}";
+    if (ports.size() > 0) {
+      writerObj = env.pool.ask();
+      env.writer.tab().append("var ").append(writerObj).append("=$.WX([");
+      boolean notFirst = false;
+      for (Map.Entry<String, StatePath> port : ports.entrySet()) {
+        if (notFirst) {
+          env.writer.append(",");
+        }
+        env.writer.append("'").append(port.getKey()).append("',");
+        env.writer.append(port.getValue().command);
+        env.writer.append(",'").append(port.getValue().name).append("'");
+      }
+      env.writer.append("]);").newline();
+    }
+    RxObject obj = new RxObject(env, RxObject.pullParameters(env.element));
+    env.writer.tab().append("$.C(").append(eVar).append(",").append(env.stateVar).append(",'").append(env.element.attr("rx:custom")).append("',").append(obj.rxObj).append(",").append(writerObj);
+    env.writer.append(",function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(caseVar);
+    env.pool.give(childStateVar);
+    env.pool.give(parentVar);
+    obj.finish();
+  }
+
   public void _template() {
     String name = env.element.attr("rx:template");
     String parentVar = env.pool.ask();
@@ -188,6 +239,18 @@ public class Attributes {
     env.pool.give(caseVar);
   }
 
+  private static boolean skip(String attributeKey) {
+    switch (attributeKey) {
+      case "rx:action":
+      case "rx:behavior":
+        return true;
+    }
+    if (attributeKey.startsWith("port:") || attributeKey.startsWith("parameter:")) {
+      return true;
+    }
+    return false;
+  }
+
   public void _base() {
     TreeSet<String> features = new TreeSet<>();
     if (env.element.tagName().equalsIgnoreCase("A")) {
@@ -198,6 +261,9 @@ public class Attributes {
     }
     for (Attribute attr : env.element.attributes().asList()) {
       if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:") || "ln:ch".equals(attr.getKey())) {
+        continue;
+      }
+      if (skip(attr.getKey())) {
         continue;
       }
       if (attr.hasDeclaredValue()) {

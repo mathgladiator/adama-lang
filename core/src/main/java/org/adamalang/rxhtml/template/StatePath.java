@@ -42,7 +42,7 @@ public class StatePath {
     String toParse = path.trim();
     ArrayList<PathInstruction> instructions = new ArrayList<>();
     int kColon = toParse.indexOf(':');
-    if (kColon >= 0) {
+    if (kColon > 0) {
       String switchTo = toParse.substring(0, kColon).trim().toLowerCase(Locale.ENGLISH);
       if ("view".equals(switchTo)) {
         toParse = toParse.substring(kColon + 1).stripLeading();
@@ -54,6 +54,19 @@ public class StatePath {
         instructions.add(new SwitchTo("data"));
       }
     }
+
+    // strip remaining data/view switches and only respect the first one
+    kColon = toParse.indexOf(':');
+    while (kColon > 0) {
+      String switchTo = toParse.substring(0, kColon).trim().toLowerCase(Locale.ENGLISH);
+      if ("view".equals(switchTo) || "data".equals(switchTo)) {
+        toParse = toParse.substring(kColon + 1).stripLeading();
+        kColon = toParse.indexOf(':');
+      } else {
+        kColon = -1;
+      }
+    }
+
     while (true) {
       if (toParse.startsWith("/")) {
         toParse = toParse.substring(1).stripLeading();
