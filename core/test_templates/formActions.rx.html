@@ -85,5 +85,10 @@
             <input name="files" />
             <input type="submit" />
         </form>
+
+        <form rx:action="dynamic:send" rx:success="reset">
+            <input name="__channel" value="the_channel" type="hidden" />
+            <input type="submit" />
+        </form>
     </page>
 </forest>

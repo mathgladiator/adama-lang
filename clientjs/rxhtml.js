@@ -3481,8 +3481,12 @@ var RxHTML = (function () {
       }
 
       var after = function() {
-        // TODO: pass through the debugger
-        state.data.connection.ptr.send(channel, msg, {
+        var channelToUse = channel;
+        if (channel == "__ds") {
+          channelToUse = msg['__channel'];
+          delete msg['__channel'];
+        }
+        state.data.connection.ptr.send(channelToUse, msg, {
           success: function (/* payload */) {
             fire_success(form);
           },
