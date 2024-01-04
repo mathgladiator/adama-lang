@@ -99,6 +99,8 @@ public class Document implements TopLevelDocumentHandler {
   private short assocIdGen;
   public final LinkedHashMap<String, DefineTemplate> templates;
   public final LinkedHashMap<String, DefineCronTask> cronTasks;
+  private File includeRoot;
+  private final SymbolIndex index;
 
   public Document() {
     autoClassId = 0;
@@ -139,10 +141,20 @@ public class Document implements TopLevelDocumentHandler {
     templates = new LinkedHashMap<>();
     authPipes = new ArrayList<>();
     cronTasks = new LinkedHashMap<>();
+    includeRoot = null;
+    index = new SymbolIndex();
+  }
+
+  public SymbolIndex getSymbolIndex() {
+    return this.index;
   }
 
   public void setIncludes(Map<String, String> include) {
     this.includes.putAll(include);
+  }
+
+  public void setIncludeRoot(File includeRoot) {
+    this.includeRoot = includeRoot;
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -275,8 +287,8 @@ public class Document implements TopLevelDocumentHandler {
     if (codeToParseIntoDoc == null) {
       typeChecker.issueError(in, String.format("Failed to include '%s' as it was not bound to the deployment", in.import_name));
     } else {
-      final var tokenEngine = new TokenEngine(in.import_name, codeToParseIntoDoc.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, rootScope);
+      final var tokenEngine = new TokenEngine( includeRoot != null ? new File(includeRoot, in.import_name + ".adama").getAbsolutePath() : in.import_name + ".adama", codeToParseIntoDoc.codePoints().iterator());
+      final var parser = new Parser(tokenEngine, index, rootScope);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {
@@ -296,7 +308,7 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     final var tokenEngine = new TokenEngine("link:" + link.name.text, defn.codePoints().iterator());
-    final var parser = new Parser(tokenEngine, rootScope);
+    final var parser = new Parser(tokenEngine, index, rootScope);
     try {
       parser.document().accept(this);
     } catch (AdamaLangException ale) {
@@ -550,7 +562,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     try {
       final var tokenEngine = new TokenEngine(filename, Files.readString(file.toPath()).codePoints().iterator());
-      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+      final var parser = new Parser(tokenEngine, index, Scope.makeRootDocument());
       parser.document().accept(this);
     } catch (final ScanException e) {
       createError(position, String.format("File '%s' failed to lex: %s", filename, e.getMessage()));

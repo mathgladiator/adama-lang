@@ -17,6 +17,7 @@
 */
 package org.adamalang.cli.devbox;
 
+import org.adamalang.devbox.Command;
 import org.junit.Assert;
 import org.junit.Test;
 

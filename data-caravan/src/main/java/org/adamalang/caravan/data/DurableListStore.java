@@ -110,7 +110,6 @@ public class DurableListStore {
     this.bytesWrittenToLog = 0;
     openLogForWriting();
     LOGGER.error("DurableListStore opened; type=" + (buffer.getClass()) + ", PlatformDependent: unsafe" + PlatformDependent.hasUnsafe() + ", prefer-direct:" + PlatformDependent.directBufferPreferred() + ", buffer-capacity:" + buffer.capacity());
-
   }
 
   /** build a report of the free disk space available; side-effect: emit metrics */

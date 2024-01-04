@@ -26,8 +26,9 @@ public class MainRouterGen {
         StringBuilder sb = new StringBuilder();
         sb.append("package " + packageName + ";\n\n");
         sb.append("import org.adamalang.ErrorTable;\n");
+        sb.append("import org.adamalang.common.ANSI;\n");
+        sb.append("import org.adamalang.common.ColorUtilTools;\n");
         sb.append("import org.adamalang.cli.Config;\n");
-        sb.append("import org.adamalang.cli.Util;\n");
         sb.append("import org.adamalang.cli.runtime.Output;\n");
         sb.append("import org.adamalang.cli.runtime.Output.*;\n");
         sb.append("import org.adamalang.common.ErrorCodeException;\n");
@@ -123,10 +124,10 @@ public class MainRouterGen {
         sb.append("      }\n");
         sb.append("    } catch (Exception ex) {\n");
         sb.append("      if (ex instanceof Config.BadException) {\n");
-        sb.append("        System.err.println(Util.prefix(\"[CONFIG ERROR]\", Util.ANSI.Red));\n");
+        sb.append("        System.err.println(ColorUtilTools.prefix(\"[CONFIG ERROR]\", ANSI.Red));\n");
         sb.append("        System.err.println(ex.getMessage());\n");
         sb.append("      } else if (ex instanceof ErrorCodeException) {\n");
-        sb.append("        System.err.println(Util.prefix(\"[ERROR]\", Util.ANSI.Red));\n");
+        sb.append("        System.err.println(ColorUtilTools.prefix(\"[ERROR]\", ANSI.Red));\n");
         sb.append("        System.err.println(\"#:\" + ((ErrorCodeException) ex).code);\n");
         sb.append("        System.err.println(\"Name:\" + ErrorTable.INSTANCE.names.get(((ErrorCodeException) ex).code));\n");
         sb.append("        System.err.println(\"Description:\" + ErrorTable.INSTANCE.descriptions.get(((ErrorCodeException) ex).code));\n");

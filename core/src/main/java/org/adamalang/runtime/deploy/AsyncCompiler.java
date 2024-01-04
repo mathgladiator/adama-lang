@@ -87,7 +87,7 @@ public class AsyncCompiler {
           document.setClassName(className);
           document.setIncludes(version.includes);
           final var tokenEngine = new TokenEngine("main", version.main.codePoints().iterator());
-          final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+          final var parser = new Parser(tokenEngine, document.getSymbolIndex(), Scope.makeRootDocument());
           parser.document().accept(document);
           if (!document.check(state.scope())) {
             if (failedWithBetterError.compareAndSet(false, true)) {

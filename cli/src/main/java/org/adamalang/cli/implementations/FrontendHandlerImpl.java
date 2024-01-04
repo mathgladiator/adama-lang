@@ -18,11 +18,7 @@
 package org.adamalang.cli.implementations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.helger.css.ECSSVersion;
-import com.helger.css.decl.CascadingStyleSheet;
-import com.helger.css.reader.CSSReader;
-import org.adamalang.cli.css.StudyEngine;
-import org.adamalang.cli.devbox.DevBoxStart;
+import org.adamalang.cli.devbox.DevBoxInputTranslator;
 import org.adamalang.cli.implementations.mobile.MobileCapacitor;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
@@ -31,11 +27,11 @@ import org.adamalang.common.Json;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
+import org.adamalang.devbox.Start;
 import org.adamalang.rxhtml.*;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -112,7 +108,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
 
   @Override
   public void devServer(Arguments.FrontendDevServerArgs args, Output.YesOrError output) throws Exception {
-    DevBoxStart.start(new DevBoxStart.DevBoxInputs(args));
+    Start.start(DevBoxInputTranslator.from(args));
   }
 
   @Override
@@ -141,18 +137,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
         node.put("local-libadama-path-default", args.localLibadamaPath);
       }
     });
-    output.out();
-  }
-
-  @Override
-  public void studyCss(Arguments.FrontendStudyCssArgs args, Output.YesOrError output) throws Exception {
-    final CascadingStyleSheet css = CSSReader.readFromFile(new File(args.input), StandardCharsets.UTF_8, ECSSVersion.CSS30);
-    StringBuilder constant = new StringBuilder();
-    ObjectNode db = Json.newJsonObject();
-    String study = StudyEngine.study(css, constant, db);
-    Files.writeString(new File("css.style.txt").toPath(), study);
-    Files.writeString(new File("css.style.constants.txt").toPath(), constant.toString());
-    Files.writeString(new File("css.style.db.json").toPath(), db.toPrettyString());
     output.out();
   }
 

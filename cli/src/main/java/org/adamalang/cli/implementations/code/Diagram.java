@@ -73,6 +73,9 @@ public class Diagram {
         return "maybe~" + summarizeType((ObjectNode) type.get("type"), depends) + "~";
       case "native_array":
         return "array~" + summarizeType((ObjectNode) type.get("type"), depends) + "~";
+      case "native_map":
+      case "reactive_map":
+        return "map~" + summarizeType((ObjectNode) type.get("domain"), depends) + "~,~" + summarizeType((ObjectNode) type.get("range"), depends) + "~";
       case "reactive_table":
         String tableRecord = type.get("record_name").textValue();
         depends.add(tableRecord);

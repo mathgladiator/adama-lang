@@ -543,6 +543,10 @@ public class CodeGenRecords {
     sb.append("@Override").writeNewline();
     sb.append("public void __dump(JsonStreamWriter __writer) {").tabUp().writeNewline();
     sb.append("__writer.beginObject();").writeNewline();
+    if (isRoot) {
+      sb.append("__writer.writeObjectFieldIntro(\"__snapshot\");").writeNewline();
+      sb.append("__writer.writeString(__space + \"/\" + __key);");
+    }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);

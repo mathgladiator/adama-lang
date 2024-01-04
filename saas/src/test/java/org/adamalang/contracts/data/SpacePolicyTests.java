@@ -37,6 +37,10 @@ public class SpacePolicyTests {
     return new AuthenticatedUser(id, new NtPrincipal(id + "", "adama"), null);
   }
 
+  public static AuthenticatedUser document(String agent, String space, String key) {
+    return new AuthenticatedUser(0, new NtPrincipal(agent, "doc/" + space + "/" + key), null);
+  }
+
   public static AuthenticatedUser simple(String agent, String authority) {
     return new AuthenticatedUser(-1, new NtPrincipal(agent, authority), null);
   }
@@ -111,5 +115,81 @@ public class SpacePolicyTests {
     Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
     Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "cake")));
     Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+  }
+
+  @Test
+  public void defaults_null_documents() {
+    SpacePolicy policy = of("{\"x\":{\"allowed-documents\":null}}");
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(2)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(4)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(2)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(4)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key")));
+  }
+
+  @Test
+  public void defaults_null_document_spaces() {
+    SpacePolicy policy = of("{\"x\":{\"allowed-document-spaces\":null}}");
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(2)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(4)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(2)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(4)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key")));
+  }
+
+
+  @Test
+  public void defaults_empty_documents() {
+    SpacePolicy policy = of("{\"x\":{\"allowed-documents\":[]}}");
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(2)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(4)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(2)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(4)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key")));
+  }
+
+  @Test
+  public void defaults_empty_document_spaces() {
+    SpacePolicy policy = of("{\"x\":{\"allowed-document-spaces\":[]}}");
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(2)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(4)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(2)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(4)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key")));
+  }
+
+
+  @Test
+  public void defaults_single_documents() {
+    SpacePolicy policy = of("{\"x\":{\"allowed-documents\":[\"space/key\"]}}");
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(2)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(4)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(2)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(4)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key")));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key2")));
+  }
+
+  @Test
+  public void defaults_single_document_spaces() {
+    SpacePolicy policy = of("{\"x\":{\"allowed-document-spaces\":[\"space\"]}}");
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(2)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.Owner, simple(4)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(2)));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(4)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple(3)));
+    Assert.assertFalse(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, simple("x", "ninja")));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key")));
+    Assert.assertTrue(policy.checkPolicy("x", DefaultPolicyBehavior.OwnerAndDevelopers, document("x", "space", "key2")));
   }
 }

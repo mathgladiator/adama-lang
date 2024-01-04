@@ -50,6 +50,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="min-size" type="int" short="ms">
+        <documentation>
+            Minimum size for considering a recovered json object.
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="asset-path" type="string" short="a">
         <documentation>
             The path to map for static assets.
@@ -214,13 +220,19 @@
 
     <arg-definition name="dump-to" type="string" short="d">
         <documentation>
-            Placeholder
+            Dump the output/result to the given file
         </documentation>
     </arg-definition>
 
     <arg-definition name="port" type="string" short="p">
         <documentation>
-            Placeholder
+            Port for a server
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="language-port" type="string" short="p">
+        <documentation>
+            Port for the language server
         </documentation>
     </arg-definition>
 
@@ -788,6 +800,15 @@
             <arg name="output" />
         </command>
 
+        <command name="forensics">
+            <documentation>
+                Dive into a data store and recover snapshots
+            </documentation>
+            <arg name="input" />
+            <arg name="output" />
+            <arg name="min-size" default="0" />
+        </command>
+
         <command name="explain">
             <documentation>
                 Explain the history of a value at a path
@@ -927,12 +948,6 @@
             <arg name="input" default="style.css" />
             <arg name="output" default="css.rx.html" />
         </command>
-        <command name="study-css">
-            <documentation>
-                Tool to study CSS
-            </documentation>
-            <arg name="input" default="style.css" />
-        </command>
         <command name="push-generate">
             <documentation>
                 Generate VAPID tokens for a devbox.
@@ -1036,6 +1051,7 @@
         <arg name="environment" default="test" />
         <arg name="preserve-view" default="true" />
         <arg name="types" default="types" />
+        <arg name="language-port" default="2423"/>
     </command>
 
 </cli>

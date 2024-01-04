@@ -20,6 +20,7 @@ package org.adamalang.cli;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.system.contracts.JsonConfig;
 
 import java.io.File;
@@ -58,7 +59,7 @@ public class Config extends JsonConfig {
     String _configPath = System.getProperty("user.home") + "/.adama";
     for (int k = 0; k < args.length; k++) {
       if ("--no-color".equals(args[k])) {
-        Util.setNoColor();
+        ColorUtilTools.setNoColor();
       } else if ("--config".equals(args[k]) && k + 1 < args.length) {
         _configPath = args[k + 1];
         k++;

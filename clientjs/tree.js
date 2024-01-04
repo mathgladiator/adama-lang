@@ -4,6 +4,23 @@ function AdamaTree() {
 
   var root = {};
   var all_subscriptions = {};
+  var settleId = 0;
+  var settlements = {};
+
+  // invoke all the settle subscriptions
+  var settle = function() {
+    var axe = [];
+    for (var k in settlements) {
+      var result = settlements[k]();
+      if (!result) {
+        // if the result isn't true, then unsubscribe
+        axe.push(k);
+      }
+    }
+    for (var k = 0; k < axe.length; k++) {
+      delete settlements[k];
+    }
+  };
 
   var clone_object = function (obj) {
     if (Array.isArray(obj)) {
@@ -321,8 +338,10 @@ function AdamaTree() {
   };
 
   this.update_in_progress = false;
+  this.updates = 0;
   this.update = function (delta) {
     this.update_in_progress = true;
+    this.updates++;
     var arr = []; // convert the subscriptions into an array
     for (var k in all_subscriptions) {
       arr.push(all_subscriptions[k]);
@@ -344,6 +363,7 @@ function AdamaTree() {
       fire_events(events);
     }
     this.update_in_progress = false;
+    settle();
   };
 
   // fix the callback structure from the user's happy land to the rigor of the format needed
@@ -465,9 +485,17 @@ function AdamaTree() {
       var events = [];
       merge({}, delta, [sub], events, true); // execute the callback now on a callback of all data to fire events and fill the subscription object
       fire_events(events);
+      if (this.updates > 0) {
+        settle();
+      }
       return function () { // return a method to unsubscribe
         delete all_subscriptions[S];
       };
     }
+  };
+
+  this.add_on_settle = function(callback) {
+    var id = settleId++;
+    settlements[id] = callback;
   };
 }

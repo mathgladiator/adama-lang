@@ -575,7 +575,7 @@ var RxHTML = (function () {
         obj[name] = value;
       }
       var delta = path_to(state.view, obj);
-      state[state.current].tree.update(delta);
+      state.view.tree.update(delta);
     });
   };
 
@@ -824,7 +824,6 @@ var RxHTML = (function () {
       var state = fork(priorState);
       childrenMaker(parent, self.pD(state), "" + value);
       subscribe_state(state, this);
-
     }.bind(swst);
     subscribe(priorState, name, sub);
   };
@@ -889,6 +888,7 @@ var RxHTML = (function () {
         if (valueToSet) {
           parentDom.value = valueToSet;
         }
+        parentDom.dispatchEvent(new Event("ordered"));
       }
     };
     subscribe(state, name, sub);
@@ -1125,11 +1125,28 @@ var RxHTML = (function () {
     } else if (type.startsWith("delay:")) {
       // delay will run after $delayTimeMS IF the dom element is still visible to the document
       var delayTimeMS = parseInt(type.substring(6));
-      window.setTimeout(function() {
+      window.setTimeout(function () {
         if (document.body.contains(dom)) {
           runnable();
         }
       }, delayTimeMS);
+    } else if (type == "settle") {
+      state.data.tree.add_on_settle(function() {
+        // if the DOM has been added to the body, then run the code
+        if (document.body.contains(dom)) {
+          runnable();
+          return true;
+        }
+        return false;
+      });
+    } else if (type == "settle-once") {
+      state.data.tree.add_on_settle(function() {
+        // if the DOM has been added to the body, then run the code
+        if (document.body.contains(dom)) {
+          runnable();
+        }
+        return false;
+      });
     } else {
       if (type == "click") {
         dom.addEventListener(type, function(event) {
@@ -1798,8 +1815,48 @@ var RxHTML = (function () {
     return obj;
   };
 
+  // <... rx:wrap=const >
+  var customs_components = {};
+  self.provideCustomComponent = function(name, foo) {
+    customs_components[name] = foo;
+  };
+
+  // RUNTIME | <tag ... rx:custom="?" port:$name=$output ... >...</tag> | assemble a writer object
+  self.WX = function(instructions) {
+    var writer = {};
+    for (var k = 0; k + 2 < instructions.length; k++) {
+      var obj = {};
+      writer[instructions[k]] = function(value) {
+        var s = this;
+        s.w[s.k] = value;
+        s.t.update(s.d);
+      }.bind({
+        d:path_to(instructions[1].view, obj),
+        w: obj,
+        k: instructions[2],
+        t: instructions[1].view.tree
+      });
+    }
+    return writer;
+  };
+  self.C = function (dom, state, name, rxobj, writer, childMakerWithCase) {
+    var obj = {
+      dom: dom,
+      state: state,
+      inputs: rxobj,
+      outputs: writer,
+      maker: childMakerWithCase,
+      framework: self
+    };
+    if (name in customs_components) {
+      customs_components[name](obj);
+    } else {
+      console.error("failed to find custom component: '" + name + "'");
+    }
+  };
+
   var wrappers = {};
-  var wrappers_onload = {};
+  var wrappers_onload = {}; // TODO: study if this can be removed
   self.PRWP = function (name, foo) {
     wrappers[name] = foo;
     if (name in wrappers_onload) {
@@ -1823,6 +1880,24 @@ var RxHTML = (function () {
       } else {
         wrappers_onload[name] = [loader];
       }
+    }
+  };
+
+  var behaviors = {};
+  self.defineBehavior = function(name, behavior) {
+    if (typeof(behavior) == 'function') {
+      behaviors[name] = behavior;
+    } else {
+      throw new Error("defining behavior '" + name + "' failed due to not a function")
+    }
+  };
+
+  // RUNTIME | rx:behavior=$name
+  self.BHV = function(dom, name) {
+    if (name in behaviors) {
+      behaviors[name];
+    } else {
+      console.log("couldn't find behavior:" + name);
     }
   };
 
@@ -2763,22 +2838,41 @@ var RxHTML = (function () {
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var req = get_form_and_pw(form);
-      var sm = {attempts:0};
-      sm.responder = {
-        success: function (payload) {
-          identities[identityName] = payload.identity;
-          localStorage.setItem("identity_" + identityName, payload.identity);
-          stash_identity(identityName, payload.identity, connection);
-          // TODO: blow away connections
-          self.goto(rxobj.rx_forward, false);
-          fire_success(form);
-        },
-        failure: function (reason) {
-          fire_failure(form, "Failed signing into document:" + reason);
-        }
-      };
-      nextStep(req, sm.responder);
+      var sendReq = function(req) {
+        var sm = {attempts:0};
+        sm.responder = {
+          success: function (payload) {
+            identities[identityName] = payload.identity;
+            localStorage.setItem("identity_" + identityName, payload.identity);
+            stash_identity(identityName, payload.identity, connection);
+            // TODO: blow away connections
+            self.goto(rxobj.rx_forward, false);
+            fire_success(form);
+          },
+          failure: function (reason) {
+            fire_failure(form, "Failed signing into document:" + reason);
+          }
+        };
+        nextStep(req, sm.responder);
+      }
+      var passwords = {};
+      var req = get_form(form, passwords);
+      if ('password' in passwords) {
+        req['password'] = passwords['password'];
+      }
+      if ('new_password' in passwords) {
+        connection.DocumentsHashPassword(passwords['new_password'], {
+          success: function (hashed_pw) {
+            req['new_password'] = hashed_pw.passwordHash;
+            sendReq(req);
+          },
+          failed: function () {
+            fire_failure(form, "Failed to hash password");
+          }
+        });
+      } else {
+        sendReq(req);
+      }
     }, true);
   }
 
@@ -2825,7 +2919,7 @@ var RxHTML = (function () {
     });
   };
 
-  // RUNTIME | rx:action=domain:sign-in
+  // RUNTIME | rx:action=domain:sign-in (to deprecate)
   self.adDSO = function (form, state, identityName, rxobj) {
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
@@ -2849,7 +2943,7 @@ var RxHTML = (function () {
     }, true);
   }
 
-  // RUNTIME | rx:action=document:sign-in
+  // RUNTIME | rx:action=document:sign-in (to deprecate)
   self.aDSO = function (form, state, identityName, rxobj) { // DEPRECATED
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
@@ -2870,7 +2964,7 @@ var RxHTML = (function () {
     }, true);
   };
 
-  // RUNTIME | rx:action=domain:sign-in-reset
+  // RUNTIME | rx:action=domain:sign-in-reset (to deprecate)
   self.adDSOr = function (form, state, identityName, rxobj) { // DEPRECATED
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
@@ -2891,7 +2985,7 @@ var RxHTML = (function () {
     }, true);
   }
 
-  // RUNTIME | rx:action=document:sign-in-reset
+  // RUNTIME | rx:action=document:sign-in-reset (to deprecate)
   self.aDSOr = function (form, state, identityName, rxobj) { // DEPRECATED
     rxobj.__ = function () { };
     form.addEventListener('submit', function (evt) {
@@ -3064,6 +3158,29 @@ var RxHTML = (function () {
     }
   };
 
+  transforms['date'] = function(format, d) {
+    if (typeof (d) == "string") {
+      // if date is not set, return empty string
+      if (d == "1-01-01") return ""
+
+      const p = format.toLowerCase().split("/");
+      const opts = {};
+      p.forEach(f => {
+        const val = f.length > 2 ? "numeric" : "2-digit";
+        const keys = {"y": "year", "m": "month", "d": "day"}
+        opts[keys[f.charAt(0)]] = val;
+      })
+
+      // if not datetime, converting to one here to prevent timezone issues
+      const datetime = d.includes("T") ? d : d + "T00:00:00";
+      return new Date(datetime).toLocaleDateString('en-US', opts);
+    } else {
+      // do nothing
+      return d;
+    }
+  }
+  
+
   self.RTR = function(name, transform) {
     transforms[name] = transform;
   };
@@ -3073,6 +3190,11 @@ var RxHTML = (function () {
   self.TR = function(name) {
     if (name in transforms) {
       return transforms[name];
+    } 
+    // check for date format
+    if (name.startsWith("date-format:")){
+      const [_, format]  = name.split(":");
+      return x => transforms["date"](format, x);
     }
     return function(x) { return x; };
   };
@@ -3313,12 +3435,33 @@ var RxHTML = (function () {
         });
       };
 
+      var postPassword = function() {
+        if ('new_password' in passwords) {
+          if (!('confirm-new_password' in passwords) || passwords['new_password'] == passwords['confirm-new_password']) {
+            connection.DocumentsHashPassword(passwords['new_password'], {
+              success: function (hashed_pw) {
+                msg['new_password'] = hashed_pw.passwordHash;
+                after();
+              },
+              failed: function () {
+                fire_failure(form, "Failed to hash password");
+              }
+            });
+
+          } else {
+            fire_failure(form, "Passwords mismatch for new password.");
+          }
+        } else {
+          postPassword();
+        }
+      }
+
       if ('password' in passwords) {
         if (!('confirm-password' in passwords) || passwords['password'] == passwords['confirm-password']) {
           connection.DocumentsHashPassword(passwords['password'], {
             success: function (hashed_pw) {
               msg['password'] = hashed_pw.passwordHash;
-              after();
+              postPassword();
             },
             failed: function () {
               fire_failure(form, "Failed to hash password");
@@ -3344,6 +3487,12 @@ var RxHTML = (function () {
   self.SA = function(dom, attr, value) {
     dom.setAttribute(attr, value);
   };
+  // RUNTIME: set the label of an option
+  self.SL = function(dom, value) {
+    dom.label = value;
+    dom.innerText = value;
+  };
+
   // for selects
   // d.value=$value;
   // $.SV(d,$value);

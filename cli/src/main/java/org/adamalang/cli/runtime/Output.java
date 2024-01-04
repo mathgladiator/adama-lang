@@ -19,7 +19,8 @@ package org.adamalang.cli.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.cli.Util;
+import org.adamalang.common.ANSI;
+import org.adamalang.common.ColorUtilTools;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,7 +46,7 @@ public class Output {
 
     public class YesOrError {
         public void out() {
-            System.out.println(Util.prefix("\u2705", Util.ANSI.Green));
+            System.out.println(ColorUtilTools.prefix("\u2705", ANSI.Green));
         }
     }
 
@@ -82,11 +83,11 @@ public class Output {
                 System.out.println("]");
                 return;
             }
-            Util.ANSI headingColor = Util.ANSI.Normal;
-            Util.ANSI valueColor = Util.ANSI.Normal;
+            ANSI headingColor = ANSI.Normal;
+            ANSI valueColor = ANSI.Normal;
             if (color) {
-                headingColor = Util.ANSI.Yellow;
-                valueColor = Util.ANSI.Green;
+                headingColor = ANSI.Yellow;
+                valueColor = ANSI.Green;
             }
             ArrayList<StringBuilder> table = new ArrayList<>();
             for (int i = 0; i < 3 + (2*objList.size()); i++) {
@@ -118,15 +119,15 @@ public class Output {
                 }
             }
              // Create heading table
-             table.get(0).append(Util.prefix("\u250C", headingColor));
-             table.get(1).append(Util.prefix("\u2502", headingColor));
-             table.get(table.size()-1).append(Util.prefix("\u2514", valueColor));
+             table.get(0).append(ColorUtilTools.prefix("\u250C", headingColor));
+             table.get(1).append(ColorUtilTools.prefix("\u2502", headingColor));
+             table.get(table.size()-1).append(ColorUtilTools.prefix("\u2514", valueColor));
              for (int i = 0; i < longestEach.length; i++) {
-                 table.get(0).append(Util.prefix("\u2500".repeat(longestEach[i]+2), headingColor));
-                 table.get(table.size()-1).append(Util.prefix("\u2500".repeat(longestEach[i]+2), valueColor));
+                 table.get(0).append(ColorUtilTools.prefix("\u2500".repeat(longestEach[i]+2), headingColor));
+                 table.get(table.size()-1).append(ColorUtilTools.prefix("\u2500".repeat(longestEach[i]+2), valueColor));
                  if (i < longestEach.length - 1) {
-                     table.get(0).append(Util.prefix("\u252C", headingColor));
-                     table.get(table.size()-1).append(Util.prefix("\u2534", valueColor));
+                     table.get(0).append(ColorUtilTools.prefix("\u252C", headingColor));
+                     table.get(table.size()-1).append(ColorUtilTools.prefix("\u2534", valueColor));
                  }
                  int spaces = (longestEach[i] + 2 - headers[i].length());
                  int leftPad = (spaces)/2;
@@ -134,7 +135,7 @@ public class Output {
                  if ((spaces) % 2 == 1) {
                     rightPad++;
                 }
-                 table.get(1).append(" ".repeat(leftPad)).append(Util.prefixBold(headers[i], Util.ANSI.Normal)).append(" ".repeat(rightPad)).append(Util.prefix("\u2502", headingColor));
+                 table.get(1).append(" ".repeat(leftPad)).append(ColorUtilTools.prefixBold(headers[i], ANSI.Normal)).append(" ".repeat(rightPad)).append(ColorUtilTools.prefix("\u2502", headingColor));
              }
              for (int i = 0; i < values.length ; i++) {
                 for (int j = 0; j < values[i].length ; j++) {
@@ -146,21 +147,21 @@ public class Output {
                         rightPad++;
                     }
                     if (j == 0)
-                        table.get(i*2 + 2).append(Util.prefix("\u251C", valueColor));
-                    table.get(i*2 + 2).append(Util.prefix("\u2504".repeat(longestEach[j]+2), valueColor));
+                        table.get(i*2 + 2).append(ColorUtilTools.prefix("\u251C", valueColor));
+                    table.get(i*2 + 2).append(ColorUtilTools.prefix("\u2504".repeat(longestEach[j]+2), valueColor));
                     if (j == longestEach.length - 1)
-                        table.get(i*2 + 2).append(Util.prefix("\u2524", valueColor));
+                        table.get(i*2 + 2).append(ColorUtilTools.prefix("\u2524", valueColor));
                     if (j < longestEach.length - 1)
-                        table.get(i*2 + 2).append(Util.prefix("\u253C", valueColor));
-                    table.get(i*2 + 3).append(Util.prefix("\u2502", valueColor));
+                        table.get(i*2 + 2).append(ColorUtilTools.prefix("\u253C", valueColor));
+                    table.get(i*2 + 3).append(ColorUtilTools.prefix("\u2502", valueColor));
                     table.get(i*2 + 3).append(" ".repeat(leftPad)).append(value).append(" ".repeat(rightPad));
                     if (j == longestEach.length - 1)
-                        table.get(i*2 + 3).append(Util.prefix("\u2502", valueColor));
+                        table.get(i*2 + 3).append(ColorUtilTools.prefix("\u2502", valueColor));
 
                     }
              }
-             table.get(0).append(Util.prefix("\u2510", headingColor));
-             table.get(table.size()-1).append(Util.prefix("\u2518", valueColor));
+             table.get(0).append(ColorUtilTools.prefix("\u2510", headingColor));
+             table.get(table.size()-1).append(ColorUtilTools.prefix("\u2518", valueColor));
              for (StringBuilder sb : table) {
                  System.out.println(sb);
              }

@@ -88,6 +88,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"ops", "--help"});
     Main.testMain(new String[]{"ops", "compact", "--help"});
     Main.testMain(new String[]{"ops", "explain", "--help"});
+    Main.testMain(new String[]{"ops", "forensics", "--help"});
     Main.testMain(new String[]{"domain", "--help"});
     Main.testMain(new String[]{"domain", "configure", "--help"});
     Main.testMain(new String[]{"domain", "list", "--help"});
@@ -104,7 +105,6 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"frontend", "push-generate", "--help"});
     Main.testMain(new String[]{"frontend", "rxhtml", "--help"});
     Main.testMain(new String[]{"frontend", "set-libadama", "--help"});
-    Main.testMain(new String[]{"frontend", "study-css", "--help"});
     Main.testMain(new String[]{"frontend", "validate", "--help"});
     Main.testMain(new String[]{"frontend", "wrap-css", "--help"});
     Main.testMain(new String[]{"services", "--help"});

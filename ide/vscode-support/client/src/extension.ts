@@ -1,14 +1,8 @@
-/* --------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- * ------------------------------------------------------------------------------------------ */
 
-import * as path from 'path';
 import * as net from 'net';
 import * as vscode from 'vscode';
 import { workspace, ExtensionContext } from 'vscode';
-import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
-
+import { LanguageClient, LanguageClientOptions } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
 const connectionInfo = {
@@ -16,29 +10,33 @@ const connectionInfo = {
     host: "127.0.0.1"
 };
 let extensionContext: ExtensionContext;
-
-let adamaTerminal: vscode.Terminal | undefined;
+let output: vscode.OutputChannel | undefined;
+var status: vscode.StatusBarItem | undefined;
 
 function writeToTerminal(...messages: string[]) {
-    if (!adamaTerminal) {
-        adamaTerminal = vscode.window.createTerminal('Adama Logs');
-    }
-    adamaTerminal.show();
-    for (const message of messages) {
-        adamaTerminal.sendText(`echo "${message}"`);
-    }
+  if (!output) {
+    output = vscode.window.createOutputChannel('Adama Logs');
+  }
+  if (!status) {
+    status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
+    status.backgroundColor = "#000000";
+    status.color = "#ffffff";
+    status.show();
+  }
+  output.appendLine(messages.join(" "));
+  status.text = messages.join(" ");
 }
 
-
 export function activate(context: ExtensionContext) {
-    writeToTerminal('Activating Adama extension...');
-    extensionContext = context;
-    startAdamaConfigCommand(context);
-    startLanguageClient(context);
+  writeToTerminal('[adama] activating adama extension');
+  extensionContext = context;
+  startAdamaConfigCommand(context);
+  startLanguageClient(context);
+  writeToTerminal('[adama] extension activation finished');
 }
 
 function startAdamaConfigCommand(context: ExtensionContext) {
-    writeToTerminal('Setting up Adama Configuration Command...');
+    writeToTerminal("[adama] command 'showAdamaConfig' registered which allows you to change the host:port for lsp support");
     const disposable = vscode.commands.registerCommand('showAdamaConfig', () => {
         createAdamaPanel();
     });
@@ -46,43 +44,30 @@ function startAdamaConfigCommand(context: ExtensionContext) {
 }
 
 function startLanguageClient(context: ExtensionContext) {
-    writeToTerminal('Starting Language Client...');
-    const serverOptions = getServerOptions(context);
+    writeToTerminal('[adama] language extension starting... (note: devbox should be running)');
+    const serverOptions = () => {
+        const socket = net.connect(connectionInfo);
+        socket.on('connect', () => {
+            writeToTerminal('[adama] found devbox @ ', connectionInfo.host, ":", '' + connectionInfo.port);
+        });
+        socket.on('error', (err) => {
+            writeToTerminal('[error] ' + err);
+            writeToTerminal('[note] if you restarted the devbox, then you need to start it again and re-load vscode');
+        });
+        return Promise.resolve({ writer: socket, reader: socket });
+    };
     const clientOptions: LanguageClientOptions = {
 		documentSelector: [{ scheme: 'file', language: 'adama' }],
 		synchronize: { fileEvents: workspace.createFileSystemWatcher('**/*.*') }
 	};
-
     client = new LanguageClient(
         'LanguageServer', 
-        'Language Server', 
+        'Adama Language Server', 
         serverOptions, 
         clientOptions
     );
-
     client.start();
-
-    vscode.languages.onDidChangeDiagnostics((diagnosticChangeEvent) => {
-        writeToTerminal("Diagnostics changed for: " + JSON.stringify(diagnosticChangeEvent.uris));
-    });    
 }
-
-function getServerOptions(context: ExtensionContext) {
-    writeToTerminal('Fetching server options...');
-    const serverModule = context.asAbsolutePath(path.join('server', 'out', 'server.js'));
-    
-    return () => {
-        const socket = net.connect(connectionInfo);
-        socket.on('connect', () => {
-            writeToTerminal('Successfully connected to server.');
-        });
-        socket.on('error', (err) => {
-            console.error('Error connecting to server:', err);
-        });
-        return Promise.resolve({ writer: socket, reader: socket });
-    };    
-}
-
 
 function createAdamaPanel() {
     const panel = vscode.window.createWebviewPanel('adamaConfig', 'Adama Config', vscode.ViewColumn.One, { enableScripts: true });
@@ -93,23 +78,26 @@ function createAdamaPanel() {
         }
     }, undefined, extensionContext.subscriptions);
 
-    panel.webview.html = generateWebviewHTML();
+    panel.webview.html = generateWebviewHTML(connectionInfo.host, connectionInfo.port);
+}
+
+function retry() {
+    if (client) {
+        client.stop().then(() => {
+            startLanguageClient(extensionContext);
+        });
+    } else {
+        startLanguageClient(extensionContext);
+    }
 }
 
 function handleConnectionUpdate(host: string, port: string) {
-    writeToTerminal(`Updating connection to Host: ${host}, Port: ${port}`);
+    writeToTerminal(`[adama] updating connection: ${host}, Port: ${port}`);
     if (isValidHost(host) && isValidPort(port)) {
         connectionInfo.host = host;
         connectionInfo.port = parseInt(port, 10);
-        if (client) {
-            client.stop().then(() => {
-                startLanguageClient(extensionContext);
-            });
-        } else {
-            startLanguageClient(extensionContext);
-        }
+        retry();
     }
-    vscode.window.showInformationMessage(`Connection updated to Host: ${host}, Port: ${port}`);
 }
 
 function isValidHost(host: string): boolean {
@@ -121,7 +109,7 @@ function isValidPort(port: string): boolean {
     return !isNaN(portNumber) && portNumber > 0 && portNumber < 65536;
 }
 
-function generateWebviewHTML() {
+function generateWebviewHTML(host: string, port: number) {
     return `
     <html>
         <head>
@@ -163,8 +151,8 @@ function generateWebviewHTML() {
         <body>
             <h1>Adama Configuration</h1>
             <div class="input-group">
-                <input type="text" id="hostInput" placeholder="localhost">
-                <input type="text" id="portInput" placeholder="2423">
+                <input type="text" id="hostInput" placeholder="${host}">
+                <input type="text" id="portInput" placeholder="${port}">
                 <button id="enableButton">Enable</button>
             </div>
         </body>

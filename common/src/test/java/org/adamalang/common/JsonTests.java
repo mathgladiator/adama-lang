@@ -26,6 +26,7 @@ public class JsonTests {
   public void coverage() throws Exception {
     Json.newJsonObject();
     Json.parseJsonObject("{}");
+    Json.newJsonArray();
     boolean failure = true;
     try {
       Json.parseJsonObjectThrows("x");

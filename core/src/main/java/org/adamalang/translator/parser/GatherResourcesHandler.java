@@ -21,6 +21,7 @@ import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.SymbolIndex;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
@@ -153,7 +154,7 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
     String code = resolver.apply(in.import_name);
     if (code != null) {
       final var tokenEngine = new TokenEngine(in.import_name, code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, rootScope);
+      final var parser = new Parser(tokenEngine, new SymbolIndex(), rootScope);
       try {
         parser.document().accept(this);
       } catch (AdamaLangException ale) {

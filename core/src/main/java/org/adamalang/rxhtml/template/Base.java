@@ -33,7 +33,11 @@ public class Base {
     "rise", "fall", // monitor
     "check", "uncheck", // checkboxes
     "keyup", "keydown", // keyboard antics
-    "load", "success", "failure", "submit", "submitted", "aftersync"};
+    "settle", "settle-once", // RxHTML: fires when the data tree has settled
+    "load", // RxHTML: fires after 1ms of creating the DOM
+    "ordered", // RxHTML: fires after elements within a DOM have been ordered
+    "success", "failure", // RxHTML + forms: success or failure fires when a form action is performed
+    "submit", "submitted", "aftersync"};
 
   private static String xmlnsOf(Environment env) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
@@ -71,7 +75,17 @@ public class Base {
     return delayEvents.toArray(new String[delayEvents.size()]);
   }
 
-  private static String writeIntro(Environment env, String xmlns) {
+  private static class IntroHandoff {
+    public final String eVar;
+    public final Attributes rx;
+
+    public IntroHandoff(String eVar, Attributes rx) {
+      this.eVar = eVar;
+      this.rx = rx;
+    }
+  }
+
+  private static IntroHandoff writeIntro(Environment env, String xmlns) {
     String eVar = env.pool.ask();
     env.writer.tab().append("var ").append(eVar).append("=$.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
     Attributes rx = new Attributes(env, eVar);
@@ -87,11 +101,10 @@ public class Base {
     for (String delay : extractDelayEvents(env)) {
       rx._delay(delay);
     }
-
     if (env.element.hasAttr("rx:link")) {
       env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(",'").append(env.element.attr("rx:link")).append("',$);").newline();
     }
-    return eVar;
+    return new IntroHandoff(eVar, rx);
   }
 
   private static int countAttr(Element element, String... attrs) {
@@ -105,7 +118,7 @@ public class Base {
   }
 
   private static void body(Environment env, String eVar) {
-    if (countAttr(env.element, "rx:iterate", "rx:repeat", "rx:if", "rx:ifnot", "rx:wrap", "rx:switch", "rx:template") > 1) {
+    if (countAttr(env.element, "rx:iterate", "rx:repeat", "rx:if", "rx:ifnot", "rx:wrap", "rx:custom", "rx:switch", "rx:template") > 1) {
       env.feedback.warn(env.element, "Too many incompatible rx:flags");
     }
     Attributes rx = new Attributes(env, eVar);
@@ -119,6 +132,8 @@ public class Base {
       rx._ifnot();
     } else if (env.element.hasAttr("rx:wrap")) {
       rx._wrap();
+    } else if (env.element.hasAttr("rx:custom")) {
+      rx._custom();
     } else if (env.element.hasAttr("rx:switch")) {
       rx._switch();
     } else if (env.element.hasAttr("rx:template")) {
@@ -141,7 +156,8 @@ public class Base {
     env.writeElementDebugIfTest();
 
     // introduce the element
-    String eVar = writeIntro(env, xmlns);
+    IntroHandoff handoff = writeIntro(env, xmlns);
+    String eVar = handoff.eVar;
 
     // start build a new environment
     Environment next = env.parentVariable(eVar);
@@ -166,6 +182,9 @@ public class Base {
     // if we have a parent variable, then append it
     if (env.parentVariable != null) {
       env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+    }
+    if (env.element.hasAttr("rx:behavior")) {
+      handoff.rx._behavior();
     }
     wrapUpRxCase(env, hasCase);
     if (returnVariable) {

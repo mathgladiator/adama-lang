@@ -32,7 +32,8 @@ public class ArgumentsGen {
     public static String generate(Group[] groups, Command[] mainCommands, String packageName) {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(packageName).append(";\n\n");
-        sb.append("import org.adamalang.cli.Util;\n");
+        sb.append("import org.adamalang.common.ANSI;\n");
+        sb.append("import org.adamalang.common.ColorUtilTools;\n");
         sb.append("import org.adamalang.cli.Config;\n\n");
         sb.append("public class Arguments {\n");
         // Can have a superclass that grabs the config
@@ -125,11 +126,11 @@ public class ArgumentsGen {
                 }
                 sb.append("\t\t}\n");
                 sb.append("\t\tpublic static void help() {\n");
-                sb.append("\t\t\tSystem.out.println(Util.prefix(\"").append(Common.escape(command.documentation)).append("\", Util.ANSI.Green));\n");
-                sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"USAGE:\", Util.ANSI.Yellow));\n");
-                sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"adama ").append(group.name).append(" ").append(command.name).append("\", Util.ANSI.Green)");
+                sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefix(\"").append(Common.escape(command.documentation)).append("\", ANSI.Green));\n");
+                sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefixBold(\"USAGE:\", ANSI.Yellow));\n");
+                sb.append("\t\t\tSystem.out.println(\"    \" + ColorUtilTools.prefix(\"adama ").append(group.name).append(" ").append(command.name).append("\", ANSI.Green)");
                 if (command.argList.length > 0) {
-                    sb.append("+ \" \" + Util.prefix(\"[FLAGS]\", Util.ANSI.Magenta)");
+                    sb.append("+ \" \" + ColorUtilTools.prefix(\"[FLAGS]\", ANSI.Magenta)");
                 }
                 sb.append(");\n");
                 ArrayList<Argument> requiredArgs = new ArrayList<>();
@@ -141,15 +142,15 @@ public class ArgumentsGen {
                         requiredArgs.add(arg);
                 }
                 if (requiredArgs.size() > 0) {
-                    sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"FLAGS:\", Util.ANSI.Yellow));\n");
+                    sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefixBold(\"FLAGS:\", ANSI.Yellow));\n");
                     for (Argument arg: requiredArgs) {
-                        sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White) + \" : ").append(arg.definition.documentation).append("\");\n");
+                        sb.append("\t\t\tSystem.out.println(\"    \" + ColorUtilTools.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", ANSI.Green) + \" \" + ColorUtilTools.prefix(\"<").append(arg.name).append(">\", ANSI.White) + \" : ").append(arg.definition.documentation).append("\");\n");
                     }
                 }
                 if (optionalArgs.size() > 0) {
-                    sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"OPTIONAL FLAGS:\", Util.ANSI.Yellow));\n");
+                    sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefixBold(\"OPTIONAL FLAGS:\", ANSI.Yellow));\n");
                     for (Argument arg: optionalArgs) {
-                        sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White) + \" : ").append(arg.definition.documentation).append("\");\n");
+                        sb.append("\t\t\tSystem.out.println(\"    \" + ColorUtilTools.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", ANSI.Green) + \" \" + ColorUtilTools.prefix(\"<").append(arg.name).append(">\", ANSI.White) + \" : ").append(arg.definition.documentation).append("\");\n");
                     }
                 }
                 sb.append("\t\t}\n");
@@ -244,11 +245,11 @@ public class ArgumentsGen {
             }
             sb.append("\t\t}\n");
             sb.append("\t\tpublic static void help() {\n");
-            sb.append("\t\t\tSystem.out.println(Util.prefix(\"").append(Common.escape(command.documentation)).append("\", Util.ANSI.Green));\n");
-            sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"USAGE:\", Util.ANSI.Yellow));\n");
-            sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"adama ").append(command.name).append("\", Util.ANSI.Green)");
+            sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefix(\"").append(Common.escape(command.documentation)).append("\", ANSI.Green));\n");
+            sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefixBold(\"USAGE:\", ANSI.Yellow));\n");
+            sb.append("\t\t\tSystem.out.println(\"    \" + ColorUtilTools.prefix(\"adama ").append(command.name).append("\", ANSI.Green)");
             if (command.argList.length > 0) {
-                sb.append("+ \" \" + Util.prefix(\"[FLAGS]\", Util.ANSI.Magenta)");
+                sb.append("+ \" \" + ColorUtilTools.prefix(\"[FLAGS]\", ANSI.Magenta)");
             }
             sb.append(");\n");
             ArrayList<Argument> requiredArgs = new ArrayList<>();
@@ -260,15 +261,15 @@ public class ArgumentsGen {
                     requiredArgs.add(arg);
             }
             if (requiredArgs.size() > 0) {
-                sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"FLAGS:\", Util.ANSI.Yellow));\n");
+                sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefixBold(\"FLAGS:\", ANSI.Yellow));\n");
                 for (Argument arg: requiredArgs) {
-                    sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White));\n");
+                    sb.append("\t\t\tSystem.out.println(\"    \" + ColorUtilTools.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", ANSI.Green) + \" \" + ColorUtilTools.prefix(\"<").append(arg.name).append(">\", ANSI.White));\n");
                 }
             }
             if (optionalArgs.size() > 0) {
-                sb.append("\t\t\tSystem.out.println(Util.prefixBold(\"OPTIONAL FLAGS:\", Util.ANSI.Yellow));\n");
+                sb.append("\t\t\tSystem.out.println(ColorUtilTools.prefixBold(\"OPTIONAL FLAGS:\", ANSI.Yellow));\n");
                 for (Argument arg: optionalArgs) {
-                    sb.append("\t\t\tSystem.out.println(\"    \" + Util.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", Util.ANSI.Green) + \" \" + Util.prefix(\"<").append(arg.name).append(">\", Util.ANSI.White));\n");
+                    sb.append("\t\t\tSystem.out.println(\"    \" + ColorUtilTools.prefix(\"-").append(arg.definition.shortField).append(", --").append(arg.name).append("\", ANSI.Green) + \" \" + ColorUtilTools.prefix(\"<").append(arg.name).append(">\", ANSI.White));\n");
                 }
             }
             sb.append("\t\t}\n");

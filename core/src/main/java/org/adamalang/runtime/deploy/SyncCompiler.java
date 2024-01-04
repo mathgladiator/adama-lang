@@ -36,6 +36,7 @@ import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
+import org.adamalang.translator.tree.SymbolIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,7 +121,7 @@ public class SyncCompiler {
       document.setClassName(className);
       document.setIncludes(includes);
       final var tokenEngine = new TokenEngine("main", code.codePoints().iterator());
-      final var parser = new Parser(tokenEngine, Scope.makeRootDocument());
+      final var parser = new Parser(tokenEngine, document.getSymbolIndex(), Scope.makeRootDocument());
       parser.document().accept(document);
       if (!document.check(state.scope())) {
         throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());

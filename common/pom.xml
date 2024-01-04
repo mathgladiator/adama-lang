@@ -44,11 +44,6 @@
             <version>1.17.1</version>
         </dependency>
         <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-css</artifactId>
-            <version>7.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.commonmark</groupId>
             <artifactId>commonmark</artifactId>
             <version>0.21.0</version>

@@ -465,6 +465,7 @@ public class CaravanDataService implements ArchivingDataService {
     execute("patch", key, true, callback, (cached) -> {
       if (!cached.check(patches[0].seqBegin)) {
         metrics.caravan_seq_off.run();
+        LOGGER.error("failure-to-patch-head-patch: given:" + patches[0].seqBegin + " have:" +  cached.seq() + " for:" + key.space + "/" + key.key);
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         return;
       }
@@ -531,6 +532,11 @@ public class CaravanDataService implements ArchivingDataService {
     byte[] bytes = ByteArrayHelper.convert(buf);
 
     execute("snapshot", key, true, callback, (cached) -> {
+      if (cached.snapshotInvalid(snapshot.seq)) {
+        LOGGER.error("failed-snapshot-due-race: snapshot:" + snapshot.seq + " cached:" + cached.seq());
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_REJECT_FUTURE_SNAPSHOT));
+        return;
+      }
       Integer size = store.append(key, bytes, snapshot.seq, snapshot.assetBytes, () -> {
       });
       if (size == null) {

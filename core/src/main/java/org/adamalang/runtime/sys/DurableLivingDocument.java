@@ -322,7 +322,7 @@ public class DurableLivingDocument implements Queryable {
         writer.enableAssetTracking();
         document.__dump(writer);
         int toCompactNow = Math.max(0, size.get() - currentFactory.maximum_history);
-        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history, writer.getAssetBytes()), new Callback<>() {
+        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history, writer.getAssetBytes()), base.metrics.document_snapshot.wrap(new Callback<>() {
           @Override
           public void success(Integer value) {
             base.executor.execute(new NamedRunnable("compact-complete") {
@@ -344,7 +344,7 @@ public class DurableLivingDocument implements Queryable {
               }
             });
           }
-        });
+        }));
       }
     });
   }

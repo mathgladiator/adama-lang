@@ -18,8 +18,9 @@
 package org.adamalang.cli.implementations.space;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ANSI;
 import org.adamalang.cli.Config;
-import org.adamalang.cli.Util;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
@@ -49,12 +50,12 @@ public class Kickstarter {
     askTemplate();
     askSpaceName();
     if (space == null) {
-      System.out.print(Util.prefix("Failed to get space name resolved", Util.ANSI.Red));
+      System.out.print(ColorUtilTools.prefix("Failed to get space name resolved", ANSI.Red));
       return;
     }
     File spaceDir = new File(space);
     if (spaceDir.exists()) {
-      System.err.println(Util.prefix("The directory '" + space + "' already exists", Util.ANSI.Yellow));
+      System.err.println(ColorUtilTools.prefix("The directory '" + space + "' already exists", ANSI.Yellow));
     }
     spaceDir.mkdirs();
     File backendDir = new File(spaceDir, "backend");
@@ -112,9 +113,9 @@ public class Kickstarter {
     readme.append("\n");
 
     Files.writeString(new File(spaceDir, "README.md").toPath(), readme.toString());
-    System.out.println("Directory '" + Util.prefix(space, Util.ANSI.Cyan) + "' was created which contains a useful README.md\n");
+    System.out.println("Directory '" + ColorUtilTools.prefix(space, ANSI.Cyan) + "' was created which contains a useful README.md\n");
     System.out.println("Your app is available online at https://" + space + ".adama.games/ \n");
-    System.out.println(Util.prefix("Thank you for using Adama", Util.ANSI.Green));
+    System.out.println(ColorUtilTools.prefix("Thank you for using Adama", ANSI.Green));
     System.out.println();
   }
 
@@ -128,7 +129,7 @@ public class Kickstarter {
       Files.writeString(backendAdama.toPath(), response.get("plan").get("versions").get(response.get("plan").get("default").textValue()).get("main").textValue());
     } catch (Exception ex) {
       if (ex instanceof ErrorCodeException) {
-        System.err.println(Util.prefix("Failed downloading Adama Specification files (.adama):" + ((ErrorCodeException) ex).code, Util.ANSI.Red));
+        System.err.println(ColorUtilTools.prefix("Failed downloading Adama Specification files (.adama):" + ((ErrorCodeException) ex).code, ANSI.Red));
       } else {
         System.err.println("Exception: " + ex.getMessage());
       }
@@ -145,7 +146,7 @@ public class Kickstarter {
       Files.writeString(rxhtmlAdama.toPath(), response.get("rxhtml").textValue());
     } catch (Exception ex) {
       if (ex instanceof ErrorCodeException) {
-        System.err.println(Util.prefix("Failed downloading RxHTML files (*.rx.html):" + ((ErrorCodeException) ex).code, Util.ANSI.Red));
+        System.err.println(ColorUtilTools.prefix("Failed downloading RxHTML files (*.rx.html):" + ((ErrorCodeException) ex).code, ANSI.Red));
       } else {
         System.err.println("Exception: " + ex.getMessage());
       }
@@ -153,7 +154,7 @@ public class Kickstarter {
   }
 
   public void intro() {
-    System.out.println("Greetings fellow human! Welcome to the " + Util.prefix("Adama Project Kickstart Tool", Util.ANSI.Green) + "!");
+    System.out.println("Greetings fellow human! Welcome to the " + ColorUtilTools.prefix("Adama Project Kickstart Tool", ANSI.Green) + "!");
     System.out.println();
     System.out.println("This tool will help create a project for you to experience the wonder");
     System.out.println("of the Adama Platform... First, let's begin by picking a template to");
@@ -164,7 +165,7 @@ public class Kickstarter {
 
   public void askTemplate() {
     // TODO: list templates from production
-    System.out.print(Util.prefix("Template: ", Util.ANSI.Cyan));
+    System.out.print(ColorUtilTools.prefix("Template: ", ANSI.Cyan));
     this.template = System.console().readLine();
     // TODO: validate
   }
@@ -178,12 +179,12 @@ public class Kickstarter {
     System.out.println();
 
     while (true) {
-      System.out.print(Util.prefix("Space name: ", Util.ANSI.Cyan));
+      System.out.print(ColorUtilTools.prefix("Space name: ", ANSI.Cyan));
       this.space = System.console().readLine();
       try {
         ValidateSpace.validate(space);
       } catch (ErrorCodeException ex) {
-        System.out.println(Util.prefix("Invalid space name (reason=" + ex.code + ")!", Util.ANSI.Red) + " Try again please.");
+        System.out.println(ColorUtilTools.prefix("Invalid space name (reason=" + ex.code + ")!", ANSI.Red) + " Try again please.");
         System.out.println();
         continue;
       }
@@ -200,21 +201,21 @@ public class Kickstarter {
       try {
         connection.execute(request);
         System.out.println();
-        System.out.println(Util.prefix("Space created!", Util.ANSI.Green));
+        System.out.println(ColorUtilTools.prefix("Space created!", ANSI.Green));
         System.out.println();
         return;
       } catch (Exception ex) {
         if (ex instanceof ErrorCodeException) {
           if (((ErrorCodeException) ex).code == 130092 || ((ErrorCodeException) ex).code == 667658) {
-            System.err.println(Util.prefix("This space already exists!", Util.ANSI.Red));
-            System.err.println(Util.prefix("Do you want to use it anyway and setup your local project anyway? [yes/no]", Util.ANSI.Yellow));
+            System.err.println(ColorUtilTools.prefix("This space already exists!", ANSI.Red));
+            System.err.println(ColorUtilTools.prefix("Do you want to use it anyway and setup your local project anyway? [yes/no]", ANSI.Yellow));
             String yes = System.console().readLine().trim().toLowerCase();
             if (yes.length() > 0 && yes.charAt(0) == 'y') {
               return;
             }
           }
           // IF exists, then ask "Since this project already exists, do you want to just construct your environment"
-          System.err.println(Util.prefix("Failed:" + ((ErrorCodeException) ex).code + "!!", Util.ANSI.Red));
+          System.err.println(ColorUtilTools.prefix("Failed:" + ((ErrorCodeException) ex).code + "!!", ANSI.Red));
         } else {
           System.err.println("Exception: " + ex.getMessage());
           return;

@@ -26,7 +26,6 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerEvent {
@@ -120,6 +119,14 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
 
   public boolean check(int newSeq) {
     return seq + 1 == newSeq;
+  }
+
+  public boolean snapshotInvalid(int snapshotSeq) {
+    if (seq == 0) {
+      return false;
+    }
+    // we don't allow future snapshots to happen
+    return seq < snapshotSeq;
   }
 
   public String computeHeadPatch(int seqGoal) {

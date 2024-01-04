@@ -875,6 +875,8 @@ public class ErrorTable {
     retry.add(787507);
     names.put(734263, "CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY");
     descriptions.put(734263, "no description of error (yet)");
+    names.put(729311, "CARAVAN_REJECT_FUTURE_SNAPSHOT");
+    descriptions.put(729311, "no description of error (yet)");
     names.put(785490, "CARAVAN_OUT_OF_SPACE_SNAPSHOT");
     descriptions.put(785490, "no description of error (yet)");
     names.put(788560, "CARAVAN_OUT_OF_SPACE_PATCH");

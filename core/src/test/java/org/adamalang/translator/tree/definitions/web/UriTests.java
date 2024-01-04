@@ -21,6 +21,7 @@ import org.adamalang.common.web.UriMatcher;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.SymbolIndex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class UriTests {
   }
   private UriMatcher of(String path) throws Exception {
     TokenEngine engine = new TokenEngine("test", path.codePoints().iterator());
-    Parser parser = new Parser(engine, Scope.makeRootDocument());
+    Parser parser = new Parser(engine, new SymbolIndex(), Scope.makeRootDocument());
     return parser.uri().matcher();
   }
   @Test

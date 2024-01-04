@@ -193,8 +193,8 @@ public class AdamaLanguageServerProtocol {
     try {
       // create a lexer
       TokenEngine tokenEngine = new TokenEngine(code, code.codePoints().iterator());
-      Parser parser = new Parser(tokenEngine, Scope.makeRootDocument());
       Document document = new Document();
+      Parser parser = new Parser(tokenEngine, document.getSymbolIndex(), Scope.makeRootDocument());
       parser.document().accept(document);
 
       // typecheck and compile the document

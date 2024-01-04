@@ -18,11 +18,6 @@
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>system</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.adamalang</groupId>
             <artifactId>apikit</artifactId>
             <version>MAIN</version>
         </dependency>
@@ -33,13 +28,8 @@
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>lsp</artifactId>
+            <artifactId>devbox</artifactId>
             <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline-reader</artifactId>
-            <version>3.24.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
