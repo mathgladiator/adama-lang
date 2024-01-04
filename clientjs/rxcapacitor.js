@@ -135,9 +135,10 @@ async function LinkCapacitor($, identityName) {
 // Method called when tapping on a notification
   PushNotifications.addListener('pushNotificationActionPerformed', function (action) {
     console.log('Push action performed: ' + JSON.stringify(action));
-    // TODO: to test iOS devices
-    // TODO : add logger
-    window.rxhtml.goto(action.notification.data.url, true);
+    $.bump("npap");
+    if (action.notification.data.url) {
+      window.rxhtml.goto(action.notification.data.url, true);
+    }
   });
 
   Network.addListener('networkStatusChange', status => {
