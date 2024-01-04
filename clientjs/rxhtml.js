@@ -684,12 +684,69 @@ var RxHTML = (function () {
     }.bind({prior:null}));
   };
 
-  // document-get
+  // RUNTIME | <local-storage-poll key=$key [ms=$ms]>
+  self.LoStPo = function(parent, priorState, rxObj, childMakerFound, childMakerNotFound) {
+    var unsub = make_unsub();
+    var sm = {};
+    sm.key = null;
+    sm.ms = 5000;
+    sm.last = "!";
+    sm.p = function() {
+      if (this.key == null) {
+        return;
+      }
+      var value = localStorage.getItem(this.key);
+      if (value == this.last) {
+        return;
+      }
+      this.last = value;
+      fire_unsub(unsub);
+      nuke(parent);
+      var tree = new AdamaTree();
+      var state = {
+        service: priorState.service,
+        data: { connection: priorState.connection, tree: tree, delta: {}, parent: null, path: null },
+        view: new_delta_copy(priorState.view),
+        current: "data"
+      };
+      if (value == null) {
+        childMakerNotFound(parent, state);
+        subscribe_state(state, unsub);
+      } else {
+        childMakerFound(parent, state);
+        subscribe_state(state, unsub);
+        tree.update(tree.MakeDelta(JSON.parse(value)));
+      }
+
+    }.bind(sm);
+    rxObj.__ = debounce(50, function () {
+      if ('key' in rxObj) {
+        this.key = rxObj.key;
+      }
+      if ('ms' in rxObj) {
+        this.ms = parseInt(rxObj.ms);
+        if (isNaN(this.ms)) {
+          this.ms = 5000;
+        }
+      }
+      this.p();
+    }.bind(sm));
+
+    sm.timeout = function() {
+      if (document.body.contains(parent)) {
+        this.p();
+        window.setTimeout(this.timeout, this.ms);
+      }
+    }.bind(sm);
+    window.setTimeout(sm.timeout, 50);
+  };
+
+  // RUNTIME | <document-get space="$space" key="$key" url="$path" search:x="..." ...>
   self.DcG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed) {
     // TODO
   };
 
-  // RUNTIME <domain-get url="path" search:x="...">
+  // RUNTIME | <domain-get url="path" search:x="..." ...>
   self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed) {
     var unsub = make_unsub();
     rxObj.__ = debounce(50, function () {
@@ -756,7 +813,7 @@ var RxHTML = (function () {
       xhttp.send();
     }.bind({url:"", gen:0}));
     rxObj.__();
-  }
+  };
 
   // RUNTIME | <pick name=...>
   self.P = function (parent, priorState, rxObj, childMakerConnected, childMakerDisconnected, keepOpen) {

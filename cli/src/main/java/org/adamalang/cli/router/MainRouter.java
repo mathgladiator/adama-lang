@@ -705,6 +705,16 @@ public class MainRouter {
                documentHandler.list(documentArgs, out);
                return 0;
             }
+            case "list-push-tokens": {
+              DocumentListPushTokensArgs documentArgs = DocumentListPushTokensArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentListPushTokensArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               documentHandler.listPushTokens(documentArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {

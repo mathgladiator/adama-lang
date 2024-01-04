@@ -3499,6 +3499,105 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-l, --limit", ANSI.Green) + " " + ColorUtilTools.prefix("<limit>", ANSI.White) + " : Limit the returned items.");
 		}
 	}
+	public static class DocumentListPushTokensArgs {
+		public Config config;
+		public String space;
+		public String key;
+		public String domain;
+		public String agent;
+		public static DocumentListPushTokensArgs from(String[] args, int start) {
+			DocumentListPushTokensArgs returnArgs = new DocumentListPushTokensArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--space", "--key", "--domain", "--agent", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-s":
+					case "--space": {
+						if (k+1 < args.length) {
+							returnArgs.space = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-k":
+					case "--key": {
+						if (k+1 < args.length) {
+							returnArgs.key = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-d":
+					case "--domain": {
+						if (k+1 < args.length) {
+							returnArgs.domain = args[k+1];
+							k++;
+							missing[2] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-ag":
+					case "--agent": {
+						if (k+1 < args.length) {
+							returnArgs.agent = args[k+1];
+							k++;
+							missing[3] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("List push tokens for a specific agent within a document's authority", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama document list-push-tokens", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-s, --space", ANSI.Green) + " " + ColorUtilTools.prefix("<space>", ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + ColorUtilTools.prefix("-k, --key", ANSI.Green) + " " + ColorUtilTools.prefix("<key>", ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + ColorUtilTools.prefix("-d, --domain", ANSI.Green) + " " + ColorUtilTools.prefix("<domain>", ANSI.White) + " : The domain name");
+			System.out.println("    " + ColorUtilTools.prefix("-ag, --agent", ANSI.Green) + " " + ColorUtilTools.prefix("<agent>", ANSI.White) + " : The user id or agent part of a principal.");
+		}
+	}
 	public static class OpsCompactArgs {
 		public Config config;
 		public String input;

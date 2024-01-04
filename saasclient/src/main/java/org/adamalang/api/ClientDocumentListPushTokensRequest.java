@@ -15,17 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.cli.router;
+package org.adamalang.api;
 
-import org.adamalang.cli.router.Arguments.*;
-import org.adamalang.cli.runtime.Output.*;
-
-public interface DocumentHandler {
-  void attach(DocumentAttachArgs args, JsonOrError output) throws Exception;
-  void connect(DocumentConnectArgs args, YesOrError output) throws Exception;
-  void create(DocumentCreateArgs args, YesOrError output) throws Exception;
-  void delete(DocumentDeleteArgs args, YesOrError output) throws Exception;
-  void downloadArchive(DocumentDownloadArchiveArgs args, YesOrError output) throws Exception;
-  void list(DocumentListArgs args, JsonOrError output) throws Exception;
-  void listPushTokens(DocumentListPushTokensArgs args, JsonOrError output) throws Exception;
+/** generated request type for document/list-push-tokens */
+public class ClientDocumentListPushTokensRequest {
+  public String identity;
+  public String space;
+  public String key;
+  public String domain;
+  public String agent;
 }

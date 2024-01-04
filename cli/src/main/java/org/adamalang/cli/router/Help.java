@@ -170,6 +170,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("delete", 15), ANSI.Green) + "Delete a document");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("download-archive", 15), ANSI.Green) + "Download the latest archive backup");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("list", 15), ANSI.Green) + "List documents");
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("list-push-tokens", 15), ANSI.Green) + "List push tokens for a specific agent within a document's authority");
   }
   public static void displayOpsHelp() {
     System.out.println(ColorUtilTools.prefix("Operational tasks", ANSI.Green));

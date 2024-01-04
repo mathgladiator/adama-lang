@@ -82,7 +82,8 @@ public class GeneratedResponderErrorProxyTest {
     new SimpleResponder(responder).error(new ErrorCodeException(35));
     new SpaceListingResponder(responder).error(new ErrorCodeException(36));
     new StatsResponder(responder).error(new ErrorCodeException(37));
-    new YesResponder(responder).error(new ErrorCodeException(38));
-    Assert.assertEquals(741, errorCount.get());
+    new TokenStreamResponder(responder).error(new ErrorCodeException(38));
+    new YesResponder(responder).error(new ErrorCodeException(39));
+    Assert.assertEquals(780, errorCount.get());
   }
 }

@@ -138,6 +138,19 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DocumentListPushTokensRequest request, TokenStreamResponder responder) {
+    try {
+      List<DeviceSubscription> subscriptions = PushSubscriptions.list(nexus.database, request.domain, new NtPrincipal(request.agent, "doc/" + request.space + "/" + request.key));
+      for (DeviceSubscription sub : subscriptions) {
+        responder.next((long) sub.id, Json.parseJsonObject(sub.subscription), Json.parseJsonObject(sub.deviceInfo));
+      }
+      responder.finish();
+    } catch (Exception ex) {
+      responder.error(new ErrorCodeException(ErrorCodes.FAILED_LIST_PUSH_TOKENS_UNKNOWN));
+    }
+  }
+
+  @Override
   public void handle(Session session, DeinitRequest request, SimpleResponder responder) {
     try {
       if (!Spaces.list(nexus.database, request.who.id, "", 10).isEmpty()) {

@@ -163,6 +163,12 @@
         <validate service="org.adamalang.validators.ValidateToken"/>
     </parameter-definition>
 
+    <parameter-definition name="agent" type="string" missing-error="493556">
+        <documentation>
+            Agent within a principal
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="plan" type="json-object" missing-error="425999">
         <documentation>
             This 'plan' parameter contains multiple Adama scripts all gated on various rules.
@@ -1170,6 +1176,35 @@
         <parameter name="key"/>
         <documentation>
             Send an authorization request to the document
+        </documentation>
+    </method>
+
+    <field-definition name="subscription-info" type="json-object">
+        <documentation>
+            Subscription information for a push subscriber.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="device-info" type="json-object">
+        <documentation>
+            Device information for a push subscriber.
+        </documentation>
+    </field-definition>
+
+    <responder name="token-stream" stream="true">
+        <field name="id" />
+        <field name="subscription-info" />
+        <field name="device-info" />
+    </responder>
+
+    <method name="document/list-push-tokens" responder="token-stream" scope="global" policy="true" policy-failure-code="913242" policy-default="Owner">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="domain"/>
+        <parameter name="agent"/>
+        <documentation>
+            List push tokens for a given agent within a document
         </documentation>
     </method>
 
@@ -2291,7 +2326,7 @@
 494583
 455668
 454644
-493556
+
 
 -->
 

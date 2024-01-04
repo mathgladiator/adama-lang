@@ -708,6 +708,15 @@ class WebSocketAdamaConnection {
       request: {"method":"document/download-archive", "id":parId, "identity": identity, "space": space, "key": key}
     });
   }
+  DocumentListPushTokens(identity, space, key, domain, agent, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_stream({
+      id: parId,
+      responder: responder,
+      request: {"method":"document/list-push-tokens", "id":parId, "identity": identity, "space": space, "key": key, "domain": domain, "agent": agent}
+    });
+  }
   DocumentAuthorization(space, key, message, responder) {
     var self = this;
     var parId = self.__id();

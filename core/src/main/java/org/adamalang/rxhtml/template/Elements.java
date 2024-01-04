@@ -21,13 +21,36 @@ import org.adamalang.common.Escaping;
 import org.adamalang.common.Hashing;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class Elements {
+
+  private static boolean isElse(Node node) {
+    return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected") || node.hasAttr("rx:failed"));
+  }
+
+  private static Function<Node, Boolean> TRUE_BRANCH = (node) -> {
+    if (node instanceof Element) {
+      return !isElse(node);
+    } else {
+      return true;
+    }
+  };
+
+  private static Function<Node, Boolean> FALSE_BRANCH = (node) -> {
+    if (node instanceof Element) {
+      return isElse(node);
+    } else {
+      return false;
+    }
+  };
+
   public static void template(Environment env) { /* no-op */ }
 
   public static void page(Environment env) { /* no-op */ }
@@ -159,21 +182,9 @@ public class Elements {
     String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);
     env.writer.tab().append("$.VSy(").append(parentVar).append(",").append(env.stateVar).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
-      } else {
-        return true;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
     env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
-      } else {
-        return false;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(childStateVar);
   }
@@ -196,23 +207,10 @@ public class Elements {
     }
     String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);
-
     env.writer.tab().append("$.CSt(").append(parentVar).append(",").append(env.stateVar).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
-      } else {
-        return true;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
     env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
-      } else {
-        return false;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
     env.writer.tabDown().tab().append("});").newline();
   }
 
@@ -258,6 +256,51 @@ public class Elements {
     }
   }
 
+  public static void localstoragepoll(Environment env) {
+    String childStateVar = env.pool.ask();
+    String parentVar = soloParent(env);
+    RxObject obj = new RxObject(env, "key", "ms");
+    env.writer.tab().append("$.LoStPo(") //
+        .append(parentVar).append(",") //
+        .append(env.stateVar) //
+        .append(",").append(obj.rxObj).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
+    env.writer.tabDown().tab().append("}").append(");").newline();
+    obj.finish();
+    env.pool.give(childStateVar);
+    obj.finish();
+  }
+
+  public static void documentget(Environment env) {
+    String childStateVar = env.pool.ask();
+    String parentVar = soloParent(env);
+    ArrayList<String> parameters = new ArrayList<>();
+    parameters.add("url");
+    parameters.add("space");
+    parameters.add("key");
+    parameters.add("identity");
+    parameters.add("redirect");
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.getKey().startsWith("search:") || attr.getKey().startsWith("parameter:")) {
+        parameters.add(attr.getKey());
+      }
+    }
+    RxObject obj = new RxObject(env, parameters.toArray(new String[parameters.size()]));
+    env.writer.tab().append("$.DG(") //
+        .append(parentVar).append(",") //
+        .append(env.stateVar) //
+        .append(",").append(obj.rxObj).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
+    env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
+    env.writer.tabDown().tab().append("}").append(");").newline();
+    obj.finish();
+    env.pool.give(childStateVar);
+    obj.finish();
+  }
+
   public static void domainget(Environment env) {
     String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);
@@ -275,21 +318,9 @@ public class Elements {
         .append(parentVar).append(",") //
         .append(env.stateVar) //
         .append(",").append(obj.rxObj).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected") || node.hasAttr("rx:disconnected"));
-      } else {
-        return true;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
     env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected") || node.hasAttr("rx:failed"));
-      } else {
-        return false;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
     env.writer.tabDown().tab().append("}").append(");").newline();
     obj.finish();
     env.pool.give(childStateVar);
@@ -304,21 +335,9 @@ public class Elements {
     String childStateVar = env.pool.ask();
     String parentVar = soloParent(env);
     env.writer.tab().append("$.P(").append(parentVar).append(",").append(env.stateVar).append(",").append(obj.rxObj).append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return !(node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
-      } else {
-        return true;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
     env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
-    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), (node) -> {
-      if (node instanceof Element) {
-        return (node.hasAttr("rx:else") || node.hasAttr("rx:disconnected"));
-      } else {
-        return false;
-      }
-    });
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
     env.writer.tabDown().tab().append("}").append(env.element.hasAttr("keep-open") ? ",true" : ",false").append(");").newline();
     obj.finish();
     env.pool.give(childStateVar);
