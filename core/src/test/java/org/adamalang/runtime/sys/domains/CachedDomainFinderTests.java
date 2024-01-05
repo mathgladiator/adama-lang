@@ -35,7 +35,7 @@ public class CachedDomainFinderTests {
     AtomicBoolean alive = new AtomicBoolean(true);
     try {
       MockDomainFinder mock = new MockDomainFinder() //
-          .with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
+          .with("host", new Domain("domain", 1, "space", "key", null, false, "", null, 123L));
       CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 100000, executor, mock);
       CountDownLatch latch = new CountDownLatch(1);
       finder.find("host", new Callback<Domain>() {
@@ -66,7 +66,7 @@ public class CachedDomainFinderTests {
       int N = 50000;
       MockDomainFinder mock = new MockDomainFinder();
       for (int k = 0; k < N; k++) {
-        mock.with("host-" + k, new Domain("domain", 1, "space", "key", false, "", null, 123L));
+        mock.with("host-" + k, new Domain("domain", 1, "space", "key", null, false, "", null, 123L));
       }
       CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 100000, executor, mock);
       CountDownLatch latch = new CountDownLatch(20000);
@@ -97,7 +97,7 @@ public class CachedDomainFinderTests {
     SimpleExecutor executor = SimpleExecutor.create("x");
     try {
       MockDomainFinder mock = new MockDomainFinder();
-      mock.with("host", new Domain("domain", 1, "space", "key", false, "", null, 123L));
+      mock.with("host", new Domain("domain", 1, "space", "key", null, false, "", null, 123L));
       CountDownLatch latch = new CountDownLatch(5);
       CachedDomainFinder finder = new CachedDomainFinder(TimeSource.REAL_TIME, 100, 5, executor, new DomainFinder() {
         @Override

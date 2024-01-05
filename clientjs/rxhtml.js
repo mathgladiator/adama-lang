@@ -3617,6 +3617,62 @@ var RxHTML = (function () {
   self.ASRC = function (dom, value) {
     dom.setAttribute("src", value);
   };
+
+  self.findElementByIdInUnboundDom = function(dom, id) {
+    var febid = function (d, id) {
+      if ('id' in d) {
+        if (d.id == id) {
+          return d;
+        }
+      }
+      if ('children' in d) {
+        var arr = d.children;
+        var n = arr.length;
+        for (var k = 0; k < n; k++) {
+          var result = febid(arr[k], id);
+          if (result !== null) {
+            return result;
+          }
+        }
+      }
+      return null;
+    };
+    return febid(dom, id);
+  };
+  self.pollElement = function(dom, timeout, success, failure) {
+    var adm = function (dom, remain) {
+      if (remain < 0) {
+        failure();
+        return;
+      }
+      if (document.body.contains(dom)) {
+        success();
+      } else {
+        window.setTimeout(function () {
+          adm(dom, remain - 25);
+        }, 25);
+      }
+    };
+    adm(dom, timeout);
+  };
+  var libsLoaded = {};
+  self.loadLibrary = function(lib, callback) {
+    if (lib in libsLoaded) {
+      callback(libsLoaded[lib]);
+      return;
+    }
+    libsLoaded[lib] = false;
+    var script = document.createElement('script');
+    script.setAttribute('src',lib);
+    script.onload = function() {
+      libsLoaded[lib] = true;
+      callback(true);
+    };
+    script.onerror = function() {
+      callback(false);
+    };
+    document.head.appendChild(script);
+  };
   window.rxhtml = self;
   return self;
 })();

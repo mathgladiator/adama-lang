@@ -334,6 +334,25 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
+  /** domain/claim-apex */
+  public void domainClaimApex(ClientDomainClaimApexRequest request, Callback<ClientDomainVerifyResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "domain/claim-apex");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
+    pool.requestResponse(node, (obj) -> new ClientDomainVerifyResponse(obj), callback);
+  }
+
+  /** domain/redirect */
+  public void domainRedirect(ClientDomainRedirectRequest request, Callback<ClientSimpleResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "domain/redirect");
+    node.put("identity", request.identity);
+    node.put("domain", request.domain);
+    node.put("destination-domain", request.destinationDomain);
+    pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
+  }
+
   /** domain/configure */
   public void domainConfigure(ClientDomainConfigureRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

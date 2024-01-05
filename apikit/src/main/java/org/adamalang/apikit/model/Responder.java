@@ -68,7 +68,7 @@ public class Responder {
             }
             FieldDefinition fieldToUse = fields.get(fieldName);
             if (fieldToUse == null) {
-              throw new Exception("field must be valid");
+              throw new Exception("field must be valid; failed to find: '" + fieldName + "'");
             }
             fieldsForThisResponder.add(fieldToUse);
           }

@@ -27,6 +27,7 @@ public class ClientDomainRawResponse {
   public final Integer owner;
   public final String space;
   public final String key;
+  public final String forward;
   public final Boolean route;
   public final String certificate;
   public final Long timestamp;
@@ -37,6 +38,7 @@ public class ClientDomainRawResponse {
     this.owner = Json.readInteger(response, "owner");
     this.space = Json.readString(response, "space");
     this.key = Json.readString(response, "key");
+    this.forward = Json.readString(response, "forward");
     this.route = Json.readBool(response, "route");
     this.certificate = Json.readString(response, "certificate");
     this.timestamp = Json.readLong(response, "timestamp");
@@ -47,6 +49,7 @@ public class ClientDomainRawResponse {
     _next.put("owner", owner);
     _next.put("space", space);
     _next.put("key", key);
+    _next.put("forward", forward);
     _next.put("route", route);
     _next.put("certificate", certificate);
     _next.put("timestamp", timestamp);

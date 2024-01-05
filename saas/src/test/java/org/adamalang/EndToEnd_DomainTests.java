@@ -46,7 +46,7 @@ public class EndToEnd_DomainTests {
       Iterator<String> c5 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/map\",\"space\":\"newspace\",\"domain\":\"www.foo.com\"}");
       Assert.assertEquals("FINISH:{}", c5.next());
       Iterator<String> c6 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/list-by-space\",\"space\":\"newspace\"}");
-      Assert.assertEquals("STREAM:{\"domain\":\"www.foo.com\",\"space\":\"newspace\",\"key\":null,\"route\":false}", c6.next());
+      Assert.assertEquals("STREAM:{\"domain\":\"www.foo.com\",\"space\":\"newspace\",\"key\":null,\"route\":false,\"forward\":null}", c6.next());
       Assert.assertEquals("FINISH:null", c6.next());
       Iterator<String> c6x = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/configure\",\"domain\":\"www.foo.com\",\"product-config\":{\"x\":true}}");
       Assert.assertEquals("FINISH:{}", c6x.next());

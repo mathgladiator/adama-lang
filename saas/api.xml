@@ -342,6 +342,12 @@
                    error-code="406514"/>
     </parameter-definition>
 
+    <parameter-definition name="destination-domain" type="string" missing-error="454644" logged="true">
+        <documentation>
+            A domain name to forward to
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="certificate" type="string" optional="true">
         <documentation>
             A TLS/SSL Certificate encoded as json.
@@ -631,6 +637,12 @@
     <field-definition name="route" type="boolean">
         <documentation>
             Does the domain route GET to the document or the space.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="forward" type="string">
+        <documentation>
+            Does the domain have a forwarding address
         </documentation>
     </field-definition>
 
@@ -1091,6 +1103,40 @@
         </documentation>
     </method>
 
+    <field-definition name="claimed" type="boolean">
+        <documentation>
+            Has the apex domain been claimed and validated?
+        </documentation>
+    </field-definition>
+
+    <field-definition name="txt-token" type="string">
+        <documentation>
+            The TXT field to introduce under the domain to prove ownership
+        </documentation>
+    </field-definition>
+
+    <responder name="domain-verify">
+        <field name="claimed" />
+        <field name="txt-token" />
+    </responder>
+
+    <method name="domain/claim-apex" responder="domain-verify" scope="global" policy-manual="true" gen-service="true">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <documentation>
+            Claim an apex domain to be used only by your account
+        </documentation>
+    </method>
+
+    <method name="domain/redirect" responder="simple" scope="global" policy-manual="true" gen-service="true">
+        <parameter name="identity"/>
+        <parameter name="domain"/>
+        <parameter name="destination-domain"/>
+        <documentation>
+            Map a domain to another domain
+        </documentation>
+    </method>
+
     <method name="domain/configure" responder="simple" scope="global" policy-manual="true" gen-service="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
@@ -1125,6 +1171,7 @@
         <field name="space" />
         <field name="key" />
         <field name="route" />
+        <field name="forward" />
     </responder>
 
     <method name="domain/list" responder="domain-listing" scope="global">
@@ -1582,6 +1629,7 @@
         <field name="owner"/>
         <field name="space"/>
         <field name="key"/>
+        <field name="forward"/>
         <field name="route"/>
         <field name="certificate"/>
         <field name="timestamp"/>
@@ -2325,7 +2373,7 @@
 463863
 494583
 455668
-454644
+
 
 
 -->

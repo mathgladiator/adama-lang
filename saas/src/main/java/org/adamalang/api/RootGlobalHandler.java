@@ -80,6 +80,10 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, DomainMapRequest request, SimpleResponder responder);
 
+  public void handle(Session session, DomainClaimApexRequest request, DomainVerifyResponder responder);
+
+  public void handle(Session session, DomainRedirectRequest request, SimpleResponder responder);
+
   public void handle(Session session, DomainConfigureRequest request, SimpleResponder responder);
 
   public void handle(Session session, DomainReflectRequest request, ReflectionResponder responder);
@@ -184,6 +188,8 @@ public interface RootGlobalHandler {
       case "space/list":
       case "push/register":
       case "domain/map":
+      case "domain/claim-apex":
+      case "domain/redirect":
       case "domain/configure":
       case "domain/reflect":
       case "domain/map-document":

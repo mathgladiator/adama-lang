@@ -27,6 +27,7 @@ public class ClientDomainListingResponse {
   public final String space;
   public final String key;
   public final Boolean route;
+  public final String forward;
 
   public ClientDomainListingResponse(ObjectNode response) {
     this._original = response;
@@ -34,6 +35,7 @@ public class ClientDomainListingResponse {
     this.space = Json.readString(response, "space");
     this.key = Json.readString(response, "key");
     this.route = Json.readBool(response, "route");
+    this.forward = Json.readString(response, "forward");
   }
   public String toInternalJson() {
     ObjectNode _next = Json.newJsonObject();
@@ -41,6 +43,7 @@ public class ClientDomainListingResponse {
     _next.put("space", space);
     _next.put("key", key);
     _next.put("route", route);
+    _next.put("forward", forward);
     return _next.toString();
   }
 }
