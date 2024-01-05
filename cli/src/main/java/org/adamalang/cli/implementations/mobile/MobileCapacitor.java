@@ -93,10 +93,16 @@ public class MobileCapacitor {
     if (!(root.exists() && root.isDirectory())) {
       throw new Exception("root '" + rootPath + "' must exist");
     }
-    File capacitorConfig = new File(root, "capacitor.config.json");
-    if (!capacitorConfig.exists()) {
-      throw new Exception("root '" + rootPath + "' lacks capacitor.config.json which means it isn't a mobile template");
+    File iOScapacitorConfig = new File(root + "/ios/App/App/", "capacitor.config.json");
+    if (!iOScapacitorConfig.exists()) {
+      throw new Exception("root '" + rootPath + iOScapacitorConfig.getPath() + "' lacks capacitor.config.json which means it isn't a mobile-iOS template");
     }
+
+    File androidCapacitorConfig = new File(root + "/android/app/src/main/assets/", "capacitor.config.json");
+    if (!androidCapacitorConfig.exists()) {
+      throw new Exception("root '" + rootPath + androidCapacitorConfig.getPath() + "' lacks capacitor.config.json which means it isn't a mobile-Android template");
+    }
+
     File rootSrc = new File(root, "src");
     if (!(rootSrc.exists() && rootSrc.isDirectory())) {
       throw new Exception("path '" + rootPath + "/src' must exist");
@@ -143,10 +149,21 @@ public class MobileCapacitor {
         googleServices = MasterKey.decrypt(args.config.getMasterKey(), googleServices);
       }
       Files.writeString(new File(androidApp, "google-services.json").toPath(), googleServices);
-      ObjectNode capacitorConfigNode = Json.parseJsonObject(Files.readString(capacitorConfig.toPath()));
-      capacitorConfigNode.put("appId", appid);
-      capacitorConfigNode.put("appName", manifestJson.get("name").textValue());
-      Files.writeString(capacitorConfig.toPath(), capacitorConfigNode.toPrettyString());
+
+      // iOS with path : ios/App/App/capacitor.config.json
+      // Writing iOS specific configuration
+      ObjectNode iOSCapacitorConfigNode = Json.parseJsonObject(Files.readString(iOScapacitorConfig.toPath()));
+      iOSCapacitorConfigNode.put("appId", appid);
+      iOSCapacitorConfigNode.put("appName", manifestJson.get("name").textValue());
+      Files.writeString(iOScapacitorConfig.toPath(), iOSCapacitorConfigNode.toPrettyString());
+
+      // Android with path: /android/app/src/main/assets/capacitor.config.json
+      // Writing Android specific configuration
+      ObjectNode androidCapacitorConfigNode = Json.parseJsonObject(Files.readString(androidCapacitorConfig.toPath()));
+      androidCapacitorConfigNode.put("appId", appid);
+      androidCapacitorConfigNode.put("appName", manifestJson.get("name").textValue());
+      Files.writeString(androidCapacitorConfig.toPath(), androidCapacitorConfigNode.toPrettyString());
+
     } finally {
       webBase.shutdown();
     }
