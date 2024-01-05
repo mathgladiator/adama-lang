@@ -420,6 +420,18 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientBackupStreamResponse(obj), streamback);
   }
 
+  /** document/list-push-tokens */
+  public void documentListPushTokens(ClientDocumentListPushTokensRequest request, Stream<ClientTokenStreamResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/list-push-tokens");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("domain", request.domain);
+    node.put("agent", request.agent);
+    pool.requestStream(node, (obj) -> new ClientTokenStreamResponse(obj), streamback);
+  }
+
   /** document/authorization */
   public void documentAuthorization(ClientDocumentAuthorizationRequest request, Callback<ClientInitiationResponse> callback) {
     ObjectNode node = Json.newJsonObject();

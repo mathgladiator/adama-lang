@@ -36,6 +36,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
   private final NtMap<DomainTy, RangeTy> objects;
+  private boolean invalidated;
 
   public RxMap(final RxParent owner, final Codec<DomainTy, RangeTy> codec) {
     super(owner);
@@ -43,6 +44,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     this.objects = new NtMap<>();
     this.deleted = new LinkedHashMap<>();
     this.created = new HashSet<>();
+    this.invalidated = false;
   }
 
   @Override
@@ -62,6 +64,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public void __settle(Set<Integer> viewers) {
+    invalidated = false;
     for (RangeTy item : objects.storage.values()) {
       if (item instanceof RxParent) {
         ((RxParent) item).__settle(viewers);
@@ -125,11 +128,11 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       while (reader.notEndOfObject()) {
         final var key = codec.fromStr(reader.fieldName());
         if (reader.testLackOfNull()) {
-          var value = getOrCreate(key); // TODO: this leaks dirty
+          var value = getOrCreateAndMaybeSignalDirty(key, false);
           value.__insert(reader);
           created.remove(key);
         } else {
-          remove(key); // TODO: this may cause an excess dirty
+          removeAndMaybeSignalDirty(key, false);
         }
       }
     }
@@ -180,6 +183,10 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   public RangeTy getOrCreate(DomainTy key) {
+    return getOrCreateAndMaybeSignalDirty(key, true);
+  }
+
+  public RangeTy getOrCreateAndMaybeSignalDirty(DomainTy key, boolean signalDirty) {
     RangeTy value = objects.get(key);
     if (value != null) {
       return value;
@@ -190,7 +197,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       objects.put(key, value);
       return value;
     }
-    __raiseDirty();
+    if (signalDirty) {
+      __raiseDirty();
+    }
     value = codec.make(this);
     objects.put(key, value);
     value.__subscribe(this);
@@ -203,10 +212,16 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   public void remove(DomainTy key) {
+    removeAndMaybeSignalDirty(key, true);
+  }
+
+  public void removeAndMaybeSignalDirty(DomainTy key, boolean signalDirty) {
     RangeTy value = objects.removeDirect(key);
     if (value != null) {
       if (!created.contains(key)) {
-        __raiseDirty();
+        if (signalDirty) {
+          __raiseDirty();
+        }
         deleted.put(key, value);
       }
     }
@@ -235,7 +250,13 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public boolean __raiseInvalid() {
-    __raiseDirty();
+    if (!invalidated) {
+      invalidated = true;
+      __invalidateSubscribers();
+    }
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
     return true;
   }
 

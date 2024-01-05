@@ -612,6 +612,19 @@ public class Attributes {
     }, "password", "code");
   }
 
+  private void check_dynamic_send() {
+    walkAndValidateAndCheck(env, (el) -> {
+      String name = el.attr("name");
+      if ("__channel".equals(name)) {
+        if (!("hidden".equals(el.attr("type")))) {
+          env.feedback.warn(el, "The dynamic channel field ('__channel') should have type 'hidden'.");
+        }
+        return true;
+      }
+      return false;
+    }, "__channel");
+  }
+
   private void convertFailureVariableToEvents(Element element, String defaultVar) {
     String failureVariable = defaultVar;
     if (element.hasAttr("rx:failure-variable")) {
@@ -733,6 +746,12 @@ public class Attributes {
           .append(",").append(env.stateVar) //
           .append(",'").append(env.val("rx:forward", "/")) //
           .append("'").append(");").newline();
+    } else if (action.equals("dynamic:send")) {
+      check_dynamic_send();
+      convertFailureVariableToEvents(env.element, "send_failed");
+      env.writer.tab().append("$.aSD(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'__ds');").newline();
     } else if (action.startsWith("send:")) { // Send a message on the given channel
       convertFailureVariableToEvents(env.element, "send_failed");
       String channel = action.substring(5);

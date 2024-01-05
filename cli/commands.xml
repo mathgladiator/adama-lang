@@ -748,6 +748,16 @@
             <arg name="output" />
         </command>
 
+        <command name="list-push-tokens" output="json">
+            <documentation>
+                List push tokens for a specific agent within a document's authority
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="domain" />
+            <arg name="agent" />
+        </command>
+
         <command name="create">
             <documentation>
                 Create a document

@@ -49,6 +49,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private RxTableGuard activeGuard;
   private ArrayList<DifferentialEdgeTracker<Ty>> trackers;
   private TableSubscription trackerSub;
+  private boolean invalidated;
 
   public void debug(JsonStreamWriter writer) {
     writer.beginObject();
@@ -90,6 +91,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.activeGuard = null;
     this.trackers = null;
     this.trackerSub = null;
+    this.invalidated = false;
   }
 
   public void pump(DifferentialEdgeTracker<Ty> tracker) {
@@ -342,7 +344,13 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
   @Override
   public boolean __raiseInvalid() {
-    __raiseDirty();
+    if (!invalidated) {
+      invalidated = true;
+      __invalidateSubscribers();
+    }
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
     return true;
   }
 
@@ -530,6 +538,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
   @Override
   public void __settle(Set<Integer> viewers) {
+    invalidated = false;
     for (Ty child : itemsByKey.values()) {
       child.__settle(viewers);
     }

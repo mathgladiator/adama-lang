@@ -19,6 +19,7 @@ package org.adamalang.runtime.delta.secure;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Hex;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;

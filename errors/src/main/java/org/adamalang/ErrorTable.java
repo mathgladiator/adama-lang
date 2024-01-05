@@ -722,6 +722,8 @@ public class ErrorTable {
     descriptions.put(909436, "no description of error (yet)");
     names.put(930111, "AUTH_IDENTITIES_NOT_AVAILABLE");
     descriptions.put(930111, "no description of error (yet)");
+    names.put(946435, "FAILED_LIST_PUSH_TOKENS_UNKNOWN");
+    descriptions.put(946435, "no description of error (yet)");
     names.put(798735, "SERVICE_CONFIG_BAD_INTEGER_FROM_STRING");
     descriptions.put(798735, "no description of error (yet)");
     names.put(777231, "SERVICE_CONFIG_BAD_INTEGER");
