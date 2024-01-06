@@ -347,6 +347,7 @@ public class CaravanDataService implements ArchivingDataService {
         }
       });
     }) == null) {
+      LOGGER.error("out-of-space: caravan unable to merge:" + key.space + "/" + key.key);
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE));
     }
   }
@@ -439,6 +440,7 @@ public class CaravanDataService implements ArchivingDataService {
           }
         });
       }) == null) {
+        LOGGER.error("out-of-space: caravan unable to initialize:" + key.space + "/" + key.key);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_INITIALIZE));
       }
     });
@@ -478,6 +480,7 @@ public class CaravanDataService implements ArchivingDataService {
           }
         });
       }) == null) {
+        LOGGER.error("out-of-space: caravan unable to patch:" + key.space + "/" + key.key);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_PATCH));
       }
     });
@@ -540,6 +543,7 @@ public class CaravanDataService implements ArchivingDataService {
       Integer size = store.append(key, bytes, snapshot.seq, snapshot.assetBytes, () -> {
       });
       if (size == null) {
+        LOGGER.error("out-of-space: caravan unable to snapshot:" + key.space + "/" + key.key);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
       } else {
         cached.handle(snap);
