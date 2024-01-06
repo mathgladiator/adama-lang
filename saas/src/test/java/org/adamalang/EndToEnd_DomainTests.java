@@ -56,6 +56,8 @@ public class EndToEnd_DomainTests {
       Assert.assertEquals("FINISH:{}", c7.next());
       Iterator<String> c8 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/list-by-space\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:null", c8.next());
+      Iterator<String> c9 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"domain/claim-apex\",\"domain\":\"adama-platform.com\"}");
+      Assert.assertEquals("FINISH:{\"claimed\":false,\"txtToken\":\"adama971511e89f0bf0bdcf2d9321f5fa0a80\"}", c9.next());
     }
   }
 }

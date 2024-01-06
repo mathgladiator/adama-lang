@@ -24,6 +24,7 @@ import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.common.dns.ApexDomain;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
@@ -497,7 +498,51 @@ public class GlobalControlHandler implements RootGlobalHandler {
 
   @Override
   public void handle(Session session, DomainClaimApexRequest request, DomainVerifyResponder responder) {
-    responder.error(new ErrorCodeException(0));
+    if (!request.who.isAdamaDeveloper) {
+      responder.error(new ErrorCodeException(ErrorCodes.APEX_DOMAIN_CLAIM_NOT_DEVELOPER));
+      return;
+    }
+    if (!ApexDomain.test(request.domain)) {
+      responder.error(new ErrorCodeException(ErrorCodes.APEX_DOMAIN_CLAIM_NOT_APEX_DOMAIN));
+      return;
+    }
+    // we hash the future owner with the domain to create a token
+    String stringToSign = request.who.who.agent + "/" + request.who.who.authority + "/" + request.domain;
+    MessageDigest digest = Hashing.sha384();
+    digest.update(stringToSign.getBytes(StandardCharsets.UTF_8));
+    digest.update(stringToSign.getBytes(StandardCharsets.UTF_8));
+    String token = "adama" + Hashing.finishAndEncodeHex(digest).substring(0, 32);
+
+    // ask DNS for the token
+    nexus.dnsTxtResolver.query(request.domain, new Callback<String[]>() {
+      @Override
+      public void success(String[] txtRecords) {
+        // token was either found or not
+        boolean found = false;
+        for (String txt : txtRecords) {
+          if (txt.equalsIgnoreCase(token)) {
+            found = true;
+          }
+        }
+
+        if (found) {
+          nexus.dnsClaimer.execute(new NamedRunnable("claim-dns") {
+            @Override
+            public void execute() throws Exception {
+              // TODO: ensureRecordExistsUnderOwner
+              responder.complete(true, token);
+            }
+          });
+        } else {
+          responder.complete(false, token);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override

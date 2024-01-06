@@ -15,9 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.common.dns;
 
-public class Platform {
-  public static final String VERSION = "20240106085026";
-  public static final String JS_VERSION = "40610ffa52107ba916b80f159be116b7";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ApexDomainTests {
+  @Test
+  public void sanity() {
+    Assert.assertTrue(ApexDomain.test("thing.com"));
+    Assert.assertFalse(ApexDomain.test("www.thing.com"));
+  }
 }

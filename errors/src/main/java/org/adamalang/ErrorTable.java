@@ -1017,5 +1017,11 @@ public class ErrorTable {
     descriptions.put(788607, "no description of error (yet)");
     names.put(728051, "DEVBOX_NO_SECRET_FOR_KEY");
     descriptions.put(728051, "no description of error (yet)");
+    names.put(752835, "DNS_RESOLVE_FAILED");
+    descriptions.put(752835, "no description of error (yet)");
+    names.put(712700, "APEX_DOMAIN_CLAIM_NOT_APEX_DOMAIN");
+    descriptions.put(712700, "no description of error (yet)");
+    names.put(753651, "APEX_DOMAIN_CLAIM_NOT_DEVELOPER");
+    descriptions.put(753651, "no description of error (yet)");
   }
 }
