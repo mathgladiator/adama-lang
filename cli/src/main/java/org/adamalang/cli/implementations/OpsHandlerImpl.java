@@ -33,7 +33,9 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -104,6 +106,76 @@ public class OpsHandlerImpl implements OpsHandler {
     } finally {
       store.close();
     }
+  }
+
+  @Override
+  public void summarize(Arguments.OpsSummarizeArgs args, Output.YesOrError output) throws Exception {
+    ArrayList<byte[]> writes = RestoreLoader.load(new File(args.input));
+    TreeMap<String, Integer> counts = new TreeMap<>();
+
+    Consumer<String> bump = (key) -> {
+      Integer prior = counts.get(key);
+      if (prior == null) {
+        counts.put(key, 1);
+      } else {
+        counts.put(key, 1 + prior);
+      }
+    };
+
+    Consumer<String> cut = (label) -> {
+      ArrayList<String> parts = new ArrayList<>();
+      int total = 0;
+      for (Map.Entry<String, Integer> entry : counts.entrySet()) {
+        parts.add(entry.getKey() + "=" + entry.getValue());
+        total += entry.getValue();
+      }
+      if (parts.size() > 0) {
+        System.out.println(label + ": " + String.join(", ", parts) + "; total=" + total);
+      }
+      counts.clear();
+    };
+
+    EventCodec.HandlerEvent event = new EventCodec.HandlerEvent() {
+      String last = "start";
+
+      @Override
+      public void handle(Events.Snapshot snapshot) {
+        bump.accept("snapshot");
+      }
+
+      @Override
+      public void handle(Events.Batch batch) {
+        for (Events.Change change : batch.changes) {
+          handle(change);
+        }
+      }
+
+      @Override
+      public void handle(Events.Change change) {
+        ObjectNode request = Json.parseJsonObject(change.request);
+        if (request.has("password")) { // has no timestamp
+          return;
+        }
+
+        try {
+          long timestamp = Long.parseLong(request.get("timestamp").textValue());
+          String key = new SimpleDateFormat("yyyy-MM-dd").format(new Date(timestamp));
+          if (!key.equalsIgnoreCase(last)) {
+            cut.accept(last);
+            last = key;
+          }
+          bump.accept(request.get("command").textValue());
+        } catch (Exception ex) {
+          System.err.println("Failed:" + ex.getMessage());
+          System.err.println(request.toString());
+        }
+      }
+    };
+
+    for (byte[] write : writes) {
+      EventCodec.route(Unpooled.wrappedBuffer(write), event);
+    }
+    cut.accept("latest");
   }
 
   @Override

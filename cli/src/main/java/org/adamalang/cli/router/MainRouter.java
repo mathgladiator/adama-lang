@@ -763,6 +763,16 @@ public class MainRouter {
                opsHandler.forensics(opsArgs, out);
                return 0;
             }
+            case "summarize": {
+              OpsSummarizeArgs opsArgs = OpsSummarizeArgs.from(args, 2);
+              if (opsArgs == null) {
+                OpsSummarizeArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               opsHandler.summarize(opsArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {

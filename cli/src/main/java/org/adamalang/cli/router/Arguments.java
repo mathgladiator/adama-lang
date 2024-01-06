@@ -3825,6 +3825,63 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-ms, --min-size", ANSI.Green) + " " + ColorUtilTools.prefix("<min-size>", ANSI.White) + " : Minimum size for considering a recovered json object.");
 		}
 	}
+	public static class OpsSummarizeArgs {
+		public Config config;
+		public String input;
+		public static OpsSummarizeArgs from(String[] args, int start) {
+			OpsSummarizeArgs returnArgs = new OpsSummarizeArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--input", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-i":
+					case "--input": {
+						if (k+1 < args.length) {
+							returnArgs.input = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("Summarize the archive in a meaningful way", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama ops summarize", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-i, --input", ANSI.Green) + " " + ColorUtilTools.prefix("<input>", ANSI.White) + " : An input file");
+		}
+	}
 	public static class DomainConfigureArgs {
 		public Config config;
 		public String domain;
