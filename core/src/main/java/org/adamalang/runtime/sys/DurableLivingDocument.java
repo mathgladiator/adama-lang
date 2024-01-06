@@ -624,6 +624,7 @@ public class DurableLivingDocument implements Queryable {
       }
       if (limit == 0) {
         LOG.error("Reached internal invalidation limit:" + document.__getSpace() + "/" + document.__getKey());
+        base.metrics.invalidation_limit_reached.run();
       }
       if (!currentFactory.appMode) {
         requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
