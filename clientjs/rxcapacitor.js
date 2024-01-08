@@ -4,6 +4,8 @@ var SafeArea = Capacitor.Plugins.SafeArea;
 var PushNotifications = Capacitor.Plugins.PushNotifications;
 var Network = Capacitor.Plugins.Network;
 
+var LocalNotifications = Capacitor.Plugins.LocalNotifications;
+
 var CapacitorApp = Capacitor.Plugins.App;
 
 
@@ -128,8 +130,21 @@ async function LinkCapacitor($, identityName) {
 
 // Show us the notification payload if the app is open on our device
   PushNotifications.addListener('pushNotificationReceived', function (notification) {
-    // TODO: get the tracking id from the notification, call into RxHTML to trigger a logging message
     console.log('Push received: ' + JSON.stringify(notification));
+    // TODO: get the tracking id from the notification, call into RxHTML to trigger a logging message
+    if (Capacitor.getPlatform() === 'android'){
+        LocalNotifications.schedule({
+          notifications: [
+            {
+              id: notification.id,
+              title: notification.title,
+              body: notification.body,
+              data: notification.data
+            }
+          ]
+        });
+    }
+
   });
 
 // Method called when tapping on a notification
