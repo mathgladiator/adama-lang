@@ -3548,7 +3548,7 @@ var RxHTML = (function () {
             fire_failure(form, "Passwords mismatch for new password.");
           }
         } else {
-          postPassword();
+          after();
         }
       }
 
@@ -3567,7 +3567,7 @@ var RxHTML = (function () {
           fire_failure(form, "Passwords mismatch");
         }
       } else {
-        after();
+        postPassword();
       }
     }, true);
   };
