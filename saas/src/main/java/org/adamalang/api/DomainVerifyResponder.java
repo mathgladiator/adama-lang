@@ -23,25 +23,18 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.io.*;
 
-public class DomainListingResponder {
+public class DomainVerifyResponder {
   public final JsonResponder responder;
 
-  public DomainListingResponder(JsonResponder responder) {
+  public DomainVerifyResponder(JsonResponder responder) {
     this.responder = responder;
   }
 
-  public void next(String domain, String space, String key, Boolean route, String forward) {
+  public void complete(Boolean claimed, String txtToken) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("domain", domain);
-    _obj.put("space", space);
-    _obj.put("key", key);
-    _obj.put("route", route);
-    _obj.put("forward", forward);
-    responder.stream(_obj.toString());
-  }
-
-  public void finish() {
-    responder.finish(null);
+    _obj.put("claimed", claimed);
+    _obj.put("txtToken", txtToken);
+    responder.finish(_obj.toString());
   }
 
   public void error(ErrorCodeException ex) {

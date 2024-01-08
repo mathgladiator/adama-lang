@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.common.dns;
 
-public class Platform {
-  public static final String VERSION = "20240106112409";
-  public static final String JS_VERSION = "40610ffa52107ba916b80f159be116b7";
+public class ApexDomain {
+  public static boolean test(String domain) {
+    return domain.indexOf('.') == domain.lastIndexOf('.');
+  }
 }

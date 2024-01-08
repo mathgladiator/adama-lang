@@ -22,6 +22,8 @@ import org.adamalang.api.RegionApiMetrics;
 import org.adamalang.auth.Authenticator;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.dns.DNSTxtResolver;
+import org.adamalang.common.dns.NettyDNSTxtResolver;
 import org.adamalang.common.keys.PrivateKeyWithId;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.metrics.MetricsFactory;
@@ -73,11 +75,12 @@ public class GlobalExternNexus {
   public final Authenticator authenticator;
   public final SimpleExecutor crypto;
   public final AsyncByteCodeCache byteCodeCache;
-
   public final SimpleExecutor capacity;
   public final GlobalCapacityOverseer overseer;
   public final CapacityPlanFetcher capacityPlanFetcher;
   public final S3 s3;
+  public final DNSTxtResolver dnsTxtResolver;
+  public final SimpleExecutor dnsClaimer;
 
   public GlobalExternNexus(FrontendConfig config, Email email, DataBase database, MultiRegionClient adama, Authenticator authenticator, AssetSystem assets, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger, String masterKey, WebClientBase webBase, String region, String machine, PrivateKey webHostKey, int publicKeyId, String[] superPublicKeys,  String[] regionalPublicKeys, SignalControl signalControl, GlobalFinder finder, PrivateKeyWithId signingKey, AsyncByteCodeCache byteCodeCache, S3 s3) {
     this.config = config;
@@ -113,6 +116,8 @@ public class GlobalExternNexus {
     this.byteCodeCache = byteCodeCache;
     this.capacityPlanFetcher = new CachedCapacityPlanFetcher(TimeSource.REAL_TIME, 1024, 60000, capacity, new GlobalCapacityPlanFetcher(database));
     this.s3 = s3;
+    this.dnsTxtResolver = new NettyDNSTxtResolver();
+    this.dnsClaimer = SimpleExecutor.create("dns");
   }
 
   public void close() throws Exception {
@@ -122,5 +127,7 @@ public class GlobalExternNexus {
     metrics.shutdown();
     crypto.shutdown();
     capacity.shutdown();
+    dnsTxtResolver.shutdown();
+    dnsClaimer.shutdown();
   }
 }

@@ -27,6 +27,7 @@ public class Domain implements Measurable {
   public final int owner;
   public final String space;
   public final String key;
+  public final String forwardTo;
   public final boolean routeKey;
   public final String certificate;
   public final Date updated;
@@ -34,12 +35,13 @@ public class Domain implements Measurable {
 
   private final long _measure;
 
-  public Domain(String domain, int owner, String space, String key, boolean routeKey, String certificate, Date updated, long timestamp) {
+  public Domain(String domain, int owner, String space, String key, String forwardTo, boolean routeKey, String certificate, Date updated, long timestamp) {
     this.domain = domain;
     this.owner = owner;
     this.space = space;
     this.routeKey = routeKey;
     this.key = key;
+    this.forwardTo = forwardTo;
     this.certificate = certificate;
     this.updated = updated;
     this.timestamp = timestamp;

@@ -52,6 +52,9 @@ public class Adama extends SimpleService {
     sb.append("message _AdamaReflectionRes { dynamic reflection }\n");
     sb.append("message _AdamaDomainMapReq { string domain; string space; maybe<string> certificate; }\n");
     sb.append("message _AdamaSimpleRes {  }\n");
+    sb.append("message _AdamaDomainClaimApexReq { string domain; }\n");
+    sb.append("message _AdamaDomainVerifyRes { bool claimed string txtToken }\n");
+    sb.append("message _AdamaDomainRedirectReq { string domain; string destinationDomain; }\n");
     sb.append("message _AdamaDomainConfigureReq { string domain; dynamic productConfig; }\n");
     sb.append("message _AdamaDomainMapDocumentReq { string domain; string space; string key; maybe<bool> route; maybe<string> certificate; }\n");
     sb.append("message _AdamaDocumentCreateReq { string space; string key; maybe<string> entropy; dynamic arg; }\n");
@@ -63,6 +66,8 @@ public class Adama extends SimpleService {
     sb.append("  class=\"adama\";\n");
     sb.append("  method secured<_AdamaSpaceReflectReq, _AdamaReflectionRes)> spaceReflect;\n");
     sb.append("  method secured<_AdamaDomainMapReq, _AdamaSimpleRes)> domainMap;\n");
+    sb.append("  method secured<_AdamaDomainClaimApexReq, _AdamaDomainVerifyRes)> domainClaimApex;\n");
+    sb.append("  method secured<_AdamaDomainRedirectReq, _AdamaSimpleRes)> domainRedirect;\n");
     sb.append("  method secured<_AdamaDomainConfigureReq, _AdamaSimpleRes)> domainConfigure;\n");
     sb.append("  method secured<_AdamaDomainMapDocumentReq, _AdamaSimpleRes)> domainMapDocument;\n");
     sb.append("  method secured<_AdamaDocumentCreateReq, _AdamaSimpleRes)> documentCreate;\n");
@@ -101,6 +106,39 @@ public class Adama extends SimpleService {
         req.space = Json.readString(requestNode, "space");
         req.certificate = Json.readString(requestNode, "certificate");
         client.domainMap(req, new Callback<>() {
+          @Override
+          public void success(ClientSimpleResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
+      case "domainClaimApex": {
+        ClientDomainClaimApexRequest req = new ClientDomainClaimApexRequest();
+        req.identity = identity;
+        req.domain = Json.readString(requestNode, "domain");
+        client.domainClaimApex(req, new Callback<>() {
+          @Override
+          public void success(ClientDomainVerifyResponse response) {
+            callback.success(response.toInternalJson());
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+        return;
+      } 
+      case "domainRedirect": {
+        ClientDomainRedirectRequest req = new ClientDomainRedirectRequest();
+        req.identity = identity;
+        req.domain = Json.readString(requestNode, "domain");
+        req.destinationDomain = Json.readString(requestNode, "destinationDomain");
+        client.domainRedirect(req, new Callback<>() {
           @Override
           public void success(ClientSimpleResponse response) {
             callback.success(response.toInternalJson());

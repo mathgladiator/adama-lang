@@ -96,6 +96,42 @@ public class DomainsTest {
         Assert.assertTrue(Domains.superSetAutoCert(dataBase, "www.my-domain.com", "new-cert", 150));
         superList = Domains.superListAutoDomains(dataBase, 100);
         Assert.assertEquals(0, superList.size());
+        Assert.assertTrue(Domains.forward(dataBase, 50, "myforward.com", "www.destination.com", null));
+        Assert.assertEquals("www.destination.com", Domains.get(dataBase, "myforward.com").forwardTo);
+        Assert.assertFalse(Domains.forward(dataBase, 51, "myforward.com", "rogue", null));
+        Assert.assertEquals("www.destination.com", Domains.get(dataBase, "myforward.com").forwardTo);
+        Domains.superSetAutoCert(dataBase, "myforward.com", "yo", 100);
+        Assert.assertEquals("yo", Domains.get(dataBase, "myforward.com").certificate);
+        Domains.map(dataBase, 50, "myforward.com", "space", "key", false, null);
+        {
+          Domain fwd = Domains.get(dataBase, "myforward.com");
+          Assert.assertNull(fwd.forwardTo);
+          Assert.assertEquals("space", fwd.space);
+          Assert.assertEquals("key", fwd.key);
+        }
+        Domains.forward(dataBase, 50, "myforward.com", "newplace.com", "sup");
+        {
+          Domain fwd = Domains.get(dataBase, "myforward.com");
+          Assert.assertEquals("newplace.com", fwd.forwardTo);
+          Assert.assertEquals("", fwd.space);
+          Assert.assertEquals("", fwd.key);
+          Assert.assertEquals("sup", fwd.certificate);
+        }
+        Domains.map(dataBase, 50, "myforward.com", "space", "key", false, null);
+        {
+          Domain fwd = Domains.get(dataBase, "myforward.com");
+          Assert.assertNull(fwd.forwardTo);
+          Assert.assertEquals("space", fwd.space);
+          Assert.assertEquals("key", fwd.key);
+        }
+        Domains.forward(dataBase, 50, "myforward.com", "newplace.com", null);
+        {
+          Domain fwd = Domains.get(dataBase, "myforward.com");
+          Assert.assertEquals("newplace.com", fwd.forwardTo);
+          Assert.assertEquals("", fwd.space);
+          Assert.assertEquals("", fwd.key);
+          Assert.assertEquals("sup", fwd.certificate);
+        }
       } finally {
         installer.uninstall();
       }

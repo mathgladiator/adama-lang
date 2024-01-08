@@ -627,6 +627,24 @@ class WebSocketAdamaConnection {
       request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
     });
   }
+  DomainClaimApex(identity, domain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/claim-apex", "id":parId, "identity": identity, "domain": domain}
+    });
+  }
+  DomainRedirect(identity, domain, destinationDomain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/redirect", "id":parId, "identity": identity, "domain": domain, "destination-domain": destinationDomain}
+    });
+  }
   DomainConfigure(identity, domain, productConfig, responder) {
     var self = this;
     var parId = self.__id();

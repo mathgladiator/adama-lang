@@ -52,7 +52,7 @@ public class GlobalDomainWithPolicyResolver implements DomainWithPolicyResolver 
         if ("wildcard".equals(space)) {
           return null;
         }
-        return new Domain(domain, 0, space, "default-document", false, null, null, System.currentTimeMillis());
+        return new Domain(domain, 0, space, "default-document", null, false, null, null, System.currentTimeMillis());
       }
     }
     return null;

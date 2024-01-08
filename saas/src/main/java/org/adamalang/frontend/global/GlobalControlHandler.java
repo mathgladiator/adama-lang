@@ -24,6 +24,7 @@ import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.common.dns.ApexDomain;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
@@ -55,7 +56,6 @@ import org.adamalang.web.io.NoOpJsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
@@ -497,6 +497,60 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, DomainClaimApexRequest request, DomainVerifyResponder responder) {
+    if (!request.who.isAdamaDeveloper) {
+      responder.error(new ErrorCodeException(ErrorCodes.APEX_DOMAIN_CLAIM_NOT_DEVELOPER));
+      return;
+    }
+    if (!ApexDomain.test(request.domain)) {
+      responder.error(new ErrorCodeException(ErrorCodes.APEX_DOMAIN_CLAIM_NOT_APEX_DOMAIN));
+      return;
+    }
+    // we hash the future owner with the domain to create a token
+    String stringToSign = request.who.who.agent + "/" + request.who.who.authority + "/" + request.domain;
+    MessageDigest digest = Hashing.sha384();
+    digest.update(stringToSign.getBytes(StandardCharsets.UTF_8));
+    digest.update(stringToSign.getBytes(StandardCharsets.UTF_8));
+    String token = "adama" + Hashing.finishAndEncodeHex(digest).substring(0, 32);
+
+    // ask DNS for the token
+    nexus.dnsTxtResolver.query(request.domain, new Callback<String[]>() {
+      @Override
+      public void success(String[] txtRecords) {
+        // token was either found or not
+        boolean found = false;
+        for (String txt : txtRecords) {
+          if (txt.equalsIgnoreCase(token)) {
+            found = true;
+          }
+        }
+
+        if (found) {
+          nexus.dnsClaimer.execute(new NamedRunnable("claim-dns") {
+            @Override
+            public void execute() throws Exception {
+              // TODO: ensureRecordExistsUnderOwner
+              responder.complete(true, token);
+            }
+          });
+        } else {
+          responder.complete(false, token);
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle(Session session, DomainRedirectRequest request, SimpleResponder responder) {
+    responder.error(new ErrorCodeException(0));
+  }
+
+  @Override
   public void handle(Session session, DomainConfigureRequest request, SimpleResponder responder) {
     if (request.resolvedDomain.domain != null && request.resolvedDomain.policy != null && request.resolvedDomain.policy.checkPolicy("domain/configure", DefaultPolicyBehavior.OwnerAndDevelopers, request.who)) {
       try {
@@ -546,7 +600,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
     try {
       if (request.who.isAdamaDeveloper) {
         for (Domain domain : Domains.list(nexus.database, request.who.id)) {
-          responder.next(domain.domain, domain.space, domain.key, domain.routeKey);
+          responder.next(domain.domain, domain.space, domain.key, domain.routeKey, domain.forwardTo);
         }
         responder.finish();
       } else {
@@ -561,7 +615,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   public void handle(Session session, DomainListBySpaceRequest request, DomainListingResponder responder) {
     try {
       for (Domain domain : Domains.listBySpace(nexus.database, request.space)) {
-        responder.next(domain.domain, domain.space, domain.key, domain.routeKey);
+        responder.next(domain.domain, domain.space, domain.key, domain.routeKey, domain.forwardTo);
       }
       responder.finish();
     } catch (Exception ex) {
@@ -977,7 +1031,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
         if (domain.certificate != null) {
           cert = MasterKey.decrypt(nexus.masterKey, cert);
         }
-        responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.routeKey, cert, domain.timestamp);
+        responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.forwardTo, domain.routeKey, cert, domain.timestamp);
       } catch (Exception ex) {
         responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_DOMAIN_FIND_EXCEPTION, ex, LOGGER));
       }

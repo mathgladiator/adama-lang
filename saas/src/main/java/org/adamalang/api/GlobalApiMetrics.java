@@ -51,6 +51,8 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SpaceList;
   public final RequestResponseMonitor monitor_PushRegister;
   public final RequestResponseMonitor monitor_DomainMap;
+  public final RequestResponseMonitor monitor_DomainClaimApex;
+  public final RequestResponseMonitor monitor_DomainRedirect;
   public final RequestResponseMonitor monitor_DomainConfigure;
   public final RequestResponseMonitor monitor_DomainReflect;
   public final RequestResponseMonitor monitor_DomainMapDocument;
@@ -118,6 +120,8 @@ public class GlobalApiMetrics {
     this.monitor_SpaceList = factory.makeRequestResponseMonitor("space/list");
     this.monitor_PushRegister = factory.makeRequestResponseMonitor("push/register");
     this.monitor_DomainMap = factory.makeRequestResponseMonitor("domain/map");
+    this.monitor_DomainClaimApex = factory.makeRequestResponseMonitor("domain/claim-apex");
+    this.monitor_DomainRedirect = factory.makeRequestResponseMonitor("domain/redirect");
     this.monitor_DomainConfigure = factory.makeRequestResponseMonitor("domain/configure");
     this.monitor_DomainReflect = factory.makeRequestResponseMonitor("domain/reflect");
     this.monitor_DomainMapDocument = factory.makeRequestResponseMonitor("domain/map-document");

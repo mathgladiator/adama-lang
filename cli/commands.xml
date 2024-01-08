@@ -819,6 +819,13 @@
             <arg name="min-size" default="0" />
         </command>
 
+        <command name="summarize">
+            <documentation>
+                Summarize the archive in a meaningful way
+            </documentation>
+            <arg name="input" />
+        </command>
+
         <command name="explain">
             <documentation>
                 Explain the history of a value at a path

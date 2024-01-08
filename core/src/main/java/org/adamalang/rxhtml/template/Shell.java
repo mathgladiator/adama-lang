@@ -60,20 +60,27 @@ public class Shell {
       sb.append(">\n<head>");
       String defaultTitle = null;
       for (Element element : shell.getElementsByTag("title")) {
-        defaultTitle = element.text();
+        if (config.includeInShell(element)) {
+          defaultTitle = element.text();
+        }
       }
       if (defaultTitle != null) {
         sb.append("<title>").append(defaultTitle).append("</title>");
       }
       for (Element element : shell.getElementsByTag("meta")) {
-        sb.append(element.toString());
+        if (config.includeInShell(element)) {
+          sb.append(element);
+        }
       }
-      // TODO: think about scripts
       for (Element element : shell.getElementsByTag("link")) {
-        sb.append(element.toString());
+        if (config.includeInShell(element)) {
+          sb.append(element);
+        }
       }
       for (Element element : shell.getElementsByTag("script")) {
-        scripts.append(element.toString());
+        if (config.includeInShell(element)) {
+          scripts.append(element);
+        }
       }
     } else {
       sb.append("<!DOCTYPE html>\n<html>\n<head>");

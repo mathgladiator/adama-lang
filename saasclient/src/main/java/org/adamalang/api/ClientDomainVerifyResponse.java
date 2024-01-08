@@ -17,34 +17,24 @@
 */
 package org.adamalang.api;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.web.io.*;
+import org.adamalang.common.Json;
 
-public class DomainListingResponder {
-  public final JsonResponder responder;
+/** generated class for the responder: domain-verify */
+public class ClientDomainVerifyResponse {
+  public final ObjectNode _original;
+  public final Boolean claimed;
+  public final String txtToken;
 
-  public DomainListingResponder(JsonResponder responder) {
-    this.responder = responder;
+  public ClientDomainVerifyResponse(ObjectNode response) {
+    this._original = response;
+    this.claimed = Json.readBool(response, "claimed");
+    this.txtToken = Json.readString(response, "txt-token");
   }
-
-  public void next(String domain, String space, String key, Boolean route, String forward) {
-    ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("domain", domain);
-    _obj.put("space", space);
-    _obj.put("key", key);
-    _obj.put("route", route);
-    _obj.put("forward", forward);
-    responder.stream(_obj.toString());
-  }
-
-  public void finish() {
-    responder.finish(null);
-  }
-
-  public void error(ErrorCodeException ex) {
-    responder.error(ex);
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.put("claimed", claimed);
+    _next.put("txtToken", txtToken);
+    return _next.toString();
   }
 }
