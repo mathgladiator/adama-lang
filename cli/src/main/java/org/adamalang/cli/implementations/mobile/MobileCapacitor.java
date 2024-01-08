@@ -77,17 +77,28 @@ public class MobileCapacitor {
     if (!mobileConfig.has("google")) {
       throw new Exception("mobile-config missing google");
     }
+    if (!mobileConfig.has("google-ios")) {
+      throw new Exception("mobile-config missing google-ios");
+    }
     if (!mobileConfig.has("manifest")) {
       throw new Exception("mobile-config missing manifest");
     }
     if (!mobileConfig.has("appid")) {
       throw new Exception("mobile-config missing appid");
     }
+    if (!mobileConfig.has("app-entitlements")) {
+      throw new Exception("mobile-config missing app-entitlements");
+    }
+
+
     String rootPath = mobileConfig.get("root").textValue();
     String domain = mobileConfig.get("domain").textValue();
     String google = mobileConfig.get("google").textValue();
     String manifest = mobileConfig.get("manifest").textValue();
     String appid = mobileConfig.get("appid").textValue();
+    String googleIOS = mobileConfig.get("google-ios").textValue();
+    String appEntitlements = mobileConfig.get("app-entitlements").textValue();
+
 
     File root = new File(rootPath);
     if (!(root.exists() && root.isDirectory())) {
@@ -115,6 +126,17 @@ public class MobileCapacitor {
     if (!(androidApp.exists() && androidApp.isDirectory())) {
       throw new Exception("path '" + rootPath + "/android/app' must exist");
     }
+
+    File ios = new File(root, "ios");
+    if (!(ios.exists() && ios.isDirectory())) {
+      throw new Exception("path '" + rootPath + "/ios' must exist");
+    }
+    File iosApp = new File(ios, "App/App");
+    if (!(iosApp.exists() && iosApp.isDirectory())) {
+      throw new Exception("path '" + rootPath + "/ios/App/App' must exist");
+    }
+
+
     WebClientBase webBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(args.config.get_or_create_child("web"))));
     try {
       ObjectNode manifestJson = Json.parseJsonObject(new String(fetch(webBase, manifest), StandardCharsets.UTF_8));
@@ -149,6 +171,21 @@ public class MobileCapacitor {
         googleServices = MasterKey.decrypt(args.config.getMasterKey(), googleServices);
       }
       Files.writeString(new File(androidApp, "google-services.json").toPath(), googleServices);
+
+      // iOS GoogleService-Info.plist
+      String googleiOSServices = Files.readString(new File(googleIOS).toPath());
+      if (googleIOS.endsWith(".encrypted")) {
+        googleiOSServices = MasterKey.decrypt(args.config.getMasterKey(), googleiOSServices);
+      }
+      Files.writeString(new File(iosApp, "GoogleService-Info.plist").toPath(), googleiOSServices);
+
+      // iOS App.entitlements
+      String iOSAppEntitlements = Files.readString(new File(appEntitlements).toPath());
+      if (appEntitlements.endsWith(".encrypted")) {
+        iOSAppEntitlements = MasterKey.decrypt(args.config.getMasterKey(), iOSAppEntitlements);
+      }
+      Files.writeString(new File(iosApp, "App.entitlements").toPath(), iOSAppEntitlements);
+
 
       // iOS with path : ios/App/App/capacitor.config.json
       // Writing iOS specific configuration
