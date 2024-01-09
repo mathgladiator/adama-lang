@@ -1,0 +1,43 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/syntax.html
+file_extensions:
+  - adama
+scope: source.adama
+contexts:
+  main:
+    # Strings begin and end with quotes, and use backslashes as an escape
+    # character
+    - match: '"'
+      scope: punctuation.definition.string.begin.adama
+      push: double_quoted_string
+
+    # Comments begin with a '//' and finish at the end of the line
+    - match: '//'
+      scope: punctuation.definition.comment.adama
+      push: line_comment
+
+    # Keywords are if, else for and while.
+    # Note that blackslashes don't need to be escaped within single quoted
+    # strings in YAML. When using single quoted strings, only single quotes
+    # need to be escaped: this is done by using two single quotes next to each
+    # other.
+    - match: '\b(if|else|for|foreach|while|@who)\b'
+      scope: keyword.control.adama
+
+    # Numbers
+    - match: '\b(-)?[0-9.]+\b'
+      scope: constant.numeric.example-c
+
+  double_quoted_string:
+    - meta_scope: string.quoted.double.adama
+    - match: '\\.'
+      scope: constant.character.escape.adama
+    - match: '"'
+      scope: punctuation.definition.string.end.adama
+      pop: true
+
+  line_comment:
+    - meta_scope: comment.line.adama
+    - match: $
+      pop: true
