@@ -19,7 +19,6 @@ package org.adamalang.rxhtml.typing;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
-import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;

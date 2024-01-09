@@ -17,6 +17,8 @@
 */
 package org.adamalang.rxhtml.atl;
 
+import org.adamalang.rxhtml.atl.Context;
+import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Text;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.junit.Assert;
@@ -30,7 +32,7 @@ public class ParserTests {
     String[] strs = new String[]{"{xyz", "[xyz", "[[", "[}", "{]", "{{", "[b]v"};
     for (String str : strs) {
       try {
-        Parser.parse(str);
+        org.adamalang.rxhtml.atl.Parser.parse(str);
         Assert.fail(str);
       } catch (Exception ex) {
         ex.printStackTrace();
@@ -40,7 +42,7 @@ public class ParserTests {
 
   @Test
   public void simple() throws Exception {
-    Tree tree = Parser.parse("xyz");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("xyz");
     Assert.assertTrue(tree instanceof Text);
     Assert.assertEquals(((Text) tree).text, "xyz");
     Assert.assertEquals("TEXT(xyz)", tree.debug());
@@ -51,14 +53,14 @@ public class ParserTests {
 
   @Test
   public void href_regression() throws Exception {
-    Tree tree = Parser.parse("/#project/{view:space}/manage");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("/#project/{view:space}/manage");
     Assert.assertEquals("[TEXT(/#project/),LOOKUP[space],TEXT(/manage)]", tree.debug());
     Assert.assertEquals("\"/#project/\" + $.F($X,'space') + \"/manage\"", tree.js(Context.DEFAULT, "$X"));
   }
 
   @Test
   public void variable() throws Exception {
-    Tree tree = Parser.parse("hi {first|trim} {last}");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("hi {first|trim} {last}");
     Assert.assertEquals("[TEXT(hi ),TRANSFORM(LOOKUP[first],trim),TEXT( ),LOOKUP[last]]", tree.debug());
     Assert.assertEquals("\"hi \" + ($.TR('trim'))($.F($X,'first')) + \" \" + $.F($X,'last')", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
@@ -69,14 +71,14 @@ public class ParserTests {
 
   @Test
   public void normal_white_space() throws Exception {
-    Tree tree = Parser.parse("BLAH{nope}      many    {more}     ");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("BLAH{nope}      many    {more}     ");
     Assert.assertEquals("[TEXT(BLAH),LOOKUP[nope],TEXT(      many    ),LOOKUP[more],TEXT(     )]", tree.debug());
     Assert.assertEquals("\"BLAH\" + $.F($X,'nope') + \"      many    \" + $.F($X,'more') + \"     \"", tree.js(Context.DEFAULT, "$X"));
   }
 
   @Test
   public void normalize_css() throws Exception {
-    Tree tree = Parser.parse("BLAH{nope}      many    {more}     ");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("BLAH{nope}      many    {more}     ");
     Assert.assertEquals("[TEXT(BLAH),LOOKUP[nope],TEXT(      many    ),LOOKUP[more],TEXT(     )]", tree.debug());
     Context class_context = Context.makeClassContext();
     Assert.assertEquals("\" BLAH \" + $.F($X,'nope') + \" many \" + $.F($X,'more')", tree.js(class_context, "$X"));
@@ -84,7 +86,7 @@ public class ParserTests {
 
   @Test
   public void condition_trailing() throws Exception {
-    Tree tree = Parser.parse("hi [b]active[/]");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("hi [b]active[/]");
     Assert.assertEquals("[TEXT(hi ),(LOOKUP[b]) ? (TEXT(active)) : (EMPTY)]", tree.debug());
     Assert.assertEquals("\"hi \" + (($.F($X,'b')) ? (\"active\") : (\"\"))", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
@@ -94,7 +96,7 @@ public class ParserTests {
 
   @Test
   public void condition_trailing_negate() throws Exception {
-    Tree tree = Parser.parse("hi [!b]inactive[/]");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("hi [!b]inactive[/]");
     Assert.assertEquals("[TEXT(hi ),(!(LOOKUP[b])) ? (TEXT(inactive)) : (EMPTY)]", tree.debug());
     Assert.assertEquals("\"hi \" + ((!($.F($X,'b'))) ? (\"inactive\") : (\"\"))", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
@@ -104,7 +106,7 @@ public class ParserTests {
 
   @Test
   public void condition() throws Exception {
-    Tree tree = Parser.parse("hi [b]A[#b]B[/b] there");
+    Tree tree = org.adamalang.rxhtml.atl.Parser.parse("hi [b]A[#b]B[/b] there");
     Assert.assertEquals("[TEXT(hi ),(LOOKUP[b]) ? (TEXT(A)) : (TEXT(B)),TEXT( there)]", tree.debug());
     Assert.assertEquals("\"hi \" + (($.F($X,'b')) ? (\"A\") : (\"B\")) + \" there\"", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();

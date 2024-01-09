@@ -18,13 +18,11 @@
 package org.adamalang.support;
 
 import org.adamalang.common.DefaultCopyright;
-import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.Bundler;
-import org.adamalang.rxhtml.RxHtmlResult;
+import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.config.ShellConfig;
-import org.adamalang.support.testgen.TestClass;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -36,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GenerateTemplateTests {
+  private static final String WTF = "" + (char) 92;
 
   public static String fixTestGold(String gold) {
     return gold.replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js")).replaceAll("/libadama-worker\\.js/[a-z0-9.\"',]*", Matcher.quoteReplacement("/WORKER.js\",'VERSION'"));
@@ -61,7 +60,7 @@ public class GenerateTemplateTests {
           System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
-        RxHtmlResult result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file), false), null, ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
+        RxHtmlBundle result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file), false), null, ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
         String gold = fixTestGold(result.toString());
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);
@@ -80,22 +79,22 @@ public class GenerateTemplateTests {
         output.append("  }\n");
         output.append("  @Override\n");
         output.append("  public String issues() {\n");
-        TestClass.writeStringBuilder(issues.toString(), output, "issues");
+        writeStringBuilder(issues.toString(), output, "issues");
         output.append("    return issues.toString();\n");
         output.append("  }\n");
         output.append("  @Override\n");
         output.append("  public String gold() {\n");
-        TestClass.writeStringBuilder(gold, output, "gold");
+        writeStringBuilder(gold, output, "gold");
         output.append("    return gold.toString();\n");
         output.append("  }\n");
         output.append("  @Override\n");
         output.append("  public String source() {\n");
-        TestClass.writeStringBuilder(Files.readString(file.toPath()), output, "source");
+        writeStringBuilder(Files.readString(file.toPath()), output, "source");
         output.append("    return source.toString();\n");
         output.append("  }\n");
         output.append("  @Override\n");
         output.append("  public String schema() {\n");
-        TestClass.writeStringBuilder(result.viewSchema.toPrettyString(), output, "gold");
+        writeStringBuilder(result.viewSchema.toPrettyString(), output, "gold");
         output.append("    return gold.toString();\n");
         output.append("  }\n");
         output.append("}\n");
@@ -107,5 +106,26 @@ public class GenerateTemplateTests {
   private static boolean isValid(String path) {
     File p = new File(path);
     return p.exists() && p.isDirectory();
+  }
+
+  public static void writeStringBuilder(String str, StringBuilder outputFile, String variable) {
+    outputFile.append("    StringBuilder ").append(variable).append(" = new StringBuilder();\n");
+    final var lines = str.split("\n");
+    for (var k = 0; k < lines.length; k++) {
+      lines[k] = lines[k].stripTrailing();
+    }
+    if (lines.length > 0) {
+      outputFile.append(String.format("    " + variable + ".append(\"%s\");\n", escapeLine(lines[0])));
+      for (var k = 1; k < lines.length; k++) {
+        outputFile.append(String.format("    " + variable + ".append(\"\\n%s\");\n", escapeLine(lines[k])));
+      }
+    }
+  }
+
+  public static String escapeLine(final String line) {
+    return line //
+        .replaceAll(Pattern.quote(WTF), WTF + WTF + WTF + WTF) //
+        .replaceAll("\"", WTF + WTF + "\"") //
+        ;
   }
 }

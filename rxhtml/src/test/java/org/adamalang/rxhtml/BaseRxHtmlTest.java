@@ -20,25 +20,19 @@ package org.adamalang.rxhtml;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.common.StringHelper;
-import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.support.GenerateTemplateTests;
-import org.adamalang.translator.env2.Scope;
-import org.adamalang.translator.parser.Parser;
-import org.adamalang.translator.parser.token.TokenEngine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.regex.Matcher;
-
 public abstract class BaseRxHtmlTest {
-  private RxHtmlResult cachedResult = null;
+  private RxHtmlBundle cachedResult = null;
   private StringBuilder issuesLive;
 
-  public RxHtmlResult result() {
+  public RxHtmlBundle result() {
     if (cachedResult == null) {
       issuesLive = new StringBuilder();
       Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
@@ -51,20 +45,20 @@ public abstract class BaseRxHtmlTest {
 
   @Test
   public void stable_code() throws Exception {
-    RxHtmlResult result = result();
+    RxHtmlBundle result = result();
     String live = GenerateTemplateTests.fixTestGold(result.toString());
     Assert.assertEquals(gold().replaceAll("\r", ""), live.trim().replaceAll("\r", ""));
   }
 
   @Test
   public void stable_issues() {
-    RxHtmlResult result = result();
+    RxHtmlBundle result = result();
     Assert.assertEquals(issues().trim(), issuesLive.toString().trim());
   }
 
   @Test
   public void stable_schema() {
-    RxHtmlResult result = result();
+    RxHtmlBundle result = result();
     ObjectNode expected = Json.parseJsonObject(schema());
     ObjectNode computed = Json.parseJsonObject(result.viewSchema.toPrettyString());
     Assert.assertEquals(expected, computed);

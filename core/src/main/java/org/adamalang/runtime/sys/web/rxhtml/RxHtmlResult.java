@@ -15,12 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.rxhtml;
+package org.adamalang.runtime.sys.web.rxhtml;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.runtime.sys.web.WebFragment;
 import org.adamalang.runtime.sys.web.WebPath;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
+import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.Task;
 
@@ -29,6 +30,7 @@ import java.util.HashMap;
 
 /** result of executing RxHtml */
 public class RxHtmlResult {
+  public final RxHtmlBundle bundle;
   public final String javascript;
   public final String style;
   public final Shell shell;
@@ -37,17 +39,18 @@ public class RxHtmlResult {
   public final ArrayList<Task> tasks;
   public final ObjectNode viewSchema;
 
-  public RxHtmlResult(String javascript, String style, Shell shell, ArrayList<String> patterns, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks, ObjectNode viewSchema) {
-    this.javascript = javascript;
-    this.style = style;
-    this.shell = shell;
+  public RxHtmlResult(RxHtmlBundle bundle) {
+    this.bundle = bundle;
+    this.javascript = bundle.javascript;
+    this.style = bundle.style;
+    this.shell = bundle.shell;
     this.paths = new ArrayList<>();
-    for (String pattern : patterns) {
+    for (String pattern : bundle.patterns) {
       paths.add(new WebPath(pattern));
     }
-    this.cssFreq = cssFreq;
-    this.tasks = tasks;
-    this.viewSchema = viewSchema;
+    this.cssFreq = bundle.cssFreq;
+    this.tasks = bundle.tasks;
+    this.viewSchema = bundle.viewSchema;
   }
 
   public boolean test(String rawUri) {
@@ -79,10 +82,5 @@ public class RxHtmlResult {
       }
     }
     return false;
-  }
-
-  @Override
-  public String toString() {
-    return "JavaScript:" + javascript.trim() + "\nStyle:" + style.trim() + "\nShell:" + shell.makeShell(this);
   }
 }

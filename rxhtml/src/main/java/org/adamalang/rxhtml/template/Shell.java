@@ -18,7 +18,7 @@
 package org.adamalang.rxhtml.template;
 
 import org.adamalang.common.Platform;
-import org.adamalang.rxhtml.RxHtmlResult;
+import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,7 +43,7 @@ public class Shell {
     }
   }
 
-  public String makeShell(RxHtmlResult result) {
+  public String makeShell(RxHtmlBundle result) {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
     boolean worker = false;

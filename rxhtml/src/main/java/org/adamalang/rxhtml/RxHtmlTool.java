@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
-  public static RxHtmlResult convertStringToTemplateForest(String str, File types, ShellConfig config) {
+  public static RxHtmlBundle convertStringToTemplateForest(String str, File types, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback, config.environment);
     TypeChecker.typecheck(str, types, config.feedback);
     Document document = Jsoup.parse(str);
@@ -51,7 +51,7 @@ public class RxHtmlTool {
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlResult(javascript, style, shell, patterns, env.getCssFreq(), env.tasks, vb.results);
+    return new RxHtmlBundle(javascript, style, shell, patterns, env.getCssFreq(), env.tasks, vb.results);
   }
 
   public static String buildCustomJavaScript(Document document) {

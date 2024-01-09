@@ -39,6 +39,8 @@ class WebSocketAdamaConnection {
     this.nextId = 0;
     // events to execute on reconnect
     this.onreconnect = new Map();
+    // protocol for metrics
+    this.protocol = "https";
   }
 
   /** stop the connection */
@@ -52,7 +54,7 @@ class WebSocketAdamaConnection {
   bump(bm) {
     try {
       var xhttp = new XMLHttpRequest();
-      xhttp.open("PUT", location.protocol + "//" + this.host + "/~bm/" + bm, true);
+      xhttp.open("PUT", this.protocol + "//" + this.host + "/~bm/" + bm, true);
       xhttp.send();
     } catch (ex) {
       // don't care
@@ -62,7 +64,7 @@ class WebSocketAdamaConnection {
   log(name, body) {
     try {
       var xhttp = new XMLHttpRequest();
-      xhttp.open("PUT", location.protocol + "//" + this.host + "/~lg/" + name, true);
+      xhttp.open("PUT", this.protocol + "//" + this.host + "/~lg/" + name, true);
       xhttp.send(body);
     } catch (ex) {
       // don't care
@@ -153,7 +155,7 @@ class WebSocketAdamaConnection {
           success: function (payload) {
             try {
               var xhttp = new XMLHttpRequest();
-              xhttp.open("GET", location.protocol + "//" + self.host + "/~p" + payload.assetKey, true);
+              xhttp.open("GET", self.protocol + "//" + self.host + "/~p" + payload.assetKey, true);
               xhttp.withCredentials = true;
               xhttp.send();
             } catch (ex) {

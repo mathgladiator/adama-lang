@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.atl;
 
+import org.adamalang.rxhtml.atl.TokenStream;
 import org.junit.Assert;
 import org.junit.Test;
 

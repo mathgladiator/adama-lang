@@ -3,8 +3,12 @@ var RxHTML = (function () {
 
   var templates = {};
   var router = {};
+
+  var defaultEndpoint = /*ENDPOINT=[*/Adama.Production/*]*/;
+  // TODO: check for override endpoint
+
   // This strange escaping is for developer mode to proxy to localhost.
-  var connection = new Adama.Connection(/*ENDPOINT=[*/Adama.Production/*]*/);
+  var connection = new Adama.Connection(defaultEndpoint);
   var connections = {};
   self.connection = connection;
   self.bump = function(m) {
@@ -2711,10 +2715,16 @@ var RxHTML = (function () {
   self.host = location.host;
   self.protocol = location.protocol;
 
-  self.mobileInit = function(overrideDomain) {
-    self.domain = overrideDomain;
-    self.host = overrideDomain;
+  self.mobileInit = function(defaultOverrideDomain) {
+    self.domain = defaultOverrideDomain;
+    self.host = defaultOverrideDomain;
     self.protocol = "https";
+    connection.protocol = "https";
+  };
+
+  self.setMobileOverrideDomain = function(mode, newDomain) {
+    localStorage.setItem("override-mode", newDomain);
+    localStorage.setItem("override-domain", newDomain);
   };
 
   // <connection use-domain ...>
@@ -3363,7 +3373,7 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:action=document:put
   self.aDPUT = function (form, state, identityName, rxobj) {
-    commonPut(form, state, identityName, rxobj, function (rxobj) { return "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path; })
+    commonPut(form, state, identityName, rxobj, function (rxobj) { return self.protocol + "//" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path; })
   };
 
   // RUNTIME | rx:action=adama:sign-in

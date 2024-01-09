@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.adamalang</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>rxhtml</artifactId>
     <version>MAIN</version>
     <parent>
         <groupId>org.adamalang</groupId>
@@ -16,11 +16,6 @@
         <dependency>
             <groupId>org.adamalang</groupId>
             <artifactId>common</artifactId>
-            <version>MAIN</version>
-        </dependency>
-        <dependency>
-            <groupId>org.adamalang</groupId>
-            <artifactId>rxhtml</artifactId>
             <version>MAIN</version>
         </dependency>
         <dependency>
@@ -38,28 +33,6 @@
     </properties>
     <build>
         <plugins>
-            <!-- ENABLE THIS ONCE WE USE IT
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.3</version>
-                <executions>
-                    <execution>
-                        <id>coverage-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

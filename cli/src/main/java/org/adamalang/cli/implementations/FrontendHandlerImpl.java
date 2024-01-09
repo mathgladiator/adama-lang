@@ -28,6 +28,7 @@ import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.VAPIDFactory;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.devbox.Start;
+import org.adamalang.runtime.sys.web.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.*;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
@@ -115,8 +116,9 @@ public class FrontendHandlerImpl implements FrontendHandler {
   public void make200(Arguments.FrontendMake200Args args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
     aggregateFiles(new File(args.rxhtmlPath), files);
-    RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
-    Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(updated));
+    RxHtmlBundle bundle = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
+    RxHtmlResult updated = new RxHtmlResult(bundle);
+    Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(bundle));
     output.out();
   }
 
