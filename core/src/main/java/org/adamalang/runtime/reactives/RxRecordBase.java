@@ -88,6 +88,14 @@ public abstract class RxRecordBase<Ty extends RxRecordBase<Ty>> extends RxBase i
   }
 
   @Override
+  public void __invalidateUp() {
+    __raiseInvalid();
+    if (__parent != null) {
+      __parent.__invalidateUp();
+    }
+  }
+
+  @Override
   public boolean __isAlive() {
     if (__parent != null) {
       if (!__parent.__isAlive()) {

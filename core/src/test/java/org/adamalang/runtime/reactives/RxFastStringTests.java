@@ -101,6 +101,10 @@ public class RxFastStringTests {
     Assert.assertEquals("cake", s.get());
     s.__revert();
     Assert.assertEquals("xyz", s.get());
+    child.assertInvalidateCount(1);
+    s.__raiseDirty();
+    s.__revert();
+    s.__revert();
     child.assertInvalidateCount(2);
   }
 

@@ -241,8 +241,11 @@ public class RxMaybeTests {
     mi.__subscribe(child);
     mi.make().set(50);
     mi.__revert();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     commitCheck(mi, "", "");
+    mi.__lowerInvalid();
+    mi.make().set(100);
+    child.assertInvalidateCount(1);
   }
 
   @Test
@@ -253,14 +256,16 @@ public class RxMaybeTests {
     Assert.assertFalse(mi.has());
     commitCheck(mi, "", "");
     mi.make();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     commitCheck(mi, "\"v\":42", "\"v\":null");
     mi.make().set(5000);
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
     Assert.assertTrue(mi.has());
     mi.__revert();
-    child.assertInvalidateCount(6);
+    child.assertInvalidateCount(2);
     commitCheck(mi, "", "");
+    mi.__raiseDirty();
+    child.assertInvalidateCount(3);
   }
 
   @Test
@@ -271,15 +276,15 @@ public class RxMaybeTests {
     Assert.assertFalse(mi.has());
     commitCheck(mi, "", "");
     mi.make();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     commitCheck(mi, "\"v\":42", "\"v\":null");
     mi.delete();
-    child.assertInvalidateCount(3);
+    child.assertInvalidateCount(2);
     Assert.assertFalse(mi.has());
     mi.__revert();
     Assert.assertTrue(mi.has());
     commitCheck(mi, "", "");
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(2);
   }
 
   @Test

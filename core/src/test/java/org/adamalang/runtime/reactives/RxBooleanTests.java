@@ -121,7 +121,10 @@ public class RxBooleanTests {
     rx.set(true);
     invalidate.assertInvalidateCount(1);
     rx.__revert();
-    invalidate.assertInvalidateCount(2);
+    invalidate.assertInvalidateCount(1);
+    rx.__raiseDirty();
+    rx.__revert();
+    rx.__revert();
     rx.__revert();
     invalidate.assertInvalidateCount(2);
     rx.__cancelAllSubscriptions();

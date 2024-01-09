@@ -27,11 +27,13 @@ public class MockRxParent implements RxParent {
   public boolean alive;
   public int cost;
   public int settleCount;
+  public int invalidateUpCalls;
 
   public MockRxParent() {
     dirtyCount = 0;
     alive = true;
     settleCount = 0;
+    invalidateUpCalls = 0;
   }
 
   @Override
@@ -51,6 +53,12 @@ public class MockRxParent implements RxParent {
   @Override
   public void __cost(int cost) {
     this.cost += cost;
+  }
+
+
+  @Override
+  public void __invalidateUp() {
+    invalidateUpCalls++;
   }
 
   @Override

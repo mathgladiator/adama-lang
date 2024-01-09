@@ -54,6 +54,10 @@ public class DelayParent implements RxParent {
   }
 
   @Override
+  public void __invalidateUp() {
+  }
+
+  @Override
   public void __cost(int cost) {
   }
 

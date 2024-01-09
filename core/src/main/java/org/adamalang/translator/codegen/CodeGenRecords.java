@@ -67,7 +67,7 @@ public class CodeGenRecords {
     if (!isRoot) {
       writeFieldOf(storage, sb);
     }
-    writeSettles(storage, sb, environment);
+    writeSettles(storage, sb, environment, isRoot);
     writeInsert(storage, sb, environment, isRoot, others);
     writerDump(storage, sb, environment, isRoot, others);
     sb.append("@Override").writeNewline();
@@ -358,7 +358,7 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
   }
 
-  public static void writeSettles(final StructureStorage storage, final StringBuilderWithTabs sb, Environment environment) {
+  public static void writeSettles(final StructureStorage storage, final StringBuilderWithTabs sb, Environment environment, boolean isRoot) {
     ArrayList<String> thingsToSettle = new ArrayList<>();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
@@ -379,20 +379,30 @@ public class CodeGenRecords {
       }
     }
     int n = thingsToSettle.size();
-    if (n == 0) {
-      sb.append("@Override").writeNewline();
-      sb.append("public void __settle(Set<Integer> __viewers) {").writeNewline();
-      sb.append("}").writeNewline();
+    if (isRoot) {
+      if (n == 0) {
+        sb.append("@Override").writeNewline();
+        sb.append("public void __settle(Set<Integer> __viewers) {").writeNewline();
+        sb.append("}").writeNewline();
+      } else {
+        sb.append("@Override").writeNewline();
+        sb.append("public void __settle(Set<Integer> __viewers) {").tabUp().writeNewline();
+        for (int k = 0; k < n; k++) {
+          sb.append(thingsToSettle.get(k)).append(".__settle(__viewers);");
+          if (k == n - 1) {
+            sb.tabDown();
+          }
+          sb.writeNewline();
+        }
+        sb.append("}").writeNewline();
+      }
     } else {
       sb.append("@Override").writeNewline();
       sb.append("public void __settle(Set<Integer> __viewers) {").tabUp().writeNewline();
       for (int k = 0; k < n; k++) {
-        sb.append(thingsToSettle.get(k)).append(".__settle(__viewers);");
-        if (k == n - 1) {
-          sb.tabDown();
-        }
-        sb.writeNewline();
+        sb.append(thingsToSettle.get(k)).append(".__settle(__viewers);").writeNewline();
       }
+      sb.append("__lowerInvalid();").tabDown().writeNewline();
       sb.append("}").writeNewline();
     }
   }

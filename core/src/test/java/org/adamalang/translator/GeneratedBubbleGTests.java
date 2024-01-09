@@ -1357,6 +1357,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n      ___k.__settle(__viewers);");
     gold.append("\n      ___k2.__settle(__viewers);");
     gold.append("\n      ___k3.__settle(__viewers);");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");

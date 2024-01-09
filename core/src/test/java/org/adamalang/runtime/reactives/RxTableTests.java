@@ -468,7 +468,6 @@ public class RxTableTests {
     Assert.assertEquals(3, common.__getSubscriberCount());
     common.__settle(null);
     Assert.assertTrue(common.__raiseInvalid());
-    common.__settle(null);
     common.getGeneration();
     common.__raiseInvalid();
     Assert.assertEquals(0, common.__getSubscriberCount());

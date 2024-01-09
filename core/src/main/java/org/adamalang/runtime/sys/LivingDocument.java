@@ -2227,6 +2227,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     return stats;
   }
 
+  @Override
+  public void __invalidateUp() { // no-op
+  }
+
   public static class StaticState {
     protected int __goodwillBudget;
 

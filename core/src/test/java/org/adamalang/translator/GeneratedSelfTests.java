@@ -583,6 +583,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n      dx2.__settle(__viewers);");
     gold.append("\n      ___dx.__settle(__viewers);");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -1521,6 +1522,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -2514,6 +2516,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -2724,6 +2727,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n      ___b.__settle(__viewers);");
     gold.append("\n      __b_others.__settle(__viewers);");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");

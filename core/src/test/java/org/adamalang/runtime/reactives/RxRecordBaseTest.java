@@ -75,7 +75,7 @@ public class RxRecordBaseTest {
     mr.__delete();
     Assert.assertTrue(mr.__isDirty());
     Assert.assertTrue(mr.__isDying());
-    child.assertInvalidateCount(4);
+    child.assertInvalidateCount(3);
     Assert.assertEquals(0, mr.compareTo(mr));
     Assert.assertEquals(123, mr.hashCode());
     Assert.assertTrue(mr.equals(mr));

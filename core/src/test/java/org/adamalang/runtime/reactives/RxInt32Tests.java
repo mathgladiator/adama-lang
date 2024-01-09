@@ -104,8 +104,12 @@ public class RxInt32Tests {
     child.assertInvalidateCount(1);
     Assert.assertEquals(55, i.getIndexValue());
     i.__revert();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     Assert.assertEquals(42, (int) i.get());
+    i.__raiseDirty();
+    i.__revert();
+    i.__revert();
+    child.assertInvalidateCount(2);
     i.__revert();
     child.assertInvalidateCount(2);
     i.__cancelAllSubscriptions();
