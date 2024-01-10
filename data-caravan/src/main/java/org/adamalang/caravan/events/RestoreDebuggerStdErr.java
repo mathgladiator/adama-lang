@@ -47,6 +47,11 @@ public class RestoreDebuggerStdErr implements EventCodec.HandlerEvent {
     System.err.println("Change[" + payload.seq_begin + "->" + payload.seq_end + "," + payload.dAssetBytes + "] = " + payload.redo);
   }
 
+  @Override
+  public void handle(Events.Recover payload) {
+    System.err.println("Recover[" + payload.seq + "]");
+  }
+
   public static void print(ArrayList<byte[]> writes) {
     for (byte[] write : writes) {
       EventCodec.route(Unpooled.wrappedBuffer(write), new RestoreDebuggerStdErr());

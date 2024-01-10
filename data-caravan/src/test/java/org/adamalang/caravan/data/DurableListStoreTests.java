@@ -137,6 +137,11 @@ public class DurableListStoreTests {
           }
 
           @Override
+          public void handle(Events.Recover payload) {
+
+          }
+
+          @Override
           public void handle(Events.Change payload) {
             try {
               stream.next(appendIndex, payload.redo.getBytes(StandardCharsets.UTF_8), seq, assetBytes);

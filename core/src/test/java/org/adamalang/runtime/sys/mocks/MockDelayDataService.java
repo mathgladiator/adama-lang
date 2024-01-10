@@ -136,6 +136,11 @@ public class MockDelayDataService implements DataService {
   }
 
   @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    enqueue(() -> parent.recover(key, restore, callback));
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     enqueue(() -> parent.close(key, callback));
   }

@@ -15,9 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.data;
 
-public class Platform {
-  public static final String VERSION = "20240110123023";
-  public static final String JS_VERSION = "aaab2dad1e84adcd5efa1adeb68b10ed";
+import org.adamalang.runtime.natives.NtPrincipal;
+
+/** the message for a document restore */
+public class DocumentRestore {
+  public final int seq;
+  public final String document;
+  public final NtPrincipal who;
+
+  public DocumentRestore(int seq, String document, NtPrincipal who) {
+    this.seq = seq;
+    this.document = document;
+    this.who = who;
+  }
 }

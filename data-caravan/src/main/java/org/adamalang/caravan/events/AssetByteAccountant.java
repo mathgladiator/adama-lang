@@ -63,4 +63,11 @@ public class AssetByteAccountant implements EventCodec.HandlerEvent {
       minimumSeq = payload.seq_begin;
     }
   }
+
+  @Override
+  public void handle(Events.Recover payload) {
+    bytes = 0;
+    snapshot = true;
+    minimumSeq = payload.seq;
+  }
 }

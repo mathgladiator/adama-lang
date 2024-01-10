@@ -151,9 +151,15 @@ public class OpsHandlerImpl implements OpsHandler {
       }
 
       @Override
+      public void handle(Events.Recover payload) {
+        bump.accept("recover");
+      }
+
+      @Override
       public void handle(Events.Change change) {
         ObjectNode request = Json.parseJsonObject(change.request);
         if (request.has("password")) { // has no timestamp
+          bump.accept("password");
           return;
         }
 
@@ -202,12 +208,17 @@ public class OpsHandlerImpl implements OpsHandler {
           for (Events.Change change : batch.changes) {
             handle(change);
           }
-
         }
 
         @Override
         public void handle(Events.Change change) {
           toMerge.add(change.redo);
+        }
+
+        @Override
+        public void handle(Events.Recover payload) {
+          toMerge.clear();
+          toMerge.add(payload.document);
         }
       });
     }
@@ -256,6 +267,14 @@ public class OpsHandlerImpl implements OpsHandler {
         public void handle(Events.Batch batch) {
           for (Events.Change change : batch.changes) {
             handle(change);
+          }
+        }
+
+        @Override
+        public void handle(Events.Recover payload) {
+          String result = test(payload.document);
+          if (result != null) {
+            System.out.println("RECOVERY => " + result);
           }
         }
 

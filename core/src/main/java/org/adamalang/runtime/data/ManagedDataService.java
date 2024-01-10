@@ -171,6 +171,15 @@ public class ManagedDataService implements DataService {
   }
 
   @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    base.on(key, machine -> {
+      machine.write(new Action(() -> {
+        base.data.recover(key, restore, callback);
+      }, callback));
+    });
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     base.on(key, (machine) -> {
       machine.close();

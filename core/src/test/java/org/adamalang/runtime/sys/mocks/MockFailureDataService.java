@@ -63,6 +63,11 @@ public class MockFailureDataService implements DataService {
   }
 
   @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    callback.failure(new ErrorCodeException(-42));
+  }
+
+  @Override
   public void inventory(Callback<Set<Key>> callback) {
     callback.failure(new ErrorCodeException(123));
   }

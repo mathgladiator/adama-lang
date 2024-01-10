@@ -197,6 +197,21 @@ public class InMemoryDataService implements DataService {
     });
   }
 
+  @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    executor.execute(() -> {
+      InMemoryDocument document = datum.get(key);
+      if (document == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_RESTORE_CANT_FIND_DOCUMENT));
+        return;
+      }
+      document.updates.clear();
+      document.seq = restore.seq;
+      document.updates.add(new RemoteDocumentUpdate(restore.seq, restore.seq, restore.who, "{\"restore\":" + restore.seq + "}", restore.document, "{}", true, 0, 0, UpdateType.Restore));
+      callback.success(null);
+    });
+  }
+
   private static class InMemoryDocument {
     private final ArrayList<RemoteDocumentUpdate> updates;
     private boolean active;

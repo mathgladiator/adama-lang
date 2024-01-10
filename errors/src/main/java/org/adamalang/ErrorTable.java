@@ -224,6 +224,8 @@ public class ErrorTable {
     descriptions.put(128052, "no description of error (yet)");
     names.put(117816, "INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT");
     descriptions.put(117816, "no description of error (yet)");
+    names.put(117817, "INMEMORY_DATA_RESTORE_CANT_FIND_DOCUMENT");
+    descriptions.put(117817, "no description of error (yet)");
     names.put(127034, "INMEMORY_DATA_COMPUTE_INVALID_METHOD");
     descriptions.put(127034, "no description of error (yet)");
     names.put(103060, "INMEMORY_DATA_COMPACT_CANT_FIND_DOCUMENT");

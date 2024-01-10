@@ -169,6 +169,7 @@ public class ErrorCodes {
   public static final int INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO = 120944;
   public static final int INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO = 128052;
   public static final int INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT = 117816;
+  public static final int INMEMORY_DATA_RESTORE_CANT_FIND_DOCUMENT = 117817;
   public static final int INMEMORY_DATA_COMPUTE_INVALID_METHOD = 127034;
   public static final int INMEMORY_DATA_COMPACT_CANT_FIND_DOCUMENT = 103060;
   public static final int DOCUMENT_QUEUE_BUSY_TOO_MANY_PENDING_ITEMS = 123004;

@@ -147,6 +147,11 @@ public class DumbDataService implements DataService {
   }
 
   @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    callback.failure(new ErrorCodeException(-42));
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     callback.success(null);
   }
