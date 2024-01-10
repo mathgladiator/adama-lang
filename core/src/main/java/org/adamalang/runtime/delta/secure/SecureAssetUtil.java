@@ -33,7 +33,7 @@ public class SecureAssetUtil {
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.ENCRYPT_MODE, key);
       byte[] bytes = cipher.doFinal(id.getBytes(StandardCharsets.UTF_8));
-      return Base64.getEncoder().encodeToString(bytes);
+      return Base64.getUrlEncoder().encodeToString(bytes);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -43,7 +43,7 @@ public class SecureAssetUtil {
     try {
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
       cipher.init(Cipher.DECRYPT_MODE, key);
-      byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(base64));
+      byte[] plainText = cipher.doFinal(Base64.getUrlDecoder().decode(base64));
       return new String(plainText, StandardCharsets.UTF_8);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
@@ -51,7 +51,7 @@ public class SecureAssetUtil {
   }
 
   public static SecretKey secretKeyOf(String base64) throws ErrorCodeException {
-    byte[] raw = Base64.getDecoder().decode(base64);
+    byte[] raw = Base64.getUrlDecoder().decode(base64);
     if (raw.length != 24) {
       throw new ErrorCodeException(ErrorCodes.ASSET_KEY_WRONG_LENGTH);
     }
@@ -77,7 +77,7 @@ public class SecureAssetUtil {
     KeyGenerator keygen = getKeyGenerator("AES");
     keygen.init(192);
     SecretKey key = keygen.generateKey();
-    return Base64.getEncoder().encodeToString(key.getEncoded());
+    return Base64.getUrlEncoder().encodeToString(key.getEncoded());
   }
 
   public static KeyGenerator getKeyGenerator(String algorithm) {

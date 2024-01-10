@@ -40,7 +40,7 @@ class WebSocketAdamaConnection {
     // events to execute on reconnect
     this.onreconnect = new Map();
     // protocol for metrics
-    this.protocol = "https";
+    this.protocol = "https:";
   }
 
   /** stop the connection */

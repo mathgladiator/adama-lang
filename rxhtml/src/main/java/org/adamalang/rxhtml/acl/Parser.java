@@ -111,6 +111,20 @@ public class Parser {
             if (kEq > 0) {
               commands.add(new ForceAuth(body.substring(0, kEq).trim(), body.substring(kEq + 1).trim()));
             }
+            break;
+          }
+          case "manifest-add": { // value is a web manifest URL
+            commands.add(new ManifestBaseCommand("a", body));
+            break;
+          }
+          case "manifest-use": { // value is an ID
+            commands.add(new ManifestBaseCommand("u", body));
+            break;
+          }
+          case "manifest-delete":
+          case "manifest-del": { // value is an ID
+            commands.add(new ManifestBaseCommand("d", body));
+            break;
           }
         }
       } else {

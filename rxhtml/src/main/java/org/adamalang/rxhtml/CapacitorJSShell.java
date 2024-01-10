@@ -17,7 +17,6 @@
 */
 package org.adamalang.rxhtml;
 
-import org.adamalang.common.Platform;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -29,8 +28,34 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 
 public class CapacitorJSShell {
+  private String domainOverride;
+  private boolean devmode;
+  private final Feedback feedback;
+  private boolean multiDomain;
+  private String startingPath;
 
-  public static String makeMobileShell(String forest, String domainOverride, boolean devMode, Feedback feedback) throws Exception {
+  public CapacitorJSShell(Feedback feedback) {
+    this.feedback = feedback;
+    this.domainOverride = null;
+    this.devmode = false;
+    this.multiDomain = false;
+    this.startingPath = null;
+  }
+
+  public void enableDevMode() {
+    this.devmode = true;
+  }
+
+  public void setDomain(String domainOverride) {
+    this.domainOverride = domainOverride;
+  }
+
+  public void setMultiDomain(String startingPath) {
+    this.multiDomain = true;
+    this.startingPath = startingPath;
+  }
+
+  public String make(String forest) throws Exception {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
     Document document = Jsoup.parse(forest);
@@ -58,7 +83,7 @@ public class CapacitorJSShell {
     for (Element element : mobileShell.getElementsByTag("script")) {
       scripts.append(element.toString()).append("\n");
     }
-    if (devMode) {
+    if (devmode) {
       sb.append("  <script src=\"/connection.js\"></script>").append("\n");
       sb.append("  <script src=\"/tree.js\"></script>").append("\n");
       sb.append("  <script src=\"/rxhtml.js\"></script>").append("\n");
@@ -85,8 +110,12 @@ public class CapacitorJSShell {
     }
     sb.append(" </head>\n");
     sb.append("<body></body>\n<script>\n");
-    sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
-    sb.append("  RxHTML.init();\n");
+    if (multiDomain) {
+      sb.append("  RxHTML.mobileInitMultiDomain(\"").append(startingPath).append("\");\n");
+    } else {
+      sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
+      sb.append("  RxHTML.init();\n");
+    }
     sb.append("  LinkCapacitor(RxHTML, \"").append(workerIdentity).append("\");\n");
     sb.append("</script>\n</html>\n");
     return sb.toString();

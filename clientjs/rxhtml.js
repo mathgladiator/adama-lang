@@ -2718,13 +2718,86 @@ var RxHTML = (function () {
   self.mobileInit = function(defaultOverrideDomain) {
     self.domain = defaultOverrideDomain;
     self.host = defaultOverrideDomain;
-    self.protocol = "https";
-    connection.protocol = "https";
+    self.protocol = "https:";
+    connection.protocol = "https:";
   };
+  self.mobileInitMultiDomain = function(start) {
+    self.run(document.body, fixPath(start), false);
+    window.onpopstate = function (p) {
+      self.run(document.body, fixPath(start), false);
+    };
+  };
+  var getOrCreateManifests = function() {
+    var db = localStorage.getItem("__domain_manifests");
+    if (db == null) {
+      db = {manifests:[]};
+    } else {
+      db = JSON.parse(db);
+    }
+    return db;
+  };
+  var saveManifests = function(db) {
+    localStorage.setItem("__domain_manifests", JSON.stringify(db));
+  }
+  self.registerManifest = function(url) {
+    var add = function(manifest) {
+      var db = getOrCreateManifests();
+      manifest.source = url;
+      manifest.id = db.seq;
+      db.seq++;
+      for (var k = 0; k < db.manifests.length; k++) {
+        if (db.manifests[k].source == url) {
+          db.manifests[k] = manifest;
+          saveManifests(db);
+          return;
+        }
+      }
+      db.manifests.push(manifest);
+      saveManifests(db);
+    };
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          add(JSON.stringify(this.responseText));
+        }
+      }
+    };
+    xhttp.open("GET", url, true);
+    xhttp.send();
+  }
 
-  self.setMobileOverrideDomain = function(mode, newDomain) {
-    localStorage.setItem("override-mode", newDomain);
-    localStorage.setItem("override-domain", newDomain);
+  // RUNTIME(mobile) | rx:action="manifest-add:"
+  self.MD_a = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
+      self.registerManifest(typeof(value) == 'function' ? value() : value);
+    });
+  };
+  // RUNTIME(mobile) | rx:action="manifest-use:"
+  self.MD_u = function(dom, type, value) { // TODO: not tested
+    reg_event(null, dom, type, function() {
+      var id = parseInt(typeof(value) == 'function' ? value() : value);
+      for (var k = 0; k < db.manifests.length; k++) {
+        if (db.manifests[k].id == id) {
+          // TODO: DEFINE HOW TO USE IT
+        }
+      }
+    });
+  };
+  // RUNTIME(mobile) | rx:action="manifest-del:"
+  self.MD_d = function(dom, type, value) { // TODO: not tested
+    reg_event(null, dom, type, value, function() {
+      var id = parseInt(typeof(value) == 'function' ? value() : value);
+      var db = getOrCreateManifests();
+      var new_manifests = [];
+      for (var k = 0; k < db.manifests.length; k++) {
+        if (db.manifests[k].id != id) {
+          new_manifests.push(db.manifests[k]);
+        }
+      }
+      db.manifests = new_manifests;
+      saveManifests(db);
+    });
   };
 
   // <connection use-domain ...>
