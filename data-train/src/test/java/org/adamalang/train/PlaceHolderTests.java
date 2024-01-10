@@ -15,9 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.train;
 
-public class Platform {
-  public static final String VERSION = "20240110164628";
-  public static final String JS_VERSION = "aaab2dad1e84adcd5efa1adeb68b10ed";
+public class PlaceHolderTests {
 }

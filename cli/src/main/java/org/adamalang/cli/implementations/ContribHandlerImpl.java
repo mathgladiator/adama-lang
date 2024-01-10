@@ -36,6 +36,7 @@ import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
+import org.adamalang.train.message.Messages;
 import org.adamalang.web.service.BundleJavaScript;
 
 import java.io.File;
@@ -130,12 +131,18 @@ public class ContribHandlerImpl implements ContribHandler {
     String server = CodecCodeGen.assembleCodec("org.adamalang.net.codec", "ServerCodec", ServerMessage.class.getDeclaredClasses());
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ClientCodec.java").toPath(), client);
     Files.writeString(new File("./net/src/main/java/org/adamalang/net/codec/ServerCodec.java").toPath(), server);
+
     System.out.println(ColorUtilTools.prefix("Creating Gossip Codec", ANSI.Cyan));
     String gossipCodec = CodecCodeGen.assembleCodec("org.adamalang.common.gossip.codec", "GossipProtocolCodec", GossipProtocol.class.getDeclaredClasses());
     Files.writeString(new File("./common/src/main/java/org/adamalang/common/gossip/codec/GossipProtocolCodec.java").toPath(), gossipCodec);
+
     System.out.println(ColorUtilTools.prefix("Creating Disk Codec", ANSI.Cyan));
     String diskCodec = CodecCodeGen.assembleCodec("org.adamalang.caravan.events", "EventCodec", Events.class.getDeclaredClasses());
     Files.writeString(new File("./data-caravan/src/main/java/org/adamalang/caravan/events/EventCodec.java").toPath(), diskCodec);
+
+    System.out.println(ColorUtilTools.prefix("Creating RaFT Codec", ANSI.Cyan));
+    String raftCodec = CodecCodeGen.assembleCodec("org.adamalang.train.message", "MessagesCodec", Messages.class.getDeclaredClasses());
+    Files.writeString(new File("./data-train/src/main/java/org/adamalang/train/message/MessagesCodec.java").toPath(), raftCodec);
     output.out();
   }
 
