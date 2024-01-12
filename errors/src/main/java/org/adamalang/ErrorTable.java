@@ -991,6 +991,8 @@ public class ErrorTable {
     descriptions.put(792643, "no description of error (yet)");
     names.put(736243, "CONFIG_NOT_FOUND_FOR_DOMAIN");
     descriptions.put(736243, "no description of error (yet)");
+    names.put(717820, "FIRST_PARTY_SERVICES_PAYRIX_REQUIRES_IDEMPOTENCE_KEY");
+    descriptions.put(717820, "no description of error (yet)");
     names.put(888888, "FIRST_PARTY_SERVICES_METHOD_NOT_FOUND");
     descriptions.put(888888, "no description of error (yet)");
     names.put(888889, "FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED");

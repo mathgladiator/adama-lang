@@ -53,6 +53,11 @@ public class LibDate {
   }
 
   @Extension
+  public static boolean valid(NtDate d) {
+    return d.year > 1;
+  }
+
+  @Extension
   public static @HiddenType(clazz = NtDate.class) NtList<NtDate> calendarViewOf(NtDate day) {
     ArrayList<NtDate> dates = new ArrayList<>();
     // get the first of the given month

@@ -23,6 +23,7 @@ import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.services.Adama;
+import org.adamalang.services.billing.Payrix;
 import org.adamalang.services.billing.Stripe;
 import org.adamalang.services.email.AmazonSES;
 import org.adamalang.services.email.SendGrid;
@@ -67,6 +68,14 @@ public class CoreServices {
       try {
         ServiceConfig config = nexus.serviceConfigFactory.cons("stripe", space, configRaw, keys);
         return Stripe.build(nexus.fpMetrics, config, nexus.webClientBase);
+      } catch (ErrorCodeException ex) {
+        return Service.FAILURE;
+      }
+    });
+    ServiceRegistry.add("payrix", Payrix.class, (space, configRaw, keys) -> {
+      try {
+        ServiceConfig config = nexus.serviceConfigFactory.cons("payrix", space, configRaw, keys);
+        return Payrix.build(nexus.fpMetrics, config, nexus.webClientBase);
       } catch (ErrorCodeException ex) {
         return Service.FAILURE;
       }

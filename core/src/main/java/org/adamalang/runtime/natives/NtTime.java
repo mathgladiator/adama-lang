@@ -17,7 +17,10 @@
 */
 package org.adamalang.runtime.natives;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /** a time within a day at the precision of a minute */
 public class NtTime implements Comparable<NtTime> {
@@ -63,5 +66,14 @@ public class NtTime implements Comparable<NtTime> {
       return 1;
     }
     return Integer.compare(minute, o.minute);
+  }
+
+  public static NtTime parse(String val) {
+    try {
+      String[] parts = val.split(Pattern.quote(":"));
+      return new NtTime(Integer.parseInt(parts[0]), parts.length > 1 ? Integer.parseInt(parts[1]) : 0);
+    } catch (Exception nfe) {
+      return new NtTime(0, 0);
+    }
   }
 }

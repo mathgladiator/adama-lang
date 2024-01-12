@@ -2250,15 +2250,26 @@ var RxHTML = (function () {
   };
 
   var routeMessage = function(event) {
-    if (!('data' in event)) { return; }
-    if (!('channel' in event.data)) { return; }
-    var channel = event.data.channel;
-    var list = currentMessageHandlers[channel];
-    if (list !== null) {
-      var n = list.length;
-      for (var k = 0; k < n; k++) {
-        list[k](event.data, event);
+    try {
+      if (!('data' in event)) {
+        return;
       }
+      if (typeof (event.data) != 'object') {
+        return;
+      }
+      if (!('channel' in event.data)) {
+        return;
+      }
+      var channel = event.data.channel;
+      var list = currentMessageHandlers[channel];
+      if (list !== null) {
+        var n = list.length;
+        for (var k = 0; k < n; k++) {
+          list[k](event.data, event);
+        }
+      }
+    } catch (wellMaybeTheErrorDoesntBelongToMe) {
+      // :shrug:
     }
   };
 

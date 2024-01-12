@@ -188,32 +188,15 @@ public class JsonStreamReader {
   }
 
   public NtDate readNtDate() {
-    String val = readString();
-    String[] parts = val.split("[/-]");
-    try {
-      return new NtDate(Integer.parseInt(parts[0]), parts.length > 1 ? Integer.parseInt(parts[1]) : 1, parts.length > 2 ? Integer.parseInt(parts[2]) : 1);
-    } catch (NumberFormatException nfe) {
-      return new NtDate(1, 1, 1);
-    }
+    return NtDate.parse(readString());
   }
 
   public NtDateTime readNtDateTime() {
-    String val = readString();
-    try {
-      return new NtDateTime(ZonedDateTime.parse(val));
-    } catch (Exception ex) {
-      return new NtDateTime(ZonedDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
-    }
+    return NtDateTime.parse(readString());
   }
 
   public NtTime readNtTime() {
-    String val = readString();
-    String[] parts = val.split(Pattern.quote(":"));
-    try {
-      return new NtTime(Integer.parseInt(parts[0]), parts.length > 1 ? Integer.parseInt(parts[1]) : 0);
-    } catch (NumberFormatException nfe) {
-      return new NtTime(0, 0);
-    }
+    return NtTime.parse(readString());
   }
 
   public NtTimeSpan readNtTimeSpan() {

@@ -222,4 +222,18 @@ public class LibDynamicTests {
     Assert.assertFalse((LibDynamic.is_null(new NtDynamic("{}"), "x").has()));
     Assert.assertFalse(LibDynamic.is_null(new NtDynamic("null"), "x").has());
   }
+
+  @Test
+  public void coverage_date() {
+    Assert.assertEquals("2000-07-01", LibDynamic.date(new NtDynamic("\"2000/7/1\"")).get().toString());
+    Assert.assertEquals("2000-07-01", LibDynamic.date(new NtDynamic("{\"x\":\"2000/7/1\"}"), "x").get().toString());
+    Assert.assertEquals("2000-07-01", LibDynamic.date(new NtDynamic("{\"x\":\"2000/7/1\"}"), "x", "-").toString());
+  }
+
+  @Test
+  public void coverage_datetime() {
+    Assert.assertEquals("2023-04-24T17:57:19.802528800-05:00[America/Chicago]", LibDynamic.datetime(new NtDynamic("\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"")).get().toString());
+    Assert.assertEquals("2023-04-24T17:57:19.802528800-05:00[America/Chicago]", LibDynamic.datetime(new NtDynamic("{\"x\":\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"}"), "x").get().toString());
+    Assert.assertEquals("2023-04-24T17:57:19.802528800-05:00[America/Chicago]", LibDynamic.datetime(new NtDynamic("{\"x\":\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"}"), "x", "-").toString());
+  }
 }
