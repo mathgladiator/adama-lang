@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.SelfClient;
 import org.adamalang.common.*;
-import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.language.LanguageServer;
 import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.region.AdamaDeploymentSyncMetrics;

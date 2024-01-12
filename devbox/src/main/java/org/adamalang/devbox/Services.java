@@ -25,7 +25,6 @@ import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.ServiceConfigFactory;
