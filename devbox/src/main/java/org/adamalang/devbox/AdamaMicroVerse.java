@@ -26,6 +26,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.TimeMachine;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
@@ -177,7 +178,7 @@ public class AdamaMicroVerse {
     Thread.sleep(1000);
   }
 
-  public static AdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics) throws Exception {
+  public static AdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics, MetricsFactory metricsFactory) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -212,7 +213,7 @@ public class AdamaMicroVerse {
         }
       }
     }
-    LocalServiceFactory factory = new LocalServiceFactory(io, alive, caravanPath, cloudPath, new NoOpMetricsFactory());
+    LocalServiceFactory factory = new LocalServiceFactory(io, alive, caravanPath, cloudPath, metricsFactory);
     JsonNode spacesNode = defn.get("spaces");
     if (spacesNode == null || !spacesNode.isArray()) {
       io.notice("verse|lacked a spaces array in microverse config");
@@ -264,7 +265,7 @@ public class AdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase), diagnostics);
+    return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics);
   }
 
   public void shutdown() throws Exception {

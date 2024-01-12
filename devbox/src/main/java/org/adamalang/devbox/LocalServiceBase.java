@@ -22,6 +22,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -68,8 +69,9 @@ public class LocalServiceBase implements ServiceBase {
   private final ConcurrentHashMap<Integer, LocalAdama> inflight;
   private final AtomicInteger inflightId;
   private final RxPubSub rxPubSub;
+  private final MetricsFactory metricsFactory;
 
-  public LocalServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub) throws Exception {
+  public LocalServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -83,6 +85,7 @@ public class LocalServiceBase implements ServiceBase {
     this.inflight = new ConcurrentHashMap<>();
     this.inflightId = new AtomicInteger(1);
     this.rxPubSub = rxPubSub;
+    this.metricsFactory = metricsFactory;
   }
 
   public String diagnostics() {
@@ -322,7 +325,7 @@ public class LocalServiceBase implements ServiceBase {
   }
 
   public Thread start() throws Exception {
-    ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), this, (domain, callback) -> callback.success(null), new DomainFinder() {
+    ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(metricsFactory), this, (domain, callback) -> callback.success(null), new DomainFinder() {
       @Override
       public void find(String domain, Callback<Domain> callback) {
         if (verse != null && verse.domainKeyToUse != null) {
