@@ -28,7 +28,6 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
-import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.*;
 import org.adamalang.runtime.graph.Graph;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -470,7 +469,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     for (Map.Entry<NtPrincipal, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
       for (PrivateView pv : existing.getValue()) {
         // create a new view within the usurping document
-        PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective, pv.assetIdEncoder);
+        PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective);
         // the usuper takes over the current view
         JsonStreamWriter priorView = new JsonStreamWriter();
         pv.dumpViewer(priorView);
@@ -483,8 +482,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     usurpingDocument.__code_cost = __code_cost;
   }
 
-  public PrivateView __createView(final NtPrincipal __who, final Perspective perspective, AssetIdEncoder __encoder) {
-    final var view = __createPrivateView(__who, perspective, __encoder);
+  public PrivateView __createView(final NtPrincipal __who, final Perspective perspective) {
+    final var view = __createPrivateView(__who, perspective);
     view.setRefresh(() -> {
       String delta = __makeRefreshJustData(view);
       if (delta != null) {
@@ -502,7 +501,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: create a private view for the given person */
-  public abstract PrivateView __createPrivateView(NtPrincipal __who, Perspective __perspective, AssetIdEncoder __encoder);
+  public abstract PrivateView __createPrivateView(NtPrincipal __who, Perspective __perspective);
 
   private String __makeRefreshJustData(PrivateView pv) {
     JsonStreamWriter data = new JsonStreamWriter();

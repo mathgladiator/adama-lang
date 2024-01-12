@@ -281,28 +281,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     });
   }
 
-  /** handle an asset request */
-  @Deprecated
-  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
-    assets.request(assetRequest, streamOf(req, ctx, cors, null));
-  }
-
-  /** handle secret and encrypted assets */
-  private void handleEncryptedAsset(FullHttpRequest req, final ChannelHandlerContext ctx) {
-    String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
-    if (assetKey != null) {
-      try {
-        String encryptedId = req.uri().substring("/~assets/".length());
-        metrics.webhandler_assets_start.run();
-        handleAsset(req, ctx, AssetRequest.parse(encryptedId, assetKey), true);
-      } catch (Exception err) {
-        sendImmediate(metrics.webhandler_assets_failed_start, req, ctx, HttpResponseStatus.OK, ASSET_FAILED_ATTACHMENT, "text/html; charset=UTF-8", false);
-      }
-    } else {
-      sendImmediate(metrics.webhandler_assets_no_cookie, req, ctx, HttpResponseStatus.OK, ASSET_COOKIE_LACKING, "text/html; charset=UTF-8", false);
-    }
-  }
-
   private void handleAssetUpload(final ChannelHandlerContext ctx, final FullHttpRequest req) {
     HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(req);
     try {
@@ -606,9 +584,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     } else if ((req.uri().startsWith("/~lg/") || req.uri().startsWith("/~pt/") || req.uri().startsWith("/~bm/")) && req.method() == HttpMethod.OPTIONS) {
       ok(ctx, req);
       return true;
-    } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
-      handleEncryptedAsset(req, ctx);
-      return true;
     } else if (req.uri().startsWith("/~lg/") && req.method() == HttpMethod.PUT) {
       String logName = req.uri().substring(5);
       byte[] memory = new byte[req.content().readableBytes()];
@@ -701,26 +676,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       } catch (Exception ex) {
         sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
       }
-      return true;
-    } else if (req.uri().startsWith("/~p")) { // set an asset key
-      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
-      String value = req.uri().substring(3);
-      String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-      if (origin != null) { // CORS support directly
-        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
-      }
-      res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
-      DefaultCookie cookie = new DefaultCookie("SAK", value);
-      cookie.setSameSite(CookieHeaderNames.SameSite.None);
-      cookie.setMaxAge(60 * 60 * 24 * 7);
-      cookie.setHttpOnly(true);
-      if (!isDevBox) {
-        cookie.setSecure(true);
-      }
-      res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-      res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
-      sendWithKeepAlive(webConfig, ctx, req, res);
       return true;
     }
     return false;

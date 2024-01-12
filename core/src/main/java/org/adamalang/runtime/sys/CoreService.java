@@ -23,7 +23,6 @@ import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
@@ -535,11 +534,6 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
-  /** connect the given person to the document hooking up a streamback */
-  public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
-    connect(context, key, stream, viewerState, assetIdEncoder);
-  }
-
   private void loadOrCreate(CoreRequestContext context, Key key, Callback<DurableLivingDocument> callback) {
     load(key, new Callback<>() {
       @Override
@@ -593,7 +587,7 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** internal: do the connect with retry when connect executes create */
-  private void connect(CoreRequestContext context, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder) {
+  public void connect(CoreRequestContext context, Key key, String viewerState, Streamback stream) {
     if (!shield.canConnectExisting.get()) {
       stream.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_CONNECT_DOCUMENT));
       return;
@@ -601,7 +595,7 @@ public class CoreService implements Deliverer, Queryable {
     loadOrCreate(context, key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        connectDirectMustBeInDocumentBase(context, document, stream, new JsonStreamReader(viewerState), assetIdEncoder);
+        connectDirectMustBeInDocumentBase(context, document, stream, new JsonStreamReader(viewerState));
       }
 
       @Override
@@ -612,7 +606,7 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** internal: send connection to the document if not joined, then join */
-  private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState, AssetIdEncoder assetIdEncoder) {
+  private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
@@ -630,7 +624,7 @@ public class CoreService implements Deliverer, Queryable {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
         };
-        document.createPrivateView(context.who, perspective, viewerState, assetIdEncoder, metrics.create_private_view.wrap(new Callback<>() {
+        document.createPrivateView(context.who, perspective, viewerState, metrics.create_private_view.wrap(new Callback<>() {
           @Override
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, view));

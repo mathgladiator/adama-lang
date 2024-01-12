@@ -57,11 +57,11 @@ public class ServiceAppModeTests {
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
 
       MockStreamback streambackViewer = new MockStreamback();
-      service.connect(ContextSupport.WRAP(new NtPrincipal("ag", "au")), KEY, "{}", null, streambackViewer);
+      service.connect(ContextSupport.WRAP(new NtPrincipal("ag", "au")), KEY, "{}", streambackViewer);
       streambackViewer.await_began();
 
       ArrayList<LatchCallback> callbacks = new ArrayList<>();

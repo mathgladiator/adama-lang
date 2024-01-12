@@ -49,6 +49,7 @@ var RxHTML = (function () {
     payload.colno = event.colno;
     payload.filename = event.filename;
     connection.log("window.error", JSON.stringify(payload));
+    console.err("[error]" + event.message);
   });
 
   connection.bump("rxhtml");
@@ -1687,7 +1688,7 @@ var RxHTML = (function () {
     sm.last = {};
     sm.params = "";
     sm.mode = "replace";
-    sm.ping = debounce(5, function() {
+    sm.ping = debounce(500, function() {
       var args = [];
       for (var k = 0; k < this.vars.length; k++) {
         var arg = this.vars[k];
@@ -1701,7 +1702,11 @@ var RxHTML = (function () {
         obj.viewer_search_query = result;
         var delta = path_to(state.view, obj);
         state.view.tree.update(delta);
-        window.history.replaceState({}, "", fixHref(window.location.pathname + result));
+        try {
+          window.history.replaceState({}, "", fixHref(window.location.pathname + result));
+        } catch(failedToReplaceState) {
+
+        }
       }
     }.bind(sm));
     state.view.tree.subscribe(function(s) {

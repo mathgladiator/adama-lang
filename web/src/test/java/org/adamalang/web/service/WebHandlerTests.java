@@ -19,9 +19,7 @@ package org.adamalang.web.service;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
 import org.adamalang.web.service.mocks.MockDomainFinder;
@@ -29,9 +27,6 @@ import org.adamalang.web.service.mocks.MockServiceBase;
 import org.adamalang.web.service.mocks.NullCertificateFinder;
 import org.junit.Assert;
 import org.junit.Test;
-
-import javax.crypto.SecretKey;
-import java.security.PrivateKey;
 
 public class WebHandlerTests {
   @Test
@@ -89,16 +84,6 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/~assets/space/key/id=123")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("<html><head><title>Bad Request</title></head><body>Asset cookie was not set.</body></html>");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
             .get("/~set/key/value")
             .execute(callback);
         callback.awaitFirst();
@@ -124,69 +109,6 @@ public class WebHandlerTests {
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("OK");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", SecureAssetUtil.makeAssetKeyHeader()))
-            .get("/~assets/space/key/id=123")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>");
-      }
-
-      {
-        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
-        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/~assets/space/fail/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Download asset failure:1234");
-      }
-
-      {
-        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
-        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/~assets/space/incomplete/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Chunk");
-      }
-
-      {
-        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
-        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/~assets/space/1/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("ChunkAndDone");
-      }
-
-      {
-        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
-        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
-            .get("/~assets/space/3/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Chunk1Chunk2Chunk3");
       }
 
       {
@@ -264,17 +186,6 @@ public class WebHandlerTests {
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("goo");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("Origin", "FOO")
-            .get("/~p123")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("OK");
       }
 
       {

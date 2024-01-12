@@ -17,7 +17,6 @@
 */
 package org.adamalang.runtime.delta;
 
-import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtDate;
@@ -30,7 +29,7 @@ public class DDateTests {
   public void flow() {
     final var db = new DDate();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, 0);
     db.show(new NtDate(1, 2, 3), writer);
     db.show(new NtDate(3, 4, 5), writer);
     db.hide(writer);

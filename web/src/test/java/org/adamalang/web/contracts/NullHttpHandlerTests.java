@@ -31,7 +31,7 @@ public class NullHttpHandlerTests {
   @Test
   public void coverage() throws Exception {
     CountDownLatch latch = new CountDownLatch(5);
-    ConnectionContext context = new ConnectionContext("origin", "remote-ip", "user-agent", null, new TreeMap<>());
+    ConnectionContext context = new ConnectionContext("origin", "remote-ip", "user-agent", new TreeMap<>());
     HttpHandler.NULL.handle(context, HttpHandler.Method.GET, "", "", new TreeMap<>(), "{}", "body", new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {

@@ -17,7 +17,6 @@
 */
 package org.adamalang.runtime.delta;
 
-import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -33,7 +32,7 @@ public class DTextTests {
     RxText text = new RxText(null, new RxInt32(null, 0));
     DText dt = new DText();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, 0);
     dt.show(text, writer);
     text.set("xyz");
     dt.show(text, writer);
@@ -53,7 +52,7 @@ public class DTextTests {
     RxText text = new RxText(null, new RxInt32(null, 0));
     DText dt = new DText();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, 0);
     text.set("/* adama */");
     dt.show(text, writer);
     text.append(0, new NtDynamic("{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]}"));

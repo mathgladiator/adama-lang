@@ -31,9 +31,6 @@ import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.*;
-import org.adamalang.runtime.delta.secure.AssetIdEncoder;
-import org.adamalang.runtime.json.JsonStreamReader;
-import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.AuthResponse;
@@ -555,12 +552,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
     CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
-    try {
-      AssetIdEncoder assetIdEncoder = payload.assetKey != null ? new AssetIdEncoder(payload.assetKey) : null;
-      nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, assetIdEncoder, this);
-    } catch (ErrorCodeException ex) {
-      failure(ex);
-    }
+    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, this);
   }
 
   @Override

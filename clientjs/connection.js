@@ -17,8 +17,6 @@ class WebSocketAdamaConnection {
     this.url = "wss://" + host + "/~s";
     // is the connection connected
     this.connected = false;
-    // TODO
-    this.assets = true;
     // is the connection dead
     this.dead = false;
     // the maximum period of time between waiting for a retry
@@ -148,23 +146,8 @@ class WebSocketAdamaConnection {
         // tell the client that we are good!
         self.backoff = 1;
         self.connected = true;
-        self.assets = result.assets;
         self.onstatuschange(true);
         self._reconnect();
-        self.ConfigureMakeOrGetAssetKey({
-          success: function (payload) {
-            try {
-              var xhttp = new XMLHttpRequest();
-              xhttp.open("GET", self.protocol + "//" + self.host + "/~p" + payload.assetKey, true);
-              xhttp.withCredentials = true;
-              xhttp.send();
-            } catch (ex) {
-              console.log(ex);
-            }
-          },
-          failure: function () {
-          }
-        });
         return;
       }
       // the result was a failure...
@@ -1038,15 +1021,6 @@ class WebSocketAdamaConnection {
           request: { method: "connection/end", id: subId, "connection":parId}
         });
       }
-    });
-  }
-  ConfigureMakeOrGetAssetKey(responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"configure/make-or-get-asset-key", "id":parId}
     });
   }
   AttachmentStart(identity, space, key, filename, contentType, responder) {

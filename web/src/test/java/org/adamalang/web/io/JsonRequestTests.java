@@ -26,7 +26,7 @@ import org.junit.Test;
 import java.util.TreeMap;
 
 public class JsonRequestTests {
-  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent", "assets", new TreeMap<>());
+  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent", new TreeMap<>());
 
   @Test
   public void noMethod() throws Exception {

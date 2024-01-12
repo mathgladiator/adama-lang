@@ -62,10 +62,7 @@ public class GlobalPerSessionAuthenticatorTests {
   @Test
   public void anonymous() throws Exception {
     GlobalAuthenticator gAuth = new GlobalAuthenticator(null, SimpleExecutor.NOW);
-    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] {}, new String[] {});
-    Assert.assertEquals("D", authenticator.getTransportAssetKey());
-    authenticator.updateTransportAssetKey("E");
-    Assert.assertEquals("E", authenticator.getTransportAssetKey());
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", null), new String[] {}, new String[] {});
     Session session = new Session(authenticator);
     CountDownLatch success = new CountDownLatch(1);
     authenticator.execute(session, "anonymous:jeffrey", new Callback<AuthenticatedUser>() {
@@ -90,7 +87,7 @@ public class GlobalPerSessionAuthenticatorTests {
     KeyPair pair = Jwts.SIG.ES256.keyPair().build();
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().subject("super").issuer("super").signWith(pair.getPrivate()).compact();
-    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] { publicKey }, new String[] {});
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", null), new String[] { publicKey }, new String[] {});
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override
@@ -115,7 +112,7 @@ public class GlobalPerSessionAuthenticatorTests {
     KeyPair pair = Jwts.SIG.ES256.keyPair().build();
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
     String token = Jwts.builder().setSubject("xyz").setIssuer("region").signWith(pair.getPrivate()).compact();
-    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", "D", null), new String[] {  }, new String[] {publicKey});
+    GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", null), new String[] {  }, new String[] {publicKey});
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {
       @Override

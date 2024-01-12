@@ -68,7 +68,7 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -99,7 +99,7 @@ public class ServiceConnectTests {
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_failure(950384);
     } finally {
       service.shutdown();
@@ -119,7 +119,7 @@ public class ServiceConnectTests {
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_failure(950384);
     } finally {
       service.shutdown();
@@ -145,7 +145,7 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -189,7 +189,7 @@ public class ServiceConnectTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -222,7 +222,7 @@ public class ServiceConnectTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_failure(9999);
     } finally {
       service.shutdown();
@@ -248,7 +248,7 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -287,7 +287,7 @@ public class ServiceConnectTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(3);
       Runnable latch2 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -319,9 +319,9 @@ public class ServiceConnectTests {
       Runnable latch2a = streamback2.latchAt(2);
       Runnable latch1b = streamback1.latchAt(4);
       Runnable latch2b = streamback2.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
       streamback1.await_began();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback2);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback2);
       streamback2.await_began();
       latch1a.run();
       latch2a.run();
@@ -360,8 +360,8 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback1.latchAt(2);
       Runnable latch2 = streamback2.latchAt(2);
       Runnable queuedUp = dataService.latchAt(1);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback2);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback2);
       queuedUp.run();
       dataService.unpause();
       streamback1.await_began();
@@ -387,7 +387,7 @@ public class ServiceConnectTests {
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latchAfter = factoryFactory.latchAt(1);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       latchAfter.run();
       factoryFactory.satisfyNone(KEY);
       streamback.await_failure(50000);
@@ -413,7 +413,7 @@ public class ServiceConnectTests {
       dataService.set(new MockFailureDataService());
       dataService.unpause();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_failure(999);
     } finally {
       service.shutdown();
@@ -430,7 +430,7 @@ public class ServiceConnectTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_failure(999);
     } finally {
       service.shutdown();
@@ -454,7 +454,7 @@ public class ServiceConnectTests {
       Runnable latch1 = dataService.latchAt(1);
       Runnable latch2 = dataService.latchAt(2);
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       latch1.run();
       dataService.once();
       latch2.run();

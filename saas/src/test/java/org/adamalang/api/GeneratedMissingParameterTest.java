@@ -788,10 +788,6 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c164 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:458759", c164.next());
       node.put("identity", _identity);
-      //ConfigureMakeOrGetAssetKey
-      node = Json.newJsonObject();
-      node.put("id", 164);
-      node.put("method", "configure/make-or-get-asset-key");
       //AttachmentStart
       node = Json.newJsonObject();
       node.put("id", 164);

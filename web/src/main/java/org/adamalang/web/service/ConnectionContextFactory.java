@@ -51,7 +51,6 @@ public class ConnectionContextFactory {
       }
     }
     String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
-    String assetKey = AssetRequest.extractAssetKey(cookieHeader);
-    return new ConnectionContext(origin, ip, userAgent, assetKey, identites);
+    return new ConnectionContext(origin, ip, userAgent, identites);
   }
 }

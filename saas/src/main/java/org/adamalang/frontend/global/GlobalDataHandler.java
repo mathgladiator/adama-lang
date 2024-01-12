@@ -29,7 +29,6 @@ import org.adamalang.frontend.Session;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.AuthResponse;
@@ -315,14 +314,6 @@ public class GlobalDataHandler implements RootRegionHandler {
       responder.error(new ErrorCodeException(ErrorCodes.API_CONNECT_BILING_MUST_BE_ADAMA_DEVELOPER));
       return null;
     }
-  }
-
-  @Override
-  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder) {
-    if (session.authenticator.getTransportAssetKey() == null) {
-      session.authenticator.updateTransportAssetKey(SecureAssetUtil.makeAssetKeyHeader());
-    }
-    responder.complete(session.authenticator.getTransportAssetKey());
   }
 
   @Override

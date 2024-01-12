@@ -53,7 +53,7 @@ public class ServiceDisconnectTests {
       created.await_success();
       MockStreamback stream = new MockStreamback();
       Runnable r = stream.latchAt(3);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, stream);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", stream);
       stream.await_began();
       SimpleIntCallback cbSent = new SimpleIntCallback();
       stream.get().send("foo", null, "{}", cbSent);

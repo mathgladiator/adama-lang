@@ -83,7 +83,7 @@ public class ServiceCleanupTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));

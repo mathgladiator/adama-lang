@@ -53,7 +53,7 @@ public class ServiceLoadShedTests {
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latchStreamBack = streamback1.latchAt(3);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
       streamback1.await_began();
       service.shed((k) -> true);
       latchStreamBack.run();

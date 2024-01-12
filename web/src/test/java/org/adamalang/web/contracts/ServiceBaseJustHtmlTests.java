@@ -94,7 +94,7 @@ public class ServiceBaseJustHtmlTests {
     base.establish(null).kill();
     base.assets();
     CountDownLatch latch = new CountDownLatch(4);
-    ConnectionContext context = new ConnectionContext("origin", "ip", "ua", null, new TreeMap<>());
+    ConnectionContext context = new ConnectionContext("origin", "ip", "ua", new TreeMap<>());
     base.http().handle(context, HttpHandler.Method.OPTIONS, null, "/opt=yes", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {

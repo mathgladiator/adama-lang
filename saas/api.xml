@@ -138,12 +138,6 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="asset-key" type="string" missing-error="475129">
-        <documentation>
-            A secure session-based key for allowing browsers to access assets without leaking of assets between browsers.
-        </documentation>
-    </parameter-definition>
-
     <parameter-definition name="email" type="string" missing-error="473103" logged="true">
         <documentation>
             The email of an Adama developer.
@@ -369,13 +363,6 @@
     <field-definition name="success" type="boolean">
         <documentation>
             Indicates if the operation or method was successful.
-        </documentation>
-    </field-definition>
-
-    <field-definition name="asset-key" type="string">
-        <documentation>
-            A key used to connect the dots from the connection to assets to a browser.
-            This is a session-based encryption scheme to protect assets from leaking outside the browser.
         </documentation>
     </field-definition>
 
@@ -645,10 +632,6 @@
             Does the domain have a forwarding address
         </documentation>
     </field-definition>
-
-    <responder name="asset-key">
-        <field name="asset-key"/>
-    </responder>
 
     <responder name="asset-id">
         <field name="asset-id"/>
@@ -1519,16 +1502,6 @@
         </documentation>
     </method>
     -->
-
-    <method name="configure/make-or-get-asset-key" responder="asset-key" scope="region" devbox="true">
-        <documentation>
-            Here, we ask if the connection if it has an asset key already.
-            If not, then it will generate one and send it along.
-            Otherwise, it will return the key bound to the connection.
-
-            This is allows anyone to have access to assets which are not exposed directly via a web handler should they see the asset within their document view.
-        </documentation>
-    </method>
 
     <method name="attachment/start" responder="progress" create="attachment-upload" scope="region" policy-via-document="true">
         <parameter name="identity"/>

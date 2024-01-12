@@ -24,7 +24,6 @@ import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.Queryable;
 import org.adamalang.runtime.data.*;
-import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
 import org.adamalang.runtime.exceptions.PerformDocumentRewindException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -855,9 +854,9 @@ public class DurableLivingDocument implements Queryable {
     return document.__isConnected(who);
   }
 
-  public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, AssetIdEncoder encoder, Callback<PrivateView> callback) {
+  public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, Callback<PrivateView> callback) {
     try {
-      PrivateView result = document.__createView(who, perspective, encoder);
+      PrivateView result = document.__createView(who, perspective);
       result.ingest(viewerState);
       invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
     } catch (Exception ex) {

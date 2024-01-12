@@ -22,9 +22,12 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.SocketChannel;
 import org.adamalang.common.gossip.Engine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** the server side of the connection */
 public class ChannelServer extends ChannelCommon {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServer.class);
   private final SocketChannelSet set;
   private final Handler handler;
   private final int id;
@@ -63,5 +66,11 @@ public class ChannelServer extends ChannelCommon {
       routeCommon(type, id, inBuffer, ctx);
     }
     inBuffer.release();
+  }
+
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    LOGGER.error("channel-server-exception", cause);
+    ctx.close();
   }
 }

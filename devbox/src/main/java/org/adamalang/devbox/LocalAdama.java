@@ -25,7 +25,6 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
@@ -399,16 +398,11 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     responder.complete(SCryptUtil.scrypt(password, 16384, 8, 1));
   }
 
-  @Override
-  public void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder) {
-    responder.complete(SecureAssetUtil.makeAssetKeyHeader());
-  }
-
   private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
     long started = System.currentTimeMillis();
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
 
-    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", null, new Streamback() {
+    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", new Streamback() {
       Runnable unsub = null;
       private CoreStream got = null;
 
