@@ -15,7 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.train;
+package org.adamalang.train.sm;
 
-public class PlaceHolderTests {
+import java.util.TreeMap;
+
+/** represents the membership with a log */
+public class Membership {
+  public final TreeMap<Integer, String> membership;
+
+  public Membership() {
+    this.membership = new TreeMap<>();
+  }
 }
