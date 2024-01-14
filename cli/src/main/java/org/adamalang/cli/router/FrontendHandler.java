@@ -27,6 +27,7 @@ public interface FrontendHandler {
   void enableEncryption(FrontendEnableEncryptionArgs args, YesOrError output) throws Exception;
   void encryptProductConfig(FrontendEncryptProductConfigArgs args, YesOrError output) throws Exception;
   void make200(FrontendMake200Args args, YesOrError output) throws Exception;
+  void measure(FrontendMeasureArgs args, YesOrError output) throws Exception;
   void mobileCapacitor(FrontendMobileCapacitorArgs args, YesOrError output) throws Exception;
   void pushGenerate(FrontendPushGenerateArgs args, YesOrError output) throws Exception;
   void rxhtml(FrontendRxhtmlArgs args, YesOrError output) throws Exception;

@@ -15,9 +15,27 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.template;
 
-public class Platform {
-  public static final String VERSION = "20240114123110";
-  public static final String JS_VERSION = "77b627ef5055f6a8260452615d390591";
+/** common rules for tools */
+public class Rules {
+  public static boolean isSpecialElement(String tag) {
+    String tagNameNormal = Base.normalizeTag(tag);
+    try {
+      Elements.class.getMethod(tagNameNormal, Environment.class);
+      return true;
+    } catch (NoSuchMethodException nsme) {
+      return false;
+    }
+  }
+
+  public static boolean isSpecialAttribute(String name) {
+    if (name.startsWith("rx:")) {
+      return true;
+    }
+    if (name.equals("for-env")) {
+      return true;
+    }
+    return false;
+  }
 }

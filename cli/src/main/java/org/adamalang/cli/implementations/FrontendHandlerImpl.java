@@ -30,12 +30,17 @@ import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.devbox.Start;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.*;
+import org.adamalang.rxhtml.preprocess.MeasureAttributeSameness;
 import org.adamalang.rxhtml.template.config.ShellConfig;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FrontendHandlerImpl implements FrontendHandler {
   public static void aggregateFiles(File file, ArrayList<File> files) {
@@ -93,6 +98,33 @@ public class FrontendHandlerImpl implements FrontendHandler {
     aggregateFiles(new File(args.rxhtmlPath), files);
     String result = Bundler.bundle(files, false);
     Files.writeString(new File(args.output).toPath(), result);
+    output.out();
+  }
+
+  @Override
+  public void measure(Arguments.FrontendMeasureArgs args, Output.YesOrError output) throws Exception {
+    ArrayList<File> files = new ArrayList<>();
+    aggregateFiles(new File(args.rxhtmlPath), files);
+    String result = Bundler.bundle(files, false);
+    Document document = Jsoup.parse(result);
+    int sourceLevelCompact = 0;
+    int attributesToCompact = 0;
+    System.out.println("name,value,count");
+    for (Map.Entry<String, HashMap<String, Integer>> entry : MeasureAttributeSameness.measure(document).entrySet()) {
+      for (Map.Entry<String, Integer> counts : entry.getValue().entrySet()) {
+        int c = counts.getValue();
+        if (c > 1) {
+          System.out.println(entry.getKey() + "," + counts.getKey() + "," + c);
+          sourceLevelCompact += counts.getKey().length() * c;
+          attributesToCompact += c;
+        }
+      }
+    }
+    double percent = Math.round((10000.0 * sourceLevelCompact) / result.length()) / 100.0;
+    System.out.println("# source total size: " + result.length());
+    System.out.println("# source level compact: " + sourceLevelCompact);
+    System.out.println("# min savings: " + percent);
+    System.out.println("# attributes to compact: " + attributesToCompact);
     output.out();
   }
 

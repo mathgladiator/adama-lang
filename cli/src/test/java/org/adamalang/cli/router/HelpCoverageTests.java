@@ -103,6 +103,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"frontend", "enable-encryption", "--help"});
     Main.testMain(new String[]{"frontend", "encrypt-product-config", "--help"});
     Main.testMain(new String[]{"frontend", "make-200", "--help"});
+    Main.testMain(new String[]{"frontend", "measure", "--help"});
     Main.testMain(new String[]{"frontend", "mobile-capacitor", "--help"});
     Main.testMain(new String[]{"frontend", "push-generate", "--help"});
     Main.testMain(new String[]{"frontend", "rxhtml", "--help"});

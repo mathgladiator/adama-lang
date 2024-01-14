@@ -4611,6 +4611,54 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-ty, --types", ANSI.Green) + " " + ColorUtilTools.prefix("<types>", ANSI.White) + " : The path for RxHTML to scan for reflected types.");
 		}
 	}
+	public static class FrontendMeasureArgs {
+		public Config config;
+		public String rxhtmlPath = "frontend";
+		public static FrontendMeasureArgs from(String[] args, int start) {
+			FrontendMeasureArgs returnArgs = new FrontendMeasureArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-r":
+					case "--rxhtml-path": {
+						if (k+1 < args.length) {
+							returnArgs.rxhtmlPath = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			return returnArgs;
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("Measure potential optimizations for an RxHTML directory", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama frontend measure", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-r, --rxhtml-path", ANSI.Green) + " " + ColorUtilTools.prefix("<rxhtml-path>", ANSI.White) + " : The path to scan for RxHTML files.");
+		}
+	}
 	public static class FrontendMobileCapacitorArgs {
 		public Config config;
 		public String rxhtmlPath = "frontend";

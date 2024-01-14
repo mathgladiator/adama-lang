@@ -215,6 +215,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("enable-encryption", 15), ANSI.Green) + "Encrypted product config encryption by generating a master key which");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("encrypt-product-config", 15), ANSI.Green) + "Encrypt product config");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("make-200", 15), ANSI.Green) + "Create a 200.html");
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("measure", 15), ANSI.Green) + "Measure potential optimizations for an RxHTML directory");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("mobile-capacitor", 15), ANSI.Green) + "Create a shell for https://capacitorjs.com/");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("push-generate", 15), ANSI.Green) + "Generate VAPID tokens for a devbox.");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("rxhtml", 15), ANSI.Green) + "Compile an rxhtml template set");
