@@ -541,7 +541,7 @@ public class CaravanDataService implements ArchivingDataService {
 
     execute("snapshot", key, true, callback, (cached) -> {
       if (cached.snapshotInvalid(snapshot.seq)) {
-        LOGGER.error("failed-snapshot-due-race: snapshot:" + snapshot.seq + " cached:" + cached.seq());
+        LOGGER.error("failed-snapshot-due-race: snapshot:" + snapshot.seq + " cached:" + cached.seq() + ";" + key.space + "/" + key.key);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_REJECT_FUTURE_SNAPSHOT));
         return;
       }
