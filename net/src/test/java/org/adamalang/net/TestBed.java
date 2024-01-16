@@ -45,6 +45,7 @@ import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.junit.Assert;
 
 import java.io.File;
@@ -94,7 +95,7 @@ public class TestBed implements AutoCloseable {
     planWriter.endObject();
     DeploymentPlan plan = new DeploymentPlan(planWriter.toString(), (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(latch));
     Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
@@ -239,7 +240,7 @@ public class TestBed implements AutoCloseable {
     digest.update(code.getBytes(StandardCharsets.UTF_8));
     AtomicBoolean success = new AtomicBoolean(false);
     CountDownLatch latch = new CountDownLatch(1);
-    AsyncCompiler.forge("space", null, plan, Deliverer.FAILURE, new TreeMap<>(), AsyncByteCodeCache.DIRECT, new Callback<DeploymentFactory>() {
+    AsyncCompiler.forge(RuntimeEnvironment.Tooling, "space", null, plan, Deliverer.FAILURE, new TreeMap<>(), AsyncByteCodeCache.DIRECT, new Callback<DeploymentFactory>() {
       @Override
       public void success(DeploymentFactory value) {
         success.set(true);

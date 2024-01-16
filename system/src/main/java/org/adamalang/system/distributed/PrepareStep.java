@@ -29,6 +29,7 @@ import org.adamalang.CoreServices;
 import org.adamalang.system.common.CloudBoot;
 import org.adamalang.system.common.DataBaseBoot;
 import org.adamalang.system.contracts.JsonConfig;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.service.WebConfig;
@@ -60,7 +61,7 @@ public class PrepareStep {
         DeploymentPlan plan = new DeploymentPlan(Spaces.getPlan(db.database, space.id), EXLOG);
         ManagedAsyncByteCodeCache cache = new ManagedAsyncByteCodeCache(cb.s3, webClientBase.executor, new DeploymentMetrics(metrics));
         CountDownLatch latch = new CountDownLatch(1);
-        AsyncCompiler.forge(space.name, null, plan, Deliverer.FAILURE, new TreeMap<>(), cache, new Callback<>() {
+        AsyncCompiler.forge(RuntimeEnvironment.Tooling, space.name, null, plan, Deliverer.FAILURE, new TreeMap<>(), cache, new Callback<>() {
           @Override
           public void success(DeploymentFactory value) {
             System.out.println("\u001b[32mSUCCESS\u001b[39m");

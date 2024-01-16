@@ -23,6 +23,7 @@ import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.sys.PredictiveInventory;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class MeteringPubSubTests {
             (t, errorCode) -> {
               t.printStackTrace();
             });
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     CountDownLatch latchDeploy = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), Callback.FINISHED_LATCH_DONT_CARE_VOID(latchDeploy));
     Assert.assertTrue(latchDeploy.await(5000, TimeUnit.MILLISECONDS));

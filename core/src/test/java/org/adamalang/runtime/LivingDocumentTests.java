@@ -44,6 +44,7 @@ import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
@@ -73,7 +74,7 @@ public class LivingDocumentTests {
     CompilerOptions.Builder opts = CompilerOptions.start().enableCodeCoverage();
     opts.packageName = "P";
     final var options = opts.noCost().make();
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
     document.setClassName("MeCode");

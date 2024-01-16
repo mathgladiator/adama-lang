@@ -25,6 +25,7 @@ import org.adamalang.support.testgen.TestForge;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
 
@@ -60,7 +61,7 @@ public class GenerateLanguageTests {
     ByteArrayOutputStream memory = new ByteArrayOutputStream();
     PrintWriter writer = new PrintWriter(memory);
     final var options = CompilerOptions.start().make();
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
     final var state = new EnvironmentState(globals, options);
     final var root = new File(inputRootPath);
     ArrayList<File> files = new ArrayList<>();

@@ -32,6 +32,7 @@ import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +108,7 @@ public class LocalServiceFactory {
       }
     });
     flusher.start();
-    this.base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    this.base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Beta);
     AtomicReference<Runnable> sweep = new AtomicReference<>(() -> {
     });
     this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run());

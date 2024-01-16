@@ -26,6 +26,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
@@ -53,7 +54,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":\"@con\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
       @Override
@@ -77,7 +78,7 @@ public class DeploymentFactoryTests {
             "{\"versions\":{\"x\":\"public int x = true;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
 
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
 
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
@@ -101,7 +102,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
       @Override
@@ -124,7 +125,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"versions\":{\"x\":{\"main\":\"public int x = 123;\",\"rxhtml\":\"<forest><page uri=\\\"/\\\">Hello World</page></forest>\"}},\"default\":\"x\",\"plan\":[]}",
             (t, errorCode) -> {});
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     CountDownLatch latch = new CountDownLatch(1);
     base.deploy("space", plan, new TreeMap<>(), new Callback<Void>() {
       @Override
@@ -189,7 +190,7 @@ public class DeploymentFactoryTests {
         builder = builder.instrument();
       }
       final var options = builder.make();
-      final var globals = GlobalObjectPool.createPoolWithStdLib();
+      final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();
       document.setClassName(className);

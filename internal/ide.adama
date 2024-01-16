@@ -77,8 +77,6 @@ record Document {
   public string name;
   public text content;
   public int failures;
-  public formula issues = name.endsWith(".adama") ? @maybe(Adama.validate(content.get())) : @maybe<dynamic>;
-  public formula reflection = name.endsWith(".adama") ? Adama.reflect(content.get()) : @maybe<dynamic>;
 }
 
 table<Document> _documents;

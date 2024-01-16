@@ -351,6 +351,26 @@ var RxHTML = (function () {
   };
   self.debounce = debounce;
 
+  var delay = function(ms, foo) {
+    var status = { avail: true, again:false, timeout: null };
+    status.go = function() {
+      if (status.avail) {
+        status.avail = false;
+        status.timeout = window.setTimeout(function() {
+          status.avail = true;
+          if (status.again) {
+            go();
+          }
+        });
+        foo();
+      } else {
+        status.again = true;
+      }
+    };
+    return status.go;
+  };
+  self.delay = delay;
+
   // HELPER | prepare a free unsubscribe object
   var make_unsub = function () {
     return {
@@ -752,9 +772,10 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | <domain-get url="path" search:x="..." ...>
-  self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed) {
+  self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed, delayLimit) {
     var unsub = make_unsub();
-    rxObj.__ = debounce(50, function () {
+    var delayToUse = typeof(delayLimit) == "number" ? delayLimit : 250;
+    rxObj.__ = debounce(50, delay(delayToUse, function () {
       if (!('url' in rxObj)) {
         return;
       }
@@ -810,13 +831,13 @@ var RxHTML = (function () {
           }
         }
       }.bind({gen:self.gen, xhttp:xhttp});
-      xhttp.open("GET", "/~d" + url, true);
+      xhttp.open("GET",  self.base + "/~d" + url, true);
       if (identity != null) {
         xhttp.setRequestHeader("Authorization", "Bearer " + identity);
       }
       xhttp.withCredentials = true;
       xhttp.send();
-    }.bind({url:"", gen:0}));
+    }.bind({url:"", gen:0, base:self.protocol + "//" + self.host})));
     rxObj.__();
   };
 

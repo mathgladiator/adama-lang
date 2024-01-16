@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
 
@@ -35,7 +36,7 @@ public class PhaseValidate {
       optionsBuilder = optionsBuilder.instrument();
     }
     final var options = optionsBuilder.make();
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
     document.addSearchPath(inputRoot.toFile());

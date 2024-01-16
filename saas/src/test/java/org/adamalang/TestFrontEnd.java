@@ -47,6 +47,7 @@ import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
@@ -229,7 +230,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     });
     flusher.start();
 
-    deploymentFactoryBase = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    deploymentFactoryBase = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     // TODO: test the
     OndemandDeploymentFactoryBase ondemand = new OndemandDeploymentFactoryBase(new DeploymentMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, new GlobalPlanFetcher(dataBase, masterKey), new DeploySync() {
       @Override

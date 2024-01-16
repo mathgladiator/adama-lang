@@ -331,6 +331,7 @@ public class LocalServiceBase implements ServiceBase {
     Thread serviceThread = new Thread(webServer);
     serviceThread.start();
     webServer.waitForReady(1000);
+    io.important("web|server \"ready\" http://127.0.0.1:" + webConfig.port);
     return serviceThread;
   }
 }

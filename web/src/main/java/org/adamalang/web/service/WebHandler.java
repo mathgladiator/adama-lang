@@ -509,15 +509,12 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     });
   }
 
-  private void ok(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+  private void okOpen(final ChannelHandlerContext ctx, final FullHttpRequest req) {
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
     HttpUtil.setContentLength(res, 0);
-    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-    if (origin != null) {
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "*");
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
-    }
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "*");
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
     res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
@@ -580,7 +577,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       }
       return true;
     } else if ((req.uri().startsWith("/~lg/") || req.uri().startsWith("/~pt/") || req.uri().startsWith("/~bm/")) && req.method() == HttpMethod.OPTIONS) {
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~lg/") && req.method() == HttpMethod.PUT) {
       String logName = req.uri().substring(5);
@@ -588,14 +585,14 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       req.content().readBytes(memory);
       String result = new String(memory, StandardCharsets.UTF_8);
       LOG.error(logName + ":{} %s", logSanitize(result));
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~pt/") && req.uri().length() >= 10 && req.method() == HttpMethod.PUT) {
       metrics.webclient_pushack.run();
       String pushToken = req.uri().substring(5);
       LOG.error("push-token-ack:" + logSanitize(pushToken));
       // TODO: route to real logger
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~bm/") && req.uri().length() >= 6) { // bump a metric
       String metricName = req.uri().substring(5);
@@ -603,7 +600,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       if (counter != null) {
         counter.run();
       }
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~set/")) { // set a secure cookie
       String[] fragments = req.uri().split(Pattern.quote("/"));

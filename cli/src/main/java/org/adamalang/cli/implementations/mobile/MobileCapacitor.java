@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -165,7 +166,15 @@ public class MobileCapacitor {
       if (!(assetsPath.exists() && assetsPath.isDirectory())) {
         throw new Exception(args.assetPath + " must be a directory");
       }
-      copyAssets(assetsPath, rootSrc);
+      TreeSet<String> ignore = new TreeSet<>();
+      ignore.add(".adama-ignore");
+      File assetsToIgnore = new File(assetsPath, ".adama-ignore");
+      if (assetsToIgnore.exists()) {
+        for (String ln : Files.readAllLines(assetsToIgnore.toPath())) {
+          ignore.add(ln);
+        }
+      }
+      copyAssets(assetsPath, rootSrc, ignore, "");
       final String[] filesToMigrate;
       if (devmode) {
         filesToMigrate = new String[]{"connection.js", "tree.js", "rxhtml.js", "rxcapacitor.js"};
@@ -222,16 +231,20 @@ public class MobileCapacitor {
     }
   }
 
-  private static void copyAssets(File source, File dest) throws Exception {
+  private static void copyAssets(File source, File dest, TreeSet<String> ignore, String prefix) throws Exception {
     for (File child : source.listFiles()) {
       if (child.isDirectory()) {
         File newDest = new File(dest, child.getName());
         newDest.mkdirs();
         if (newDest.isDirectory()) {
-          copyAssets(child, newDest);
+          if (!ignore.contains(prefix + child.getName())) {
+            copyAssets(child, newDest, ignore, prefix + "/" + child.getName());
+          }
         }
       } else {
-        Files.copy(child.toPath(), new File(dest, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        if (!ignore.contains(prefix + child.getName())) {
+          Files.copy(child.toPath(), new File(dest, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
       }
     }
   }

@@ -313,6 +313,22 @@ public class Elements {
         parameters.add(attr.getKey());
       }
     }
+    int delayLimit = 250;
+    if (env.element.hasAttr("get:delay")) {
+      String delayStr = env.element.attr("get:delay");
+      try {
+        delayLimit = Integer.parseInt(delayStr);
+      } catch (NumberFormatException nfe1) {
+        env.feedback.warn(env.element, "get:delay not parsed as integer '" + delayStr + "'");
+        try {
+          delayLimit = (int) Math.round(Double.parseDouble(delayStr));
+        } catch (NumberFormatException nfe2) {
+          env.feedback.warn(env.element, "get:delay not parsed as double! '" + delayStr + "'");
+        }
+      }
+      env.element.removeAttr("get:delay");
+    }
+
     RxObject obj = new RxObject(env, parameters.toArray(new String[parameters.size()]));
     env.writer.tab().append("$.DG(") //
         .append(parentVar).append(",") //
@@ -321,7 +337,7 @@ public class Elements {
     Base.children(env.stateVar(childStateVar).parentVariable(parentVar), TRUE_BRANCH);
     env.writer.tabDown().tab().append("},function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(childStateVar).parentVariable(parentVar), FALSE_BRANCH);
-    env.writer.tabDown().tab().append("}").append(");").newline();
+    env.writer.tabDown().tab().append("},").append("" + delayLimit).append(");").newline();
     obj.finish();
     env.pool.give(childStateVar);
     obj.finish();

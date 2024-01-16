@@ -20,6 +20,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class AsyncCompilerTests {
   public static Object pump(DeploymentFactory prior, DeploymentPlan plan, AsyncByteCodeCache cache) throws Exception {
     AtomicReference<Object> ref = new AtomicReference<>(null);
     CountDownLatch latch = new CountDownLatch(1);
-    AsyncCompiler.forge("space", prior, plan, Deliverer.FAILURE, new TreeMap<>(), cache, new Callback<DeploymentFactory>() {
+    AsyncCompiler.forge(RuntimeEnvironment.Tooling, "space", prior, plan, Deliverer.FAILURE, new TreeMap<>(), cache, new Callback<DeploymentFactory>() {
       @Override
       public void success(DeploymentFactory value) {
         ref.set(value);

@@ -3,5 +3,16 @@
         <domain-get url="/foo/path/blah" search:v="{x}">
             <lookup path="some_name" />
         </domain-get>
+
+        <domain-get url="/foo/path/blah" search:v="{x}" get:delay="1500">
+            <lookup path="some_name" />
+        </domain-get>
+
+        <domain-get url="/foo/path/blah" search:v="{x}" get:delay="1500.7">
+            <lookup path="some_name" />
+        </domain-get>
+        <domain-get url="/foo/path/blah" search:v="{x}" get:delay="xyz">
+            <lookup path="some_name" />
+        </domain-get>
     </page>
 </forest>
