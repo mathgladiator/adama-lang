@@ -5,7 +5,12 @@ var RxHTML = (function () {
   var router = {};
 
   var defaultEndpoint = /*ENDPOINT=[*/Adama.Production/*]*/;
-  // TODO: check for override endpoint
+
+  // override endpoint based on the presence of __md_endpoint
+  var mdOverrideEndpoint = localStorage.getItem("mdec"); // multi domain endpoint choice
+  if (mdOverrideEndpoint != null && "beta" == mdOverrideEndpoint) {
+    defaultEndpoint = Adama.Beta;
+  }
 
   // This strange escaping is for developer mode to proxy to localhost.
   var connection = new Adama.Connection(defaultEndpoint);
@@ -49,7 +54,7 @@ var RxHTML = (function () {
     payload.colno = event.colno;
     payload.filename = event.filename;
     connection.log("window.error", JSON.stringify(payload));
-    console.err("[error]" + event.message);
+    console.error("[error]" + event.message);
   });
 
   connection.bump("rxhtml");
@@ -2748,17 +2753,34 @@ var RxHTML = (function () {
     });
   };
 
+  // CHECK FOR OVERRIDE SIGNAL HERE
   self.domain = location.hostname;
   self.host = location.host;
   self.protocol = location.protocol;
+  self.is_mobile = false;
+
+  var hostOverride = localStorage.getItem("mdo_host"); // multi domain endpoint choice
+  if (hostOverride != null) {
+    self.host = hostOverride;
+    self.domain = hostOverride.split(":")[0];
+  }
+
+  self.url_prefix = self.protocol + "//" + self.host;
+
 
   self.mobileInit = function(defaultOverrideDomain) {
     self.domain = defaultOverrideDomain;
     self.host = defaultOverrideDomain;
     self.protocol = "https:";
     connection.protocol = "https:";
+    self.is_mobile = true;
   };
-  self.mobileInitMultiDomain = function(start) {
+  self.mobileInitMultiDomain = function(start, betaPrefix, prodPrefix) {
+    self.md_betaPrefix = betaPrefix;
+    self.md_prodPrefix = prodPrefix;
+    self.protocol = "https:";
+    connection.protocol = "https:";
+    self.is_mobile = true;
     self.run(document.body, fixPath(start), false);
     window.onpopstate = function (p) {
       self.run(document.body, fixPath(start), false);
@@ -2767,7 +2789,7 @@ var RxHTML = (function () {
   var getOrCreateManifests = function() {
     var db = localStorage.getItem("__domain_manifests");
     if (db == null) {
-      db = {manifests:[]};
+      db = {seq:0, manifests:[]};
     } else {
       db = JSON.parse(db);
     }
@@ -2775,7 +2797,7 @@ var RxHTML = (function () {
   };
   var saveManifests = function(db) {
     localStorage.setItem("__domain_manifests", JSON.stringify(db));
-  }
+  };
   self.registerManifest = function(url) {
     var add = function(manifest) {
       var db = getOrCreateManifests();
@@ -2796,14 +2818,13 @@ var RxHTML = (function () {
     xhttp.onreadystatechange = function () {
       if (this.readyState == 4) {
         if (this.status == 200) {
-          add(JSON.stringify(this.responseText));
+          add(JSON.parse(this.responseText));
         }
       }
     };
     xhttp.open("GET", url, true);
     xhttp.send();
-  }
-
+  };
   // RUNTIME(mobile) | rx:action="manifest-add:"
   self.MD_a = function(dom, type, value) {
     reg_event(null, dom, type, function() {
@@ -2811,19 +2832,37 @@ var RxHTML = (function () {
     });
   };
   // RUNTIME(mobile) | rx:action="manifest-use:"
-  self.MD_u = function(dom, type, value) { // TODO: not tested
+  self.MD_u = function(dom, type, value) {
     reg_event(null, dom, type, function() {
       var id = parseInt(typeof(value) == 'function' ? value() : value);
+      var db = getOrCreateManifests();
       for (var k = 0; k < db.manifests.length; k++) {
-        if (db.manifests[k].id == id) {
-          // TODO: DEFINE HOW TO USE IT
+        var manifest = db.manifests[k];
+        if (manifest.id == id) {
+          localStorage.setItem("mdo_host", new URL(db.manifests[k].source).host);
+          if (manifest.beta) {
+            localStorage.setItem("mdec", "beta");
+          } else {
+            localStorage.setItem("mdec", "prod");
+          }
+          window.location.href = "/";
         }
       }
     });
   };
+  self.mobileLoad = function(url) {
+    var parsed = new URL(url);
+    localStorage.setItem("mdo_host", parsed.host);
+    if (parsed.host.endsWith(self.md_betaPrefix)) {
+      localStorage.setItem("mdec", "beta");
+    } else {
+      localStorage.setItem("mdec", "prod");
+    }
+    window.location.href = parsed.path;
+  };
   // RUNTIME(mobile) | rx:action="manifest-del:"
-  self.MD_d = function(dom, type, value) { // TODO: not tested
-    reg_event(null, dom, type, value, function() {
+  self.MD_d = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
       var id = parseInt(typeof(value) == 'function' ? value() : value);
       var db = getOrCreateManifests();
       var new_manifests = [];

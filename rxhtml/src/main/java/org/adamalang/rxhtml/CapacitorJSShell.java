@@ -33,6 +33,8 @@ public class CapacitorJSShell {
   private final Feedback feedback;
   private boolean multiDomain;
   private String startingPath;
+  private String betaSuffix;
+  private String prodSuffix;
 
   public CapacitorJSShell(Feedback feedback) {
     this.feedback = feedback;
@@ -48,12 +50,17 @@ public class CapacitorJSShell {
 
   public void setDomain(String domainOverride) {
     this.domainOverride = domainOverride;
+    this.betaSuffix = domainOverride;
+    this.prodSuffix = domainOverride;
   }
 
-  public void setMultiDomain(String startingPath) {
+  public void setMultiDomain(String startingPath, String betaSuffix, String prodSuffix) {
     this.multiDomain = true;
     this.startingPath = startingPath;
+    this.betaSuffix = betaSuffix;
+    this.prodSuffix = prodSuffix;
   }
+
 
   public String make(String forest) throws Exception {
     StringBuilder sb = new StringBuilder();
@@ -111,7 +118,7 @@ public class CapacitorJSShell {
     sb.append(" </head>\n");
     sb.append("<body></body>\n<script>\n");
     if (multiDomain) {
-      sb.append("  RxHTML.mobileInitMultiDomain(\"").append(startingPath).append("\");\n");
+      sb.append("  RxHTML.mobileInitMultiDomain(\"").append(startingPath).append("\",\"").append(betaSuffix).append("\",\"").append(prodSuffix).append("\");\n");
     } else {
       sb.append("  RxHTML.mobileInit(\"").append(domainOverride).append("\");\n");
       sb.append("  RxHTML.init();\n");

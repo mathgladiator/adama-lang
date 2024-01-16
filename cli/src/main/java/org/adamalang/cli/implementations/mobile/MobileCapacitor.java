@@ -81,10 +81,19 @@ public class MobileCapacitor {
       if (!mobileConfig.has("start")) {
         throw new Exception("multi-domain requires a 'start' field");
       }
+      if (!mobileConfig.has("beta-suffix")) {
+        throw new Exception("multi-domain requires a 'beta-suffix' field");
+      }
+      if (!mobileConfig.has("prod-suffix")) {
+        throw new Exception("multi-domain requires a 'prod-suffix' field");
+      }
       if (beta) {
         throw new Exception("mobile shell can't have both beta and multi-domain set to true");
       }
-      shellBuilder.setMultiDomain(mobileConfig.get("start").textValue());
+      String start = mobileConfig.get("start").textValue();
+      String betaSuffix = mobileConfig.get("beta-suffix").textValue();
+      String prodSuffix = mobileConfig.get("prod-suffix").textValue();
+      shellBuilder.setMultiDomain(start, betaSuffix, prodSuffix);
     } else {
       if (!mobileConfig.has("domain")) {
         throw new Exception("requries 'domain' to be set (or multi-domain & start)");
@@ -155,7 +164,6 @@ public class MobileCapacitor {
     if (!(iosApp.exists() && iosApp.isDirectory())) {
       throw new Exception("path '" + rootPath + "/ios/App/App' must exist");
     }
-
 
     WebClientBase webBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(args.config.get_or_create_child("web"))));
     try {
