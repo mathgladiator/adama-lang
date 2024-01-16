@@ -3274,7 +3274,7 @@ var RxHTML = (function () {
     } // else 1
     return ival + suffix;
   }
-  transforms['time_ago'] = function(dt) {
+  transforms['time_ago'] = function(dt, format) {
     // only transform strings
     if (typeof (dt) == "string") {
       // let's strip out everything after the brackets
@@ -3304,10 +3304,19 @@ var RxHTML = (function () {
       // it wasn't 90 minutes ago, so let's just put the time stamp up
       var dthen = new Date(d);
       var dnow = new Date();
-      if (dthen.toLocaleDateString() != dnow.toLocaleDateString()) {
-        return dthen.toLocaleDateString() + " " + dthen.toLocaleTimeString();
+      var opts = {};
+      if (format){
+        format.trim().split("").forEach(char => {
+          const keys = {"h": "hour", "m": "minute", "s": "second"}
+          if (char in keys){
+            opts[keys[char]] = "numeric";
+          }
+        })
       }
-      return dthen.toLocaleTimeString();
+      if (dthen.toLocaleDateString() != dnow.toLocaleDateString()) {
+        return dthen.toLocaleDateString() + " " + dthen.toLocaleTimeString([], opts);
+      }
+      return dthen.toLocaleTimeString([], opts);
     } else {
       // do nothing
       return dt;
@@ -3349,7 +3358,7 @@ var RxHTML = (function () {
     }
   };
 
-  transforms['date'] = function(format, d) {
+  transforms['date-format'] = function(d, format) {
     if (typeof (d) == "string") {
       // if date is not set, return empty string
       if (d == "1-01-01") return ""
@@ -3382,11 +3391,14 @@ var RxHTML = (function () {
     if (name in transforms) {
       return transforms[name];
     } 
-    // check for date format
-    if (name.startsWith("date-format:")){
-      const [_, format]  = name.split(":");
-      return x => transforms["date"](format, x);
+    // ex: date-format:mm/dd/yy
+    if (name.includes(":")){
+      const [key, format]  = name.split(":");
+      if (key in transforms) {
+        return x => transforms[key](x, format);
+      }
     }
+    
     return function(x) { return x; };
   };
 
