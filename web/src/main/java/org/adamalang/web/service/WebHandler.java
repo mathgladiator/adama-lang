@@ -36,6 +36,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
+import org.adamalang.runtime.sys.web.KnownErrors;
 import org.adamalang.web.assets.*;
 import org.adamalang.web.assets.cache.CachedAsset;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
@@ -62,13 +63,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   private static final byte[] EMPTY_RESPONSE = new byte[0];
   private static final byte[] OK_RESPONSE = "OK".getBytes(StandardCharsets.UTF_8);
-  private static final byte[] ASSET_FAILED_ATTACHMENT = ("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
-  private static final byte[] ASSET_COOKIE_LACKING = "<html><head><title>Bad Request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_FAILURE = "<html><head><title>Bad Request; Internal Error Uploading</title></head><body>Sorry, the upload failed.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] COOKIE_SET_FAILURE = "<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
-  private static final byte[] COOKIE_GET_FAILURE = "<html><head><title>Bad Request; Failed to get cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] JAR_FAILURE = "<html><head><title>Bad Request; Internal Error Access Jar</title></head><body>Sorry, the download failed.</body></html>".getBytes(StandardCharsets.UTF_8);
 
   private final WebConfig webConfig;
@@ -689,7 +687,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
 
     if (httpResult.redirect) {
-      redirect(metrics.webhandler_redirect, req, ctx, httpResult.redirectStatus == 301 ? HttpResponseStatus.PERMANENT_REDIRECT : HttpResponseStatus.TEMPORARY_REDIRECT, httpResult.location);
+      redirect(metrics.webhandler_redirect, req, ctx, httpResult.status == 301 ? HttpResponseStatus.PERMANENT_REDIRECT : HttpResponseStatus.TEMPORARY_REDIRECT, httpResult.location);
       return;
     }
 
@@ -701,7 +699,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     // otherwise, send the body
     metrics.webhandler_found.run();
     byte[] body = httpResult.body != null ? httpResult.body : EMPTY_RESPONSE;
-    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(body));
+    final HttpResponseStatus status = HttpResponseStatus.valueOf(httpResult.status);
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(body));
     HttpUtil.setContentLength(res, body.length);
     if (httpResult.contentType.length() > 0) {
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
@@ -742,7 +741,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         } else {
           LOG.error("failed-web-handler:" + ex.getMessage());
         }
-        handleHttpResult(null, ctx, req);
+        handleHttpResult(new HttpHandler.HttpResult(KnownErrors.inferHttpStatusCodeFrom(ex.code), "text/html", ("error:" + ex.code).getBytes(StandardCharsets.UTF_8), true), ctx, req);
       }
     };
 

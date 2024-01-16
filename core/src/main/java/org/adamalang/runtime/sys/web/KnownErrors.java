@@ -15,9 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.web;
 
-public class Platform {
-  public static final String VERSION = "20240115223505";
-  public static final String JS_VERSION = "77b627ef5055f6a8260452615d390591";
+import org.adamalang.ErrorCodes;
+
+/** for converting Adama's error codes to HTTP */
+public class KnownErrors {
+  public static int inferHttpStatusCodeFrom(int code) {
+    if (code == ErrorCodes.DOCUMENT_WEB_GET_ABORT || //
+        code == ErrorCodes.DOCUMENT_WEB_DELETE_ABORT || //
+        code == ErrorCodes.DOCUMENT_WEB_PUT_ABORT) return 400;
+    if (code == ErrorCodes.DOCUMENT_WEB_GET_NOT_FOUND || //
+        code == ErrorCodes.DOCUMENT_WEB_DELETE_NOT_FOUND || //
+        code == ErrorCodes.DOCUMENT_WEB_OPTIONS_NOT_FOUND || //
+        code == ErrorCodes.DOCUMENT_WEB_PUT_NOT_FOUND) return 404;
+    return 500;
+  }
 }

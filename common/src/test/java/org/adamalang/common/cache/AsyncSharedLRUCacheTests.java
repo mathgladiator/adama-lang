@@ -36,8 +36,7 @@ public class AsyncSharedLRUCacheTests {
   @Test
   public void sweep() throws Exception {
     MockTime time = new MockTime();
-    ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 50, (key, ms) -> evictions.add(key));
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 50, (key, ms) -> {});
     SimpleExecutor executor = SimpleExecutor.create("test");
     try {
       AtomicInteger calls = new AtomicInteger(0);
@@ -94,8 +93,7 @@ public class AsyncSharedLRUCacheTests {
   @Test
   public void herd_success() throws Exception {
     MockTime time = new MockTime();
-    ArrayList<String> evictions = new ArrayList<>();
-    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, (key, ms) -> evictions.add(key));
+    SyncCacheLRU cache = new SyncCacheLRU<String, MeasuredString>(time, 1, 10, 1024, 1000, (key, ms) -> {});
     SimpleExecutor executor = SimpleExecutor.create("test");
     try {
       AtomicInteger calls = new AtomicInteger(0);

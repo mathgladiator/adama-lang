@@ -54,19 +54,19 @@ public class ServiceBaseJustHtmlTests {
       }
 
       public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("","".getBytes(StandardCharsets.UTF_8), uri.equalsIgnoreCase("/opt=yes")));
+        callback.success(new HttpResult(200, "","".getBytes(StandardCharsets.UTF_8), uri.equalsIgnoreCase("/opt=yes")));
       }
 
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
+        callback.success(new HttpResult(200, "yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
       public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
+        callback.success(new HttpResult(200, "yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("post", "post".getBytes(StandardCharsets.UTF_8), true));
+        callback.success(new HttpResult(200, "post", "post".getBytes(StandardCharsets.UTF_8), true));
       }
 
       @Override

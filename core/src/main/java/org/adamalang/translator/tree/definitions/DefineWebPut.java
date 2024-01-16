@@ -23,6 +23,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
+import org.adamalang.translator.tree.definitions.web.WebGuard;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
@@ -41,10 +42,11 @@ public class DefineWebPut extends Definition implements UriAction {
   public final Token messageType;
   public final Token messageVariable;
   public final Token closeParen;
+  public final WebGuard guard;
   public final Block code;
   private TyType messageTypeFound;
 
-  public DefineWebPut(Token webToken, Token postToken, Uri uri, Token openParen, Token messageType, Token messageVariable, Token closeParen, Block code) {
+  public DefineWebPut(Token webToken, Token postToken, Uri uri, Token openParen, Token messageType, Token messageVariable, Token closeParen, WebGuard guard, Block code) {
     this.webToken = webToken;
     this.postToken = postToken;
     this.uri = uri;
@@ -52,6 +54,7 @@ public class DefineWebPut extends Definition implements UriAction {
     this.messageType = messageType;
     this.messageVariable = messageVariable;
     this.closeParen = closeParen;
+    this.guard = guard;
     this.code = code;
     this.messageTypeFound = null;
     ingest(webToken);
@@ -67,6 +70,9 @@ public class DefineWebPut extends Definition implements UriAction {
     yielder.accept(messageType);
     yielder.accept(messageVariable);
     yielder.accept(closeParen);
+    if (guard != null) {
+      guard.emit(yielder);
+    }
     code.emit(yielder);
   }
 
@@ -74,6 +80,9 @@ public class DefineWebPut extends Definition implements UriAction {
   public void format(Formatter formatter) {
     formatter.startLine(webToken);
     uri.format(formatter);
+    if (guard != null) {
+      guard.format(formatter);
+    }
     code.format(formatter);
   }
 
@@ -91,6 +100,9 @@ public class DefineWebPut extends Definition implements UriAction {
   }
 
   public void typing(TypeCheckerRoot checker) {
+    if (guard != null) {
+      guard.typing(checker);
+    }
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
     checker.register(fe.free, (environment) -> {

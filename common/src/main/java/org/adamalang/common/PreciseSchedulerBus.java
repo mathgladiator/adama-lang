@@ -35,7 +35,7 @@ public class PreciseSchedulerBus implements Runnable {
     this.snapshot = System.nanoTime();
   }
 
-  @SuppressWarnings("BusyWait")
+  @SuppressWarnings({"BusyWait","Unchecked"})
   @Override
   public void run() {
     while (true) {

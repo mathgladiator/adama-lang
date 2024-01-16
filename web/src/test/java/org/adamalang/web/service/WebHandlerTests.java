@@ -118,7 +118,7 @@ public class WebHandlerTests {
             .get("/crash")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>");
+        callback.assertData("error:-1");
       }
 
       {
@@ -139,7 +139,7 @@ public class WebHandlerTests {
             .post("/crash", "{}")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>");
+        callback.assertData("error:-1");
       }
 
       {

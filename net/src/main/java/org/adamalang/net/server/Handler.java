@@ -297,9 +297,10 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
       response.assetSHA384 = value.asset.sha384;
       response.assetSize = value.asset.size;
     }
+    response.status = value.status;
     response.cors = value.cors;
-    response.cache_ttl_seconds = value.cache_ttl_seconds;
-    response.asset_transform = value.asset_transform;
+    response.cacheTimeToLiveSeconds = value.cache_ttl_seconds;
+    response.assetTransform = value.asset_transform;
     ByteBuf buf = upstream.create(1024);
     ServerCodec.write(buf, response);
     upstream.next(buf);

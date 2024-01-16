@@ -53,6 +53,7 @@ public interface HttpHandler {
 
   /** The concrete result of handling a request; */
   class HttpResult {
+    public final int status;
     public final String contentType;
     public final byte[] body;
     public final String space;
@@ -62,11 +63,11 @@ public interface HttpHandler {
     public final boolean cors;
     public final boolean redirect;
     public final String location;
-    public final int redirectStatus;
     public final Integer cacheTimeSeconds;
 
-    public HttpResult(String contentType, byte[] body, boolean cors) {
-      this.contentType = contentType;
+    public HttpResult(int status, String contentType, byte[] body, boolean cors) {
+      this.status = status;
+      this.contentType = contentType != null ? contentType : "";
       this.body = body;
       this.space = null;
       this.key = null;
@@ -75,11 +76,11 @@ public interface HttpHandler {
       this.cors = cors;
       this.redirect = false;
       this.location = null;
-      this.redirectStatus = 0;
       this.cacheTimeSeconds = null;
     }
 
-    public HttpResult(String space, String key, NtAsset asset, String transform, boolean cors, int cts) {
+    public HttpResult(int status, String space, String key, NtAsset asset, String transform, boolean cors, int cts) {
+      this.status = status;
       this.contentType = asset.contentType;
       this.body = null;
       this.space = space;
@@ -89,11 +90,11 @@ public interface HttpHandler {
       this.cors = cors;
       this.redirect = false;
       this.location = null;
-      this.redirectStatus = 0;
       this.cacheTimeSeconds = cts > 0 ? cts : null;
     }
 
     public HttpResult(String location, int code) {
+      this.status = code;
       this.contentType = null;
       this.body = null;
       this.space = null;
@@ -103,7 +104,6 @@ public interface HttpHandler {
       this.cors = true;
       this.redirect = true;
       this.location = location;
-      this.redirectStatus = code;
       this.cacheTimeSeconds = null;
     }
 

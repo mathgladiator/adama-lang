@@ -128,7 +128,7 @@ public class TestClientRequestBuilder {
                             final ChannelHandlerContext ctx, final FullHttpResponse msg)
                             throws Exception {
                           System.err.println("read some data");
-                          Iterator<Map.Entry<String, String>> hdrIt = msg.headers().iterator();
+                          Iterator<Map.Entry<String, String>> hdrIt = msg.headers().entries().iterator();
                           while (hdrIt.hasNext()) {
                             Map.Entry<String, String> hdr = hdrIt.next();
                             callback.headers.put(hdr.getKey().toLowerCase(Locale.ROOT), hdr.getValue());

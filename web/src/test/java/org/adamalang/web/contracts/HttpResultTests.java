@@ -23,7 +23,7 @@ import org.junit.Test;
 public class HttpResultTests {
   @Test
   public void trivial() {
-    HttpHandler.HttpResult a = new HttpHandler.HttpResult("", null, true);
-    HttpHandler.HttpResult b = new HttpHandler.HttpResult("space", "key", NtAsset.NOTHING, null, true, 0);
+    HttpHandler.HttpResult a = new HttpHandler.HttpResult(200, "", null, true);
+    HttpHandler.HttpResult b = new HttpHandler.HttpResult(200, "space", "key", NtAsset.NOTHING, null, true, 0);
   }
 }

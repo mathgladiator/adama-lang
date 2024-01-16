@@ -40,7 +40,7 @@ public class HttpResultCacheTests {
       }
     };
     HttpResultCache cache = new HttpResultCache(mock);
-    cache.inject("key").accept(1000, new HttpHandler.HttpResult("space", "key", NtAsset.NOTHING, null, false, 0));
+    cache.inject("key").accept(1000, new HttpHandler.HttpResult(200, "space", "key", NtAsset.NOTHING, null, false, 0));
     Assert.assertEquals("space", cache.get("key").space);
     time.set(999);
     Assert.assertEquals("space", cache.get("key").space);
@@ -59,7 +59,7 @@ public class HttpResultCacheTests {
       }
     };
     HttpResultCache cache = new HttpResultCache(mock);
-    cache.inject("key").accept(1000, new HttpHandler.HttpResult("space", "key", NtAsset.NOTHING, null, false, 0));
+    cache.inject("key").accept(1000, new HttpHandler.HttpResult(200, "space", "key", NtAsset.NOTHING, null, false, 0));
     Assert.assertEquals("space", cache.get("key").space);
     Assert.assertEquals(0, cache.sweep());
     time.set(999);
@@ -77,7 +77,7 @@ public class HttpResultCacheTests {
     try {
       AtomicBoolean alive = new AtomicBoolean(true);
       HttpResultCache.sweeper(executor, alive, cache, 10, 20);
-      cache.inject("key").accept(100, new HttpHandler.HttpResult("space", "key", NtAsset.NOTHING, null, false, 0));
+      cache.inject("key").accept(100, new HttpHandler.HttpResult(200, "space", "key", NtAsset.NOTHING, null, false, 0));
       while (cache.get("key") != null) {
         System.out.println("poll");
         Thread.sleep(5);

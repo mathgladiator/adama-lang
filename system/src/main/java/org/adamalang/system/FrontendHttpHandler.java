@@ -299,38 +299,27 @@ public class FrontendHttpHandler implements HttpHandler {
               String identity = signingKey.signDocumentIdentity(response.body, skr.space, skr.key, response.cache_ttl_seconds);
               ObjectNode json = Json.newJsonObject();
               json.put("identity", identity);
-              result = new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
+              result = new HttpResult(200, "application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
             } catch (Exception ex) {
               callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_SECRETS_SIGNING_EXCEPTION, ex, EXLOGGER));
               return;
             }
-          } else if ("redirection/301".equals(response.contentType)) {
-            result = new HttpResult(response.body, 301);
-          } else if ("redirection/302".equals(response.contentType)) {
-            result = new HttpResult(response.body, 302);
-          } else if ("text/identity".equals(response.contentType)) {
-            ObjectNode json = Json.newJsonObject();
-            json.put("identity", response.body);
-            result = new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
           } else {
-            if (response.asset != null) {
-              result = new HttpResult(skr.space, skr.key, response.asset, response.asset_transform, response.cors, response.cache_ttl_seconds);
-            } else {
-              result = new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors);
-            }
+            result = commonRoute(response, skr);
           }
           if (writeToCache != null && response.cache_ttl_seconds > 0) {
             writeToCache.accept(response.cache_ttl_seconds * 1000, result);
           }
           callback.success(result);
         } else {
-          callback.success(null);
+          callback.success(new HttpResult(404, "text/plain", "not found".getBytes(StandardCharsets.UTF_8), true));
         }
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        callback.failure(ex);
+        int status = KnownErrors.inferHttpStatusCodeFrom(ex.code);
+        callback.success(new HttpResult(status, "text/plain", ("error:" + ex.code).getBytes(StandardCharsets.UTF_8), true));
       }
     };
   }
@@ -392,7 +381,7 @@ public class FrontendHttpHandler implements HttpHandler {
       client.webOptions(skr.space, skr.key, get, new Callback<>() {
         @Override
         public void success(WebResponse value) {
-          callback.success(new HttpResult("", null, value.cors));
+          callback.success(new HttpResult(200, "", null, value.cors));
         }
 
         @Override
@@ -402,7 +391,7 @@ public class FrontendHttpHandler implements HttpHandler {
       });
     } else {
       logItem.put("invalid", true);
-      callback.success(new HttpResult("", null, false));
+      callback.success(new HttpResult(404, "", null, false));
     }
   }
 
@@ -441,9 +430,10 @@ public class FrontendHttpHandler implements HttpHandler {
     rxHtmlFetcher.fetch(space, new Callback<>() {
       @Override
       public void success(LiveSiteRxHtmlResult result) {
+        // TODO: for bundling, the test will have to go with a "resolve"
         if (result.test(uri)) {
           logInfo.put("rxhtml", true);
-          callback.success(new HttpResult("text/html", result.html, false));
+          callback.success(new HttpResult(200, "text/html", result.html, false));
         } else {
           logInfo.put("rxhtml", false);
           get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
@@ -455,5 +445,23 @@ public class FrontendHttpHandler implements HttpHandler {
         get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);
       }
     });
+  }
+
+  public static HttpResult commonRoute(WebResponse response, SpaceKeyRequest skr) {
+    if ("redirection/301".equals(response.contentType)) {
+      return new HttpResult(response.body, 301);
+    } else if ("redirection/302".equals(response.contentType)) {
+      return new HttpResult(response.body, 302);
+    } else if ("text/identity".equals(response.contentType)) {
+      ObjectNode json = Json.newJsonObject();
+      json.put("identity", response.body);
+      return new HttpResult(200, "application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors);
+    } else {
+      if (response.asset != null) {
+        return new HttpResult(response.status, skr.space, skr.key, response.asset, response.asset_transform, response.cors, response.cache_ttl_seconds);
+      } else {
+        return new HttpResult(response.status, response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors);
+      }
+    }
   }
 }

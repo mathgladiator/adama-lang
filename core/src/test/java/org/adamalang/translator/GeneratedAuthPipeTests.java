@@ -747,7 +747,7 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\n      __track(0);");
     gold.append("\n      {");
     gold.append("\n        RTx_AnonObjConvert_0 __capture1 = new RTx_AnonObjConvert_0(\"1\", \"hash\");");
-    gold.append("\n        return new AuthResponse().agent(__capture1.agent).hash(__capture1.hash);");
+    gold.append("\n        return new AuthResponse().hash(__capture1.hash).agent(__capture1.agent);");
     gold.append("\n      }");
     gold.append("\n    } catch (AbortMessageException ame) {");
     gold.append("\n      return null;");

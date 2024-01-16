@@ -111,7 +111,7 @@ public class GlobalPerSessionAuthenticatorTests {
     GlobalAuthenticator gAuth = new GlobalAuthenticator(null, SimpleExecutor.NOW);
     KeyPair pair = Jwts.SIG.ES256.keyPair().build();
     String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-    String token = Jwts.builder().setSubject("xyz").setIssuer("region").signWith(pair.getPrivate()).compact();
+    String token = Jwts.builder().subject("xyz").issuer("region").signWith(pair.getPrivate()).compact();
     GlobalPerSessionAuthenticator authenticator = new GlobalPerSessionAuthenticator(null, gAuth, new ConnectionContext("a", "b", "c", null), new String[] {  }, new String[] {publicKey});
     CountDownLatch latch = new CountDownLatch(1);
     authenticator.execute(new Session(authenticator), token, new Callback<AuthenticatedUser>() {

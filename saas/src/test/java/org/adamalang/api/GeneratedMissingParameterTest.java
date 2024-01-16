@@ -136,7 +136,7 @@ public class GeneratedMissingParameterTest {
       node.put("authority", "xzya");
       Iterator<String> c19 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:457743", c19.next());
-      node.put("key-store", Json.newJsonObject());
+      node.set("key-store", Json.newJsonObject());
       //AuthorityGet
       node = Json.newJsonObject();
       node.put("id", 19);
@@ -206,7 +206,7 @@ public class GeneratedMissingParameterTest {
       node.put("space", "xzya");
       Iterator<String> c33 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425999", c33.next());
-      node.put("plan", Json.newJsonObject());
+      node.set("plan", Json.newJsonObject());
       //SpaceRedeployKick
       node = Json.newJsonObject();
       node.put("id", 33);
@@ -252,7 +252,7 @@ public class GeneratedMissingParameterTest {
       node.put("space", "xzya");
       Iterator<String> c43 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:402255", c43.next());
-      node.put("access-policy", Json.newJsonObject());
+      node.set("access-policy", Json.newJsonObject());
       //SpaceGetPolicy
       node = Json.newJsonObject();
       node.put("id", 43);
@@ -341,10 +341,10 @@ public class GeneratedMissingParameterTest {
       node.put("domain", "xzya");
       Iterator<String> c62 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:407308", c62.next());
-      node.put("subscription", Json.newJsonObject());
+      node.set("subscription", Json.newJsonObject());
       Iterator<String> c63 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:446218", c63.next());
-      node.put("device-info", Json.newJsonObject());
+      node.set("device-info", Json.newJsonObject());
       //DomainMap
       node = Json.newJsonObject();
       node.put("id", 63);
@@ -393,7 +393,7 @@ public class GeneratedMissingParameterTest {
       node.put("domain", "xzya");
       Iterator<String> c74 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:453621", c74.next());
-      node.put("product-config", Json.newJsonObject());
+      node.set("product-config", Json.newJsonObject());
       //DomainReflect
       node = Json.newJsonObject();
       node.put("id", 74);
@@ -511,7 +511,7 @@ public class GeneratedMissingParameterTest {
       node.put("key", "xzya");
       Iterator<String> c100 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c100.next());
-      node.put("message", Json.newJsonObject());
+      node.set("message", Json.newJsonObject());
       //DocumentAuthorizationDomain
       node = Json.newJsonObject();
       node.put("id", 100);
@@ -521,7 +521,7 @@ public class GeneratedMissingParameterTest {
       node.put("domain", "xzya");
       Iterator<String> c102 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c102.next());
-      node.put("message", Json.newJsonObject());
+      node.set("message", Json.newJsonObject());
       //DocumentAuthorize
       node = Json.newJsonObject();
       node.put("id", 102);
@@ -601,7 +601,7 @@ public class GeneratedMissingParameterTest {
       node.put("key", "xzya");
       Iterator<String> c122 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:461826", c122.next());
-      node.put("arg", Json.newJsonObject());
+      node.set("arg", Json.newJsonObject());
       //DocumentDelete
       node = Json.newJsonObject();
       node.put("id", 122);
@@ -643,7 +643,7 @@ public class GeneratedMissingParameterTest {
       node.put("channel", "xzya");
       Iterator<String> c132 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c132.next());
-      node.put("message", Json.newJsonObject());
+      node.set("message", Json.newJsonObject());
       //MessageDirectSendOnce
       node = Json.newJsonObject();
       node.put("id", 132);
@@ -662,7 +662,7 @@ public class GeneratedMissingParameterTest {
       node.put("channel", "xzya");
       Iterator<String> c137 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c137.next());
-      node.put("message", Json.newJsonObject());
+      node.set("message", Json.newJsonObject());
       //ConnectionCreate
       node = Json.newJsonObject();
       node.put("id", 137);
@@ -698,7 +698,7 @@ public class GeneratedMissingParameterTest {
       node.put("channel", "xzya");
       Iterator<String> c145 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c145.next());
-      node.put("message", Json.newJsonObject());
+      node.set("message", Json.newJsonObject());
       //ConnectionPassword
       node = Json.newJsonObject();
       node.put("id", 145);
@@ -727,7 +727,7 @@ public class GeneratedMissingParameterTest {
       node.put("channel", "xzya");
       Iterator<String> c152 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425987", c152.next());
-      node.put("message", Json.newJsonObject());
+      node.set("message", Json.newJsonObject());
       //ConnectionCanAttach
       node = Json.newJsonObject();
       node.put("id", 152);
@@ -898,7 +898,7 @@ public class GeneratedMissingParameterTest {
       node.put("key", "xzya");
       Iterator<String> c189 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:425213", c189.next());
-      node.put("metrics", Json.newJsonObject());
+      node.set("metrics", Json.newJsonObject());
       //RegionalInitHost
       node = Json.newJsonObject();
       node.put("id", 189);

@@ -1,0 +1,9 @@
+message M { }
+
+@web put /path1 (M m) {
+  return {html:"", status:410};
+}
+
+@web put /path2 (M m) {
+  return {html:"", status:403};
+}

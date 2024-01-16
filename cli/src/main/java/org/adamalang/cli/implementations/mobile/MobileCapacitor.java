@@ -68,9 +68,13 @@ public class MobileCapacitor {
     boolean beta = false;
     if (mobileConfig.has("devmode") && mobileConfig.get("devmode").booleanValue()) {
       shellBuilder.enableDevMode();
+      devmode = true;
     }
     if (mobileConfig.has("beta")) {
       beta = mobileConfig.get("beta").booleanValue();
+    }
+    if (beta) {
+      devmode = true;
     }
     if (mobileConfig.has("multi-domain") && mobileConfig.get("multi-domain").booleanValue()) {
       if (!mobileConfig.has("start")) {

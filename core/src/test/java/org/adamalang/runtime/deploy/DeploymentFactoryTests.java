@@ -17,16 +17,32 @@
 */
 package org.adamalang.runtime.deploy;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.keys.PrivateKeyBundle;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.translator.env.CompilerOptions;
+import org.adamalang.translator.env.EnvironmentState;
+import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env2.Scope;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.adamalang.translator.parser.Parser;
+import org.adamalang.translator.parser.exceptions.AdamaLangException;
+import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DeploymentFactoryTests {
 
@@ -131,7 +147,7 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
-    DeploymentFactory newFactory = SyncCompiler.forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
+    DeploymentFactory newFactory = forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
     Assert.assertEquals(1, newFactory.spacesAvailable().size());
   }
 
@@ -141,7 +157,55 @@ public class DeploymentFactoryTests {
         new DeploymentPlan(
             "{\"instrument\":true,\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
             (t, errorCode) -> {});
-    DeploymentFactory newFactory = SyncCompiler.forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
+    DeploymentFactory newFactory = forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
     Assert.assertEquals(1, newFactory.spacesAvailable().size());
+  }
+
+  public static DeploymentFactory forge(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
+    HashMap<String, LivingDocumentFactory> factories = new HashMap<>();
+    long _memoryUsed = 0L;
+    for (Map.Entry<String, DeployedVersion> entry : plan.versions.entrySet()) {
+      LivingDocumentFactory factory = null;
+      if (prior != null) {
+        if (prior.plan.versions.containsKey(entry.getKey())) {
+          if (prior.plan.versions.get(entry.getKey()).equals(entry.getValue())) {
+            factory = prior.factories.get(entry.getKey());
+          }
+        }
+      }
+      if (factory == null) {
+        factory = compile(name, spacePrefix.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_")) + newClassId.getAndIncrement(), entry.getValue().main, entry.getValue().includes, deliverer, keys, plan.instrument);
+      }
+      _memoryUsed += factory.memoryUsage;
+      factories.put(entry.getKey(), factory);
+    }
+    return new DeploymentFactory(name, plan, _memoryUsed, factories);
+  }
+
+  private static LivingDocumentFactory compile(String spaceName, String className, final String code, Map<String, String> includes, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, boolean instrument) throws ErrorCodeException {
+    try {
+      CompilerOptions.Builder builder = CompilerOptions.start();
+      if (instrument) {
+        builder = builder.instrument();
+      }
+      final var options = builder.make();
+      final var globals = GlobalObjectPool.createPoolWithStdLib();
+      final var state = new EnvironmentState(globals, options);
+      final var document = new Document();
+      document.setClassName(className);
+      document.setIncludes(includes);
+      final var tokenEngine = new TokenEngine("main", code.codePoints().iterator());
+      final var parser = new Parser(tokenEngine, document.getSymbolIndex(), Scope.makeRootDocument());
+      parser.document().accept(document);
+      if (!document.check(state.scope())) {
+        throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());
+      }
+      final var java = document.compileJava(state);
+      JsonStreamWriter reflection = new JsonStreamWriter();
+      document.writeTypeReflectionJson(reflection);
+      return new LivingDocumentFactory(SyncCompiler.compile(spaceName, className, java, reflection.toString()), deliverer, keys);
+    } catch (AdamaLangException ex) {
+      throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_PARSE_LANGUAGE, ex);
+    }
   }
 }
