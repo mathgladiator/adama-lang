@@ -347,6 +347,42 @@ public class InMemoryDataServiceTests {
         success.incrementAndGet();
       }
     });
+    ds.recover(key, new DocumentRestore(125, "{\"doc\":1}", NtPrincipal.NO_ONE), new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.get(key, new Callback<LocalDocumentChange>() {
+      @Override
+      public void success(LocalDocumentChange value) {
+        Assert.assertEquals("{\"doc\":1}", value.patch);
+        Assert.assertEquals(1, value.reads);
+        Assert.assertEquals(125, value.seq);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.recover(new Key("SPPPPPPAACE", "key"), new DocumentRestore(125, "{\"doc\":1}", NtPrincipal.NO_ONE), new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        Assert.assertEquals(117817, ex.code);
+        success.incrementAndGet();
+      }
+    });
     ds.close(key, new Callback<Void>() {
       @Override
       public void success(Void value) {
@@ -358,6 +394,6 @@ public class InMemoryDataServiceTests {
 
       }
     });
-    Assert.assertEquals(1009, success.get());
+    Assert.assertEquals(1012, success.get());
   }
 }

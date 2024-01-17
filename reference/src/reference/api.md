@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [Deinit](#method-deinit), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [Stats](#method-stats), [IdentityHash](#method-identityhash), [IdentityStash](#method-identitystash), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [PushRegister](#method-pushregister), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization), [DocumentAuthorizationDomain](#method-documentauthorizationdomain), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [BillingConnectionCreate](#method-billingconnectioncreate), [ConfigureMakeOrGetAssetKey](#method-configuremakeorgetassetkey), [AttachmentStart](#method-attachmentstart), [AttachmentStartByDomain](#method-attachmentstartbydomain), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [Deinit](#method-deinit), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [Stats](#method-stats), [IdentityHash](#method-identityhash), [IdentityStash](#method-identitystash), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [PushRegister](#method-pushregister), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization), [DocumentAuthorizationDomain](#method-documentauthorizationdomain), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [BillingConnectionCreate](#method-billingconnectioncreate), [AttachmentStart](#method-attachmentstart), [AttachmentStartByDomain](#method-attachmentstartbydomain), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount
 This initiates developer machine via email verification.
@@ -1825,31 +1825,6 @@ connection.BillingConnectionCreate(identity, {
 | name | type | documentation |
 | --- | --- | --- |
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
-
-## Method: ConfigureMakeOrGetAssetKey
-Here, we ask if the connection if it has an asset key already.
-If not, then it will generate one and send it along.
-Otherwise, it will return the key bound to the connection.
-
-This is allows anyone to have access to assets which are not exposed directly via a web handler should they see the asset within their document view.
-This method has no parameters.
-
-### Template
-```js
-connection.ConfigureMakeOrGetAssetKey({
-  success: function(response) {
-    // response.assetKey
-  },
-  failure: function(reason) {
-  }
-});
-```
-
-
-### Request response fields
-| name | type | documentation |
-| --- | --- | --- |
-| asset-key | String | A key used to connect the dots from the connection to assets to a browser.             This is a session-based encryption scheme to protect assets from leaking outside the browser. |
 
 ## Method: AttachmentStart
 Start an upload for the given document with the given filename and content type.

@@ -68,7 +68,7 @@ public class ServiceDrainTests {
 
       MockStreamback streamback1 = new MockStreamback();
       Runnable latchStreamBack = streamback1.latchAt(3);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
       streamback1.await_began();
 
       {
@@ -110,7 +110,7 @@ public class ServiceDrainTests {
       }
       {
         MockStreamback streamback2 = new MockStreamback();
-        service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback2);
+        service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback2);
         streamback2.await_failure(193265);
       }
 

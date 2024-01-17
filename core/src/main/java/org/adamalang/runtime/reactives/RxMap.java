@@ -36,7 +36,6 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
   private final NtMap<DomainTy, RangeTy> objects;
-  private boolean invalidated;
 
   public RxMap(final RxParent owner, final Codec<DomainTy, RangeTy> codec) {
     super(owner);
@@ -44,7 +43,6 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     this.objects = new NtMap<>();
     this.deleted = new LinkedHashMap<>();
     this.created = new HashSet<>();
-    this.invalidated = false;
   }
 
   @Override
@@ -64,7 +62,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public void __settle(Set<Integer> viewers) {
-    invalidated = false;
+    __lowerInvalid();
     for (RangeTy item : objects.storage.values()) {
       if (item instanceof RxParent) {
         ((RxParent) item).__settle(viewers);
@@ -250,14 +248,16 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public boolean __raiseInvalid() {
-    if (!invalidated) {
-      invalidated = true;
-      __invalidateSubscribers();
-    }
+    __invalidateSubscribers();
     if (__parent != null) {
       return __parent.__isAlive();
     }
     return true;
+  }
+
+  @Override
+  public void __invalidateUp() {
+    __raiseInvalid();
   }
 
   @Override

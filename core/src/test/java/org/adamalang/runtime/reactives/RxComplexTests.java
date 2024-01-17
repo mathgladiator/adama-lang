@@ -123,8 +123,11 @@ public class RxComplexTests {
     d.set(new NtComplex(5, 6));
     child.assertInvalidateCount(1);
     d.__revert();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     Assert.assertEquals(new NtComplex(1, 2), d.get());
+    d.__raiseDirty();
+    d.__revert();
+    d.__revert();
     d.__revert();
     child.assertInvalidateCount(2);
     d.__cancelAllSubscriptions();

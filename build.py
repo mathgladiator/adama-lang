@@ -82,10 +82,12 @@ if made_jar:
         fail("jar", "Failed to copy adama.jar")
 
 if args.generate:
-    cor_path = os.path.join(ROOT_PATH, "core")
+    core_path = os.path.join(ROOT_PATH, "core")
+    rxhtml_path = os.path.join(ROOT_PATH, "rxhtml")
     contribs = {
-        cor_path: ('tests-adama', 'tests-rxhtml'),
-        ROOT_PATH: ('make-cli', 'make-api', 'make-embed', 'make-et', 'make-codec', 'bundle-js', 'str-temp', 'copyright', 'version'),
+        core_path: ['tests-adama'],
+        rxhtml_path: ['tests-rxhtml'],
+        ROOT_PATH: ['make-cli', 'make-api', 'make-embed', 'make-et', 'make-codec', 'bundle-js', 'str-temp', 'copyright', 'version'],
     }
     adama_jar = os.path.join(ROOT_PATH, 'release', 'adama.jar')
     for cwd, contrib in contribs.items():

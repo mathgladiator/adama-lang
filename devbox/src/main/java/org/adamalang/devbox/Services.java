@@ -24,7 +24,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.keys.PrivateKeyBundle;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceConfig;
 import org.adamalang.runtime.remote.ServiceConfigFactory;
@@ -43,14 +43,14 @@ import java.util.function.Consumer;
 /** services for the devbox; this don't help test the services, but they provide a great experience for developers */
 public class Services {
 
-  public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger) {
+  public static void install(ObjectNode verseDefn, WebClientBase webClientBase, SimpleExecutor executor, Consumer<String> logger, MetricsFactory metricsFactory) {
     ObjectNode servicesDefn = Json.readObject(verseDefn, "services");
     if (servicesDefn == null) {
       logger.accept("devservices|no service secrets");
       servicesDefn = Json.newJsonObject();
     }
     logger.accept("devservices|installing services");
-    CoreServicesNexus coreServicesNexus = new CoreServicesNexus(executor, executor, new NoOpMetricsFactory(), webClientBase, null, null, new DevBoxServiceConfigFactory(servicesDefn, logger));
+    CoreServicesNexus coreServicesNexus = new CoreServicesNexus(executor, executor, metricsFactory, webClientBase, null, null, new DevBoxServiceConfigFactory(servicesDefn, logger));
     CoreServices.install(coreServicesNexus);
     logger.accept("devservices|installing overrides");
     if (!servicesDefn.has("amazonses")) {

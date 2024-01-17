@@ -20,8 +20,10 @@ package org.adamalang.runtime.sys.web;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.sys.PredictiveInventory;
+import org.adamalang.translator.tree.definitions.web.WebGuard;
 
 public class WebResponse {
   public String contentType = null;
@@ -30,6 +32,11 @@ public class WebResponse {
   public boolean cors = false;
   public int cache_ttl_seconds = 0;
   public String asset_transform = "";
+  public int status;
+
+  public WebResponse() {
+    this.status = 200;
+  }
 
   public static WebResponse readFromObject(JsonStreamReader reader) {
     if (reader.startObject()) {
@@ -53,6 +60,9 @@ public class WebResponse {
             break;
           case "cache-ttl-seconds":
             response.cache_ttl_seconds = reader.readInteger();
+            break;
+          case "status":
+            response.status = reader.readInteger();
             break;
           default:
             reader.skipValue();
@@ -90,6 +100,10 @@ public class WebResponse {
     if (cache_ttl_seconds > 0) {
       writer.writeObjectFieldIntro("cache-ttl-seconds");
       writer.writeInteger(cache_ttl_seconds);
+    }
+    if (status != 0) {
+      writer.writeObjectFieldIntro("status");
+      writer.writeInteger(status);
     }
     writer.endObject();
   }
@@ -171,9 +185,20 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse json(NtDynamic message) {
+    this.contentType = "application/json";
+    this.body = message.json;
+    return this;
+  }
+
   public WebResponse asset(NtAsset asset) {
     this.contentType = asset.contentType;
     this.asset = asset;
+    return this;
+  }
+
+  public WebResponse status(int status) {
+    this.status = status;
     return this;
   }
 
@@ -186,4 +211,5 @@ public class WebResponse {
     }
   }
 
+  public static final WebResponse FORBIDDEN = new WebResponse().status(403);
 }

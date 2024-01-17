@@ -95,8 +95,11 @@ public class RxDoubleTests {
     d.set(55.0);
     child.assertInvalidateCount(1);
     d.__revert();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     Assert.assertEquals(42, d.get(), 0.1);
+    d.__raiseDirty();
+    d.__revert();
+    d.__revert();
     d.__revert();
     child.assertInvalidateCount(2);
     d.__cancelAllSubscriptions();

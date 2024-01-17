@@ -187,6 +187,16 @@ public class MockInstantDataService implements DataService {
   }
 
   @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    println("RECOVER:" + key.space + "/" + key.key);
+    if (logByKey.containsKey(key)) {
+      callback.success(null);
+    } else {
+      callback.failure(new ErrorCodeException(-404));
+    }
+  }
+
+  @Override
   public void close(Key key, Callback<Void> callback) {
     callback.success(null);
     println("CLOSE:" + key.space + "/" + key.key);

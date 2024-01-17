@@ -28,14 +28,12 @@ public class ConnectionContext {
   public final String origin;
   public final String remoteIp;
   public final String userAgent;
-  public final String assetKey;
   public final TreeMap<String, String> identities;
 
-  public ConnectionContext(String origin, String remoteIp, String userAgent, String assetKey, TreeMap<String, String> identities) {
+  public ConnectionContext(String origin, String remoteIp, String userAgent, TreeMap<String, String> identities) {
     this.origin = origin != null ? origin : "";
     this.remoteIp = remoteIpFix(remoteIp);
     this.userAgent = userAgent != null ? userAgent : "";
-    this.assetKey = assetKey;
     this.identities = identities;
   }
 

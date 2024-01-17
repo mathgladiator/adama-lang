@@ -609,13 +609,6 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (wcc, id) -> new DocumentStreamHandler(wcc, id), (obj) -> new ClientDataResponse(obj), callback, streamback);
   }
 
-  /** configure/make-or-get-asset-key */
-  public void configureMakeOrGetAssetKey(ClientConfigureMakeOrGetAssetKeyRequest request, Callback<ClientAssetKeyResponse> callback) {
-    ObjectNode node = Json.newJsonObject();
-    node.put("method", "configure/make-or-get-asset-key");
-    pool.requestResponse(node, (obj) -> new ClientAssetKeyResponse(obj), callback);
-  }
-
   /** attachment/start */
   public void attachmentStart(ClientAttachmentStartRequest request, Callback<AttachmentUploadHandler> callback, Stream<ClientProgressResponse> streamback) {
     ObjectNode node = Json.newJsonObject();

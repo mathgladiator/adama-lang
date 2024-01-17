@@ -136,7 +136,7 @@ public class AuthorityHandlerImpl implements AuthorityHandler {
     ObjectNode keyNode = Json.parseJsonObject(Files.readString(new File(args.key).toPath()));
     String authority = keyNode.get("authority").textValue();
     PrivateKey signingKey = Keystore.parsePrivateKey(keyNode);
-    String token = Jwts.builder().setSubject(args.agent).setIssuer(authority).signWith(signingKey).compact();
+    String token = Jwts.builder().subject(args.agent).issuer(authority).signWith(signingKey).compact();
     ObjectNode tokenBundle = Json.newJsonObject();
     tokenBundle.put("token", token);
     output.add(tokenBundle);

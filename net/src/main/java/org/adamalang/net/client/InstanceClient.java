@@ -20,7 +20,6 @@ package org.adamalang.net.client;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
-import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.ChannelClient;
 import org.adamalang.common.net.NetBase;
@@ -482,8 +481,9 @@ public class InstanceClient implements AutoCloseable {
       response.asset = new NtAsset(payload.assetId, payload.assetName, payload.contentType, payload.assetSize, payload.assetMD5, payload.assetSHA384);
     }
     response.cors = payload.cors;
-    response.cache_ttl_seconds = payload.cache_ttl_seconds;
-    response.asset_transform = payload.asset_transform;
+    response.cache_ttl_seconds = payload.cacheTimeToLiveSeconds;
+    response.asset_transform = payload.assetTransform;
+    response.status = payload.status;
     callback.success(response);
   }
 
@@ -901,7 +901,7 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** connect to a document */
-  public void connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, Events events) {
+  public void connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, Events events) {
     ClientMessage.StreamConnect connectMessage = new ClientMessage.StreamConnect();
     connectMessage.ip = ip;
     connectMessage.origin = origin;
@@ -910,7 +910,6 @@ public class InstanceClient implements AutoCloseable {
     connectMessage.space = space;
     connectMessage.key = key;
     connectMessage.viewerState = viewerState;
-    connectMessage.assetKey = assetKey;
     executor.execute(new NamedRunnable("document-exchange") {
       @Override
       public void execute() throws Exception {

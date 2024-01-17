@@ -376,6 +376,11 @@ public class CaravanDataService implements ArchivingDataService {
               }
 
               @Override
+              public void handle(Events.Recover payload) {
+                stream.next("RECOVER:" + payload.seq);
+              }
+
+              @Override
               public void handle(Events.Change payload) {
                 stream.next("[" + (seq + ":" + payload.seq_begin + "-->" + payload.seq_end)  + "] REQUEST:"+ payload.request + " ; REDO:" + payload.redo + " ; UNDO=" + payload.undo + " (active=" + payload.active + ")");
               }
@@ -536,7 +541,7 @@ public class CaravanDataService implements ArchivingDataService {
 
     execute("snapshot", key, true, callback, (cached) -> {
       if (cached.snapshotInvalid(snapshot.seq)) {
-        LOGGER.error("failed-snapshot-due-race: snapshot:" + snapshot.seq + " cached:" + cached.seq());
+        LOGGER.error("failed-snapshot-due-race: snapshot:" + snapshot.seq + " cached:" + cached.seq() + ";" + key.space + "/" + key.key);
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_REJECT_FUTURE_SNAPSHOT));
         return;
       }
@@ -553,6 +558,12 @@ public class CaravanDataService implements ArchivingDataService {
         });
       }
     });
+  }
+
+  @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    // NOT SUPPORTED YET
+    callback.failure(new ErrorCodeException(0));
   }
 
   @Override

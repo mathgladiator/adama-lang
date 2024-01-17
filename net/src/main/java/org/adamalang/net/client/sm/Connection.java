@@ -45,7 +45,6 @@ public class Connection implements AdamaStream {
   private final String agent;
   private final String authority;
   private final Key key;
-  private final String assetKey;
   private final SimpleEvents events;
   private String viewerState;
   // the buffer of actions to execute once we have a remote
@@ -57,7 +56,7 @@ public class Connection implements AdamaStream {
   private boolean connectedOnce;
   private String machineToAsk;
 
-  public Connection(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, int timeoutMilliseconds, SimpleEvents events) {
+  public Connection(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
@@ -65,7 +64,6 @@ public class Connection implements AdamaStream {
     this.authority = authority;
     this.key = new Key(space, key);
     this.viewerState = viewerState;
-    this.assetKey = assetKey;
     this.events = events;
     this.timeoutMilliseconds = timeoutMilliseconds;
     this.queue = new ItemQueue<>(base.executor, base.config.getConnectionQueueSize(), base.config.getConnectionQueueTimeoutMS());
@@ -112,7 +110,7 @@ public class Connection implements AdamaStream {
     base.mesh.find(machineToAsk, new Callback<>() {
       @Override
       public void success(InstanceClient client) {
-        client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
+        client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, new Events() {
           @Override
           public void connected(Remote remote) {
             base.executor.execute(new NamedRunnable("lcsm-connected") {

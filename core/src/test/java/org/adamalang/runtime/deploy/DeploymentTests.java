@@ -27,6 +27,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockMetricsReporter;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class DeploymentTests {
             (t, errorCode) -> {
               t.printStackTrace();
             });
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     {
       CountDownLatch latch = new CountDownLatch(1);
       base.deploy("MySpace", plan1, new TreeMap<>(), new Callback<Void>() {

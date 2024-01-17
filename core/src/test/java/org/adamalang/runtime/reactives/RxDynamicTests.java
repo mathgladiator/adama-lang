@@ -113,8 +113,12 @@ public class RxDynamicTests {
     Assert.assertEquals(B, c.get());
     child.assertInvalidateCount(1);
     c.__revert();
-    child.assertInvalidateCount(2);
+    child.assertInvalidateCount(1);
     Assert.assertEquals(NtDynamic.NULL, c.get());
+    c.__raiseDirty();
+    c.__revert();
+    c.__revert();
+    child.assertInvalidateCount(2);
     c.__cancelAllSubscriptions();
     c.set(B);
     child.assertInvalidateCount(2);

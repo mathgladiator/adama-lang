@@ -22,6 +22,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import org.junit.Test;
 public class DeploymentFactoryBaseTests {
   @Test
   public void coverage_dumb() {
-    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT);
+    DeploymentFactoryBase base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Tooling);
     base.fetch(
         new Key("space", "key"),
         new Callback<LivingDocumentFactory>() {

@@ -36,6 +36,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
+import org.adamalang.runtime.sys.web.KnownErrors;
 import org.adamalang.web.assets.*;
 import org.adamalang.web.assets.cache.CachedAsset;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
@@ -62,13 +63,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   private static final byte[] EMPTY_RESPONSE = new byte[0];
   private static final byte[] OK_RESPONSE = "OK".getBytes(StandardCharsets.UTF_8);
-  private static final byte[] ASSET_FAILED_ATTACHMENT = ("<html><head><title>Asset Failure</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
-  private static final byte[] ASSET_COOKIE_LACKING = "<html><head><title>Bad Request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_FAILURE = "<html><head><title>Bad Request; Internal Error Uploading</title></head><body>Sorry, the upload failed.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] COOKIE_SET_FAILURE = "<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
-  private static final byte[] COOKIE_GET_FAILURE = "<html><head><title>Bad Request; Failed to get cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] JAR_FAILURE = "<html><head><title>Bad Request; Internal Error Access Jar</title></head><body>Sorry, the download failed.</body></html>".getBytes(StandardCharsets.UTF_8);
 
   private final WebConfig webConfig;
@@ -279,28 +277,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         response.failure(ex.code);
       }
     });
-  }
-
-  /** handle an asset request */
-  @Deprecated
-  private void handleAsset(FullHttpRequest req, final ChannelHandlerContext ctx, AssetRequest assetRequest, boolean cors) {
-    assets.request(assetRequest, streamOf(req, ctx, cors, null));
-  }
-
-  /** handle secret and encrypted assets */
-  private void handleEncryptedAsset(FullHttpRequest req, final ChannelHandlerContext ctx) {
-    String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
-    if (assetKey != null) {
-      try {
-        String encryptedId = req.uri().substring("/~assets/".length());
-        metrics.webhandler_assets_start.run();
-        handleAsset(req, ctx, AssetRequest.parse(encryptedId, assetKey), true);
-      } catch (Exception err) {
-        sendImmediate(metrics.webhandler_assets_failed_start, req, ctx, HttpResponseStatus.OK, ASSET_FAILED_ATTACHMENT, "text/html; charset=UTF-8", false);
-      }
-    } else {
-      sendImmediate(metrics.webhandler_assets_no_cookie, req, ctx, HttpResponseStatus.OK, ASSET_COOKIE_LACKING, "text/html; charset=UTF-8", false);
-    }
   }
 
   private void handleAssetUpload(final ChannelHandlerContext ctx, final FullHttpRequest req) {
@@ -533,15 +509,12 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     });
   }
 
-  private void ok(final ChannelHandlerContext ctx, final FullHttpRequest req) {
+  private void okOpen(final ChannelHandlerContext ctx, final FullHttpRequest req) {
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(EMPTY_RESPONSE));
     HttpUtil.setContentLength(res, 0);
-    String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-    if (origin != null) {
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "*");
-      res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
-    }
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "*");
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
     res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
@@ -604,10 +577,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       }
       return true;
     } else if ((req.uri().startsWith("/~lg/") || req.uri().startsWith("/~pt/") || req.uri().startsWith("/~bm/")) && req.method() == HttpMethod.OPTIONS) {
-      ok(ctx, req);
-      return true;
-    } else if (req.uri().startsWith("/~assets/")) { // assets that are encrypted and private to the connection
-      handleEncryptedAsset(req, ctx);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~lg/") && req.method() == HttpMethod.PUT) {
       String logName = req.uri().substring(5);
@@ -615,14 +585,14 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       req.content().readBytes(memory);
       String result = new String(memory, StandardCharsets.UTF_8);
       LOG.error(logName + ":{} %s", logSanitize(result));
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~pt/") && req.uri().length() >= 10 && req.method() == HttpMethod.PUT) {
       metrics.webclient_pushack.run();
       String pushToken = req.uri().substring(5);
       LOG.error("push-token-ack:" + logSanitize(pushToken));
       // TODO: route to real logger
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~bm/") && req.uri().length() >= 6) { // bump a metric
       String metricName = req.uri().substring(5);
@@ -630,7 +600,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       if (counter != null) {
         counter.run();
       }
-      ok(ctx, req);
+      okOpen(ctx, req);
       return true;
     } else if (req.uri().startsWith("/~set/")) { // set a secure cookie
       String[] fragments = req.uri().split(Pattern.quote("/"));
@@ -702,26 +672,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         sendImmediate(metrics.webhandler_failed_cookie_set, req, ctx, HttpResponseStatus.BAD_REQUEST, COOKIE_SET_FAILURE, "text/html; charset=UTF-8", true);
       }
       return true;
-    } else if (req.uri().startsWith("/~p")) { // set an asset key
-      final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(OK_RESPONSE));
-      String value = req.uri().substring(3);
-      String origin = req.headers().get(HttpHeaderNames.ORIGIN);
-      if (origin != null) { // CORS support directly
-        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
-        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
-      }
-      res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
-      DefaultCookie cookie = new DefaultCookie("SAK", value);
-      cookie.setSameSite(CookieHeaderNames.SameSite.None);
-      cookie.setMaxAge(60 * 60 * 24 * 7);
-      cookie.setHttpOnly(true);
-      if (!isDevBox) {
-        cookie.setSecure(true);
-      }
-      res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
-      res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
-      sendWithKeepAlive(webConfig, ctx, req, res);
-      return true;
     }
     return false;
   }
@@ -734,7 +684,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
 
     if (httpResult.redirect) {
-      redirect(metrics.webhandler_redirect, req, ctx, httpResult.redirectStatus == 301 ? HttpResponseStatus.PERMANENT_REDIRECT : HttpResponseStatus.TEMPORARY_REDIRECT, httpResult.location);
+      redirect(metrics.webhandler_redirect, req, ctx, httpResult.status == 301 ? HttpResponseStatus.PERMANENT_REDIRECT : HttpResponseStatus.TEMPORARY_REDIRECT, httpResult.location);
       return;
     }
 
@@ -746,7 +696,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     // otherwise, send the body
     metrics.webhandler_found.run();
     byte[] body = httpResult.body != null ? httpResult.body : EMPTY_RESPONSE;
-    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(body));
+    final HttpResponseStatus status = HttpResponseStatus.valueOf(httpResult.status);
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(body));
     HttpUtil.setContentLength(res, body.length);
     if (httpResult.contentType.length() > 0) {
       res.headers().set(HttpHeaderNames.CONTENT_TYPE, httpResult.contentType);
@@ -787,7 +738,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         } else {
           LOG.error("failed-web-handler:" + ex.getMessage());
         }
-        handleHttpResult(null, ctx, req);
+        handleHttpResult(new HttpHandler.HttpResult(KnownErrors.inferHttpStatusCodeFrom(ex.code), "text/html", ("error:" + ex.code).getBytes(StandardCharsets.UTF_8), true), ctx, req);
       }
     };
 

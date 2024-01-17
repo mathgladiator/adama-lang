@@ -17,8 +17,6 @@ class WebSocketAdamaConnection {
     this.url = "wss://" + host + "/~s";
     // is the connection connected
     this.connected = false;
-    // TODO
-    this.assets = true;
     // is the connection dead
     this.dead = false;
     // the maximum period of time between waiting for a retry
@@ -39,6 +37,8 @@ class WebSocketAdamaConnection {
     this.nextId = 0;
     // events to execute on reconnect
     this.onreconnect = new Map();
+    // protocol for metrics
+    this.protocol = location.protocol;
   }
 
   /** stop the connection */
@@ -52,7 +52,7 @@ class WebSocketAdamaConnection {
   bump(bm) {
     try {
       var xhttp = new XMLHttpRequest();
-      xhttp.open("PUT", location.protocol + "//" + this.host + "/~bm/" + bm, true);
+      xhttp.open("PUT", this.protocol + "//" + this.host + "/~bm/" + bm, true);
       xhttp.send();
     } catch (ex) {
       // don't care
@@ -62,7 +62,7 @@ class WebSocketAdamaConnection {
   log(name, body) {
     try {
       var xhttp = new XMLHttpRequest();
-      xhttp.open("PUT", location.protocol + "//" + this.host + "/~lg/" + name, true);
+      xhttp.open("PUT", this.protocol + "//" + this.host + "/~lg/" + name, true);
       xhttp.send(body);
     } catch (ex) {
       // don't care
@@ -146,23 +146,8 @@ class WebSocketAdamaConnection {
         // tell the client that we are good!
         self.backoff = 1;
         self.connected = true;
-        self.assets = result.assets;
         self.onstatuschange(true);
         self._reconnect();
-        self.ConfigureMakeOrGetAssetKey({
-          success: function (payload) {
-            try {
-              var xhttp = new XMLHttpRequest();
-              xhttp.open("GET", location.protocol + "//" + self.host + "/~p" + payload.assetKey, true);
-              xhttp.withCredentials = true;
-              xhttp.send();
-            } catch (ex) {
-              console.log(ex);
-            }
-          },
-          failure: function () {
-          }
-        });
         return;
       }
       // the result was a failure...
@@ -1036,15 +1021,6 @@ class WebSocketAdamaConnection {
           request: { method: "connection/end", id: subId, "connection":parId}
         });
       }
-    });
-  }
-  ConfigureMakeOrGetAssetKey(responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"configure/make-or-get-asset-key", "id":parId}
     });
   }
   AttachmentStart(identity, space, key, filename, contentType, responder) {

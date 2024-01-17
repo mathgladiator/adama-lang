@@ -28,7 +28,6 @@ import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.mocks.SimpleIntCallback;
 import org.adamalang.net.mocks.*;
-import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -89,7 +88,7 @@ public class InstanceClientTests {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", null, events);
+        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
         Remote remote = events.getRemote();
         remote.update("{\"z\":100}");
         SimpleIntCallback sic = new SimpleIntCallback();
@@ -165,7 +164,7 @@ public class InstanceClientTests {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("127.0.0.1", "origin","nope", "test", "space", "1", "{}", SecureAssetUtil.makeAssetKeyHeader(), events);
+        client.connect("127.0.0.1", "origin","nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(disconnected.await(5000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -210,7 +209,7 @@ public class InstanceClientTests {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", null, events);
+        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -262,7 +261,7 @@ public class InstanceClientTests {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("127.0.0.1", "origin","nope", "nope", "space", "1", "{}", null, events);
+        client.connect("127.0.0.1", "origin","nope", "nope", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(canAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -320,7 +319,7 @@ public class InstanceClientTests {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", null, events);
+        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         Assert.assertEquals(769085, error.get());
@@ -354,7 +353,7 @@ public class InstanceClientTests {
 
         MockEvents connectEvents = new MockEvents();
         Runnable waitError = connectEvents.latchAt(1);
-        client.connect("127.0.0.1", "origin", "nope", "nope", "space", "1", "{}", null, connectEvents);
+        client.connect("127.0.0.1", "origin", "nope", "nope", "space", "1", "{}", connectEvents);
         waitError.run();
         connectEvents.assertWrite(0, "ERROR:702524");
 

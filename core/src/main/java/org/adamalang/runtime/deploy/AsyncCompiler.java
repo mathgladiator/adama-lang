@@ -25,6 +25,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
@@ -49,7 +50,7 @@ public class AsyncCompiler {
     return space.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_"));
   }
 
-  public static void forge(String name, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, AsyncByteCodeCache cache, Callback<DeploymentFactory> callback) {
+  public static void forge(RuntimeEnvironment runtime, String name, DeploymentFactory prior, DeploymentPlan plan, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys, AsyncByteCodeCache cache, Callback<DeploymentFactory> callback) {
     ConcurrentHashMap<String, LivingDocumentFactory> factories = new ConcurrentHashMap<>();
     AtomicLong _memoryUsed = new AtomicLong();
     AtomicBoolean failedWithBetterError = new AtomicBoolean(false);
@@ -74,7 +75,7 @@ public class AsyncCompiler {
             builder = builder.instrument();
           }
           final var options = builder.make();
-          final var globals = GlobalObjectPool.createPoolWithStdLib();
+          final var globals = GlobalObjectPool.createPoolWithStdLib(runtime);
           final var state = new EnvironmentState(globals, options);
           final var document = new Document();
           MessageDigest digest = Hashing.sha384();

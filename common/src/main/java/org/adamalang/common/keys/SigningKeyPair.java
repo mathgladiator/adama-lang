@@ -55,7 +55,7 @@ public class SigningKeyPair {
   }
 
   public String signDocument(String space, String key, String agent) {
-    return Jwts.builder().setSubject(agent).setIssuer("doc/" + space + "/" + key).signWith(privateKey).compact();
+    return Jwts.builder().subject(agent).issuer("doc/" + space + "/" + key).signWith(privateKey).compact();
   }
 
   public void validateTokenThrows(String token) {

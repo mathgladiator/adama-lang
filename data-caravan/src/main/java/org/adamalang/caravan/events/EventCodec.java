@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.caravan.events.Events.Recover;
 import org.adamalang.caravan.events.Events.Snapshot;
 import org.adamalang.caravan.events.Events.Batch;
 import org.adamalang.caravan.events.Events.Change;
@@ -28,6 +29,8 @@ import org.adamalang.caravan.events.Events.Change;
 public class EventCodec {
 
   public static abstract class StreamEvent implements ByteStream {
+    public abstract void handle(Recover payload);
+
     public abstract void handle(Snapshot payload);
 
     public abstract void handle(Batch payload);
@@ -46,6 +49,9 @@ public class EventCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 80:
+          handle(readBody_80(buf, new Recover()));
+          return;
         case 48:
           handle(readBody_48(buf, new Snapshot()));
           return;
@@ -60,6 +66,7 @@ public class EventCodec {
   }
 
   public static interface HandlerEvent {
+    public void handle(Recover payload);
     public void handle(Snapshot payload);
     public void handle(Batch payload);
     public void handle(Change payload);
@@ -67,6 +74,9 @@ public class EventCodec {
 
   public static void route(ByteBuf buf, HandlerEvent handler) {
     switch (buf.readIntLE()) {
+      case 80:
+        handler.handle(readBody_80(buf, new Recover()));
+        return;
       case 48:
         handler.handle(readBody_48(buf, new Snapshot()));
         return;
@@ -79,6 +89,23 @@ public class EventCodec {
     }
   }
 
+
+  public static Recover read_Recover(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 80:
+        return readBody_80(buf, new Recover());
+    }
+    return null;
+  }
+
+
+  private static Recover readBody_80(ByteBuf buf, Recover o) {
+    o.seq = buf.readIntLE();
+    o.document = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    return o;
+  }
 
   public static Snapshot read_Snapshot(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -132,6 +159,18 @@ public class EventCodec {
     o.delay = buf.readIntLE();
     o.dAssetBytes = buf.readLongLE();
     return o;
+  }
+
+  public static void write(ByteBuf buf, Recover o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(80);
+    buf.writeIntLE(o.seq);
+    Helper.writeString(buf, o.document);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
   }
 
   public static void write(ByteBuf buf, Snapshot o) {

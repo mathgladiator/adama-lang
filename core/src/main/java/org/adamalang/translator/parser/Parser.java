@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.definitions.config.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.config.DocumentConfig;
 import org.adamalang.translator.tree.definitions.config.StaticPiece;
 import org.adamalang.translator.tree.definitions.web.Uri;
+import org.adamalang.translator.tree.definitions.web.WebGuard;
 import org.adamalang.translator.tree.expressions.*;
 import org.adamalang.translator.tree.expressions.constants.*;
 import org.adamalang.translator.tree.expressions.linq.*;
@@ -579,10 +580,21 @@ public class Parser {
     return uri;
   }
 
+  private WebGuard has_web_guard() throws AdamaLangException {
+    final var requires = tokens.popIf((t) -> t.isIdentifier("requires"));
+    Guard guard = null;
+    if (requires != null) {
+      Token openGuard = consumeExpectedSymbol("<");
+      guard = define_guard(openGuard);
+      return new WebGuard(requires, guard);
+    }
+    return null;
+  }
+
   public Consumer<TopLevelDocumentHandler> define_web(Token webToken) throws AdamaLangException {
     Token methodToken = tokens.popIf((t) -> t.isIdentifier("get", "put", "options", "delete"));
     if (methodToken == null) {
-      throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get), write (i.e. put) request, or the prelight options for CORS.", tokens.getLastTokenIfAvailable());
+      throw new ParseException("Parser lacked a known verb of get, put, delete, or options @web to indicate a read (i.e. get), write (i.e. put) request, delete (i.e. delete) request, or the prelight options for CORS.", tokens.getLastTokenIfAvailable());
     }
     Uri uri = uri();
     if ("put".equals(methodToken.text)) {
@@ -590,28 +602,32 @@ public class Parser {
       final var messageTypeName = id();
       final var messageVariableName = id();
       final var close = consumeExpectedSymbol(")");
+      final var webguard = has_web_guard();
       final var body = block(rootScope.makeWebHandler("put"));
       // @web post URI / childPath / $var (messageType messageVar) {
       // }
-      DefineWebPut dwp = new DefineWebPut(webToken, methodToken, uri, open, messageTypeName, messageVariableName, close, body);
+      DefineWebPut dwp = new DefineWebPut(webToken, methodToken, uri, open, messageTypeName, messageVariableName, close, webguard, body);
       return (doc) -> doc.add(dwp);
     } else if ("options".equals(methodToken.text)) {
+      final var webguard = has_web_guard();
       final var body = block(rootScope.makeWebHandler("options"));
       // @web options URI / childPath / $var {
       // }
-      DefineWebOptions dwo = new DefineWebOptions(webToken, methodToken, uri, body);
+      DefineWebOptions dwo = new DefineWebOptions(webToken, methodToken, uri, webguard, body);
       return (doc) -> doc.add(dwo);
     } else if ("delete".equals(methodToken.text)) {
+      final var webguard = has_web_guard();
       final var body = block(rootScope.makeWebHandler("delete"));
       // @web delete URI / childPath / $var {
       // }
-      DefineWebDelete dwd = new DefineWebDelete(webToken, methodToken, uri, body);
+      DefineWebDelete dwd = new DefineWebDelete(webToken, methodToken, uri, webguard, body);
       return (doc) -> doc.add(dwd);
     } else { // GET
       // @web get URI / childPath / $var {
       // }
+      final var webguard = has_web_guard();
       final var body = block(rootScope.makeWebHandler("get"));
-      DefineWebGet dwg = new DefineWebGet(webToken, methodToken, uri, body);
+      DefineWebGet dwg = new DefineWebGet(webToken, methodToken, uri, webguard, body);
       return (doc) -> doc.add(dwg);
     }
   }

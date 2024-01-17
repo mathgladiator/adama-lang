@@ -23,7 +23,6 @@ import org.adamalang.common.Json;
 import org.adamalang.common.template.tree.T;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -45,6 +44,7 @@ import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
@@ -74,7 +74,7 @@ public class LivingDocumentTests {
     CompilerOptions.Builder opts = CompilerOptions.start().enableCodeCoverage();
     opts.packageName = "P";
     final var options = opts.noCost().make();
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
     document.setClassName("MeCode");
@@ -126,7 +126,7 @@ public class LivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       for (int k = 0; k < 5; k++) {
         setup.document.send(ContextSupport.WRAP(A), null, null, "foo", "{}", new RealDocumentSetup.AssertInt(5 + k));
       }
@@ -161,7 +161,7 @@ public class LivingDocumentTests {
             public void disconnect() {}
           };
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
 
       MockDataObserver obs1 = new MockDataObserver();
       setup.document.watch(obs1);
@@ -219,7 +219,7 @@ public class LivingDocumentTests {
               public void disconnect() {}
             };
 
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
 
     setup.document.send(
             ContextSupport.WRAP(NtPrincipal.NO_ONE),
@@ -268,7 +268,7 @@ public class LivingDocumentTests {
             public void disconnect() {}
           };
       setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
 
       setup.document.send(
           ContextSupport.WRAP(NtPrincipal.NO_ONE),
@@ -422,7 +422,7 @@ public class LivingDocumentTests {
           @Override
           public void disconnect() {}
         };
-    setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
     setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
     setup.document.invalidate(new RealDocumentSetup.AssertInt(4));
     Thread.sleep(1000);
@@ -495,7 +495,7 @@ public class LivingDocumentTests {
           public void disconnect() {}
         };
     setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(1));
-    setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
     setup.document.send(ContextSupport.WRAP(A), 0, "", "foo", "{\"name\":\"ninja\"}", new RealDocumentSetup.AssertInt(4));
     setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
     Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
@@ -623,7 +623,7 @@ public class LivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       for (String item : list) {
         System.err.println(item);
       }
@@ -663,7 +663,7 @@ public class LivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       for (String item : list) {
         System.err.println(item);
       }
@@ -950,7 +950,7 @@ public class LivingDocumentTests {
           @Override
           public void disconnect() {}
         };
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
     setup.document.apply(NtPrincipal.NO_ONE, "{\"x\":4242}", new RealDocumentSetup.AssertInt(3));
     setup.document.deploy(
         new RealDocumentSetup("public formula x = 50;").factory,
@@ -969,7 +969,7 @@ public class LivingDocumentTests {
           new RealDocumentSetup(
               "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble x = inf();");
       setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(NtPrincipal.NO_ONE, Perspective.DEAD, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+      setup.document.createPrivateView(NtPrincipal.NO_ONE, Perspective.DEAD, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
       setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
       Assert.fail();
     } catch (final RuntimeException yay) {
@@ -994,7 +994,7 @@ public class LivingDocumentTests {
               null,
               false);
       setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(NtPrincipal.NO_ONE, Perspective.DEAD, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+      setup.document.createPrivateView(NtPrincipal.NO_ONE, Perspective.DEAD, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
       setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
       Assert.fail();
     } catch (final RuntimeException yay) {
@@ -1028,7 +1028,7 @@ public class LivingDocumentTests {
           @Override
           public void disconnect() {}
         };
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
     Assert.assertEquals(1, list.size());
     Assert.assertEquals("{\"data\":{\"x\":100},\"seq\":1}", list.get(0));
   }
@@ -1052,7 +1052,7 @@ public class LivingDocumentTests {
           @Override
           public void disconnect() {}
         };
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     setup.document.send(ContextSupport.WRAP(NtPrincipal.NO_ONE), null, null, "foo", "{\"eee\":10000}", new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(3, list.size());
@@ -1473,17 +1473,17 @@ public class LivingDocumentTests {
     Assert.assertFalse(setup.document.isConnected(NtPrincipal.NO_ONE));
     RealDocumentSetup.ArrayPerspective viewOne = new RealDocumentSetup.ArrayPerspective();
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, viewOne, new JsonStreamReader("{}"), TestKey.ENCODER, pv1);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, viewOne, new JsonStreamReader("{}"), pv1);
     Assert.assertEquals(1, viewOne.datum.size());
     Assert.assertTrue(setup.document.isConnected(NtPrincipal.NO_ONE));
 
     RealDocumentSetup.ArrayPerspective viewTwo = new RealDocumentSetup.ArrayPerspective();
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, viewTwo, new JsonStreamReader("{}"), TestKey.ENCODER, pv2);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, viewTwo, new JsonStreamReader("{}"), pv2);
     Assert.assertEquals(2, viewOne.datum.size());
     Assert.assertEquals(1, viewTwo.datum.size());
 
     RealDocumentSetup.ArrayPerspective viewThree = new RealDocumentSetup.ArrayPerspective();
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, viewThree, new JsonStreamReader("{}"), TestKey.ENCODER, pv3);
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, viewThree, new JsonStreamReader("{}"), pv3);
     Assert.assertEquals(3, viewOne.datum.size());
     Assert.assertEquals(2, viewTwo.datum.size());
     Assert.assertEquals(1, viewThree.datum.size());
@@ -1905,7 +1905,7 @@ public class LivingDocumentTests {
             " public int x = 0; public asset f; @connected { x++; return true; } @construct {} @attached (a) { x++; f = a; }");
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
     Assert.assertTrue(deNO_ONE.datum.get(0).startsWith("{\"data\":{\"x\":1,\"f\":{\""));
     Assert.assertTrue(deNO_ONE.datum.get(0).endsWith("\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"seq\":4}"));
@@ -1924,7 +1924,7 @@ public class LivingDocumentTests {
             " public int lolseq = 0; public string lolkey; @connected { lolseq = Document.seq(); return true; } @construct { lolkey = Document.key(); } ");
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
     Assert.assertEquals("{\"data\":{\"lolseq\":1,\"lolkey\":\"0\"},\"seq\":4}", deNO_ONE.datum.get(0));
     setup.assertCompare();
@@ -2073,15 +2073,15 @@ public class LivingDocumentTests {
             "public int x; @construct { x = 123; } @connected { x++; return true; }");
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
     Assert.assertEquals("{\"data\":{\"x\":124},\"seq\":4}", deNO_ONE.datum.get(0).toString());
     final var deA = new RealDocumentSetup.ArrayPerspective();
     final var deB = new RealDocumentSetup.ArrayPerspective();
     setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(5));
-    setup.document.createPrivateView(A, deA, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(A, deA, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     setup.document.connect(ContextSupport.WRAP(B), new RealDocumentSetup.AssertInt(8));
-    setup.document.createPrivateView(B, deB, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(B, deB, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     Assert.assertEquals("{\"data\":{\"x\":125},\"seq\":7}", deA.datum.get(0).toString());
     Assert.assertEquals("{\"data\":{\"x\":126},\"seq\":10}", deB.datum.get(0).toString());
     setup.assertCompare();
@@ -2096,15 +2096,15 @@ public class LivingDocumentTests {
             false);
     setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
-    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
     Assert.assertEquals("{\"data\":{\"x\":124},\"seq\":4}", deNO_ONE.datum.get(0).toString());
     final var deA = new RealDocumentSetup.ArrayPerspective();
     final var deB = new RealDocumentSetup.ArrayPerspective();
     setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(5));
-    setup.document.createPrivateView(A, deA, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(A, deA, new JsonStreamReader("{}"),  new RealDocumentSetup.GotView());
     setup.document.connect(ContextSupport.WRAP(B), new RealDocumentSetup.AssertInt(8));
-    setup.document.createPrivateView(B, deB, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    setup.document.createPrivateView(B, deB, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
     Assert.assertEquals("{\"data\":{\"x\":125},\"seq\":7}", deA.datum.get(0).toString());
     Assert.assertEquals("{\"data\":{\"x\":126},\"seq\":10}", deB.datum.get(0).toString());
     setup.assertCompare();

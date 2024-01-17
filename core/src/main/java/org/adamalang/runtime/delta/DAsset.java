@@ -50,17 +50,14 @@ public class DAsset implements DeltaNode {
 
   /** the asset is visible, so show changes */
   public void show(final NtAsset value, final PrivateLazyDeltaWriter writer) {
-    if (writer.assetIdEncoder != null) {
-      if (!value.equals(prior)) {
-        final var obj = writer.planObject();
-        // note; we don't send the name as that may leak private information from the uploader
-        obj.planField("id").writeString(writer.assetIdEncoder.encrypt(value.id));
-        obj.planField("size").writeFastString("" + value.size);
-        obj.planField("type").writeString(value.contentType);
-        obj.planField("md5").writeString(value.md5);
-        obj.planField("sha384").writeString(value.sha384);
-        obj.end();
-      }
+    if (!value.equals(prior)) {
+      final var obj = writer.planObject();
+      obj.planField("id").writeString(value.id);
+      obj.planField("size").writeFastString("" + value.size);
+      obj.planField("type").writeString(value.contentType);
+      obj.planField("md5").writeString(value.md5);
+      obj.planField("sha384").writeString(value.sha384);
+      obj.end();
     }
     prior = value;
   }

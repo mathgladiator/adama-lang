@@ -922,6 +922,12 @@
             <arg name="rxhtml-path" default="frontend" />
             <arg name="output" default="frontend.rx.html" />
         </command>
+        <command name="measure">
+            <documentation>
+                Measure potential optimizations for an RxHTML directory
+            </documentation>
+            <arg name="rxhtml-path" default="frontend" />
+        </command>
         <command name="validate">
             <documentation>
                 (Temporary) Runs a deeper check on an RxHTML forest

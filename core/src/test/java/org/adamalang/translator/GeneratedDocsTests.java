@@ -113,7 +113,6 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
-    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.graph.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
@@ -478,12 +477,12 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective) {");
     gold.append("\n    AssignmentLocalVars_1 __self = this;");
     gold.append("\n    DeltaAssignmentLocalVars_1 __state = new DeltaAssignmentLocalVars_1();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
-    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -498,7 +497,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -603,6 +602,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -1083,7 +1083,6 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
-    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.graph.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
@@ -1421,12 +1420,12 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective) {");
     gold.append("\n    Records_2 __self = this;");
     gold.append("\n    DeltaRecords_2 __state = new DeltaRecords_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
-    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective, __encoder) {");
+    gold.append("\n    return new PrivateView(__viewId, __who, ___perspective) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1441,7 +1440,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder, __viewId));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __viewId));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -1551,6 +1550,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -1770,6 +1770,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
     gold.append("\n      ds.__settle(__viewers);");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -1996,6 +1997,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -2207,6 +2209,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");
@@ -2442,6 +2445,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __settle(Set<Integer> __viewers) {");
+    gold.append("\n      __lowerInvalid();");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __insert(JsonStreamReader __reader) {");

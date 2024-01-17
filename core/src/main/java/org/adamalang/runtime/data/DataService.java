@@ -46,6 +46,9 @@ public interface DataService {
   /** a command from on-high to shed the key from the machine */
   void shed(Key key);
 
+  /** recover a document from a snapshot */
+  void recover(Key key, DocumentRestore restore, Callback<Void> callback);
+
   /** list all the keys in storage */
   void inventory(Callback<Set<Key>> callback);
 

@@ -40,12 +40,12 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
     if (method == Method.GET) {
       callback.success(uris.get(uri));
     } else {
-      callback.success(new HttpResult("", new byte[0], false));
+      callback.success(new HttpResult(200, "", new byte[0], false));
     }
   }
 
   public void put(String uri, String html) {
-    uris.put(uri, new HttpResult("text/html; charset=UTF-8", html.getBytes(StandardCharsets.UTF_8), false));
+    uris.put(uri, new HttpResult(200, "text/html; charset=UTF-8", html.getBytes(StandardCharsets.UTF_8), false));
   }
 
   public void put(String uri, HttpResult result) {

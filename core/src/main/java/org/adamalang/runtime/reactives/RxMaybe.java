@@ -169,7 +169,15 @@ public class RxMaybe<Ty extends RxBase, Ry> extends RxBase implements RxParent, 
   @Override
   public boolean __raiseInvalid() {
     __invalidateSubscribers();
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
     return true;
+  }
+
+  @Override
+  public void __invalidateUp() {
+    __raiseInvalid();
   }
 
   public int compareValues(final RxMaybe<Ty, Ry> other, final Comparator<Ty> test) {
@@ -217,6 +225,7 @@ public class RxMaybe<Ty extends RxBase, Ry> extends RxBase implements RxParent, 
 
   @Override
   public void __settle(Set<Integer> viewers) {
+    __lowerInvalid();
     if (value != null) {
       if (value instanceof RxParent) {
         ((RxParent) value).__settle(viewers);

@@ -18,10 +18,13 @@
 package org.adamalang.mysql.model;
 
 import org.adamalang.common.keys.MasterKey;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.TreeMap;
 
 public class SecretsTests {
   @Test
@@ -31,11 +34,12 @@ public class SecretsTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        int key1 = Secrets.insertSecretKey(dataBase, "space", "private-key1");
-        int key2 = Secrets.insertSecretKey(dataBase, "space", "private-key2");
-        Assert.assertEquals("private-key1", Secrets.getPrivateKey(dataBase, "space", key1));
-        Assert.assertEquals("private-key2", Secrets.getPrivateKey(dataBase, "space", key2));
         String masterKey = MasterKey.generateMasterKey();
+        int key1 = Secrets.insertSecretKey(dataBase, "space", MasterKey.encrypt(masterKey, "private-key1"));
+        int key2 = Secrets.insertSecretKey(dataBase, "space", MasterKey.encrypt(masterKey, "private-key2"));
+        TreeMap<Integer, PrivateKeyBundle> bundle = Secrets.getKeys(dataBase, masterKey, "space");
+        Assert.assertEquals("private-key1", bundle.get(key1).getPrivateKey());
+        Assert.assertEquals("private-key2", bundle.get(key2).getPrivateKey());
       } finally {
         installer.uninstall();
       }

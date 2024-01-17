@@ -245,7 +245,7 @@ public class MultiRegionClient {
       public void success(DocumentLocation value) {
         if (value.location == LocationType.Machine) {
           if (region.equals(value.region)) {
-            stream.ready(local.connect(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, user.context.assetKey, events));
+            stream.ready(local.connect(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, events));
             return;
           } else {
             SelfClient remote = remoteForRegion(value.region, events);

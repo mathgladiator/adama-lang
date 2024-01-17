@@ -210,6 +210,11 @@ public class MockArchiveDataSource implements ArchivingDataService {
   }
 
   @Override
+  public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
+    data.recover(key, restore, callback);
+  }
+
+  @Override
   public void inventory(Callback<Set<Key>> callback) {
     callback.success(new TreeSet<>());
   }

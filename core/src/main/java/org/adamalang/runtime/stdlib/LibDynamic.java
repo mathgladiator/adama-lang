@@ -19,6 +19,8 @@ package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtDate;
+import org.adamalang.runtime.natives.NtDateTime;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
@@ -207,6 +209,52 @@ public class LibDynamic {
       }
     }
     return defaultValue;
+  }
+
+  private static NtMaybe<NtDate> dateOf(NtMaybe<String> str) {
+    if (str.has()) {
+      return new NtMaybe<>(NtDate.parse(str.get()));
+    } else {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDate.class) NtMaybe<NtDate> date(NtDynamic dyn) {
+    return dateOf(str(dyn));
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDate.class) NtMaybe<NtDate> date(NtDynamic dyn, String field) {
+    return dateOf(str(dyn, field));
+  }
+
+  @Extension
+  public static NtDate date(NtDynamic dyn, String field, String defaultValue) {
+    return NtDate.parse(str(dyn, field, defaultValue));
+  }
+
+  private static NtMaybe<NtDateTime> datetimeOf(NtMaybe<String> str) {
+    if (str.has()) {
+      return new NtMaybe<>(NtDateTime.parse(str.get()));
+    } else {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> datetime(NtDynamic dyn) {
+    return datetimeOf(str(dyn));
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> datetime(NtDynamic dyn, String field) {
+    return datetimeOf(str(dyn, field));
+  }
+
+  @Extension
+  public static NtDateTime datetime(NtDynamic dyn, String field, String defaultValue) {
+    return NtDateTime.parse(str(dyn, field, defaultValue));
   }
 
   @Extension

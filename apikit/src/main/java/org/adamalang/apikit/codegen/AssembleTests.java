@@ -20,6 +20,7 @@ package org.adamalang.apikit.codegen;
 import org.adamalang.apikit.model.Method;
 import org.adamalang.apikit.model.ParameterDefinition;
 import org.adamalang.apikit.model.Responder;
+import org.adamalang.apikit.model.Type;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +58,11 @@ public class AssembleTests {
               rId++;
               sb.append("      Iterator<String> c").append(rId).append(" = fe.execute(node.toString());\n");
               sb.append("      Assert.assertEquals(\"ERROR:").append(pd.errorCodeIfMissing).append("\", c").append(rId).append(".next());\n");
-              sb.append("      node.put(\"").append(pd.name).append("\", ").append(pd.invent()).append(");\n");
+              if (pd.type == Type.JsonObject || pd.type == Type.JsonObjectOrArray) {
+                sb.append("      node.set(\"").append(pd.name).append("\", ").append(pd.invent()).append(");\n");
+              } else {
+                sb.append("      node.put(\"").append(pd.name).append("\", ").append(pd.invent()).append(");\n");
+              }
             }
           }
         }

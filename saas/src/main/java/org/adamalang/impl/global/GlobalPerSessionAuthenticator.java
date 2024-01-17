@@ -66,7 +66,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         .requireIssuer("host")
         .build()
         .parseSignedClaims(identity);
-    ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, parsedToken.proxy_asset_key, null);
+    ConnectionContext context = new ConnectionContext(parsedToken.proxy_origin, parsedToken.proxy_ip, parsedToken.proxy_useragent, null);
     AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
     session.identityCache.put(identity, user);
     callback.success(user);
@@ -79,7 +79,7 @@ public class GlobalPerSessionAuthenticator extends PerSessionAuthenticator {
         .requireIssuer("internal")
         .build()
         .parseSignedClaims(identity);
-    ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null, null);
+    ConnectionContext context = new ConnectionContext("::adama", "0.0.0.0", "", null);
     AuthenticatedUser user = new AuthenticatedUser(parsedToken.proxy_user_id, new NtPrincipal(parsedToken.sub, parsedToken.proxy_authority), context);
     session.identityCache.put(identity, user);
     callback.success(user);

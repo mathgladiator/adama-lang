@@ -36,7 +36,7 @@ public class PrivateKeyWithId {
   public String signDocumentIdentity(String agent, String space, String key, int expiry) {
     TreeMap<String, Object> claims = new TreeMap<>();
     claims.put("kid", keyId);
-    JwtBuilder builder = Jwts.builder().setClaims(claims).setSubject(agent);
+    JwtBuilder builder = Jwts.builder().claims(claims).subject(agent);
     if (expiry > 0) {
       // TODO
     }

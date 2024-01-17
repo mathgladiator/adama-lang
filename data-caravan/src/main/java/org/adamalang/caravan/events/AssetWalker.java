@@ -58,6 +58,11 @@ public class AssetWalker implements EventCodec.HandlerEvent {
     scanJson(payload.undo);
   }
 
+  @Override
+  public void handle(Events.Recover payload) {
+    scanJson(payload.document);
+  }
+
   public void scanJson(String json) {
     new JsonStreamReader(json).populateGarbageCollectedIds(ids);
   }

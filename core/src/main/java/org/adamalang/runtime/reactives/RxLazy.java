@@ -30,13 +30,11 @@ public class RxLazy<Ty> extends RxDependent {
   private final Supplier<Runnable> perf;
   protected Ty cached;
   private int generation;
-  private boolean invalid;
 
   public RxLazy(final RxParent parent, final Supplier<Ty> formula, final Supplier<Runnable> perf) {
     super(parent);
     this.formula = formula;
     this.cached = null;
-    this.invalid = false;
     this.generation = 0;
     this.perf = perf;
   }
@@ -72,13 +70,6 @@ public class RxLazy<Ty> extends RxDependent {
 
   @Override
   public boolean __raiseInvalid() {
-    if (invalid) {
-      if (__parent != null) {
-        return __parent.__isAlive();
-      }
-      return true;
-    }
-    invalid = true;
     cached = null;
     __invalidateSubscribers();
     if (__parent != null) {
@@ -88,7 +79,7 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   public Ty get() {
-    if (invalid) {
+    if (__invalid) {
       Runnable track = null;
       if (perf != null) {
         track = perf.get();
@@ -137,10 +128,10 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   public void __settle(Set<Integer> views) {
-    if (invalid) {
-      invalid = false;
+    if (__invalid) {
       cached = null;
       inc();
+      __lowerInvalid();
     }
   }
 }

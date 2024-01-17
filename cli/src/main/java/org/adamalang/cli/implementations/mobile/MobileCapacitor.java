@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,29 +57,59 @@ public class MobileCapacitor {
       forest = Bundler.bundle(files, false);
     }
 
+    CapacitorJSShell shellBuilder = new CapacitorJSShell((el, w) -> {
+      System.err.println("warning:" + w);
+    });
+
     // parse the mobile config bundle
     ObjectNode mobileConfig = Json.parseJsonObject(Files.readString(new File(args.mobileConfig).toPath()));
 
     // parse the mobile config bundle
     boolean devmode = false;
     boolean beta = false;
-    if (mobileConfig.has("devmode")) {
-      devmode = mobileConfig.get("devmode").booleanValue();
+    if (mobileConfig.has("devmode") && mobileConfig.get("devmode").booleanValue()) {
+      shellBuilder.enableDevMode();
+      devmode = true;
     }
     if (mobileConfig.has("beta")) {
       beta = mobileConfig.get("beta").booleanValue();
     }
+    if (beta) {
+      devmode = true;
+    }
+    if (mobileConfig.has("multi-domain") && mobileConfig.get("multi-domain").booleanValue()) {
+      if (!mobileConfig.has("start")) {
+        throw new Exception("multi-domain requires a 'start' field");
+      }
+      if (!mobileConfig.has("beta-suffix")) {
+        throw new Exception("multi-domain requires a 'beta-suffix' field");
+      }
+      if (!mobileConfig.has("prod-suffix")) {
+        throw new Exception("multi-domain requires a 'prod-suffix' field");
+      }
+      if (beta) {
+        throw new Exception("mobile shell can't have both beta and multi-domain set to true");
+      }
+      String start = mobileConfig.get("start").textValue();
+      String betaSuffix = mobileConfig.get("beta-suffix").textValue();
+      String prodSuffix = mobileConfig.get("prod-suffix").textValue();
+      shellBuilder.setMultiDomain(start, betaSuffix, prodSuffix);
+    } else {
+      if (!mobileConfig.has("domain")) {
+        throw new Exception("requries 'domain' to be set (or multi-domain & start)");
+      }
+      shellBuilder.setDomain(mobileConfig.get("domain").textValue());
+    }
     if (!mobileConfig.has("root")) {
       throw new Exception("mobile-config missing root");
     }
-    if (!mobileConfig.has("domain")) {
-      throw new Exception("mobile-config missing domain");
-    }
+
+    // PUSH related configs
     if (!mobileConfig.has("google")) {
       throw new Exception("mobile-config missing google");
     }
     if (!mobileConfig.has("google-ios")) {
-      throw new Exception("mobile-config missing google-ios");
+      //throw new Exception("mobile-config missing google-ios");
     }
     if (!mobileConfig.has("manifest")) {
       throw new Exception("mobile-config missing manifest");
@@ -93,16 +124,14 @@ public class MobileCapacitor {
       throw new Exception("mobile-config missing android-manifest");
     }
 
-
     String rootPath = mobileConfig.get("root").textValue();
-    String domain = mobileConfig.get("domain").textValue();
+
     String google = mobileConfig.get("google").textValue();
     String manifest = mobileConfig.get("manifest").textValue();
     String appid = mobileConfig.get("appid").textValue();
     String googleIOS = mobileConfig.get("google-ios").textValue();
     String appEntitlements = mobileConfig.get("app-entitlements").textValue();
     String androidManifest = mobileConfig.get("android-manifest").textValue();
-
 
     File root = new File(rootPath);
     if (!(root.exists() && root.isDirectory())) {
@@ -147,19 +176,24 @@ public class MobileCapacitor {
       throw new Exception("path '" + rootPath + "/ios/App/App' must exist");
     }
 
-
     WebClientBase webBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(args.config.get_or_create_child("web"))));
     try {
       ObjectNode manifestJson = Json.parseJsonObject(new String(fetch(webBase, manifest), StandardCharsets.UTF_8));
-      String shell = CapacitorJSShell.makeMobileShell(forest, domain, devmode, (el, w) -> {
-        System.err.println("warning:" + w);
-      });
+      String shell = shellBuilder.make(forest);
       Files.writeString(new File(rootSrc, "index.html").toPath(), shell);
       File assetsPath = new File(args.assetPath);
       if (!(assetsPath.exists() && assetsPath.isDirectory())) {
         throw new Exception(args.assetPath + " must be a directory");
       }
-      copyAssets(assetsPath, rootSrc);
+      TreeSet<String> ignore = new TreeSet<>();
+      ignore.add(".adama-ignore");
+      File assetsToIgnore = new File(assetsPath, ".adama-ignore");
+      if (assetsToIgnore.exists()) {
+        for (String ln : Files.readAllLines(assetsToIgnore.toPath())) {
+          ignore.add(ln);
+        }
+      }
+      copyAssets(assetsPath, rootSrc, ignore, "");
       final String[] filesToMigrate;
       if (devmode) {
         filesToMigrate = new String[]{"connection.js", "tree.js", "rxhtml.js", "rxcapacitor.js"};
@@ -223,16 +257,20 @@ public class MobileCapacitor {
     }
   }
 
-  private static void copyAssets(File source, File dest) throws Exception {
+  private static void copyAssets(File source, File dest, TreeSet<String> ignore, String prefix) throws Exception {
     for (File child : source.listFiles()) {
       if (child.isDirectory()) {
         File newDest = new File(dest, child.getName());
         newDest.mkdirs();
         if (newDest.isDirectory()) {
-          copyAssets(child, newDest);
+          if (!ignore.contains(prefix + child.getName())) {
+            copyAssets(child, newDest, ignore, prefix + "/" + child.getName());
+          }
         }
       } else {
-        Files.copy(child.toPath(), new File(dest, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        if (!ignore.contains(prefix + child.getName())) {
+          Files.copy(child.toPath(), new File(dest, child.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
       }
     }
   }

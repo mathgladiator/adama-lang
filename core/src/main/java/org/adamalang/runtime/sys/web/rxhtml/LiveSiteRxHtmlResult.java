@@ -19,7 +19,6 @@ package org.adamalang.runtime.sys.web.rxhtml;
 
 import org.adamalang.common.cache.Measurable;
 import org.adamalang.runtime.sys.web.WebPath;
-import org.adamalang.rxhtml.RxHtmlResult;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

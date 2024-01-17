@@ -829,8 +829,9 @@ public class ServerCodec {
     o.assetMD5 = Helper.readString(buf);
     o.assetSHA384 = Helper.readString(buf);
     o.cors = buf.readBoolean();
-    o.cache_ttl_seconds = buf.readIntLE();
-    o.asset_transform = Helper.readString(buf);
+    o.cacheTimeToLiveSeconds = buf.readIntLE();
+    o.assetTransform = Helper.readString(buf);
+    o.status = buf.readIntLE();
     return o;
   }
 
@@ -1137,8 +1138,9 @@ public class ServerCodec {
     Helper.writeString(buf, o.assetMD5);;
     Helper.writeString(buf, o.assetSHA384);;
     buf.writeBoolean(o.cors);
-    buf.writeIntLE(o.cache_ttl_seconds);
-    Helper.writeString(buf, o.asset_transform);;
+    buf.writeIntLE(o.cacheTimeToLiveSeconds);
+    Helper.writeString(buf, o.assetTransform);;
+    buf.writeIntLE(o.status);
   }
 
   public static void write(ByteBuf buf, InventoryHeartbeat o) {

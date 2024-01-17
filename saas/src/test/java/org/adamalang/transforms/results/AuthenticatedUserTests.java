@@ -31,7 +31,7 @@ public class AuthenticatedUserTests {
 
   @Test
   public void flow() throws Exception {
-    AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", "asset-key", null));
+    AuthenticatedUser user = new AuthenticatedUser(123, new NtPrincipal("jeff", "adama"), new ConnectionContext("origin", "ip", "agent", null));
     KeyPair pair = PublicKeyCodec.inventHostKey();
     String identity = user.asIdentity(42, pair.getPrivate());
     ParsedToken parsedToken = new ParsedToken(identity);
@@ -43,6 +43,5 @@ public class AuthenticatedUserTests {
     Assert.assertEquals("origin", parsedToken.proxy_origin);
     Assert.assertEquals("ip", parsedToken.proxy_ip);
     Assert.assertEquals("agent", parsedToken.proxy_useragent);
-    Assert.assertEquals("asset-key", parsedToken.proxy_asset_key);
   }
 }

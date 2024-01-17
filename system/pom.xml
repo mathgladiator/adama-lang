@@ -33,6 +33,16 @@
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
+            <artifactId>data-train</artifactId>
+            <version>MAIN</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>data-caravan</artifactId>
+            <version>MAIN</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
             <artifactId>services</artifactId>
             <version>MAIN</version>
         </dependency>

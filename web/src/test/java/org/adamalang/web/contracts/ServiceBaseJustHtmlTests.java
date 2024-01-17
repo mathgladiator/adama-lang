@@ -54,19 +54,19 @@ public class ServiceBaseJustHtmlTests {
       }
 
       public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("","".getBytes(StandardCharsets.UTF_8), uri.equalsIgnoreCase("/opt=yes")));
+        callback.success(new HttpResult(200, "","".getBytes(StandardCharsets.UTF_8), uri.equalsIgnoreCase("/opt=yes")));
       }
 
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
+        callback.success(new HttpResult(200, "yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
       public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8), true));
+        callback.success(new HttpResult(200, "yay", "yay".getBytes(StandardCharsets.UTF_8), true));
       }
 
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("post", "post".getBytes(StandardCharsets.UTF_8), true));
+        callback.success(new HttpResult(200, "post", "post".getBytes(StandardCharsets.UTF_8), true));
       }
 
       @Override
@@ -94,7 +94,7 @@ public class ServiceBaseJustHtmlTests {
     base.establish(null).kill();
     base.assets();
     CountDownLatch latch = new CountDownLatch(4);
-    ConnectionContext context = new ConnectionContext("origin", "ip", "ua", null, new TreeMap<>());
+    ConnectionContext context = new ConnectionContext("origin", "ip", "ua", new TreeMap<>());
     base.http().handle(context, HttpHandler.Method.OPTIONS, null, "/opt=yes", new TreeMap<>(), "{}", null, new Callback<HttpHandler.HttpResult>() {
       @Override
       public void success(HttpHandler.HttpResult value) {

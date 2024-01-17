@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
@@ -59,5 +60,13 @@ public class NtDateTime implements Comparable<NtDateTime> {
     long val = dateTime.toInstant().toEpochMilli();
     // convert to minutes since epoch as this fits within int
     return (int) (val / 60000L);
+  }
+
+  public static NtDateTime parse(String val) {
+    try {
+      return new NtDateTime(ZonedDateTime.parse(val));
+    } catch (Exception ex) {
+      return new NtDateTime(ZonedDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
+    }
   }
 }

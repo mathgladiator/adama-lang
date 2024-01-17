@@ -91,4 +91,17 @@ public interface Events {
     @FieldOrder(4)
     public long assetBytes;
   }
+
+  @TypeId(0x50)
+  @Flow("Event")
+  class Recover {
+    @FieldOrder(1)
+    public int seq;
+    @FieldOrder(2)
+    public String document;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+  }
 }

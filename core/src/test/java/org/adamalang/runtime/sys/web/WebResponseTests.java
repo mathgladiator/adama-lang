@@ -94,7 +94,7 @@ public class WebResponseTests {
     WebResponse response = new WebResponse();
     JsonStreamWriter writer = new JsonStreamWriter();
     response.writeAsObject(writer);
-    Assert.assertEquals("{}", writer.toString());
+    Assert.assertEquals("{\"status\":200}", writer.toString());
   }
 
   @Test
@@ -108,7 +108,7 @@ public class WebResponseTests {
     response.cache_ttl_seconds = 42;
     JsonStreamWriter writer = new JsonStreamWriter();
     response.writeAsObject(writer);
-    Assert.assertEquals("{\"content-type\":\"type\",\"body\":\"body\",\"asset\":{\"id\":\"\",\"size\":\"0\",\"name\":\"\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"@gc\":\"@yes\"},\"asset-transform\":\"transform\",\"cors\":true,\"cache-ttl-seconds\":42}", writer.toString());
+    Assert.assertEquals("{\"content-type\":\"type\",\"body\":\"body\",\"asset\":{\"id\":\"\",\"size\":\"0\",\"name\":\"\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"@gc\":\"@yes\"},\"asset-transform\":\"transform\",\"cors\":true,\"cache-ttl-seconds\":42,\"status\":200}", writer.toString());
   }
 
   @Test

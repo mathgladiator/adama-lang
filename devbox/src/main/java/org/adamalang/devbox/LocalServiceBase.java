@@ -22,7 +22,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -32,6 +32,7 @@ import org.adamalang.runtime.sys.web.WebContext;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.system.FrontendHttpHandler;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.ContentType;
 import org.adamalang.web.contracts.HttpHandler;
@@ -68,8 +69,9 @@ public class LocalServiceBase implements ServiceBase {
   private final ConcurrentHashMap<Integer, LocalAdama> inflight;
   private final AtomicInteger inflightId;
   private final RxPubSub rxPubSub;
+  private final MetricsFactory metricsFactory;
 
-  public LocalServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub) throws Exception {
+  public LocalServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -83,6 +85,7 @@ public class LocalServiceBase implements ServiceBase {
     this.inflight = new ConcurrentHashMap<>();
     this.inflightId = new AtomicInteger(1);
     this.rxPubSub = rxPubSub;
+    this.metricsFactory = metricsFactory;
   }
 
   public String diagnostics() {
@@ -180,11 +183,11 @@ public class LocalServiceBase implements ServiceBase {
           }
         }
         if ("/template.js".equals(uri)) {
-          callback.success(new HttpResult("text/javascript", current.forestJavaScript.getBytes(), false));
+          callback.success(new HttpResult(200, "text/javascript", current.forestJavaScript.getBytes(), false));
           return;
         }
         if ("/template.css".equals(uri)) {
-          callback.success(new HttpResult("text/javascript", current.forestStyle.getBytes(), false));
+          callback.success(new HttpResult(200, "text/javascript", current.forestStyle.getBytes(), false));
           return;
         }
         if (uri != null && uri.endsWith("/devlibadama-worker.js")) {
@@ -195,7 +198,7 @@ public class LocalServiceBase implements ServiceBase {
             } else {
               js.append(JavaScriptResourcesRaw.WORKER);
             }
-            callback.success(new HttpResult("text/javascript", js.toString().getBytes(), false));
+            callback.success(new HttpResult(200, "text/javascript", js.toString().getBytes(), false));
           } catch (Exception ex) {
             callback.failure(new ErrorCodeException(500));
           }
@@ -244,7 +247,7 @@ public class LocalServiceBase implements ServiceBase {
               rxhtml = rxhtml.replaceAll(Pattern.quote("\"https://\""), Matcher.quoteReplacement("\"http://\""));
             }
             js.append(rxhtml);
-            callback.success(new HttpResult("text/javascript", js.toString().getBytes(), false));
+            callback.success(new HttpResult(200, "text/javascript", js.toString().getBytes(), false));
           } catch (Exception ex) {
             callback.failure(new ErrorCodeException(500));
           }
@@ -253,7 +256,7 @@ public class LocalServiceBase implements ServiceBase {
 
         // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
         if (current.result.test(uri)) {
-          callback.success(new HttpResult("text/html", current.shell.getBytes(), false));
+          callback.success(new HttpResult(200, "text/html", current.shell.getBytes(), false));
           return;
         }
         if (uri.endsWith("/")) {
@@ -267,7 +270,7 @@ public class LocalServiceBase implements ServiceBase {
         try {
           if (file.exists()) {
             byte[] bytes = Files.readAllBytes(file.toPath());
-            callback.success(new HttpResult(ContentType.of(uri), bytes, true));
+            callback.success(new HttpResult(200, ContentType.of(uri), bytes, true));
           } else {
             callback.failure(new ErrorCodeException(404));
           }
@@ -285,17 +288,9 @@ public class LocalServiceBase implements ServiceBase {
                 String identity = "document/" + skr.space + "/" + skr.key + "/" + response.body;
                 ObjectNode json = Json.newJsonObject();
                 json.put("identity", identity);
-                callback.success(new HttpResult("application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
-              } else if ("redirection/301".equals(response.contentType)) {
-                callback.success(new HttpResult(response.body, 301));
-              } else if ("redirection/302".equals(response.contentType)) {
-                callback.success(new HttpResult(response.body, 302));
+                callback.success(new HttpResult(200, "application/json", json.toString().getBytes(StandardCharsets.UTF_8), response.cors));
               } else {
-                if (response.asset != null) {
-                  callback.success(new HttpResult(skr.space, skr.key, response.asset, response.asset_transform, response.cors, 0));
-                } else {
-                  callback.success(new HttpResult(response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors));
-                }
+                callback.success(FrontendHttpHandler.commonRoute(response, skr));
               }
             } else {
               callback.success(null);
@@ -322,7 +317,7 @@ public class LocalServiceBase implements ServiceBase {
   }
 
   public Thread start() throws Exception {
-    ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), this, (domain, callback) -> callback.success(null), new DomainFinder() {
+    ServiceRunnable webServer = new ServiceRunnable(webConfig, new WebMetrics(metricsFactory), this, (domain, callback) -> callback.success(null), new DomainFinder() {
       @Override
       public void find(String domain, Callback<Domain> callback) {
         if (verse != null && verse.domainKeyToUse != null) {
@@ -336,6 +331,7 @@ public class LocalServiceBase implements ServiceBase {
     Thread serviceThread = new Thread(webServer);
     serviceThread.start();
     webServer.waitForReady(1000);
+    io.important("web|server \"ready\" http://127.0.0.1:" + webConfig.port);
     return serviceThread;
   }
 }

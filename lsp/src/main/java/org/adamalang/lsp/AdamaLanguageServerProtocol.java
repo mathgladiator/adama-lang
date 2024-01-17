@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.exceptions.ParseException;
@@ -185,7 +186,7 @@ public class AdamaLanguageServerProtocol {
   }
 
   private void code(String code, ArrayNode diagnostics) throws Exception {
-    GlobalObjectPool globals = GlobalObjectPool.createPoolWithStdLib();
+    GlobalObjectPool globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
     CompilerOptions options = CompilerOptions.start().enableCodeCoverage().make();
     EnvironmentState state = new EnvironmentState(globals, options);
     String className = "XGen" + nameId.incrementAndGet();

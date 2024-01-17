@@ -27,7 +27,7 @@ public class EnvironmentTests {
     final var options = CompilerOptions.start().make();
     final var environment =
         Environment.fresh(
-            new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), options));
+            new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling), options));
     Assert.assertNull(environment.getMostRecentReturnType());
     Assert.assertFalse(environment.state.isPure());
     Assert.assertTrue(environment.scopeAsPureFunction().state.isPure());

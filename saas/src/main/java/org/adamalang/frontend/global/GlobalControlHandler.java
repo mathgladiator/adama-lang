@@ -48,6 +48,7 @@ import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.capacity.CapacityInstance;
 import org.adamalang.runtime.sys.domains.Domain;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.client.*;
 import org.adamalang.web.io.ConnectionContext;
@@ -298,7 +299,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
       arg.writeObjectFieldIntro("email");
       arg.writeString(email);
       arg.endObject();
-      AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), new ConnectionContext("adama", "0.0.0.0", "adama", null, null));
+      AuthenticatedUser user = new AuthenticatedUser(userId, new NtPrincipal("" + userId, "adama"), new ConnectionContext("adama", "0.0.0.0", "adama", null));
       nexus.adama.create(user, "billing", "" + userId, null, arg.toString(), new Callback<Void>() {
         @Override
         public void success(Void value) {
@@ -788,7 +789,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
       };
 
       DeploymentPlan plan = new DeploymentPlan(planJson, LOGGER);
-      AsyncCompiler.forge(request.space, null, plan, Deliverer.FAILURE, new TreeMap<>(), nexus.byteCodeCache, new Callback<>() {
+      AsyncCompiler.forge(RuntimeEnvironment.Tooling, request.space, null, plan, Deliverer.FAILURE, new TreeMap<>(), nexus.byteCodeCache, new Callback<>() {
         @Override
         public void success(DeploymentFactory value) {
           nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);

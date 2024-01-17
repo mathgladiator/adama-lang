@@ -37,6 +37,7 @@ import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.capacity.CapacityOverseer;
 import org.adamalang.runtime.sys.metering.*;
 import org.adamalang.system.contracts.JsonConfig;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,8 @@ public class Backend {
     ManagedAsyncByteCodeCache managedByteCodeCache = new ManagedAsyncByteCodeCache(init.s3, init.em.compileOffload, init.deploymentMetrics);
     CachedAsyncByteCodeCache cachedAsyncByteCodeCache = new CachedAsyncByteCodeCache(TimeSource.REAL_TIME, 1024, 120000, init.system, managedByteCodeCache);
     cachedAsyncByteCodeCache.startSweeping(init.alive, 30000, 90000);
-    DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase(cachedAsyncByteCodeCache);
+    RuntimeEnvironment env = ("test".equals(init.em.environment) || "beta".equals(init.em.environment)) ? RuntimeEnvironment.Beta : RuntimeEnvironment.Production;
+    DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase(cachedAsyncByteCodeCache, env);
     CapacityOverseer overseer = new GlobalCapacityOverseer(init.database);
 
     DelayedDeploy delayedDeploy = new DelayedDeploy();

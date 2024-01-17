@@ -18,7 +18,6 @@
 package org.adamalang.runtime;
 
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.junit.Assert;
@@ -56,7 +55,7 @@ public class RxLivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":1}", new RealDocumentSetup.AssertInt(5));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":2}", new RealDocumentSetup.AssertInt(6));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":3}", new RealDocumentSetup.AssertInt(7));
@@ -99,7 +98,7 @@ public class RxLivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":1}", new RealDocumentSetup.AssertInt(5));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":2}", new RealDocumentSetup.AssertInt(6));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":3}", new RealDocumentSetup.AssertInt(7));
@@ -143,7 +142,7 @@ public class RxLivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":1}", new RealDocumentSetup.AssertInt(5));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":2}", new RealDocumentSetup.AssertInt(6));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":3}", new RealDocumentSetup.AssertInt(7));
@@ -187,7 +186,7 @@ public class RxLivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":1}", new RealDocumentSetup.AssertInt(5));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":2}", new RealDocumentSetup.AssertInt(6));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":3}", new RealDocumentSetup.AssertInt(7));
@@ -230,7 +229,7 @@ public class RxLivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":1}", new RealDocumentSetup.AssertInt(5));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":2}", new RealDocumentSetup.AssertInt(6));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":3}", new RealDocumentSetup.AssertInt(7));
@@ -274,7 +273,7 @@ public class RxLivingDocumentTests {
           };
 
       setup.document.connect(ContextSupport.WRAP(A), new RealDocumentSetup.AssertInt(2));
-      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), TestKey.ENCODER, gv);
+      setup.document.createPrivateView(A, linked, new JsonStreamReader("{}"), gv);
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":1}", new RealDocumentSetup.AssertInt(5));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":2}", new RealDocumentSetup.AssertInt(6));
       setup.document.send(ContextSupport.WRAP(A), null, null, "add", "{\"val\":3}", new RealDocumentSetup.AssertInt(7));

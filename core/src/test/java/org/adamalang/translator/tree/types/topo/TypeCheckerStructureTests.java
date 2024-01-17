@@ -17,10 +17,7 @@
 */
 package org.adamalang.translator.tree.types.topo;
 
-import org.adamalang.translator.env.CompilerOptions;
-import org.adamalang.translator.env.Environment;
-import org.adamalang.translator.env.EnvironmentState;
-import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.*;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -38,7 +35,7 @@ public class TypeCheckerStructureTests {
     tcs.register(Collections.singleton("x"), (env) -> {});
     TypeCheckerRoot root = new TypeCheckerRoot();
     tcs.transferInto("R", StorageSpecialization.Record, root);
-    EnvironmentState es = new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make());
+    EnvironmentState es = new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Beta), CompilerOptions.start().make());
     root.check(Environment.fresh(new Document(), es));
   }
 }

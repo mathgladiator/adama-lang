@@ -3,8 +3,17 @@ var RxHTML = (function () {
 
   var templates = {};
   var router = {};
+
+  var defaultEndpoint = /*ENDPOINT=[*/Adama.Production/*]*/;
+
+  // override endpoint based on the presence of __md_endpoint
+  var mdOverrideEndpoint = localStorage.getItem("mdec"); // multi domain endpoint choice
+  if (mdOverrideEndpoint != null && "beta" == mdOverrideEndpoint) {
+    defaultEndpoint = Adama.Beta;
+  }
+
   // This strange escaping is for developer mode to proxy to localhost.
-  var connection = new Adama.Connection(/*ENDPOINT=[*/Adama.Production/*]*/);
+  var connection = new Adama.Connection(defaultEndpoint);
   var connections = {};
   self.connection = connection;
   self.bump = function(m) {
@@ -45,6 +54,7 @@ var RxHTML = (function () {
     payload.colno = event.colno;
     payload.filename = event.filename;
     connection.log("window.error", JSON.stringify(payload));
+    console.error("[error]" + event.message);
   });
 
   connection.bump("rxhtml");
@@ -345,6 +355,26 @@ var RxHTML = (function () {
     };
   };
   self.debounce = debounce;
+
+  var delay = function(ms, foo) {
+    var status = { avail: true, again:false, timeout: null };
+    status.go = function() {
+      if (status.avail) {
+        status.avail = false;
+        status.timeout = window.setTimeout(function() {
+          status.avail = true;
+          if (status.again) {
+            go();
+          }
+        });
+        foo();
+      } else {
+        status.again = true;
+      }
+    };
+    return status.go;
+  };
+  self.delay = delay;
 
   // HELPER | prepare a free unsubscribe object
   var make_unsub = function () {
@@ -747,9 +777,10 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | <domain-get url="path" search:x="..." ...>
-  self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed) {
+  self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed, delayLimit) {
     var unsub = make_unsub();
-    rxObj.__ = debounce(50, function () {
+    var delayToUse = typeof(delayLimit) == "number" ? delayLimit : 250;
+    rxObj.__ = debounce(50, delay(delayToUse, function () {
       if (!('url' in rxObj)) {
         return;
       }
@@ -805,13 +836,13 @@ var RxHTML = (function () {
           }
         }
       }.bind({gen:self.gen, xhttp:xhttp});
-      xhttp.open("GET", "/~d" + url, true);
+      xhttp.open("GET",  self.base + "/~d" + url, true);
       if (identity != null) {
         xhttp.setRequestHeader("Authorization", "Bearer " + identity);
       }
       xhttp.withCredentials = true;
       xhttp.send();
-    }.bind({url:"", gen:0}));
+    }.bind({url:"", gen:0, base:self.protocol + "//" + self.host})));
     rxObj.__();
   };
 
@@ -1683,7 +1714,7 @@ var RxHTML = (function () {
     sm.last = {};
     sm.params = "";
     sm.mode = "replace";
-    sm.ping = debounce(5, function() {
+    sm.ping = debounce(500, function() {
       var args = [];
       for (var k = 0; k < this.vars.length; k++) {
         var arg = this.vars[k];
@@ -1697,7 +1728,11 @@ var RxHTML = (function () {
         obj.viewer_search_query = result;
         var delta = path_to(state.view, obj);
         state.view.tree.update(delta);
-        window.history.replaceState({}, "", fixHref(window.location.pathname + result));
+        try {
+          window.history.replaceState({}, "", fixHref(window.location.pathname + result));
+        } catch(failedToReplaceState) {
+
+        }
       }
     }.bind(sm));
     state.view.tree.subscribe(function(s) {
@@ -2246,15 +2281,26 @@ var RxHTML = (function () {
   };
 
   var routeMessage = function(event) {
-    if (!('data' in event)) { return; }
-    if (!('channel' in event.data)) { return; }
-    var channel = event.data.channel;
-    var list = currentMessageHandlers[channel];
-    if (list !== null) {
-      var n = list.length;
-      for (var k = 0; k < n; k++) {
-        list[k](event.data, event);
+    try {
+      if (!('data' in event)) {
+        return;
       }
+      if (typeof (event.data) != 'object') {
+        return;
+      }
+      if (!('channel' in event.data)) {
+        return;
+      }
+      var channel = event.data.channel;
+      var list = currentMessageHandlers[channel];
+      if (list !== null) {
+        var n = list.length;
+        for (var k = 0; k < n; k++) {
+          list[k](event.data, event);
+        }
+      }
+    } catch (wellMaybeTheErrorDoesntBelongToMe) {
+      // :shrug:
     }
   };
 
@@ -2707,14 +2753,127 @@ var RxHTML = (function () {
     });
   };
 
+  // CHECK FOR OVERRIDE SIGNAL HERE
   self.domain = location.hostname;
   self.host = location.host;
   self.protocol = location.protocol;
+  self.is_mobile = false;
 
-  self.mobileInit = function(overrideDomain) {
-    self.domain = overrideDomain;
-    self.host = overrideDomain;
-    self.protocol = "https";
+  var hostOverride = localStorage.getItem("mdo_host"); // multi domain endpoint choice
+  if (hostOverride != null) {
+    self.host = hostOverride;
+    self.domain = hostOverride.split(":")[0];
+  }
+
+  self.url_prefix = self.protocol + "//" + self.host;
+
+
+  self.mobileInit = function(defaultOverrideDomain) {
+    self.domain = defaultOverrideDomain;
+    self.host = defaultOverrideDomain;
+    self.protocol = "https:";
+    connection.protocol = "https:";
+    self.is_mobile = true;
+  };
+  self.mobileInitMultiDomain = function(start, betaPrefix, prodPrefix) {
+    self.md_betaPrefix = betaPrefix;
+    self.md_prodPrefix = prodPrefix;
+    self.protocol = "https:";
+    connection.protocol = "https:";
+    self.is_mobile = true;
+    self.run(document.body, fixPath(start), false);
+    window.onpopstate = function (p) {
+      self.run(document.body, fixPath(start), false);
+    };
+  };
+  var getOrCreateManifests = function() {
+    var db = localStorage.getItem("__domain_manifests");
+    if (db == null) {
+      db = {seq:0, manifests:[]};
+    } else {
+      db = JSON.parse(db);
+    }
+    return db;
+  };
+  var saveManifests = function(db) {
+    localStorage.setItem("__domain_manifests", JSON.stringify(db));
+  };
+  self.registerManifest = function(url) {
+    var add = function(manifest) {
+      var db = getOrCreateManifests();
+      manifest.source = url;
+      manifest.id = db.seq;
+      db.seq++;
+      for (var k = 0; k < db.manifests.length; k++) {
+        if (db.manifests[k].source == url) {
+          db.manifests[k] = manifest;
+          saveManifests(db);
+          return;
+        }
+      }
+      db.manifests.push(manifest);
+      saveManifests(db);
+    };
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          add(JSON.parse(this.responseText));
+        }
+      }
+    };
+    xhttp.open("GET", url, true);
+    xhttp.send();
+  };
+  // RUNTIME(mobile) | rx:action="manifest-add:"
+  self.MD_a = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
+      self.registerManifest(typeof(value) == 'function' ? value() : value);
+    });
+  };
+  // RUNTIME(mobile) | rx:action="manifest-use:"
+  self.MD_u = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
+      var id = parseInt(typeof(value) == 'function' ? value() : value);
+      var db = getOrCreateManifests();
+      for (var k = 0; k < db.manifests.length; k++) {
+        var manifest = db.manifests[k];
+        if (manifest.id == id) {
+          localStorage.setItem("mdo_host", new URL(db.manifests[k].source).host);
+          if (manifest.beta) {
+            localStorage.setItem("mdec", "beta");
+          } else {
+            localStorage.setItem("mdec", "prod");
+          }
+          window.location.href = "/";
+        }
+      }
+    });
+  };
+  self.mobileLoad = function(url) {
+    var parsed = new URL(url);
+    localStorage.setItem("mdo_host", parsed.host);
+    if (parsed.host.endsWith(self.md_betaPrefix)) {
+      localStorage.setItem("mdec", "beta");
+    } else {
+      localStorage.setItem("mdec", "prod");
+    }
+    window.location.href = parsed.path;
+  };
+  // RUNTIME(mobile) | rx:action="manifest-del:"
+  self.MD_d = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
+      var id = parseInt(typeof(value) == 'function' ? value() : value);
+      var db = getOrCreateManifests();
+      var new_manifests = [];
+      for (var k = 0; k < db.manifests.length; k++) {
+        if (db.manifests[k].id != id) {
+          new_manifests.push(db.manifests[k]);
+        }
+      }
+      db.manifests = new_manifests;
+      saveManifests(db);
+    });
   };
 
   // <connection use-domain ...>
@@ -3175,7 +3334,7 @@ var RxHTML = (function () {
     } // else 1
     return ival + suffix;
   }
-  transforms['time_ago'] = function(dt) {
+  transforms['time_ago'] = function(dt, format) {
     // only transform strings
     if (typeof (dt) == "string") {
       // let's strip out everything after the brackets
@@ -3205,10 +3364,19 @@ var RxHTML = (function () {
       // it wasn't 90 minutes ago, so let's just put the time stamp up
       var dthen = new Date(d);
       var dnow = new Date();
-      if (dthen.toLocaleDateString() != dnow.toLocaleDateString()) {
-        return dthen.toLocaleDateString() + " " + dthen.toLocaleTimeString();
+      var opts = {};
+      if (format){
+        format.trim().split("").forEach(char => {
+          const keys = {"h": "hour", "m": "minute", "s": "second"}
+          if (char in keys){
+            opts[keys[char]] = "numeric";
+          }
+        })
       }
-      return dthen.toLocaleTimeString();
+      if (dthen.toLocaleDateString() != dnow.toLocaleDateString()) {
+        return dthen.toLocaleDateString() + " " + dthen.toLocaleTimeString([], opts);
+      }
+      return dthen.toLocaleTimeString([], opts);
     } else {
       // do nothing
       return dt;
@@ -3250,7 +3418,7 @@ var RxHTML = (function () {
     }
   };
 
-  transforms['date'] = function(format, d) {
+  transforms['date-format'] = function(d, format) {
     if (typeof (d) == "string") {
       // if date is not set, return empty string
       if (d == "1-01-01") return ""
@@ -3283,11 +3451,14 @@ var RxHTML = (function () {
     if (name in transforms) {
       return transforms[name];
     } 
-    // check for date format
-    if (name.startsWith("date-format:")){
-      const [_, format]  = name.split(":");
-      return x => transforms["date"](format, x);
+    // ex: date-format:mm/dd/yy
+    if (name.includes(":")){
+      const [key, format]  = name.split(":");
+      if (key in transforms) {
+        return x => transforms[key](x, format);
+      }
     }
+    
     return function(x) { return x; };
   };
 
@@ -3363,7 +3534,7 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:action=document:put
   self.aDPUT = function (form, state, identityName, rxobj) {
-    commonPut(form, state, identityName, rxobj, function (rxobj) { return "https://" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path; })
+    commonPut(form, state, identityName, rxobj, function (rxobj) { return self.protocol + "//" + connection.host + "/" + rxobj.space + "/" + rxobj.key + "/" + rxobj.path; })
   };
 
   // RUNTIME | rx:action=adama:sign-in
@@ -3548,7 +3719,7 @@ var RxHTML = (function () {
             fire_failure(form, "Passwords mismatch for new password.");
           }
         } else {
-          postPassword();
+          after();
         }
       }
 
@@ -3567,7 +3738,7 @@ var RxHTML = (function () {
           fire_failure(form, "Passwords mismatch");
         }
       } else {
-        after();
+        postPassword();
       }
     }, true);
   };

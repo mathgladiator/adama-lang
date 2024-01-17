@@ -30,6 +30,9 @@ public interface RxParent {
   /** hidden costs made manifest up the parent chain */
   void __cost(int cost);
 
+  /** children may request an upward invalidation */
+  void __invalidateUp();
+
   /** settle down the reactivity */
   void __settle(Set<Integer> viewers);
 }

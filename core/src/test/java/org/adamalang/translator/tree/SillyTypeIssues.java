@@ -19,10 +19,7 @@ package org.adamalang.translator.tree;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.translator.env.CompilerOptions;
-import org.adamalang.translator.env.Environment;
-import org.adamalang.translator.env.EnvironmentState;
-import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.*;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -156,7 +153,7 @@ public class SillyTypeIssues {
         Environment.fresh(
             new Document(),
             new EnvironmentState(
-                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+                GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling), CompilerOptions.start().make()));
     final var ss = new StructureStorage(Token.WRAP("s"), StorageSpecialization.Record, false, false, Token.WRAP("{"));
     ss.end(Token.WRAP("}"));
     final var record = new TyReactiveRecord(Token.WRAP("R"), Token.WRAP("X"), ss);
@@ -330,7 +327,7 @@ public class SillyTypeIssues {
       ity.writeTypeReflectionJson(null, ReflectionSource.Root);
     } catch (UnsupportedOperationException uoe) {
     }
-    Environment env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+    Environment env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling), CompilerOptions.start().make()));
     ity.getLookupType(env, "x");
     ity.getLookupType(env, "z");
     ity.getLookupType(env, "w");

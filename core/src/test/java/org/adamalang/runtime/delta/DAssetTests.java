@@ -17,7 +17,6 @@
 */
 package org.adamalang.runtime.delta;
 
-import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
@@ -30,7 +29,7 @@ public class DAssetTests {
   public void flow() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, TestKey.ENCODER, 0);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, 0);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);
@@ -46,17 +45,17 @@ public class DAssetTests {
   }
 
   @Test
-  public void flowNoKey() {
+  public void another_simple_test_sanity() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, null, 0);
+    final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, 0);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);
     da.show(new NtAsset("32", "name", "type", 42, "md5", "sha"), writer);
 
     da.hide(writer);
-    Assert.assertEquals("nullnull", stream.toString());
+    Assert.assertEquals("{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}null{\"id\":\"12\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}{\"id\":\"32\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}null", stream.toString());
     Assert.assertEquals(32, da.__memory());
   }
 }

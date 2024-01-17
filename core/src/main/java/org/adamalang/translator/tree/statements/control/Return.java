@@ -31,6 +31,7 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
@@ -39,10 +40,10 @@ public class Return extends Statement {
   public final Expression expression;
   public final Token returnToken;
   public final Token semicolonToken;
-  private TreeSet<String> webFields;
+  private ArrayList<String> webFields;
   private TyNativeMessage webReturnType;
 
-  private TreeSet<String> authorizationFields;
+  private ArrayList<String> authorizationFields;
   private TyNativeMessage authorizationReturnType;
 
   public Return(final Token returnToken, final Expression expression, final Token semicolonToken) {
@@ -73,7 +74,7 @@ public class Return extends Statement {
     }
   }
 
-  private static boolean consider(String field, TyNativeMessage message, Consumer<TyType> check, TreeSet<String> fields) {
+  private static boolean consider(String field, TyNativeMessage message, Consumer<TyType> check, ArrayList<String> fields) {
     FieldDefinition fd = message.storage.fields.get(field);
     if (fd != null) {
       check.accept(fd.type);
@@ -89,7 +90,7 @@ public class Return extends Statement {
     if (environment.state.isAuthorize() && expectedReturnType == null) {
       final var givenReturnType = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), true);
       if (givenReturnType instanceof TyNativeMessage) {
-        authorizationFields = new TreeSet<>();
+        authorizationFields = new ArrayList<>();
         authorizationReturnType = (TyNativeMessage) givenReturnType;
         boolean hasHash = false;
         boolean hasAgent = false;
@@ -126,7 +127,7 @@ public class Return extends Statement {
       final var givenReturnType = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), true);
       if (givenReturnType instanceof TyNativeMessage) {
         String method = environment.state.getWebMethod();
-        webFields = new TreeSet<>();
+        webFields = new ArrayList<>();
         webReturnType = (TyNativeMessage) givenReturnType;
         int body = 0;
         if (consider("html", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
@@ -165,6 +166,8 @@ public class Return extends Statement {
         }
         consider("cors", webReturnType, (ty) -> environment.rules.IsBoolean(ty, false), webFields);
         consider("cache_ttl_seconds", webReturnType, (ty) -> environment.rules.IsInteger(ty, false), webFields);
+        consider("status", webReturnType, (ty) -> environment.rules.IsInteger(ty, false), webFields);
+
         if (method.equals("options")) {
           if (body != 0) {
             environment.document.createError(this, String.format("The return statement within a @web expects no body fields; got " + body + " instead"));

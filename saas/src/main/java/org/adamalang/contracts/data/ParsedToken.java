@@ -36,7 +36,6 @@ public class ParsedToken {
   public final String proxy_authority;
   public final String proxy_origin;
   public final String proxy_ip;
-  public final String proxy_asset_key;
   public final String proxy_useragent;
 
   public ParsedToken(String token) throws ErrorCodeException {
@@ -64,7 +63,6 @@ public class ParsedToken {
           this.proxy_authority = Json.readString(tree, "pa");
           this.proxy_origin = Json.readString(tree, "po");
           this.proxy_ip = Json.readString(tree, "pip");
-          this.proxy_asset_key = Json.readString(tree, "pak");
           this.proxy_useragent = Json.readString(tree, "pua");
           if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
             this.iss = _iss.textValue();

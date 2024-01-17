@@ -30,6 +30,7 @@ public class FirstPartyMetrics {
   public final RequestResponseMonitor facebook_validate;
   public final RequestResponseMonitor github_validate;
   public final RequestResponseMonitor twitter_validate;
+  public final RequestResponseMonitor payrix_post_tx;
 
   public FirstPartyMetrics(MetricsFactory factory) {
     amazon_ses_send = factory.makeRequestResponseMonitor("fpm_amazon_ses_send");
@@ -41,5 +42,6 @@ public class FirstPartyMetrics {
     facebook_validate = factory.makeRequestResponseMonitor("fpm_facebook_validate");
     github_validate = factory.makeRequestResponseMonitor("fpm_github_validate");
     twitter_validate = factory.makeRequestResponseMonitor("fpm_twitter_validate");
+    payrix_post_tx = factory.makeRequestResponseMonitor("fpm_payrix_post_tx");
   }
 }

@@ -23,6 +23,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
+import org.adamalang.translator.tree.definitions.web.WebGuard;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
@@ -37,12 +38,14 @@ public class DefineWebGet extends Definition implements UriAction {
   public final Token webToken;
   public final Token getToken;
   public final Uri uri;
+  public final WebGuard guard;
   public final Block code;
 
-  public DefineWebGet(Token webToken, Token getToken, Uri uri, Block code) {
+  public DefineWebGet(Token webToken, Token getToken, Uri uri, WebGuard guard, Block code) {
     this.webToken = webToken;
     this.getToken = getToken;
     this.uri = uri;
+    this.guard = guard;
     this.code = code;
     ingest(webToken);
     ingest(code);
@@ -53,6 +56,9 @@ public class DefineWebGet extends Definition implements UriAction {
     yielder.accept(webToken);
     yielder.accept(getToken);
     uri.emit(yielder);
+    if (guard != null) {
+      guard.emit(yielder);
+    }
     code.emit(yielder);
   }
 
@@ -60,6 +66,9 @@ public class DefineWebGet extends Definition implements UriAction {
   public void format(Formatter formatter) {
     formatter.startLine(webToken);
     uri.format(formatter);
+    if (guard != null) {
+      guard.format(formatter);
+    }
     code.format(formatter);
   }
 
@@ -76,6 +85,9 @@ public class DefineWebGet extends Definition implements UriAction {
   }
 
   public void typing(TypeCheckerRoot checker) {
+    if (guard != null) {
+      guard.typing(checker);
+    }
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
     checker.register(fe.free, (environment) -> {

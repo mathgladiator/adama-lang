@@ -265,6 +265,7 @@ public class LibDateTests {
     NtDate x = new NtDate(2023, 8, 1);
     Assert.assertEquals("2023-07-25", LibDate.offsetDay(x, -7).toString());
     Assert.assertEquals("2023-08-08", LibDate.offsetDay(x, 7).toString());
+    Assert.assertTrue(LibDate.valid(x));
   }
 
   @Test
@@ -272,6 +273,12 @@ public class LibDateTests {
     NtDate x = new NtDate(2023, 8, 1);
     Assert.assertEquals("2022-06-27", LibDate.offsetDay(x, -400).toString());
     Assert.assertEquals("2024-09-04", LibDate.offsetDay(x, 400).toString());
+    Assert.assertTrue(LibDate.valid(x));
+  }
+
+  @Test
+  public void invalid_date() {
+    Assert.assertFalse(LibDate.valid(NtDate.parse("-")));
   }
 
   @Test
@@ -279,6 +286,7 @@ public class LibDateTests {
     NtDateTime present = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]"));
     NtDate d = LibDate.date(present);
     Assert.assertEquals("2023-04-24", d.toString());
+    Assert.assertTrue(LibDate.valid(d));
   }
 
   @Test

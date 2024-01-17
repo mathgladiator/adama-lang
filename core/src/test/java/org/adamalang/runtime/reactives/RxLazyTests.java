@@ -82,6 +82,8 @@ public class RxLazyTests {
     lz.__settle(null);
     lz2.__settle(null);
     Assert.assertEquals(50, (int) lz2.get());
+    lz2.__raiseInvalid();
+    Assert.assertEquals(50, (int) lz2.get());
     lz.__insert(new JsonStreamReader("{}"));
     lz.__dump(null);
     lz.__patch(new JsonStreamReader("{}"));

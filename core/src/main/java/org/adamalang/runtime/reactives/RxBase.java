@@ -30,11 +30,13 @@ public abstract class RxBase {
   private boolean __dirty;
   private ArrayList<RxChild> __subscribers;
   private boolean __notifying;
+  protected boolean __invalid;
 
   protected RxBase(final RxParent __parent) {
     this.__parent = __parent;
     __subscribers = null;
     __notifying = false;
+    __invalid = false;
   }
 
   /** disconnect all subscriptions */
@@ -70,16 +72,29 @@ public abstract class RxBase {
   /** lower the dirtiness based on a commit */
   public void __lowerDirtyCommit() {
     __dirty = false;
+    __invalid = false;
   }
 
   /** lower the dirtiness based on a revert; will invalidate subscribers */
   public void __lowerDirtyRevert() {
     __dirty = false;
     __invalidateSubscribers();
+    __invalid = false;
+  }
+
+  public void __lowerInvalid() {
+    __invalid = false;
   }
 
   /** tell all subscribers that they need to recompute */
   protected void __invalidateSubscribers() {
+    if (__invalid) {
+      return;
+    }
+    __invalid = true;
+    if (__parent != null) {
+      __parent.__invalidateUp();
+    }
     if (__subscribers != null && !__notifying) {
       __notifying = true;
       try {

@@ -128,12 +128,12 @@ public class MockServiceBase implements ServiceBase {
       }
 
       public void handleOptions(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.success(new HttpResult("", new byte[0], uri.equalsIgnoreCase("/ok-cors")));
+        callback.success(new HttpResult(200, "", new byte[0], uri.equalsIgnoreCase("/ok-cors")));
       }
 
       public void handleDelete(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
-          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "deleted".getBytes(StandardCharsets.UTF_8), true));
+          callback.success(new HttpHandler.HttpResult(200, "text/html; charset=UTF-8", "deleted".getBytes(StandardCharsets.UTF_8), true));
           return;
         }
         callback.failure(new ErrorCodeException(1000));
@@ -141,7 +141,7 @@ public class MockServiceBase implements ServiceBase {
 
       public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
-          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8), true));
+          callback.success(new HttpHandler.HttpResult(200, "text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8), true));
           return;
         }
         if ("/crash".equals(uri)) {
@@ -161,7 +161,7 @@ public class MockServiceBase implements ServiceBase {
 
       public void handlePost(String uri, TreeMap<String, String> headers, String parametersJson, String body, Callback<HttpResult> callback) {
         if ("/body".equals(uri)){
-          callback.success(new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8), true));
+          callback.success(new HttpHandler.HttpResult(200, "text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8), true));
           return;
         }
         if ("/crash".equals(uri)) {

@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.api.SelfClient;
 import org.adamalang.common.*;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.language.LanguageServer;
 import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.region.AdamaDeploymentSyncMetrics;
@@ -53,13 +52,14 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Start {
   public static void start(Inputs args) throws Exception {
     TerminalIO terminal = new TerminalIO();
+    DevBoxMetricsFactory metricsFactory = new DevBoxMetricsFactory((ln) -> terminal.notice("metrics|" + ln));
     String developerIdentity = args.developerIdentity;
     SimpleExecutor offload = SimpleExecutor.create("executor");
-    WebClientBase webClientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), new WebConfig(new ConfigObject(Json.newJsonObject())));
+    WebClientBase webClientBase = new WebClientBase(new WebClientBaseMetrics(metricsFactory), new WebConfig(new ConfigObject(Json.newJsonObject())));
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
-    MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(new NoOpMetricsFactory()), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
+    MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(metricsFactory), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
     SelfClient production = new SelfClient(productionPool);
-    AdamaDeploymentSync sync = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(new NoOpMetricsFactory()), production, offload, developerIdentity, new Deploy() {
+    AdamaDeploymentSync sync = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(metricsFactory), production, offload, developerIdentity, new Deploy() {
       private HashSet<String> ignoredFirst = new HashSet<>();
 
       @Override
@@ -119,13 +119,13 @@ public class Start {
           }
         }
         LanguageServer server = new LanguageServer(args.lspPort, terminal, alive);
-        Services.install(defn, webClientBase, offload, (line) -> terminal.info(line));
-        verse = AdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types), server.pubsub);
+        Services.install(defn, webClientBase, offload, (line) -> terminal.info(line), metricsFactory);
+        verse = AdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types), server.pubsub, metricsFactory);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
           terminal.info("verse|installing push notifications");
-          verse.devPush.install();
+          verse.devPush.install(metricsFactory);
           for (AdamaMicroVerse.LocalSpaceDefn space : verse.spaces) {
             terminal.notice("devbox|connecting to hivemind for " + space.spaceName);
             sync.watch(space.spaceName);
@@ -160,7 +160,7 @@ public class Start {
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
       attachmentsPath.mkdirs();
-      LocalServiceBase base = new LocalServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub);
+      LocalServiceBase base = new LocalServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub, metricsFactory);
       Thread webServerThread = base.start();
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());

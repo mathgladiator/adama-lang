@@ -40,18 +40,18 @@ public class RxGuardTests {
   public void flow() {
     final var guard = new RxGuard(null);
     Assert.assertEquals(1, guard.getGeneration(0));
-    Assert.assertEquals(true, guard.invalid);
+    Assert.assertEquals(true, guard.__invalid);
     guard.__settle(null);
     Assert.assertEquals(1, guard.getGeneration(0));
-    Assert.assertEquals(false, guard.invalid);
+    Assert.assertEquals(false, guard.__invalid);
     final var child = new MockRxChild();
     guard.__subscribe(child);
     guard.__raiseInvalid();
-    child.assertInvalidateCount(0);
+    child.assertInvalidateCount(1);
     Assert.assertEquals(65522, guard.getGeneration(0));
-    Assert.assertEquals(true, guard.invalid);
+    Assert.assertEquals(true, guard.__invalid);
     guard.__settle(null);
-    Assert.assertEquals(false, guard.invalid);
+    Assert.assertEquals(false, guard.__invalid);
     Assert.assertEquals(65522, guard.getGeneration(0));
     guard.__insert(null);
     guard.__patch(null);
@@ -76,7 +76,10 @@ public class RxGuardTests {
 
       @Override
       public void __cost(int cost) {
+      }
 
+      @Override
+      public void __invalidateUp() {
       }
 
       @Override

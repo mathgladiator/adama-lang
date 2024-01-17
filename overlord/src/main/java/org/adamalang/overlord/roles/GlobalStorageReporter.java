@@ -81,7 +81,7 @@ public class GlobalStorageReporter {
     }
 
     public void accountForStorage(long timestamp) throws Exception {
-      AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("overlord", "region"), new ConnectionContext("adama", "0.0.0.0", "adama", null, new TreeMap<>()));
+      AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("overlord", "region"), new ConnectionContext("adama", "0.0.0.0", "adama", new TreeMap<>()));
       HashMap<String, Long> inventory = Inventory.inventoryStorage(dataBase);
       for (Map.Entry<String, Long> entry : inventory.entrySet()) {
         ObjectNode message = Json.newJsonObject();
@@ -118,7 +118,7 @@ public class GlobalStorageReporter {
     }
 
     public void accountForSystemUsage(long timestamp) throws Exception {
-      AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("overlord", "region"), new ConnectionContext("adama", "0.0.0.0", "adama", null, new TreeMap<>()));
+      AuthenticatedUser user = new AuthenticatedUser(0, new NtPrincipal("overlord", "region"), new ConnectionContext("adama", "0.0.0.0", "adama", new TreeMap<>()));
       HashMap<Integer, SystemUsageInventoryRecord> inventory = Inventory.inventorySystemUsage(dataBase);
       for (Map.Entry<Integer, SystemUsageInventoryRecord> entry : inventory.entrySet()) {
         ObjectNode message = Json.newJsonObject();

@@ -57,7 +57,7 @@ public class ServiceBadCodeTests {
       created.await_success();
 
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       CountDownLatch latch = new CountDownLatch(2);
       streamback.get().canAttach(new Callback<Boolean>() {

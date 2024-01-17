@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
-  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", "assetKey", null);
+  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", null);
   private static final Logger LOG = LoggerFactory.getLogger(WebSocketHandler.class);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
   private final WebConfig webConfig;
@@ -117,7 +117,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       ObjectNode connected = Json.newJsonObject();
       connected.put("status", "connected");
       connected.put("version", Platform.VERSION);
-      connected.put("assets", context.assetKey != null);
       if (context.identities != null) {
         ObjectNode idents = connected.putObject("identities");
         for (String ident : context.identities.keySet()) {

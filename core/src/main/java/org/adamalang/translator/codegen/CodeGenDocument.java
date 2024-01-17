@@ -26,7 +26,6 @@ public class CodeGenDocument {
     sb.append("import org.adamalang.runtime.async.*;").writeNewline();
     sb.append("import org.adamalang.runtime.contracts.*;").writeNewline();
     sb.append("import org.adamalang.runtime.delta.*;").writeNewline();
-    sb.append("import org.adamalang.runtime.delta.secure.*;").writeNewline();
     sb.append("import org.adamalang.runtime.exceptions.*;").writeNewline();
     sb.append("import org.adamalang.runtime.graph.*;").writeNewline();
     sb.append("import org.adamalang.runtime.index.*;").writeNewline();

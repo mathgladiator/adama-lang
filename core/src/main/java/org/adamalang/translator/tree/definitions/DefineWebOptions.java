@@ -23,6 +23,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
+import org.adamalang.translator.tree.definitions.web.WebGuard;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
@@ -35,12 +36,14 @@ public class DefineWebOptions extends Definition implements UriAction {
   public final Token webToken;
   public final Token optionsToken;
   public final Uri uri;
+  public final WebGuard guard;
   public final Block code;
 
-  public DefineWebOptions(Token webToken, Token optionsToken, Uri uri, Block code) {
+  public DefineWebOptions(Token webToken, Token optionsToken, Uri uri, WebGuard guard, Block code) {
     this.webToken = webToken;
     this.optionsToken = optionsToken;
     this.uri = uri;
+    this.guard = guard;
     this.code = code;
     ingest(webToken);
     ingest(code);
@@ -51,6 +54,9 @@ public class DefineWebOptions extends Definition implements UriAction {
     yielder.accept(webToken);
     yielder.accept(optionsToken);
     uri.emit(yielder);
+    if (guard != null) {
+      guard.emit(yielder);
+    }
     code.emit(yielder);
   }
 
@@ -58,6 +64,9 @@ public class DefineWebOptions extends Definition implements UriAction {
   public void format(Formatter formatter) {
     formatter.startLine(webToken);
     uri.format(formatter);
+    if (guard != null) {
+      guard.format(formatter);
+    }
     code.format(formatter);
   }
 
@@ -74,6 +83,9 @@ public class DefineWebOptions extends Definition implements UriAction {
   }
 
   public void typing(TypeCheckerRoot checker) {
+    if (guard != null) {
+      guard.typing(checker);
+    }
     FreeEnvironment fe = FreeEnvironment.root();
     code.free(fe);
     checker.register(fe.free, (environment) -> {

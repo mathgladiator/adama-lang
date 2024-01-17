@@ -18,6 +18,9 @@
 package org.adamalang.translator.env;
 
 import org.adamalang.runtime.stdlib.*;
+import org.adamalang.runtime.stdlib.runtime.LibRuntimeBeta;
+import org.adamalang.runtime.stdlib.runtime.LibRuntimeProduction;
+import org.adamalang.runtime.stdlib.runtime.LibRuntimeTooling;
 import org.adamalang.translator.reflect.GlobalFactory;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -40,7 +43,7 @@ public class GlobalObjectPool {
     extensions = new HashMap<>();
   }
 
-  public static GlobalObjectPool createPoolWithStdLib() {
+  public static GlobalObjectPool createPoolWithStdLib(RuntimeEnvironment runtime) {
     final TyNativeString tyStr = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null);
     final TyNativeInteger tyInt = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null);
     final TyNativeDouble tyDbl = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null);
@@ -53,7 +56,6 @@ public class GlobalObjectPool {
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Math", LibMath.class, pool.extensions));
-    pool.add(GlobalFactory.makeGlobal("Adama", LibAdama.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Date", LibDate.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("TimeSpan", LibTimeSpan.class, pool.extensions));
@@ -61,6 +63,18 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Templates", LibTemplates.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Template", LibTemplate.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Search", LibSearch.class, pool.extensions));
+
+    switch (runtime) {
+      case Tooling:
+        pool.add(GlobalFactory.makeGlobal("Runtime", LibRuntimeTooling.class, pool.extensions));
+        break;
+      case Beta:
+        pool.add(GlobalFactory.makeGlobal("Runtime", LibRuntimeBeta.class, pool.extensions));
+        break;
+      case Production:
+        pool.add(GlobalFactory.makeGlobal("Runtime", LibRuntimeProduction.class, pool.extensions));
+        break;
+    }
 
     final var client = new TyNativeGlobalObject("Principal", null, false);
     client.setParentOverride(GlobalFactory.makeGlobal("Principal", LibPrincipal.class, pool.extensions));

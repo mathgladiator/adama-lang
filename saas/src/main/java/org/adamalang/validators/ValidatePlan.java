@@ -31,6 +31,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
@@ -64,7 +65,7 @@ public class ValidatePlan {
         builder = builder.instrument();
       }
       final var options = builder.make();
-      final var globals = GlobalObjectPool.createPoolWithStdLib();
+      final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
       final var state = new EnvironmentState(globals, options);
       final var document = new Document();
 
@@ -208,7 +209,7 @@ public class ValidatePlan {
 
   public static CompileResult sharedCompileCode(String filename, File includePath, String code, HashMap<String, String> includes, Consumer<String> log, Consumer<ArrayNode> diagnostics, Consumer<SymbolIndex> index) throws Exception {
     final var options = CompilerOptions.start().make();
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var globals = GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling);
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
     document.setIncludeRoot(includePath);

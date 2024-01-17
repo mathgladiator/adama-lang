@@ -18,5 +18,10 @@
 package org.adamalang.runtime.data;
 
 public enum UpdateType {
-  DirectMessageExecute, AddUserData, Invalidate, Internal, CompactedResult
+  DirectMessageExecute, //
+  AddUserData, //
+  Invalidate, //
+  Internal, //
+  CompactedResult, //
+  Restore
 }

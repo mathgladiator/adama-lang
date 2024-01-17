@@ -26,7 +26,7 @@ import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Spaces;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
-import org.adamalang.rxhtml.RxHtmlResult;
+import org.adamalang.runtime.sys.web.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
@@ -46,8 +46,8 @@ public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
     try {
       SpaceInfo spaceInfo = Spaces.getSpaceInfo(database, space);
       String rxhtml = Spaces.getRxHtml(database, spaceInfo.id);
-      RxHtmlResult rxhtmlResult = RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withEnvironment(environment).end());
-      String html = rxhtmlResult.shell.makeShell(rxhtmlResult);
+      RxHtmlResult rxhtmlResult = new RxHtmlResult(RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withEnvironment(environment).end()));
+      String html = rxhtmlResult.shell.makeShell(rxhtmlResult.bundle);
       callback.success(new LiveSiteRxHtmlResult(html, rxhtmlResult.paths));
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_FAILED_RXHTML_LOOKUP, ex, EXLOGGER));

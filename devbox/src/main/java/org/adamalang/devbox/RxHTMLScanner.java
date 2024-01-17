@@ -23,7 +23,8 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.html.InjectCoordInline;
 import org.adamalang.rxhtml.Bundler;
-import org.adamalang.rxhtml.RxHtmlResult;
+import org.adamalang.runtime.sys.web.rxhtml.RxHtmlResult;
+import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.Task;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -176,7 +177,8 @@ public class RxHTMLScanner implements AutoCloseable {
               try {
                 long started = System.currentTimeMillis();
                 // TODO: bring the new type checker in here such that devbox can run type checking every change
-                RxHtmlResult updated = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(rxhtml(scanRoot), true), "test"), types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                RxHtmlBundle rxHtmlBundle = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(rxhtml(scanRoot), true), "test"), types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());;
+                RxHtmlResult updated = new RxHtmlResult(rxHtmlBundle);
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;
@@ -186,7 +188,7 @@ public class RxHTMLScanner implements AutoCloseable {
                     opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
                   }
                 }
-                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(updated), updated.javascript, updated.style));
+                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(rxHtmlBundle), updated.javascript, updated.style));
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
                 rxPubSub.notifyReload();
                 io.notice("rxhtml|responders; count=" + rxPubSub.responders.size());

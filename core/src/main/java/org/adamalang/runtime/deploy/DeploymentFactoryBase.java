@@ -28,6 +28,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.PerfTracker;
 import org.adamalang.runtime.sys.PredictiveInventory;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
@@ -39,15 +40,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** this is the base for all spaces to resolve against */
 public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deliverer, Undeploy {
   private final AsyncByteCodeCache cache;
-  private final AtomicInteger newClassId;
   private final ConcurrentHashMap<String, DeploymentFactory> spaces;
+  private final RuntimeEnvironment runtime;
   private Deliverer deliverer;
 
-  public DeploymentFactoryBase(AsyncByteCodeCache cache) {
+  public DeploymentFactoryBase(AsyncByteCodeCache cache, RuntimeEnvironment runtime) {
     this.cache = cache;
-    this.newClassId = new AtomicInteger(0);
     this.spaces = new ConcurrentHashMap<>();
     this.deliverer = Deliverer.FAILURE;
+    this.runtime = runtime;
   }
 
   public void attachDeliverer(Deliverer deliverer) {
@@ -69,7 +70,7 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory, Deli
 
   public void deploy(String space, DeploymentPlan plan, TreeMap<Integer, PrivateKeyBundle> keys, Callback<Void> callback){
     long started = System.currentTimeMillis();
-    AsyncCompiler.forge(space, spaces.get(space), plan, this, keys, cache, new Callback<DeploymentFactory>() {
+    AsyncCompiler.forge(runtime, space, spaces.get(space), plan, this, keys, cache, new Callback<DeploymentFactory>() {
       @Override
       public void success(DeploymentFactory factory) {
         spaces.put(space, factory);

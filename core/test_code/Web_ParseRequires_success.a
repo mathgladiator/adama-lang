@@ -1,0 +1,22 @@
+policy policy_search {
+  return true;
+}
+
+@web get /path requires<policy_search> {
+  return {json:{error:true}};
+}
+
+@web delete /path requires<policy_search> {
+  return {json:{error:true}};
+}
+
+@web options /path requires<policy_search> {
+  return {cors:true};
+}
+
+message M {
+}
+
+@web put /path (M m) requires<policy_search> {
+  return {json:{error:true}};
+}

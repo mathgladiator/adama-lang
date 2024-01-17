@@ -910,6 +910,16 @@ public class MainRouter {
                frontendHandler.make200(frontendArgs, out);
                return 0;
             }
+            case "measure": {
+              FrontendMeasureArgs frontendArgs = FrontendMeasureArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendMeasureArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.measure(frontendArgs, out);
+               return 0;
+            }
             case "mobile-capacitor": {
               FrontendMobileCapacitorArgs frontendArgs = FrontendMobileCapacitorArgs.from(args, 2);
               if (frontendArgs == null) {

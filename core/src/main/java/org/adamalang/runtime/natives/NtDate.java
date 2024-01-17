@@ -81,4 +81,13 @@ public class NtDate implements Comparable<NtDate> {
   public LocalDate toLocalDate() {
     return LocalDate.of(year, month, day);
   }
+
+  public static NtDate parse(String val) {
+    try {
+      String[] parts = val.split("[/-]");
+      return new NtDate(Integer.parseInt(parts[0]), parts.length > 1 ? Integer.parseInt(parts[1]) : 1, parts.length > 2 ? Integer.parseInt(parts[2]) : 1);
+    } catch (Exception nfe) {
+      return new NtDate(1, 1, 1);
+    }
+  }
 }

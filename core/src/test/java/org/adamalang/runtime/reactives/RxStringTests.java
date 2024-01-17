@@ -110,7 +110,14 @@ public class RxStringTests {
     Assert.assertEquals("cake", s.get());
     s.__revert();
     Assert.assertEquals("xyz", s.get());
+    child.assertInvalidateCount(1);
+    s.set("foo");
     child.assertInvalidateCount(2);
+    s.set("goo");
+    child.assertInvalidateCount(2);
+    s.__lowerDirtyRevert();
+    s.set("zoo");
+    child.assertInvalidateCount(3);
   }
 
   @Test

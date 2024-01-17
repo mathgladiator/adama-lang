@@ -33,16 +33,6 @@ public abstract class PerSessionAuthenticator {
 
   public abstract ConnectionContext getTransportContext();
 
-  /** update the default asset key within the default context */
-  public void updateTransportAssetKey(String assetKey) {
-    this.transportContext = new ConnectionContext(transportContext.origin, transportContext.remoteIp, transportContext.userAgent, assetKey, transportContext.identities);
-  }
-
-  /** get the asset key for the default context. If the session's connection is a user, then this is the user's asset key. */
-  public String getTransportAssetKey() {
-    return transportContext.assetKey;
-  }
-
   /** log the user details into */
   public static void logInto(AuthenticatedUser user, ObjectNode node) {
     if (user != null) {

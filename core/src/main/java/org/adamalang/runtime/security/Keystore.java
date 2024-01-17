@@ -159,7 +159,7 @@ public class Keystore {
             .requireIssuer(authority)
             .build()
             .parseSignedClaims(identity);
-        return new NtPrincipal(claims.getBody().getSubject(), authority);
+        return new NtPrincipal(claims.getPayload().getSubject(), authority);
       } catch (Exception ex) {
         // move on
       }

@@ -43,24 +43,6 @@ public class Secrets {
     });
   }
 
-  /** get the private key by an id */
-  @Deprecated
-  public static String getPrivateKey(DataBase dataBase, String space, int keyId) throws Exception {
-    return dataBase.transactSimple((connection) -> {
-      String sql = "SELECT `encrypted_private_key` FROM `" + dataBase.databaseName + "`.`secrets` WHERE `id`=? AND `space`=?";
-      try (PreparedStatement statement = connection.prepareStatement(sql)) {
-        statement.setInt(1, keyId);
-        statement.setString(2, space);
-        try (ResultSet rs = statement.executeQuery()) {
-          if (rs.next()) {
-            return rs.getString(1);
-          }
-        }
-      }
-      throw new ErrorCodeException(ErrorCodes.MYSQL_FAILED_FINDING_SECRET_KEY);
-    });
-  }
-
   public static TreeMap<Integer, PrivateKeyBundle> getKeys(DataBase dataBase, String masterKey, String space) throws Exception {
     return dataBase.transactSimple((connection) -> {
       TreeMap<Integer, PrivateKeyBundle> keys = new TreeMap<>();

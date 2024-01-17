@@ -84,6 +84,11 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
     seq = change.seq_end;
   }
 
+  @Override
+  public void handle(Events.Recover payload) {
+    // TODO
+  }
+
   public ArrayList<byte[]> filter(ArrayList<byte[]> writes) {
     ArrayList<byte[]> reduced = new ArrayList<>();
     AtomicInteger checkSeq = new AtomicInteger(seq);
@@ -111,6 +116,16 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
             reduced.add(write);
             checkSeq.set(payload.seq_end);
           }
+        }
+
+        @Override
+        public void handle(Events.Recover payload) {
+          // TODO
+          /*
+          reduced.clear();
+          reduced.add(write);
+          checkSeq.set(payload.seq);
+          */
         }
       });
     }

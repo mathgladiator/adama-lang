@@ -21,7 +21,6 @@ import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeId;
 import org.adamalang.common.rate.TokenGrant;
-import org.adamalang.runtime.data.LocalDocumentChange;
 
 /** messages from server to client */
 public class ServerMessage {
@@ -170,9 +169,11 @@ public class ServerMessage {
     @FieldOrder(8)
     public boolean cors;
     @FieldOrder(9)
-    public int cache_ttl_seconds;
+    public int cacheTimeToLiveSeconds;
     @FieldOrder(10)
-    public String asset_transform;
+    public String assetTransform;
+    @FieldOrder(11)
+    public int status;
   }
 
   @TypeId(2123)

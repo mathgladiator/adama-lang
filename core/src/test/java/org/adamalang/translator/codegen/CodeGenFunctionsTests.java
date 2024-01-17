@@ -17,10 +17,7 @@
 */
 package org.adamalang.translator.codegen;
 
-import org.adamalang.translator.env.CompilerOptions;
-import org.adamalang.translator.env.Environment;
-import org.adamalang.translator.env.EnvironmentState;
-import org.adamalang.translator.env.GlobalObjectPool;
+import org.adamalang.translator.env.*;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -38,7 +35,7 @@ public class CodeGenFunctionsTests {
         Environment.fresh(
             new Document(),
             new EnvironmentState(
-                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+                GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling), CompilerOptions.start().make()));
     final var foi =
         new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.NORMAL);
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
@@ -52,7 +49,7 @@ public class CodeGenFunctionsTests {
         Environment.fresh(
             new Document(),
             new EnvironmentState(
-                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+                GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling), CompilerOptions.start().make()));
     final var foi =
         new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.NORMAL);
     foi.hiddenSuffixArgs.add("X");
@@ -67,7 +64,7 @@ public class CodeGenFunctionsTests {
         Environment.fresh(
             new Document(),
             new EnvironmentState(
-                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+                GlobalObjectPool.createPoolWithStdLib(RuntimeEnvironment.Tooling), CompilerOptions.start().make()));
     final var foi =
         new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.NORMAL);
     foi.hiddenSuffixArgs.add("X");

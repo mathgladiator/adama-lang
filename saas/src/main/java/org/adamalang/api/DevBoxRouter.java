@@ -75,8 +75,6 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_DocumentsHashPassword(long requestId, String password, HashedPasswordResponder responder);
 
-  public abstract void handle_ConfigureMakeOrGetAssetKey(long requestId, AssetKeyResponder responder);
-
   public void route(JsonRequest request, JsonResponder responder) {
     try {
       long requestId = request.id();
@@ -270,10 +268,6 @@ public abstract class DevBoxRouter {
           handle_DocumentsHashPassword(requestId, //
             request.getString("password", true, 465917), //
             new HashedPasswordResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
-          return;
-        case "configure/make-or-get-asset-key":
-          handle_ConfigureMakeOrGetAssetKey(requestId, //
-            new AssetKeyResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
       }
       responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));

@@ -45,4 +45,10 @@ public class RestoreWalker implements EventCodec.HandlerEvent {
     seq = Math.max(payload.seq_end, seq);
     assetBytes += payload.dAssetBytes;
   }
+
+  @Override
+  public void handle(Events.Recover payload) {
+    seq = payload.seq;
+    assetBytes = 0L;
+  }
 }

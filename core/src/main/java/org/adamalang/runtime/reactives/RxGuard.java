@@ -29,14 +29,13 @@ import java.util.TreeMap;
  * to learn if changes have happened since the last time a commited happened
  */
 public class RxGuard extends RxDependent {
-  protected boolean invalid;
   private int generation;
   private TreeMap<Integer, Integer> bumps;
 
   public RxGuard(RxParent parent) {
     super(parent);
     generation = 0;
-    invalid = true;
+    __invalid = true;
     bumps = null;
   }
 
@@ -73,15 +72,18 @@ public class RxGuard extends RxDependent {
 
   @Override
   public boolean __raiseInvalid() {
-    if (!invalid) {
+    if (!__invalid) {
       inc();
-      invalid = true;
+      __invalidateSubscribers();
+    }
+    if (__parent != null) {
+      return __parent.__isAlive();
     }
     return true;
   }
 
   public void __settle(Set<Integer> viewers) {
-    invalid = false;
+    __lowerInvalid();
   }
 
   public int getGeneration(int viewerId) {

@@ -25,13 +25,13 @@ import java.util.TreeMap;
 public class ConnectionContextTests {
   @Test
   public void stripColonIp() {
-    ConnectionContext a = new ConnectionContext("you", "123:42", "house", "", null);
+    ConnectionContext a = new ConnectionContext("you", "123:42", "house", null);
     Assert.assertEquals("123", a.remoteIp);
   }
 
   @Test
   public void nulls() {
-    ConnectionContext a = new ConnectionContext(null, null, null, null, null);
+    ConnectionContext a = new ConnectionContext(null, null, null, null);
     Assert.assertEquals("", a.remoteIp);
     Assert.assertEquals("", a.userAgent);
     Assert.assertEquals("", a.origin);
@@ -42,7 +42,7 @@ public class ConnectionContextTests {
   public void cookies() {
     TreeMap<String, String> identites = new TreeMap<>();
     identites.put("x", "abc");
-    ConnectionContext a = new ConnectionContext("you", "123:42", "house", "", identites);
+    ConnectionContext a = new ConnectionContext("you", "123:42", "house", identites);
     Assert.assertEquals("abc", a.identityOf("cookie:x"));
   }
 }

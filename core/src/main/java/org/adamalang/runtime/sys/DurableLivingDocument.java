@@ -18,16 +18,12 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.*;
 import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.Queryable;
 import org.adamalang.runtime.data.*;
-import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
 import org.adamalang.runtime.exceptions.PerformDocumentRewindException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -177,7 +173,10 @@ public class DurableLivingDocument implements Queryable {
     return writer;
   }
 
-  public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
+  public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callbackReal) {
+    Callback<DurableLivingDocument> callback = SimpleTimeout.WRAP(SimpleTimeout.make(base.executor, 30000, () -> {
+      LOG.error("timeout-loading:" + key.space + "/" + key.key);
+    }), callbackReal);
     try {
       if (!base.shield.canConnectNew.get()) {
         callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_NEW_DOCUMENT));
@@ -855,9 +854,9 @@ public class DurableLivingDocument implements Queryable {
     return document.__isConnected(who);
   }
 
-  public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, AssetIdEncoder encoder, Callback<PrivateView> callback) {
+  public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, Callback<PrivateView> callback) {
     try {
-      PrivateView result = document.__createView(who, perspective, encoder);
+      PrivateView result = document.__createView(who, perspective);
       result.ingest(viewerState);
       invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
     } catch (Exception ex) {

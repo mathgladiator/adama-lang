@@ -17,15 +17,18 @@
 */
 package org.adamalang.translator.codegen;
 
-import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.DefineWebDelete;
 import org.adamalang.translator.tree.definitions.DefineWebGet;
 import org.adamalang.translator.tree.definitions.DefineWebOptions;
 import org.adamalang.translator.tree.definitions.DefineWebPut;
 import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.definitions.web.UriTable;
+import org.adamalang.translator.tree.definitions.web.WebGuard;
+import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
 
 import java.util.Map;
@@ -164,6 +167,26 @@ public class CodeGenWeb {
   private void table(StringBuilderWithTabs sb) {
     level(sb, this.table.root, 0, false);
   }
+  private void writeWebGuard(StringBuilderWithTabs sb, WebGuard guard) {
+    if (guard != null) {
+      for (TokenizedItem<String> policy :guard.guard.policies) {
+        sb.append("if (!__POLICY_").append(policy.item).append("(__who)) {").tabUp().writeNewline();
+        sb.append("return WebResponse.FORBIDDEN;").tabDown().writeNewline();
+        sb.append("}").writeNewline();
+      }
+    }
+  }
+
+  private void writeWebHandlerBody(StringBuilderWithTabs sb, WebGuard guard, Block code, Environment env) {
+    if (guard == null) {
+      code.writeJava(sb, env);
+    } else {
+      sb.append("{").tabUp().writeNewline();
+      writeWebGuard(sb, guard);
+      code.specialWriteJava(sb, env, false, true);
+      sb.append("}").writeNewline();
+    }
+  }
 
   private void writeGetHandler(StringBuilderWithTabs sb, Environment environment, String name, DefineWebGet get) {
     sb.append("private WebResponse __get_").append(name).append("(CoreRequestContext __context, NtPrincipal __who, WebGet __request");
@@ -171,7 +194,7 @@ public class CodeGenWeb {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
     sb.append(") throws AbortMessageException ");
-    get.code.writeJava(sb, get.next(environment));
+    writeWebHandlerBody(sb, get.guard, get.code, get.next(environment));
     sb.writeNewline();
   }
 
@@ -181,7 +204,7 @@ public class CodeGenWeb {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
     sb.append(")");
-    options.code.writeJava(sb, options.next(environment));
+    writeWebHandlerBody(sb, options.guard, options.code, options.next(environment));
     sb.writeNewline();
   }
 
@@ -192,6 +215,7 @@ public class CodeGenWeb {
     }
     sb.append(") throws AbortMessageException {").tabUp().writeNewline();
     sb.append("RTx").append(put.messageType.text).append(" ").append(put.messageVariable.text).append(" = new RTx").append(put.messageType.text).append("(__request.body());").writeNewline();
+    writeWebGuard(sb, put.guard);
     put.code.specialWriteJava(sb, put.next(environment), false, true);
     sb.append("}").writeNewline();
   }
@@ -202,7 +226,7 @@ public class CodeGenWeb {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
     sb.append(") throws AbortMessageException ");
-    delete.code.writeJava(sb, delete.next(environment));
+    writeWebHandlerBody(sb, delete.guard, delete.code, delete.next(environment));
     sb.writeNewline();
   }
 }

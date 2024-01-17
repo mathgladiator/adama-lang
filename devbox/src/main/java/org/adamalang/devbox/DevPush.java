@@ -24,7 +24,8 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -51,13 +52,15 @@ public class DevPush implements Pusher {
   private final VAPIDPublicPrivateKeyPair keypair;
   private final WebClientBase webClientBase;
   private final WebPushRequestFactory128 webPushFactory128;
+  private final RequestResponseMonitor monitor;
 
-  public DevPush(TerminalIO io, File path, String email, VAPIDPublicPrivateKeyPair keypair, WebClientBase webClientBase) {
+  public DevPush(TerminalIO io, File path, String email, VAPIDPublicPrivateKeyPair keypair, WebClientBase webClientBase, MetricsFactory metricsFactory) {
     this.io = io;
     this.path = path;
     this.keypair = keypair;
     this.webClientBase = webClientBase;
     this.webPushFactory128 = new WebPushRequestFactory128(email, new SecureRandom());
+    this.monitor = metricsFactory.makeRequestResponseMonitor("devpush");
   }
 
   public void register(NtPrincipal who, String domain, ObjectNode subscription, ObjectNode deviceInfo) {
@@ -115,7 +118,7 @@ public class DevPush implements Pusher {
     }
     try {
       SimpleHttpRequest request = webPushFactory128.make(keypair, subscription, 14, payload.getBytes(StandardCharsets.UTF_8));
-      webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, new FirstPartyMetrics(new NoOpMetricsFactory()).webpush_send.start(), new Callback<Void>() {
+      webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, monitor.start(), new Callback<Void>() {
         @Override
         public void success(Void value) {
           // track some metrics
@@ -134,7 +137,7 @@ public class DevPush implements Pusher {
     }
   }
 
-  public void install() {
-    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(new FirstPartyMetrics(new NoOpMetricsFactory()), DevPush.this));
+  public void install(MetricsFactory metricsFactory) {
+    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(new FirstPartyMetrics(metricsFactory), DevPush.this));
   }
 }
