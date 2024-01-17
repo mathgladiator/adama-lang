@@ -63,8 +63,20 @@ public class DevBoxMetricsFactory extends NoOpMetricsFactory {
     return finished;
   }
 
+  private boolean ignore(String name) {
+    switch (name) {
+      case "adamasync_connected":
+        return true;
+      default:
+        return false;
+    }
+  }
+
   @Override
   public CallbackMonitor makeCallbackMonitor(String name) {
+    if (ignore(name)) {
+      return super.makeCallbackMonitor(name);
+    }
     return new CallbackMonitor() {
       @Override
       public CallbackMonitorInstance start() {
@@ -87,6 +99,9 @@ public class DevBoxMetricsFactory extends NoOpMetricsFactory {
 
   @Override
   public RequestResponseMonitor makeRequestResponseMonitor(String name) {
+    if (ignore(name)) {
+      return super.makeRequestResponseMonitor(name);
+    }
     return () -> {
       long started = System.currentTimeMillis();
       AtomicBoolean finished = create(name);

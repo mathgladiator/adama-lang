@@ -792,7 +792,11 @@ public class GlobalControlHandler implements RootGlobalHandler {
       AsyncCompiler.forge(RuntimeEnvironment.Tooling, request.space, null, plan, Deliverer.FAILURE, new TreeMap<>(), nexus.byteCodeCache, new Callback<>() {
         @Override
         public void success(DeploymentFactory value) {
-          nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
+          if (isReservedSpace(request.space)) {
+            postDirectSend.success(0);
+          } else {
+            nexus.adama.directSend(request.who, "ide", request.space, null, "signal_deployment", "{}", postDirectSend);
+          }
         }
 
         @Override
