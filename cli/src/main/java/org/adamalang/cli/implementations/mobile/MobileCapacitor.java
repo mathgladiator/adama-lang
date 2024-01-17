@@ -89,6 +89,9 @@ public class MobileCapacitor {
     if (!mobileConfig.has("app-entitlements")) {
       throw new Exception("mobile-config missing app-entitlements");
     }
+    if (!mobileConfig.has("android-manifest")) {
+      throw new Exception("mobile-config missing android-manifest");
+    }
 
 
     String rootPath = mobileConfig.get("root").textValue();
@@ -98,6 +101,7 @@ public class MobileCapacitor {
     String appid = mobileConfig.get("appid").textValue();
     String googleIOS = mobileConfig.get("google-ios").textValue();
     String appEntitlements = mobileConfig.get("app-entitlements").textValue();
+    String androidManifest = mobileConfig.get("android-manifest").textValue();
 
 
     File root = new File(rootPath);
@@ -125,6 +129,13 @@ public class MobileCapacitor {
     File androidApp = new File(android, "app");
     if (!(androidApp.exists() && androidApp.isDirectory())) {
       throw new Exception("path '" + rootPath + "/android/app' must exist");
+    }
+
+    File androidAppProdPath = new File(androidApp, "src/prodRelease");
+    if(!(androidAppProdPath.exists() && androidAppProdPath.isDirectory())){
+      if(!androidAppProdPath.mkdir()){
+        throw new Exception("path '" + rootPath + "/android/app/src/prodRelease' must exist");
+      }
     }
 
     File ios = new File(root, "ios");
@@ -185,6 +196,12 @@ public class MobileCapacitor {
         iOSAppEntitlements = MasterKey.decrypt(args.config.getMasterKey(), iOSAppEntitlements);
       }
       Files.writeString(new File(iosApp, "App.entitlements").toPath(), iOSAppEntitlements);
+
+      String androidAppManifest = Files.readString(new File(androidManifest).toPath());
+      if(androidAppManifest.endsWith(".encrypted")){
+        androidAppManifest = MasterKey.decrypt(args.config.getMasterKey(), androidAppManifest);
+      }
+      Files.writeString(new File(androidAppProdPath, "AndroidManifest.xml").toPath(), androidAppManifest);
 
 
       // iOS with path : ios/App/App/capacitor.config.json
