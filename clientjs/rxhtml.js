@@ -2493,7 +2493,7 @@ var RxHTML = (function () {
       },
       failure: function (reason) {
         callback.failure(reason);
-        if (reason == 403403 || reason == 403500 || reason == 184333) {
+        if (reason == 403403 || reason == 403500 || reason == 184333 || reason == 982253) {
           lookup.cleanup();
         }
       }
@@ -2619,7 +2619,7 @@ var RxHTML = (function () {
         // register the failure
         co.set_connected(false);
         co.ptr = null;
-        if (reason == 403403 || reason == 403500 || reason == 184333) {
+        if (reason == 403403 || reason == 403500 || reason == 184333 || reason == 982253) {
           cleanup();
           return;
         }
@@ -2781,9 +2781,13 @@ var RxHTML = (function () {
     self.protocol = "https:";
     connection.protocol = "https:";
     self.is_mobile = true;
-    self.run(document.body, fixPath(start), false);
+    var initial_path = start;
+    if ("ready" == localStorage.getItem("mdl")) {
+      initial_path = window.location.pathname + window.location.search + window.location.hash;
+    }
+    self.run(document.body, fixPath(initial_path), false);
     window.onpopstate = function (p) {
-      self.run(document.body, fixPath(start), false);
+      self.run(document.body, fixPath(initial_path), false);
     };
   };
   var getOrCreateManifests = function() {
@@ -2845,6 +2849,7 @@ var RxHTML = (function () {
           } else {
             localStorage.setItem("mdec", "prod");
           }
+          localStorage.setItem("mdl", "ready");
           window.location.href = "/";
         }
       }

@@ -54,7 +54,7 @@ public class GlobalAuthenticator implements Authenticator {
       PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
       auth = () -> Jwts.parser().verifyWith(publicKey).build().parseSignedClaims(identity);
     } catch (Exception ex) {
-      callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_DOC_AUTHENTICATE));
+      callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FORBIDDEN));
       return;
     }
     auth.run();

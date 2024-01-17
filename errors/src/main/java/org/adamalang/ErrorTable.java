@@ -378,8 +378,6 @@ public class ErrorTable {
     descriptions.put(647199, "no description of error (yet)");
     names.put(695327, "WEB_FAILED_ASSET_UPLOAD_ALL");
     descriptions.put(695327, "no description of error (yet)");
-    names.put(982253, "AUTH_FAILED_DOC_AUTHENTICATE");
-    descriptions.put(982253, "no description of error (yet)");
     names.put(916531, "AUTH_FAILED_VALIDATING_AGAINST_KEYSTORE");
     descriptions.put(916531, "no description of error (yet)");
     names.put(403403, "AUTH_FORBIDDEN");
