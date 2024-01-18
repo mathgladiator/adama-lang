@@ -63,6 +63,7 @@ public class CoreMetrics {
   public final Runnable failed_invention;
   public final Runnable internal_seq_drift;
   public final Runnable document_collision;
+  public final Runnable snapshot_recovery;
   public final CallbackMonitor document_load_startup;
 
   public final Runnable trigger_deployment;
@@ -108,10 +109,11 @@ public class CoreMetrics {
     document_compacting = metricsFactory.counter("core_document_compacting");
     failed_invention = metricsFactory.counter("core_document_failed_invention");
     internal_seq_drift = metricsFactory.counter("core_document_internal_seq_drift");
-    document_collision = metricsFactory.counter("core_document_document_collision");
+    document_collision = metricsFactory.counter("core_document_collision");
     document_load_startup = metricsFactory.makeCallbackMonitor("core_document_load_startup");
 
     trigger_deployment = metricsFactory.counter("core_trigger_deployment");
     invalidation_limit_reached = metricsFactory.counter("core_invalidation_limit_reached");
+    snapshot_recovery = metricsFactory.counter("core_document_snapshot_recovery");
   }
 }

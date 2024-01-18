@@ -83,6 +83,7 @@ public class DurableLivingDocument implements Queryable {
   private boolean metricsScheduled;
   private boolean disableMetrics;
   private boolean invalidationScheduled;
+  private boolean failedLastSnapshot;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -103,6 +104,7 @@ public class DurableLivingDocument implements Queryable {
     this.metricsScheduled = false;
     this.disableMetrics = false;
     this.invalidationScheduled = false;
+    this.failedLastSnapshot = false;
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -327,6 +329,10 @@ public class DurableLivingDocument implements Queryable {
             base.executor.execute(new NamedRunnable("compact-complete") {
               @Override
               public void execute() throws Exception {
+                if (failedLastSnapshot) {
+                  base.metrics.snapshot_recovery.run();
+                }
+                failedLastSnapshot = false;
                 inflightCompact = false;
                 size.getAndAdd(-toCompactNow);
                 testQueueSizeAndThenMaybeCompact();
@@ -340,6 +346,7 @@ public class DurableLivingDocument implements Queryable {
               @Override
               public void execute() throws Exception {
                 inflightCompact = false;
+                failedLastSnapshot = true;
               }
             });
           }
