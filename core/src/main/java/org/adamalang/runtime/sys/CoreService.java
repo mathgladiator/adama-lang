@@ -273,10 +273,14 @@ public class CoreService implements Deliverer, Queryable {
     loadInternal(key, metrics.serviceLoad.wrap(callbackReal));
   }
 
-  private void loadInternal(Key key, Callback<DurableLivingDocument> callback) {
+  private void loadInternal(Key key, Callback<DurableLivingDocument> callbackReal) {
     // bind to the thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
+
+    Callback<DurableLivingDocument> callback = SimpleTimeout.WRAP(SimpleTimeout.make(base.executor, 30000, () -> {
+      LOGGER.error("load-internal-timeout-loading:" + key.space + "/" + key.key);
+    }), callbackReal);
 
     // jump into thread
     base.executor.execute(new NamedRunnable("load", key.space, key.key) {
