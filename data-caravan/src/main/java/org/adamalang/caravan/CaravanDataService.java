@@ -398,22 +398,8 @@ public class CaravanDataService implements ArchivingDataService {
 
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
-    execute("get", key, false, callback, (cached) -> {
-      if (cached != null) {
-        callback.success(cached.build());
-        return;
-      }
-      load(key, new Callback<>() {
-        @Override
-        public void success(LocalCache builder) {
-          callback.success(addToCacheIfDoesntExistReturnCorrect(key, builder).build());
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          callback.failure(ex);
-        }
-      });
+    execute("get", key, true, callback, (cached) -> {
+      callback.success(cached.build());
     });
   }
 
