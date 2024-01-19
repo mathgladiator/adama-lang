@@ -84,7 +84,7 @@ public class RealDocumentSetup implements Deliverer {
               }
             });
     this.dumbDataService = dds;
-    DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), new MockMetricsReporter(), dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    DocumentThreadBase base = new DocumentThreadBase(0, new ServiceShield(), new MockMetricsReporter(), dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code, this);
     this.code = code;

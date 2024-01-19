@@ -55,7 +55,7 @@ public class PhaseRun {
     });
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
     Key key = new Key("0", "0");
-    DocumentThreadBase base = new DocumentThreadBase(new ServiceShield(), new MetricsReporter() {
+    DocumentThreadBase base = new DocumentThreadBase(0, new ServiceShield(), new MetricsReporter() {
       @Override
       public void emitMetrics(Key key, String metricsPayload) {
       }

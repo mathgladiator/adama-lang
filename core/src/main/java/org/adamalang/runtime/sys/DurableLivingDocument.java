@@ -276,6 +276,8 @@ public class DurableLivingDocument implements Queryable {
       public void execute() throws Exception {
         JsonStreamWriter writer = new JsonStreamWriter();
         writer.beginObject();
+        writer.writeObjectFieldIntro("thread");
+        writer.writeInteger(base.threadId);
         writer.writeObjectFieldIntro("space");
         writer.writeString(key.space);
         writer.writeObjectFieldIntro("key");

@@ -81,7 +81,7 @@ public class CoreService implements Deliverer, Queryable {
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      bases[k] = new DocumentThreadBase(shield, metricsReporter, dataService, metrics, SimpleExecutor.create("core-" + k), time);
+      bases[k] = new DocumentThreadBase(k, shield, metricsReporter, dataService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
