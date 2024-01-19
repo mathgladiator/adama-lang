@@ -106,7 +106,8 @@ public class ServiceCleanupTests {
         }
       });
       Assert.assertTrue(latchQuery.await(5000, TimeUnit.MILLISECONDS));
-      Assert.assertTrue(queryResult.get().startsWith("{\"space\":\"space\",\"key\":\"key\""));
+      System.err.println(queryResult.get());
+      Assert.assertTrue(queryResult.get().startsWith("{\"thread\":2,\"space\":\"space\",\"key\":\"key\""));
       LatchCallback cb1 = new LatchCallback();
       streamback.get().send("foo", null, "{}", cb1);
       cb1.await_success(5);
