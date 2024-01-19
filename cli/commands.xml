@@ -321,13 +321,13 @@
         </documentation>
     </arg-definition>
 
-    <arg-definition name="data" type="string" short="d">
+    <arg-definition name="data" type="string" short="dt">
         <documentation>
             A file containing a snapshot
         </documentation>
     </arg-definition>
 
-    <arg-definition name="message" type="string" short="m">
+    <arg-definition name="message" type="string" short="msg">
         <documentation>
             A file containing a send message (channel + message)
         </documentation>
@@ -607,10 +607,11 @@
             <documentation>
                 Compiles the adama file and shows any problems
             </documentation>
-            <arg name="file" />
+            <arg name="main" />
             <arg name="imports" default="backend" />
             <arg name="data" default="input.json" />
             <arg name="message" default="message.json" />
+            <arg name="dump-to" default="benchmark.report.json" />
         </command>
 
         <command name="format">

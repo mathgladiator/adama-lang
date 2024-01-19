@@ -80,12 +80,14 @@ public class CodeHandlerImpl implements CodeHandler {
   public void benchmarkMessage(Arguments.CodeBenchmarkMessageArgs args, Output.YesOrError output) throws Exception {
     CoreServices.install(CoreServicesNexus.NOOP());
 
+    ObjectNode report = Json.newJsonObject();
+
     final DeploymentPlan deploymentPlan;
     {
       ObjectNode plan = Json.newJsonObject();
       plan.put("instrument", true);
       ObjectNode version = plan.putObject("versions").putObject("file");
-      version.put("main", Files.readString(new File(args.file).toPath()));
+      version.put("main", Files.readString(new File(args.main).toPath()));
       ObjectNode includes = version.putObject("includes");
       for (Map.Entry<String, String> entry : getImports(args.imports).entrySet()) {
         includes.put(entry.getKey(), entry.getValue());
@@ -158,11 +160,30 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.writeString("0.0.0.0");
       writer.endObject();
       doc.__transact(writer.toString(), factory.get());
-      System.out.println("CONNECT");
-      System.out.println(doc.__perf.dump());
+      report.set("connect", Json.parseJsonObject(doc.__perf.dump()));
     }
 
     doc.__createView(who, Perspective.DEAD);
+    {
+      final var writer = new JsonStreamWriter();
+      writer.beginObject();
+      writer.writeObjectFieldIntro("command");
+      writer.writeFastString("invalidate");
+      writer.writeObjectFieldIntro("timestamp");
+      writer.writeLong(System.currentTimeMillis());
+      writer.writeObjectFieldIntro("who");
+      writer.writeNtPrincipal(who);
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(instruction.get("key").textValue());
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString("origin");
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString("0.0.0.0");
+      writer.endObject();
+      doc.__transact(writer.toString(), factory.get());
+      report.set("invalidate", Json.parseJsonObject(doc.__perf.dump()));
+    }
+
 
     if (instruction.has("channel")) {
       final var writer = new JsonStreamWriter();
@@ -185,9 +206,10 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.injectJson(instruction.get("message").toString());
       writer.endObject();
       doc.__transact(writer.toString(), factory.get());
-      System.out.println("SEND");
-      System.out.println(doc.__perf.dump());
+      report.set("send", Json.parseJsonObject(doc.__perf.dump()));
     }
+    Files.writeString(new File(args.dumpTo).toPath(), report.toPrettyString());
+    output.out();
   }
 
   public void formatSingleFile(File file) throws Exception {
