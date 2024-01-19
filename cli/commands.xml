@@ -321,6 +321,18 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="data" type="string" short="d">
+        <documentation>
+            A file containing a snapshot
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="message" type="string" short="m">
+        <documentation>
+            A file containing a send message (channel + message)
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="target" type="string" short="tg">
         <documentation>
             A target is a combination of ip address and port.
@@ -589,6 +601,16 @@
             <arg name="file" />
             <arg name="imports" default="backend" />
             <arg name="dump-to" default="null" />
+        </command>
+
+        <command name="benchmark-message">
+            <documentation>
+                Compiles the adama file and shows any problems
+            </documentation>
+            <arg name="file" />
+            <arg name="imports" default="backend" />
+            <arg name="data" default="input.json" />
+            <arg name="message" default="message.json" />
         </command>
 
         <command name="format">

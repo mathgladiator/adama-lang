@@ -93,14 +93,28 @@ public class PerfTracker {
       writer.writeInteger(n);
       long sum_cost = 0;
       double sum_ms = 0.0;
+      double min_ms = 60000;
+      double max_ms = 0.0;
       for (Sample sample : samples) {
         sum_cost += sample.cost;
         sum_ms += sample.ms;
+        if (sample.ms > max_ms) {
+          max_ms = sample.ms;
+        }
+        if (sample.ms < min_ms) {
+          min_ms = sample.ms;
+        }
       }
       writer.writeObjectFieldIntro("avg_cost");
       writer.writeDouble(sum_cost / (double) n);
       writer.writeObjectFieldIntro("avg_ms");
       writer.writeDouble(sum_ms / (double) n);
+      writer.writeObjectFieldIntro("sum_ms");
+      writer.writeDouble(sum_ms);
+      writer.writeObjectFieldIntro("min_ms");
+      writer.writeDouble(min_ms);
+      writer.writeObjectFieldIntro("max_ms");
+      writer.writeDouble(max_ms);
       writer.endObject();
     }
     writer.endObject();

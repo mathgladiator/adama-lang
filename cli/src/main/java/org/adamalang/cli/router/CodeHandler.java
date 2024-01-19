@@ -21,6 +21,7 @@ import org.adamalang.cli.router.Arguments.*;
 import org.adamalang.cli.runtime.Output.*;
 
 public interface CodeHandler {
+  void benchmarkMessage(CodeBenchmarkMessageArgs args, YesOrError output) throws Exception;
   void bundlePlan(CodeBundlePlanArgs args, YesOrError output) throws Exception;
   void compileFile(CodeCompileFileArgs args, YesOrError output) throws Exception;
   void diagram(CodeDiagramArgs args, YesOrError output) throws Exception;

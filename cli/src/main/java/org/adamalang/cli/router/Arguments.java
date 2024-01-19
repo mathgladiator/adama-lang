@@ -1771,6 +1771,103 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("adama account set-password", ANSI.Green));
 		}
 	}
+	public static class CodeBenchmarkMessageArgs {
+		public Config config;
+		public String file;
+		public String imports = "backend";
+		public String data = "input.json";
+		public String message = "message.json";
+		public static CodeBenchmarkMessageArgs from(String[] args, int start) {
+			CodeBenchmarkMessageArgs returnArgs = new CodeBenchmarkMessageArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--file", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-f":
+					case "--file": {
+						if (k+1 < args.length) {
+							returnArgs.file = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-i":
+					case "--imports": {
+						if (k+1 < args.length) {
+							returnArgs.imports = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-d":
+					case "--data": {
+						if (k+1 < args.length) {
+							returnArgs.data = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-m":
+					case "--message": {
+						if (k+1 < args.length) {
+							returnArgs.message = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("Compiles the adama file and shows any problems", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama code benchmark-message", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-f, --file", ANSI.Green) + " " + ColorUtilTools.prefix("<file>", ANSI.White) + " : A file.");
+			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-i, --imports", ANSI.Green) + " " + ColorUtilTools.prefix("<imports>", ANSI.White) + " : A directory containing adama files to import into the main");
+			System.out.println("    " + ColorUtilTools.prefix("-d, --data", ANSI.Green) + " " + ColorUtilTools.prefix("<data>", ANSI.White) + " : A file containing a snapshot");
+			System.out.println("    " + ColorUtilTools.prefix("-m, --message", ANSI.Green) + " " + ColorUtilTools.prefix("<message>", ANSI.White) + " : A file containing a send message (channel + message)");
+		}
+	}
 	public static class CodeBundlePlanArgs {
 		public Config config;
 		public String output;

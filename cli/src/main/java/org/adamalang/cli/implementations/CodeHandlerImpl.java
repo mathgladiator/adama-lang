@@ -23,21 +23,38 @@ import org.adamalang.cli.implementations.code.Diagram;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
-import org.adamalang.common.ANSI;
-import org.adamalang.common.ColorUtilTools;
-import org.adamalang.common.Json;
+import org.adamalang.common.*;
+import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.lsp.LanguageServer;
 import org.adamalang.CoreServices;
+import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.deploy.AsyncByteCodeCache;
+import org.adamalang.runtime.deploy.AsyncCompiler;
+import org.adamalang.runtime.deploy.DeploymentFactory;
+import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.*;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.SymbolIndex;
 import org.adamalang.validators.ValidatePlan;
+import org.checkerframework.checker.units.qual.K;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class CodeHandlerImpl implements CodeHandler {
@@ -57,6 +74,120 @@ public class CodeHandlerImpl implements CodeHandler {
     plan.putArray("plan");
     Files.writeString(new File(args.output).toPath(), plan.toPrettyString());
     output.out();
+  }
+
+  @Override
+  public void benchmarkMessage(Arguments.CodeBenchmarkMessageArgs args, Output.YesOrError output) throws Exception {
+    CoreServices.install(CoreServicesNexus.NOOP());
+
+    final DeploymentPlan deploymentPlan;
+    {
+      ObjectNode plan = Json.newJsonObject();
+      plan.put("instrument", true);
+      ObjectNode version = plan.putObject("versions").putObject("file");
+      version.put("main", Files.readString(new File(args.file).toPath()));
+      ObjectNode includes = version.putObject("includes");
+      for (Map.Entry<String, String> entry : getImports(args.imports).entrySet()) {
+        includes.put(entry.getKey(), entry.getValue());
+      }
+      plan.put("default", "file");
+      plan.putArray("plan");
+      deploymentPlan = new DeploymentPlan(plan.toString(), (x, y) -> {});
+    }
+
+    ObjectNode instruction = Json.parseJsonObject(Files.readString(new File(args.message).toPath()));
+
+    AtomicReference<LivingDocumentFactory> factory = new AtomicReference<>();
+    AtomicReference<LivingDocument> ref = new AtomicReference<>();
+    CountDownLatch latch = new CountDownLatch(1);
+    new Thread(() -> AsyncCompiler.forge(RuntimeEnvironment.Beta, "Benchmark", null, deploymentPlan, Deliverer.FAILURE, new TreeMap<>(), AsyncByteCodeCache.DIRECT, new Callback<DeploymentFactory>() {
+      @Override
+      public void success(DeploymentFactory df) {
+        df.fetch(new Key(instruction.get("space").textValue(), instruction.get("key").textValue()), new Callback<LivingDocumentFactory>() {
+          @Override
+          public void success(LivingDocumentFactory ldf) {
+            factory.set(ldf);
+            try {
+              ref.set(ldf.create(null));
+            } catch (ErrorCodeException ece) {
+              System.err.println("LDF FAILED:" + ece.code);
+            }
+            latch.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("FETCH FAILED:" + ex.code);
+            latch.countDown();
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        System.err.println("FORGE FAILED:" + ex.code);
+        latch.countDown();
+      }
+    })).start();
+    System.out.print("compiling:");
+    while (!latch.await(100, TimeUnit.MILLISECONDS)) {
+      System.out.print(".");
+    }
+    System.out.println("done!");
+    if (ref.get() == null) {
+      return;
+    }
+    NtPrincipal who = new NtPrincipal(instruction.get("agent").textValue(), instruction.get("authority").textValue());
+    LivingDocument doc = ref.get();
+    doc.__insert(new JsonStreamReader(Files.readString(new File(args.data).toPath())));
+    doc.__perf.dump();
+    if (instruction.has("connect") && instruction.get("connect").booleanValue()){
+      final var writer = new JsonStreamWriter();
+      writer.beginObject();
+      writer.writeObjectFieldIntro("command");
+      writer.writeFastString("connect");
+      writer.writeObjectFieldIntro("timestamp");
+      writer.writeLong(System.currentTimeMillis());
+      writer.writeObjectFieldIntro("who");
+      writer.writeNtPrincipal(who);
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(instruction.get("key").textValue());
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString("origin");
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString("0.0.0.0");
+      writer.endObject();
+      doc.__transact(writer.toString(), factory.get());
+      System.out.println("CONNECT");
+      System.out.println(doc.__perf.dump());
+    }
+
+    doc.__createView(who, Perspective.DEAD);
+
+    if (instruction.has("channel")) {
+      final var writer = new JsonStreamWriter();
+      writer.beginObject();
+      writer.writeObjectFieldIntro("command");
+      writer.writeFastString("send");
+      writer.writeObjectFieldIntro("timestamp");
+      writer.writeLong(System.currentTimeMillis());
+      writer.writeObjectFieldIntro("who");
+      writer.writeNtPrincipal(who);
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(instruction.get("key").textValue());
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString("origin");
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString("0.0.0.0");
+      writer.writeObjectFieldIntro("channel");
+      writer.writeFastString(instruction.get("channel").textValue());
+      writer.writeObjectFieldIntro("message");
+      writer.injectJson(instruction.get("message").toString());
+      writer.endObject();
+      doc.__transact(writer.toString(), factory.get());
+      System.out.println("SEND");
+      System.out.println(doc.__perf.dump());
+    }
   }
 
   public void formatSingleFile(File file) throws Exception {

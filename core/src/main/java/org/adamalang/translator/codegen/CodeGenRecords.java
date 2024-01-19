@@ -231,7 +231,7 @@ public class CodeGenRecords {
           classConstructorX.append(")");
         }
         if (environment.state.options.instrumentPerf) {
-          classConstructorX.append(", () -> __perf.measure(\"").append("f" + storage.name.text + "_" + fdInOrder.name).append("\")");
+          classConstructorX.append(", () -> __perf.measure(\"").append("f_" + storage.name.text + "_" + fdInOrder.name).append("\")");
         } else {
           classConstructorX.append(", null");
         }

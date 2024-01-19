@@ -40,6 +40,7 @@ public class Uri extends Definition {
   private final StringBuilder rxhtmlPath;
   private final ArrayList<Function<String, Boolean>> matchers;
   private boolean lastHasStar;
+  private StringBuilder perfSuffix;
 
   public Uri() {
     this.emission = new ArrayList<>();
@@ -49,9 +50,11 @@ public class Uri extends Definition {
     this.rxhtmlPath = new StringBuilder();
     this.matchers = new ArrayList<>();
     this.lastHasStar = false;
+    this.perfSuffix = new StringBuilder();
   }
 
   public void push(Token slash, Token dollarSign, Token id, Token starToken, Token colon, TyType type) {
+    perfSuffix.append("_");
     ingest(slash);
     emission.add((y) -> y.accept(slash));
     str.append("/");
@@ -83,10 +86,14 @@ public class Uri extends Definition {
           case "double":
           case "long":
             rxhtmlPath.append("number");
+            perfSuffix.append("number");
             break;
           default:
             rxhtmlPath.append("text");
+            perfSuffix.append("text");
         }
+      } else {
+        perfSuffix.append(id.stripStringLiteral().text);
       }
       if (starToken == null) {
         if (dollarSign != null) {
@@ -198,5 +205,9 @@ public class Uri extends Definition {
     } catch (NumberFormatException nfe) {
       return false;
     }
+  }
+
+  public String toPerfSuffix() {
+    return perfSuffix.toString();
   }
 }

@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.codegen;
 
+import org.adamalang.common.Escaping;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -177,13 +178,30 @@ public class CodeGenWeb {
     }
   }
 
-  private void writeWebHandlerBody(StringBuilderWithTabs sb, WebGuard guard, Block code, Environment env) {
-    if (guard == null) {
+  private void writePerfIntro(StringBuilderWithTabs sb, Environment env, String verb, String uri) {
+    if (env.state.options.instrumentPerf) {
+      sb.append("Runnable __measure = __perf.measure(\"wb_").append(verb).append(new Escaping(uri).removeNewLines().go()).append("\");").writeNewline();
+      sb.append("try {").tabUp().writeNewline();
+    }
+  }
+
+  private void writePerfOutro(StringBuilderWithTabs sb, Environment env, String verb) {
+    if (env.state.options.instrumentPerf) {
+      sb.append("} finally {").tabUp().writeNewline();
+      sb.append("__measure.run();").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+    }
+  }
+
+  private void writeWebHandlerBody(StringBuilderWithTabs sb, String verb, String uri, WebGuard guard, Block code, Environment env) {
+    if (guard == null && !env.state.options.instrumentPerf) {
       code.writeJava(sb, env);
     } else {
       sb.append("{").tabUp().writeNewline();
+      writePerfIntro(sb, env, verb, uri);
       writeWebGuard(sb, guard);
       code.specialWriteJava(sb, env, false, true);
+      writePerfOutro(sb, env, verb);
       sb.append("}").writeNewline();
     }
   }
@@ -194,7 +212,7 @@ public class CodeGenWeb {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
     sb.append(") throws AbortMessageException ");
-    writeWebHandlerBody(sb, get.guard, get.code, get.next(environment));
+    writeWebHandlerBody(sb, "get", get.uri.toPerfSuffix(), get.guard, get.code, get.next(environment));
     sb.writeNewline();
   }
 
@@ -204,7 +222,7 @@ public class CodeGenWeb {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
     sb.append(")");
-    writeWebHandlerBody(sb, options.guard, options.code, options.next(environment));
+    writeWebHandlerBody(sb, "options", options.uri.toPerfSuffix(), options.guard, options.code, options.next(environment));
     sb.writeNewline();
   }
 
@@ -215,8 +233,10 @@ public class CodeGenWeb {
     }
     sb.append(") throws AbortMessageException {").tabUp().writeNewline();
     sb.append("RTx").append(put.messageType.text).append(" ").append(put.messageVariable.text).append(" = new RTx").append(put.messageType.text).append("(__request.body());").writeNewline();
+    writePerfIntro(sb, environment, "put", put.uri.toPerfSuffix());
     writeWebGuard(sb, put.guard);
     put.code.specialWriteJava(sb, put.next(environment), false, true);
+    writePerfOutro(sb, environment, "put");
     sb.append("}").writeNewline();
   }
 
@@ -226,7 +246,7 @@ public class CodeGenWeb {
       sb.append(", ").append(param.getValue().getJavaConcreteType(environment)).append(" ").append(param.getKey());
     }
     sb.append(") throws AbortMessageException ");
-    writeWebHandlerBody(sb, delete.guard, delete.code, delete.next(environment));
+    writeWebHandlerBody(sb, "delete", delete.uri.toPerfSuffix(), delete.guard, delete.code, delete.next(environment));
     sb.writeNewline();
   }
 }

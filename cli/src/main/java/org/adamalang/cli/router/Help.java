@@ -111,6 +111,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("--config", 15), ANSI.Green) + "Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(ColorUtilTools.prefix("CODESUBCOMMAND:", ANSI.Yellow));
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("benchmark-message", 15), ANSI.Green) + "Compiles the adama file and shows any problems");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("bundle-plan", 15), ANSI.Green) + "Bundle the main and imports into a single deployment plan.");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("compile-file", 15), ANSI.Green) + "Compiles the adama file and shows any problems");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("diagram", 15), ANSI.Green) + "Convert a reflection JSON into a mermaid diagram source");

@@ -50,3 +50,11 @@ record R {
     return 1;
   }
 }
+
+@web get /foo {
+  return {html:"Happy"};
+}
+
+@web get / "happy-times" {
+  return {html:"Happy"};
+}

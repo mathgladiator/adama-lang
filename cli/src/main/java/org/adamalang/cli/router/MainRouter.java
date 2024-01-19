@@ -360,6 +360,16 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "benchmark-message": {
+              CodeBenchmarkMessageArgs codeArgs = CodeBenchmarkMessageArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeBenchmarkMessageArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.benchmarkMessage(codeArgs, out);
+               return 0;
+            }
             case "bundle-plan": {
               CodeBundlePlanArgs codeArgs = CodeBundlePlanArgs.from(args, 2);
               if (codeArgs == null) {
