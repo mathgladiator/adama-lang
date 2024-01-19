@@ -17,6 +17,8 @@
 */
 package org.adamalang.runtime.sys;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.common.LogTimestamp;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.slf4j.Logger;
@@ -25,18 +27,57 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /** track specific events */
 public class PerfTracker {
   private static final Logger LOG = LoggerFactory.getLogger("tracked");
   private final HashMap<String, ArrayList<Sample>> samples;
   private final LivingDocument owner;
+  private boolean lightning;
+  private ObjectNode lightningGraph;
+  private Stack<ObjectNode> current;
+
   public PerfTracker(LivingDocument owner) {
     this.owner = owner;
     this.samples = new HashMap<>();
+    this.lightning = false;
   }
 
-  public Runnable measure(String name) {
+  public void measureLightning() {
+    this.lightning = true;
+    this.lightningGraph = Json.newJsonObject();
+    this.current = new Stack<>();
+    this.current.push(lightningGraph);
+  }
+
+  public String getLightningJsonAndReset() {
+    if (this.lightning) {
+      String result = lightningGraph.toString();
+      lightningGraph.removeAll();
+      return result;
+    }
+    return null;
+  }
+
+  private Runnable measureWithLightning(String name) {
+    Runnable base = measureNoLightning(name);
+    ObjectNode head = current.peek();
+    ObjectNode path = head.has(name) ? (ObjectNode) head.get(name) : head.putObject(name);
+    long started = System.currentTimeMillis();
+    current.push(path);
+    return () -> {
+      long ms = System.currentTimeMillis() - started;
+      if (path.has("__ms")) {
+        ms += path.get("__ms").longValue();
+      }
+      path.put("__ms", ms);
+      base.run();
+      current.pop();
+    };
+  }
+
+  private Runnable measureNoLightning(String name) {
     ArrayList<Sample> _sample = samples.get(name);
     if (_sample == null) {
       _sample = new ArrayList<>();
@@ -48,6 +89,14 @@ public class PerfTracker {
     return () -> {
       sample.add(new Sample(owner.__getCodeCost() - costStart, System.currentTimeMillis() - timeStart));
     };
+  }
+
+  public Runnable measure(String name) {
+    if (lightning) {
+      return measureWithLightning(name);
+    } else {
+      return measureNoLightning(name);
+    }
   }
 
   public static void writeDeploymentTime(String space, long latency, boolean success) {

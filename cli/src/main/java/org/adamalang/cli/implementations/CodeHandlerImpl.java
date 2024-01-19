@@ -24,7 +24,6 @@ import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
 import org.adamalang.common.*;
-import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.lsp.LanguageServer;
 import org.adamalang.CoreServices;
 import org.adamalang.runtime.contracts.Perspective;
@@ -45,7 +44,6 @@ import org.adamalang.translator.parser.*;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.SymbolIndex;
 import org.adamalang.validators.ValidatePlan;
-import org.checkerframework.checker.units.qual.K;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -143,6 +141,7 @@ public class CodeHandlerImpl implements CodeHandler {
     LivingDocument doc = ref.get();
     doc.__insert(new JsonStreamReader(Files.readString(new File(args.data).toPath())));
     doc.__perf.dump();
+    doc.__perf.measureLightning();
     if (instruction.has("connect") && instruction.get("connect").booleanValue()){
       final var writer = new JsonStreamWriter();
       writer.beginObject();
@@ -161,6 +160,7 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.endObject();
       doc.__transact(writer.toString(), factory.get());
       report.set("connect", Json.parseJsonObject(doc.__perf.dump()));
+      report.set("connect-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
     }
 
     doc.__createView(who, Perspective.DEAD);
@@ -182,8 +182,8 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.endObject();
       doc.__transact(writer.toString(), factory.get());
       report.set("invalidate", Json.parseJsonObject(doc.__perf.dump()));
+      report.set("invalidate-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
     }
-
 
     if (instruction.has("channel")) {
       final var writer = new JsonStreamWriter();
@@ -207,6 +207,7 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.endObject();
       doc.__transact(writer.toString(), factory.get());
       report.set("send", Json.parseJsonObject(doc.__perf.dump()));
+      report.set("send-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
     }
     Files.writeString(new File(args.dumpTo).toPath(), report.toPrettyString());
     output.out();

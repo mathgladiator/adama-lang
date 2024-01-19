@@ -17,6 +17,8 @@
 */
 package org.adamalang.runtime.sys;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -43,5 +45,20 @@ public class PerfTrackerTests {
     Assert.assertTrue(result.contains("\"type\":\"document\""));
     Assert.assertTrue(result.contains("\"avg_cost\":100.0"));
     Assert.assertNull(tracker.dump());
+  }
+
+  @Test
+  public void lightning() {
+    MockLivingDocument doc = new MockLivingDocument();
+    doc.__lateBind("space", "key", Deliverer.FAILURE, new ServiceRegistry());
+    PerfTracker tracker = new PerfTracker(doc);
+    tracker.measureLightning();
+    Runnable x = tracker.measure("foo");
+    Runnable y = tracker.measure("dip");
+    y.run();
+    x.run();
+    ObjectNode report = Json.parseJsonObject(tracker.getLightningJsonAndReset());
+    String normalized = report.toString().replaceAll("[0-9]+", "x");
+    Assert.assertEquals("{\"foo\":{\"dip\":{\"__ms\":x},\"__ms\":x}}", normalized);
   }
 }
