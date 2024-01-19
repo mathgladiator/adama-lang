@@ -416,6 +416,8 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -1269,6 +1271,8 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -2134,6 +2138,8 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");

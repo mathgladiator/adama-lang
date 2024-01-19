@@ -393,6 +393,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -1071,6 +1073,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -1744,6 +1748,13 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    x.__reportRx(\"x\", __writer);");
+    gold.append("\n    ___k.__reportRx(\"k\", __writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -2409,6 +2420,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -3202,6 +3215,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    str.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -3923,6 +3938,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -4278,6 +4295,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
@@ -5006,6 +5025,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");

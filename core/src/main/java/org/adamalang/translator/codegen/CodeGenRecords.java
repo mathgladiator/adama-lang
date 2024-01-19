@@ -242,12 +242,13 @@ public class CodeGenRecords {
         }
         environment.define(fieldName, new TyReactiveLazy(lazyType), false, fdInOrder);
         for (final String watched : fdInOrder.variablesToWatch) {
-          classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+          // TODO: UNCOMMENT THESE IN NEXT DIFF (REQUIRES A BUNCH OF VALIDATION)
+          // if (!fdInOrder.tablesToInject.contains(watched)) {
+            classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+          // }
         }
         for (final String watched : fdInOrder.tablesToInject) {
-          // TODO: REMOVE THIS LINE ONCE TABLE EVENTS ARE BEING PRODUCED! SUPER AWESOME MODE!
-          // classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
-          classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline();
+          classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
           classLinker.append(fieldName).append(".__guard(").append(watched).append(",__").append(fieldName).append("_").append(watched).append(");").writeNewline();
         }
         if (hasCache) {
@@ -330,12 +331,13 @@ public class CodeGenRecords {
         classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxTableGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
       }
       for (final String watched : bubble.variablesToWatch) {
-        classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
+        // TODO: UNCOMMENT THESE IN NEXT DIFF (REQUIRES A BUNCH OF VALIDATION)
+        // if (!bubble.tablesToWatch.contains(watched)) {
+          classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
+        // }
       }
       for (final String watched : bubble.tablesToWatch) {
-        // TODO: REMOVE THIS LINE ONCE TABLE EVENTS ARE BEING PRODUCED! SUPER AWESOME MODE!
-        // classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
-        classLinker.append(watched).append(".__subscribe(__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
+        classLinker.append(watched).append(".__subscribe(__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
         classLinker.append("___").append(bubble.nameToken.text).append(".__guard(").append(watched).append(",__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
       }
     }
@@ -612,6 +614,7 @@ public class CodeGenRecords {
     sb.append("__goodwillLimitOfBudget = ").append(environment.state.options.goodwillBudget + ";").tabDown().writeNewline();
     sb.append("}").writeNewline();
     writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__last_expire_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__timezone", "__auto_table_row_id", "__auto_gen", "__auto_cache_id", "__cache", "__webTaskId");
+    CodeGenReport.writeRxReport(storage, sb, environment);
     CodeGenDocumentPolicyCache.writeRecordDeltaClass(storage, sb);
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
     sb.append("@Override").writeNewline();

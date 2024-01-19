@@ -18,6 +18,7 @@
 package org.adamalang.runtime.reactives.tables;
 
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -68,6 +69,10 @@ public class TablePubSub implements TableSubscription {
     this._subscriptions = new ArrayList<>();
     this.filter = new TreeSet<>();
     this.filterIndex = new TreeSet<>();
+  }
+
+  public int count() {
+    return _subscriptions.size();
   }
 
   public void subscribe(TableSubscription ts) {

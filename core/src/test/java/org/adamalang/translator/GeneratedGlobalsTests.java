@@ -415,6 +415,8 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    p1.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -1157,6 +1159,8 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    z2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -1879,6 +1883,8 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    zzz.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -2691,6 +2697,8 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n    l.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");

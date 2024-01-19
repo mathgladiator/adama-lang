@@ -18,10 +18,7 @@
 package org.adamalang.translator.tree.types.reactive;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.translator.codegen.CodeGenDeltaClass;
-import org.adamalang.translator.codegen.CodeGenDynCompare;
-import org.adamalang.translator.codegen.CodeGenIndexing;
-import org.adamalang.translator.codegen.CodeGenRecords;
+import org.adamalang.translator.codegen.*;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
@@ -120,6 +117,7 @@ public class TyReactiveRecord extends TyType implements //
     CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
     CodeGenIndexing.writeIndices(name, storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);
+    CodeGenReport.writeRxReport(storage, sb, environment);
     String linkerCompact = classLinker.toString().stripTrailing();
     sb.append("@Override").writeNewline();
     sb.append("public RTx" + name + " __link() {").tabUp().writeNewline();

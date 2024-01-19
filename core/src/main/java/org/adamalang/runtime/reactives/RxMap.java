@@ -17,12 +17,15 @@
 */
 package org.adamalang.runtime.reactives;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.common.SlashStringArrayEncoder;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.json.JsonSum;
 import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.NtPair;
@@ -283,6 +286,28 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     String toStr(DomainTy key);
 
     DomainTy fromStr(String key);
+  }
+
+  @Override
+  public void __reportRx(String name, JsonStreamWriter __writer) {
+    ArrayList<ObjectNode> children = new ArrayList<>();
+    for (Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
+      JsonStreamWriter childWriter = new JsonStreamWriter();
+      childWriter.beginObject();
+      entry.getValue().__reportRx("_", childWriter);
+      childWriter.endObject();
+      children.add(Json.parseJsonObject(childWriter.toString()));
+    }
+
+    __writer.writeObjectFieldIntro(name);
+    __writer.beginObject();
+    __writer.writeObjectFieldIntro("subscribers");
+    __writer.writeInteger(__getSubscriberCount());
+    __writer.writeObjectFieldIntro("count");
+    __writer.writeInteger(objects.size());
+    __writer.writeObjectFieldIntro("sum_items");
+    __writer.injectJson(JsonSum.sum(children).get("_").toString());
+    __writer.endObject();
   }
 
   public abstract static class IntegerCodec<R extends RxBase> implements Codec<Integer, R> {

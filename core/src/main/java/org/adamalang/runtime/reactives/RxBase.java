@@ -58,6 +58,11 @@ public abstract class RxBase {
     return 0;
   }
 
+  public void __reportRx(String name, JsonStreamWriter __writer) {
+    __writer.writeObjectFieldIntro(name);
+    __writer.writeInteger(__getSubscriberCount());
+  }
+
   /** initialize data & merge data in */
   public abstract void __insert(JsonStreamReader reader);
 

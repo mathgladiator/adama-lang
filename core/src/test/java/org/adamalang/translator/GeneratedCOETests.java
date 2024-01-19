@@ -648,6 +648,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    _people.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -932,6 +934,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
+    gold.append("\n    @Override");
     gold.append("\n    public RTxFamily __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
@@ -1159,6 +1163,8 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxPerson __link() {");
     gold.append("\n      return this;");

@@ -76,6 +76,10 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public void __writeRxReport(JsonStreamWriter __writer) {
+  }
+
+  @Override
   protected void __link(ServiceRegistry registry) {
   }
 

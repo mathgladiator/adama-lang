@@ -416,6 +416,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    r2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -656,6 +658,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
@@ -1458,6 +1462,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -2152,6 +2158,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -2416,6 +2424,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR __link() {");
     gold.append("\n      return this;");
@@ -3455,6 +3465,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -3702,6 +3714,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxY __link() {");
     gold.append("\n      u.__subscribe(v);");
@@ -3964,6 +3978,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public void __killFields() {");
     gold.append("\n      w.__kill();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      x.__subscribe(z);");
@@ -4657,6 +4673,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    lst.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -4906,6 +4924,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public void __killFields() {");
     gold.append("\n      mi.__kill();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      return this;");
@@ -5578,6 +5598,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __webTaskId.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -6922,6 +6944,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public final boolean p;");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {");
@@ -7635,6 +7659,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    owner.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public final boolean saneG;");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {");
@@ -7898,6 +7924,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      return this;");
@@ -8867,6 +8895,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -9342,6 +9372,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
+    gold.append("\n    @Override");
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      x.__subscribe(sum);");
     gold.append("\n      return this;");
@@ -9582,6 +9614,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
     gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
+    gold.append("\n    @Override");
     gold.append("\n    public RTxY __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
@@ -9774,6 +9808,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxZ __link() {");
     gold.append("\n      return this;");
@@ -10657,6 +10693,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    defMS.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
@@ -10882,6 +10920,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxY __link() {");
     gold.append("\n      return this;");
@@ -11180,6 +11220,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      ms.__kill();");
     gold.append("\n    }");
     gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
+    gold.append("\n    @Override");
     gold.append("\n    public RTxX __link() {");
     gold.append("\n      return this;");
     gold.append("\n    }");
@@ -11378,6 +11420,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public void __killFields() {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxEmpty __link() {");
     gold.append("\n      return this;");

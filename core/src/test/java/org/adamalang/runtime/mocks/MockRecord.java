@@ -197,6 +197,10 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   public int settled = 0;
 
   @Override
+  public void __writeRxReport(JsonStreamWriter __writer) {
+  }
+
+  @Override
   public void __settle(Set<Integer> viewers) {
     settled++;
   }

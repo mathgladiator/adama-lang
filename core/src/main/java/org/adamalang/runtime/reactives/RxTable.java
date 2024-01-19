@@ -17,11 +17,14 @@
 */
 package org.adamalang.runtime.reactives;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.graph.DifferentialEdgeTracker;
 import org.adamalang.runtime.index.ReactiveIndex;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.json.JsonSum;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
@@ -543,5 +546,32 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       child.__settle(viewers);
     }
     pubsub.settle();
+  }
+
+  @Override
+  public void __reportRx(String name, JsonStreamWriter __writer) {
+    int direct = __getSubscriberCount();
+    int focused = pubsub.count();
+    ArrayList<ObjectNode> children = new ArrayList<>();
+    for (Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
+      JsonStreamWriter childWriter = new JsonStreamWriter();
+      entry.getValue().__writeRxReport(childWriter);
+      children.add(Json.parseJsonObject(childWriter.toString()));
+    }
+    __writer.writeObjectFieldIntro(name);
+    __writer.beginObject();
+    __writer.writeObjectFieldIntro("subscribers");
+    __writer.writeInteger(direct + focused);
+    __writer.writeObjectFieldIntro("direct");
+    __writer.writeInteger(direct);
+    __writer.writeObjectFieldIntro("pubsub");
+    __writer.writeInteger(focused);
+    __writer.writeObjectFieldIntro("count");
+    __writer.writeInteger(itemsByKey.size());
+    if (children.size() > 0) {
+      __writer.writeObjectFieldIntro("sum_rows");
+      __writer.injectJson(JsonSum.sum(children).toString());
+    }
+    __writer.endObject();
   }
 }

@@ -1688,6 +1688,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  /** write an rx report */
+  public abstract void __writeRxReport(JsonStreamWriter __writer);
+
   /** transaction: a person connects to document */
   private LivingDocumentChange __transaction_connect(final String request, final CoreRequestContext context) throws ErrorCodeException {
     final var startedTime = System.nanoTime();

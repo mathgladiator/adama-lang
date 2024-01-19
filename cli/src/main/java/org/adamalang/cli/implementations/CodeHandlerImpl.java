@@ -37,6 +37,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.LivingDocumentChange;
 import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -47,6 +48,7 @@ import org.adamalang.validators.ValidatePlan;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -54,6 +56,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class CodeHandlerImpl implements CodeHandler {
   @Override
@@ -139,6 +142,11 @@ public class CodeHandlerImpl implements CodeHandler {
     }
     NtPrincipal who = new NtPrincipal(instruction.get("agent").textValue(), instruction.get("authority").textValue());
     LivingDocument doc = ref.get();
+    Supplier<ObjectNode> snap = () -> {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      doc.__writeRxReport(writer);
+      return Json.parseJsonObject(writer.toString());
+    };
     doc.__insert(new JsonStreamReader(Files.readString(new File(args.data).toPath())));
     doc.__perf.dump();
     doc.__perf.measureLightning();
@@ -164,7 +172,7 @@ public class CodeHandlerImpl implements CodeHandler {
     }
 
     doc.__createView(who, Perspective.DEAD);
-    {
+    Runnable invalidate = () -> {
       final var writer = new JsonStreamWriter();
       writer.beginObject();
       writer.writeObjectFieldIntro("command");
@@ -180,7 +188,14 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.writeObjectFieldIntro("ip");
       writer.writeString("0.0.0.0");
       writer.endObject();
-      doc.__transact(writer.toString(), factory.get());
+      try {
+        doc.__transact(writer.toString(), factory.get());
+      } catch (ErrorCodeException e) {
+        throw new RuntimeException(e);
+      }
+    };
+    {
+      invalidate.run();
       report.set("invalidate", Json.parseJsonObject(doc.__perf.dump()));
       report.set("invalidate-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
     }
@@ -205,10 +220,18 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.writeObjectFieldIntro("message");
       writer.injectJson(instruction.get("message").toString());
       writer.endObject();
-      doc.__transact(writer.toString(), factory.get());
+      LivingDocumentChange change = doc.__transact(writer.toString(), factory.get());
       report.set("send", Json.parseJsonObject(doc.__perf.dump()));
       report.set("send-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
+      if (change != null) {
+        report.set("send-redo", Json.parseJsonObject(change.update.redo));
+        report.set("send-undo", Json.parseJsonObject(change.update.undo));
+      }
     }
+    doc.__settle(Collections.emptySet());
+    invalidate.run();
+
+    report.set("rx-report", snap.get());
     Files.writeString(new File(args.dumpTo).toPath(), report.toPrettyString());
     output.out();
   }

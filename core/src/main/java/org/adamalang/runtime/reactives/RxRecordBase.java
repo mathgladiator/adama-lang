@@ -21,6 +21,7 @@ import org.adamalang.runtime.contracts.MultiIndexable;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
 
 /** the base object for generated record types */
@@ -140,6 +141,8 @@ public abstract class RxRecordBase<Ty extends RxRecordBase<Ty>> extends RxBase i
     }
     return false;
   }
+
+  public abstract void __writeRxReport(JsonStreamWriter __writer);
 
   public abstract Object __fieldOf(String name);
 }
