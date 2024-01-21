@@ -38,11 +38,13 @@ public class TyReactiveLazy extends TyType implements //
     DetailComputeRequiresGet // to get the native value
 {
   public final TyType computedType;
+  public final boolean cached;
 
-  public TyReactiveLazy(final TyType computedType) {
+  public TyReactiveLazy(final TyType computedType, boolean cached) {
     super(TypeBehavior.ReadOnlyGetNativeValue);
     this.computedType = computedType;
     ingest(computedType);
+    this.cached = cached;
   }
 
   @Override
@@ -61,7 +63,11 @@ public class TyReactiveLazy extends TyType implements //
 
   @Override
   public String getJavaBoxType(final Environment environment) {
-    return String.format("RxLazy<%s>", computedType.getJavaBoxType(environment));
+    if (cached) {
+      return String.format("RxCachedLazy<%s>", computedType.getJavaBoxType(environment));
+    } else {
+      return String.format("RxLazy<%s>", computedType.getJavaBoxType(environment));
+    }
   }
 
   @Override
@@ -71,7 +77,7 @@ public class TyReactiveLazy extends TyType implements //
 
   @Override
   public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveLazy(computedType).withPosition(position);
+    return new TyReactiveLazy(computedType, cached).withPosition(position);
   }
 
   @Override

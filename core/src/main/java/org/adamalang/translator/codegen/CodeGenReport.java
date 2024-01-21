@@ -25,7 +25,7 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 
 /** when instrumented, generate a report of the state of the reactive connections */
 public class CodeGenReport {
-  public static void writeRxReport(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+  public static void writeRxReport(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, String... others) {
     if (!environment.state.options.instrumentPerf) {
       sb.append("@Override").writeNewline();
       sb.append("public void __writeRxReport(JsonStreamWriter __writer) { }").writeNewline();
@@ -35,6 +35,9 @@ public class CodeGenReport {
       sb.append("__writer.beginObject();").writeNewline();
       for (FieldDefinition fd : storage.fields.values()) {
         sb.append(fd.name).append(".__reportRx(\"").append(fd.name).append("\", __writer);").writeNewline();
+      }
+      for (String other : others) {
+        sb.append(other).append(".__reportRx(\"").append(other).append("\", __writer);").writeNewline();
       }
       for (BubbleDefinition bd : storage.bubbles.values()) {
         sb.append("___").append(bd.nameToken.text).append(".__reportRx(\"").append(bd.nameToken.text).append("\", __writer);").writeNewline();

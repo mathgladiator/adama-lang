@@ -27,7 +27,6 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
-import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
@@ -213,14 +212,22 @@ public class CodeGenRecords {
       if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
         final var lazyType = ((TyReactiveLazy) fieldType).getEmbeddedType(environment);
         String boxType = lazyType.getJavaBoxType(environment);
-        classFields.append("private final RxLazy<" + boxType + "> " + fieldName + ";").writeNewline();
+        if (fdInOrder.hasCachePolicy()) {
+          classFields.append("private final RxCachedLazy<" + boxType + "> " + fieldName + ";").writeNewline();
+        } else {
+          classFields.append("private final RxLazy<" + boxType + "> " + fieldName + ";").writeNewline();
+        }
 
         boolean hasCache = !fdInOrder.servicesToWatch.isEmpty();
         if (hasCache) {
           classFields.append("private final RxCache __c").append(fieldName).append(";").writeNewline();
           classConstructorX.append("__c").append(fieldName).append(" = new RxCache(__self, this);").writeNewline();
         }
-        classConstructorX.append(fieldName).append(" = new RxLazy<").append(lazyType.getJavaBoxType(environment));
+        if (fdInOrder.hasCachePolicy()) {
+          classConstructorX.append(fieldName).append(" = new RxCachedLazy<").append(lazyType.getJavaBoxType(environment));
+        } else {
+          classConstructorX.append(fieldName).append(" = new RxLazy<").append(lazyType.getJavaBoxType(environment));
+        }
         if (hasCache) {
           classConstructorX.append(">(this,__c").append(fieldName).append(".wrap(() -> (").append(boxType).append(")(");
           fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithCache("__c" + fieldName).scopeWithComputeContext(ComputeContext.Computation));
@@ -235,21 +242,26 @@ public class CodeGenRecords {
         } else {
           classConstructorX.append(", null");
         }
+        if (fdInOrder.hasCachePolicy()) {
+          classConstructorX.append(", " + fdInOrder.getCachePolicy().toSeconds()).append(", __time");
+        }
         classConstructorX.append(");").writeNewline();
         for (final String tableToWatch : fdInOrder.tablesToInject) {
           classFields.append("private final RxTableGuard __").append(fieldName).append("_").append(tableToWatch).append(";").writeNewline();
           classConstructorX.append("__").append(fieldName).append("_").append(tableToWatch).append(" = new RxTableGuard(").append(fieldName).append(");").writeNewline();
         }
-        environment.define(fieldName, new TyReactiveLazy(lazyType), false, fdInOrder);
-        for (final String watched : fdInOrder.variablesToWatch) {
-          // TODO: UNCOMMENT THESE IN NEXT DIFF (REQUIRES A BUNCH OF VALIDATION)
-          // if (!fdInOrder.tablesToInject.contains(watched)) {
+        environment.define(fieldName, new TyReactiveLazy(lazyType, fdInOrder.hasCachePolicy()), false, fdInOrder);
+        if (!fdInOrder.hasCachePolicy()) {
+          for (final String watched : fdInOrder.variablesToWatch) {
+            // TODO: UNCOMMENT THESE IN NEXT DIFF (REQUIRES A BUNCH OF VALIDATION)
+            // if (!fdInOrder.tablesToInject.contains(watched)) {
             classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
-          // }
-        }
-        for (final String watched : fdInOrder.tablesToInject) {
-          classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
-          classLinker.append(fieldName).append(".__guard(").append(watched).append(",__").append(fieldName).append("_").append(watched).append(");").writeNewline();
+            // }
+          }
+          for (final String watched : fdInOrder.tablesToInject) {
+            classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
+            classLinker.append(fieldName).append(".__guard(").append(watched).append(",__").append(fieldName).append("_").append(watched).append(");").writeNewline();
+          }
         }
         if (hasCache) {
           classConstructorX.append("__c").append(fieldName).append(".__subscribe(").append(fieldName).append(");").writeNewline();
@@ -614,7 +626,7 @@ public class CodeGenRecords {
     sb.append("__goodwillLimitOfBudget = ").append(environment.state.options.goodwillBudget + ";").tabDown().writeNewline();
     sb.append("}").writeNewline();
     writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__last_expire_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__timezone", "__auto_table_row_id", "__auto_gen", "__auto_cache_id", "__cache", "__webTaskId");
-    CodeGenReport.writeRxReport(storage, sb, environment);
+    CodeGenReport.writeRxReport(storage, sb, environment, "__time", "__today", "__timezone");
     CodeGenDocumentPolicyCache.writeRecordDeltaClass(storage, sb);
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
     sb.append("@Override").writeNewline();

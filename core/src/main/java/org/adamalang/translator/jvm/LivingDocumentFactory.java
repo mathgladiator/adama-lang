@@ -56,6 +56,7 @@ public class LivingDocumentFactory {
   public final long memoryUsage;
   public final boolean appMode;
   public final int appDelay;
+  public final int temporalResolutionMilliseconds;
 
   public LivingDocumentFactory(CachedByteCode code, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     try {
@@ -81,6 +82,7 @@ public class LivingDocumentFactory {
       this.reflection = code.reflection;
       this.registry = new ServiceRegistry();
       this.registry.resolve(code.spaceName, (HashMap<String, HashMap<String, Object>>) (clazz.getMethod("__services").invoke(null)), keys);
+      this.temporalResolutionMilliseconds = extractTemporalResolution(config);
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }
@@ -116,6 +118,15 @@ public class LivingDocumentFactory {
       return ((Integer) value).intValue();
     } else {
       return 1000;
+    }
+  }
+
+  private static int extractTemporalResolution(HashMap<String, Object> config) {
+    Object value = config.get("temporal_resolution_ms");
+    if (value != null && value instanceof Integer) {
+      return ((Integer) value).intValue();
+    } else {
+      return 0; // preserves existing behavior
     }
   }
 

@@ -1094,6 +1094,9 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    points_played.__reportRx(\"points_played\", __writer);");
     gold.append("\n    ready.__reportRx(\"ready\", __writer);");
     gold.append("\n    suit_in_play.__reportRx(\"suit_in_play\", __writer);");
+    gold.append("\n    __time.__reportRx(\"__time\", __writer);");
+    gold.append("\n    __today.__reportRx(\"__today\", __writer);");
+    gold.append("\n    __timezone.__reportRx(\"__timezone\", __writer);");
     gold.append("\n    ___my_take.__reportRx(\"my_take\", __writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
@@ -4900,6 +4903,9 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    _chat.__reportRx(\"_chat\", __writer);");
     gold.append("\n    chat.__reportRx(\"chat\", __writer);");
+    gold.append("\n    __time.__reportRx(\"__time\", __writer);");
+    gold.append("\n    __today.__reportRx(\"__today\", __writer);");
+    gold.append("\n    __timezone.__reportRx(\"__timezone\", __writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  public class DeltaPrivacyCache {");

@@ -410,6 +410,34 @@ public class Parser {
     }
   }
 
+  private Token consumeExpectedOneOfIdentifier(final String... idents) throws AdamaLangException {
+    final var token = tokens.pop();
+    if (token != null) {
+      for (String candidate : idents) {
+        if (token.isIdentifier(candidate)) {
+          return token;
+        }
+      }
+    }
+    final String[] pretty = new String[idents.length];
+    for (int k = 0; k < pretty.length; k++) {
+      pretty[k] = "'" + idents[k] + "'";
+    }
+    final String combined;
+    if (pretty.length == 2) {
+      combined = String.join(" or ", pretty);
+    } else {
+      pretty[pretty.length - 1] = "or " + pretty[pretty.length - 1];
+      combined = String.join(", ", pretty);
+    }
+    if (token == null) {
+      throw new ParseException(String.format("Parser was expecting %s, but got an end of the stream instead.", combined), tokens.getLastTokenIfAvailable());
+    } else {
+      throw new ParseException(String.format("Parser was expecting %s, but got `%s` instead.", combined, token.text), token);
+    }
+  }
+
+
   private Token consumeExpectedKeyword(final String keyword) throws AdamaLangException {
     final var token = tokens.pop();
     if (token != null && token.isKeyword(keyword)) {
@@ -528,7 +556,7 @@ public class Parser {
 
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
-      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history", "delete_on_close", "frequency")) {
+      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history", "delete_on_close", "temporal_resolution_ms", "frequency")) {
         throw new ParseException("Parser was expecting a static definition. Candidates are create, invent, send, maximum_history, delete_on_close, frequency", tokens.getLastTokenIfAvailable());
       }
       switch (nextOrClose.text) {
@@ -544,6 +572,7 @@ public class Parser {
         case "maximum_history":
         case "delete_on_close":
         case "frequency":
+        case "temporal_resolution_ms":
           definitions.add(define_config(staticScope, nextOrClose));
           break;
       }
@@ -1086,14 +1115,35 @@ public class Parser {
     return doc -> doc.add(new TyNativeEnum(TypeBehavior.ReadWriteNative, enumToken, enumName, openBrace, es, endBrace));
   }
 
+  public CachePolicy define_cache_policy() throws AdamaLangException {
+    Token open = consumeExpectedSymbol("<");
+    Token type = consumeExpectedOneOfIdentifier("once", "every");
+    Token count = null;
+    Token unit = null;
+    if ("every".equals(type.text)) {
+      count = consumeInteger();
+      unit = consumeExpectedOneOfIdentifier("min", "minute", "minutes", "sec", "second", "seconds", "hr", "hour", "hours");
+    }
+    Token close = consumeExpectedSymbol(">");
+    return new CachePolicy(open, type, count, unit, close);
+  }
+
   public FieldDefinition define_field_record(Scope scope) throws AdamaLangException {
     final var policy = field_privacy();
-    final var isAuto = tokens.popIf(t -> t.isIdentifier("auto", "formula"));
+    final var isAuto = tokens.popIf(t -> t.isIdentifier("auto", "formula", "cached"));
     if (isAuto != null) {
+      CachePolicy cachePolicy = null;
+      if (isAuto.isIdentifier("cached")) {
+        cachePolicy = define_cache_policy();
+      }
       final var id = id();
       final var equalsToken = consumeExpectedSymbol("=");
       final var compute = expression(scope);
-      return new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
+      FieldDefinition fd = new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
+      if (cachePolicy != null) {
+        fd.enableCache(cachePolicy);
+      }
+      return fd;
     } else {
       // we allow a superfluous privacy policy as that is the same as absent
       final var readonly = tokens.popIf((t) -> t.isIdentifier("readonly"));

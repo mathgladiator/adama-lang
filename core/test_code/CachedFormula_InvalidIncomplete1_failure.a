@@ -1,0 +1,1 @@
+public cached<every 1> foo = 123;

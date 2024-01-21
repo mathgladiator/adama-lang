@@ -54,6 +54,7 @@ public class FieldDefinition extends StructureComponent {
   public Token uniqueToken;
   public TyType type;
   private Formatter.FirstAndLastToken fal;
+  private CachePolicy cachePolicy;
 
   public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, final Token semicolonToken) {
     this.policy = policy;
@@ -100,6 +101,18 @@ public class FieldDefinition extends StructureComponent {
     return false;
   }
 
+  public void enableCache(CachePolicy cachePolicy) {
+    this.cachePolicy = cachePolicy;
+  }
+
+  public boolean hasCachePolicy() {
+    return cachePolicy != null;
+  }
+
+  public CachePolicy getCachePolicy() {
+    return this.cachePolicy;
+  }
+
   public boolean isRequired() {
     if (lossyOrRequiredToken != null) {
       return "required".equals(lossyOrRequiredToken.text);
@@ -132,6 +145,9 @@ public class FieldDefinition extends StructureComponent {
     if (introToken != null) {
       yielder.accept(introToken);
     }
+    if (cachePolicy != null) {
+      cachePolicy.emit(yielder);
+    }
     if (type != null) {
       type.emit(yielder);
     }
@@ -161,6 +177,9 @@ public class FieldDefinition extends StructureComponent {
     }
     if (type != null) {
       type.format(formatter);
+    }
+    if (cachePolicy != null) {
+      cachePolicy.format(formatter);
     }
     if (equalsToken != null) {
       if (computeExpression != null) {
@@ -210,7 +229,7 @@ public class FieldDefinition extends StructureComponent {
     if (type == null && computeExpression != null) {
       type = computeExpression.typing(environment.scopeReactiveExpression().scopeWithCache("__c" + name).scopeWithComputeContext(ComputeContext.Computation), null /* no suggestion makes sense */);
       if (type != null) {
-        type = new TyReactiveLazy(type).withPosition(type);
+        type = new TyReactiveLazy(type, hasCachePolicy()).withPosition(type);
       }
     }
     if (type != null) {

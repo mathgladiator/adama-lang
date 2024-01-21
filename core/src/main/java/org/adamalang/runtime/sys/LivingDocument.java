@@ -121,8 +121,9 @@ public abstract class LivingDocument implements RxParent, Caller {
     __today = new RxLazy<>(this, () -> __dateOfToday(), null) {
       @Override
       public boolean __raiseInvalid() {
-        if (this.cached == null || !__dateOfToday().equals(this.cached)) {
-          return super.__raiseInvalid();
+        if (!__dateOfToday().equals(this.cached)) {
+          super.__raiseInvalid();
+          __forceSettle();
         }
         return true;
       }
@@ -167,12 +168,19 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** exposed: get the document's timestamp as a datetime */
+  private long lastCachedValue = 0;
+  private NtDateTime lastCachedDateTimeNow = null;
   protected NtDateTime __datetimeNow() {
-    // create a system instance
-    Instant instant = Instant.ofEpochMilli(__time.get().longValue());
-    ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-    // convert to the document
-    return new NtDateTime(pdt.withZoneSameInstant(__zoneId()));
+    long now = __time.get().longValue();
+    if (lastCachedDateTimeNow == null || lastCachedValue != now) {
+      // create a system instance
+      lastCachedValue = now;
+      Instant instant = Instant.ofEpochMilli(now);
+      ZonedDateTime pdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+      // convert to the document
+      lastCachedDateTimeNow = new NtDateTime(pdt.withZoneSameInstant(__zoneId()));
+    }
+    return lastCachedDateTimeNow;
   }
 
   protected ZoneId __zoneId() {
@@ -626,8 +634,12 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListFor(NtPrincipal who) {
     Runnable perf = __perf.measure("ldf_build_broadcast_list");
-    __today.__settle(__viewsById.keySet());
-    __settle(__viewsById.keySet());
+    Runnable settle = __perf.measure("ldf_settle");
+    try {
+      __settle(__viewsById.keySet());
+    } finally {
+      settle.run();
+    }
     // build a broadcast task list
     ArrayList<BroadcastTask> tasks = new ArrayList<>(__trackedViews.size());
     final var itView = __trackedViews.get(who).iterator();
@@ -650,7 +662,12 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastListGameMode() {
     Runnable perf = __perf.measure("ld_build_broadcast_list");
-    __settle(__viewsById.keySet());
+    Runnable settle = __perf.measure("ld_settle");
+    try {
+      __settle(__viewsById.keySet());
+    } finally {
+      settle.run();
+    }
     // build a broadcast task list
     ArrayList<BroadcastTask> tasks = new ArrayList<>(__trackedViews.size());
     final var itTrackedViews = __trackedViews.entrySet().iterator();
@@ -1274,6 +1291,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   public LivingDocumentChange __transact(final String requestJson, LivingDocumentFactory factory) throws ErrorCodeException {
     Runnable perf = __perf.measure("tx");
     try {
+      Runnable perfParse = __perf.measure("parse");
       final var reader = new JsonStreamReader(requestJson);
       String command = null;
       Long timestamp = null;
@@ -1295,199 +1313,220 @@ public abstract class LivingDocument implements RxParent, Caller {
       String key = null;
       WebPut put = null;
       WebDelete delete = null;
-      if (reader.startObject()) {
-        while (reader.notEndOfObject()) {
-          final var fieldName = reader.fieldName();
-          switch (fieldName) {
-            case "command":
-              command = reader.readString();
-              break;
-            case "origin":
-              origin = reader.readString();
-              break;
-            case "ip":
-              ip = reader.readString();
-              break;
-            case "key":
-              key = reader.readString();
-              break;
-            case "marker":
-              marker = reader.readString();
-              break;
-            case "view-id":
-              viewId = reader.readInteger();
-              break;
-            case "timestamp":
-              timestamp = reader.readLong();
-              break;
-            case "limit":
-              limit = reader.readLong();
-              break;
-            case "who":
-              who = reader.readNtPrincipal();
-              break;
-            case "channel":
-              channel = reader.readString();
-              break;
-            case "entropy":
-              entropy = reader.readString();
-              break;
-            case "password":
-              password = reader.readString();
-              break;
-            case "patch":
-              patch = reader.skipValueIntoJson();
-              break;
-            case "put":
-              put = (WebPut) WebPutPartial.read(reader).convert(new WebContext(who, origin, ip));
-              break;
-            case "delete":
-              delete = (WebDelete) WebDeletePartial.read(reader).convert(new WebContext(who, origin, ip));
-              break;
-            case "delivery_id":
-              delivery_id = reader.readInteger();
-              break;
-            case "result":
-              result = new RemoteResult(reader);
-              break;
-            case "message":
-              try {
-                message = __parse_message(channel, reader);
-              } catch (Exception ex) {
-                throw ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_FAILED_PARSE_MESSAGE, ex, EXLOGGER);
-              }
-              break;
-            case "asset":
-              asset = reader.readNtAsset();
-              break;
-            case "arg": // for constructor
-              arg = __parse_construct_arg(reader);
-              break;
-            case "reason":
-              // don't use
-              reader.readString();
-              break;
-            default:
-              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
+      try {
+        if (reader.startObject()) {
+          while (reader.notEndOfObject()) {
+            final var fieldName = reader.fieldName();
+            switch (fieldName) {
+              case "command":
+                command = reader.readString();
+                break;
+              case "origin":
+                origin = reader.readString();
+                break;
+              case "ip":
+                ip = reader.readString();
+                break;
+              case "key":
+                key = reader.readString();
+                break;
+              case "marker":
+                marker = reader.readString();
+                break;
+              case "view-id":
+                viewId = reader.readInteger();
+                break;
+              case "timestamp":
+                timestamp = reader.readLong();
+                break;
+              case "limit":
+                limit = reader.readLong();
+                break;
+              case "who":
+                who = reader.readNtPrincipal();
+                break;
+              case "channel":
+                channel = reader.readString();
+                break;
+              case "entropy":
+                entropy = reader.readString();
+                break;
+              case "password":
+                password = reader.readString();
+                break;
+              case "patch":
+                patch = reader.skipValueIntoJson();
+                break;
+              case "put":
+                put = (WebPut) WebPutPartial.read(reader).convert(new WebContext(who, origin, ip));
+                break;
+              case "delete":
+                delete = (WebDelete) WebDeletePartial.read(reader).convert(new WebContext(who, origin, ip));
+                break;
+              case "delivery_id":
+                delivery_id = reader.readInteger();
+                break;
+              case "result":
+                result = new RemoteResult(reader);
+                break;
+              case "message":
+                try {
+                  message = __parse_message(channel, reader);
+                } catch (Exception ex) {
+                  throw ErrorCodeException.detectOrWrap(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_FAILED_PARSE_MESSAGE, ex, EXLOGGER);
+                }
+                break;
+              case "asset":
+                asset = reader.readNtAsset();
+                break;
+              case "arg": // for constructor
+                arg = __parse_construct_arg(reader);
+                break;
+              case "reason":
+                // don't use
+                reader.readString();
+                break;
+              default:
+                throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
+            }
           }
         }
-      }
-      if (command == null) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND);
-      }
-      if (timestamp == null) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
+        if (command == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND);
+        }
+        if (timestamp == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
+        }
+      } finally {
+        perfParse.run();
       }
       if ("load".equals(command)) {
-        return __transaction_load(requestJson, timestamp);
+        Runnable perfLoad = __perf.measure("load");
+        try {
+          return __transaction_load(requestJson, timestamp);
+        } finally {
+          perfLoad.run();
+        }
       }
       CoreRequestContext context = null;
-      if (who != null && key != null && origin != null && ip != null) {
-        context = new CoreRequestContext(who, origin, ip, key);
+      Runnable perfSetTime = __perf.measure("st");
+      try {
+        if (who != null && key != null && origin != null && ip != null) {
+          context = new CoreRequestContext(who, origin, ip, key);
+        }
+        if (timestamp - __time.get() > factory.temporalResolutionMilliseconds) {
+          __time.set(timestamp);
+        }
+      } finally {
+        perfSetTime.run();
       }
-      __time.set(timestamp);
-      switch (command) {
-        case "invalidate":
-          if (__monitor != null) {
-            return __transaction_invalidate_monitored(who, requestJson);
-          } else {
-            return __transaction_invalidate_body(who, requestJson);
-          }
-        case "construct":
-          if (__constructed.get()) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
-          }
-          if (arg == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
-          }
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
-          }
-          return __transaction_construct(requestJson, context, arg, entropy);
-        case "delete":
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
-          }
-          return __transaction_delete(requestJson, context);
-        case "connect":
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
-          }
-          return __transaction_connect(requestJson, context);
-        case "disconnect":
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
-          }
-          return __transaction_disconnect(requestJson, context);
-        case "attach":
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
-          }
-          if (asset == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET);
-          }
-          return __transaction_attach(requestJson, context, asset);
-        case "send":
-          if (channel == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
-          }
-          if (message == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
-          }
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
-          }
-          return __transaction_send(context, requestJson, viewId, marker, channel, timestamp, message, factory);
-        case "password":
-          if (context == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_CONTEXT);
-          }
-          if (password == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_PASSWORD);
-          }
-          return _transact_password(context, password);
-        case "deliver":
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-          }
-          if (delivery_id == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELIVERY_ID);
-          }
-          if (result == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_RESULT);
-          }
-          return __transaction_deliver(requestJson, who, delivery_id, result);
-        case "expire":
-          if (limit == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
-          }
-          return __transaction_expire(requestJson, limit);
-        case "web_put":
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-          }
-          if (put == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PUT);
-          }
-          return __transaction_web_put(requestJson, put);
-        case "web_delete":
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-          }
-          if (delete == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELETE);
-          }
-          return __transaction_web_delete(requestJson, delete);
-        case "apply":
-          if (who == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-          }
-          if (patch == null) {
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH);
-          }
-          return __transaction_apply_patch(requestJson, who, patch);
+      Runnable perfRun = __perf.measure("run");
+      try {
+        switch (command) {
+          case "invalidate":
+            if (__monitor != null) {
+              return __transaction_invalidate_monitored(who, requestJson);
+            } else {
+              return __transaction_invalidate_body(who, requestJson);
+            }
+          case "construct":
+            if (__constructed.get()) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
+            }
+            if (arg == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
+            }
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+            }
+            return __transaction_construct(requestJson, context, arg, entropy);
+          case "delete":
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+            }
+            return __transaction_delete(requestJson, context);
+          case "connect":
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+            }
+            return __transaction_connect(requestJson, context);
+          case "disconnect":
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+            }
+            return __transaction_disconnect(requestJson, context);
+          case "attach":
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+            }
+            if (asset == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET);
+            }
+            return __transaction_attach(requestJson, context, asset);
+          case "send":
+            if (channel == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
+            }
+            if (message == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
+            }
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+            }
+            return __transaction_send(context, requestJson, viewId, marker, channel, timestamp, message, factory);
+          case "password":
+            if (context == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_CONTEXT);
+            }
+            if (password == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SET_PASSWORD_NO_PASSWORD);
+            }
+            return _transact_password(context, password);
+          case "deliver":
+            if (who == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+            }
+            if (delivery_id == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELIVERY_ID);
+            }
+            if (result == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_RESULT);
+            }
+            return __transaction_deliver(requestJson, who, delivery_id, result);
+          case "expire":
+            if (limit == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
+            }
+            return __transaction_expire(requestJson, limit);
+          case "web_put":
+            if (who == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+            }
+            if (put == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PUT);
+            }
+            return __transaction_web_put(requestJson, put);
+          case "web_delete":
+            if (who == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+            }
+            if (delete == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_DELETE);
+            }
+            return __transaction_web_delete(requestJson, delete);
+          case "apply":
+            if (who == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+            }
+            if (patch == null) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH);
+            }
+            return __transaction_apply_patch(requestJson, who, patch);
+        }
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
+      } finally {
+        perfRun.run();
       }
-      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
     } catch (GoodwillExhaustedException gee) {
       throw new ErrorCodeException(ErrorCodes.API_GOODWILL_EXCEPTION, gee);
     } finally {
@@ -2164,29 +2203,44 @@ public abstract class LivingDocument implements RxParent, Caller {
       __monitor.push("TransactionSend");
     }
     try {
-      // they must be connected OR document allows blind/direct sends OR be overlord
-      if (!__open_channel(channel) && !__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
-      }
       String dedupeKey = context.who.agent + "/" + context.who.authority + "/" + marker;
-      if (marker != null) {
-        if (__dedupe.containsKey(dedupeKey)) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT);
+      Runnable perfValidate = __perf.measure("vd_" + channel);
+      try {
+        // they must be connected OR document allows blind/direct sends OR be overlord
+        if (!__open_channel(channel) && !__clients.containsKey(context.who) && !factory.canSendWhileDisconnected(context)) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
         }
-        __dedupe.put(dedupeKey, __time.get());
-      }
-      if (viewId != null) {
-        __currentViewId = viewId;
-      } else {
-        __currentViewId = -1;
+        if (marker != null) {
+          if (__dedupe.containsKey(dedupeKey)) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT);
+          }
+          __dedupe.put(dedupeKey, __time.get());
+        }
+        if (viewId != null) {
+          __currentViewId = viewId;
+        } else {
+          __currentViewId = -1;
+        }
+      } finally {
+        perfValidate.run();
       }
       LivingDocumentChange change;
       if (__is_direct_channel(channel)) {
         Runnable perf = __perf.measure("sd_" + channel);
         try {
           __random = new Random(Long.parseLong(__entropy.get()) + timestamp);
-          __handle_direct(context, channel, message);
-          change = __transaction_send_commit(context.who, request, dedupeKey, context.who, marker, channel, timestamp, message, factory);
+          Runnable perfExec = __perf.measure("ex_" + channel);
+          try {
+            __handle_direct(context, channel, message);
+          } finally {
+            perfExec.run();
+          }
+          Runnable perfCommit = __perf.measure("cmt_" + channel);
+          try {
+            change = __transaction_send_commit(context.who, request, dedupeKey, context.who, marker, channel, timestamp, message, factory);
+          } finally {
+            perfCommit.run();
+          }
         } catch (AbortMessageException ame) {
           throw new ErrorCodeException(ame.policyFailure != null ? ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT_POLICY : ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
         } catch (ComputeBlockedException cbe) {
@@ -2196,7 +2250,9 @@ public abstract class LivingDocument implements RxParent, Caller {
           perf.run();
         }
       } else {
+        Runnable perf = __perf.measure("qu_" + channel);
         change = __transaction_send_enqueue(request, viewId, dedupeKey, context, marker, channel, timestamp, message, factory);
+        perf.run();
       }
       exception = false;
       return change;

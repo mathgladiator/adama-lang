@@ -1,0 +1,2 @@
+public cached<once> my_name_is = "Joe";
+public cached<every 1 minute> that_person = my_name_is + " King";

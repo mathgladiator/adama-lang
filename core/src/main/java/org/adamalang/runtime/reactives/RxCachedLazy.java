@@ -24,19 +24,25 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import java.util.Set;
 import java.util.function.Supplier;
 
-/** a reactive lazy formula which is computed on demand */
-public class RxLazy<Ty> extends RxDependent {
+/** a formula that is cached by time (or evaluated exactly once) */
+public class RxCachedLazy<Ty> extends RxDependent {
   private final Supplier<Ty> formula;
   private final Supplier<Runnable> perf;
+  private final long millisecondsToKeep;
+  private final RxInt64 time;
   protected Ty cached;
   private int generation;
+  private long computedAt;
 
-  public RxLazy(final RxParent parent, final Supplier<Ty> formula, final Supplier<Runnable> perf) {
+  public RxCachedLazy(final RxParent parent, final Supplier<Ty> formula, final Supplier<Runnable> perf, int secondsToKeep, RxInt64 time) {
     super(parent);
     this.formula = formula;
+    this.perf = perf;
+    this.millisecondsToKeep = secondsToKeep * 1000L;
+    this.time = time;
     this.cached = null;
     this.generation = 0;
-    this.perf = perf;
+    this.computedAt = 0;
   }
 
   public boolean alive() {
@@ -70,8 +76,6 @@ public class RxLazy<Ty> extends RxDependent {
 
   @Override
   public boolean __raiseInvalid() {
-    cached = null;
-    __invalidateSubscribers();
     if (__parent != null) {
       return __parent.__isAlive();
     }
@@ -79,19 +83,9 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   public Ty get() {
-    if (__invalid) {
-      Runnable track = null;
-      if (perf != null) {
-        track = perf.get();
-      }
-      Ty result = formula.get();
-      if (track != null) {
-        track.run();
-      }
-      return result;
-    }
     if (cached == null) {
       cached = computeWithGuard();
+      inc();
     }
     return cached;
   }
@@ -111,9 +105,8 @@ public class RxLazy<Ty> extends RxDependent {
     if (perf != null) {
       track = perf.get();
     }
-    start();
     Ty result = formula.get();
-    finish();
+    computedAt = time.get();
     if (track != null) {
       track.run();
     }
@@ -128,18 +121,14 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   public void __settle(Set<Integer> views) {
-    if (__invalid) {
-      cached = null;
-      inc();
-      __lowerInvalid();
-    }
-  }
-
-  public void __forceSettle() {
-    if (__invalid) {
-      inc();
-      __lowerInvalid();
-      get();
+    if (millisecondsToKeep > 0) {
+      long since = time.get() - computedAt;
+      if (since > millisecondsToKeep && cached != null) {
+        inc();
+        cached = null;
+        __invalidateSubscribers();
+        __lowerInvalid();
+      }
     }
   }
 }

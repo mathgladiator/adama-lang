@@ -108,7 +108,24 @@ public class SillyTypeIssues {
   public void lazy() {
     final var lazy =
         new TyReactiveLazy(
-            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")));
+            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")), false);
+    try {
+      lazy.emit(null);
+      Assert.fail();
+    } catch (final UnsupportedOperationException uoe) {
+    }
+    lazy.getJavaConcreteType(null);
+    lazy.getAdamaType();
+    lazy.getJavaBoxType(null);
+    lazy.makeCopyWithNewPosition(lazy, TypeBehavior.ReadOnlyNativeValue);
+    lazy.writeTypeReflectionJson(new JsonStreamWriter(), ReflectionSource.Root);
+  }
+
+  @Test
+  public void lazyCached() {
+    final var lazy =
+        new TyReactiveLazy(
+            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")), true);
     try {
       lazy.emit(null);
       Assert.fail();

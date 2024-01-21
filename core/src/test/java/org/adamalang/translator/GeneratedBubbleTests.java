@@ -1752,6 +1752,9 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  public void __writeRxReport(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    x.__reportRx(\"x\", __writer);");
+    gold.append("\n    __time.__reportRx(\"__time\", __writer);");
+    gold.append("\n    __today.__reportRx(\"__today\", __writer);");
+    gold.append("\n    __timezone.__reportRx(\"__timezone\", __writer);");
     gold.append("\n    ___k.__reportRx(\"k\", __writer);");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");

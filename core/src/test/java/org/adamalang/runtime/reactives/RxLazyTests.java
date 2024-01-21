@@ -50,6 +50,7 @@ public class RxLazyTests {
     lz.__patch(new JsonStreamReader("{}"));
     Assert.assertEquals(1, lz.getGeneration());
     Assert.assertEquals(1, lz2.getGeneration());
+    lz.__forceSettle();
   }
 
   @Test
@@ -89,6 +90,11 @@ public class RxLazyTests {
     lz.__patch(new JsonStreamReader("{}"));
     Assert.assertEquals(-1900333, lz.getGeneration());
     Assert.assertEquals(-1900333, lz2.getGeneration());
+    lz.__forceSettle();
+    Assert.assertEquals(-1900333, lz.getGeneration());
+    lz.__raiseInvalid();
+    lz.__forceSettle();
+    Assert.assertEquals(42333092, lz.getGeneration());
   }
 
   @Test
