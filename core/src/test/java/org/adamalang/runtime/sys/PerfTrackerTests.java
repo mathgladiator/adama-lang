@@ -40,11 +40,11 @@ public class PerfTrackerTests {
     y.run();
     x.run();
     tracker.measure("xyz").run();
-    String result = tracker.dump();
+    String result = tracker.dump(0.0);
     System.out.println(result);
     Assert.assertTrue(result.contains("\"type\":\"document\""));
     Assert.assertTrue(result.contains("\"avg_cost\":100.0"));
-    Assert.assertNull(tracker.dump());
+    Assert.assertNull(tracker.dump(0.0));
   }
 
   @Test

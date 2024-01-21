@@ -17,6 +17,7 @@
 */
 package org.adamalang.cli.implementations;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.CoreServicesNexus;
 import org.adamalang.cli.implementations.code.Diagram;
@@ -38,20 +39,19 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.LivingDocumentChange;
+import org.adamalang.runtime.sys.PerfTracker;
 import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.env2.Scope;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.*;
+import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.SymbolIndex;
 import org.adamalang.validators.ValidatePlan;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -148,7 +148,7 @@ public class CodeHandlerImpl implements CodeHandler {
       return Json.parseJsonObject(writer.toString());
     };
     doc.__insert(new JsonStreamReader(Files.readString(new File(args.data).toPath())));
-    doc.__perf.dump();
+    doc.__perf.dump(10.0);
     doc.__perf.measureLightning();
     if (instruction.has("connect") && instruction.get("connect").booleanValue()){
       final var writer = new JsonStreamWriter();
@@ -167,8 +167,8 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.writeString("0.0.0.0");
       writer.endObject();
       doc.__transact(writer.toString(), factory.get());
-      report.set("connect", Json.parseJsonObject(doc.__perf.dump()));
-      report.set("connect-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
+      report.set("connect", Json.parseJsonObject(doc.__perf.dump(5.0)));
+      report.set("connect-strike", filteredLightning(doc.__perf));
     }
 
     doc.__createView(who, Perspective.DEAD);
@@ -196,8 +196,8 @@ public class CodeHandlerImpl implements CodeHandler {
     };
     {
       invalidate.run();
-      report.set("invalidate", Json.parseJsonObject(doc.__perf.dump()));
-      report.set("invalidate-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
+      report.set("invalidate", Json.parseJsonObject(doc.__perf.dump(5.0)));
+      report.set("invalidate-strike", filteredLightning(doc.__perf));
     }
 
     if (instruction.has("channel")) {
@@ -221,8 +221,8 @@ public class CodeHandlerImpl implements CodeHandler {
       writer.injectJson(instruction.get("message").toString());
       writer.endObject();
       LivingDocumentChange change = doc.__transact(writer.toString(), factory.get());
-      report.set("send", Json.parseJsonObject(doc.__perf.dump()));
-      report.set("send-strike", Json.parseJsonObject(doc.__perf.getLightningJsonAndReset()));
+      report.set("send", Json.parseJsonObject(doc.__perf.dump(5.0)));
+      report.set("send-strike", filteredLightning(doc.__perf));
       if (change != null) {
         report.set("send-redo", Json.parseJsonObject(change.update.redo));
         report.set("send-undo", Json.parseJsonObject(change.update.undo));
@@ -234,6 +234,33 @@ public class CodeHandlerImpl implements CodeHandler {
     report.set("rx-report", snap.get());
     Files.writeString(new File(args.dumpTo).toPath(), report.toPrettyString());
     output.out();
+  }
+
+  private static ObjectNode cloneFilteredLightning(ObjectNode child) {
+    if (child.has("__ms")) {
+      if (child.get("__ms").intValue() < 5) {
+        return null;
+      }
+    }
+    ObjectNode clone = Json.newJsonObject();
+    Iterator<Map.Entry<String, JsonNode>> it = child.fields();
+    while (it.hasNext()) {
+      Map.Entry<String, JsonNode> e = it.next();
+      if (e.getValue().isObject()) {
+        ObjectNode result = cloneFilteredLightning((ObjectNode) e.getValue());
+        if (result != null) {
+          clone.set(e.getKey(), result);
+        }
+      } else {
+        clone.set(e.getKey(), e.getValue());
+      }
+    }
+    return clone;
+  }
+
+  private static ObjectNode filteredLightning(PerfTracker tracker) {
+    ObjectNode all = Json.parseJsonObject(tracker.getLightningJsonAndReset());
+    return cloneFilteredLightning(all);
   }
 
   public void formatSingleFile(File file) throws Exception {

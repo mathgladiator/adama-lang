@@ -117,7 +117,7 @@ public class PerfTracker {
     LOG.error(result);
   }
 
-  public String dump() {
+  public String dump(double threshold) {
     if (samples.isEmpty()) {
       return null;
     }
@@ -135,11 +135,7 @@ public class PerfTracker {
     writer.beginObject();
     for (Map.Entry<String, ArrayList<Sample>> entry : samples.entrySet()) {
       ArrayList<Sample> samples = entry.getValue();
-      writer.writeObjectFieldIntro(entry.getKey());
-      writer.beginObject();
       int n = samples.size();
-      writer.writeObjectFieldIntro("n");
-      writer.writeInteger(n);
       long sum_cost = 0;
       double sum_ms = 0.0;
       double min_ms = 60000;
@@ -154,17 +150,23 @@ public class PerfTracker {
           min_ms = sample.ms;
         }
       }
-      writer.writeObjectFieldIntro("avg_cost");
-      writer.writeDouble(sum_cost / (double) n);
-      writer.writeObjectFieldIntro("avg_ms");
-      writer.writeDouble(sum_ms / (double) n);
-      writer.writeObjectFieldIntro("sum_ms");
-      writer.writeDouble(sum_ms);
-      writer.writeObjectFieldIntro("min_ms");
-      writer.writeDouble(min_ms);
-      writer.writeObjectFieldIntro("max_ms");
-      writer.writeDouble(max_ms);
-      writer.endObject();
+      if (max_ms > threshold) {
+        writer.writeObjectFieldIntro(entry.getKey());
+        writer.beginObject();
+        writer.writeObjectFieldIntro("n");
+        writer.writeInteger(n);
+        writer.writeObjectFieldIntro("avg_cost");
+        writer.writeDouble(sum_cost / (double) n);
+        writer.writeObjectFieldIntro("avg_ms");
+        writer.writeDouble(sum_ms / (double) n);
+        writer.writeObjectFieldIntro("sum_ms");
+        writer.writeDouble(sum_ms);
+        writer.writeObjectFieldIntro("min_ms");
+        writer.writeDouble(min_ms);
+        writer.writeObjectFieldIntro("max_ms");
+        writer.writeDouble(max_ms);
+        writer.endObject();
+      }
     }
     writer.endObject();
     writer.endObject();

@@ -409,7 +409,7 @@ public class DurableLivingDocument implements Queryable {
     base.executor.schedule(new NamedRunnable("dump-document-metrics") {
       @Override
       public void execute() throws Exception {
-        document.__perf.dump();
+        document.__perf.dump(5.0);
         if (!disableMetrics) {
           String metrics = document.__metrics();
           base.metricsReporter.emitMetrics(key, metrics);
