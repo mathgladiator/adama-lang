@@ -1952,7 +1952,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"rrrrs\":{\"42\":null},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:10");
+    gold.append("\nCPU:22");
     gold.append("\nMEMORY:1664");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -2895,7 +2895,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"simple\":{\"42\":24},\"b0\":true,\"b1\":true,\"x0\":true,\"x1\":true,\"a0\":true,\"y0\":true,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:16");
+    gold.append("\nCPU:26");
     gold.append("\nMEMORY:2256");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -5744,7 +5744,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"themap\":{\"?/?\":{\"x\":1,\"y\":2}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:5");
+    gold.append("\nCPU:15");
     gold.append("\nMEMORY:1890");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -7100,7 +7100,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"my_map1\":{\"42\":24,\"500\":424242,\"1000\":9999},\"my_map2\":{\"hi\":{\"u\":42,\"v\":50}},\"v\":100500,\"w\":92,\"sz\":3,\"crazy\":{\"100\":{\"100\":42}},\"simple\":{\"1\":2,\"2\":3},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:24");
+    gold.append("\nCPU:125");
     gold.append("\nMEMORY:9182");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
@@ -9387,7 +9387,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"x\":1,\"v\":1},\"2\":{\"id\":2,\"x\":2,\"v\":5},\"3\":{\"id\":3,\"x\":3,\"v\":10},\"4\":{\"id\":4,\"x\":2,\"v\":10},\"5\":{\"id\":5,\"x\":3,\"v\":100},\"6\":{\"id\":6,\"x\":3,\"v\":1000}},\"result\":{\"1\":1,\"2\":2,\"3\":3},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
-    gold.append("\nCPU:35");
+    gold.append("\nCPU:65");
     gold.append("\nMEMORY:5494");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
