@@ -30,11 +30,11 @@ public class RxMapTests {
   @Test
   public void memory() {
     final var m = map();
-    Assert.assertEquals(168, m.__memory());
+    Assert.assertEquals(1192, m.__memory());
     m.getOrCreate(42).set(52);
-    Assert.assertEquals(236, m.__memory());
+    Assert.assertEquals(1368, m.__memory());
     m.getOrCreate(123).set(52);
-    Assert.assertEquals(304, m.__memory());
+    Assert.assertEquals(1544, m.__memory());
   }
 
   @Test
@@ -47,11 +47,11 @@ public class RxMapTests {
             return new RxInt32(maker, 40);
           }
         });
-    Assert.assertEquals(168, m.__memory());
+    Assert.assertEquals(1192, m.__memory());
     m.getOrCreate("42").set(52);
-    Assert.assertEquals(240, m.__memory());
+    Assert.assertEquals(1372, m.__memory());
     m.getOrCreate("50").set(52);
-    Assert.assertEquals(312, m.__memory());
+    Assert.assertEquals(1552, m.__memory());
   }
 
   @Test
@@ -64,9 +64,9 @@ public class RxMapTests {
             return new RxPrincipal(maker, new NtPrincipal("a", "a"));
           }
         });
-    Assert.assertEquals(168, m.__memory());
+    Assert.assertEquals(1192, m.__memory());
     m.getOrCreate(new NtPrincipal("a", "b")).set(new NtPrincipal("b", "c"));
-    Assert.assertEquals(252, m.__memory());
+    Assert.assertEquals(1384, m.__memory());
     JsonStreamWriter forward = new JsonStreamWriter();
     JsonStreamWriter reverse = new JsonStreamWriter();
     m.__commit("name", forward, reverse);

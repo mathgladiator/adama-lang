@@ -35,10 +35,10 @@ public class RxTableTests {
   public void memory() {
     final var document = doc(7);
     final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
-    Assert.assertEquals(176, table.__memory());
+    Assert.assertEquals(2224, table.__memory());
     table.__insert(
         new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
-    Assert.assertEquals(462, table.__memory());
+    Assert.assertEquals(2510, table.__memory());
   }
 
   @Test

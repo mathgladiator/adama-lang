@@ -52,6 +52,7 @@ public class TablePubSubTests {
     Assert.assertEquals("IDX:13=69", two.publishes.get(1));
     Assert.assertEquals("PKEY:125", two.publishes.get(2));
     Assert.assertEquals("IDX:14=69", two.publishes.get(3));
+    pubsub.__memory();
   }
 
   @Test

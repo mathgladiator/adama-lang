@@ -47,7 +47,7 @@ public class CodeGenRecords {
 
   private static boolean isCommitCache(final FieldDefinition fd, TyType fieldType) {
     if (fieldType instanceof TyReactiveLazy) {
-      return fd.servicesToWatch.size() > 0;
+      return fd.watching.services.size() > 0;
     }
     return false;
   }
@@ -218,7 +218,7 @@ public class CodeGenRecords {
           classFields.append("private final RxLazy<" + boxType + "> " + fieldName + ";").writeNewline();
         }
 
-        boolean hasCache = !fdInOrder.servicesToWatch.isEmpty();
+        boolean hasCache = !fdInOrder.watching.services.isEmpty();
         if (hasCache) {
           classFields.append("private final RxCache __c").append(fieldName).append(";").writeNewline();
           classConstructorX.append("__c").append(fieldName).append(" = new RxCache(__self, this);").writeNewline();
@@ -246,19 +246,23 @@ public class CodeGenRecords {
           classConstructorX.append(", " + fdInOrder.getCachePolicy().toSeconds()).append(", __time");
         }
         classConstructorX.append(");").writeNewline();
-        for (final String tableToWatch : fdInOrder.tablesToInject) {
+        for (final String tableToWatch : fdInOrder.watching.tables) {
           classFields.append("private final RxTableGuard __").append(fieldName).append("_").append(tableToWatch).append(";").writeNewline();
           classConstructorX.append("__").append(fieldName).append("_").append(tableToWatch).append(" = new RxTableGuard(").append(fieldName).append(");").writeNewline();
         }
+        for (final String tableToWatch : fdInOrder.watching.maps) {
+          classFields.append("private final RxMapGuard __").append(fieldName).append("_").append(tableToWatch).append(";").writeNewline();
+          classConstructorX.append("__").append(fieldName).append("_").append(tableToWatch).append(" = new RxMapGuard(").append(fieldName).append(");").writeNewline();
+        }
         environment.define(fieldName, new TyReactiveLazy(lazyType, fdInOrder.hasCachePolicy()), false, fdInOrder);
         if (!fdInOrder.hasCachePolicy()) {
-          for (final String watched : fdInOrder.variablesToWatch) {
+          for (final String watched : fdInOrder.watching.variables) {
             // TODO: IF VALIDATION FAILS, THEN COMMENT THESE OUT
-            if (!fdInOrder.tablesToInject.contains(watched)) {
+            if (!fdInOrder.watching.pubsub.contains(watched)) {
               classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
             }
           }
-          for (final String watched : fdInOrder.tablesToInject) {
+          for (final String watched : fdInOrder.watching.pubsub) {
             classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
             classLinker.append(fieldName).append(".__guard(").append(watched).append(",__").append(fieldName).append("_").append(watched).append(");").writeNewline();
           }
@@ -338,17 +342,21 @@ public class CodeGenRecords {
     for (final BubbleDefinition bubble : storage.bubbles.values()) {
       classFields.append("private final RxGuard ___" + bubble.nameToken.text + ";").writeNewline();
       classConstructorX.append("___").append(bubble.nameToken.text).append(" =  new RxGuard(this);").writeNewline();
-      for (final String tableToWatch : bubble.tablesToWatch) {
+      for (final String tableToWatch : bubble.watching.tables) {
         classFields.append("private final RxTableGuard __").append(bubble.nameToken.text).append("_").append(tableToWatch).append(";").writeNewline();
         classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxTableGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
       }
-      for (final String watched : bubble.variablesToWatch) {
+      for (final String tableToWatch : bubble.watching.maps) {
+        classFields.append("private final RxMapGuard __").append(bubble.nameToken.text).append("_").append(tableToWatch).append(";").writeNewline();
+        classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxMapGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
+      }
+      for (final String watched : bubble.watching.variables) {
         // TODO: IF VALIDATION FAILS, THEN COMMENT THESE OUT
-        if (!bubble.tablesToWatch.contains(watched)) {
+        if (!bubble.watching.pubsub.contains(watched)) {
           classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
         }
       }
-      for (final String watched : bubble.tablesToWatch) {
+      for (final String watched : bubble.watching.pubsub) {
         classLinker.append(watched).append(".__subscribe(__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
         classLinker.append("___").append(bubble.nameToken.text).append(".__guard(").append(watched).append(",__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
       }
@@ -379,7 +387,7 @@ public class CodeGenRecords {
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
         thingsToSettle.add(fieldName);
-        for (final String watched : fdInOrder.tablesToInject) {
+        for (final String watched : fdInOrder.watching.pubsub) {
           thingsToSettle.add("__" + fieldName + "_" + watched);
         }
       } else if (fieldType instanceof DetailNeedsSettle) {
@@ -388,7 +396,7 @@ public class CodeGenRecords {
     }
     for (final BubbleDefinition bubble : storage.bubbles.values()) {
       thingsToSettle.add("___" + bubble.nameToken.text);
-      for (final String watched : bubble.tablesToWatch) {
+      for (final String watched : bubble.watching.pubsub) {
         thingsToSettle.add("__" + bubble.nameToken.text + "_" + watched);
       }
     }

@@ -23,13 +23,13 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Guard;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
@@ -40,9 +40,7 @@ public class BubbleDefinition extends StructureComponent {
   public final Expression expression;
   public final Token nameToken;
   public final Token semicolonToken;
-  public final LinkedHashSet<String> servicesToWatch;
-  public final LinkedHashSet<String> variablesToWatch;
-  public final LinkedHashSet<String> tablesToWatch;
+  public final WatchSet watching;
   public TyType expressionType;
   public final HashSet<String> globalPolicies;
   public TreeSet<String> viewerFields;
@@ -56,9 +54,7 @@ public class BubbleDefinition extends StructureComponent {
     this.semicolonToken = semicolonToken;
     ingest(bubbleToken);
     ingest(semicolonToken);
-    servicesToWatch = new LinkedHashSet<>();
-    variablesToWatch = new LinkedHashSet<>();
-    tablesToWatch = new LinkedHashSet<>();
+    this.watching = new WatchSet();
     this.globalPolicies = new HashSet<>();
     this.viewerFields = new TreeSet<>();
   }

@@ -3077,7 +3077,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:690");
+    gold.append("\nMEMORY:2866");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"tx1\":{\"0\":{\"x\":1},\"1\":{\"x\":2},\"2\":{\"x\":3},\"@s\":3},\"tx2\":{\"0\":{\"x\":1},\"1\":{\"x\":2},\"2\":{\"x\":3},\"@s\":3},\"m1\":{\"1\":2},\"m2\":{\"1\":2}},\"seq\":3}");
@@ -3091,7 +3091,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:3160");
+    gold.append("\nMEMORY:5336");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -5714,7 +5714,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"two\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"x\":1},\"2\":{\"id\":2,\"x\":2},\"3\":{\"id\":3,\"x\":3},\"4\":{\"x\":4,\"id\":4},\"5\":{\"x\":5,\"id\":5},\"6\":{\"x\":6,\"id\":6}},\"__messages\":null,\"__seq\":1} need:true in:25");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"id\":7,\"x\":7},\"8\":{\"id\":8,\"x\":8},\"9\":{\"id\":9,\"x\":9}}} need:false in:0");
     gold.append("\nCPU:32");
-    gold.append("\nMEMORY:1952");
+    gold.append("\nMEMORY:4128");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"tx\":{\"1\":{\"x\":1},\"2\":{\"x\":2},\"3\":{\"x\":3},\"4\":{\"x\":4},\"5\":{\"x\":5},\"6\":{\"x\":6},\"7\":{\"x\":7},\"8\":{\"x\":8},\"9\":{\"x\":9},\"@o\":[1,2,3,4,5,6,7,8,9]}},\"seq\":3}");
@@ -5728,7 +5728,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:4806");
+    gold.append("\nMEMORY:6982");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{\"1\":{\"id\":1,\"x\":1},\"2\":{\"id\":2,\"x\":2},\"3\":{\"id\":3,\"x\":3},\"4\":{\"id\":4,\"x\":4},\"5\":{\"id\":5,\"x\":5},\"6\":{\"id\":6,\"x\":6},\"7\":{\"id\":7,\"x\":7},\"8\":{\"id\":8,\"x\":8},\"9\":{\"id\":9,\"x\":9}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":9,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -6808,7 +6808,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"two\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"x\":1},\"2\":{\"id\":2,\"x\":2},\"3\":{\"id\":3,\"x\":3},\"4\":{\"x\":4,\"id\":4},\"5\":{\"x\":5,\"id\":5},\"6\":{\"x\":6,\"id\":6}},\"__messages\":null,\"__seq\":1} need:true in:25");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"id\":7,\"x\":7},\"8\":{\"id\":8,\"x\":8},\"9\":{\"id\":9,\"x\":9}}} need:false in:0");
     gold.append("\nCPU:32");
-    gold.append("\nMEMORY:1952");
+    gold.append("\nMEMORY:4128");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"tx\":{\"1\":{\"x\":1},\"2\":{\"x\":2},\"3\":{\"x\":3},\"4\":{\"x\":4},\"5\":{\"x\":5},\"6\":{\"x\":6},\"7\":{\"x\":7},\"8\":{\"x\":8},\"9\":{\"x\":9},\"@o\":[1,2,3,4,5,6,7,8,9]}},\"seq\":3}");
@@ -6822,7 +6822,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:4806");
+    gold.append("\nMEMORY:6982");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{\"1\":{\"id\":1,\"x\":1},\"2\":{\"id\":2,\"x\":2},\"3\":{\"id\":3,\"x\":3},\"4\":{\"id\":4,\"x\":4},\"5\":{\"id\":5,\"x\":5},\"6\":{\"id\":6,\"x\":6},\"7\":{\"id\":7,\"x\":7},\"8\":{\"id\":8,\"x\":8},\"9\":{\"id\":9,\"x\":9}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":9,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

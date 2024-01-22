@@ -4438,7 +4438,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:1618");
+    gold.append("\nMEMORY:6610");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"playing\":false,\"passing_mode\":0,\"played\":0,\"suit_in_play\":1,\"points_played\":false,\"last_winner\":{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"},\"points_awarded\":0,\"players_connected\":0,\"observers_connected\":0,\"ready\":false},\"seq\":3}");
@@ -4459,7 +4459,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:9");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":8}");
     gold.append("\n+ RANDO DELTA:{\"seq\":8}");
-    gold.append("\nMEMORY:5940");
+    gold.append("\nMEMORY:10932");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"deck\":{},\"owner\":{\"agent\":\"rando\",\"authority\":\"random-place\"},\"players\":{\"1\":{\"id\":1,\"link\":{\"agent\":\"?\",\"authority\":\"?\"},\"playing\":true,\"points\":0,\"leader\":true,\"play_order\":0},\"2\":{\"id\":2,\"link\":{\"agent\":\"rando\",\"authority\":\"random-place\"},\"playing\":true,\"points\":0,\"leader\":true,\"play_order\":0}},\"playing\":false,\"passing_mode\":0,\"player1\":{\"agent\":\"?\",\"authority\":\"?\"},\"player2\":{\"agent\":\"?\",\"authority\":\"?\"},\"player3\":{\"agent\":\"?\",\"authority\":\"?\"},\"player4\":{\"agent\":\"?\",\"authority\":\"?\"},\"current\":{\"agent\":\"?\",\"authority\":\"?\"},\"played\":0,\"suit_in_play\":1,\"points_played\":false,\"last_winner\":{\"agent\":\"?\",\"authority\":\"?\"},\"points_awarded\":0,\"__state\":\"lobby\",\"__constructed\":true,\"__next_time\":\"150\",\"__last_expire_time\":\"0\",\"__blocked\":true,\"__seq\":9,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -6069,7 +6069,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:538");
+    gold.append("\nMEMORY:2714");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -6088,7 +6088,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:9");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":9}");
     gold.append("\n+ RANDO DELTA:{\"seq\":9}");
-    gold.append("\nMEMORY:656");
+    gold.append("\nMEMORY:2832");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"_chat\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":9,\"__entropy\":\"-652523483647487500\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"150\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

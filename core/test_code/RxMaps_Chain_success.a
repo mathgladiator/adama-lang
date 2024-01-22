@@ -1,0 +1,20 @@
+record R {
+  int x;
+  int v;
+}
+
+map<string, R> m;
+
+procedure foo() -> int readonly {
+  if (m["hi"] as r) {
+    return r.x;
+  }
+  return -1;
+}
+
+public formula me = foo();
+bubble boo = foo();
+
+@construct {
+  m["hi"].x = 100;
+}

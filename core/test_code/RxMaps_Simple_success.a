@@ -1,0 +1,13 @@
+record R {
+  int x;
+  int v;
+}
+
+map<string, R> m;
+
+public formula me = m["hi"];
+bubble boo = m["cake"];
+
+@construct {
+  m["hi"].x = 100;
+}

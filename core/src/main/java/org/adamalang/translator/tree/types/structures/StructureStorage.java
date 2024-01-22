@@ -25,6 +25,7 @@ import org.adamalang.translator.env.topo.TopologicalSort;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
+import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.ReflectionSource;
@@ -156,7 +157,7 @@ public class StructureStorage extends DocumentPosition {
     ingest(rd);
     rd.expression.free(fe);
     fe.free.add("service:" + rd.service.text);
-    checker.register(fe.free, env -> rd.typing(env.watch(Watcher.makeAuto(env, rd.variablesToWatch, rd.variablesToWatch, rd.servicesToWatch))));
+    checker.register(fe.free, env -> rd.typing(env.watch(Watcher.makeAutoSimple(env, rd.variablesToWatch, rd.servicesToWatch))));
     if (has(rd.name.text)) {
       checker.issueError(rd, String.format("Replication '%s' was already defined", rd.name.text));
       return;
@@ -185,7 +186,7 @@ public class StructureStorage extends DocumentPosition {
     formatting.add(f -> bd.format(f));
     ingest(bd);
     bd.expression.free(fe);
-    inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.makeAuto(env, bd.variablesToWatch, bd.tablesToWatch, bd.servicesToWatch)), StructureStorage.this));
+    inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.makeAuto(env, bd.watching)), StructureStorage.this));
     if (has(bd.nameToken.text)) {
       inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text));
       return;
@@ -259,7 +260,7 @@ public class StructureStorage extends DocumentPosition {
       fd.computeExpression.free(fe);
     }
     insertChecker.define(fd.nameToken, fe.free, env -> {
-      fd.typing(env.watch(Watcher.makeAuto(env, fd.variablesToWatch, fd.tablesToInject, fd.servicesToWatch)), this);
+      fd.typing(env.watch(Watcher.makeAuto(env, fd.watching)), this);
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);

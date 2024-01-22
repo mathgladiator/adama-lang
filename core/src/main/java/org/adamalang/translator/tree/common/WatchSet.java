@@ -15,9 +15,23 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree.common;
 
-public class Platform {
-  public static final String VERSION = "20240122092128";
-  public static final String JS_VERSION = "f99e22bb7e78786eee404e0cb501383d";
+import java.util.LinkedHashSet;
+
+/** bundle of all the ways to watch */
+public class WatchSet {
+  public final LinkedHashSet<String> variables;
+  public final LinkedHashSet<String> tables;
+  public final LinkedHashSet<String> maps;
+  public final LinkedHashSet<String> pubsub;
+  public final LinkedHashSet<String> services;
+
+  public WatchSet() {
+    this.variables = new LinkedHashSet<>();
+    this.tables = new LinkedHashSet<>();
+    this.maps = new LinkedHashSet<>();
+    this.pubsub = new LinkedHashSet<>();
+    this.services = new LinkedHashSet<>();
+  }
 }

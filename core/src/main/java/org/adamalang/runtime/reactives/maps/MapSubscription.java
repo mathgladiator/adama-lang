@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives.maps;
 
-public class Platform {
-  public static final String VERSION = "20240122092128";
-  public static final String JS_VERSION = "f99e22bb7e78786eee404e0cb501383d";
+/** a map subscription represents a virtual change log of the map at a high level (keys) */
+public interface MapSubscription<DomainTy> {
+  /** is the subscription still alive */
+  public boolean alive();
+
+  /** an item within the map at the given key has changed */
+  public boolean changed(DomainTy key);
 }

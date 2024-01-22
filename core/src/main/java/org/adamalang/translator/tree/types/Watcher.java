@@ -18,36 +18,59 @@
 package org.adamalang.translator.tree.types;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.TyNativeTemplate;
+import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
 import java.util.LinkedHashSet;
 import java.util.function.BiConsumer;
 
 public class Watcher {
-  public static BiConsumer<String, TyType> makeAuto(Environment env, LinkedHashSet<String> variablesToWatch, LinkedHashSet<String> rxTables, LinkedHashSet<String> services) {
-    return (name, type) -> {
+  public static BiConsumer<String, TyType> makeAuto(Environment env, WatchSet watching) {    return (name, type) -> {
       TyType resolved = env.rules.Resolve(type, true);
       if (resolved instanceof TyNativeGlobalObject) return;
       if (resolved instanceof TyNativeTemplate) return;
       if (resolved instanceof TyNativeFunctional) {
-        variablesToWatch.addAll(((TyNativeFunctional) resolved).gatherDependencies());
+        watching.variables.addAll(((TyNativeFunctional) resolved).gatherDependencies());
         return;
       }
       if (resolved instanceof TyNativeService) {
-        services.add(((TyNativeService) resolved).service.name.text);
+        watching.services.add(((TyNativeService) resolved).service.name.text);
         return;
       }
       if (!env.document.functionTypes.containsKey(name)) {
-        if (rxTables != null && type instanceof TyReactiveTable) {
-          rxTables.add(name);
+        if (type instanceof TyReactiveMap) {
+          watching.maps.add(name);
+          watching.pubsub.add(name);
+        } else if (type instanceof TyReactiveTable) {
+          watching.tables.add(name);
+          watching.pubsub.add(name);
         } else {
-          variablesToWatch.add(name);
+          watching.variables.add(name);
         }
       }
     };
+  }
+
+  public static BiConsumer<String, TyType> makeAutoSimple(Environment env, LinkedHashSet<String> variables, LinkedHashSet<String> services) {    return (name, type) -> {
+    TyType resolved = env.rules.Resolve(type, true);
+    if (resolved instanceof TyNativeGlobalObject) return;
+    if (resolved instanceof TyNativeTemplate) return;
+    if (resolved instanceof TyNativeFunctional) {
+      variables.addAll(((TyNativeFunctional) resolved).gatherDependencies());
+      return;
+    }
+    if (resolved instanceof TyNativeService) {
+      services.add(((TyNativeService) resolved).service.name.text);
+      return;
+    }
+    if (!env.document.functionTypes.containsKey(name)) {
+      variables.add(name);
+    }
+  };
   }
 }

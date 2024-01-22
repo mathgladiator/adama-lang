@@ -49,6 +49,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private final LinkedHashMap<Integer, Ty> itemsByKey;
   private final TreeSet<Ty> unknowns;
   public final TablePubSub pubsub;
+  private final Stack<RxTableGuard> guardsInflight;
   private RxTableGuard activeGuard;
   private ArrayList<DifferentialEdgeTracker<Ty>> trackers;
   private TableSubscription trackerSub;
@@ -93,6 +94,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.activeGuard = null;
     this.trackers = null;
     this.trackerSub = null;
+    this.guardsInflight = new Stack<>();
   }
 
   public void pump(DifferentialEdgeTracker<Ty> tracker) {
@@ -304,7 +306,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
   @Override
   public long __memory() {
-    long sum = super.__memory() + 64 + className.length() * 2L;
+    long sum = super.__memory() + 64 + className.length() * 2L + pubsub.__memory();
     if (indices != null) {
       for (ReactiveIndex<Ty> idx : indices) {
         sum += idx.memory();
@@ -535,8 +537,18 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     pubsub.subscribe(g);
   }
 
-  public void setGuard(RxTableGuard guard) {
+  public void pushGuard(RxTableGuard guard) {
+    guardsInflight.push(guard);
     activeGuard = guard;
+  }
+
+  public void popGuard() {
+    guardsInflight.pop();
+    if (guardsInflight.empty()) {
+      activeGuard = null;
+    } else {
+      activeGuard = guardsInflight.peek();
+    }
   }
 
   @Override

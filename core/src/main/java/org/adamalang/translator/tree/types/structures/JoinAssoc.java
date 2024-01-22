@@ -21,6 +21,7 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
+import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.definitions.DefineAssoc;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
@@ -46,8 +47,7 @@ public class JoinAssoc extends StructureComponent {
   private final Token toLabel;
   public final Expression toExpr;
   private final Token semicolon;
-  public final LinkedHashSet<String> variablesToWatch;
-  private final LinkedHashSet<String> servicesToWatch;
+  public final WatchSet watching;
   public DefineAssoc foundAssoc;
   public String edgeRecordName;
   private TyType elementType;
@@ -65,8 +65,7 @@ public class JoinAssoc extends StructureComponent {
     this.toLabel = toLabel;
     this.toExpr = toExpr;
     this.semicolon = semicolon;
-    this.variablesToWatch = new LinkedHashSet<>();
-    this.servicesToWatch = new LinkedHashSet<>();
+    this.watching = new WatchSet();
     ingest(joinToken);
     ingest(semicolon);
   }
@@ -102,7 +101,7 @@ public class JoinAssoc extends StructureComponent {
   }
 
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {
-    Environment next = environment.watch(Watcher.makeAuto(environment, variablesToWatch, variablesToWatch, servicesToWatch));
+    Environment next = environment.watch(Watcher.makeAuto(environment, watching));
     foundAssoc = environment.document.assocs.get(assoc.text);
     String edgeType = null;
     if (foundAssoc == null) {

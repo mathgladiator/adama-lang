@@ -23,15 +23,95 @@ import org.adamalang.runtime.contracts.RxParent;
 import java.util.ArrayList;
 
 public abstract class RxDependent extends RxBase implements RxChild {
-  protected ArrayList<GuardPair> guards;
+  protected ArrayList<GuardPairCommon> guards;
 
-  protected class GuardPair {
+  /** combine guard pairs regardless of the data type */
+  protected interface GuardPairCommon {
+    /** for formulas */
+    public void start();
+    public void finish();
+
+    /** for viewer centric bubbles */
+    public void startView(int viewId);
+    public void finishView();
+    public boolean isFired(int viewId);
+  }
+
+  /** guard a table */
+  protected class GuardPairTable implements GuardPairCommon {
     protected final RxTable<?> table;
     protected final RxTableGuard guard;
 
-    protected GuardPair(RxTable<?> table, RxTableGuard guard) {
+    protected GuardPairTable(RxTable<?> table, RxTableGuard guard) {
       this.table = table;
       this.guard = guard;
+    }
+
+    @Override
+    public void start() {
+      guard.reset();
+      table.pushGuard(guard);
+    }
+
+    @Override
+    public void finish() {
+      table.popGuard();
+    }
+
+    @Override
+    public void startView(int viewId) {
+      guard.resetView(viewId);
+      table.pushGuard(guard);
+    }
+
+    @Override
+    public void finishView() {
+      guard.finishView();
+      table.popGuard();
+    }
+
+    @Override
+    public boolean isFired(int viewId) {
+      return guard.isFired(viewId);
+    }
+  }
+
+  /** guard a map */
+  protected class GuardPairMap implements GuardPairCommon {
+    protected final RxMap<?, ?> map;
+    protected final RxMapGuard<?> guard;
+
+    protected GuardPairMap(RxMap<?, ?> map, RxMapGuard<?> guard) {
+      this.map = map;
+      this.guard = guard;
+    }
+
+    @Override
+    public void start() {
+      guard.reset();
+      map.pushGuard(guard);
+    }
+
+    @Override
+    public void finish() {
+      map.popGuard();
+    }
+
+    @Override
+    public void startView(int viewId) {
+      guard.resetView(viewId);
+      map.pushGuard(guard);
+    }
+
+    @Override
+    public void finishView() {
+      guard.finishView();
+      map.popGuard();
+    }
+
+    @Override
+    public boolean isFired(int viewId) {
+      return guard.isFired(viewId);
     }
   }
 
@@ -46,9 +126,8 @@ public abstract class RxDependent extends RxBase implements RxChild {
   /** [formula mode] start capturing the reads */
   public void start() {
     if (guards != null) {
-      for (GuardPair gp : guards) {
-        gp.guard.reset();
-        gp.table.setGuard(gp.guard);
+      for (GuardPairCommon gp : guards) {
+        gp.start();
       }
     }
   }
@@ -56,8 +135,8 @@ public abstract class RxDependent extends RxBase implements RxChild {
   /** [formula mode] finish up capturing reads */
   public void finish() {
     if (guards != null) {
-      for (GuardPair gp : guards) {
-        gp.table.setGuard(null);
+      for (GuardPairCommon gp : guards) {
+        gp.finish();
       }
     }
   }
@@ -67,15 +146,21 @@ public abstract class RxDependent extends RxBase implements RxChild {
     if (guards == null) {
       guards = new ArrayList<>();
     }
-    guards.add(new GuardPair(table, guard));
+    guards.add(new GuardPairTable(table, guard));
+  }
+
+  public void __guard(RxMap<?, ?> map, RxMapGuard<?> guard) {
+    if (guards == null) {
+      guards = new ArrayList<>();
+    }
+    guards.add(new GuardPairMap(map, guard));
   }
 
   /** [bubble version] start capturing reads */
   public void startView(int viewId) {
     if (guards != null) {
-      for (GuardPair gp : guards) {
-        gp.guard.resetView(viewId);
-        gp.table.setGuard(gp.guard);
+      for (GuardPairCommon gp : guards) {
+        gp.startView(viewId);
       }
     }
   }
@@ -83,9 +168,8 @@ public abstract class RxDependent extends RxBase implements RxChild {
   /** [bubble version] stop capturing reads */
   public void finishView() {
     if (guards != null) {
-      for (GuardPair gp : guards) {
-        gp.guard.finishView();
-        gp.table.setGuard(null);
+      for (GuardPairCommon gp : guards) {
+        gp.finishView();
       }
     }
   }
@@ -93,8 +177,8 @@ public abstract class RxDependent extends RxBase implements RxChild {
   /** is the given view in a fired state */
   public boolean isFired(int viewId) {
     if (guards != null) {
-      for (GuardPair gp : guards) {
-        if (gp.guard.isFired(viewId)) {
+      for (GuardPairCommon gp : guards) {
+        if (gp.isFired(viewId)) {
           return true;
         }
       }

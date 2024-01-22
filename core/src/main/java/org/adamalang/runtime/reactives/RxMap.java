@@ -23,6 +23,7 @@ import org.adamalang.common.SlashStringArrayEncoder;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.contracts.RxParentIntercept;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.JsonSum;
@@ -30,6 +31,7 @@ import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.NtPair;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.reactives.maps.MapPubSub;
 
 import java.util.*;
 
@@ -39,6 +41,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
   private final NtMap<DomainTy, RangeTy> objects;
+  private final Stack<RxMapGuard> guardsInflight;
+  private RxMapGuard activeGuard;
+  private MapPubSub<DomainTy> pubsub;
 
   public RxMap(final RxParent owner, final Codec<DomainTy, RangeTy> codec) {
     super(owner);
@@ -46,6 +51,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     this.objects = new NtMap<>();
     this.deleted = new LinkedHashMap<>();
     this.created = new HashSet<>();
+    this.guardsInflight = new Stack<>();
+    this.activeGuard = null;
+    this.pubsub = new MapPubSub<>(owner);
   }
 
   @Override
@@ -66,6 +74,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   @Override
   public void __settle(Set<Integer> viewers) {
     __lowerInvalid();
+    pubsub.settle();
     for (RangeTy item : objects.storage.values()) {
       if (item instanceof RxParent) {
         ((RxParent) item).__settle(viewers);
@@ -78,6 +87,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
+      pubsub.gc();
       forwardDelta.writeObjectFieldIntro(name);
       forwardDelta.beginObject();
       reverseDelta.writeObjectFieldIntro(name);
@@ -173,9 +183,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public long __memory() {
-    long sum = super.__memory() + 128;
+    long sum = super.__memory() + 128 + pubsub.__memory();
     for (Map.Entry<DomainTy, RangeTy> entry : objects.entries()) {
-      sum += entry.getValue().__memory() + 20;
+      sum += entry.getValue().__memory() + 128;
       if (entry.getKey() instanceof String) {
         sum += ((String) entry.getKey()).length() * 2L;
       }
@@ -188,6 +198,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   public RangeTy getOrCreateAndMaybeSignalDirty(DomainTy key, boolean signalDirty) {
+    if (activeGuard != null) {
+      activeGuard.readKey(key);
+    }
     RangeTy value = objects.get(key);
     if (value != null) {
       return value;
@@ -196,19 +209,30 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     if (value != null) {
       __raiseDirty();
       objects.put(key, value);
+      pubsub.changed(key);
       return value;
     }
     if (signalDirty) {
       __raiseDirty();
     }
-    value = codec.make(this);
+    value = codec.make(new RxParentIntercept(this) {
+      @Override
+      public void __invalidateUp() {
+        pubsub.changed(key);
+        __invalidateSubscribers();
+      }
+    });
     objects.put(key, value);
     value.__subscribe(this);
     created.add(key);
+    pubsub.changed(key);
     return value;
   }
 
   public boolean has(DomainTy key) {
+    if (activeGuard != null) {
+      activeGuard.readKey(key);
+    }
     return objects.storage.containsKey(key);
   }
 
@@ -217,6 +241,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   public void removeAndMaybeSignalDirty(DomainTy key, boolean signalDirty) {
+    if (activeGuard != null) {
+      activeGuard.readKey(key);
+    }
     RangeTy value = objects.removeDirect(key);
     if (value != null) {
       if (!created.contains(key)) {
@@ -228,7 +255,14 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
   }
 
+  public void __subscribe(RxMapGuard<DomainTy> guard) {
+    pubsub.subscribe(guard);
+  }
+
   public void clear() {
+    if (activeGuard != null) {
+      activeGuard.readAll();
+    }
     for (Map.Entry<DomainTy, RangeTy> entry : objects.storage.entrySet()) {
       deleted.put(entry.getKey(), entry.getValue());
     }
@@ -246,6 +280,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   }
 
   public NtMaybe<RangeTy> lookup(DomainTy key) {
+    if (activeGuard != null) {
+      activeGuard.readKey(key);
+    }
     return new NtMaybe<>(objects.get(key));
   }
 
@@ -260,23 +297,35 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
 
   @Override
   public void __invalidateUp() {
-    __raiseInvalid();
+    __invalidateSubscribers();
   }
 
   @Override
   public Iterator<NtPair<DomainTy, RangeTy>> iterator() {
+    if (activeGuard != null) {
+      activeGuard.readAll();
+    }
     return objects.iterator();
   }
 
   public int size() {
+    if (activeGuard != null) {
+      activeGuard.readAll();
+    }
     return objects.size();
   }
 
   public NtMaybe<NtPair<DomainTy, RangeTy>> min() {
+    if (activeGuard != null) {
+      activeGuard.readAll();
+    }
     return objects.min();
   }
 
   public NtMaybe<NtPair<DomainTy, RangeTy>> max() {
+    if (activeGuard != null) {
+      activeGuard.readAll();
+    }
     return objects.max();
   }
 
@@ -299,15 +348,36 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       children.add(Json.parseJsonObject(childWriter.toString()));
     }
 
+    int fromDirect = __getSubscriberCount();
+    int fromPubsub = pubsub.count();
+
     __writer.writeObjectFieldIntro(name);
     __writer.beginObject();
     __writer.writeObjectFieldIntro("subscribers");
-    __writer.writeInteger(__getSubscriberCount());
+    __writer.writeInteger(fromDirect + fromPubsub);
+    __writer.writeObjectFieldIntro("direct");
+    __writer.writeInteger(fromDirect);
+    __writer.writeObjectFieldIntro("pubsub");
+    __writer.writeInteger(fromPubsub);
     __writer.writeObjectFieldIntro("count");
     __writer.writeInteger(objects.size());
     __writer.writeObjectFieldIntro("sum_items");
     __writer.injectJson(JsonSum.sum(children).get("_").toString());
     __writer.endObject();
+  }
+
+  public void pushGuard(RxMapGuard guard) {
+    guardsInflight.push(guard);
+    activeGuard = guard;
+  }
+
+  public void popGuard() {
+    guardsInflight.pop();
+    if (guardsInflight.empty()) {
+      activeGuard = null;
+    } else {
+      activeGuard = guardsInflight.peek();
+    }
   }
 
   public abstract static class IntegerCodec<R extends RxBase> implements Codec<Integer, R> {

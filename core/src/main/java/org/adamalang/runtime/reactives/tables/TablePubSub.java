@@ -18,7 +18,6 @@
 package org.adamalang.runtime.reactives.tables;
 
 import org.adamalang.runtime.contracts.RxParent;
-import org.adamalang.runtime.json.JsonStreamWriter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +27,7 @@ import java.util.TreeSet;
 /** simple pubsub fanout for TableSubscription's under a parent  */
 public class TablePubSub implements TableSubscription {
   private final RxParent owner;
-  private final ArrayList<TableSubscription> _subscriptions;
+  private final ArrayList<TableSubscription> subscriptions;
   private final TreeSet<Integer> filter;
   private final TreeSet<IndexInvalidCacheHit> filterIndex;
 
@@ -66,17 +65,17 @@ public class TablePubSub implements TableSubscription {
 
   public TablePubSub(RxParent owner) {
     this.owner = owner;
-    this._subscriptions = new ArrayList<>();
+    this.subscriptions = new ArrayList<>();
     this.filter = new TreeSet<>();
     this.filterIndex = new TreeSet<>();
   }
 
   public int count() {
-    return _subscriptions.size();
+    return subscriptions.size();
   }
 
   public void subscribe(TableSubscription ts) {
-    _subscriptions.add(ts);
+    subscriptions.add(ts);
   }
 
   @Override
@@ -93,7 +92,7 @@ public class TablePubSub implements TableSubscription {
       return false;
     }
     filter.add(primaryKey);
-    for (TableSubscription ts : _subscriptions) {
+    for (TableSubscription ts : subscriptions) {
       ts.primary(primaryKey);
     }
     return true;
@@ -106,7 +105,7 @@ public class TablePubSub implements TableSubscription {
       return;
     }
     filterIndex.add(hit);
-    for (TableSubscription ts : _subscriptions) {
+    for (TableSubscription ts : subscriptions) {
       ts.index(field, value);
     }
   }
@@ -117,11 +116,15 @@ public class TablePubSub implements TableSubscription {
   }
 
   public void gc() {
-    Iterator<TableSubscription> it = _subscriptions.iterator();
+    Iterator<TableSubscription> it = subscriptions.iterator();
     while (it.hasNext()) {
       if (!it.next().alive()) {
         it.remove();
       }
     }
+  }
+
+  public long __memory() {
+    return 128 * subscriptions.size() + 2048;
   }
 }

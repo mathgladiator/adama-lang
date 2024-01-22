@@ -22,6 +22,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
+import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.privacy.PublicPolicy;
@@ -45,9 +46,7 @@ public class FieldDefinition extends StructureComponent {
   public final Token nameToken;
   public final Policy policy;
   public final Token semicolonToken;
-  public final LinkedHashSet<String> variablesToWatch;
-  public final LinkedHashSet<String> servicesToWatch;
-  public final LinkedHashSet<String> tablesToInject;
+  public final WatchSet watching;
   public final boolean readonly;
 
   public Token lossyOrRequiredToken;
@@ -89,9 +88,7 @@ public class FieldDefinition extends StructureComponent {
     if (semicolonToken != null) {
       ingest(semicolonToken);
     }
-    servicesToWatch = new LinkedHashSet<>();
-    variablesToWatch = new LinkedHashSet<>();
-    tablesToInject = new LinkedHashSet<>();
+    watching = new WatchSet();
   }
 
   public boolean isLossy() {

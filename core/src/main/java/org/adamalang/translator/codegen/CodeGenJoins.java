@@ -22,6 +22,8 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.structures.JoinAssoc;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 
+import java.util.TreeSet;
+
 public class CodeGenJoins {
 
   public static void writeJoins(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
@@ -47,7 +49,10 @@ public class CodeGenJoins {
       sb.append("};").writeNewline();
       String tracker = "__DET_" + environment.autoVariable();
       sb.append("DifferentialEdgeTracker<RTx").append(ja.edgeRecordName).append("> ").append(tracker).append(" = new DifferentialEdgeTracker<>(").append(ja.tableName.text).append(",__graph.getOrCreate((short)").append("" + ja.foundAssoc.id).append("),").append(edgeMaker).append(");").writeNewline();
-      for(String depend : ja.variablesToWatch) {
+      TreeSet<String> variablesToWatch = new TreeSet<>();
+      variablesToWatch.addAll(ja.watching.variables);
+      variablesToWatch.addAll(ja.watching.pubsub);
+      for(String depend : variablesToWatch) {
         sb.append(depend).append(".__subscribe(").append(tracker).append(");").writeNewline();
       }
       sb.append(ja.tableName.text).append(".pump(").append(tracker).append(");").writeNewline();

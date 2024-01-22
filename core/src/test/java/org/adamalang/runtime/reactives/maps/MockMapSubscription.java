@@ -15,9 +15,27 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives.maps;
 
-public class Platform {
-  public static final String VERSION = "20240122092128";
-  public static final String JS_VERSION = "f99e22bb7e78786eee404e0cb501383d";
+import java.util.ArrayList;
+
+public class MockMapSubscription implements MapSubscription<String> {
+  public boolean alive;
+  public ArrayList<String> publishes;
+
+  public MockMapSubscription() {
+    this.alive = true;
+    this.publishes = new ArrayList<>();
+  }
+
+  @Override
+  public boolean alive() {
+    return alive;
+  }
+
+  @Override
+  public boolean changed(String key) {
+    publishes.add("CHANGE:" + key);
+    return false;
+  }
 }

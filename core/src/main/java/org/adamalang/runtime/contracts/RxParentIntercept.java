@@ -15,9 +15,37 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240122092128";
-  public static final String JS_VERSION = "f99e22bb7e78786eee404e0cb501383d";
+import org.adamalang.runtime.contracts.RxParent;
+
+import java.util.Set;
+
+/** a simplified RxParent for proxying */
+public abstract class RxParentIntercept implements RxParent {
+  private final RxParent real;
+
+  public RxParentIntercept(RxParent real) {
+    this.real = real;
+  }
+
+  @Override
+  public void __raiseDirty() {
+    real.__raiseDirty();
+  }
+
+  @Override
+  public boolean __isAlive() {
+    return real.__isAlive();
+  }
+
+  @Override
+  public void __cost(int cost) {
+    real.__cost(cost);
+  }
+
+  @Override
+  public void __settle(Set<Integer> viewers) {
+    real.__settle(viewers);
+  }
 }
