@@ -253,10 +253,10 @@ public class CodeGenRecords {
         environment.define(fieldName, new TyReactiveLazy(lazyType, fdInOrder.hasCachePolicy()), false, fdInOrder);
         if (!fdInOrder.hasCachePolicy()) {
           for (final String watched : fdInOrder.variablesToWatch) {
-            // TODO: UNCOMMENT THESE IN NEXT DIFF (REQUIRES A BUNCH OF VALIDATION)
-            // if (!fdInOrder.tablesToInject.contains(watched)) {
-            classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
-            // }
+            // TODO: IF VALIDATION FAILS, THEN COMMENT THESE OUT
+            if (!fdInOrder.tablesToInject.contains(watched)) {
+              classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
+            }
           }
           for (final String watched : fdInOrder.tablesToInject) {
             classLinker.append(watched).append(".__subscribe(__").append(fieldName).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
@@ -343,10 +343,10 @@ public class CodeGenRecords {
         classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxTableGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
       }
       for (final String watched : bubble.variablesToWatch) {
-        // TODO: UNCOMMENT THESE IN NEXT DIFF (REQUIRES A BUNCH OF VALIDATION)
-        // if (!bubble.tablesToWatch.contains(watched)) {
+        // TODO: IF VALIDATION FAILS, THEN COMMENT THESE OUT
+        if (!bubble.tablesToWatch.contains(watched)) {
           classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
-        // }
+        }
       }
       for (final String watched : bubble.tablesToWatch) {
         classLinker.append(watched).append(".__subscribe(__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline(); // SUPER AWESOME MODE
