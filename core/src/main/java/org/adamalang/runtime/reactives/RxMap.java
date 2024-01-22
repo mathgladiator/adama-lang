@@ -203,7 +203,13 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
     RangeTy value = objects.get(key);
     if (value != null) {
+      if (__parent != null) {
+        __parent.__cost(1);
+      }
       return value;
+    }
+    if (__parent != null) {
+      __parent.__cost(10);
     }
     value = deleted.remove(key);
     if (value != null) {
@@ -244,6 +250,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     if (activeGuard != null) {
       activeGuard.readKey(key);
     }
+    if (__parent != null) {
+      __parent.__cost(10);
+    }
     RangeTy value = objects.removeDirect(key);
     if (value != null) {
       if (!created.contains(key)) {
@@ -262,6 +271,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public void clear() {
     if (activeGuard != null) {
       activeGuard.readAll();
+    }
+    if (__parent != null) {
+      __parent.__cost(2 * objects.size());
     }
     for (Map.Entry<DomainTy, RangeTy> entry : objects.storage.entrySet()) {
       deleted.put(entry.getKey(), entry.getValue());
@@ -282,6 +294,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public NtMaybe<RangeTy> lookup(DomainTy key) {
     if (activeGuard != null) {
       activeGuard.readKey(key);
+    }
+    if (__parent != null) {
+      __parent.__cost(5);
     }
     return new NtMaybe<>(objects.get(key));
   }
@@ -305,12 +320,18 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     if (activeGuard != null) {
       activeGuard.readAll();
     }
+    if (__parent != null) {
+      __parent.__cost(objects.size() * 4);
+    }
     return objects.iterator();
   }
 
   public int size() {
     if (activeGuard != null) {
       activeGuard.readAll();
+    }
+    if (__parent != null) {
+      __parent.__cost(5);
     }
     return objects.size();
   }
@@ -319,12 +340,18 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     if (activeGuard != null) {
       activeGuard.readAll();
     }
+    if (__parent != null) {
+      __parent.__cost(100);
+    }
     return objects.min();
   }
 
   public NtMaybe<NtPair<DomainTy, RangeTy>> max() {
     if (activeGuard != null) {
       activeGuard.readAll();
+    }
+    if (__parent != null) {
+      __parent.__cost(100);
     }
     return objects.max();
   }

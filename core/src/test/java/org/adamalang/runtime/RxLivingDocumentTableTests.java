@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-public class RxLivingDocumentTests {
+public class RxLivingDocumentTableTests {
   private static NtPrincipal A = new NtPrincipal("A", "TEST");
   @Test
   public void formula_add() throws Exception {
