@@ -170,6 +170,8 @@ public class JsonStreamReader {
           case "authority":
             authority = readString();
             break;
+          default:
+            skipValue();
         }
       }
     } else {

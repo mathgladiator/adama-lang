@@ -30,6 +30,7 @@ public class TablePubSubTests {
     MockTableSubscription two = new MockTableSubscription();
     pubsub.subscribe(one);
     pubsub.subscribe(two);
+    Assert.assertEquals(2, pubsub.count());
     pubsub.gc();
     pubsub.primary(123);
     pubsub.index(13, 69);
@@ -37,8 +38,10 @@ public class TablePubSubTests {
       pubsub.primary(123);
       pubsub.index(13, 69);
     }
+    Assert.assertEquals(2, pubsub.count());
     one.alive = false;
     pubsub.gc();
+    Assert.assertEquals(1, pubsub.count());
     pubsub.primary(125);
     pubsub.index( 14, 69);
     Assert.assertTrue(pubsub.alive());

@@ -29,6 +29,8 @@ public class DelayParentTests {
     DelayParent dp = new DelayParent();
     dp.__raiseDirty();
     dp.bind(() -> success.set(true));
+    dp.__cost(100);
+    dp.__settle(null);
     Assert.assertTrue(success.get());
     Assert.assertTrue(dp.__isAlive());
   }
@@ -38,6 +40,8 @@ public class DelayParentTests {
     AtomicBoolean success = new AtomicBoolean(false);
     DelayParent dp = new DelayParent();
     dp.bind(() -> success.set(true));
+    dp.__cost(100);
+    dp.__settle(null);
     dp.__raiseDirty();
     Assert.assertTrue(success.get());
     Assert.assertTrue(dp.__isAlive());

@@ -141,6 +141,80 @@ public class MaterializedNtListTests {
   }
 
   @Test
+  public void scoping_primary() {
+    MaterializedNtList<SortableMessage> list = new MaterializedNtList<>(demo(), 2);
+    for (int scope = 0; scope < 17; scope++) {
+      int scopeToUse = scope;
+      NtList<SortableMessage> result = list.where(true, new WhereClause<SortableMessage>() {
+        @Override
+        public Integer getPrimaryKey() {
+          throw new IllegalStateException();
+        }
+
+        @Override
+        public void scopeByIndicies(IndexQuerySet __set) {
+          __set.primary(scopeToUse);
+          __set.finish();
+        }
+
+        @Override
+        public boolean test(SortableMessage item) {
+          return true;
+        }
+      });
+      Assert.assertEquals(1, result.size());
+    }
+  }
+
+  @Test
+  public void scoping_primary_after_good() {
+    MaterializedNtList<SortableMessage> list = new MaterializedNtList<>(demo(), 2);
+    NtList<SortableMessage> result = list.where(true, new WhereClause<SortableMessage>() {
+      @Override
+      public Integer getPrimaryKey() {
+        throw new IllegalStateException();
+      }
+
+      @Override
+      public void scopeByIndicies(IndexQuerySet __set) {
+        __set.intersect(0, 1, IndexQuerySet.LookupMode.Equals);
+        __set.primary(1);
+        __set.finish();
+      }
+
+      @Override
+      public boolean test(SortableMessage item) {
+        return true;
+      }
+    });
+    Assert.assertEquals(1, result.size());
+  }
+
+  @Test
+  public void scoping_primary_after_bad() {
+    MaterializedNtList<SortableMessage> list = new MaterializedNtList<>(demo(), 2);
+    NtList<SortableMessage> result = list.where(true, new WhereClause<SortableMessage>() {
+      @Override
+      public Integer getPrimaryKey() {
+        throw new IllegalStateException();
+      }
+
+      @Override
+      public void scopeByIndicies(IndexQuerySet __set) {
+        __set.intersect(0, 2, IndexQuerySet.LookupMode.Equals);
+        __set.primary(1);
+        __set.finish();
+      }
+
+      @Override
+      public boolean test(SortableMessage item) {
+        return true;
+      }
+    });
+    Assert.assertEquals(0, result.size());
+  }
+
+  @Test
   public void scoping_all_x() {
     MaterializedNtList<SortableMessage> list = new MaterializedNtList<>(demo(), 2);
     for (int scope = 0; scope < 17; scope++) {

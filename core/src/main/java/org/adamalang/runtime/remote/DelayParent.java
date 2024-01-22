@@ -58,11 +58,8 @@ public class DelayParent implements RxParent {
   }
 
   @Override
-  public void __cost(int cost) {
-  }
+  public void __cost(int cost) {}
 
   @Override
-  public void __settle(Set<Integer> viewers) {
-
-  }
+  public void __settle(Set<Integer> viewers) {}
 }

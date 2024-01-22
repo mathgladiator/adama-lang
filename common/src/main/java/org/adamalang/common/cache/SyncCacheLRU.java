@@ -115,4 +115,8 @@ public class SyncCacheLRU<D, R extends Measurable> {
       this.measure -= value.item.measure();
     }
   }
+
+  public static <D, R extends Measurable> BiConsumer<D, R> MAKE_NO_OP() {
+    return (x, y) -> {};
+  }
 }

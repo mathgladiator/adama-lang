@@ -52,6 +52,12 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void principal_skip_bad_data() {
+    JsonStreamReader reader = new JsonStreamReader("{\"agent\":\"z\",\"x\":true}");
+    Assert.assertEquals(new NtPrincipal("z", "?"), reader.readNtPrincipal());
+  }
+
+  @Test
   public void bad_long_skip() {
     JsonStreamReader reader = new JsonStreamReader("[]123");
     Assert.assertEquals(0, reader.readLong());

@@ -34,6 +34,16 @@ public class NtComplexTests {
   }
 
   @Test
+  public void compare() {
+    NtComplex a = new NtComplex(1.2, 3.4);
+    NtComplex b = new NtComplex(1.2, 3.4);
+    NtComplex c = new NtComplex(3.4, -1.2);
+    Assert.assertEquals(a.compareTo(b), -b.compareTo(a));
+    Assert.assertEquals(a.compareTo(c), -c.compareTo(a));
+    Assert.assertEquals(0, a.compareTo(a));
+  }
+
+  @Test
   public void str() {
     NtComplex a = new NtComplex(1.2, 3.4);
     Assert.assertEquals("1.2 3.4i", a.toString());

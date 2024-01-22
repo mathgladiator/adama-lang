@@ -144,4 +144,8 @@ public class SyncCacheLRUTests {
     Assert.assertEquals(0, cache.size());
   }
 
+  @Test
+  public void coverage_noop() {
+    SyncCacheLRU.MAKE_NO_OP().accept(null, null);
+  }
 }

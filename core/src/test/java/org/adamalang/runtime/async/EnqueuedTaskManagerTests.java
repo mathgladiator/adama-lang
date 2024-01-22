@@ -50,11 +50,46 @@ public class EnqueuedTaskManagerTests {
       Assert.assertEquals("\"__enqueued\":{\"40\":null}", reverse.toString());
       JsonStreamWriter dump = new JsonStreamWriter();
       etm.dump(dump);
-      Assert.assertEquals("\"__enqueued\":{}", dump.toString());
+      Assert.assertEquals("\"__enqueued\":{\"40\":{\"who\":{\"agent\":\"agent\",\"authority\":\"auth\"},\"channel\":\"ch\",\"message\":[1,2]}}", dump.toString());
     }
     Assert.assertTrue(etm.readyForTransfer());
     EnqueuedTask pulled = etm.transfer();
     Assert.assertNotNull(pulled);
     Assert.assertEquals(0, etm.size());
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      etm.commit(forward, reverse);
+      Assert.assertEquals("\"__enqueued\":{\"40\":null}", forward.toString());
+      Assert.assertEquals("\"__enqueued\":{\"40\":{\"who\":{\"agent\":\"agent\",\"authority\":\"auth\"},\"channel\":\"ch\",\"message\":[1,2]}}", reverse.toString());
+      JsonStreamWriter dump = new JsonStreamWriter();
+      etm.dump(dump);
+      Assert.assertEquals("", dump.toString());
+    }
+    {
+      JsonStreamWriter dump = new JsonStreamWriter();
+      etm.dump(dump);
+      Assert.assertEquals("", dump.toString());
+    }
+  }
+
+  @Test
+  public void hydration() {
+    EnqueuedTaskManager etm = new EnqueuedTaskManager();
+    etm.hydrate(new JsonStreamReader("{\"1\":{\"channel\":\"ch\",\"who\":{\"agent\":\"a\",\"authority\":\"b\"},\"message\":{}}}}"));
+    etm.hydrate(new JsonStreamReader("{\"1\":{\"x\":true}}"));
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      etm.dump(writer);
+      Assert.assertEquals("\"__enqueued\":{\"1\":{\"who\":{\"agent\":\"a\",\"authority\":\"b\"},\"channel\":\"ch\",\"message\":{}}}", writer.toString());
+    }
+    Assert.assertTrue(etm.readyForTransfer());
+    EnqueuedTask et = etm.transfer();
+    Assert.assertEquals("ch", et.channel);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      etm.dump(writer);
+      Assert.assertEquals("", writer.toString());
+    }
   }
 }

@@ -17,8 +17,6 @@
 */
 package org.adamalang.runtime.contracts;
 
-import org.adamalang.runtime.contracts.RxParent;
-
 import java.util.Set;
 
 /** a simplified RxParent for proxying */

@@ -15,18 +15,26 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.reactives;
+package org.adamalang.runtime.remote;
 
-import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.common.ErrorCodeException;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.util.function.Supplier;
+public class InstantCallbackWrapperTests {
+  @Test
+  public void happy() {
+    InstantCallbackWrapper wrapper = new InstantCallbackWrapper();
+    Assert.assertNull(wrapper.convert());
+    wrapper.success("xyz");
+    Assert.assertEquals("xyz", wrapper.convert().result);
+  }
 
-public class RxAssoc {
-  private final RxInt32 id;
-  private final short assoc;
-
-  public RxAssoc(RxInt32 id, short assoc) {
-    this.id = id;
-    this.assoc = assoc;
+  @Test
+  public void sad() {
+    InstantCallbackWrapper wrapper = new InstantCallbackWrapper();
+    Assert.assertNull(wrapper.convert());
+    wrapper.failure(new ErrorCodeException(-13));
+    Assert.assertEquals(-13, (int) wrapper.convert().failureCode);
   }
 }

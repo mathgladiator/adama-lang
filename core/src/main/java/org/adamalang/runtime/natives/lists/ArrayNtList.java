@@ -195,6 +195,7 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
         }
         return new ArrayNtList<>(results);
       }
+      default:
       case Last: {
         HashMap<KeyT, Ty> last = new HashMap<>();
         for (Ty item : list) {
@@ -203,6 +204,5 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
         return new ArrayNtList<>(new ArrayList<>(last.values()));
       }
     }
-    return this;
   }
 }

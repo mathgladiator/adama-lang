@@ -30,10 +30,12 @@ import java.util.LinkedList;
 public class EnqueuedTaskManager {
   private final LinkedList<EnqueuedTask> active;
   private final ArrayList<EnqueuedTask> pending;
+  private final ArrayList<EnqueuedTask> completed;
 
   public EnqueuedTaskManager() {
     this.active = new LinkedList<>();
     this.pending = new ArrayList<>();
+    this.completed = new ArrayList<>();
   }
 
   public void hydrate(JsonStreamReader reader) {
@@ -63,7 +65,7 @@ public class EnqueuedTaskManager {
                 reader.skipValue();
             }
           }
-          if (present.contains(messageId)) {
+          if (!present.contains(messageId)) {
             active.add(new EnqueuedTask(messageId, _who, _channel, _message));
           }
         } else {
@@ -76,7 +78,7 @@ public class EnqueuedTaskManager {
   }
 
   public void commit(JsonStreamWriter forward, JsonStreamWriter reverse) {
-    if (pending.size() > 0) {
+    if (pending.size() > 0 || completed.size() > 0) {
       forward.writeObjectFieldIntro("__enqueued");
       forward.beginObject();
       reverse.writeObjectFieldIntro("__enqueued");
@@ -88,7 +90,14 @@ public class EnqueuedTaskManager {
         reverse.writeNull();
         active.add(task);
       }
+      for (EnqueuedTask task : completed) {
+        forward.writeObjectFieldIntro(task.messageId);
+        forward.writeNull();
+        reverse.writeObjectFieldIntro(task.messageId);
+        task.writeTo(reverse);
+      }
       pending.clear();
+      completed.clear();
       forward.endObject();
       reverse.endObject();
     }
@@ -102,7 +111,7 @@ public class EnqueuedTaskManager {
     if (active.size() > 0) {
       writer.writeObjectFieldIntro("__enqueued");
       writer.beginObject();
-      for (EnqueuedTask task : pending) {
+      for (EnqueuedTask task : active) {
         writer.writeObjectFieldIntro(task.messageId);
         task.writeTo(writer);
       }
@@ -119,7 +128,9 @@ public class EnqueuedTaskManager {
   }
 
   public EnqueuedTask transfer() {
-    return active.removeFirst();
+    EnqueuedTask task = active.removeFirst();
+    completed.add(task);
+    return task;
   }
 
   public int size() {

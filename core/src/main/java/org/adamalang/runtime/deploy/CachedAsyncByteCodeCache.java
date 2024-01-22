@@ -31,8 +31,7 @@ public class CachedAsyncByteCodeCache implements AsyncByteCodeCache {
   private final AsyncSharedLRUCache<ByteCodeKey, CachedByteCode> cache;
 
   public CachedAsyncByteCodeCache(TimeSource timeSource, int maxByteCodes, long maxAge, SimpleExecutor executor, AsyncByteCodeCache byteCodeCache) {
-    this.storage = new SyncCacheLRU<>(timeSource, 0, maxByteCodes, 1024 * 1024L * maxByteCodes, maxAge, (name, record) -> {
-    });
+    this.storage = new SyncCacheLRU<>(timeSource, 0, maxByteCodes, 1024 * 1024L * maxByteCodes, maxAge, SyncCacheLRU.MAKE_NO_OP());
     this.cache = new AsyncSharedLRUCache<>(executor, storage, (key, cb) -> {
       byteCodeCache.fetchOrCompile(key.spaceName, key.className, key.javaSource, key.reflection, cb);
     });

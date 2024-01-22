@@ -15,9 +15,28 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240122135021";
-  public static final String JS_VERSION = "f99e22bb7e78786eee404e0cb501383d";
+import org.adamalang.runtime.mocks.MockRxParent;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class RxParentInterceptTests {
+  @Test
+  public void coverage() {
+    MockRxParent parent = new MockRxParent();
+    RxParentIntercept intercept = new RxParentIntercept(parent) {
+      @Override
+      public void __invalidateUp() {
+
+      }
+    };
+    intercept.__cost(100);
+    Assert.assertTrue(intercept.__isAlive());
+    intercept.__raiseDirty();
+    intercept.__settle(null);
+    intercept.__invalidateUp();
+    parent.alive = false;
+    Assert.assertFalse(intercept.__isAlive());
+  }
 }
