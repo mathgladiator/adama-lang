@@ -59,6 +59,7 @@ public class AdamaMicroVerse {
   private final WatchService watchService;
   private final Thread scanner;
   private final DiagnosticsSubscriber diagnostics;
+  private final CountDownLatch firstBuild;
 
   private AdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics) throws Exception {
     this.io = io;
@@ -71,9 +72,15 @@ public class AdamaMicroVerse {
     this.spaces = spaces;
     this.watchService = watchService;
     this.diagnostics = diagnostics;
+    AtomicBoolean signalFirstBuild = new AtomicBoolean(true);
+    this.firstBuild = new CountDownLatch(1);
     this.scanner = new Thread(() -> {
       try {
         rebuild();
+        if (signalFirstBuild.get()) {
+          signalFirstBuild.set(false);
+          firstBuild.countDown();
+        }
         while (alive.get()) {
           poll();
         }
@@ -88,6 +95,10 @@ public class AdamaMicroVerse {
     this.vapidPublicKey = vapidPublicKey;
     this.vapidPrivateKey = vapidPrivateKey;
     this.devPush = devPush;
+  }
+
+  public void waitForFirstBuild() throws Exception {
+    firstBuild.await(5000, TimeUnit.MILLISECONDS);
   }
 
   private void rebuild() {
@@ -139,7 +150,6 @@ public class AdamaMicroVerse {
 
               @Override
               public void finished(int ms) {
-                io.notice("adama:deployment-finished: " + documentsChanged + " changed; time=" + ms + "ms");
                 awaitDeployment.countDown();
               }
             });

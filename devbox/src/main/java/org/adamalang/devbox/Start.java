@@ -162,6 +162,7 @@ public class Start {
       attachmentsPath.mkdirs();
       LocalServiceBase base = new LocalServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub, metricsFactory);
       Thread webServerThread = base.start();
+      terminal.important("people|Enjoy your developer experience... we hope it is pleasurable!");
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());
         if (command.is("kill", "exit", "quit", "q", "exut")) {

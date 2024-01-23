@@ -18,6 +18,7 @@
 package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxChild;
@@ -53,8 +54,8 @@ public class RxGuardTests {
     guard.__settle(null);
     Assert.assertEquals(false, guard.__invalid);
     Assert.assertEquals(65522, guard.getGeneration(0));
-    guard.__insert(null);
-    guard.__patch(null);
+    guard.__insert(new JsonStreamReader("{}"));
+    guard.__patch(new JsonStreamReader("{}"));
     guard.__commit(null, null, null);
     guard.__revert();
     guard.__dump(null);

@@ -132,7 +132,9 @@ public class RxRootEnvironment {
     }
     ObjectNode reflect = reflections.get(backend);
     if (reflect == null) {
-      feedback.warn(connection, "The backend '" + backend + "' was not available");
+      if (backend != null) {
+        feedback.warn(connection, "The backend '" + backend + "' was not available");
+      }
       children(connection, state);
     } else {
       children(connection, state.fork(reflect));

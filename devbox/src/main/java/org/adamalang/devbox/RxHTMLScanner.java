@@ -191,11 +191,9 @@ public class RxHTMLScanner implements AutoCloseable {
                 onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(rxHtmlBundle), updated.javascript, updated.style));
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
                 rxPubSub.notifyReload();
-                io.notice("rxhtml|responders; count=" + rxPubSub.responders.size());
                 try {
-                  Files.writeString(new File("css.freq.json").toPath(), freq.toPrettyString());
-                  Files.writeString(new File("view.schema.json").toPath(), updated.viewSchema.toPrettyString());
-                  io.info("rxhtml|css.freq.json built; opportunity=" + opportunity + " bytes");
+                  Files.writeString(new File(types, "css.freq.json").toPath(), freq.toPrettyString());
+                  Files.writeString(new File(types, "view.schema.json").toPath(), updated.viewSchema.toPrettyString());
                 } catch (Exception ex) {
                   io.error("rxhtml|css.freq.json failed to be built");
                 }
@@ -224,8 +222,7 @@ public class RxHTMLScanner implements AutoCloseable {
                 summary.append("<ul>\n").append(errors).append("\n</ul>\n");
                 summary.append("</body>\n</html>\n");
                 try {
-                  Files.writeString(new File("summary.html").toPath(), summary.toString());
-                  io.info("rxhtml|summary.html built");
+                  Files.writeString(new File(types, "summary.html").toPath(), summary.toString());
                 } catch (Exception ex) {
                   io.error("rxhtml|summary.html failed to be built");
                 }
