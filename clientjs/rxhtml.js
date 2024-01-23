@@ -3448,11 +3448,11 @@ var RxHTML = (function () {
   transforms['currency'] = function(x, fmt) {
     const num = parseFloat(x);
     if (isNaN(num)) return x;
-    return num.toLocaleString([],{
+    return new Intl.NumberFormat([], {
       style: 'currency',
       currency: fmt,
       useGrouping: true,
-    });
+    }).format(num)
   }
   
 
