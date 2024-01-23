@@ -3444,6 +3444,16 @@ var RxHTML = (function () {
       return d;
     }
   }
+
+  transforms['currency'] = function(x, fmt) {
+    const num = parseFloat(x);
+    if (isNaN(num)) return x;
+    return num.toLocaleString([],{
+      style: 'currency',
+      currency: fmt,
+      useGrouping: true,
+    });
+  }
   
 
   self.RTR = function(name, transform) {
