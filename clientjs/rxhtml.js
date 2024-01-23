@@ -3444,6 +3444,22 @@ var RxHTML = (function () {
       return d;
     }
   }
+
+  transforms['currency'] = function(x, fmt) {
+    const num = parseFloat(x);
+    if (isNaN(num)) return x;
+    try {
+      return new Intl.NumberFormat([], {
+        style: 'currency',
+        currency: fmt,
+        useGrouping: true,
+      }).format(num)
+    } catch (error) {
+      console.error("'currency' transform error: ", error);
+      return x;
+    }
+    
+  }
   
 
   self.RTR = function(name, transform) {
