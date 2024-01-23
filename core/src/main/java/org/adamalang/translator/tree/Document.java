@@ -66,6 +66,7 @@ public class Document implements TopLevelDocumentHandler {
   public final ArrayList<DefineDocumentEvent> events;
   public final ArrayList<DefineConstructor> constructors;
   public final ArrayList<DefineFunction> functionDefinitions;
+  public final HashMap<String, DefineFunction> pureFunctions;
   public final HashMap<String, TyNativeFunctional> functionTypes;
   public final HashMap<String, TyNativeTemplate> templateTypes;
   public final ArrayList<DefineHandler> handlers;
@@ -122,6 +123,7 @@ public class Document implements TopLevelDocumentHandler {
     functionTypes = new HashMap<>();
     templateTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
+    pureFunctions = new HashMap<>();
     configs = new HashMap<>();
     viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(Token.WRAP("__ViewerType"), StorageSpecialization.Message, true, false, null));
     types.put("__ViewerType", viewerType);
@@ -366,6 +368,9 @@ public class Document implements TopLevelDocumentHandler {
   public void add(final DefineFunction func) {
     if (defined.contains(func.name)) {
       typeChecker.issueError(func, String.format("The %s '%s' was already defined.", func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name));
+    }
+    if (func.specialization == FunctionSpecialization.Pure) {
+      pureFunctions.put(func.name, func);
     }
     functionsDefines.add(func.name);
     functionDefinitions.add(func);

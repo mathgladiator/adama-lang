@@ -87,3 +87,6 @@
 - [Building and Contributing](./build.md)
 - [Roadmap](./road-map.md)
 - [Future Docs](./future-docs.md)
+- [Design Documents](./design/start.md)
+  - [Projection Map](./design/projection.md)
+  - [Assoc Map](./design/assoc.md)

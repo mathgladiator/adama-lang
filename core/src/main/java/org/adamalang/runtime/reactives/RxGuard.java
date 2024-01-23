@@ -47,21 +47,6 @@ public class RxGuard extends RxDependent {
     return true;
   }
 
-  @Override
-  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {}
-
-  @Override
-  public void __dump(final JsonStreamWriter writer) {}
-
-  @Override
-  public void __insert(final JsonStreamReader reader) {}
-
-  @Override
-  public void __patch(JsonStreamReader reader) {}
-
-  @Override
-  public void __revert() {}
-
   private void inc() {
     if (__parent instanceof RxRecordBase && generation == 0) {
       generation = ((RxRecordBase) __parent).__id();

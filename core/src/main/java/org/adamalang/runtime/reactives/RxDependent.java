@@ -19,10 +19,11 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.reactives.maps.MapGuardTarget;
 
 import java.util.ArrayList;
 
-public abstract class RxDependent extends RxBase implements RxChild {
+public abstract class RxDependent extends RxNerfedBase implements RxChild {
   protected ArrayList<GuardPairCommon> guards;
 
   /** combine guard pairs regardless of the data type */
@@ -78,10 +79,10 @@ public abstract class RxDependent extends RxBase implements RxChild {
 
   /** guard a map */
   protected class GuardPairMap implements GuardPairCommon {
-    protected final RxMap<?, ?> map;
+    protected final MapGuardTarget map;
     protected final RxMapGuard<?> guard;
 
-    protected GuardPairMap(RxMap<?, ?> map, RxMapGuard<?> guard) {
+    protected GuardPairMap(MapGuardTarget map, RxMapGuard<?> guard) {
       this.map = map;
       this.guard = guard;
     }
@@ -149,7 +150,7 @@ public abstract class RxDependent extends RxBase implements RxChild {
     guards.add(new GuardPairTable(table, guard));
   }
 
-  public void __guard(RxMap<?, ?> map, RxMapGuard<?> guard) {
+  public void __guard(MapGuardTarget map, RxMapGuard<?> guard) {
     if (guards == null) {
       guards = new ArrayList<>();
     }

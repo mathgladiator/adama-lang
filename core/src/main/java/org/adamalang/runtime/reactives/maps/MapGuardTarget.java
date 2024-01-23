@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.reactives.maps;
 
-public class Platform {
-  public static final String VERSION = "20240123154454";
-  public static final String JS_VERSION = "f99e22bb7e78786eee404e0cb501383d";
+import org.adamalang.runtime.reactives.RxMapGuard;
+
+/** an interface to commonize all map guard target */
+public interface MapGuardTarget {
+  public void pushGuard(RxMapGuard guard);
+
+  public void popGuard();
 }

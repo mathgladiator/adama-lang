@@ -47,28 +47,6 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   @Override
-  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
-  }
-
-  @Override
-  public void __dump(final JsonStreamWriter writer) {
-  }
-
-  @Override
-  public void __insert(final JsonStreamReader reader) {
-    reader.skipValue();
-  }
-
-  @Override
-  public void __patch(JsonStreamReader reader) {
-    reader.skipValue();
-  }
-
-  @Override
-  public void __revert() {
-  }
-
-  @Override
   public boolean __raiseInvalid() {
     cached = null;
     __invalidateSubscribers();

@@ -364,6 +364,10 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     return obj;
   }
 
+  public boolean has(int id) {
+    return itemsByKey.containsKey(id);
+  }
+
   public ReactiveIndex<Ty> getIndex(final short column) {
     return indices[column];
   }

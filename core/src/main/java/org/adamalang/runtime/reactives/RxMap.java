@@ -31,12 +31,13 @@ import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.NtPair;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.reactives.maps.MapGuardTarget;
 import org.adamalang.runtime.reactives.maps.MapPubSub;
 
 import java.util.*;
 
 /** a reactive map */
-public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<NtPair<DomainTy, RangeTy>>, RxParent, RxChild, RxKillable {
+public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<NtPair<DomainTy, RangeTy>>, RxParent, RxChild, RxKillable, MapGuardTarget {
   public final Codec<DomainTy, RangeTy> codec;
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
@@ -393,11 +394,13 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     __writer.endObject();
   }
 
+  @Override
   public void pushGuard(RxMapGuard guard) {
     guardsInflight.push(guard);
     activeGuard = guard;
   }
 
+  @Override
   public void popGuard() {
     guardsInflight.pop();
     if (guardsInflight.empty()) {

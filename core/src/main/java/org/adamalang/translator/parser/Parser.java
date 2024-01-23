@@ -1997,6 +1997,15 @@ public class Parser {
         }
         return table;
       }
+      //case "assoc": { --> TyReactiveAssocMap }
+      case "projection": {
+        final var open = consumeExpectedSymbol("<");
+        Token tableVar = typesafe_id();
+        final var dot = consumeExpectedIdentifier(".");
+        Token field = typesafe_id();
+        final var close = consumeExpectedIdentifier(">");
+        return new TyReactiveProjectionMap(token, open, tableVar, dot, field, close, readonly, has_policy);
+      }
       case "map":
         return reactive_map(readonly, token);
       case "maybe":
