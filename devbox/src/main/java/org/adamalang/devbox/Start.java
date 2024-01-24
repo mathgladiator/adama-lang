@@ -188,6 +188,9 @@ public class Start {
           terminal.info("  `diagnostics` - get some useful diagnostics");
           terminal.info("  `flush` - force flush caravan");
           terminal.info("  `query $space $key` - execute an op query against a document");
+          terminal.info("  `test $space $key` - run tests for the given key");
+          terminal.info("  `test` - run tests for the domain key (if available)");
+          terminal.info("  `autotest` - toggle tests to run after a deployment");
           terminal.info("  `timeslip $delta $unit [$timeframe-seconds]`");
           terminal.info("                   $unit \\in {ms, sec, min, hr, day, week}");
           terminal.info("      - change by $delta $unit over $timeframe-seconds (default is 5 seconds)");
@@ -246,6 +249,28 @@ public class Start {
             }
           } else {
             terminal.notice("load $space $key $file");
+          }
+        }
+        if (command.is("autotest")) {
+          if (verse != null && verse.domainKeyToUse != null) {
+            terminal.info("verse|auto testing " + (verse.autoTest.get() ? "disabled" : "enabled"));
+            verse.autoTest.set(!verse.autoTest.get());
+          } else {
+            terminal.error("verse|no verse nor domain key to use for autotest");
+          }
+        }
+        if (command.is("test")) {
+          final Key theKey;
+          if (command.requireArg(1)) {
+            theKey = new Key(command.argAt(0), command.argAt(1));
+          } else if (verse != null && verse.domainKeyToUse != null) {
+            theKey = verse.domainKeyToUse;
+          } else {
+            theKey = null;
+            terminal.notice("test $space $key (or test if a domain is mapped)");
+          }
+          if (verse != null && theKey != null) {
+            verse.runTests(theKey);
           }
         }
         if (command.is("save")) {

@@ -32,7 +32,13 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.deploy.Linter;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.validators.ValidatePlan;
 import org.adamalang.web.client.WebClientBase;
 
@@ -42,6 +48,7 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /** a microverse is a local cosmos of an Adama machine that outlines everything needed to run Adama locally without a DB */
 public class AdamaMicroVerse {
@@ -54,6 +61,7 @@ public class AdamaMicroVerse {
   public final String vapidPrivateKey;
   public final DevPush devPush;
   public final TimeMachine timeMachine;
+  public final AtomicBoolean autoTest;
   private final TerminalIO io;
   private final AtomicBoolean alive;
   private final WatchService watchService;
@@ -72,6 +80,7 @@ public class AdamaMicroVerse {
     this.spaces = spaces;
     this.watchService = watchService;
     this.diagnostics = diagnostics;
+    this.autoTest = new AtomicBoolean(false);
     AtomicBoolean signalFirstBuild = new AtomicBoolean(true);
     this.firstBuild = new CountDownLatch(1);
     this.scanner = new Thread(() -> {
@@ -158,6 +167,9 @@ public class AdamaMicroVerse {
             Files.writeString(defn.reflectFile.toPath(), Json.parseJsonObject(newReflection).toPrettyString());
             awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
             io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
+            if (domainKeyToUse != null && autoTest.get()) {
+              runTests(domainKeyToUse);
+            }
           } else {
             io.error("adama|failure: " + defn.spaceName);
           }
@@ -275,6 +287,46 @@ public class AdamaMicroVerse {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
     return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics);
+  }
+
+  public void runTests(Key key) {
+    service.saveCustomerBackup(key, new Callback<String>() {
+      @Override
+      public void success(String snapshot) {
+        io.info("test|snapshot made for testing");
+        factory.base.fetch(key, new Callback<LivingDocumentFactory>() {
+          @Override
+          public void success(LivingDocumentFactory factory) {
+            try {
+              LivingDocument doc = factory.create(null);
+              // TODO: FIGURE OUT A WAY TO MAKE ALL SERVICES SYNC... that would be neat-o
+              doc.__lateBind(key.space, key.key, Deliverer.FAILURE, new ServiceRegistry());
+              doc.__insert(new JsonStreamReader(snapshot));
+              String[] tests = doc.__getTests();
+              TestReportBuilder builder = new TestReportBuilder();
+              for (String test : tests) {
+                doc.__test(builder, test);
+              }
+              String report = builder.toString();
+              for(String ln : report.split(Pattern.quote("\n"))) {
+                io.info("test-result|" + ln);
+              }
+            } catch (ErrorCodeException ex) {
+              failure(ex);
+            }
+          }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            io.error("test|failed creation; reason=" + ex.code);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        io.error("test|failed snapshot; reason=" + ex.code);
+      }
+    });
   }
 
   public void shutdown() throws Exception {
