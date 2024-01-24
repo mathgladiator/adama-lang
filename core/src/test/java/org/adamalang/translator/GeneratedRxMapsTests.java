@@ -136,7 +136,7 @@ public class GeneratedRxMapsTests extends GeneratedBase {
     gold.append("\n    m = new RxMap<String,RTxR>(this, new RxMap.StringCodec<RTxR>() { @Override public RTxR make(RxParent __parent) { return new RTxR(__parent).__link();} });");
     gold.append("\n    me = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_0_foo()), null);");
     gold.append("\n    __me_m = new RxMapGuard(me);");
-    gold.append("\n    ___boo =  new RxGuard(this);");
+    gold.append("\n    ___boo = new RxGuard(this);");
     gold.append("\n    __boo_m = new RxMapGuard(___boo);");
     gold.append("\n    m.__subscribe(__me_m);");
     gold.append("\n    me.__guard(m,__me_m);");
@@ -1080,7 +1080,7 @@ public class GeneratedRxMapsTests extends GeneratedBase {
     gold.append("\n    m = new RxMap<String,RTxR>(this, new RxMap.StringCodec<RTxR>() { @Override public RTxR make(RxParent __parent) { return new RTxR(__parent).__link();} });");
     gold.append("\n    me = new RxLazy<NtMaybe<RTxR>>(this, () -> (NtMaybe<RTxR>)(m.lookup(\"hi\")), null);");
     gold.append("\n    __me_m = new RxMapGuard(me);");
-    gold.append("\n    ___boo =  new RxGuard(this);");
+    gold.append("\n    ___boo = new RxGuard(this);");
     gold.append("\n    __boo_m = new RxMapGuard(___boo);");
     gold.append("\n    m.__subscribe(__me_m);");
     gold.append("\n    me.__guard(m,__me_m);");

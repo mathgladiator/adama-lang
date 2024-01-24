@@ -1012,7 +1012,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public BubbleDataFake_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    ___this_day_calendar =  new RxGuard(this);");
+    gold.append("\n    ___this_day_calendar = new RxGuard(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

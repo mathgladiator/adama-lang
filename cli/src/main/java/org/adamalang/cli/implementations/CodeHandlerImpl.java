@@ -36,6 +36,7 @@ import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.LivingDocumentChange;
@@ -80,9 +81,8 @@ public class CodeHandlerImpl implements CodeHandler {
   @Override
   public void benchmarkMessage(Arguments.CodeBenchmarkMessageArgs args, Output.YesOrError output) throws Exception {
     CoreServices.install(CoreServicesNexus.NOOP());
-
     ObjectNode report = Json.newJsonObject();
-
+    long time = System.currentTimeMillis();
     final DeploymentPlan deploymentPlan;
     {
       ObjectNode plan = Json.newJsonObject();
@@ -97,9 +97,7 @@ public class CodeHandlerImpl implements CodeHandler {
       plan.putArray("plan");
       deploymentPlan = new DeploymentPlan(plan.toString(), (x, y) -> {});
     }
-
     ObjectNode instruction = Json.parseJsonObject(Files.readString(new File(args.message).toPath()));
-
     AtomicReference<LivingDocumentFactory> factory = new AtomicReference<>();
     AtomicReference<LivingDocument> ref = new AtomicReference<>();
     CountDownLatch latch = new CountDownLatch(1);
@@ -147,16 +145,18 @@ public class CodeHandlerImpl implements CodeHandler {
       doc.__writeRxReport(writer);
       return Json.parseJsonObject(writer.toString());
     };
+    System.out.println("[inserting]");
     doc.__insert(new JsonStreamReader(Files.readString(new File(args.data).toPath())));
     doc.__perf.dump(10.0);
     doc.__perf.measureLightning();
     if (instruction.has("connect") && instruction.get("connect").booleanValue()){
+      System.out.println("[connecting]");
       final var writer = new JsonStreamWriter();
       writer.beginObject();
       writer.writeObjectFieldIntro("command");
       writer.writeFastString("connect");
       writer.writeObjectFieldIntro("timestamp");
-      writer.writeLong(System.currentTimeMillis());
+      writer.writeLong(time);
       writer.writeObjectFieldIntro("who");
       writer.writeNtPrincipal(who);
       writer.writeObjectFieldIntro("key");
@@ -170,15 +170,15 @@ public class CodeHandlerImpl implements CodeHandler {
       report.set("connect", Json.parseJsonObject(doc.__perf.dump(5.0)));
       report.set("connect-strike", filteredLightning(doc.__perf));
     }
-
     doc.__createView(who, Perspective.DEAD);
     Runnable invalidate = () -> {
+      System.out.println("[invalidate]");
       final var writer = new JsonStreamWriter();
       writer.beginObject();
       writer.writeObjectFieldIntro("command");
       writer.writeFastString("invalidate");
       writer.writeObjectFieldIntro("timestamp");
-      writer.writeLong(System.currentTimeMillis());
+      writer.writeLong(time);
       writer.writeObjectFieldIntro("who");
       writer.writeNtPrincipal(who);
       writer.writeObjectFieldIntro("key");
@@ -199,14 +199,19 @@ public class CodeHandlerImpl implements CodeHandler {
       report.set("invalidate", Json.parseJsonObject(doc.__perf.dump(5.0)));
       report.set("invalidate-strike", filteredLightning(doc.__perf));
     }
-
+    {
+      invalidate.run();
+      report.set("invalidate-again", Json.parseJsonObject(doc.__perf.dump(5.0)));
+      report.set("invalidate-again-strike", filteredLightning(doc.__perf));
+    }
     if (instruction.has("channel")) {
+      System.out.println("[send]");
       final var writer = new JsonStreamWriter();
       writer.beginObject();
       writer.writeObjectFieldIntro("command");
       writer.writeFastString("send");
       writer.writeObjectFieldIntro("timestamp");
-      writer.writeLong(System.currentTimeMillis());
+      writer.writeLong(time);
       writer.writeObjectFieldIntro("who");
       writer.writeNtPrincipal(who);
       writer.writeObjectFieldIntro("key");
@@ -230,7 +235,6 @@ public class CodeHandlerImpl implements CodeHandler {
     }
     doc.__settle(Collections.emptySet());
     invalidate.run();
-
     report.set("rx-report", snap.get());
     Files.writeString(new File(args.dumpTo).toPath(), report.toPrettyString());
     output.out();

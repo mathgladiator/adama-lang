@@ -541,7 +541,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      x = new RxInt32(this, 0);");
     gold.append("\n      dx2 = new RxLazy<Integer>(this, () -> (Integer)(__FUNC_0_double_x(__this)), null);");
     gold.append("\n      dx2.__subscribe(this);");
-    gold.append("\n      ___dx =  new RxGuard(this);");
+    gold.append("\n      ___dx = new RxGuard(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
     gold.append("\n      } else {");
@@ -2695,7 +2695,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
     gold.append("\n      x = new RxInt32(this, 0);");
-    gold.append("\n      ___b =  new RxGuard(this);");
+    gold.append("\n      ___b = new RxGuard(this);");
     gold.append("\n      __b_others = new RxTableGuard(___b);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");

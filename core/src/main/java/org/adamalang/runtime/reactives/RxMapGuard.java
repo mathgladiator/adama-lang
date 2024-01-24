@@ -48,6 +48,13 @@ public class RxMapGuard<DomainTy> implements MapSubscription<DomainTy> {
       this.all = false;
       this.keys = null;
       this.viewFired = true;
+      owner.invalidateParent();
+    }
+
+    private void justReset() {
+      this.all = false;
+      this.keys = null;
+      this.viewFired = false;
     }
 
     public boolean key(DomainTy key) {
@@ -85,7 +92,7 @@ public class RxMapGuard<DomainTy> implements MapSubscription<DomainTy> {
 
   /** reset the state */
   public void reset() {
-    root.raiseFireAndReset();
+    root.justReset();
     root.viewFired = false;
     current = root;
   }

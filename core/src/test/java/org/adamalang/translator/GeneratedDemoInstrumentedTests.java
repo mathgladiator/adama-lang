@@ -624,7 +624,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    ready = new RxLazy<Boolean>(this, () -> (Boolean)(((int) players_connected.get()) == ((int) 4)), () -> __perf.measure(\"f_Root_ready\"));");
     gold.append("\n    in_play = new RxLazy<NtList<RTxCard>>(this, () -> (NtList<RTxCard>)(deck.iterate(false).where(false, new __CLOSURE_WhereClause33()).orderBy(true, __ORDER_Card_rank_d)), () -> __perf.measure(\"f_Root_in_play\"));");
     gold.append("\n    __in_play_deck = new RxTableGuard(in_play);");
-    gold.append("\n    ___my_take =  new RxGuard(this);");
+    gold.append("\n    ___my_take = new RxGuard(this);");
     gold.append("\n    __my_take_deck = new RxTableGuard(___my_take);");
     gold.append("\n    players.__subscribe(__people_players);");
     gold.append("\n    people.__guard(players,__people_players);");

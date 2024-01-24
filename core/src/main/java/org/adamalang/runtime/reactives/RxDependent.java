@@ -186,4 +186,10 @@ public abstract class RxDependent extends RxNerfedBase implements RxChild {
     }
     return false;
   }
+
+  public void invalidateParent() {
+    if (__parent != null) {
+      __parent.__invalidateUp();
+    }
+  }
 }

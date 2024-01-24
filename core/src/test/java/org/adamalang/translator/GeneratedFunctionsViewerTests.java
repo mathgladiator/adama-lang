@@ -137,8 +137,8 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n  public Happy_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    r = new RTxR(this);");
-    gold.append("\n    ___ff =  new RxGuard(this);");
-    gold.append("\n    ___fv =  new RxGuard(this);");
+    gold.append("\n    ___ff = new RxGuard(this);");
+    gold.append("\n    ___fv = new RxGuard(this);");
     gold.append("\n    r.__link();");
     gold.append("\n    r.__subscribe(___ff);");
     gold.append("\n    __goodwillBudget = 100000;");

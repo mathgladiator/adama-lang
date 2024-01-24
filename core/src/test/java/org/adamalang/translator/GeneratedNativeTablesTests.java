@@ -2904,7 +2904,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public MessageSyncArray_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    ___fooz =  new RxGuard(this);");
+    gold.append("\n    ___fooz = new RxGuard(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -3818,7 +3818,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public MessageSync_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    ___fooz =  new RxGuard(this);");
+    gold.append("\n    ___fooz = new RxGuard(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

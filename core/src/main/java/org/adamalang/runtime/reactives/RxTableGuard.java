@@ -42,11 +42,19 @@ public class RxTableGuard implements TableSubscription {
       this.viewFired = false;
     }
 
+    private void justReset() {
+      this.all = false;
+      this.primaryKeys = null;
+      this.indices = null;
+      this.viewFired = false;
+    }
+
     private void raiseFireAndReset() {
       this.all = false;
       this.primaryKeys = null;
       this.indices = null;
       this.viewFired = true;
+      owner.invalidateParent();
     }
 
     public boolean index(int field, int value) {
@@ -133,7 +141,7 @@ public class RxTableGuard implements TableSubscription {
 
   /** reset the state */
   public void reset() {
-    root.raiseFireAndReset();
+    root.justReset();
     root.viewFired = false;
     current = root;
   }

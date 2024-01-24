@@ -119,7 +119,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  public CanOnlyCallPure_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 7);");
-    gold.append("\n    ___k =  new RxGuard(this);");
+    gold.append("\n    ___k = new RxGuard(this);");
     gold.append("\n    x.__subscribe(___k);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -799,7 +799,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  public Define_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 7);");
-    gold.append("\n    ___k =  new RxGuard(this);");
+    gold.append("\n    ___k = new RxGuard(this);");
     gold.append("\n    x.__subscribe(___k);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -1474,7 +1474,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  public Instrumented_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 7);");
-    gold.append("\n    ___k =  new RxGuard(this);");
+    gold.append("\n    ___k = new RxGuard(this);");
     gold.append("\n    x.__subscribe(___k);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2160,7 +2160,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public ViewerStateDefineMessage_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    ___cake =  new RxGuard(this);");
+    gold.append("\n    ___cake = new RxGuard(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -2944,7 +2944,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  public ViewerStateDefine_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    str = new RxString(this, \"\");");
-    gold.append("\n    ___cake =  new RxGuard(this);");
+    gold.append("\n    ___cake = new RxGuard(this);");
     gold.append("\n    str.__subscribe(___cake);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3660,9 +3660,9 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  public ViewerStateUseWhere_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxR(__parent).__link(), 0);");
-    gold.append("\n    ___cake =  new RxGuard(this);");
+    gold.append("\n    ___cake = new RxGuard(this);");
     gold.append("\n    __cake_tbl = new RxTableGuard(___cake);");
-    gold.append("\n    ___todo =  new RxGuard(this);");
+    gold.append("\n    ___todo = new RxGuard(this);");
     gold.append("\n    tbl.__subscribe(__cake_tbl);");
     gold.append("\n    ___cake.__guard(tbl,__cake_tbl);");
     gold.append("\n    __today.__subscribe(___todo);");
@@ -4765,7 +4765,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public ViewerStateUse_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    ___v =  new RxGuard(this);");
+    gold.append("\n    ___v = new RxGuard(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");

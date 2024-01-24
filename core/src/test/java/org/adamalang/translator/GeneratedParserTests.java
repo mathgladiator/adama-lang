@@ -37233,7 +37233,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  public ViewerCompute_120(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    ___y =  new RxGuard(this);");
+    gold.append("\n    ___y = new RxGuard(this);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -37648,7 +37648,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
     gold.append("\n      id = new RxInt32(this, 0);");
-    gold.append("\n      ___x =  new RxGuard(this);");
+    gold.append("\n      ___x = new RxGuard(this);");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
     gold.append("\n      } else {");

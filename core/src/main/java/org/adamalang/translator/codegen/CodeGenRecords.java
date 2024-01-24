@@ -257,7 +257,6 @@ public class CodeGenRecords {
         environment.define(fieldName, new TyReactiveLazy(lazyType, fdInOrder.hasCachePolicy()), false, fdInOrder);
         if (!fdInOrder.hasCachePolicy()) {
           for (final String watched : fdInOrder.watching.variables) {
-            // TODO: IF VALIDATION FAILS, THEN COMMENT THESE OUT
             if (!fdInOrder.watching.pubsub.contains(watched)) {
               classLinker.append(watched).append(".__subscribe(").append(fieldName).append(");").writeNewline();
             }
@@ -341,7 +340,7 @@ public class CodeGenRecords {
 
     for (final BubbleDefinition bubble : storage.bubbles.values()) {
       classFields.append("private final RxGuard ___" + bubble.nameToken.text + ";").writeNewline();
-      classConstructorX.append("___").append(bubble.nameToken.text).append(" =  new RxGuard(this);").writeNewline();
+      classConstructorX.append("___").append(bubble.nameToken.text).append(" = new RxGuard(this);").writeNewline();
       for (final String tableToWatch : bubble.watching.tables) {
         classFields.append("private final RxTableGuard __").append(bubble.nameToken.text).append("_").append(tableToWatch).append(";").writeNewline();
         classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxTableGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
@@ -351,7 +350,6 @@ public class CodeGenRecords {
         classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxMapGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
       }
       for (final String watched : bubble.watching.variables) {
-        // TODO: IF VALIDATION FAILS, THEN COMMENT THESE OUT
         if (!bubble.watching.pubsub.contains(watched)) {
           classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
         }
@@ -361,7 +359,6 @@ public class CodeGenRecords {
         classLinker.append("___").append(bubble.nameToken.text).append(".__guard(").append(watched).append(",__").append(bubble.nameToken.text).append("_").append(watched).append(");").writeNewline();
       }
     }
-
     CodeGenJoins.writeJoins(storage, classLinker, environment);
   }
 
