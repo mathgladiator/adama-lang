@@ -3306,7 +3306,7 @@ var RxHTML = (function () {
       return Math.round(ival * 10) / 10.0 + " GB";
     }
   }
-  transforms['ordinal'] = function(n) {
+  transforms['ordinalize'] = function(n) {
     const num = parseInt(n);
     if (!isNaN(num)) {
       let ord = 'th';
