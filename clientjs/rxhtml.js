@@ -3306,6 +3306,24 @@ var RxHTML = (function () {
       return Math.round(ival * 10) / 10.0 + " GB";
     }
   }
+  transforms['ordinalize'] = function(n) {
+    const num = parseInt(n);
+    if (!isNaN(num)) {
+      let ord = 'th';
+      if (n % 10 == 1 && n % 100 != 11) {
+        ord = 'st';
+      }
+      else if (n % 10 == 2 && n % 100 != 12) {
+        ord = 'nd';
+      }
+      else if (n % 10 == 3 && n % 100 != 13) {
+        ord = 'rd';
+      }
+      return n + ord;
+    } else {
+      return n;
+    }
+  }
   transforms['vulgar_fraction'] = function(xraw) {
     var x = 0.0;
     if (typeof(xraw) == 'number') {
