@@ -28,6 +28,7 @@ import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
+import org.adamalang.web.assets.transforms.TransformQueue;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class ServiceRunnable implements Runnable {
   private Channel channel;
   private boolean stopped;
   private final DomainFinder domainFinder;
+  private final TransformQueue transformQueue;
 
   public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, CertificateFinder certificateFinder, DomainFinder domainFinder, Runnable heartbeat) {
     this.webConfig = webConfig;
@@ -64,6 +66,7 @@ public class ServiceRunnable implements Runnable {
     ready = new CountDownLatch(1);
     this.heartbeat = heartbeat;
     this.cache = new WebHandlerAssetCache(TimeSource.REAL_TIME, webConfig.cacheRoot);
+    this.transformQueue = new TransformQueue(TimeSource.REAL_TIME, webConfig.transformRoot, base.assets());
   }
 
   public synchronized boolean isAccepting() {
@@ -94,7 +97,7 @@ public class ServiceRunnable implements Runnable {
             final var b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)//
              .channel(NioServerSocketChannel.class) //
-             .childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache, domainFinder));
+             .childHandler(new Initializer(webConfig, metrics, base, certificateFinder, context, cache, domainFinder, transformQueue));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");
@@ -137,5 +140,7 @@ public class ServiceRunnable implements Runnable {
     if (channel != null) {
       channel.close();
     }
+    transformQueue.shutdown();
+    cache.shutdown();
   }
 }

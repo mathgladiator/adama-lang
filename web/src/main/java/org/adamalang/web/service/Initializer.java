@@ -35,6 +35,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
+import org.adamalang.web.assets.transforms.TransformQueue;
 import org.adamalang.web.contracts.CertificateFinder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
@@ -51,8 +52,9 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
   private final SslContext context;
   private final WebHandlerAssetCache cache;
   private final DomainFinder domainFinder;
+  private final TransformQueue transformQueue;
 
-  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, final CertificateFinder certificateFinder, SslContext context, WebHandlerAssetCache cache, DomainFinder domainFinder) {
+  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, final CertificateFinder certificateFinder, SslContext context, WebHandlerAssetCache cache, DomainFinder domainFinder, TransformQueue transformQueue) {
     this.logger = LoggerFactory.getLogger("Initializer");
     this.webConfig = webConfig;
     this.metrics = metrics;
@@ -61,6 +63,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     this.context = context;
     this.cache = cache;
     this.domainFinder = domainFinder;
+    this.transformQueue = transformQueue;
   }
 
   @Override
@@ -93,7 +96,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     pipeline.addLast(new WebSocketServerCompressionHandler());
     pipeline.addLast(new WebSocketServerProtocolHandler("/~s", null, true, webConfig.maxWebSocketFrameSize, false, true, webConfig.timeoutWebsocketHandshake));
     pipeline.addLast(new HttpContentCompressor());
-    pipeline.addLast(new WebHandler(webConfig, metrics, base.http(), base.assets(), cache, domainFinder));
+    pipeline.addLast(new WebHandler(webConfig, metrics, base.http(), base.assets(), cache, domainFinder, transformQueue));
     pipeline.addLast(new WebSocketHandler(webConfig, metrics, base));
   }
 }

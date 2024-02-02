@@ -79,7 +79,8 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
-  public void restore(Key key, String archiveKey, Callback<Void> callback) {
+  public void restore(Key key, String archiveKey, Callback<Void> callbackReal) {
+    Callback<Void> callback = metrics.caravan_restore.wrap(callbackReal);
     // ask the cloud to ensure the archive key has been downloaded
     cloud.restore(key, archiveKey, new Callback<>() {
       @Override
@@ -137,8 +138,9 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
-  public void backup(Key key, Callback<BackupResult> callback) {
+  public void backup(Key key, Callback<BackupResult> callbackReal) {
     String archiveKey = ProtectedUUID.generate() + "-" + System.currentTimeMillis();
+    Callback<BackupResult> callback = metrics.caravan_backup.wrap(callbackReal);
     execute("backup", key, true, callback, (cached) -> {
       int seq = cached.seq();
       AtomicLong deltaBytesSum = new AtomicLong(0);

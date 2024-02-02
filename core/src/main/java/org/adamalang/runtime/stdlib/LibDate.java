@@ -284,4 +284,83 @@ public class LibDate {
   public static NtTimeSpan between(NtDateTime from, NtDateTime to) {
     return new NtTimeSpan(ChronoUnit.MILLIS.between(from.dateTime, to.dateTime) / 1000.0);
   }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> withYear(NtDateTime current, int year) {
+    try {
+      return new NtMaybe<>(new NtDateTime(current.dateTime.withYear(year)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> withMonth(NtDateTime current, int month) {
+    try {
+      return new NtMaybe<>(new NtDateTime(current.dateTime.withMonth(month)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> withDayOfMonth(NtDateTime current, int dayOfMonth) {
+    try {
+      return new NtMaybe<>(new NtDateTime(current.dateTime.withDayOfMonth(dayOfMonth)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> withHour(NtDateTime current, int hour) {
+    try {
+      return new NtMaybe<>(new NtDateTime(current.dateTime.withHour(hour)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> withMinute(NtDateTime current, int minute) {
+    try {
+      return new NtMaybe<>(new NtDateTime(current.dateTime.withMinute(minute)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz=NtDateTime.class) NtMaybe<NtDateTime> withTime(NtDateTime current, NtTime t) {
+    try {
+      return new NtMaybe<>(new NtDateTime(current.dateTime.withHour(t.hour).withMinute(t.minute).withSecond(0).truncatedTo(ChronoUnit.SECONDS)));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
+
+  @Extension
+  public static NtDateTime truncateDay(NtDateTime current) {
+    return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.DAYS));
+  }
+
+  @Extension
+  public static NtDateTime truncateHour(NtDateTime current) {
+    return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.HOURS));
+  }
+
+  @Extension
+  public static NtDateTime truncateMinute(NtDateTime current) {
+    return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.MINUTES));
+  }
+
+  @Extension
+  public static NtDateTime truncateSeconds(NtDateTime current) {
+    return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.SECONDS));
+  }
+
+  @Extension
+  public static NtDateTime truncateMilliseconds(NtDateTime current) {
+    return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.MILLIS));
+  }
 }

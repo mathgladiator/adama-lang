@@ -355,4 +355,118 @@ public class LibDateTests {
     Assert.assertEquals(5721.7, LibDate.between(a, b).seconds, 0.01);
     Assert.assertEquals(-5721.7, LibDate.between(b, a).seconds, 0.01);
   }
+
+  @Test
+  public void withYear() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.withYear(a, 2050).get();
+    Assert.assertEquals("2050-04-24T17:22:01.102528800-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void withYearInvalid() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.withMonth(a, -1230000).has());
+  }
+
+  @Test
+  public void withMonth() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.withMonth(a, 9).get();
+    Assert.assertEquals("2023-09-24T17:22:01.102528800-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void withMonthInvalid() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.withMonth(a, 123).has());
+  }
+
+  @Test
+  public void withDayOfMonth() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.withDayOfMonth(a, 15).get();
+    Assert.assertEquals("2023-04-15T17:22:01.102528800-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void withDayOfMonthInvalid() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.withDayOfMonth(a, 2322).has());
+  }
+
+
+  @Test
+  public void withHour() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.withHour(a, 15).get();
+    Assert.assertEquals("2023-04-24T15:22:01.102528800-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void withHourInvalid() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.withHour(a, 2322).has());
+  }
+
+  @Test
+  public void withTime() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.withTime(a, new NtTime(1, 23)).get();
+    Assert.assertEquals("2023-04-24T01:23-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void withTimeInvalid() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.withTime(a, new NtTime(1000, 2000)).has());
+  }
+
+  @Test
+  public void withMinute() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.withMinute(a, 50).get();
+    Assert.assertEquals("2023-04-24T17:50:01.102528800-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void withMinuteInvalid() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.withMinute(a, 2322).has());
+  }
+
+  @Test
+  public void truncateDay() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.truncateDay(a);
+    Assert.assertEquals("2023-04-24T00:00-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void truncateHour() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.truncateHour(a);
+    Assert.assertEquals("2023-04-24T17:00-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void truncateMinute() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.truncateMinute(a);
+    Assert.assertEquals("2023-04-24T17:22-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void truncateSeconds() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.truncateSeconds(a);
+    Assert.assertEquals("2023-04-24T17:22:01-05:00[America/Chicago]", b.toString());
+  }
+
+  @Test
+  public void truncateMilliseconds() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = LibDate.truncateMilliseconds(a);
+    Assert.assertEquals("2023-04-24T17:22:01.102-05:00[America/Chicago]", b.toString());
+  }
 }

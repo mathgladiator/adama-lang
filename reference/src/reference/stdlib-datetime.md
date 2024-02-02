@@ -68,13 +68,24 @@ Adama supports four date and time related types:
 | TimeSpan.hours(timespan a) or a.seconds()   | Return the timespan as hours                                                  | double      |
 
 ## DateTime functions
-| Method                                            | Description                                                    | Result type           |
-|---------------------------------------------------|----------------------------------------------------------------|-----------------------|
-| Date.future(datetime d, timespan t)               | Get the future datetime by the given timespan                  | datetime              |
-| Date.past(datetime d, timespan t)                 | Get the past datetime by the given timespan                    | datetime              |
-| Date.date(datetime d)                             | Convert the datetime to a date, throwing away the time         | date                  |
-| Date.time(datetime d)                             | Convert the datetime to a time, throwing away the date         | time                  |
-| Date.adjustTimeZone(datetime d, String tz)        | Adjust the timezone if the timezone exists                     | maybe&lt;datetime&gt; |
-| Date.format(datetime, string format, string lang) | Format the datetime for the given format in the given language | maybe&lt;string&gt;   |
-| Date.format(datetime, string format)              | Format the datetime for the given format using english         | maybe&lt;string&gt;   |
+| Method                                            | Description                                                            | Result type       |
+|---------------------------------------------------|------------------------------------------------------------------------|-------------------|
+| Date.future(datetime d, timespan t)               | Get the future datetime by the given timespan                          | datetime          |
+| Date.past(datetime d, timespan t)                 | Get the past datetime by the given timespan                            | datetime          |
+| Date.date(datetime d)                             | Convert the datetime to a date, throwing away the time                 | date              |
+| Date.time(datetime d)                             | Convert the datetime to a time, throwing away the date                 | time              |
+| Date.adjustTimeZone(datetime d, String tz)        | Adjust the timezone if the timezone exists                             | maybe&lt;datetime&gt; |
+| Date.format(datetime, string format, string lang) | Format the datetime for the given format in the given language         | maybe&lt;string&gt; |
+| Date.format(datetime, string format)              | Format the datetime for the given format using english                 | maybe&lt;string&gt; |
+| Date.withYear(datetime d, int year)               | Replace the year                                                       | maybe&lt;datetime&gt; |
+| Date.withMonth(datetime d, int month)             | Replace the month                                                      | maybe&lt;datetime&gt; |
+| Date.withDayOfMonth(datetime d, int day)          | Replace the day of the month                                           | maybe&lt;datetime&gt; |
+| Date.withHour(datetime d, int hour)               | Replace the hour                                                       | maybe&lt;datetime&gt; |
+| Date.withMinute(datetime d, int minute)           | Replace the minute the month                                           | maybe&lt;datetime&gt; |
+| Date.withTime(datetime d, time t)                 | Replace both the hour and minute and zero out seconds and milliseconds | maybe&lt;datetime&gt; |
+| Date.truncateDay(datetime)                        | Zero out the day, hour, minute, seconds, milliseconds                  | datetime |
+| Date.truncateHour(datetime)                       | Zero out the hour, minute, seconds, milliseconds                       | datetime |
+| Date.truncateMinute(datetime)                     | Zero out the minute, seconds, milliseconds                             | datetime |
+| Date.truncateSeconds(datetime)                    | Zero out the seconds, milliseconds                                     | datetime |
+| Date.truncateMilliseconds(datetime)               | Zero out the milliseconds                                              | datetime |
 

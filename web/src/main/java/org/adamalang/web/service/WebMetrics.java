@@ -43,6 +43,7 @@ public class WebMetrics {
   public final Runnable webhandler_notfound;
   public final Runnable webhandler_redirect;
   public final Runnable webhandler_upload_asset_failure;
+  public final Runnable webhandler_transform_failure_none_available;
   public final Runnable webhandler_failed_cookie_set;
   public final Runnable webhandler_version;
   public final Runnable webhandler_failed_cookie_get;
@@ -102,6 +103,7 @@ public class WebMetrics {
     this.webhandler_notfound = factory.counter("webhandler_notfound");
     this.webhandler_redirect = factory.counter("webhandler_redirect");
     this.webhandler_upload_asset_failure = factory.counter("webhandler_upload_asset_failure");
+    this.webhandler_transform_failure_none_available = factory.counter("webhandler_transform_failure_none_available");
     this.webhandler_healthcheck = factory.counter("webhandler_healthcheck");
     this.webhandler_deephealthcheck = factory.counter("webhandler_deephealthcheck");
     this.webhandler_firewall = factory.counter("webhandler_firewall");

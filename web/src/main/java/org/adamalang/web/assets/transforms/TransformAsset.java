@@ -15,16 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.web.service;
+package org.adamalang.web.assets.transforms;
 
-import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.web.service.mocks.MockServiceBase;
-import org.adamalang.web.service.mocks.NullCertificateFinder;
-import org.junit.Test;
+import org.adamalang.common.cache.Measurable;
 
-public class InitializerTests {
-  @Test
-  public void sanity() throws Exception {
-    new Initializer(WebConfigTests.mockConfig(WebConfigTests.Scenario.Dev), new WebMetrics(new NoOpMetricsFactory()), new MockServiceBase(), new NullCertificateFinder(), null, null, null, null);
+public class TransformAsset implements Measurable {
+  public void evict() {
+
+  }
+
+  @Override
+  public long measure() {
+    return 0;
   }
 }

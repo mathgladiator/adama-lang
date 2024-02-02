@@ -23,8 +23,6 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
-import org.adamalang.common.XWWWFormUrl;
-import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.ServiceConfig;
@@ -64,13 +62,16 @@ public class Payrix  extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-
+    sb.append("enum PayrixTxStatus { Pending:0, Approved:1, Failed:2, Captured:3, Settled:5, Returned:6 }");
     sb.append("message PayrixTxResponse {");
     sb.append("  bool success;");
     sb.append("  maybe<string> tx_id;");
+    sb.append("  maybe<PayrixTxStatus> tx_status;");
     sb.append("  maybe<dynamic> error;");
     sb.append("}");
-
+    sb.append("message PayrixTxFetchRequest {");
+    sb.append("  string tx_id;");
+    sb.append("}");
     sb.append("service payrix {\n");
     sb.append("  class=\"payrix\";\n");
     sb.append("  ").append(params).append("\n");
@@ -81,59 +82,45 @@ public class Payrix  extends SimpleService {
       error.accept("Payrix requires an 'endpoint' for either sandbox or production");
     }
     sb.append("  method<dynamic, PayrixTxResponse> PostTransaction;\n");
+    sb.append("  method<PayrixTxFetchRequest, PayrixTxResponse> GetTransaction;\n");
     sb.append("}\n");
     return sb.toString();
   }
 
-  @Override
-  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
-    ObjectNode node = Json.parseJsonObject(request);
-    switch (method) {
-      case "PostTransaction": {
-        // remove the idempotent_key to be used as part of the header, this must exist
-        JsonNode idempotentKey = node.remove("idempotent_key");
-        if (idempotentKey == null || idempotentKey.isNull() || !idempotentKey.isTextual()) {
-          metrics.payrix_post_tx.start().failure(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_REQUIRES_IDEMPOTENCE_KEY);
-          callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_REQUIRES_IDEMPOTENCE_KEY));
-          return;
+  private static Callback<String> createTransactionTeardownCallback(Callback<String> callback) {
+    return new Callback<String>() {
+      @Override
+      public void success(String value) {
+        ObjectNode resultFromPayrix = Json.parseJsonObject(value);
+        ObjectNode handoffResult = Json.newJsonObject();
+        // isolate
+        String txId = extractTransactionId(resultFromPayrix);
+        if (txId != null) {
+          handoffResult.put("tx_id", txId);
         }
-        TreeMap<String, String> headers = new TreeMap<>();
-        headers.put("APIKEY", apikey);
-        headers.put("REQUEST-TOKEN", idempotentKey.textValue());
-        headers.put("Content-Type", "application/json");
-        SimpleHttpRequest req = new SimpleHttpRequest("POST", endpoint + "txns", headers, SimpleHttpRequestBody.WRAP(node.toString().getBytes(StandardCharsets.UTF_8)));
-        Callback<String> transformCallback = new Callback<String>() {
-          @Override
-          public void success(String value) {
-            ObjectNode resultFromPayrix = Json.parseJsonObject(value);
-            ObjectNode handoffResult = Json.newJsonObject();
-            // isolate
-            String txId = detectSuccessAndReturnTransactionId(resultFromPayrix);
-            if (txId != null) {
-              handoffResult.put("tx_id", txId);
-              handoffResult.put("success", true);
-            } else {
-              handoffResult.set("error", resultFromPayrix);
-              handoffResult.put("success", false);
-            }
-            callback.success(handoffResult.toString());
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        };
-        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_post_tx.start(), transformCallback));
-        return;
+        Integer status = extractStatus(resultFromPayrix);
+        if (status != null) {
+          handoffResult.put("tx_status", status);
+        }
+        if (hasErrors(resultFromPayrix)) {
+          handoffResult.put("success", false);
+          handoffResult.set("error", resultFromPayrix);
+        } else {
+          handoffResult.put("success", true);
+        }
+        callback.success(handoffResult.toString());
       }
-      default:
-        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
-    }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
   }
 
+
   /** ultimately, the system only cares about success -> transaction id and the payrix side has all the details */
-  private static String detectSuccessAndReturnTransactionId(ObjectNode resultFromPayrix) {
+  private static String extractTransactionId(ObjectNode resultFromPayrix) {
     try {
       JsonNode at = resultFromPayrix.get("response");
       if (!(at != null && at.isObject() && at.has("data"))) {
@@ -152,4 +139,75 @@ public class Payrix  extends SimpleService {
       return null;
     }
   }
+
+  public static Integer extractStatus(ObjectNode resultFromPayrix) {
+    try {
+      JsonNode at = resultFromPayrix.get("response");
+      if (!(at != null && at.isObject() && at.has("data"))) {
+        return null;
+      }
+      at = at.get("data");
+      if (!(at != null && at.isArray() && at.size() == 1)) {
+        return null;
+      }
+      at = at.get(0);
+      if (!(at != null && at.isObject() && at.has("status"))) {
+        return null;
+      }
+      return at.get("status").intValue();
+    } catch (Exception shrug) {
+      return null;
+    }
+  }
+
+  public static boolean hasErrors(ObjectNode resultFromPayrix) {
+    try {
+      JsonNode at = resultFromPayrix.get("response");
+      if (!(at != null && at.isObject() && at.has("errors"))) {
+        return true;
+      }
+      at = at.get("errors");
+      if ((at != null && at.isArray())) {
+        return at.size() > 0;
+      }
+      return true;
+    } catch (Exception shrug) {
+      return true;
+    }
+  }
+
+  @Override
+  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+    ObjectNode node = Json.parseJsonObject(request);
+    switch (method) {
+      case "GetTransaction": {
+        TreeMap<String, String> headers = new TreeMap<>();
+        headers.put("APIKEY", apikey);
+        headers.put("Content-Type", "application/json");
+        String transactionId = node.get("tx_id").textValue();
+        SimpleHttpRequest req = new SimpleHttpRequest("GET", endpoint + "txns/" + transactionId, headers, SimpleHttpRequestBody.EMPTY);
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_tx.start(), createTransactionTeardownCallback(callback)));
+        return;
+      }
+      case "PostTransaction": {
+        // remove the idempotent_key to be used as part of the header, this must exist
+        JsonNode idempotentKey = node.remove("idempotent_key");
+        if (idempotentKey == null || idempotentKey.isNull() || !idempotentKey.isTextual()) {
+          metrics.payrix_post_tx.start().failure(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_REQUIRES_IDEMPOTENCE_KEY);
+          callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_REQUIRES_IDEMPOTENCE_KEY));
+          return;
+        }
+        TreeMap<String, String> headers = new TreeMap<>();
+        headers.put("APIKEY", apikey);
+        headers.put("REQUEST-TOKEN", idempotentKey.textValue());
+        headers.put("Content-Type", "application/json");
+        SimpleHttpRequest req = new SimpleHttpRequest("POST", endpoint + "txns", headers, SimpleHttpRequestBody.WRAP(node.toString().getBytes(StandardCharsets.UTF_8)));
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_post_tx.start(), createTransactionTeardownCallback(callback)));
+        return;
+      }
+      default:
+        callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_METHOD_NOT_FOUND));
+    }
+  }
+
 }

@@ -17,6 +17,7 @@
 */
 package org.adamalang.caravan;
 
+import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 
@@ -24,10 +25,14 @@ public class CaravanMetrics {
   public Runnable caravan_waste;
   public Runnable caravan_seq_off;
   public Inflight caravan_datalog_loss;
+  public CallbackMonitor caravan_backup;
+  public CallbackMonitor caravan_restore;
 
   public CaravanMetrics(MetricsFactory factory) {
     this.caravan_waste = factory.counter("caravan_waste");
     this.caravan_seq_off = factory.counter("caravan_seq_off");
     this.caravan_datalog_loss = factory.inflight("alarm_caravan_datalog_loss");
+    this.caravan_backup = factory.makeCallbackMonitor("caravan_backup");
+    this.caravan_restore = factory.makeCallbackMonitor("caravan_restore");
   }
 }

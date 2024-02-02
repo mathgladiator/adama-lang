@@ -42,6 +42,7 @@ import org.adamalang.web.assets.cache.CachedAsset;
 import org.adamalang.web.assets.cache.WebHandlerAssetCache;
 import org.adamalang.web.assets.transforms.Transform;
 import org.adamalang.web.assets.transforms.TransformFactory;
+import org.adamalang.web.assets.transforms.TransformQueue;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.firewall.WebRequestShield;
 import org.adamalang.web.io.ConnectionContext;
@@ -65,6 +66,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] OK_RESPONSE = "OK".getBytes(StandardCharsets.UTF_8);
   private static final byte[] NOT_FOUND_RESPONSE = "<html><head><title>Bad Request; Not Found</title></head><body>Sorry, the request was not found within our handler space.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_FAILURE = "<html><head><title>Bad Request; Internal Error Uploading</title></head><body>Sorry, the upload failed.</body></html>".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] ASSET_TRANSFORM_FAILURE = "<html><head><title>Bad Request; asset content type not understood</title></head><body>Sorry.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] ASSET_UPLOAD_INCOMPLETE_FIELDS = "<html><head><title>Bad Request; Incomplete</title></head><body>Sorry, the post request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] COOKIE_SET_FAILURE = "<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] JAR_FAILURE = "<html><head><title>Bad Request; Internal Error Access Jar</title></head><body>Sorry, the download failed.</body></html>".getBytes(StandardCharsets.UTF_8);
@@ -76,13 +78,15 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebHandlerAssetCache cache;
   private final ExecutorService jarThread;
   private final DomainFinder domainFinder;
+  private final TransformQueue transformQueue;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache, DomainFinder incomingDomainFinder) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache, DomainFinder incomingDomainFinder, TransformQueue transformQueue) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
     this.assets = assets;
     this.cache = cache;
+    this.transformQueue = transformQueue;
     this.jarThread = Executors.newSingleThreadExecutor();
     this.domainFinder = new DomainFinder() {
       @Override
@@ -224,16 +228,18 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   /** handle a native asset */
   private void handleNtAsset(FullHttpRequest req, final ChannelHandlerContext ctx, Key key, NtAsset asset, String transform, boolean cors, Integer cacheTimeSeconds) {
+    AssetStream response = streamOf(req, ctx, cors, cacheTimeSeconds);
+
     if (transform != null) {
       Transform how = TransformFactory.make(asset.contentType, transform);
       if (how == null) {
-        // error out, it's a very sad day
-
+        sendImmediate(metrics.webhandler_transform_failure_none_available, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_TRANSFORM_FAILURE, "text/html; charset=UTF-8", true);
+        return;
       } else {
-        // OK, we need to stream the asset out of S3 and onto the disk and gate on the output
+        // transformQueue.process(key, transform, how, asset, response);
+        // return;
       }
     }
-    AssetStream response = streamOf(req, ctx, cors, cacheTimeSeconds);
 
     if (!WebHandlerAssetCache.canCache(asset)) {
       // we can't cache? sad face -> stream direct
