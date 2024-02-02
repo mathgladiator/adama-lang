@@ -1,0 +1,9 @@
+@cron foo hourly 50000 {
+
+}
+
+private string hr;
+
+@cron fozozy hourly hr {
+
+}

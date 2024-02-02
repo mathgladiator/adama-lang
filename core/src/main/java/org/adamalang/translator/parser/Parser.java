@@ -666,11 +666,35 @@ public class Parser {
     Token head = id();
     schedule.add(head);
     switch (head.text) {
-      case "daily":
-        schedule.add(consumeInteger());
-        schedule.add(consumeExpectedSymbol(":"));
-        schedule.add(consumeInteger());
+      case "hourly": {
+        Token varName = tokens.popIf((t) -> t.isIdentifier());
+        if (varName != null) {
+          schedule.add(varName);
+        } else {
+          schedule.add(consumeInteger());
+        }
         break;
+      }
+      case "daily": {
+        Token varName = tokens.popIf((t) -> t.isIdentifier());
+        if (varName != null) {
+          schedule.add(varName);
+        } else {
+          schedule.add(consumeInteger());
+          schedule.add(consumeExpectedSymbol(":"));
+          schedule.add(consumeInteger());
+        }
+        break;
+      }
+      case "monthly": {
+        Token varName = tokens.popIf((t) -> t.isIdentifier());
+        if (varName != null) {
+          schedule.add(varName);
+        } else {
+          schedule.add(consumeInteger());
+        }
+        break;
+      }
     }
     return schedule.toArray(new Token[schedule.size()]);
   }

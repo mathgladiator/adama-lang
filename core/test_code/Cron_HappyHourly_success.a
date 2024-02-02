@@ -1,0 +1,9 @@
+@cron foo hourly 30 {
+
+}
+
+private int hr;
+
+@cron fozozy hourly hr {
+
+}

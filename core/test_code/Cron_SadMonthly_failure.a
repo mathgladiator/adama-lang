@@ -1,0 +1,9 @@
+@cron foo monthly 1500 {
+
+}
+
+private string day;
+
+@cron fozozy monthly day {
+
+}

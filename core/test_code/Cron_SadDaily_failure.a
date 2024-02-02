@@ -1,0 +1,8 @@
+@cron foo daily 50:1000 {
+}
+
+private string the_time_to_fire;
+
+@cron fozozy daily the_time_to_fire {
+
+}

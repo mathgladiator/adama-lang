@@ -1,0 +1,22 @@
+int x;
+int y;
+
+@cron first daily 8:00 {
+  x++;
+  if (x % 2 == 0) { return; }
+  y++;
+}
+
+@cron second daily 9:00 {
+  y++;
+}
+
+@cron third monthly 5 {
+  x++;
+  y++;
+}
+
+@cron fourth hourly 30 {
+  x += 100;
+  y += 10;
+}

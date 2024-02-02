@@ -1,3 +1,9 @@
 @cron foo daily 10:00 {
 
 }
+
+private time the_time_to_fire;
+
+@cron fozozy daily the_time_to_fire {
+
+}
