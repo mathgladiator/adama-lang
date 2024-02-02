@@ -31,7 +31,7 @@ public class WebResponse {
   public NtAsset asset = null;
   public boolean cors = false;
   public int cache_ttl_seconds = 0;
-  public String asset_transform = "";
+  public String asset_transform = null;
   public int status;
 
   public WebResponse() {
