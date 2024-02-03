@@ -27,11 +27,11 @@ public class CodeGenTests {
     // generate test bodies
     if (!environment.state.options.removeTests) {
       for (final DefineTest test : environment.document.tests) {
-        sb.append("public void __test_").append(test.name).append("(TestReportBuilder report) {").tabUp().writeNewline();
-        sb.append("report.begin(\"").append(test.name).append("\");").writeNewline();
+        sb.append("public void __test_").append(test.name).append("(TestReportBuilder __report) {").tabUp().writeNewline();
+        sb.append("__report.begin(\"").append(test.name).append("\");").writeNewline();
         test.code.writeJava(sb, environment.scopeAsUnitTest());
         sb.writeNewline();
-        sb.append("report.end(getAndResetAssertions());").tabDown().writeNewline();
+        sb.append("__report.end(getAndResetAssertions());").tabDown().writeNewline();
         sb.append("}").writeNewline();
       }
     }

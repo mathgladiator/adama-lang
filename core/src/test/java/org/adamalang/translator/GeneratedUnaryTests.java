@@ -1663,8 +1663,8 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_Negate(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"Negate\");");
+    gold.append("\n  public void __test_Negate(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"Negate\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      __track(1);");
@@ -1674,7 +1674,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n      __track(3);");
     gold.append("\n      __assert_truth(((int) -(1 + 4)) == ((int) -5), 23, 2, 23, 24);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

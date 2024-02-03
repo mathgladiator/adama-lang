@@ -820,8 +820,8 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_drive_it(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"drive_it\");");
+    gold.append("\n  public void __test_drive_it(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"drive_it\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 18;");
     gold.append("\n      __track(8);");
@@ -859,7 +859,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __track(24);");
     gold.append("\n      __assert_truth((status.get()).equals(\"Value:4/8:5/10\"), 40, 2, 40, 36);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

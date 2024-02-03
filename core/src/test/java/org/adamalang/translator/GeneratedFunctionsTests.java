@@ -9722,8 +9722,8 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"PrimaryTest\");");
+    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"PrimaryTest\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      __track(0);");
@@ -9733,10 +9733,10 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __track(2);");
     gold.append("\n      __assert_truth(((int) x.length()) == ((int) 3), 7, 2, 7, 25);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
-    gold.append("\n  public void __test_SecondTest(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"SecondTest\");");
+    gold.append("\n  public void __test_SecondTest(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"SecondTest\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 7;");
     gold.append("\n      __track(3);");
@@ -9752,7 +9752,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __track(8);");
     gold.append("\n      __assert_truth(((int) t.size()) == ((int) 0), 24, 2, 24, 23);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

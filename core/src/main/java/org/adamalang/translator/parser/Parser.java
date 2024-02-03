@@ -45,10 +45,7 @@ import org.adamalang.translator.tree.statements.loops.DoWhile;
 import org.adamalang.translator.tree.statements.loops.For;
 import org.adamalang.translator.tree.statements.loops.ForEach;
 import org.adamalang.translator.tree.statements.loops.While;
-import org.adamalang.translator.tree.statements.testing.AssertTruth;
-import org.adamalang.translator.tree.statements.testing.Force;
-import org.adamalang.translator.tree.statements.testing.Forward;
-import org.adamalang.translator.tree.statements.testing.PumpMessage;
+import org.adamalang.translator.tree.statements.testing.*;
 import org.adamalang.translator.tree.types.TyTablePtr;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeAnnotation;
@@ -1563,6 +1560,7 @@ public class Parser {
     switch (token.text) {
       case "abstract":
       case "assert":
+      case "log":
       case "boolean":
       case "break":
       case "byte":
@@ -2065,7 +2063,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "preempt"));
+      op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "log", "preempt"));
     }
     if (op != null) {
       switch (op.text) {
@@ -2121,6 +2119,10 @@ public class Parser {
         case "assert": {
           final var toAssert = expression(scope);
           return new AssertTruth(op, toAssert, consumeExpectedSymbol(";"));
+        }
+        case "log": {
+          final var toLog = expression(scope);
+          return new LogString(op, toLog, consumeExpectedSymbol(";"));
         }
         case "@step": {
           return new Force(op, Force.Action.Step, consumeExpectedSymbol(";"));

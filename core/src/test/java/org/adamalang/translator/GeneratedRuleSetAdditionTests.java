@@ -657,10 +657,10 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"PrimaryTest\");");
+    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"PrimaryTest\");");
     gold.append("\n    {}");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

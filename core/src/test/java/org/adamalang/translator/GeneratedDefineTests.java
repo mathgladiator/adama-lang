@@ -7720,8 +7720,8 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_Ints(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"Ints\");");
+    gold.append("\n  public void __test_Ints(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"Ints\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 9;");
     gold.append("\n      __track(0);");
@@ -7741,10 +7741,10 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n      __track(7);");
     gold.append("\n      sx.set(x);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
-    gold.append("\n  public void __test_Doubles(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"Doubles\");");
+    gold.append("\n  public void __test_Doubles(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"Doubles\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 9;");
     gold.append("\n      __track(8);");
@@ -7764,7 +7764,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n      __track(15);");
     gold.append("\n      sy.set(y);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

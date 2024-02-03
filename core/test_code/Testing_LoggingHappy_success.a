@@ -1,0 +1,10 @@
+test Test1 {
+  log "Hello World";
+}
+
+test Test2 {
+  log "Hi";
+}
+
+test Test3 {
+}

@@ -1642,8 +1642,8 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_drive_it(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"drive_it\");");
+    gold.append("\n  public void __test_drive_it(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"drive_it\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 9;");
     gold.append("\n      __track(4);");
@@ -1663,7 +1663,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n      __track(11);");
     gold.append("\n      __assert_truth(((int) z.get()) == ((int) 12), 33, 2, 33, 17);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
@@ -2509,8 +2509,8 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_drive_it(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"drive_it\");");
+    gold.append("\n  public void __test_drive_it(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"drive_it\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 11;");
     gold.append("\n      __track(4);");
@@ -2534,7 +2534,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n      __track(13);");
     gold.append("\n      __assert_truth(((int) z.get()) == ((int) -1), 35, 2, 35, 17);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

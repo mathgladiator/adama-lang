@@ -19,19 +19,22 @@ package org.adamalang.runtime.ops;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** a fun way to build test reports */
 public class TestReportBuilder {
   private final HashMap<String, Object> dumps;
   private final StringBuilder report;
-  private final long started;
   private int failures;
+  private String current;
+  private final HashMap<String, ArrayList<String>> logs;
 
   public TestReportBuilder() {
-    report = new StringBuilder();
-    started = System.currentTimeMillis();
-    dumps = new HashMap<>();
+    this.report = new StringBuilder();
+    this.dumps = new HashMap<>();
+    this.logs = new HashMap<>();
+    this.current = null;
   }
 
   public void annotate(final String name, final HashMap<String, Object> dump) {
@@ -43,7 +46,19 @@ public class TestReportBuilder {
     dumps.put(name, dump);
   }
 
+  public void log(String message, int startLine, int startChar, int endLine, int endChar) {
+    if (current != null) {
+      ArrayList<String> log = logs.get(current);
+      if (log == null) {
+        log = new ArrayList<>();
+        logs.put(current, log);
+      }
+      log.add(message + " {line:" + startLine + "}");
+    }
+  }
+
   public void begin(final String name) {
+    current = name;
     report.append("TEST[").append(name).append("]");
   }
 
@@ -56,6 +71,14 @@ public class TestReportBuilder {
       report.append("\n");
     } else {
       report.append(" HAS NO ASSERTS\n");
+    }
+    if (current != null) {
+      ArrayList<String> log = logs.get(current);
+      if (log != null) {
+        for (String ln : log) {
+          report.append(" - LOG:").append(ln).append("\n");
+        }
+      }
     }
     failures += stats.failures;
   }

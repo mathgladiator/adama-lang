@@ -883,8 +883,8 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_foo(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"foo\");");
+    gold.append("\n  public void __test_foo(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"foo\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 9;");
     gold.append("\n      __track(6);");
@@ -904,7 +904,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      __track(13);");
     gold.append("\n      __assert_truth(skip.get(), 34, 2, 34, 14);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
@@ -5026,8 +5026,8 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_foo(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"foo\");");
+    gold.append("\n  public void __test_foo(TestReportBuilder __report) {");
+    gold.append("\n    __report.begin(\"foo\");");
     gold.append("\n    {");
     gold.append("\n      __code_cost += 10;");
     gold.append("\n      __track(9);");
@@ -5049,7 +5049,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      __track(17);");
     gold.append("\n      __assert_truth(((int) lastV.get()) == ((int) 50), 41, 2, 41, 21);");
     gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
+    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");

@@ -1,0 +1,10 @@
+test Test1 {
+  log 123;
+}
+
+test Test2 {
+  log @i;
+}
+
+test Test3 {
+}
