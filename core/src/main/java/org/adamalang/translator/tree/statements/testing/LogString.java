@@ -30,8 +30,7 @@ import org.adamalang.translator.tree.statements.Statement;
 import java.util.function.Consumer;
 
 /**
- * Asserts a true statement. This is useful for testing, but also measuring quality as things go
- * bump in the night.
+ * Logs a string to the test builder report
  */
 public class LogString extends Statement {
   public final Token logToken;
