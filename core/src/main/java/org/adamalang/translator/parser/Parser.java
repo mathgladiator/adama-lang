@@ -60,6 +60,7 @@ import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 /**
  * recursive descent parser for the Adama language; this contains all the rules which tear down a
@@ -158,37 +159,45 @@ public class Parser {
           }
         case "@date":
         {
-          Token year = consumeInteger();
+          Token year = consumeInteger(false);
           Token slash1 = consumeExpectedSymbol("/");
-          Token month = consumeInteger();
+          Token month = consumeInteger(false);
           Token slash2 = consumeExpectedSymbol("/");
-          Token day = consumeInteger();
+          Token day = consumeInteger(false);
           return new DateConstant(intval(year), intval(month), intval(day), token, year, slash1, month, slash2, day);
         }
         case "@time":
         {
-          Token hour = consumeInteger();
+          Token hour = consumeInteger(false);
           Token colon = consumeExpectedSymbol(":");
-          Token minute = consumeInteger();
+          Token minute = consumeInteger(false);
           return new TimeConstant(intval(hour), intval(minute), token, hour, colon, minute);
         }
         case "@timespan":
-          Token quantity = tokens.pop();
-          double quantityVal = Double.parseDouble(quantity.text);
-          Token unit = tokens.pop();
+          Token quantity = consumeDouble();
+          double quantityVal = Double.parseDouble(quantity.text.replaceAll(Pattern.quote(" "), ""));
+          Token unit = id();
           switch (unit.text) {
+            case "seconds":
+            case "second":
             case "sec":
             case "s":
               return new TimeSpanConstant(quantityVal, token, quantity, unit);
+            case "minutes":
+            case "minute":
             case "min":
             case "m":
               return new TimeSpanConstant(quantityVal * 60.0, token, quantity, unit);
+            case "hours":
+            case "hour":
             case "hr":
             case "h":
               return new TimeSpanConstant(quantityVal * 60.0 * 60.0, token, quantity, unit);
+            case "days":
             case "day":
             case "d":
               return new TimeSpanConstant(quantityVal * 60.0 * 60.0 * 24.0, token, quantity, unit);
+            case "weeks":
             case "week":
             case "w":
               return new TimeSpanConstant(quantityVal * 60.0 * 60.0 * 24.0 * 7, token, quantity, unit);
@@ -455,16 +464,40 @@ public class Parser {
     return arrow;
   }
 
-  private Token consumeInteger() throws AdamaLangException {
-    final var token = tokens.pop();
+  private Token consumeInteger(boolean allowMinus) throws AdamaLangException {
+    Token minus = null;
+    if (allowMinus) {
+      minus = tokens.popIf((t) -> t.isSymbolWithTextEq("-"));
+    }
+    Token token = tokens.pop();
     if (token == null) {
       throw new ParseException("Parser was expecting an integer; got end of stream", tokens.getLastTokenIfAvailable());
     }
     try {
+      if (minus != null) {
+        token = Token.mergeAdjacentTokens(minus, token, token.majorType, token.minorType);
+      }
       Integer.parseInt(token.text);
       return token;
     } catch (NumberFormatException nfe) {
       throw new ParseException("Parser was expecting an integer; got '" + token.text + "'instead", token);
+    }
+  }
+
+  private Token consumeDouble() throws AdamaLangException {
+    final var minus = tokens.popIf((t) -> t.isSymbolWithTextEq("-"));
+    Token token = tokens.pop();
+    if (token == null) {
+      throw new ParseException("Parser was expecting an double; got end of stream", tokens.getLastTokenIfAvailable());
+    }
+    try {
+      if (minus != null) {
+        token = Token.mergeAdjacentTokens(minus, token, token.majorType, token.minorType);
+      }
+      Double.parseDouble(token.text.replaceAll(Pattern.quote(" "), ""));
+      return token;
+    } catch (NumberFormatException nfe) {
+      throw new ParseException("Parser was expecting an double; got '" + token.text + "'instead", token);
     }
   }
 
@@ -668,7 +701,7 @@ public class Parser {
         if (varName != null) {
           schedule.add(varName);
         } else {
-          schedule.add(consumeInteger());
+          schedule.add(consumeInteger(false));
         }
         break;
       }
@@ -677,9 +710,9 @@ public class Parser {
         if (varName != null) {
           schedule.add(varName);
         } else {
-          schedule.add(consumeInteger());
+          schedule.add(consumeInteger(false));
           schedule.add(consumeExpectedSymbol(":"));
-          schedule.add(consumeInteger());
+          schedule.add(consumeInteger(false));
         }
         break;
       }
@@ -688,7 +721,7 @@ public class Parser {
         if (varName != null) {
           schedule.add(varName);
         } else {
-          schedule.add(consumeInteger());
+          schedule.add(consumeInteger(false));
         }
         break;
       }
@@ -1142,7 +1175,7 @@ public class Parser {
     Token count = null;
     Token unit = null;
     if ("every".equals(type.text)) {
-      count = consumeInteger();
+      count = consumeInteger(false);
       unit = consumeExpectedOneOfIdentifier("min", "minute", "minutes", "sec", "second", "seconds", "hr", "hour", "hours");
     }
     Token close = consumeExpectedSymbol(">");

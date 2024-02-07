@@ -95,8 +95,8 @@ public class TokenEngine {
 
   public Token pop() throws AdamaLangException {
     var size = buffer.size();
-    if (size == 0) {
-      ensureBufferFilled(2);
+    if (size <= 1) {
+      ensureBufferFilled(16);
       size = buffer.size();
     }
     if (size > 0) {
@@ -108,7 +108,7 @@ public class TokenEngine {
   }
 
   public Token peek(final int future) throws AdamaLangException {
-    ensureBufferFilled(future + 1);
+    ensureBufferFilled(future + 16);
     if (future < buffer.size()) {
       return buffer.get(future);
     } else {

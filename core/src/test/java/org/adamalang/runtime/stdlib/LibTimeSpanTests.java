@@ -41,4 +41,12 @@ public class LibTimeSpanTests {
     Assert.assertFalse(LibTimeSpan.minutes(new NtMaybe<>()).has());
     Assert.assertFalse(LibTimeSpan.hours(new NtMaybe<>()).has());
   }
+
+  @Test
+  public void make() {
+    Assert.assertEquals(100, LibTimeSpan.makeFromSeconds(100.0).seconds, 0.01);
+    Assert.assertEquals(100, LibTimeSpan.makeFromSeconds((int) 100).seconds, 0.01);
+    Assert.assertEquals(6000, LibTimeSpan.makeFromMinutes(100.0).seconds, 0.01);
+    Assert.assertEquals(6000, LibTimeSpan.makeFromMinutes((int) 100).seconds, 0.01);
+  }
 }

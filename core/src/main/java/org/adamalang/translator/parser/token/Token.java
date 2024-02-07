@@ -72,7 +72,22 @@ public class Token implements Comparable<Token> {
 
   /** helper for merging two adjacent tokens */
   public static Token mergeAdjacentTokens(final Token left, final Token right, final MajorTokenType newMajorType, final MinorTokenType newMinorType) {
-    final var token = new Token(left.sourceName, left.text + right.text, newMajorType, newMinorType, left.lineStart, left.charStart, right.lineEnd, right.charEnd, left.byteStart, right.byteEnd);
+    StringBuilder text = new StringBuilder();
+    {
+      text.append(left.text);
+      if (left.nonSemanticTokensAfter != null) {
+        for (Token after : left.nonSemanticTokensAfter) {
+          text.append(after.text);
+        }
+      }
+      if (right.nonSemanticTokensPrior != null) {
+        for (Token prior : right.nonSemanticTokensPrior) {
+          text.append(prior.text);
+        }
+      }
+      text.append(right.text);
+    }
+    final var token = new Token(left.sourceName, text.toString(), newMajorType, newMinorType, left.lineStart, left.charStart, right.lineEnd, right.charEnd, left.byteStart, right.byteEnd);
     token.nonSemanticTokensPrior = left.nonSemanticTokensPrior;
     token.nonSemanticTokensAfter = right.nonSemanticTokensAfter;
     return token;

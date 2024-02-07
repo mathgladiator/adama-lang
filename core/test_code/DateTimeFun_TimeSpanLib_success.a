@@ -1,0 +1,11 @@
+public timespan m1 = 15 * (@timespan 1 min);
+public timespan m2 = 17 * (@timespan -1 min);
+public timespan m3 = (@timespan 1 min) * 19;
+public timespan m4 = (@timespan -1 min) * 20;
+public timespan m5 = 21 * (@timespan - 1 min);
+public timespan m6 = (@timespan - 1 min) * 23;
+
+public timespan t1 = TimeSpan.makeFromSeconds(1);
+public timespan t2 = TimeSpan.makeFromSeconds(3.14);
+public timespan t3 = TimeSpan.makeFromMinutes(1);
+public timespan t4 = TimeSpan.makeFromMinutes(3.14);

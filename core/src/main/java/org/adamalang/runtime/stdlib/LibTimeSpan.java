@@ -35,6 +35,26 @@ public class LibTimeSpan {
   }
 
   @Extension
+  public static NtTimeSpan makeFromSeconds(double x) {
+    return new NtTimeSpan(x);
+  }
+
+  @Extension
+  public static NtTimeSpan makeFromSeconds(int x) {
+    return new NtTimeSpan(x);
+  }
+
+  @Extension
+  public static NtTimeSpan makeFromMinutes(double x) {
+    return new NtTimeSpan(x * 60);
+  }
+
+  @Extension
+  public static NtTimeSpan makeFromMinutes(int x) {
+    return new NtTimeSpan(x * 60);
+  }
+
+  @Extension
   public static double seconds(NtTimeSpan x) {
     return x.seconds;
   }
