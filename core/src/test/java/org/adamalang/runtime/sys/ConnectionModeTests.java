@@ -15,9 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys;
 
-public class Platform {
-  public static final String VERSION = "20240207210445";
-  public static final String JS_VERSION = "a4cb11935c6b862199cb432878eb45d3";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ConnectionModeTests {
+  @Test
+  public void flow() {
+    Assert.assertEquals(ConnectionMode.Full, ConnectionMode.from(100));
+    Assert.assertEquals(ConnectionMode.Full, ConnectionMode.from(3));
+    Assert.assertEquals(ConnectionMode.WriteOnly, ConnectionMode.from(2));
+    Assert.assertEquals(ConnectionMode.ReadOnly, ConnectionMode.from(1));
+  }
 }

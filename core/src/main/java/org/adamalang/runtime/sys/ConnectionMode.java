@@ -15,9 +15,33 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys;
 
-public class Platform {
-  public static final String VERSION = "20240207210445";
-  public static final String JS_VERSION = "a4cb11935c6b862199cb432878eb45d3";
+/** simplify the way documents are connected */
+public enum ConnectionMode {
+  // connect for read and write
+  Full(true, true, 3),
+  // connect for write only (another machine/thread may read)
+  WriteOnly(false, true, 2),
+  // connect for read only
+  ReadOnly(true, false, 1);
+
+  public final boolean read;
+  public final boolean write;
+  public final int asInt;
+
+  private ConnectionMode(boolean r, boolean w, int asInt) {
+    this.read = r;
+    this.write = w;
+    this.asInt = asInt;
+  }
+
+  public static ConnectionMode from(int val) {
+    for (ConnectionMode cm : ConnectionMode.values()) {
+      if (cm.asInt == val) {
+        return cm;
+      }
+    }
+    return ConnectionMode.Full;
+  }
 }

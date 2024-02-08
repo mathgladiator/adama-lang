@@ -735,6 +735,7 @@ public class ClientCodec {
     o.viewerState = Helper.readString(buf);
     o.origin = Helper.readString(buf);
     o.ip = Helper.readString(buf);
+    o.mode = buf.readIntLE();
     return o;
   }
 
@@ -1131,6 +1132,7 @@ public class ClientCodec {
     Helper.writeString(buf, o.viewerState);;
     Helper.writeString(buf, o.origin);;
     Helper.writeString(buf, o.ip);;
+    buf.writeIntLE(o.mode);
   }
 
   public static void write(ByteBuf buf, ScanDeployment o) {

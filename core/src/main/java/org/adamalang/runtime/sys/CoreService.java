@@ -591,7 +591,7 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** internal: do the connect with retry when connect executes create */
-  public void connect(CoreRequestContext context, Key key, String viewerState, Streamback stream) {
+  public void connect(CoreRequestContext context, Key key, String viewerState, ConnectionMode mode, Streamback stream) {
     if (!shield.canConnectExisting.get()) {
       stream.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_CONNECT_DOCUMENT));
       return;
@@ -599,7 +599,7 @@ public class CoreService implements Deliverer, Queryable {
     loadOrCreate(context, key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        connectDirectMustBeInDocumentBase(context, document, stream, new JsonStreamReader(viewerState));
+        connectDirectMustBeInDocumentBase(context, document, stream,ConnectionMode.Full, new JsonStreamReader(viewerState));
       }
 
       @Override
@@ -610,7 +610,7 @@ public class CoreService implements Deliverer, Queryable {
   }
 
   /** internal: send connection to the document if not joined, then join */
-  private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState) {
+  private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, ConnectionMode mode, JsonStreamReader viewerState) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
@@ -628,22 +628,29 @@ public class CoreService implements Deliverer, Queryable {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
         };
-        document.createPrivateView(context.who, perspective, viewerState, metrics.create_private_view.wrap(new Callback<>() {
-          @Override
-          public void success(PrivateView view) {
-            stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, view));
-            stream.status(Streamback.StreamStatus.Connected);
-            String viewStateFilter = document.document().__getViewStateFilter();
-            if (!"[]".equals(viewStateFilter)) {
-              view.deliver("{\"view-state-filter\":" + viewStateFilter + "}");
+        // if (mode.read) {
+          document.createPrivateView(context.who, perspective, viewerState, metrics.create_private_view.wrap(new Callback<>() {
+            @Override
+            public void success(PrivateView view) {
+              stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, new StreamHandle(view)));
+              stream.status(Streamback.StreamStatus.Connected);
+              String viewStateFilter = document.document().__getViewStateFilter();
+              if (!"[]".equals(viewStateFilter)) {
+                view.deliver("{\"view-state-filter\":" + viewStateFilter + "}");
+              }
             }
-          }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            stream.failure(ex);
-          }
-        }));
+            @Override
+            public void failure(ErrorCodeException ex) {
+              stream.failure(ex);
+            }
+          }));
+        /*
+        } else {
+          stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, null));
+          stream.status(Streamback.StreamStatus.Connected);
+        }
+        */
       }
 
       @Override

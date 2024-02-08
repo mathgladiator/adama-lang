@@ -27,6 +27,7 @@ import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.mocks.MockRoutingTarget;
 import org.adamalang.net.mocks.LatchedSeqCallback;
 import org.adamalang.net.mocks.MockSimpleEvents;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class ConnectionTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", 1000, events);
+        Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", ConnectionMode.Full, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 2; k++) {
           connection.update("{\"k\":" + k + "}");
@@ -112,7 +113,7 @@ public class ConnectionTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", 1000, events);
+        Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", ConnectionMode.Full, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 20; k++) {
           connection.update("{\"k\":" + k + "}");

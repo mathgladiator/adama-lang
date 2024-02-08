@@ -88,7 +88,7 @@ public class ServiceCreateTests {
       created1.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
       latch1.run();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created2);
       created2.await_failure(130092);

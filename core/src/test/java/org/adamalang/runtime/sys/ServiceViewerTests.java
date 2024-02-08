@@ -54,7 +54,7 @@ public class ServiceViewerTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(3);
       Runnable latch2 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{\"x\":42}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{\"x\":42}", ConnectionMode.Full, streamback);
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"view-state-filter\":[\"x\"]}", streamback.get(1));

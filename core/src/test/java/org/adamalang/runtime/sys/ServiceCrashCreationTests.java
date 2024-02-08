@@ -70,7 +70,7 @@ public class ServiceCrashCreationTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
       streamback.await_failure(625676);
     } finally {
       service.shutdown();
@@ -155,7 +155,7 @@ public class ServiceCrashCreationTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
       streamback.await_failure(146558);
     } finally {
       service.shutdown();
@@ -172,7 +172,7 @@ public class ServiceCrashCreationTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
       streamback.await_failure(146558);
     } finally {
       service.shutdown();
@@ -189,7 +189,7 @@ public class ServiceCrashCreationTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
       streamback.await_failure(146558);
     } finally {
       service.shutdown();
@@ -206,7 +206,7 @@ public class ServiceCrashCreationTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
       streamback.await_failure(146558);
     } finally {
       service.shutdown();

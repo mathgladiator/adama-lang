@@ -29,6 +29,7 @@ import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.runtime.sys.AuthResponse;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
@@ -901,7 +902,7 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** connect to a document */
-  public void connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, Events events) {
+  public void connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, ConnectionMode mode, Events events) {
     ClientMessage.StreamConnect connectMessage = new ClientMessage.StreamConnect();
     connectMessage.ip = ip;
     connectMessage.origin = origin;
@@ -910,6 +911,7 @@ public class InstanceClient implements AutoCloseable {
     connectMessage.space = space;
     connectMessage.key = key;
     connectMessage.viewerState = viewerState;
+    connectMessage.mode = mode.asInt;
     executor.execute(new NamedRunnable("document-exchange") {
       @Override
       public void execute() throws Exception {

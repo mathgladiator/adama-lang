@@ -31,6 +31,7 @@ import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,9 @@ public class Connection implements AdamaStream {
   private int waitingInError;
   private boolean connectedOnce;
   private String machineToAsk;
+  private ConnectionMode mode;
 
-  public Connection(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, int timeoutMilliseconds, SimpleEvents events) {
+  public Connection(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, ConnectionMode mode, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
@@ -72,6 +74,7 @@ public class Connection implements AdamaStream {
     this.waitingInError = 0;
     this.connectedOnce = false;
     this.machineToAsk = machineToAsk;
+    this.mode = mode;
     base.metrics.client_state_machines_alive.up();
   }
 
@@ -110,7 +113,7 @@ public class Connection implements AdamaStream {
     base.mesh.find(machineToAsk, new Callback<>() {
       @Override
       public void success(InstanceClient client) {
-        client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, new Events() {
+        client.connect(ip, origin, agent, authority, key.space, key.key, viewerState, mode, new Events() {
           @Override
           public void connected(Remote remote) {
             base.executor.execute(new NamedRunnable("lcsm-connected") {

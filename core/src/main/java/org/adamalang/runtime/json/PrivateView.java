@@ -19,6 +19,7 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.StreamHandle;
 
 /** a private view of the document where private lives; code is generated to use this */
 public abstract class PrivateView {
@@ -27,7 +28,7 @@ public abstract class PrivateView {
   public final NtPrincipal who;
   private final int viewId;
   private boolean alive;
-  private PrivateView usurper;
+  private StreamHandle handle;
   private String lastWrittenFutures;
   private Runnable refresh;
 
@@ -41,18 +42,18 @@ public abstract class PrivateView {
     this.refresh = null;
   }
 
+  public void link(StreamHandle handle) {
+    this.handle = handle;
+  }
+
   /** this is an optimized way to update the viewer without causing an invalidate */
   public void setRefresh(Runnable refresh) {
     this.refresh = refresh;
   }
 
   public void triggerRefresh() {
-    if (usurper != null) {
-      usurper.triggerRefresh();
-    } else {
-      if (refresh != null) {
-        refresh.run();
-      }
+    if (refresh != null) {
+      refresh.run();
     }
   }
 
@@ -62,29 +63,19 @@ public abstract class PrivateView {
    * both views.
    */
   public void usurp(PrivateView usurper) {
-    if (this.usurper != null) {
-      this.usurper.usurp(usurper);
-    }
-    this.usurper = usurper;
+    handle.set(usurper);
+    usurper.link(handle);
     synchronized (this) {
       alive = false;
     }
   }
 
   public int getViewId() {
-    if (usurper != null) {
-      return usurper.getViewId();
-    } else {
-      return viewId;
-    }
+    return viewId;
   }
 
   public void ingestViewUpdate(JsonStreamReader reader) {
-    if (usurper != null) {
-      usurper.ingestViewUpdate(reader);
-    } else {
-      ingest(reader);
-    }
+    ingest(reader);
   }
 
   /** codegen: seed the state held by the view */
@@ -122,10 +113,6 @@ public abstract class PrivateView {
 
   /** the client is no longer interested */
   public synchronized void kill() {
-    if (usurper != null) {
-      // this has been usurped, so kill the usurper as well
-      usurper.kill();
-    }
     alive = false;
   }
 

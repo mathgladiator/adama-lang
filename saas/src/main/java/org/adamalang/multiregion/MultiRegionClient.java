@@ -26,6 +26,7 @@ import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.*;
 import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.runtime.sys.AuthResponse;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -245,7 +246,7 @@ public class MultiRegionClient {
       public void success(DocumentLocation value) {
         if (value.location == LocationType.Machine) {
           if (region.equals(value.region)) {
-            stream.ready(local.connect(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, events));
+            stream.ready(local.connect(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, viewerState, ConnectionMode.Full, events));
             return;
           } else {
             SelfClient remote = remoteForRegion(value.region, events);

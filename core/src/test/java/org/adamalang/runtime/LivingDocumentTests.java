@@ -38,6 +38,7 @@ import org.adamalang.runtime.remote.SampleService;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
+import org.adamalang.runtime.sys.StreamHandle;
 import org.adamalang.runtime.sys.mocks.MockDataObserver;
 import org.adamalang.runtime.sys.web.*;
 import org.adamalang.support.testgen.DumbDataService;
@@ -951,6 +952,7 @@ public class LivingDocumentTests {
           public void disconnect() {}
         };
     setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
+    gv.view.link(new StreamHandle(gv.view));
     setup.document.apply(NtPrincipal.NO_ONE, "{\"x\":4242}", new RealDocumentSetup.AssertInt(3));
     setup.document.deploy(
         new RealDocumentSetup("public formula x = 50;").factory,

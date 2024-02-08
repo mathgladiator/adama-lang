@@ -27,6 +27,7 @@ import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.web.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -94,7 +95,7 @@ public class LocalRegionClientTests {
         CountDownLatch latchGotConnected = new CountDownLatch(1);
         CountDownLatch latchGotData = new CountDownLatch(1);
         CountDownLatch latchGotDisconnect = new CountDownLatch(1);
-        Connection connection = client. connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", new SimpleEvents() {
+        Connection connection = client. connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", ConnectionMode.Full, new SimpleEvents() {
           @Override
           public void connected() {
             latchGotConnected.countDown();
@@ -564,7 +565,7 @@ public class LocalRegionClientTests {
         }
       });
       Assert.assertTrue(deleted.await(5000, TimeUnit.MILLISECONDS));
-      client.connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+      client.connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", ConnectionMode.Full, new SimpleEvents() {
         @Override
         public void connected() {
 
@@ -629,7 +630,7 @@ public class LocalRegionClientTests {
       LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
       CountDownLatch closures = new CountDownLatch(1);
-      client.connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+      client.connect("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", ConnectionMode.Full, new SimpleEvents() {
         @Override
         public void connected() {
           System.err.println("connected!");

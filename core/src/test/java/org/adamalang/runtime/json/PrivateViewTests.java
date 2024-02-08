@@ -19,6 +19,7 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.StreamHandle;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -87,7 +88,7 @@ public class PrivateViewTests {
           }
 
           @Override
-          public void ingest(JsonStreamReader reader) { gotViewUpdate.set(true);}
+          public void ingest(JsonStreamReader reader) { }
 
           @Override
           public void dumpViewer(JsonStreamWriter writer) {}
@@ -95,6 +96,8 @@ public class PrivateViewTests {
           @Override
           public void update(JsonStreamWriter writer) {}
         };
+    StreamHandle handle = new StreamHandle(pv1);
+    pv1.link(handle);
 
     PrivateView pv2 =
         new PrivateView(1, NtPrincipal.NO_ONE, pv1.perspective) {
@@ -105,7 +108,7 @@ public class PrivateViewTests {
           }
 
           @Override
-          public void ingest(JsonStreamReader reader) {}
+          public void ingest(JsonStreamReader reader) { gotViewUpdate.set(true); }
 
           @Override
           public void dumpViewer(JsonStreamWriter writer) {}
@@ -116,15 +119,15 @@ public class PrivateViewTests {
     AtomicInteger iv = new AtomicInteger(0);
     pv2.setRefresh(() -> iv.addAndGet(2));
     pv1.setRefresh(() -> iv.addAndGet(5));
-    pv2.triggerRefresh();
-    pv2.usurp(pv1);
-    pv2.triggerRefresh();
+    handle.triggerRefresh();
+    pv1.usurp(pv2);
+    handle.triggerRefresh();
     Assert.assertEquals(7, iv.get());
-    Assert.assertTrue(pv1.isAlive());
+    Assert.assertFalse(pv1.isAlive());
     Assert.assertFalse(gotViewUpdate.get());
-    pv2.ingestViewUpdate(new JsonStreamReader("{}"));;
+    handle.ingestViewUpdate(new JsonStreamReader("{}"));;
     Assert.assertTrue(gotViewUpdate.get());
-    pv2.kill();
+    handle.kill();
     Assert.assertFalse(pv1.isAlive());
   }
 

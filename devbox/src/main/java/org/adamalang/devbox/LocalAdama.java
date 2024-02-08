@@ -27,6 +27,7 @@ import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.AuthResponse;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -402,7 +403,7 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     long started = System.currentTimeMillis();
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
 
-    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", new Streamback() {
+    verse.service.connect(context, key, viewerState != null ? viewerState.toString() : "{}", ConnectionMode.Full, new Streamback() {
       Runnable unsub = null;
       private CoreStream got = null;
 

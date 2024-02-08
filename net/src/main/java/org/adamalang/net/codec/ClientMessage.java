@@ -132,6 +132,8 @@ public class ClientMessage {
     public String origin;
     @FieldOrder(7)
     public String ip;
+    @FieldOrder(8)
+    public int mode;
   }
 
   @TypeId(13345)

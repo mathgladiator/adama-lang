@@ -53,7 +53,7 @@ public class ServiceDefenseTests {
 
       service.shield.canSendMessageExisting.set(false);
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback1);
       streamback1.await_began();
       {
         SimpleIntCallback failedSend = new SimpleIntCallback();
@@ -96,7 +96,7 @@ public class ServiceDefenseTests {
 
       service.shield.canConnectExisting.set(false);
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback1);
       streamback1.await_failure(183498);
     } finally {
       service.shutdown();
@@ -117,7 +117,7 @@ public class ServiceDefenseTests {
       created.await_success();
       service.shield.canConnectNew.set(false);
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback1);
       streamback1.await_failure(146631);
     } finally {
       service.shutdown();

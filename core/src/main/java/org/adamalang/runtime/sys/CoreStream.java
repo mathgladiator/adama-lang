@@ -37,14 +37,14 @@ public class CoreStream implements AdamaStream {
   private final CoreMetrics metrics;
   private final PredictiveInventory inventory;
   private final DurableLivingDocument document;
-  private final PrivateView view;
+  private final StreamHandle handle;
 
-  public CoreStream(CoreRequestContext context, CoreMetrics metrics, PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
+  public CoreStream(CoreRequestContext context, CoreMetrics metrics, PredictiveInventory inventory, DurableLivingDocument document, StreamHandle handle) {
     this.context = context;
     this.metrics = metrics;
     this.inventory = inventory;
     this.document = document;
-    this.view = view;
+    this.handle = handle;
     inventory.message();
     inventory.connect();
     metrics.inflight_streams.up();
@@ -57,12 +57,12 @@ public class CoreStream implements AdamaStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        view.ingestViewUpdate(patch);
+        handle.ingestViewUpdate(patch);
         if (document.document().__hasInflightAsyncWork()) {
           // this is, at core, fundamentally expensive
           document.invalidate(Callback.DONT_CARE_INTEGER);
         } else {
-          view.triggerRefresh();
+          handle.triggerRefresh();
         }
       }
     });
@@ -80,7 +80,7 @@ public class CoreStream implements AdamaStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.send(context, view.getViewId(), marker, channel, message, callback);
+        document.send(context, handle.getViewId(), marker, channel, message, callback);
       }
     });
   }
@@ -137,7 +137,7 @@ public class CoreStream implements AdamaStream {
         // account for the disconnect message
         inventory.message();
         // disconnect this view
-        view.kill();
+        handle.kill();
         // clean up and keep things tidy
         if (document.garbageCollectPrivateViewsFor(context.who) == 0) {
           // falling edge disconnects the person
@@ -146,7 +146,7 @@ public class CoreStream implements AdamaStream {
           document.invalidate(Callback.DONT_CARE_INTEGER);
         }
         // tell the client
-        view.perspective.disconnect();
+        handle.disconnect();
       }
     });
   }

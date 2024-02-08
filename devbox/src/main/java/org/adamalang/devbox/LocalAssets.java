@@ -25,6 +25,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
@@ -89,7 +90,7 @@ public class LocalAssets implements AssetSystem {
   @Override
   public void attach(String identity, ConnectionContext context, Key key, NtAsset asset, String channel, String message, Callback<Integer> callback) {
     NtPrincipal who = LocalAdama.principalOf(identity);
-    service.connect(new CoreRequestContext(who, context.origin, context.remoteIp, key.key), key, "{}", new Streamback() {
+    service.connect(new CoreRequestContext(who, context.origin, context.remoteIp, key.key), key, "{}", ConnectionMode.WriteOnly, new Streamback() {
       CoreStream _stream;
       boolean _responded = false;
 

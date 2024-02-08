@@ -33,10 +33,7 @@ import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
-import org.adamalang.runtime.sys.AuthResponse;
-import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.CoreStream;
-import org.adamalang.runtime.sys.TriggerDeployment;
+import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.web.*;
@@ -553,7 +550,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
     CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
-    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, this);
+    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, ConnectionMode.from(payload.mode), this);
   }
 
   @Override
