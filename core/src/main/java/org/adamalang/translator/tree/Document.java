@@ -102,6 +102,7 @@ public class Document implements TopLevelDocumentHandler {
   public final LinkedHashMap<String, DefineCronTask> cronTasks;
   private File includeRoot;
   private final SymbolIndex index;
+  public DefineTrafficHint trafficHint;
 
   public Document() {
     autoClassId = 0;
@@ -145,6 +146,7 @@ public class Document implements TopLevelDocumentHandler {
     cronTasks = new LinkedHashMap<>();
     includeRoot = null;
     index = new SymbolIndex();
+    trafficHint = null;
   }
 
   public SymbolIndex getSymbolIndex() {
@@ -528,6 +530,16 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
+  public void add(DefineTrafficHint trafficHint) {
+    if (this.trafficHint != null) {
+      typeChecker.issueError(trafficHint, "Traffic hint was already defined.");
+      return;
+    }
+    this.trafficHint = trafficHint;
+    trafficHint.typing(typeChecker);
+  }
+
+  @Override
   public void add(DefineAssoc da) {
     if (assocs.containsKey(da.name.text)) {
       typeChecker.issueError(da, String.format("Assoc '%s' was already defined.", da.name.text));
@@ -726,6 +738,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
     CodeGenReplication.writeReplicationBind(sb, environment);
     CodeGenMetrics.writeMetricsDump(sb, environment);
+    CodeGenTraffic.writeTrafficHint(sb, environment);
     CodeGenDebug.writeDebugInfo(sb, environment);
     CodeGenAuth.writeAuth(sb, environment);
     CodeGenCron.writeCronExecution(sb, environment);

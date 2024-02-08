@@ -95,7 +95,7 @@ public class GeneratedWhoTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Who_CantStateTransition_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":15},\"end\":{\"line\":1,\"character\":14,\"byte\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers\",\"file\":\"./test_code/Who_CantStateTransition_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10,\"byte\":15},\"end\":{\"line\":1,\"character\":14,\"byte\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"@who is only available from static policies, document policies, privacy policies, bubbles, web paths, traffic hinting, and message handlers\",\"file\":\"./test_code/Who_CantStateTransition_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

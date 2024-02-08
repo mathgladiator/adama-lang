@@ -20,7 +20,6 @@ package org.adamalang.runtime;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
-import org.adamalang.common.template.tree.T;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.deploy.SyncCompiler;
@@ -35,7 +34,6 @@ import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.SampleService;
-import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.StreamHandle;
@@ -1759,6 +1757,30 @@ public class LivingDocumentTests {
             .get("t")
             .toString();
     Assert.assertEquals("10", t);
+  }
+
+  @Test
+  public void traffic_default() throws Exception {
+    final var setup = new RealDocumentSetup("");
+    Assert.assertEquals("main", setup.document.document().__traffic(null));
+  }
+
+  @Test
+  public void traffic_set() throws Exception {
+    final var setup = new RealDocumentSetup("@traffic \"foo\";");
+    Assert.assertEquals("foo", setup.document.document().__traffic(new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", "key")));
+  }
+
+  @Test
+  public void traffic_who() throws Exception {
+    final var setup = new RealDocumentSetup("@traffic @who.agent();");
+    Assert.assertEquals("agent", setup.document.document().__traffic(new CoreRequestContext(new NtPrincipal("agent", "a"), "origin", "ip", "key")));
+  }
+
+  @Test
+  public void traffic_origin() throws Exception {
+    final var setup = new RealDocumentSetup("@traffic @context.origin;");
+    Assert.assertEquals("origin", setup.document.document().__traffic(new CoreRequestContext(new NtPrincipal("agent", "a"), "origin", "ip", "key")));
   }
 
   @Test

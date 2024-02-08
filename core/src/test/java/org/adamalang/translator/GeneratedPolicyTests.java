@@ -55,7 +55,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_ContextOutOfStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":17},\"end\":{\"line\":1,\"character\":19,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"@context is only available within static policies, constructors, document events, authorize handler, message handlers, or web handlers\",\"file\":\"./test_code/Policy_ContextOutOfStatic_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11,\"byte\":17},\"end\":{\"line\":1,\"character\":19,\"byte\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"@context is only available within static policies, constructors, document events, authorize handler, message handlers, traffic hinting, or web handlers\",\"file\":\"./test_code/Policy_ContextOutOfStatic_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -620,6 +620,8 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -1317,6 +1319,8 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");

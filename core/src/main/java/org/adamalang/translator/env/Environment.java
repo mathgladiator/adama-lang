@@ -269,6 +269,9 @@ public class Environment {
     return next;
   }
 
+  public Environment scopeTrafficHint() {
+    return new Environment(document, state.scopeTraffic(), this);
+  }
 
   /** create a new environment that has access to the viewer */
   public Environment scopeDefine() {

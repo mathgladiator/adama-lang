@@ -47,13 +47,13 @@ public class WhoClientConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble() || environment.state.isWeb()) {
+    if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble() || environment.state.isWeb() || environment.state.isTrafficHint()) {
       environment.mustBeComputeContext(this);
       TyType type = new TyNativeSecurePrincipal(TypeBehavior.ReadOnlyNativeValue, null, token, token, token, token).withPosition(this);
       environment.useSpecial(type, "__who");
       return type;
     } else {
-      environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, and message handlers");
+      environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, web paths, traffic hinting, and message handlers");
       return null;
     }
   }

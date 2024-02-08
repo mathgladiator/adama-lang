@@ -58,6 +58,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public String __traffic(CoreRequestContext __context) {
+    return "main";
+  }
+
+  @Override
   public String __metrics() {
     return "{}";
   }

@@ -94,4 +94,6 @@ public interface TopLevelDocumentHandler {
   void add(DefineTemplate dt);
 
   void add(DefineCronTask dct);
+
+  void add(DefineTrafficHint dth);
 }

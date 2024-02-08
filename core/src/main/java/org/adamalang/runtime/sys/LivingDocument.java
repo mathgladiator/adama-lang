@@ -1053,6 +1053,8 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   public abstract void __make_cron_progress();
 
+  public abstract String __traffic(CoreRequestContext __context);
+
   @Deprecated
   public abstract void __password(CoreRequestContext context, String password);
 

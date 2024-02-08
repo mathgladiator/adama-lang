@@ -204,4 +204,8 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
   @Override
   public void add(DefineCronTask dct) {
   }
+
+  @Override
+  public void add(DefineTrafficHint dth) {
+  }
 }

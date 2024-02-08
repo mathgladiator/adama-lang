@@ -1007,6 +1007,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
     gold.append("\n    __writer.beginObject();");
@@ -1734,6 +1736,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -2640,6 +2644,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -3446,6 +3452,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
+    gold.append("\n  @Override");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");

@@ -37,6 +37,7 @@ public class EnvironmentState {
   private boolean isPolicy;
   private boolean isBubble;
   private boolean isWeb;
+  private boolean isTrafficHint;
   private boolean isConstructor;
   private boolean isDocumentEvent;
   private String webMethod;
@@ -62,6 +63,7 @@ public class EnvironmentState {
     isPolicy = prior.isPolicy;
     isBubble = prior.isBubble;
     isWeb = prior.isWeb;
+    isTrafficHint = prior.isTrafficHint;
     webMethod = prior.webMethod;
     cacheObject = prior.cacheObject;
     readonly = false;
@@ -92,6 +94,7 @@ public class EnvironmentState {
     isPolicy = false;
     isBubble = false;
     isWeb = false;
+    isTrafficHint = false;
     webMethod = null;
     cacheObject = null;
     isConstructor = false;
@@ -122,6 +125,10 @@ public class EnvironmentState {
 
   public boolean isWeb() {
     return isWeb;
+  }
+
+  public boolean isTrafficHint() {
+    return isTrafficHint;
   }
 
   public String getWebMethod() {
@@ -244,6 +251,12 @@ public class EnvironmentState {
     next.isWeb = true;
     next.webMethod = method;
     next.define = true;
+    return next;
+  }
+
+  public EnvironmentState scopeTraffic() {
+    final var next = new EnvironmentState(this);
+    next.isTrafficHint = true;
     return next;
   }
 

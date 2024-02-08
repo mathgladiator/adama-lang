@@ -196,4 +196,9 @@ public class FormatDocumentHandler implements TopLevelDocumentHandler{
   public void add(DefineCronTask dct) {
     dct.format(formatter);
   }
+
+  @Override
+  public void add(DefineTrafficHint dth) {
+    dth.format(formatter);
+  }
 }

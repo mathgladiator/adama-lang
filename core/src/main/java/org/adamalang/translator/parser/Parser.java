@@ -729,6 +729,13 @@ public class Parser {
     return schedule.toArray(new Token[schedule.size()]);
   }
 
+  public Consumer<TopLevelDocumentHandler> define_traffic(Token trafficToken) throws AdamaLangException {
+    Expression expression = expression(rootScope);
+    Token semicolon = consumeExpectedSymbol(";");
+    DefineTrafficHint hint = new DefineTrafficHint(trafficToken, expression, semicolon);
+    return (doc) -> doc.add(hint);
+  }
+
   public Consumer<TopLevelDocumentHandler> define_cron(Token cronToken) throws AdamaLangException {
     Token name = id();
     Token[] schedule = cron_schedule();
@@ -835,7 +842,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block(rootScope.makeStateMachineTransition()));
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load", "@cron"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load", "@cron", "@traffic"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
     }
@@ -890,6 +897,8 @@ public class Parser {
           return define_web(op);
         case "@cron":
           return define_cron(op);
+        case "@traffic":
+          return define_traffic(op);
         case "service":
           return define_service(op);
         case "view": {

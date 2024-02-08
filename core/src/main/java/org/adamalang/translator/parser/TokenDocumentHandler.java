@@ -190,4 +190,9 @@ public abstract class TokenDocumentHandler implements Consumer<Token>, TopLevelD
   public void add(DefineCronTask dct) {
     dct.emit(this);
   }
+
+  @Override
+  public void add(DefineTrafficHint dth) {
+    dth.emit(this);
+  }
 }

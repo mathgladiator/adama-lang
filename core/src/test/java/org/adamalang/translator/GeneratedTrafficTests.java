@@ -19,100 +19,135 @@ package org.adamalang.translator;
 
 import org.junit.Test;
 
-public class GeneratedCreationPolicyTests extends GeneratedBase {
-  private String cached_ControlFlowOpen_1 = null;
-  private String get_ControlFlowOpen_1() {
-    if (cached_ControlFlowOpen_1 != null) {
-      return cached_ControlFlowOpen_1;
+public class GeneratedTrafficTests extends GeneratedBase {
+  private String cached_BadType_1 = null;
+  private String get_BadType_1() {
+    if (cached_BadType_1 != null) {
+      return cached_BadType_1;
     }
-    cached_ControlFlowOpen_1 = generateTestOutput(false, "ControlFlowOpen_1", "./test_code/CreationPolicy_ControlFlowOpen_failure.a");
-    return cached_ControlFlowOpen_1;
+    cached_BadType_1 = generateTestOutput(false, "BadType_1", "./test_code/Traffic_BadType_failure.a");
+    return cached_BadType_1;
   }
 
   @Test
-  public void testControlFlowOpenFailure() {
-    assertLiveFail(get_ControlFlowOpen_1());
+  public void testBadTypeFailure() {
+    assertLiveFail(get_BadType_1());
   }
 
   @Test
-  public void testControlFlowOpenNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ControlFlowOpen_1());
+  public void testBadTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BadType_1());
   }
 
   @Test
-  public void testControlFlowOpenExceptionFree() {
-    assertExceptionFree(get_ControlFlowOpen_1());
+  public void testBadTypeExceptionFree() {
+    assertExceptionFree(get_BadType_1());
   }
 
   @Test
-  public void testControlFlowOpenTODOFree() {
-    assertTODOFree(get_ControlFlowOpen_1());
+  public void testBadTypeTODOFree() {
+    assertTODOFree(get_BadType_1());
   }
 
   @Test
-  public void stable_ControlFlowOpen_1() {
-    String live = get_ControlFlowOpen_1();
+  public void stable_BadType_1() {
+    String live = get_BadType_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:CreationPolicy_ControlFlowOpen_failure.a");
+    gold.append("Path:Traffic_BadType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9,\"byte\":19},\"end\":{\"line\":5,\"character\":3,\"byte\":68}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean\",\"file\":\"./test_code/CreationPolicy_ControlFlowOpen_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9,\"byte\":9},\"end\":{\"line\":0,\"character\":12,\"byte\":12}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'string', but the type is actually 'int'\",\"file\":\"./test_code/Traffic_BadType_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Simple_2 = null;
-  private String get_Simple_2() {
-    if (cached_Simple_2 != null) {
-      return cached_Simple_2;
+  private String cached_Multiple_2 = null;
+  private String get_Multiple_2() {
+    if (cached_Multiple_2 != null) {
+      return cached_Multiple_2;
     }
-    cached_Simple_2 = generateTestOutput(true, "Simple_2", "./test_code/CreationPolicy_Simple_success.a");
-    return cached_Simple_2;
+    cached_Multiple_2 = generateTestOutput(false, "Multiple_2", "./test_code/Traffic_Multiple_failure.a");
+    return cached_Multiple_2;
+  }
+
+  @Test
+  public void testMultipleFailure() {
+    assertLiveFail(get_Multiple_2());
+  }
+
+  @Test
+  public void testMultipleNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_Multiple_2());
+  }
+
+  @Test
+  public void testMultipleExceptionFree() {
+    assertExceptionFree(get_Multiple_2());
+  }
+
+  @Test
+  public void testMultipleTODOFree() {
+    assertTODOFree(get_Multiple_2());
+  }
+
+  @Test
+  public void stable_Multiple_2() {
+    String live = get_Multiple_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Traffic_Multiple_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0,\"byte\":15},\"end\":{\"line\":1,\"character\":14,\"byte\":29}},\"severity\":1,\"source\":\"error\",\"message\":\"Traffic hint was already defined.\",\"file\":\"./test_code/Traffic_Multiple_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":30},\"end\":{\"line\":2,\"character\":14,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Traffic hint was already defined.\",\"file\":\"./test_code/Traffic_Multiple_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Simple_3 = null;
+  private String get_Simple_3() {
+    if (cached_Simple_3 != null) {
+      return cached_Simple_3;
+    }
+    cached_Simple_3 = generateTestOutput(true, "Simple_3", "./test_code/Traffic_Simple_success.a");
+    return cached_Simple_3;
   }
 
   @Test
   public void testSimpleEmission() {
-    assertEmissionGood(get_Simple_2());
+    assertEmissionGood(get_Simple_3());
   }
 
   @Test
   public void testSimpleSuccess() {
-    assertLivePass(get_Simple_2());
+    assertLivePass(get_Simple_3());
   }
 
   @Test
   public void testSimpleNoFormatException() {
-    assertNoFormatException(get_Simple_2());
+    assertNoFormatException(get_Simple_3());
   }
 
   @Test
   public void testSimpleGoodWillHappy() {
-    assertGoodWillHappy(get_Simple_2());
+    assertGoodWillHappy(get_Simple_3());
   }
 
   @Test
   public void testSimpleExceptionFree() {
-    assertExceptionFree(get_Simple_2());
+    assertExceptionFree(get_Simple_3());
   }
 
   @Test
   public void testSimpleTODOFree() {
-    assertTODOFree(get_Simple_2());
+    assertTODOFree(get_Simple_3());
   }
 
   @Test
-  public void stable_Simple_2() {
-    String live = get_Simple_2();
+  public void stable_Simple_3() {
+    String live = get_Simple_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:CreationPolicy_Simple_success.a");
+    gold.append("Path:Traffic_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n=FORMAT===================================================");
-    gold.append("\n@static {");
-    gold.append("\n  create {");
-    gold.append("\n    return true;");
-    gold.append("\n  }");
-    gold.append("\n}");
-    gold.append("\n");
+    gold.append("\n@traffic \"main\";");
     gold.append("\n==========================================================");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
@@ -144,13 +179,13 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Simple_2 extends LivingDocument {");
+    gold.append("\npublic class Simple_3 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Simple_2(DocumentMonitor __monitor) {");
+    gold.append("\n  public Simple_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -418,9 +453,9 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSimple_2 implements DeltaNode {");
+    gold.append("\n  private class DeltaSimple_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSimple_2() {");
+    gold.append("\n    private DeltaSimple_3() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -428,7 +463,7 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public boolean show(Simple_2 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Simple_3 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -459,8 +494,8 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective) {");
-    gold.append("\n    Simple_2 __self = this;");
-    gold.append("\n    DeltaSimple_2 __state = new DeltaSimple_2();");
+    gold.append("\n    Simple_3 __self = this;");
+    gold.append("\n    DeltaSimple_3 __state = new DeltaSimple_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
     gold.append("\n    return new PrivateView(__viewId, __who, ___perspective) {");
@@ -576,7 +611,10 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) {");
+    gold.append("\n    NtPrincipal __who = __context.who;");
+    gold.append("\n    return \"main\";");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -616,18 +654,8 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtPrincipal __who, CoreRequestContext __context) {");
-    gold.append("\n    return true;");
-    gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
-    gold.append("\n    boolean __result = false;");
-    gold.append("\n    StaticState __static_state = new StaticState();");
-    gold.append("\n    if (__onCanCreate__0(__static_state, __context.who, __context)) {");
-    gold.append("\n      __result = true;");
-    gold.append("\n    } else {");
-    gold.append("\n      return false;");
-    gold.append("\n    }");
-    gold.append("\n    return __result;");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -706,46 +734,6 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    assertStable(live, gold);
-  }
-  private String cached_TimeNotStatic_3 = null;
-  private String get_TimeNotStatic_3() {
-    if (cached_TimeNotStatic_3 != null) {
-      return cached_TimeNotStatic_3;
-    }
-    cached_TimeNotStatic_3 = generateTestOutput(false, "TimeNotStatic_3", "./test_code/CreationPolicy_TimeNotStatic_failure.a");
-    return cached_TimeNotStatic_3;
-  }
-
-  @Test
-  public void testTimeNotStaticFailure() {
-    assertLiveFail(get_TimeNotStatic_3());
-  }
-
-  @Test
-  public void testTimeNotStaticNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TimeNotStatic_3());
-  }
-
-  @Test
-  public void testTimeNotStaticExceptionFree() {
-    assertExceptionFree(get_TimeNotStatic_3());
-  }
-
-  @Test
-  public void testTimeNotStaticTODOFree() {
-    assertTODOFree(get_TimeNotStatic_3());
-  }
-
-  @Test
-  public void stable_TimeNotStatic_3() {
-    String live = get_TimeNotStatic_3();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:CreationPolicy_TimeNotStatic_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":33},\"end\":{\"line\":2,\"character\":20,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now'\",\"file\":\"./test_code/CreationPolicy_TimeNotStatic_failure.a\"},{\"range\":{\"start\":{\"line\":2,\"character\":12,\"byte\":33},\"end\":{\"line\":2,\"character\":20,\"byte\":41}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function\",\"file\":\"./test_code/CreationPolicy_TimeNotStatic_failure.a\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
 }
