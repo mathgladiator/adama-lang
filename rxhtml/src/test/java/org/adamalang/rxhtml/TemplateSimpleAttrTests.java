@@ -52,7 +52,7 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    $.SA(d,'fixed',\"constant string\");");
     gold.append("\n    $.SA(d,'len',\"40\");");
-    gold.append("\n    d.append($.T(' Yaz '));");
+    gold.append("\n    $.SIH(d,\"Yaz\");");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -82,7 +82,7 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     gold.append("\n    }");
     gold.append("\n    $.SA(d,'fixed',\"constant string\");");
     gold.append("\n    $.SA(d,'len',\"40\");");
-    gold.append("\n    d.append($.T(' Yaz '));");
+    gold.append("\n    $.SIH(d,\"Yaz\");");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

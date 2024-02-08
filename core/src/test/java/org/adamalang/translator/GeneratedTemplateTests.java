@@ -55,7 +55,7 @@ public class GeneratedTemplateTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Template_DontLeak_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":28},\"end\":{\"line\":2,\"character\":16,\"byte\":44}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble has a return type that is not allowed: template\",\"file\":\"./test_code/Template_DontLeak_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":24,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `template`\",\"file\":\"./test_code/Template_DontLeak_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":0,\"byte\":26},\"end\":{\"line\":2,\"character\":16,\"byte\":42}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble has a return type that is not allowed: template\",\"file\":\"./test_code/Template_DontLeak_failure.a\"},{\"range\":{\"start\":{\"line\":0,\"character\":16,\"byte\":16},\"end\":{\"line\":0,\"character\":24,\"byte\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Lazy type has inappropriate type `template`\",\"file\":\"./test_code/Template_DontLeak_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -1,0 +1,12 @@
+enum X { A, B, C };
+
+public maybe<X> x;
+public bool b0;
+public bool b1;
+
+@construct {
+  x = X::A;
+  b0 = x.has();
+  x.delete();
+  b1 = x.has();
+}

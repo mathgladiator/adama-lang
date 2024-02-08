@@ -29,4 +29,10 @@ public class InjectCoordInlineTests {
 
     Assert.assertEquals("<!--comment-->HI", InjectCoordInline.execute("<!--comment-->HI", "name"));
   }
+
+  @Test
+  public void scriptEmbed() {
+    Assert.assertEquals("<hi ln:ch=\"0;0;0;4;name\">there<script ln:ch=\"0;9;0;17;name\">foo()</script></hi><x ln:ch=\"0;36;0;39;name\"></x>", InjectCoordInline.execute("<hi>there<script>foo()</script></hi><x></x>", "name"));
+    Assert.assertEquals("<hi ln:ch=\"0;0;0;4;name\">there<script ln:ch=\"0;9;0;17;name\">if(1<2) {}</script></hi><x ln:ch=\"0;41;0;44;name\"></x>", InjectCoordInline.execute("<hi>there<script>if(1<2) {}</script></hi><x></x>", "name"));
+  }
 }

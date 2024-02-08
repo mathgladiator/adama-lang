@@ -153,11 +153,34 @@ public class Base {
     // does the element have an rx:case
     boolean hasCase = testRxCaseIfSoThenOpen(env);
 
+    // discover if the children has static content
+    boolean hasStaticContent = env.element.hasAttr("static:content");
+    if (hasStaticContent) {
+      env.element.removeAttr("static:content");
+    }
+
     env.writeElementDebugIfTest();
 
     // introduce the element
     IntroHandoff handoff = writeIntro(env, xmlns);
     String eVar = handoff.eVar;
+
+    if (hasStaticContent) {
+      // flush out the static content in an isolate innerHTML set
+      String innerHTML = new Escaping(env.element.html()).go().trim();
+      if (innerHTML.length() > 0) {
+        env.writer.tab().append("$.SIH(").append(eVar).append(",\"").append(innerHTML).append("\");").newline();
+      }
+      if (env.parentVariable != null) {
+        env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+      }
+      if (returnVariable) {
+        return eVar;
+      } else {
+        env.pool.give(eVar);
+        return null;
+      }
+    }
 
     // start build a new environment
     Environment next = env.parentVariable(eVar);

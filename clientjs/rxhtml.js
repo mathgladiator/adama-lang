@@ -3793,6 +3793,9 @@ var RxHTML = (function () {
   self.SA = function(dom, attr, value) {
     dom.setAttribute(attr, value);
   };
+  self.SIH = function(dom, html) {
+    dom.innerHTML = html;
+  };
   // RUNTIME: set the label of an option
   self.SL = function(dom, value) {
     dom.label = value;

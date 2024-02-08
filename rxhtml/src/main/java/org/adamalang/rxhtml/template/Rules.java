@@ -19,6 +19,12 @@ package org.adamalang.rxhtml.template;
 
 /** common rules for tools */
 public class Rules {
+  public static boolean isRoot(String tag) {
+    if (tag.equalsIgnoreCase("page") || tag.equalsIgnoreCase("template")) {
+      return true;
+    }
+    return false;
+  }
   public static boolean isSpecialElement(String tag) {
     String tagNameNormal = Base.normalizeTag(tag);
     try {

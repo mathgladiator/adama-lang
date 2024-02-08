@@ -19,8 +19,9 @@ package org.adamalang.common.html;
 
 /** simple type of an HTML token at a super macro level */
 public enum Type {
-  Text,
-  ElementOpen,
-  ElementClose,
-  Comment
+  Text, // blah, blah, blah
+  ElementOpen, // <tag ... [/]>
+  ElementClose, // </tag>
+  Comment, // <!-- COMMENT -->
+  EmbeddedText // script, adama, style, etc...
 }

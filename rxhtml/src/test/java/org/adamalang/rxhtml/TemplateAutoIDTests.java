@@ -49,7 +49,7 @@ public class TemplateAutoIDTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y($.pI(a,'this'),e,'x',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    d.append($.T('A Label'));");
+    gold.append("\n    $.SIH(d,\"A Label\");");
     gold.append("\n    b.append(d);");
     gold.append("\n");
     gold.append("\n    // <input id=\"id_{%}\">");
@@ -90,7 +90,7 @@ public class TemplateAutoIDTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y($.pI(a,'this'),e,'x',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    d.append($.T('A Label'));");
+    gold.append("\n    $.SIH(d,\"A Label\");");
     gold.append("\n    b.append(d);");
     gold.append("\n");
     gold.append("\n    // <input id=\"id_{%}\">");

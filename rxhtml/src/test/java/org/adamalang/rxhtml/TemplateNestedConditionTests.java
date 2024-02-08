@@ -49,7 +49,7 @@ public class TemplateNestedConditionTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'y',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    d.append($.T(' Well, something complex... '));");
+    gold.append("\n    $.SIH(d,\"Well, something complex...\");");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -76,7 +76,7 @@ public class TemplateNestedConditionTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'y',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    d.append($.T(' Well, something complex... '));");
+    gold.append("\n    $.SIH(d,\"Well, something complex...\");");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

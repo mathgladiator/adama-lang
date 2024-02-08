@@ -27,8 +27,11 @@ import java.util.ArrayList;
 /** mark content that is static */
 public class MarkStaticContent {
   public static boolean sweepAndMark(Element element) {
-    if (Rules.isSpecialElement(element.tagName())) {
-      return false;
+    boolean root = Rules.isRoot(element.tagName());
+    if (!root) {
+      if (Rules.isSpecialElement(element.tagName())) {
+        return false;
+      }
     }
     for (Attribute attribute : element.attributes()) {
       if (Rules.isSpecialAttribute(attribute.getKey())) {
@@ -44,7 +47,7 @@ public class MarkStaticContent {
         result = false;
       }
     }
-    if (!result) {
+    if (!result || root) {
       for (Element mark : toMark) {
         mark.attr("static:content", true);
       }

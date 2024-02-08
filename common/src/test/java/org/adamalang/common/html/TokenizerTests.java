@@ -22,6 +22,162 @@ import org.junit.Test;
 
 public class TokenizerTests {
   @Test
+  public void script_empty() {
+    Tokenizer t = Tokenizer.of("Hello<script />Hi there");
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hello", tok.text);
+      Assert.assertEquals("0;0;0;5", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("<script />", tok.text);
+      Assert.assertEquals("0;5;0;15", tok.coords());
+      Assert.assertEquals(Type.ElementOpen, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hi there", tok.text);
+      Assert.assertEquals("0;15;0;23", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    Assert.assertFalse(t.hasNext());
+  }
+
+  @Test
+  public void script_happy() {
+    Tokenizer t = Tokenizer.of("Hello<script x=\"happy\">Hi 1<sc2 there goes \n> there</script>Good buhbye!");
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hello", tok.text);
+      Assert.assertEquals("0;0;0;5", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("<script x=\"happy\">", tok.text);
+      Assert.assertEquals("0;5;0;23", tok.coords());
+      Assert.assertEquals(Type.ElementOpen, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hi 1<sc2 there goes \n> there", tok.text);
+      Assert.assertEquals("0;23;1;7", tok.coords());
+      Assert.assertEquals(Type.EmbeddedText, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("</script>", tok.text);
+      Assert.assertEquals("1;7;1;16", tok.coords());
+      Assert.assertEquals(Type.ElementClose, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Good buhbye!", tok.text);
+      Assert.assertEquals("1;16;1;28", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    Assert.assertFalse(t.hasNext());
+  }
+
+  @Test
+  public void script_open() {
+    Tokenizer t = Tokenizer.of("Hello<script>Hi there");
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hello", tok.text);
+      Assert.assertEquals("0;0;0;5", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("<script>", tok.text);
+      Assert.assertEquals("0;5;0;13", tok.coords());
+      Assert.assertEquals(Type.ElementOpen, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hi there", tok.text);
+      Assert.assertEquals("0;13;0;21", tok.coords());
+      Assert.assertEquals(Type.EmbeddedText, tok.type);
+    }
+    Assert.assertFalse(t.hasNext());
+  }
+
+  @Test
+  public void script_open_partial_cancel() {
+    Tokenizer t = Tokenizer.of("Hello<script>Hi there <x");
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hello", tok.text);
+      Assert.assertEquals("0;0;0;5", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("<script>", tok.text);
+      Assert.assertEquals("0;5;0;13", tok.coords());
+      Assert.assertEquals(Type.ElementOpen, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hi there <x", tok.text);
+      Assert.assertEquals("0;13;0;24", tok.coords());
+      Assert.assertEquals(Type.EmbeddedText, tok.type);
+    }
+    Assert.assertFalse(t.hasNext());
+  }
+
+  @Test
+  public void script_open_partial_keep() {
+    Tokenizer t = Tokenizer.of("Hello<script>Hi there </scr");
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hello", tok.text);
+      Assert.assertEquals("0;0;0;5", tok.coords());
+      Assert.assertEquals(Type.Text, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("<script>", tok.text);
+      Assert.assertEquals("0;5;0;13", tok.coords());
+      Assert.assertEquals(Type.ElementOpen, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hi there ", tok.text);
+      Assert.assertEquals("0;13;0;22", tok.coords());
+      Assert.assertEquals(Type.EmbeddedText, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("</scr", tok.text);
+      Assert.assertEquals("0;22;0;27", tok.coords());
+      Assert.assertEquals(Type.ElementClose, tok.type);
+    }
+    Assert.assertFalse(t.hasNext());
+  }
+
+  @Test
   public void just_text() {
     Tokenizer t = Tokenizer.of("Hello");
     Assert.assertTrue(t.hasNext());

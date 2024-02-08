@@ -17,8 +17,11 @@
 */
 package org.adamalang.common.html;
 
+import org.adamalang.common.template.tree.T;
+
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.PrimitiveIterator;
 
 /** Convert a string into an iterator of tokens */
@@ -49,6 +52,8 @@ public class Tokenizer implements Iterator<Token> {
     return new Tokenizer(html.codePoints().iterator());
   }
 
+  private static final String[] EMBEDDED_TAGS = new String[] { "<script", "<adama", "<style" };
+
   private void push() {
     String val = current.toString();
     if (val.length() == 0) {
@@ -63,10 +68,85 @@ public class Tokenizer implements Iterator<Token> {
       type = Type.ElementOpen;
     }
     // TODO: CDATA, DTD
+    write(type, val);
+
+    if (type == Type.ElementOpen) {
+      String closer = hasEmbeddedContentReturnClosingTag(val);
+      if (closer != null) {
+        pushEmbeddedText(closer);
+      }
+    }
+  }
+
+  private void write(Type type, String val) {
     buffer.add(new Token(type, val, p_ln, p_ch, ln, ch));
     current.setLength(0);
     p_ln = ln;
     p_ch = ch;
+  }
+
+  private String hasEmbeddedContentReturnClosingTag(String val) {
+    for (String emTeg : EMBEDDED_TAGS) {
+      if (val.length() >= emTeg.length()) {
+        if (val.substring(0, emTeg.length()).equalsIgnoreCase(emTeg)) {
+          if (!val.endsWith("/>")) {
+            return "</" + emTeg.substring(1);
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  private void pushEmbeddedText(String closingTag) {
+    StringBuilder body = new StringBuilder();
+    StringBuilder tagCheck = new StringBuilder();
+    boolean checkTag = false;
+    while (codepoints.hasNext()) {
+      int cp = codepoints.nextInt();
+      if (checkTag) {
+        tagCheck.append(Character.toString(cp));
+        String toCheck = tagCheck.toString();
+        if (closingTag.startsWith(toCheck)) {
+          if (toCheck.length() == closingTag.length()) { // DONE
+            write(Type.EmbeddedText, body.toString());
+            ch += toCheck.length();
+            while (codepoints.hasNext()) {
+              int cp2 = codepoints.nextInt();
+              tagCheck.append(Character.toString(cp2));
+              ch++;
+              if (cp2 == '>') {
+                write(Type.ElementClose, tagCheck.toString());
+                return;
+              }
+            }
+          }
+        } else {
+          body.append(toCheck);
+          ch += tagCheck.length();
+          tagCheck.setLength(0);
+          checkTag = false;
+        }
+      } else {
+        if (cp == '<') {
+          checkTag = true;
+          tagCheck.append('<');
+        } else {
+          body.append(Character.toString(cp));
+          ch++;
+        }
+      }
+      if (cp == '\n') {
+        ln++;
+        ch = 0;
+      }
+    }
+    // end of stream, flush it out
+    write(Type.EmbeddedText, body.toString());
+    if (checkTag && tagCheck.length() > 0) {
+      ch += tagCheck.length();
+      write(Type.ElementClose, tagCheck.toString());
+    }
   }
 
   public void ensure(int count) {
