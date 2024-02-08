@@ -15,9 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.json;
 
-public class Platform {
-  public static final String VERSION = "20240207220156";
-  public static final String JS_VERSION = "a4cb11935c6b862199cb432878eb45d3";
+import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TrivialPrivateViewTests {
+  @Test
+  public void flow() {
+    TrivialPrivateView tpv = new TrivialPrivateView(1, NtPrincipal.NO_ONE, Perspective.DEAD);
+    tpv.ingest(new JsonStreamReader("{}"));
+    tpv.dumpViewer(new JsonStreamWriter());
+    Assert.assertEquals(1, tpv.getViewId());
+    Assert.assertEquals(1024, tpv.memory());
+    tpv.update(new JsonStreamWriter());
+    Assert.assertFalse(tpv.hasRead());
+  }
 }

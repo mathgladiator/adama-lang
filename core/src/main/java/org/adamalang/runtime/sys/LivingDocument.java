@@ -33,6 +33,7 @@ import org.adamalang.runtime.graph.Graph;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
+import org.adamalang.runtime.json.TrivialPrivateView;
 import org.adamalang.runtime.natives.*;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
@@ -490,6 +491,16 @@ public abstract class LivingDocument implements RxParent, Caller {
     usurpingDocument.__code_cost = __code_cost;
   }
 
+  private void register(NtPrincipal __who, PrivateView view) {
+    var viewsForWho = __trackedViews.get(__who);
+    if (viewsForWho == null) {
+      viewsForWho = new ArrayList<>();
+      __trackedViews.put(__who, viewsForWho);
+    }
+    __viewsById.put(view.getViewId(), view);
+    viewsForWho.add(view);
+  }
+
   public PrivateView __createView(final NtPrincipal __who, final Perspective perspective) {
     final var view = __createPrivateView(__who, perspective);
     view.setRefresh(() -> {
@@ -498,14 +509,14 @@ public abstract class LivingDocument implements RxParent, Caller {
         view.deliver(delta);
       }
     });
-    var viewsForWho = __trackedViews.get(__who);
-    if (viewsForWho == null) {
-      viewsForWho = new ArrayList<>();
-      __trackedViews.put(__who, viewsForWho);
-    }
-    __viewsById.put(view.getViewId(), view);
-    viewsForWho.add(view);
+    register(__who, view);
     return view;
+  }
+
+  public TrivialPrivateView __createTrivialPrivateView(final NtPrincipal __who, final Perspective perspective) {
+    TrivialPrivateView tpv = new TrivialPrivateView(__genViewId(), __who, perspective);
+    register(__who, tpv);
+    return tpv;
   }
 
   /** code generated: create a private view for the given person */
@@ -645,7 +656,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     final var itView = __trackedViews.get(who).iterator();
     while (itView.hasNext()) {
       final var pv = itView.next();
-      if (pv.isAlive()) {
+      if (pv.isAlive() && pv.hasRead()) {
         tasks.add(new BroadcastTask(who, pv));
       }
     }
@@ -676,7 +687,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       final var itView = entryTrackedView.getValue().iterator();
       while (itView.hasNext()) {
         final var pv = itView.next();
-        if (pv.isAlive()) {
+        if (pv.isAlive() && pv.hasRead()) {
           tasks.add(new BroadcastTask(entryTrackedView.getKey(), pv));
         }
       }

@@ -111,6 +111,11 @@ public abstract class PrivateView {
     }
   }
 
+  /** does the private view support reading data */
+  public boolean hasRead() {
+    return true;
+  }
+
   /** the client is no longer interested */
   public synchronized void kill() {
     alive = false;

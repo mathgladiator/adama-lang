@@ -24,7 +24,6 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.json.JsonStreamReader;
-import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
 
 /**
@@ -38,13 +37,15 @@ public class CoreStream implements AdamaStream {
   private final PredictiveInventory inventory;
   private final DurableLivingDocument document;
   private final StreamHandle handle;
+  private final ConnectionMode mode;
 
-  public CoreStream(CoreRequestContext context, CoreMetrics metrics, PredictiveInventory inventory, DurableLivingDocument document, StreamHandle handle) {
+  public CoreStream(CoreRequestContext context, CoreMetrics metrics, PredictiveInventory inventory, DurableLivingDocument document, ConnectionMode mode, StreamHandle handle) {
     this.context = context;
     this.metrics = metrics;
     this.inventory = inventory;
     this.document = document;
     this.handle = handle;
+    this.mode = mode;
     inventory.message();
     inventory.connect();
     metrics.inflight_streams.up();
@@ -52,25 +53,31 @@ public class CoreStream implements AdamaStream {
 
   @Override
   public void update(String newViewerState) {
-    JsonStreamReader patch = new JsonStreamReader(newViewerState);
-    document.base.executor.execute(new NamedRunnable("core-stream-send") {
-      @Override
-      public void execute() throws Exception {
-        inventory.message();
-        handle.ingestViewUpdate(patch);
-        if (document.document().__hasInflightAsyncWork()) {
-          // this is, at core, fundamentally expensive
-          document.invalidate(Callback.DONT_CARE_INTEGER);
-        } else {
-          handle.triggerRefresh();
+    if (mode.read) {
+      JsonStreamReader patch = new JsonStreamReader(newViewerState);
+      document.base.executor.execute(new NamedRunnable("core-stream-send") {
+        @Override
+        public void execute() throws Exception {
+          inventory.message();
+          handle.ingestViewUpdate(patch);
+          if (document.document().__hasInflightAsyncWork()) {
+            // this is, at core, fundamentally expensive
+            document.invalidate(Callback.DONT_CARE_INTEGER);
+          } else {
+            handle.triggerRefresh();
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   /** send a message to the document */
   @Override
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
+    if (!mode.write) {
+      callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_READ_ONLY));
+      return;
+    }
     if (!document.base.shield.canSendMessageExisting.get()) {
       callback.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_SEND_MESSAGE));
       return;

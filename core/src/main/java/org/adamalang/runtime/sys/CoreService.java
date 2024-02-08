@@ -26,6 +26,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
+import org.adamalang.runtime.json.TrivialPrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.MetricsReporter;
@@ -599,7 +600,7 @@ public class CoreService implements Deliverer, Queryable {
     loadOrCreate(context, key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        connectDirectMustBeInDocumentBase(context, document, stream,ConnectionMode.Full, new JsonStreamReader(viewerState));
+        connectDirectMustBeInDocumentBase(context, document, stream, mode, new JsonStreamReader(viewerState));
       }
 
       @Override
@@ -628,11 +629,11 @@ public class CoreService implements Deliverer, Queryable {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
         };
-        // if (mode.read) {
+        if (mode.read) {
           document.createPrivateView(context.who, perspective, viewerState, metrics.create_private_view.wrap(new Callback<>() {
             @Override
             public void success(PrivateView view) {
-              stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, new StreamHandle(view)));
+              stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, mode, new StreamHandle(view)));
               stream.status(Streamback.StreamStatus.Connected);
               String viewStateFilter = document.document().__getViewStateFilter();
               if (!"[]".equals(viewStateFilter)) {
@@ -645,12 +646,11 @@ public class CoreService implements Deliverer, Queryable {
               stream.failure(ex);
             }
           }));
-        /*
         } else {
-          stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, null));
+          TrivialPrivateView view = document.document().__createTrivialPrivateView(context.who, perspective);
+          stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, mode, new StreamHandle(view)));
           stream.status(Streamback.StreamStatus.Connected);
         }
-        */
       }
 
       @Override

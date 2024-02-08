@@ -87,6 +87,132 @@ public class ServiceConnectTests {
   }
 
   @Test
+  public void connect_read_only() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streambackFull = new MockStreamback();
+      MockStreamback streambackReadonly = new MockStreamback();
+      Runnable latch1f = streambackFull.latchAt(2);
+      Runnable latch2f = streambackFull.latchAt(4);
+      Runnable latch3f = streambackFull.latchAt(5);
+      Runnable latch1r = streambackReadonly.latchAt(2);
+      Runnable latch2r = streambackReadonly.latchAt(3);
+      Runnable latch3r = streambackReadonly.latchAt(4);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streambackFull);
+      streambackFull.await_began();
+
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.ReadOnly, streambackReadonly);
+      streambackReadonly.await_began();
+
+      latch1f.run();
+      latch1r.run();
+      Assert.assertEquals("STATUS:Connected", streambackFull.get(0));
+      Assert.assertEquals("STATUS:Connected", streambackReadonly.get(0));
+
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streambackFull.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":5}", streambackReadonly.get(1));
+
+      {
+        LatchCallback cb1 = new LatchCallback();
+        streambackFull.get().send("foo", null, "{}", cb1);
+        cb1.await_success(6);
+      }
+      {
+        LatchCallback cb1 = new LatchCallback();
+        streambackReadonly.get().send("foo", null, "{}", cb1);
+        cb1.await_failure(144583);
+      }
+
+      latch2f.run();
+      latch2r.run();
+
+      Assert.assertEquals("{\"seq\":5}", streambackFull.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streambackFull.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streambackReadonly.get(2));
+
+
+      streambackReadonly.get().close();
+      streambackFull.get().close();
+
+      latch3f.run();
+      latch3r.run();
+
+      Assert.assertEquals("STATUS:Disconnected", streambackFull.get(4));
+      Assert.assertEquals("STATUS:Disconnected", streambackReadonly.get(3));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void connect_write_only() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streambackFull = new MockStreamback();
+      MockStreamback streambackWriteOnly = new MockStreamback();
+      Runnable latch1f = streambackFull.latchAt(2);
+      Runnable latch2f = streambackFull.latchAt(3);
+      Runnable latch3f = streambackFull.latchAt(5);
+      Runnable latch1w = streambackWriteOnly.latchAt(1);
+      Runnable latch2w = streambackWriteOnly.latchAt(2);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streambackFull);
+      streambackFull.await_began();
+
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.WriteOnly, streambackWriteOnly);
+      streambackWriteOnly.await_began();
+
+      latch1f.run();
+      latch1w.run();
+      Assert.assertEquals("STATUS:Connected", streambackFull.get(0));
+      Assert.assertEquals("STATUS:Connected", streambackWriteOnly.get(0));
+
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streambackFull.get(1));
+      {
+        LatchCallback cb1 = new LatchCallback();
+        streambackFull.get().send("foo", null, "{}", cb1);
+        cb1.await_success(5);
+      }
+      {
+        LatchCallback cb1 = new LatchCallback();
+        streambackWriteOnly.get().send("foo", null, "{}", cb1);
+        cb1.await_success(6);
+      }
+
+      latch2f.run();
+
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streambackFull.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":242},\"seq\":6}", streambackFull.get(3));
+
+      streambackWriteOnly.get().close();
+      streambackFull.get().close();
+
+      latch3f.run();
+      latch2w.run();
+
+      Assert.assertEquals("STATUS:Disconnected", streambackFull.get(4));
+      Assert.assertEquals("STATUS:Disconnected", streambackWriteOnly.get(1));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
   public void connect_crash() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =

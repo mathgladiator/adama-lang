@@ -63,6 +63,7 @@ public class PrivateViewTests {
     Assert.assertFalse(pv.isAlive());
     pv.deliver("{}");
     Assert.assertEquals("{}", list.get(0));
+    Assert.assertTrue(pv.hasRead());
   }
 
   @Test

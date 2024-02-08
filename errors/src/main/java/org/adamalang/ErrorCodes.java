@@ -117,6 +117,7 @@ public class ErrorCodes {
   public static final int SHIELD_REJECT_CONNECT_DOCUMENT = 183498;
   @RetryInternally
   public static final int SHIELD_REJECT_SEND_MESSAGE = 199883;
+  public static final int DOCUMENT_READ_ONLY = 144583;
 
   public static final int DOCUMENT_SHEDDING_LOAD = 146115;
   public static final int DOCUMENT_DRAINING_LOAD = 193265;
@@ -181,7 +182,6 @@ public class ErrorCodes {
   public static final int ONLY_ACCEPTS_TEXT_FRAMES = 213711;
   public static final int USERLAND_REQUEST_NO_METHOD_PROPERTY = 213708;
   public static final int USERLAND_REQUEST_NO_ID_PROPERTY = 233120;
-  public static final int ASSET_KEY_WRONG_LENGTH = 144583;
 
   /**
    * all DataService implementations must use this for a patch failure due to sequencer out of whack

@@ -176,6 +176,8 @@ public class ErrorTable {
     names.put(199883, "SHIELD_REJECT_SEND_MESSAGE");
     descriptions.put(199883, "no description of error (yet)");
     retry.add(199883);
+    names.put(144583, "DOCUMENT_READ_ONLY");
+    descriptions.put(144583, "no description of error (yet)");
     names.put(146115, "DOCUMENT_SHEDDING_LOAD");
     descriptions.put(146115, "no description of error (yet)");
     names.put(193265, "DOCUMENT_DRAINING_LOAD");
@@ -248,8 +250,6 @@ public class ErrorTable {
     descriptions.put(213708, "no description of error (yet)");
     names.put(233120, "USERLAND_REQUEST_NO_ID_PROPERTY");
     descriptions.put(233120, "no description of error (yet)");
-    names.put(144583, "ASSET_KEY_WRONG_LENGTH");
-    descriptions.put(144583, "no description of error (yet)");
     names.put(621580, "UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF");
     descriptions.put(621580, "no description of error (yet)");
     names.put(625676, "UNIVERSAL_LOOKUP_FAILED");
