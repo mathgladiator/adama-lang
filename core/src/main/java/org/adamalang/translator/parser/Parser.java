@@ -271,6 +271,7 @@ public class Parser {
           throw new ParseException(String.format("Parser was expecting either an identifier or an `*` after `::`, but got `%s` instead.", value.text), doubleColon);
         }
       } else {
+        index.usages.add(token);
         return new Lookup(token);
       }
     } else if (token.isNumberLiteralDouble()) {
