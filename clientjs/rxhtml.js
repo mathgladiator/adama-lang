@@ -364,9 +364,10 @@ var RxHTML = (function () {
         status.timeout = window.setTimeout(function() {
           status.avail = true;
           if (status.again) {
+            status.again = false;
             status.go();
           }
-        });
+        }, ms);
         foo();
       } else {
         status.again = true;
