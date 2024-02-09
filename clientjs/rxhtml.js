@@ -1457,6 +1457,20 @@ var RxHTML = (function () {
     });
   };
 
+  // RUNTIME: <tag .. rx:event="... submit:$id ...">
+  self.oSFI = function (dom, type, state, id) {
+    reg_event(state, dom, type, function (event) {
+      var f = document.getElementById(id);
+      if (f != null) {
+        var e = new SubmitEvent('submit', {
+          'bubbles'    : true,
+          'cancelable' : true
+        });
+        f.dispatchEvent(e);
+      }
+    });
+  };
+
   self.oNK = function (dom, type, state) {
     reg_event(state, dom, type, function (event) {
       var cur = dom;

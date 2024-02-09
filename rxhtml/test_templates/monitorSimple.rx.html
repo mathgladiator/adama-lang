@@ -1,10 +1,13 @@
 <forest>
     <page uri="/">
-        <form rx:action="send:blah">
+        <form rx:action="send:blah" id="my-form-of-awesome">
             <div rx:monitor="set" rx:fall="set:x=0" rx:rise="submit">
             </div>
             <monitor path="set-e" rx:fall="set:x=0" rx:rise="submit" />
             <monitor path="set-skip" rx:fall="set:x=0" rx:rise="submit" skip-first />
         </form>
+
+        <div rx:monitor="set" rx:fall="set:x=0" rx:rise="submit:my-form-of-awesome">
+        </div>
     </page>
 </forest>

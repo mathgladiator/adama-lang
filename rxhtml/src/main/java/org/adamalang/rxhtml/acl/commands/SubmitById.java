@@ -15,9 +15,24 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.acl.commands;
 
-public class Platform {
-  public static final String VERSION = "20240208213358";
-  public static final String JS_VERSION = "a9b9849316272dfed4ceddbf8b64be9f";
+import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
+
+/** search for a parent form and then submit it */
+public class SubmitById implements Command {
+  private final String id;
+  public SubmitById(String id) {
+    this.id = id;
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+  }
+
+  @Override
+  public void write(Environment env, String type, String eVar) {
+    env.writer.tab().append("$.oSFI(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",'").append(id).append("');").newline();
+  }
 }

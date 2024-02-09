@@ -33,6 +33,10 @@ public class Parser {
         String cmd = phrase.substring(0, kColon).trim().toLowerCase();
         String body = phrase.substring(kColon + 1).trim();
         switch (cmd) {
+          case "submit": {
+            commands.add(new SubmitById(body.trim()));
+            break;
+          }
           case "toggle": {
             commands.add(new Toggle(body));
             break;
