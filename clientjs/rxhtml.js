@@ -364,7 +364,7 @@ var RxHTML = (function () {
         status.timeout = window.setTimeout(function() {
           status.avail = true;
           if (status.again) {
-            go();
+            status.go();
           }
         });
         foo();
@@ -949,7 +949,9 @@ var RxHTML = (function () {
       },
       "-": function (key) {
         if (key in domByKey) {
-          parentDom.removeChild(domByKey[key]);
+          try {
+            parentDom.removeChild(domByKey[key]);
+          } catch (ex) {}
           delete domByKey[key];
         }
         if (key in viewUnSubByKey) {

@@ -73,6 +73,7 @@ public class Payrix  extends SimpleService {
     sb.append("}");
     sb.append("message PayrixTokenInfo {");
     sb.append("  int method;");
+    sb.append("  string type;");
     sb.append("}");
     sb.append("message PayrixIdRequest {");
     sb.append("  string id;");
@@ -155,7 +156,9 @@ public class Payrix  extends SimpleService {
         ObjectNode handoffResult = Json.newJsonObject();
         try {
           ObjectNode payment = (ObjectNode) resultFromPayrix.get("response").get("data").get(0).get("payment");
+          ObjectNode bin = (ObjectNode) payment.get("bin");
           handoffResult.put("method", payment.get("method").intValue());
+          handoffResult.put("type", bin.get("type").textValue());
           callback.success(handoffResult.toString());
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_ISSUE_PARSING, ex, EXLOGGER));
