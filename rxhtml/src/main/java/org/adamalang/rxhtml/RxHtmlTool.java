@@ -36,7 +36,8 @@ public class RxHtmlTool {
     Environment env = Environment.fresh(config.feedback, config.environment);
     TypeChecker.typecheck(str, types, config.feedback);
     Document document = Jsoup.parse(str);
-    MarkStaticContent.mark(document);
+    // TODO: enabling this requires a LOT of work
+    // MarkStaticContent.mark(document);
     Root.start(env, buildCustomJavaScript(document));
     String style = buildInternStyle(document);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);

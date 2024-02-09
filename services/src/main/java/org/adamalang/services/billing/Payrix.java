@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.metrics.FirstPartyMetrics;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -41,6 +42,7 @@ import java.util.function.Consumer;
 
 public class Payrix  extends SimpleService {
   private static final Logger LOGGER = LoggerFactory.getLogger(Payrix.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private final FirstPartyMetrics metrics;
   private final WebClientBase base;
   private final String apikey;
@@ -62,15 +64,20 @@ public class Payrix  extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("enum PayrixTxStatus { Pending:0, Approved:1, Failed:2, Captured:3, Settled:5, Returned:6 }");
+    sb.append("enum PayrixTxStatus { Pending:0, Approved:1, Failed:2, Captured:3, Settled:5, Returned:6, Unknown:100}");
     sb.append("message PayrixTxResponse {");
     sb.append("  bool success;");
     sb.append("  maybe<string> tx_id;");
     sb.append("  maybe<PayrixTxStatus> tx_status;");
     sb.append("  maybe<dynamic> error;");
     sb.append("}");
-    sb.append("message PayrixTxFetchRequest {");
-    sb.append("  string tx_id;");
+    sb.append("message PayrixTokenInfo {");
+    sb.append("  int method;");
+    sb.append("}");
+    sb.append("message PayrixIdRequest {");
+    sb.append("  string id;");
+    sb.append("}");
+    sb.append("message PayrixVoid {");
     sb.append("}");
     sb.append("service payrix {\n");
     sb.append("  class=\"payrix\";\n");
@@ -82,7 +89,10 @@ public class Payrix  extends SimpleService {
       error.accept("Payrix requires an 'endpoint' for either sandbox or production");
     }
     sb.append("  method<dynamic, PayrixTxResponse> PostTransaction;\n");
-    sb.append("  method<PayrixTxFetchRequest, PayrixTxResponse> GetTransaction;\n");
+    sb.append("  method<PayrixIdRequest, PayrixTxResponse> GetTransaction;\n");
+    sb.append("  method<PayrixIdRequest, PayrixTokenInfo> GetTokenInfo;\n");
+    sb.append("  method<PayrixIdRequest, PayrixVoid> DeleteToken;\n");
+    sb.append("  method<PayrixIdRequest, PayrixVoid> DeleteCustomer;\n");
     sb.append("}\n");
     return sb.toString();
   }
@@ -100,7 +110,12 @@ public class Payrix  extends SimpleService {
         }
         Integer status = extractStatus(resultFromPayrix);
         if (status != null) {
-          handoffResult.put("tx_status", status);
+          if (0 <= status && status <= 7) {
+            handoffResult.put("tx_status", status);
+          } else {
+            LOGGER.error("unknown-payrix-status:" + status);
+            handoffResult.put("tx_status", 100);
+          }
         }
         if (hasErrors(resultFromPayrix)) {
           handoffResult.put("success", false);
@@ -118,6 +133,41 @@ public class Payrix  extends SimpleService {
     };
   }
 
+  private static Callback<String> createVoidTeardownCallback(Callback<String> callback) {
+    return new Callback<String>() {
+      @Override
+      public void success(String value) {
+        callback.success("{}");
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
+  }
+
+  private static Callback<String> createGetTokenTeardown(Callback<String> callback) {
+    return new Callback<String>() {
+      @Override
+      public void success(String value) {
+        ObjectNode resultFromPayrix = Json.parseJsonObject(value);
+        ObjectNode handoffResult = Json.newJsonObject();
+        try {
+          ObjectNode payment = (ObjectNode) resultFromPayrix.get("response").get("data").get(0).get("payment");
+          handoffResult.put("method", payment.get("method").intValue());
+          callback.success(handoffResult.toString());
+        } catch (Exception ex) {
+          callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_ISSUE_PARSING, ex, EXLOGGER));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
+  }
 
   /** ultimately, the system only cares about success -> transaction id and the payrix side has all the details */
   private static String extractTransactionId(ObjectNode resultFromPayrix) {
@@ -180,11 +230,38 @@ public class Payrix  extends SimpleService {
   public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
     ObjectNode node = Json.parseJsonObject(request);
     switch (method) {
+      case "DeleteCustomer": {
+        TreeMap<String, String> headers = new TreeMap<>();
+        headers.put("APIKEY", apikey);
+        headers.put("Content-Type", "application/json");
+        String customer_id = node.get("id").textValue();
+        SimpleHttpRequest req = new SimpleHttpRequest("DELETE", endpoint + "customers/" + customer_id, headers, SimpleHttpRequestBody.EMPTY);
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_del_customer.start(), createVoidTeardownCallback(callback)));
+        return;
+      }
+      case "GetTokenInfo": {
+        TreeMap<String, String> headers = new TreeMap<>();
+        headers.put("APIKEY", apikey);
+        headers.put("Content-Type", "application/json");
+        String token_id = node.get("id").textValue();
+        SimpleHttpRequest req = new SimpleHttpRequest("GET", endpoint + "tokens/" + token_id + "?expand[payment][bin][]", headers, SimpleHttpRequestBody.EMPTY);
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_token.start(), createGetTokenTeardown(callback)));
+        return;
+      }
+      case "DeleteToken": {
+        TreeMap<String, String> headers = new TreeMap<>();
+        headers.put("APIKEY", apikey);
+        headers.put("Content-Type", "application/json");
+        String token_id = node.get("id").textValue();
+        SimpleHttpRequest req = new SimpleHttpRequest("DELETE", endpoint + "tokens/" + token_id, headers, SimpleHttpRequestBody.EMPTY);
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_del_token.start(), createVoidTeardownCallback(callback)));
+        return;
+      }
       case "GetTransaction": {
         TreeMap<String, String> headers = new TreeMap<>();
         headers.put("APIKEY", apikey);
         headers.put("Content-Type", "application/json");
-        String transactionId = node.get("tx_id").textValue();
+        String transactionId = node.get("id").textValue();
         SimpleHttpRequest req = new SimpleHttpRequest("GET", endpoint + "txns/" + transactionId, headers, SimpleHttpRequestBody.EMPTY);
         base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_tx.start(), createTransactionTeardownCallback(callback)));
         return;

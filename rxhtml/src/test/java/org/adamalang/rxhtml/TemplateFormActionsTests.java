@@ -404,7 +404,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:channel\">");
     gold.append("\n    var bb=$.E('form');");
-    gold.append("\n    $.aSD(bb,a,'channel');");
+    gold.append("\n    $.aSD(bb,a,'channel',0);");
     gold.append("\n    var fb=[];");
     gold.append("\n    fb.push($.bS(bb,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(bb,'success',a,fb);");
@@ -931,7 +931,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:channel\">");
     gold.append("\n    var bb=$.E('form');");
-    gold.append("\n    $.aSD(bb,a,'channel');");
+    gold.append("\n    $.aSD(bb,a,'channel',0);");
     gold.append("\n    var fb=[];");
     gold.append("\n    fb.push($.bS(bb,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(bb,'success',a,fb);");

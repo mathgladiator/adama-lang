@@ -3710,7 +3710,8 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:action=send:$channel
-  self.aSD = function (form, state, channel) {
+  self.aSD = function (form, state, channel, msToDebounce) {
+    // TODO: do debounce if > 0
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
       var passwords = {};

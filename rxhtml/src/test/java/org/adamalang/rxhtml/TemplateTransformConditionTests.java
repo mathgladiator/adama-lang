@@ -48,7 +48,7 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    $.SIH(d,\"Well, ok then...\");");
+    gold.append("\n    d.append($.T(' Well, ok then... '));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -74,7 +74,7 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    $.SIH(d,\"Well, ok then...\");");
+    gold.append("\n    d.append($.T(' Well, ok then... '));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

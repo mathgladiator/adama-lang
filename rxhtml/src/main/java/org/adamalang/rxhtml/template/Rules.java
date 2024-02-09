@@ -39,6 +39,9 @@ public class Rules {
     if (name.startsWith("rx:")) {
       return true;
     }
+    if (name.equals("href")) {
+      return true;
+    }
     if (name.equals("for-env")) {
       return true;
     }

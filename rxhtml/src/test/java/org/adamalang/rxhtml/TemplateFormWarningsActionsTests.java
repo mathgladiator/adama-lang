@@ -181,7 +181,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:channel\">");
     gold.append("\n    var d=$.E('form');");
-    gold.append("\n    $.aSD(d,a,'channel');");
+    gold.append("\n    $.aSD(d,a,'channel',0);");
     gold.append("\n    var q=[];");
     gold.append("\n    q.push($.bS(d,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(d,'success',a,q);");
@@ -351,7 +351,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:channel\">");
     gold.append("\n    var d=$.E('form');");
-    gold.append("\n    $.aSD(d,a,'channel');");
+    gold.append("\n    $.aSD(d,a,'channel',0);");
     gold.append("\n    var kb=[];");
     gold.append("\n    kb.push($.bS(d,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(d,'success',a,kb);");
@@ -554,7 +554,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:channel\">");
     gold.append("\n    var d=$.E('form');");
-    gold.append("\n    $.aSD(d,a,'channel');");
+    gold.append("\n    $.aSD(d,a,'channel',0);");
     gold.append("\n    var q=[];");
     gold.append("\n    q.push($.bS(d,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(d,'success',a,q);");
@@ -724,7 +724,7 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:channel\">");
     gold.append("\n    var d=$.E('form');");
-    gold.append("\n    $.aSD(d,a,'channel');");
+    gold.append("\n    $.aSD(d,a,'channel',0);");
     gold.append("\n    var kb=[];");
     gold.append("\n    kb.push($.bS(d,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(d,'success',a,kb);");

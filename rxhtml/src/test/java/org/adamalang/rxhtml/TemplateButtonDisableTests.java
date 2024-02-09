@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
+public class TemplateButtonDisableTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -36,23 +36,19 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{classy} [b]active[#b]inactive[/b]\" fixed=\"constant string\" len=\"40\">");
-    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    // <button disabled=\"{view:hi}\">");
+    gold.append("\n    var d=$.E('button');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'classy') + (($.F(this,'b')) ? (\" active \") : (\" inactive \")));");
+    gold.append("\n        $.FV(this.__dom,'disabled',$.B($.F(this,'hi')));");
     gold.append("\n      }).bind(e);");
-    gold.append("\n      $.Y(a,e,'b',f);");
-    gold.append("\n      $.Y(a,e,'classy',f);");
+    gold.append("\n      $.Y($.pV(a),e,'hi',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    $.SA(d,'fixed',\"constant string\");");
-    gold.append("\n    $.SA(d,'len',\"40\");");
-    gold.append("\n    d.append($.T(' Yaz '));");
+    gold.append("\n    d.append($.T('Set View'));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -66,23 +62,19 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     gold.append("\n  // <page uri=\"/\">");
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
-    gold.append("\n    b.append($.T(' Simple Page '));");
     gold.append("\n");
-    gold.append("\n    // <div class=\"{classy} [b]active[#b]inactive[/b]\" fixed=\"constant string\" len=\"40\">");
-    gold.append("\n    var d=$.E('div');");
+    gold.append("\n    // <button disabled=\"{view:hi}\">");
+    gold.append("\n    var d=$.E('button');");
     gold.append("\n    {");
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'classy') + (($.F(this,'b')) ? (\" active \") : (\" inactive \")));");
+    gold.append("\n        $.FV(this.__dom,'disabled',$.B($.F(this,'hi')));");
     gold.append("\n      }).bind(e);");
-    gold.append("\n      $.Y(a,e,'b',f);");
-    gold.append("\n      $.Y(a,e,'classy',f);");
+    gold.append("\n      $.Y($.pV(a),e,'hi',f);");
     gold.append("\n      f();");
     gold.append("\n    }");
-    gold.append("\n    $.SA(d,'fixed',\"constant string\");");
-    gold.append("\n    $.SA(d,'len',\"40\");");
-    gold.append("\n    d.append($.T(' Yaz '));");
+    gold.append("\n    d.append($.T('Set View'));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -102,10 +94,7 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        Simple Page");
-    source.append("\n        <div class=\"{classy} [b]active[#b]inactive[/b]\" fixed=\"constant string\" len=40>");
-    source.append("\n            Yaz");
-    source.append("\n        </div>");
+    source.append("\n        <button disabled=\"{view:hi}\">Set View</button>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
@@ -114,7 +103,9 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : {");
+    gold.append("\n    \"hi\" : \"value\"");
+    gold.append("\n  }");
     gold.append("\n}");
     return gold.toString();
   }

@@ -39,7 +39,7 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:blah\">");
     gold.append("\n    var d=$.E('form');");
-    gold.append("\n    $.aSD(d,a,'blah');");
+    gold.append("\n    $.aSD(d,a,'blah',0);");
     gold.append("\n    var e=[];");
     gold.append("\n    e.push($.bS(d,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(d,'success',a,e);");
@@ -81,7 +81,7 @@ public class TemplateMonitorSimpleTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <form rx:action=\"send:blah\">");
     gold.append("\n    var d=$.E('form');");
-    gold.append("\n    $.aSD(d,a,'blah');");
+    gold.append("\n    $.aSD(d,a,'blah',0);");
     gold.append("\n    var e=[];");
     gold.append("\n    e.push($.bS(d,$.pV(a),'send_failed',false));");
     gold.append("\n    $.onB(d,'success',a,e);");

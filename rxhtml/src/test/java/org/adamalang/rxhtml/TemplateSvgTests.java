@@ -41,7 +41,12 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('svg', 'http://www.w3.org/2000/svg');");
     gold.append("\n    $.SA(d,'height',\"210\");");
     gold.append("\n    $.SA(d,'width',\"400\");");
-    gold.append("\n    $.SIH(d,\"<path d=\\\"M150 0 L75 200 L225 200 Z\\\" /> Sorry, your browser does not support inline SVG.\");");
+    gold.append("\n");
+    gold.append("\n    // <path d=\"M150 0 L75 200 L225 200 Z\">");
+    gold.append("\n    var e=$.E('path', 'http://www.w3.org/2000/svg');");
+    gold.append("\n    $.SA(e,'d',\"M150 0 L75 200 L225 200 Z\");");
+    gold.append("\n    d.append(e);");
+    gold.append("\n    d.append($.T(' Sorry, your browser does not support inline SVG. '));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -60,7 +65,12 @@ public class TemplateSvgTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('svg', 'http://www.w3.org/2000/svg');");
     gold.append("\n    $.SA(d,'height',\"210\");");
     gold.append("\n    $.SA(d,'width',\"400\");");
-    gold.append("\n    $.SIH(d,\"<path d=\\\"M150 0 L75 200 L225 200 Z\\\" /> Sorry, your browser does not support inline SVG.\");");
+    gold.append("\n");
+    gold.append("\n    // <path d=\"M150 0 L75 200 L225 200 Z\">");
+    gold.append("\n    var e=$.E('path', 'http://www.w3.org/2000/svg');");
+    gold.append("\n    $.SA(e,'d',\"M150 0 L75 200 L225 200 Z\");");
+    gold.append("\n    d.append(e);");
+    gold.append("\n    d.append($.T(' Sorry, your browser does not support inline SVG. '));");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

@@ -332,6 +332,9 @@ public class Attributes {
                        tagName.equalsIgnoreCase("input") ||
                        isSelect ||
                        isOption;
+    boolean isButton = tagName.equalsIgnoreCase("button");
+    boolean keyIsDisabled = key.trim().toLowerCase(Locale.ENGLISH).equals("disabled");
+
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(stateVar).append(",").append(expr).append(",").append(features.contains("merge") ? "true" : "false").append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
@@ -340,7 +343,7 @@ public class Attributes {
       env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append("$.SV(").append(var).append(",").append(expr).append(");").newline();
-    } else if (hasValue && isBooleanInputValue(key)) {
+    } else if (hasValue && isBooleanInputValue(key) || isButton && keyIsDisabled) {
       env.writer.tab().append("$.FV(").append(var).append(",'").append(key).append("',").append(wrapBoolValue(expr)).append(");").newline();
     } else {
       if (isOption && "label".equalsIgnoreCase(key)) {
@@ -755,10 +758,19 @@ public class Attributes {
     } else if (action.startsWith("send:")) { // Send a message on the given channel
       convertFailureVariableToEvents(env.element, "send_failed");
       String channel = action.substring(5);
+      int debounce = 0;
+      if (env.element.hasAttr("debounce")) {
+        try {
+          debounce = Integer.parseInt(env.element.attr("debounce"));
+        } catch (Exception ex) {
+          env.feedback.warn(env.element, "attribute debounce was not an integer '" + env.element.attr("debounce"));
+        }
+      }
       env.writer.tab().append("$.aSD(").append(eVar) //
           .append(",").append(env.stateVar) //
           .append(",'").append(channel) //
-          .append("');").newline();
+          .append("',").append("" + debounce) //
+          .append(");").newline();
     } else if (action.startsWith("copy-form:")) {
       String targetFormId = action.substring(10);
       env.writer.tab().append("$.aCF(").append(eVar) //
