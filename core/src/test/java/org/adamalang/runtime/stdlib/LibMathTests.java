@@ -45,6 +45,13 @@ public class LibMathTests {
   }
 
   @Test
+  public void clampIntOf() {
+    Assert.assertEquals(3, LibMath.clampIntOf(3.14));
+    Assert.assertEquals(Integer.MAX_VALUE, LibMath.clampIntOf(Double.MAX_VALUE));
+    Assert.assertEquals(Integer.MIN_VALUE, LibMath.clampIntOf(-Double.MAX_VALUE));
+  }
+
+  @Test
   public void longOf() {
     Assert.assertEquals(3, (long) LibMath.longOf(3.14).get());
     Assert.assertEquals(3, (long) LibMath.longOf(new NtMaybe<>(3.14)).get());

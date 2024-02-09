@@ -38,7 +38,7 @@ public class RuleSetStructures {
       for (final Map.Entry<String, FieldDefinition> elementB : storB.fields.entrySet()) {
         final var other = storA.fields.get(elementB.getKey());
         if (other != null) {
-          RuleSetAssignment.CanTypeAStoreTypeB(environment, elementB.getValue().type, other.type, StorageTweak.None, silent);
+          RuleSetAssignment.CanTypeAStoreTypeB(environment, other.type, elementB.getValue().type, StorageTweak.None, silent);
         } else {
           if (!silent) {
             environment.document.createError(typeA, String.format("The type '%s' contains field '%s' which is not found within '%s'.", typeB.getAdamaType(), elementB.getKey(), typeA.getAdamaType()));

@@ -1,0 +1,9 @@
+message S {
+  int s;
+}
+
+function foo(double d) -> S {
+  return {s: d.round()};
+}
+
+public formula f = foo(3.14);

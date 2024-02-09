@@ -9,3 +9,6 @@ public formula z2 = @maybe("3.14").doubleOf();
 public formula x3 = @maybe<string>.intOf();
 public formula y3 = @maybe<string>.longOf();
 public formula z3 = @maybe<string>.doubleOf();
+
+public formula v0 = (123.3).intOf();
+public formula v1 = (123.3).clampIntOf();

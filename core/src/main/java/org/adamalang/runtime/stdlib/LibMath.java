@@ -777,6 +777,19 @@ public class LibMath {
     return new NtMaybe<>();
   }
 
+
+  @UseName(name="clampIntOf")
+  @Extension
+  public static int clampIntOf(double x) {
+    if (x < Integer.MIN_VALUE) {
+      return Integer.MIN_VALUE;
+    }
+    if (x > Integer.MAX_VALUE) {
+      return Integer.MAX_VALUE;
+    }
+    return (int) x;
+  }
+
   @UseName(name="intOf")
   @Extension
   public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> intOf(@HiddenType(clazz = Double.class) NtMaybe<Double> x) {
