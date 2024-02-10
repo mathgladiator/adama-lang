@@ -72,6 +72,16 @@ public class TemplatePageCommonStampingTests extends BaseRxHtmlTest {
     gold.append("\n    var f=$.X();");
     gold.append("\n    b.append($.T(' Yo '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/auth/me/yo\" authenticate=\"some_id\" bundle=\"giggy\">");
+    gold.append("\n  $.PG(['fixed','auth','fixed','me','fixed','yo'], function(b,a) {");
+    gold.append("\n    var g=$.aRDz('/');");
+    gold.append("\n    if($.ID('some_id',g).abort) {");
+    gold.append("\n      return;");
+    gold.append("\n    }");
+    gold.append("\n    var g=$.X();");
+    gold.append("\n    b.append($.T(' Yo '));");
+    gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
@@ -119,6 +129,16 @@ public class TemplatePageCommonStampingTests extends BaseRxHtmlTest {
     gold.append("\n    var f=$.X();");
     gold.append("\n    b.append($.T(' Yo '));");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/auth/me/yo\" authenticate=\"some_id\" bundle=\"giggy\">");
+    gold.append("\n  $.PG(['fixed','auth','fixed','me','fixed','yo'], function(b,a) {");
+    gold.append("\n    var g=$.aRDz('/');");
+    gold.append("\n    if($.ID('some_id',g).abort) {");
+    gold.append("\n      return;");
+    gold.append("\n    }");
+    gold.append("\n    var g=$.X();");
+    gold.append("\n    b.append($.T(' Yo '));");
+    gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
     gold.append("\n");
@@ -148,6 +168,10 @@ public class TemplatePageCommonStampingTests extends BaseRxHtmlTest {
     source.append("\n    <page uri=\"/g\">");
     source.append("\n        Yo");
     source.append("\n    </page>");
+    source.append("\n    <common-page uri:prefix=\"/auth\" authenticate=\"some_id\" bundle=\"giggy\" />");
+    source.append("\n    <page uri=\"/auth/me/yo\">");
+    source.append("\n        Yo");
+    source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
   }
@@ -157,7 +181,8 @@ public class TemplatePageCommonStampingTests extends BaseRxHtmlTest {
     gold.append("{");
     gold.append("\n  \"/foo\" : { },");
     gold.append("\n  \"/foody\" : { },");
-    gold.append("\n  \"/g\" : { }");
+    gold.append("\n  \"/g\" : { },");
+    gold.append("\n  \"/auth/me/yo\" : { }");
     gold.append("\n}");
     return gold.toString();
   }
