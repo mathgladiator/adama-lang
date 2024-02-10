@@ -59,7 +59,7 @@ public class MeteringPubSubTests {
       Assert.assertEquals(1, pubsub.size());
       Consumer<HashMap<String, PredictiveInventory.MeteringSample>> publisher = pubsub.publisher();
       HashMap<String, PredictiveInventory.MeteringSample> map = new HashMap<>();
-      map.put("space", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4, 5, 6, 7));
+      map.put("space", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
       for (int k = 0; k < 11; k++) {
         publisher.accept(map);
       }

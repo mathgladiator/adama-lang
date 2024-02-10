@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ServiceHeatEstimatorTests {
 
   private static MeterReading record(String space, long mem, long cpu, long messages, long connections) {
-    return new MeterReading(0, 0, space, "", new PredictiveInventory.MeteringSample(mem, cpu, -1, messages, connections, 0, 0, 0));
+    return new MeterReading(0, 0, space, "", new PredictiveInventory.MeteringSample(mem, cpu, -1, messages, connections, 0, 0, 0, 0, 0));
   }
 
   private static ArrayList<MeterReading> array(MeterReading... records) {

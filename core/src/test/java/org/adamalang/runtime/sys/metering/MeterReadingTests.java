@@ -26,7 +26,7 @@ public class MeterReadingTests {
   @Test
   public void flow() {
     MeterReading meterReading =
-        new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13, 123, 456, 789));
+        new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13, 123, 456, 789, 13, 420));
     Assert.assertEquals(42L, meterReading.time);
     Assert.assertEquals(123, meterReading.timeframe);
     Assert.assertEquals("space", meterReading.space);
@@ -41,44 +41,44 @@ public class MeterReadingTests {
   public void packings() {
     {
       MeterReading meterReading =
-          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13, 123, 456, 789));
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13, 123, 456, 789, 13, 420));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"13\",\"123\",\"456\",\"789\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"13\",\"123\",\"456\",\"789\",\"13\",\"420\"]",
           meterReading.packup());
     }
     {
       MeterReading meterReading =
-          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 0, 0, 0, 0, 123, 456, 789));
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 0, 0, 0, 0, 123, 456, 789, 13, 420));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"0\",\"0\",\"0\",\"0\",\"123\",\"456\",\"789\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"0\",\"0\",\"0\",\"0\",\"123\",\"456\",\"789\",\"13\",\"420\"]",
           meterReading.packup());
     }
     {
       MeterReading meterReading =
-          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 200, 0, 0, 0, 123, 456, 789));
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 200, 0, 0, 0, 123, 456, 789, 13, 420));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"200\",\"0\",\"0\",\"0\",\"123\",\"456\",\"789\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"200\",\"0\",\"0\",\"0\",\"123\",\"456\",\"789\",\"13\",\"420\"]",
           meterReading.packup());
     }
     {
       MeterReading meterReading =
-          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 42, 0, 0, 123, 456, 789));
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 42, 0, 0, 123, 456, 789, 13, 420));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"42\",\"0\",\"0\",\"123\",\"456\",\"789\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"42\",\"0\",\"0\",\"123\",\"456\",\"789\",\"13\",\"420\"]",
           meterReading.packup());
     }
     {
       MeterReading meterReading =
-          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 1000, 0, 123, 456, 789));
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 1000, 0, 123, 456, 789, 13, 420));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"1000\",\"0\",\"123\",\"456\",\"789\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"1000\",\"0\",\"123\",\"456\",\"789\",\"13\",\"420\"]",
           meterReading.packup());
     }
     {
       MeterReading meterReading =
-          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 0, 13, 123, 456, 789));
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 0, 13, 123, 456, 789, 13, 420));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"0\",\"13\",\"123\",\"456\",\"789\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"0\",\"13\",\"123\",\"456\",\"789\",\"13\",\"420\"]",
           meterReading.packup());
     }
   }
@@ -86,7 +86,7 @@ public class MeterReadingTests {
   @Test
   public void unpack() {
     MeterReading meterReading =
-        new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13, 123, 456, 789));
+        new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13, 123, 456, 789, 13, 420));
     JsonStreamReader reader = new JsonStreamReader(meterReading.packup() + meterReading.packup() + meterReading.packup());
     MeterReading a = MeterReading.unpack(reader);
     MeterReading b = MeterReading.unpack(reader);
@@ -110,10 +110,10 @@ public class MeterReadingTests {
   public void badversion() {
     JsonStreamReader reader =
         new JsonStreamReader(
-            "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
-                + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\", \"123\", \"456\", \"1313\"]"
-                + "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
-                + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\", \"123\", \"456\", \"1313\"]");
+            "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\",\"13\",\"420\"]"
+                + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\", \"123\", \"456\", \"1313\",\"13\",\"420\"]"
+                + "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\",\"13\",\"420\"]"
+                + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\", \"123\", \"456\", \"1313\",\"13\",\"420\"]");
     MeterReading bad1 = MeterReading.unpack(reader);
     MeterReading a = MeterReading.unpack(reader);
     MeterReading bad2 = MeterReading.unpack(reader);
@@ -129,6 +129,8 @@ public class MeterReadingTests {
     Assert.assertEquals(42, a.count);
     Assert.assertEquals(1000, a.messages);
     Assert.assertEquals(17, a.connections);
+    Assert.assertEquals(13, a.cpu_ms);
+    Assert.assertEquals(420, a.backup_bytes_hours);
     Assert.assertEquals(42, b.time);
     Assert.assertEquals(123, b.timeframe);
     Assert.assertEquals("space", b.space);
@@ -138,5 +140,7 @@ public class MeterReadingTests {
     Assert.assertEquals(42, b.count);
     Assert.assertEquals(1000, b.messages);
     Assert.assertEquals(17, b.connections);
+    Assert.assertEquals(13, a.cpu_ms);
+    Assert.assertEquals(420, a.backup_bytes_hours);
   }
 }

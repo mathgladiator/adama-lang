@@ -34,6 +34,8 @@ public class PredictiveInventory {
   private long bandwidth; // reset
   private long first_party_service_calls; // reset
   private long third_party_service_calls; // reset
+  private long cpu_milliseconds; // reset
+  private long backup_byte_hours; // reset
 
   public PredictiveInventory() {
     this.memory = 0;
@@ -47,14 +49,18 @@ public class PredictiveInventory {
     this.bandwidth = 0;
     this.first_party_service_calls = 0;
     this.third_party_service_calls = 0;
+    this.cpu_milliseconds = 0;
+    this.backup_byte_hours = 0;
   }
 
   public MeteringSample sample() {
-    MeteringSample meteringSample = new MeteringSample(memory, ticks, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls);
+    MeteringSample meteringSample = new MeteringSample(memory, ticks, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls, cpu_milliseconds, backup_byte_hours);
     messages = 0;
     bandwidth = 0;
     first_party_service_calls = 0;
     third_party_service_calls = 0;
+    cpu_milliseconds = 0;
+    backup_byte_hours = 0;
     return meteringSample;
   }
 
@@ -71,6 +77,7 @@ public class PredictiveInventory {
     this.ticks = preciseSnapshotAccumulator.ticks;
     this.count = preciseSnapshotAccumulator.count;
     this.connections = preciseSnapshotAccumulator.connections;
+    this.cpu_milliseconds = preciseSnapshotAccumulator.cpu_ms;
 
     // compute the average document size and use that as the estimate growth
     this.memory_growth = 0;
@@ -119,6 +126,14 @@ public class PredictiveInventory {
     this.third_party_service_calls++;
   }
 
+  public void backup(long byteHours) {
+    backup_byte_hours += byteHours;
+  }
+
+  public void cpu_ms(long ms) {
+    cpu_milliseconds += ms;
+  }
+
   public static class MeteringSample {
     public final long memory;
     public final long cpu;
@@ -128,8 +143,10 @@ public class PredictiveInventory {
     public final long bandwidth;
     public final long first_party_service_calls;
     public final long third_party_service_calls;
+    public final long cpu_milliseconds;
+    public final long backup_byte_hours;
 
-    public MeteringSample(long memory, long cpu, long count, long messages, long connections, long bandwidth, long first_party_service_calls, long third_party_service_calls) {
+    public MeteringSample(long memory, long cpu, long count, long messages, long connections, long bandwidth, long first_party_service_calls, long third_party_service_calls, long cpu_milliseconds, long backup_byte_hours) {
       this.memory = memory;
       this.cpu = cpu;
       this.count = count;
@@ -138,10 +155,12 @@ public class PredictiveInventory {
       this.bandwidth = bandwidth;
       this.first_party_service_calls = first_party_service_calls;
       this.third_party_service_calls = third_party_service_calls;
+      this.cpu_milliseconds = cpu_milliseconds;
+      this.backup_byte_hours = backup_byte_hours;
     }
 
     public static MeteringSample justMemory(long memory) {
-      return new MeteringSample(memory, 0, 0, 0, 0, 0, 0, 0);
+      return new MeteringSample(memory, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public static MeteringSample add(MeteringSample a, MeteringSample b) {
@@ -152,7 +171,9 @@ public class PredictiveInventory {
           a.connections + b.connections, //
           a.bandwidth + b.bandwidth, //
           a.first_party_service_calls + b.first_party_service_calls, //
-          a.third_party_service_calls + b.third_party_service_calls);
+          a.third_party_service_calls + b.third_party_service_calls,
+          a.cpu_milliseconds + b.cpu_milliseconds,
+          a.backup_byte_hours + b.backup_byte_hours);
     }
   }
 
@@ -162,8 +183,7 @@ public class PredictiveInventory {
     public int count;
     public long connections;
     public long bandwidth;
-    public long first_party_service_calls;
-    public long third_party_service_calls;
+    public long cpu_ms;
 
     public PreciseSnapshotAccumulator() {
       this.memory = 0;
@@ -171,8 +191,7 @@ public class PredictiveInventory {
       this.count = 0;
       this.connections = 0;
       this.bandwidth = 0;
-      this.first_party_service_calls = 0;
-      this.third_party_service_calls = 0;
+      this.cpu_ms = 0;
     }
   }
 

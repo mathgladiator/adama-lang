@@ -154,6 +154,7 @@ public class DocumentThreadBase {
       }
       accum.memory += document.getMemoryBytes();
       accum.ticks += document.getCodeCost();
+      accum.cpu_ms += document.getCpuMilliseconds();
       document.zeroOutCodeCost();
       accum.connections += document.getConnectionsCount();
       accum.count++;

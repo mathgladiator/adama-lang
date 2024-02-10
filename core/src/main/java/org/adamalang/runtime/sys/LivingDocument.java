@@ -104,11 +104,13 @@ public abstract class LivingDocument implements RxParent, Caller {
   private int __nextViewId;
   protected  long __optimisticNextCronCheck;
   protected final EnqueuedTaskManager __enqueued;
+  private long __cpu_ms;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
     __random = new Random();
     __self = this;
+    __cpu_ms = 0L;
     __state = new RxFastString(this, "");
     __constructed = new RxBoolean(this, false);
     __blocked = new RxBoolean(this, false);
@@ -834,9 +836,15 @@ public abstract class LivingDocument implements RxParent, Caller {
     return __code_cost;
   }
 
+  /** get how much time did the cost run */
+  public long __getCpuMilliseconds() {
+    return __cpu_ms;
+  }
+
   /** reset the cost */
   public void __zeroOutCodeCost() {
     __code_cost = 0;
+    __cpu_ms = 0;
     if (!__state.has()) {
       __goodwillBudget = __goodwillLimitOfBudget;
     }
@@ -1303,6 +1311,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   /** transaction: core API (New Version in Draft) */
   public LivingDocumentChange __transact(final String requestJson, LivingDocumentFactory factory) throws ErrorCodeException {
     Runnable perf = __perf.measure("tx");
+    long started = System.currentTimeMillis();
     try {
       Runnable perfParse = __perf.measure("parse");
       final var reader = new JsonStreamReader(requestJson);
@@ -1544,6 +1553,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       throw new ErrorCodeException(ErrorCodes.API_GOODWILL_EXCEPTION, gee);
     } finally {
       perf.run();
+      __cpu_ms += (System.currentTimeMillis() - started);
     }
   }
 

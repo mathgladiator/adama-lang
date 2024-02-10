@@ -36,6 +36,7 @@ public class AWSConfigTests {
     aws.put("archive", "archive");
     aws.put("queue", "queue");
     aws.put("log-bucket", "log-bucket");
+    aws.put("backup-bucket", "backup-bucket");
     AWSConfig config = new AWSConfig(new ConfigObject(aws));
     Assert.assertEquals("secret", config.credential.secretKey);
     Assert.assertEquals("key", config.credential.accessKeyId);

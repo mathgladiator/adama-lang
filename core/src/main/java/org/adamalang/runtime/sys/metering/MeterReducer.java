@@ -64,6 +64,8 @@ public class MeterReducer {
     space.sumBandwidth += meterReading.bandwidth;
     space.sumFirstPartyServiceCalls += meterReading.first_party_service_calls;
     space.sumThirdPartyServiceCalls += meterReading.third_party_service_calls;
+    space.sumCPUMilliseconds += meterReading.cpu_ms;
+    space.sumBackupByteHours += meterReading.backup_bytes_hours;
   }
 
   public String toJson() {
@@ -94,6 +96,8 @@ public class MeterReducer {
     private long sumBandwidth;
     private long sumFirstPartyServiceCalls;
     private long sumThirdPartyServiceCalls;
+    private long sumCPUMilliseconds;
+    private long sumBackupByteHours;
 
     private PerSpaceReducer() {
       this.sumCPU = 0;
@@ -104,6 +108,8 @@ public class MeterReducer {
       this.sumBandwidth = 0;
       this.sumFirstPartyServiceCalls = 0;
       this.sumThirdPartyServiceCalls = 0;
+      this.sumCPUMilliseconds = 0;
+      this.sumBackupByteHours = 0;
     }
 
     private String reduce() {
@@ -154,6 +160,18 @@ public class MeterReducer {
       if (sumThirdPartyServiceCalls != 0) {
         writer.writeObjectFieldIntro("third_party_service_calls");
         writer.writeLong(sumThirdPartyServiceCalls);
+        notZero = true;
+      }
+
+      if (sumCPUMilliseconds != 0) {
+        writer.writeObjectFieldIntro("cpu_ms");
+        writer.writeLong(sumCPUMilliseconds);
+        notZero = true;
+      }
+
+      if (sumBackupByteHours != 0) {
+        writer.writeObjectFieldIntro("backup_bytes_hours");
+        writer.writeLong(sumBackupByteHours);
         notZero = true;
       }
 

@@ -821,6 +821,10 @@ public class DurableLivingDocument implements Queryable {
     return document.__getCodeCost();
   }
 
+  public long getCpuMilliseconds() {
+    return document.__getCpuMilliseconds();
+  }
+
   public void zeroOutCodeCost() {
     document.__zeroOutCodeCost();
   }

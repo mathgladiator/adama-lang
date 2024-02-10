@@ -38,6 +38,8 @@ public class MeterReading {
   public final long bandwidth; // total -> sum
   public final long first_party_service_calls; // total -> sum
   public final long third_party_service_calls; // total -> sum
+  public final long cpu_ms; // total -> sum
+  public final long backup_bytes_hours; // total -> sum
 
   public MeterReading(long time, long timeframe, String space, String hash, PredictiveInventory.MeteringSample meteringSample) {
     this.time = time;
@@ -52,6 +54,8 @@ public class MeterReading {
     this.bandwidth = meteringSample.bandwidth;
     this.first_party_service_calls = meteringSample.first_party_service_calls;
     this.third_party_service_calls = meteringSample.third_party_service_calls;
+    this.cpu_ms = meteringSample.cpu_milliseconds;
+    this.backup_bytes_hours = meteringSample.backup_byte_hours;
   }
 
   public static MeterReading unpack(JsonStreamReader reader) {
@@ -71,9 +75,10 @@ public class MeterReading {
           long bandwidth = reader.readLong();
           long first_party_service_calls = reader.readLong();
           long third_party_service_calls = reader.readLong();
-
+          long cpu_ms = reader.readLong();
+          long backup_bytes_hours = reader.readLong();
           if (!reader.notEndOfArray()) {
-            return new MeterReading(time, timeframe, space, hash, new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls));
+            return new MeterReading(time, timeframe, space, hash, new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections, bandwidth, first_party_service_calls, third_party_service_calls, cpu_ms, backup_bytes_hours));
           }
         }
         while (reader.notEndOfArray()) {
@@ -102,6 +107,8 @@ public class MeterReading {
     writer.writeLong(bandwidth);
     writer.writeLong(first_party_service_calls);
     writer.writeLong(third_party_service_calls);
+    writer.writeLong(cpu_ms);
+    writer.writeLong(backup_bytes_hours);
     writer.endArray();
     return writer.toString();
   }

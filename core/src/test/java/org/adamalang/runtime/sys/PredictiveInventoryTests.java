@@ -72,13 +72,15 @@ public class PredictiveInventoryTests {
 
   @Test
   public void add() {
-    PredictiveInventory.MeteringSample a = new PredictiveInventory.MeteringSample(100, 1000, 5, 100, 41, 123, 456, 789);
-    PredictiveInventory.MeteringSample b = new PredictiveInventory.MeteringSample(1100, 21000, 51, 1100, 91, 123, 456, 789);
+    PredictiveInventory.MeteringSample a = new PredictiveInventory.MeteringSample(100, 1000, 5, 100, 41, 123, 456, 789, 13, 1000);
+    PredictiveInventory.MeteringSample b = new PredictiveInventory.MeteringSample(1100, 21000, 51, 1100, 91, 123, 456, 789, 42, 100000);
     PredictiveInventory.MeteringSample s = PredictiveInventory.MeteringSample.add(a, b);
     Assert.assertEquals(1200, s.memory);
     Assert.assertEquals(22000, s.cpu);
     Assert.assertEquals(56, s.count);
     Assert.assertEquals(1200, s.messages);
     Assert.assertEquals(132, s.connections);
+    Assert.assertEquals(55, s.cpu_milliseconds);
+    Assert.assertEquals(101000, s.backup_byte_hours);
   }
 }

@@ -65,7 +65,7 @@ public class MeteringStateMachine {
 
   private MeteringStateMachine seed(Collection<String> spaces) {
     for (String space : spaces) {
-      accum.put(space, new PredictiveInventory.MeteringSample(0, 0, 0, 0, 0, 0, 0, 0));
+      accum.put(space, new PredictiveInventory.MeteringSample(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
     }
     return this;
   }

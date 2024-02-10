@@ -33,6 +33,8 @@ record MeteringRecord {
   public long bandwidth;
   public long first_party_service_calls;
   public long third_party_service_calls;
+  public long cpu_ms;
+  public long backup_bytes_hours;
 }
 
 record UsageRecord {
@@ -77,6 +79,8 @@ message NewMeteringRecord {
   long bandwidth;
   long first_party_service_calls;
   long third_party_service_calls;
+  long cpu_ms;
+  long backup_bytes_hours;
 }
 
 message NewStorage {
@@ -138,6 +142,8 @@ record BillingRecord {
   public long bandwidth;
   public long first_party_service_calls;
   public long third_party_service_calls;
+  public long cpu_ms;
+  public long backup_bytes_hours;
   public int domains;
   public int authorities;
   public long bytes_used;
@@ -152,6 +158,7 @@ message Brick {
   long bricks; // this is a combination of cpu and memory
   long count;
   long connections;
+  long cpu_ms;
 }
 
 // this is one time series for a space and host
@@ -162,10 +169,9 @@ function convert_records_to_brick(list<MeteringRecord> records) -> Brick {
   b.count = records.count_p95.average().longOf().getOrDefaultTo(0);
   b.connections = records.connections_p95.average().longOf().getOrDefaultTo(0);
   b.bricks = Math.max((b.cpu / 1000000).ceil(), (b.memory / 1048576).ceil()).longOf().getOrDefaultTo(1);
+  b.cpu_ms = records.cpu.sum().getOrDefaultTo(0);
   return b;
 }
-
-
 
 message PreviewBillingRecord {
   datetime at;
@@ -178,6 +184,8 @@ message PreviewBillingRecord {
   long bandwidth;
   long first_party_service_calls;
   long third_party_service_calls;
+  long cpu_ms;
+  long backup_bytes_hours;
   int domains;
   int authorities;
   long bytes_used;
@@ -194,18 +202,22 @@ function preview_record(list<StorageRecord> storage_records_in_play, list<System
   long first_party_service_calls = usage_in_play.record.first_party_service_calls.sum().getOrDefaultTo(0L);
   long third_party_service_calls = usage_in_play.record.third_party_service_calls.sum().getOrDefaultTo(0L);
   long bandwidth = usage_in_play.record.bandwidth.sum().getOrDefaultTo(0L);
+  long backup_bytes_hours = usage_in_play.record.backup_bytes_hours.sum().getOrDefaultTo(0L);
   long bricks = 0;
   long cpu = 0;
   long messages = usage_in_play.record.messages.sum().getOrDefaultTo(0L);
   long count = 0;
   long memory = 0;
   long connections = 0;
+  long cpu_ms = 0;
+
   foreach (kvp in usage_in_play reduce org_key via @lambda x: convert_records_to_brick(x.record)) {
     bricks += kvp.value.bricks;
     cpu += kvp.value.cpu;
     count += kvp.value.count;
     memory += kvp.value.memory;
     connections += kvp.value.connections;
+    cpu_ms += kvp.value.cpu_ms;
   }
 
   long cost_ap = bricks * 10 // 10 AP/brick-hr
@@ -225,6 +237,8 @@ function preview_record(list<StorageRecord> storage_records_in_play, list<System
     memory:memory,
     connections:connections,
     bandwidth:bandwidth,
+    cpu_ms:cpu_ms,
+    backup_bytes_hours:backup_bytes_hours,
     first_party_service_calls:first_party_service_calls,
     third_party_service_calls:third_party_service_calls,
     domains:domains,
