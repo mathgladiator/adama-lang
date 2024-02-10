@@ -157,6 +157,7 @@ public class Start {
     RxPubSub pubSub = new RxPubSub(preserveView);
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub, new File(args.types))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.webConfig));
+      webConfig.validateForServerUse();
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
       attachmentsPath.mkdirs();

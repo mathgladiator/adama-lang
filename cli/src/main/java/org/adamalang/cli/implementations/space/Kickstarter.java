@@ -68,7 +68,7 @@ public class Kickstarter {
     downloadRxHTML(new File(frontendDir, "initial.rx.html"));
     Files.writeString(new File(backendDir, ".gitkeep").toPath(), "");
     Files.writeString(new File(assetDir, ".gitkeep").toPath(), "");
-    String gitignore = "logs\nnode_modules\nplan.json\nfrontend.rx.html\ncaravan\ncloud\ncss.freq.json\nsummary.html\n";
+    String gitignore = "logs\nnode_modules\nplan.json\nfrontend.rx.html\ncaravan\ncloud\ncss.freq.json\nsummary.html\ntypes\ncache\ntransform-cache\nattachments\n";
     Files.writeString(new File(spaceDir, ".gitignore").toPath(), gitignore);
     String verse = "{\n  \"documents\":[\n" //
        + "    {\"space\": \"" + space + "\", \"key\":\"demo\", \"domain\":true}\n" //

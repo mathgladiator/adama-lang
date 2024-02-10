@@ -970,6 +970,16 @@ public class MainRouter {
                frontendHandler.setLibadama(frontendArgs, out);
                return 0;
             }
+            case "tailwind-kick": {
+              FrontendTailwindKickArgs frontendArgs = FrontendTailwindKickArgs.from(args, 2);
+              if (frontendArgs == null) {
+                FrontendTailwindKickArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               frontendHandler.tailwindKick(frontendArgs, out);
+               return 0;
+            }
             case "validate": {
               FrontendValidateArgs frontendArgs = FrontendValidateArgs.from(args, 2);
               if (frontendArgs == null) {

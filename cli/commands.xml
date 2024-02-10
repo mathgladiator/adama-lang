@@ -929,6 +929,11 @@
             </documentation>
             <arg name="local-libadama-path" default="null" />
         </command>
+        <command name="tailwind-kick">
+            <documentation>
+                Bootstrap an RxHTML project in the working directory with tailwind
+            </documentation>
+        </command>
         <command name="make-200">
             <documentation>
                 Create a 200.html

@@ -23,6 +23,8 @@ import org.adamalang.cli.implementations.mobile.MobileCapacitor;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.FrontendHandler;
 import org.adamalang.cli.runtime.Output;
+import org.adamalang.common.ANSI;
+import org.adamalang.common.ColorUtilTools;
 import org.adamalang.common.Json;
 import org.adamalang.common.keys.MasterKey;
 import org.adamalang.common.keys.VAPIDFactory;
@@ -41,6 +43,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class FrontendHandlerImpl implements FrontendHandler {
   public static void aggregateFiles(File file, ArrayList<File> files) {
@@ -59,6 +62,51 @@ public class FrontendHandlerImpl implements FrontendHandler {
     VAPIDPublicPrivateKeyPair vapid = factory.generateKeyPair();
     System.out.println("public:" + vapid.publicKeyBase64);
     System.out.println("private:" + vapid.privateKeyBase64);
+    output.out();
+  }
+
+  private static void createFileIfNotExists(String name, Supplier<String> gen) throws Exception {
+    File f = new File( name);
+    if (!f.exists()) {
+      Files.writeString(f.toPath(), gen.get());
+      System.out.println(ColorUtilTools.prefix("created '" + name + "'", ANSI.Cyan));
+    } else {
+      System.out.println(ColorUtilTools.prefix("'" + name + "' already exists", ANSI.Yellow));
+    }
+  }
+
+  @Override
+  public void tailwindKick(Arguments.FrontendTailwindKickArgs args, Output.YesOrError output) throws Exception {
+    File feDir = new File("frontend");
+    if (!feDir.exists() || !feDir.isDirectory()) {
+      System.err.println("'frontend' directory doesn't exist");
+    }
+
+    createFileIfNotExists("package.json", () -> //
+        "{\n" + //
+        "  \"scripts\": {\n" + //
+        "    \"dev\": \"java -jar ~/adama.jar devbox\",\n" + //
+        "    \"tailwind\": \"tailwindcss -i frontend/input.css -o assets/style.css -c frontend/tailwind.config.js --watch\"\n" + //
+        "  },\n" + //
+        "  \"devDependencies\": {\n" + //
+        "    \"@tailwindcss/forms\": \"^0.5.7\",\n" + //
+        "    \"@tailwindcss/line-clamp\": \"^0.4.4\",\n" + //
+        "    \"@tailwindcss/typography\": \"^0.5.10\",\n" + //
+        "    \"tailwindcss\": \"^3.4.1\",\n" + //
+        "    \"tailwindcss-safe-area\": \"^0.5.1\"\n" + //
+        "  }\n" + //
+        "}\n");
+
+    createFileIfNotExists("frontend/tailwind.config.js", () -> //
+        "module.exports = {\n" + //
+        "  content: ['./frontend/*.rx.html', './frontend/**/*.{rx.html,html}', './**/*.rx.html'],\n" + //
+        "  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/line-clamp'), require('tailwindcss-safe-area') ],\n" + //
+        "};\n");
+
+    createFileIfNotExists("frontend/input.css", () -> //
+        "@tailwind base;\n" + //
+        "@tailwind components;\n" +//
+        "@tailwind utilities;\n");
     output.out();
   }
 

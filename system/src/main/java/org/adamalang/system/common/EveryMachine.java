@@ -107,6 +107,7 @@ public class EveryMachine {
     this.region = config.get_string("region", null);
     this.role = role.name;
     this.webConfig = new WebConfig(configObjectForWeb);
+    this.webConfig.validateForServerUse();
     if (role == Role.Adama) {
       this.servicePort = config.get_int("adama-port", 8001);
     } else {

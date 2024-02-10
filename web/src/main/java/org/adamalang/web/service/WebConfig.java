@@ -50,7 +50,7 @@ public class WebConfig {
   public final boolean beta;
   public final File transformRoot;
 
-  public WebConfig(ConfigObject config) throws Exception {
+  public WebConfig(ConfigObject config) {
     // HTTP properties
     this.port = config.intOf("http-port", 8080);
     this.redirectPort = config.intOf("http-redirect-port", 8085);
@@ -79,17 +79,19 @@ public class WebConfig {
     this.sharedConnectionPoolMaxPoolSize = config.intOf("shared-connection-max-pool-size", 50);
     this.cacheRoot = new File(config.strOf("cache-root", "cache"));
     this.transformRoot = new File(config.strOf("transform-root", "transform-cache"));
+    // Domain Cache
+    this.minDomainsToHoldTo = config.intOf("cert-cache-min-domains", 64);
+    this.maxDomainsToHoldTo = config.intOf("cert-cache-max-domains", 2048);
+    this.maxDomainAge = config.intOf("cert-cache-max-age", 5 * 60 * 1000);
+  }
+
+  public void validateForServerUse() throws Exception {
     if (!cacheRoot.exists()) {
       cacheRoot.mkdir();
     }
     if (!transformRoot.exists()) {
       transformRoot.mkdir();
     }
-
-    // Domain Cache
-    this.minDomainsToHoldTo = config.intOf("cert-cache-min-domains", 64);
-    this.maxDomainsToHoldTo = config.intOf("cert-cache-max-domains", 2048);
-    this.maxDomainAge = config.intOf("cert-cache-max-age", 5 * 60 * 1000);
 
     if (cacheRoot.exists() && !cacheRoot.isDirectory()) {
       throw new Exception("Cache root is not a directory");
