@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -70,7 +71,7 @@ public class ServiceCleanupTests {
         }
         System.err.println(meteringSample.count);
       }
-    },  new MockMetricsReporter(), dataService, time, 3);
+    },  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
     service.tune(
         (base) -> {
           base.setInventoryMillisecondsSchedule(1000, 50);
@@ -152,7 +153,7 @@ public class ServiceCleanupTests {
         }
         System.err.println(meteringSample.count);
       }
-    },  new MockMetricsReporter(), dataService, time, 3);
+    },  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
     service.tune(
         (base) -> {
           base.setInventoryMillisecondsSchedule(250, 50);

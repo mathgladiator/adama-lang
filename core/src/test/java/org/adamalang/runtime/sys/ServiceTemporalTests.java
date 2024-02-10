@@ -26,6 +26,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
@@ -50,7 +51,7 @@ public class ServiceTemporalTests {
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, TimeSource.REAL_TIME, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), TimeSource.REAL_TIME, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
@@ -97,7 +98,7 @@ public class ServiceTemporalTests {
 
     RemoteDocumentUpdate init = new RemoteDocumentUpdate(0, 1, NtPrincipal.NO_ONE, "{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"1\"}", "{\"__state\":\"bounce\",\"__constructed\":true,\"__next_time\":\"50\",\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}", "{\"__seq\":0,\"__entropy\":\"-4276096898218380257\",\"__state\":\"\",\"__constructed\":false,\"__next_time\":\"0\"}", true, 0, 0L, UpdateType.AddUserData);
     dataService.initialize(KEY, init, Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, TimeSource.REAL_TIME, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), TimeSource.REAL_TIME, 3);
     service.tune((base) -> base.setMillisecondsForCleanupCheck(50));
     try {
       service.startupLoad(KEY);
@@ -113,7 +114,7 @@ public class ServiceTemporalTests {
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockTime(), 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), new MockTime(), 3);
     service.tune((base) -> base.setMillisecondsForCleanupCheck(5));
     try {
       Runnable latch = dataService.latchLogAt(10);

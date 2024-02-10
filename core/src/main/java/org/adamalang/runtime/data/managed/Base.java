@@ -68,12 +68,12 @@ public class Base {
   }
 
   public void reportSuccess() {
-    this.failureBackoff.set(Math.max(1, (int) (failureBackoff.get() * Math.random())));
+    this.failureBackoff.set(Math.max(100, (int) (failureBackoff.get() * Math.random())));
   }
 
   public int reportFailureGetRetryBackoff() {
     int prior = failureBackoff.get();
-    this.failureBackoff.set(Math.min(5000, (int) (prior * (1.0 + Math.random()))) + 1);
+    this.failureBackoff.set(Math.min(10000, (int) (prior * (1.0 + Math.random()))) + 100);
     return prior;
   }
 

@@ -15,9 +15,15 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.extern;
 
-public class Platform {
-  public static final String VERSION = "20240210063328";
-  public static final String JS_VERSION = "90fb96eb9ffac02c72aa7a7ce6db9904";
+import org.adamalang.common.Callback;
+import org.adamalang.runtime.contracts.BackupService;
+import org.adamalang.runtime.data.Key;
+
+public class MockBackupService implements BackupService {
+  @Override
+  public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
+    callback.success(null);
+  }
 }

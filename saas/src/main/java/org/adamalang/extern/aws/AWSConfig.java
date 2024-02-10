@@ -30,6 +30,7 @@ public class AWSConfig {
   public final String archivePath;
   public final String queue;
   public final String logBucket;
+  public final String backupBucket;
 
   public AWSConfig(ConfigObject config) throws Exception {
     this.credential = new Credential(config.strOfButCrash("access-key", "AWS Access Key not found"), config.strOfButCrash("secret-key", "AWS Secret Key not found"));
@@ -38,6 +39,7 @@ public class AWSConfig {
     this.replyToEmailAddressForInit = config.strOfButCrash("init-reply-email", "No reply email address set for init");
     this.userDataBucket = config.strOfButCrash("bucket", "No bucket for assets");
     this.logBucket = config.strOfButCrash("log-bucket", "No bucket for logs");
+    this.backupBucket = config.strOfButCrash("backup-bucket", "No bucket for backups");
     this.archivePath = config.strOfButCrash("archive", "No archive path for backups/restore");
     this.queue = config.strOfButCrash("queue", "No queue for control hand-off");
   }

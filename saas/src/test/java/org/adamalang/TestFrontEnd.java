@@ -32,9 +32,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.NetMetrics;
 import org.adamalang.common.net.ServerHandle;
-import org.adamalang.extern.MockMetricsReporter;
-import org.adamalang.extern.MockPostDocumentDelete;
-import org.adamalang.extern.SignalControl;
+import org.adamalang.extern.*;
 import org.adamalang.impl.common.PublicKeyCodec;
 import org.adamalang.multiregion.MultiRegionClient;
 import org.adamalang.mysql.impl.GlobalCapacityOverseer;
@@ -53,7 +51,6 @@ import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.contracts.*;
-import org.adamalang.extern.Email;
 import org.adamalang.frontend.global.GlobalExternNexus;
 import org.adamalang.frontend.global.BootstrapGlobalServiceBase;
 import org.adamalang.frontend.FrontendConfig;
@@ -253,7 +250,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
             meteringPubSub.publisher(), //
             metricsReporter,
             dataService, //
-            TimeSource.REAL_TIME,
+            new MockBackupService(), //
+            TimeSource.REAL_TIME, //
             1);
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");

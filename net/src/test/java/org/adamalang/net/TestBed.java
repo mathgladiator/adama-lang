@@ -28,6 +28,7 @@ import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.mocks.MockFinderService;
+import org.adamalang.net.mocks.MockBackupService;
 import org.adamalang.net.mocks.MockMetricsReporter;
 import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.deploy.*;
@@ -110,7 +111,8 @@ public class TestBed implements AutoCloseable {
             meteringPubSub.publisher(), //
             metricsReporter, //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
-            TimeSource.REAL_TIME,
+            new MockBackupService(), //
+            TimeSource.REAL_TIME, //
             2);
 
     this.identity = this.base.identity;

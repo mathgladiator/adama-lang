@@ -81,7 +81,7 @@ public class Backend {
 
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     GlobalMetricsReporter metricsReporter = new GlobalMetricsReporter(init.database, init.em.metrics);
-    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, TimeSource.REAL_TIME, coreThreads);
+    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, init.s3, TimeSource.REAL_TIME, coreThreads);
     delayedDeploy.set(factoryProxy, service);
 
     ServiceHeatEstimator.HeatVector low = config.get_heat("heat-low", 1, 100, 1, 100);

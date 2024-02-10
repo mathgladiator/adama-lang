@@ -27,6 +27,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeMachine;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -113,7 +114,12 @@ public class LocalServiceFactory {
     });
     this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run());
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
-    }, (key, metricsPayload) -> io.info("metrics:" + metricsPayload), dataService, timeMachine, 2);
+    }, (key, metricsPayload) -> io.info("metrics:" + metricsPayload), dataService, new BackupService() {
+      @Override
+      public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
+        callback.success(null);
+      }
+    }, timeMachine, 2);
     sweep.set(() -> service.invalidateAll());
     base.attachDeliverer(service);
   }

@@ -27,6 +27,7 @@ import org.adamalang.runtime.data.DocumentSnapshot;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.data.LocalDocumentChange;
+import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
@@ -56,7 +57,7 @@ public class ServiceCompactingTests {
     TimeSource time = new MockTime();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
@@ -105,7 +106,7 @@ public class ServiceCompactingTests {
     TimeSource time = new MockTime();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
@@ -166,7 +167,7 @@ public class ServiceCompactingTests {
         callback.failure(new ErrorCodeException(-1));
       }
     };
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);

@@ -21,6 +21,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.RequestResponseMonitor;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.ColdAssetSystem;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.PostDocumentDelete;
@@ -41,11 +42,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem, ExternalByteCodeSystem {
+public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAssetSystem, ExternalByteCodeSystem, BackupService {
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final Pattern COMPLETE_LOG = Pattern.compile("[a-z]*\\.[0-9]*-[0-9]*-[0-9]*\\.[0-9]*\\.log");
@@ -65,6 +67,16 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     if (!archive.exists() || !archive.isDirectory()) {
       throw new RuntimeException("archive '" + config.archivePath + "' is no a valid directory");
     }
+  }
+
+  @Override
+  public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.backup_key.start();
+    String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
+    String s3key = "backups/" + key.space + "/" + key.key + "/" + date + "/" + seq + "/" + reason.name();
+    S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, config.backupBucket, "PUT", s3key, null);
+    SimpleHttpRequest request = builder.buildWithBytesAsBody(document.getBytes());
+    base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, callback));
   }
 
   public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {

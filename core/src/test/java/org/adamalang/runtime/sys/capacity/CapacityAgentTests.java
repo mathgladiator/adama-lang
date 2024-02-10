@@ -23,6 +23,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.Undeploy;
+import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -51,7 +52,7 @@ public class CapacityAgentTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockTime time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
     CapacityMetrics capacityMetrics = new CapacityMetrics(new NoOpMetricsFactory());
     ServiceHeatEstimator.HeatVector low = new ServiceHeatEstimator.HeatVector(1, 1, 1, 100);
     ServiceHeatEstimator.HeatVector high = new ServiceHeatEstimator.HeatVector(1000, 10000, 250, 10000);

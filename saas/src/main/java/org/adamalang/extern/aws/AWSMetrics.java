@@ -32,6 +32,7 @@ public class AWSMetrics {
   public final RequestResponseMonitor well_known_get;
   public final RequestResponseMonitor well_known_put;
   public final RequestResponseMonitor upload_file;
+  public final RequestResponseMonitor backup_key;
   public final RequestResponseMonitor download_file;
   public final RequestResponseMonitor send_email;
   public final Inflight alarm_send_failures;
@@ -53,6 +54,7 @@ public class AWSMetrics {
     well_known_put = factory.makeRequestResponseMonitor("aws_well_known_put");
     list_assets = factory.makeRequestResponseMonitor("aws_list_assets");
     upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
+    backup_key = factory.makeRequestResponseMonitor("aws_backup_key");
     download_file = factory.makeRequestResponseMonitor("aws_download_file");
     delete_asset = factory.makeRequestResponseMonitor("aws_delete_asset");
     send_email = factory.makeRequestResponseMonitor("aws_send_email");

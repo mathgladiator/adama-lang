@@ -61,6 +61,7 @@ public class CoreService implements Deliverer, Queryable {
     }
   };
   public final DataService dataService;
+  public final BackupService backupService;
   public final ServiceShield shield;
   public final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
@@ -74,9 +75,10 @@ public class CoreService implements Deliverer, Queryable {
    * @param time the source of time
    * @param nThreads the number of threads to use
    */
-  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, TimeSource time, int nThreads) {
+  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, BackupService backupService, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.dataService = dataService;
+    this.backupService = backupService;
     this.shield = new ServiceShield();
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
