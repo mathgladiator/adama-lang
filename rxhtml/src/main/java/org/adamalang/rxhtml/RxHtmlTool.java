@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.rxhtml.preprocess.MarkStaticContent;
+import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
@@ -38,6 +39,7 @@ public class RxHtmlTool {
     Document document = Jsoup.parse(str);
     // TODO: enabling this requires a LOT of work
     // MarkStaticContent.mark(document);
+    Pagify.pagify(document);
     Root.start(env, buildCustomJavaScript(document));
     String style = buildInternStyle(document);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);

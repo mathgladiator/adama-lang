@@ -17,10 +17,14 @@
 */
 package org.adamalang.rxhtml.template;
 
+import org.adamalang.rxhtml.acl.commands.Set;
 import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.config.Feedback;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -62,6 +66,13 @@ public class Root {
     Instructions instructions = uri_to_instructions(uri);
     env.writeElementDebugIfTest();
     env.writer.tab().append("$.PG(").append(instructions.javascript).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.getKey().startsWith("init:")) {
+        String key = attr.getKey().substring(5);
+        String value = attr.getValue();
+        env.writer.tab().append(stateVar).append(".view.init['").append(key).append("']=").append(Escapes.constantOf(value)).append(";").newline();
+      }
+    }
     if (env.element.hasAttr("authenticate")) {
       String identity = env.element.attr("authenticate");
       if (identity == null || identity.trim().equals("")) {
@@ -115,7 +126,6 @@ public class Root {
       env.writer.tab().append("return;").tabDown().newline();
       env.writer.tab().append("}").newline();
       env.pool.give(varForAuthTest);
-
     }
     String autoVar = env.pool.ask();
     env.writer.tab().append("var ").append(autoVar).append("=$.X();").newline();

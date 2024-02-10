@@ -1,0 +1,11 @@
+<forest>
+    <template name="foo">
+        THIS IS A TEMPLATE <fragment />
+    </template>
+    <page uri="/a" template:use="foo">
+        BODY
+    </page>
+    <page uri="/b" template:use="foo" template:tag="adama">
+        BODY
+    </page>
+</forest>
