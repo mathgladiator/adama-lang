@@ -342,12 +342,12 @@ public class RxMapTests {
       JsonStreamWriter forward = new JsonStreamWriter();
       JsonStreamWriter reverse = new JsonStreamWriter();
       m.__commit("map", forward, reverse);
-      Assert.assertEquals("\"map\":{}", forward.toString());
-      Assert.assertEquals("\"map\":{}", reverse.toString());
+      Assert.assertEquals("\"map\":{\"100\":50}", forward.toString());
+      Assert.assertEquals("\"map\":{\"100\":null}", reverse.toString());
     }
     JsonStreamWriter dump = new JsonStreamWriter();
     m.__dump(dump);
-    Assert.assertEquals("{}", dump.toString());
+    Assert.assertEquals("{\"100\":50}", dump.toString());
     Assert.assertFalse(m.lookup(42).has());
     Assert.assertFalse(m.lookup(1000).has());
   }
