@@ -138,15 +138,21 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public void __insert(final JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
-        final var key = codec.fromStr(reader.fieldName());
-        if (reader.testLackOfNull()) {
-          var value = getOrCreateAndMaybeSignalDirty(key, false);
-          value.__insert(reader);
-          created.remove(key);
-        } else {
-          removeAndMaybeSignalDirty(key, false);
+        try {
+          final var key = codec.fromStr(reader.fieldName());
+          if (reader.testLackOfNull()) {
+            var value = getOrCreateAndMaybeSignalDirty(key, false);
+            value.__insert(reader);
+            created.remove(key);
+          } else {
+            removeAndMaybeSignalDirty(key, false);
+          }
+        } catch (Exception ex) {
+          reader.skipValue();
         }
       }
+    } else {
+      reader.skipValue();
     }
   }
 
@@ -154,13 +160,19 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
   public void __patch(JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
-        final var key = codec.fromStr(reader.fieldName());
-        if (reader.testLackOfNull()) {
-          getOrCreate(key).__patch(reader);
-        } else {
-          remove(key);
+        try {
+          final var key = codec.fromStr(reader.fieldName());
+          if (reader.testLackOfNull()) {
+            getOrCreate(key).__patch(reader);
+          } else {
+            remove(key);
+          }
+        } catch (Exception ex) {
+          reader.skipValue();
         }
       }
+    } else {
+      reader.skipValue();
     }
   }
 
@@ -255,6 +267,9 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       __parent.__cost(10);
     }
     RangeTy value = objects.removeDirect(key);
+    if (signalDirty) {
+      pubsub.changed(key);
+    }
     if (value != null) {
       if (!created.contains(key)) {
         if (signalDirty) {

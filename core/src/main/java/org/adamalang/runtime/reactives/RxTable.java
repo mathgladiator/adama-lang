@@ -222,42 +222,47 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         final var f2 = reader.fieldName();
-        if (reader.testLackOfNull()) {
-          final var key = Integer.parseInt(f2);
-          final var tyPrior = itemsByKey.get(key);
-          if (trackerSub != null) {
-            trackerSub.primary(key);
-          }
-          if (tyPrior == null) {
-            final var tyObj = maker.apply(this);
-            tyObj.__setId(key, true);
-            tyObj.__insert(reader);
-            itemsByKey.put(key, tyObj);
-            if (unknowns != null) {
-              tyObj.__reindex();
+        try {
+          final int key = Integer.parseInt(f2);
+          if (reader.testLackOfNull()) {
+            final var tyPrior = itemsByKey.get(key);
+            if (trackerSub != null) {
+              trackerSub.primary(key);
             }
-            tyObj.__subscribe(() -> {
-              invalidatePrimaryKey(key, tyObj);
-              return RxTable.this.__raiseInvalid();
-            });
-            tyObj.__pumpIndexEvents(pubsub);
+            if (tyPrior == null) {
+              final var tyObj = maker.apply(this);
+              tyObj.__setId(key, true);
+              tyObj.__insert(reader);
+              itemsByKey.put(key, tyObj);
+              if (unknowns != null) {
+                tyObj.__reindex();
+              }
+              tyObj.__subscribe(() -> {
+                invalidatePrimaryKey(key, tyObj);
+                return RxTable.this.__raiseInvalid();
+              });
+              tyObj.__pumpIndexEvents(pubsub);
+            } else {
+              // it exists, so it is already subscribed
+              tyPrior.__insert(reader);
+              if (unknowns != null && !unknowns.contains(tyPrior)) {
+                tyPrior.__deindex();
+                unknowns.add(tyPrior);
+              }
+            }
           } else {
-            // it exists, so it is already subscribed
-            tyPrior.__insert(reader);
-            if (unknowns != null && !unknowns.contains(tyPrior)) {
-              tyPrior.__deindex();
-              unknowns.add(tyPrior);
+            final var tyObject = itemsByKey.remove(key);
+            if (tyObject != null) {
+              tyObject.__delete();
+              tyObject.__deindex();
             }
           }
-        } else {
-          final var key = Integer.parseInt(f2);
-          final var tyObject = itemsByKey.remove(key);
-          if (tyObject != null) {
-            tyObject.__delete();
-            tyObject.__deindex();
-          }
+        } catch (NumberFormatException fieldNotInt) {
+          reader.skipValue();
         }
       }
+    } else {
+      reader.skipValue();
     }
   }
 
@@ -266,22 +271,28 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         final var f2 = reader.fieldName();
-        final var key = Integer.parseInt(f2);
-        if (reader.testLackOfNull()) {
-          var tyPrior = itemsByKey.get(key);
-          if (tyPrior == null) {
-            tyPrior = make(key);
-          }
-          tyPrior.__patch(reader);
-          invalidatePrimaryKey(key, tyPrior);
-        } else {
-          var tyPrior = itemsByKey.get(key);
-          if (tyPrior != null) {
-            tyPrior.__delete();
+        try {
+          final var key = Integer.parseInt(f2);
+          if (reader.testLackOfNull()) {
+            var tyPrior = itemsByKey.get(key);
+            if (tyPrior == null) {
+              tyPrior = make(key);
+            }
+            tyPrior.__patch(reader);
             invalidatePrimaryKey(key, tyPrior);
+          } else {
+            var tyPrior = itemsByKey.get(key);
+            if (tyPrior != null) {
+              tyPrior.__delete();
+              invalidatePrimaryKey(key, tyPrior);
+            }
           }
+        } catch (NumberFormatException fieldNotInt) {
+          reader.skipValue();
         }
       }
+    } else {
+      reader.skipValue();
     }
   }
 

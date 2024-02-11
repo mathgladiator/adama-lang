@@ -292,6 +292,89 @@ public class RxMapTests {
   }
 
   @Test
+  public void insert_bad_key_skips() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":123,\"50\":100,\"100\":null}");
+    m.__insert(reader);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{}", forward.toString());
+      Assert.assertEquals("\"map\":{}", reverse.toString());
+    }
+    JsonStreamWriter dump = new JsonStreamWriter();
+    m.__dump(dump);
+    Assert.assertEquals("{\"50\":100}", dump.toString());
+    Assert.assertTrue(m.lookup(50).has());
+    Assert.assertFalse(m.lookup(42).has());
+  }
+
+  @Test
+  public void patch_bad_key_skips() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":123,\"50\":100,\"100\":null}");
+    m.__patch(reader);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"50\":100}", forward.toString());
+      Assert.assertEquals("\"map\":{\"50\":null}", reverse.toString());
+    }
+    JsonStreamWriter dump = new JsonStreamWriter();
+    m.__dump(dump);
+    Assert.assertEquals("{\"50\":100}", dump.toString());
+    Assert.assertTrue(m.lookup(50).has());
+    Assert.assertFalse(m.lookup(42).has());
+  }
+
+  @Test
+  public void insert_skip() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("123,1000");
+    m.__insert(reader);
+    Assert.assertEquals(1000, reader.readInteger());
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{}", forward.toString());
+      Assert.assertEquals("\"map\":{}", reverse.toString());
+    }
+    JsonStreamWriter dump = new JsonStreamWriter();
+    m.__dump(dump);
+    Assert.assertEquals("{}", dump.toString());
+    Assert.assertFalse(m.lookup(42).has());
+    Assert.assertFalse(m.lookup(1000).has());
+  }
+
+  @Test
+  public void patch_skip() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("123,1000");
+    m.__patch(reader);
+    Assert.assertEquals(1000, reader.readInteger());
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"100\":50}", forward.toString());
+      Assert.assertEquals("\"map\":{\"100\":null}", reverse.toString());
+    }
+    JsonStreamWriter dump = new JsonStreamWriter();
+    m.__dump(dump);
+    Assert.assertEquals("{\"100\":50}", dump.toString());
+    Assert.assertFalse(m.lookup(42).has());
+    Assert.assertFalse(m.lookup(1000).has());
+    Assert.assertTrue(m.lookup(100).has());
+  }
+
+  @Test
   public void patch() {
     final var m = map();
     m.getOrCreate(100).set(50);

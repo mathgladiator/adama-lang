@@ -50,6 +50,67 @@ public class RxTableTests {
     Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
   }
 
+
+  @Test
+  public void bad_data() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    JsonStreamReader reader = new JsonStreamReader("123,42");
+    table.__insert(reader);
+    Assert.assertEquals(42, reader.readInteger());
+    JsonStreamWriter writer = new JsonStreamWriter();
+    table.debug(writer);
+    Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
+  }
+
+  @Test
+  public void insert_invalid_insert_by_key() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":42},1000");
+    table.__insert(reader);
+    Assert.assertEquals(1000, reader.readInteger());
+    JsonStreamWriter writer = new JsonStreamWriter();
+    table.debug(writer);
+    Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
+  }
+
+  @Test
+  public void insert_invalid_removal_by_key() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":null},1000");
+    table.__insert(reader);
+    Assert.assertEquals(1000, reader.readInteger());
+    JsonStreamWriter writer = new JsonStreamWriter();
+    table.debug(writer);
+    Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
+  }
+
+  @Test
+  public void patch_invalid_insert_by_key() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":42},1000");
+    table.__patch(reader);
+    Assert.assertEquals(1000, reader.readInteger());
+    JsonStreamWriter writer = new JsonStreamWriter();
+    table.debug(writer);
+    Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
+  }
+
+  @Test
+  public void patchinvalid_removal_by_key() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    JsonStreamReader reader = new JsonStreamReader("{\"x\":null},1000");
+    table.__patch(reader);
+    Assert.assertEquals(1000, reader.readInteger());
+    JsonStreamWriter writer = new JsonStreamWriter();
+    table.debug(writer);
+    Assert.assertEquals("{\"created\":0,\"items\":0,\"idx\":1,\"unknowns\":0}", writer.toString());
+  }
+
   private MockLivingDocument doc(int keyStart) {
     final var document = new MockLivingDocument();
     while (document.__genNextAutoKey() < keyStart - 1) {}
