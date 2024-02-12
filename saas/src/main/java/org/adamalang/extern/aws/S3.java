@@ -73,10 +73,76 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.backup_key.start();
     String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
-    String s3key = "backups/" + key.space + "/" + key.key + "/" + date + "/" + seq + "/" + reason.name();
+    String s3key = "snapshots/" + key.space + "/" + key.key + "/" + date + "/" + seq + "/" + reason.name();
     S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, config.backupBucket, "PUT", s3key, null);
     SimpleHttpRequest request = builder.buildWithBytesAsBody(document.getBytes());
     base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, callback));
+  }
+
+  public static class BackupListing {
+    public final int seq;
+    public final Reason reason;
+    public final String date;
+
+    public BackupListing(int seq, Reason reason, String date) {
+      this.seq = seq;
+      this.reason = reason;
+      this.date = date;
+    }
+
+  }
+
+  public void deleteBackup(Key key, BackupListing listing, Callback<Void> callback) {
+    String s3key = "snapshots/" + key.space + "/" + key.key + "/" + listing.date + "/" + listing.seq + "/" + listing.reason.name();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.backupBucket, "DELETE", s3key, null).buildWithEmptyBody();
+    base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.delete_backup.start(), callback));
+  }
+
+  public void fetchBackup(Key key, BackupListing listing, Callback<String> callback) {
+    String s3key = "snapshots/" + key.space + "/" + key.key + "/" + listing.date + "/" + listing.seq + "/" + listing.reason.name();
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.backupBucket, "GET", s3key, null).buildWithEmptyBody();
+    base.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.delete_backup.start(), callback));
+  }
+
+  public void listBackups(Key key, Callback<ArrayList<BackupListing>> callback) {
+    final ArrayList<BackupListing> listing = new ArrayList<>();
+    final TreeMap<String, String> parameters = new TreeMap<>();
+    String prefix = "snapshots/" + key.space + "/" + key.key + "/";
+    parameters.put("prefix", prefix);
+    base.executeShared(new S3SimpleHttpRequestBuilder(config, config.backupBucket, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_backups.start(), new Callback<String>() {
+      @Override
+      public void success(String xml) {
+        try {
+          S3XmlParsing.ListResult results = S3XmlParsing.listResultOf(xml);
+          for (String key : results.keys) {
+            try {
+              String[] parts = key.split(Pattern.quote("/"));
+              int m = parts.length;
+              Reason reason = Reason.valueOf(parts[m - 1]);
+              int seq = Integer.parseInt(parts[m - 2]);
+              String date = parts[m - 3];
+              listing.add(new BackupListing(seq, reason, date));
+            } catch (Exception ex) {
+              LOGGER.error("invalid-backup-key:" + key);
+              metrics.list_backups_invalid.up();
+            }
+          }
+          if (results.truncated) {
+            parameters.put("marker", results.last());
+            base.executeShared(new S3SimpleHttpRequestBuilder(config, config.backupBucket, "GET", "", parameters).buildWithEmptyBody(), new StringCallbackHttpResponder(LOGGER, metrics.list_backups.start(), this));
+          } else {
+            callback.success(listing);
+          }
+        } catch (Exception ex) {
+          callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.LIST_BACKUPS_PARSE_FAILURE, ex, EXLOGGER));
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }));
   }
 
   public void upload(Key key, NtAsset asset, AssetUploadBody body, Callback<Void> callback) {

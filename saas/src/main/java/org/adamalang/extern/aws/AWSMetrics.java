@@ -28,7 +28,11 @@ public class AWSMetrics {
   public final RequestResponseMonitor exists_document;
   public final RequestResponseMonitor backup_document;
   public final RequestResponseMonitor delete_document;
+  public final RequestResponseMonitor delete_backup;
+  public final RequestResponseMonitor fetch_backup;
   public final RequestResponseMonitor list_assets;
+  public final RequestResponseMonitor list_backups;
+  public final Inflight list_backups_invalid;
   public final RequestResponseMonitor well_known_get;
   public final RequestResponseMonitor well_known_put;
   public final RequestResponseMonitor upload_file;
@@ -50,9 +54,13 @@ public class AWSMetrics {
     exists_document = factory.makeRequestResponseMonitor("aws_exists_document");
     backup_document = factory.makeRequestResponseMonitor("aws_backup_document");
     delete_document = factory.makeRequestResponseMonitor("aws_delete_document");
+    delete_backup = factory.makeRequestResponseMonitor("aws_delete_backup");
+    fetch_backup = factory.makeRequestResponseMonitor("aws_fetch_backup");
     well_known_get = factory.makeRequestResponseMonitor("aws_well_known_get");
     well_known_put = factory.makeRequestResponseMonitor("aws_well_known_put");
     list_assets = factory.makeRequestResponseMonitor("aws_list_assets");
+    list_backups = factory.makeRequestResponseMonitor("aws_list_backups");
+    list_backups_invalid = factory.inflight("alarm_list_backups_invalid");
     upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
     backup_key = factory.makeRequestResponseMonitor("aws_backup_key");
     download_file = factory.makeRequestResponseMonitor("aws_download_file");

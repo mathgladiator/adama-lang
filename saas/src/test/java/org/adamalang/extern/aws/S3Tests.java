@@ -19,6 +19,7 @@ package org.adamalang.extern.aws;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.AssetRequest;
@@ -27,6 +28,7 @@ import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.service.WebConfig;
+import org.checkerframework.checker.units.qual.K;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
@@ -97,6 +99,101 @@ public class S3Tests {
     } finally {
       input.close();
     }
+  }
+
+  @Test
+  public void backup() throws Exception {
+    flow((s3) -> {
+      {
+        CountDownLatch latchPut = new CountDownLatch(1);
+        s3.backup(new Key("space", "backupy"), 50, BackupService.Reason.Deployment, "{\"doc\"}", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latchPut.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {}
+        });
+        Assert.assertTrue(latchPut.await(50000, TimeUnit.MILLISECONDS));
+      }
+      ArrayList<S3.BackupListing> found = new ArrayList<>();
+      {
+        CountDownLatch latchList = new CountDownLatch(1);
+        s3.listBackups(new Key("space", "backupy"), new Callback<ArrayList<S3.BackupListing>>() {
+          @Override
+          public void success(ArrayList<S3.BackupListing> listing) {
+            System.err.println("SIZE OF LIST:" + listing.size());
+            for (S3.BackupListing item : listing) {
+              found.add(item);
+              System.err.println(item.date + "/" + item.seq + "/" + item.reason);
+              CountDownLatch latchFetch = new CountDownLatch(1);
+              s3.fetchBackup(new Key("space", "backupy"), item, new Callback<String>() {
+                @Override
+                public void success(String value) {
+                  System.err.println("--->" + value);
+                  latchFetch.countDown();
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+
+                }
+              });
+              try {
+                latchFetch.await(10000, TimeUnit.MILLISECONDS);
+              } catch (InterruptedException ie) {
+
+              }
+            }
+
+            latchList.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latchList.await(50000, TimeUnit.MILLISECONDS));
+      }
+      {
+        for (S3.BackupListing toDelete : found) {
+          CountDownLatch latchDelete = new CountDownLatch(1);
+          s3.deleteBackup(new Key("space", "backupy"), toDelete, new Callback<Void>() {
+            @Override
+            public void success(Void value) {
+              latchDelete.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+
+            }
+          });
+          Assert.assertTrue(latchDelete.await(50000, TimeUnit.MILLISECONDS));
+        }
+        {
+          CountDownLatch latchList = new CountDownLatch(1);
+          s3.listBackups(new Key("space", "backupy"), new Callback<ArrayList<S3.BackupListing>>() {
+            @Override
+            public void success(ArrayList<S3.BackupListing> listing) {
+              System.err.println("POST_DELETE_SIZE:" + listing.size());
+              for (S3.BackupListing item : listing) {
+                System.err.println(item.date + "/" + item.seq + "/" + item.reason);
+              }
+              latchList.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+
+            }
+          });
+          Assert.assertTrue(latchList.await(50000, TimeUnit.MILLISECONDS));
+        }
+      }
+    });
   }
 
   @Test
