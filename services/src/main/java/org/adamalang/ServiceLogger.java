@@ -82,7 +82,7 @@ public class ServiceLogger {
 
     public LogInstance instance(NtPrincipal who, String method, String request) {
       LogInstance instance = new LogInstance();
-      instance.line.put("start", LogTimestamp.now());
+      instance.line.put("@timestamp", LogTimestamp.now());
       instance.line.put("space", space);
       instance.line.put("service", service);
       instance.line.put("agent", who.agent);
