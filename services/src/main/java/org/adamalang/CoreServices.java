@@ -75,7 +75,7 @@ public class CoreServices {
     ServiceRegistry.add("payrix", Payrix.class, (space, configRaw, keys) -> {
       try {
         ServiceConfig config = nexus.serviceConfigFactory.cons("payrix", space, configRaw, keys);
-        return Payrix.build(nexus.fpMetrics, config, nexus.webClientBase);
+        return Payrix.build(nexus.fpMetrics, config, nexus.webClientBase, nexus.logger.scope("payrix", space));
       } catch (ErrorCodeException ex) {
         return Service.FAILURE;
       }

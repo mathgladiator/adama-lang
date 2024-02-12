@@ -20,6 +20,7 @@ package org.adamalang.services.billing;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
+import org.adamalang.ServiceLogger;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
@@ -47,19 +48,21 @@ public class Payrix  extends SimpleService {
   private final WebClientBase base;
   private final String apikey;
   private final String endpoint;
+  private final ServiceLogger.ScopedServiceLogger logger;
 
-  public Payrix(FirstPartyMetrics metrics, WebClientBase base, String apikey, String endpoint) {
+  public Payrix(FirstPartyMetrics metrics, WebClientBase base, String apikey, String endpoint, ServiceLogger.ScopedServiceLogger logger) {
     super("payrix", new NtPrincipal("payrix", "service"), true);
     this.metrics = metrics;
     this.base = base;
     this.apikey = apikey;
     this.endpoint = endpoint.endsWith("/") ? endpoint : (endpoint + "/");
+    this.logger = logger;
   }
 
-  public static Payrix build(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base) throws ErrorCodeException {
+  public static Payrix build(FirstPartyMetrics metrics, ServiceConfig config, WebClientBase base, ServiceLogger.ScopedServiceLogger logger) throws ErrorCodeException {
     String apikey = config.getDecryptedSecret("apikey");
     String endpoint = config.getString("endpoint", null);
-    return new Payrix(metrics, base, apikey, endpoint);
+    return new Payrix(metrics, base, apikey, endpoint, logger);
   }
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
@@ -98,11 +101,12 @@ public class Payrix  extends SimpleService {
     return sb.toString();
   }
 
-  private static Callback<String> createTransactionTeardownCallback(Callback<String> callback) {
+  private static Callback<String> createTransactionTeardownCallback(ServiceLogger.LogInstance instance, Callback<String> callback) {
     return new Callback<String>() {
       @Override
       public void success(String value) {
         ObjectNode resultFromPayrix = Json.parseJsonObject(value);
+        instance.annotate("payrix_response", resultFromPayrix);
         ObjectNode handoffResult = Json.newJsonObject();
         // isolate
         String txId = extractTransactionId(resultFromPayrix);
@@ -148,11 +152,12 @@ public class Payrix  extends SimpleService {
     };
   }
 
-  private static Callback<String> createGetTokenTeardown(Callback<String> callback) {
+  private static Callback<String> createGetTokenTeardown(ServiceLogger.LogInstance instance, Callback<String> callback) {
     return new Callback<String>() {
       @Override
       public void success(String value) {
         ObjectNode resultFromPayrix = Json.parseJsonObject(value);
+        instance.annotate("payrix_response", resultFromPayrix);
         ObjectNode handoffResult = Json.newJsonObject();
         try {
           ObjectNode payment = (ObjectNode) resultFromPayrix.get("response").get("data").get(0).get("payment");
@@ -207,7 +212,7 @@ public class Payrix  extends SimpleService {
       if (!(at != null && at.isObject() && at.has("status"))) {
         return null;
       }
-      return at.get("status").intValue();
+      return Integer.parseInt(at.get("status").textValue());
     } catch (Exception shrug) {
       return null;
     }
@@ -230,8 +235,10 @@ public class Payrix  extends SimpleService {
   }
 
   @Override
-  public void request(NtPrincipal who, String method, String request, Callback<String> callback) {
+  public void request(NtPrincipal who, String method, String request, Callback<String> callbackReal) {
     ObjectNode node = Json.parseJsonObject(request);
+    ServiceLogger.LogInstance instance = logger.instance(who, method, request);
+    Callback<String> callback = instance.wrap(callbackReal);
     switch (method) {
       case "DeleteCustomer": {
         TreeMap<String, String> headers = new TreeMap<>();
@@ -248,7 +255,7 @@ public class Payrix  extends SimpleService {
         headers.put("Content-Type", "application/json");
         String token_id = node.get("id").textValue();
         SimpleHttpRequest req = new SimpleHttpRequest("GET", endpoint + "tokens/" + token_id + "?expand[payment][bin][]", headers, SimpleHttpRequestBody.EMPTY);
-        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_token.start(), createGetTokenTeardown(callback)));
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_token.start(), createGetTokenTeardown(instance, callback)));
         return;
       }
       case "DeleteToken": {
@@ -266,7 +273,7 @@ public class Payrix  extends SimpleService {
         headers.put("Content-Type", "application/json");
         String transactionId = node.get("id").textValue();
         SimpleHttpRequest req = new SimpleHttpRequest("GET", endpoint + "txns/" + transactionId, headers, SimpleHttpRequestBody.EMPTY);
-        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_tx.start(), createTransactionTeardownCallback(callback)));
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_get_tx.start(), createTransactionTeardownCallback(instance, callback)));
         return;
       }
       case "PostTransaction": {
@@ -282,7 +289,7 @@ public class Payrix  extends SimpleService {
         headers.put("REQUEST-TOKEN", idempotentKey.textValue());
         headers.put("Content-Type", "application/json");
         SimpleHttpRequest req = new SimpleHttpRequest("POST", endpoint + "txns", headers, SimpleHttpRequestBody.WRAP(node.toString().getBytes(StandardCharsets.UTF_8)));
-        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_post_tx.start(), createTransactionTeardownCallback(callback)));
+        base.executeShared(req, new StringCallbackHttpResponder(LOGGER, metrics.payrix_post_tx.start(), createTransactionTeardownCallback(instance, callback)));
         return;
       }
       default:

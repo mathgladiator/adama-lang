@@ -37,6 +37,7 @@ public class CoreServicesNexus {
   public final SelfClient adamaClientRaw;
   public final InternalSigner signer;
   public final ServiceConfigFactory serviceConfigFactory;
+  public final ServiceLogger logger;
 
   public CoreServicesNexus(SimpleExecutor executor, SimpleExecutor offload, MetricsFactory factory, WebClientBase webClientBase, SelfClient adamaClientRaw, InternalSigner signer, ServiceConfigFactory serviceConfigFactory) {
     this.executor = executor;
@@ -47,6 +48,7 @@ public class CoreServicesNexus {
     this.adamaClientRaw = adamaClientRaw;
     this.signer = signer;
     this.serviceConfigFactory = serviceConfigFactory;
+    this.logger = new ServiceLogger();
   }
 
   public static CoreServicesNexus NOOP() {

@@ -74,4 +74,23 @@
     <logger name="tracked" level="DEBUG" additivity="false">
         <appender-ref ref="ASYNC-TRACKED"/>
     </logger>
+
+    <appender name="SERVICES" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/services.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/services.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC-SERVICES" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="SERVICES" />
+    </appender>
+    <logger name="services" level="DEBUG" additivity="false">
+        <appender-ref ref="ASYNC-SERVICES"/>
+    </logger>
 </configuration>
