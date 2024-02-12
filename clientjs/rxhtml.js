@@ -3458,11 +3458,17 @@ var RxHTML = (function () {
     }
   };
 
-  transforms['date-format'] = function(d, format) {
-    if (typeof (d) == "string") {
+  transforms['date-format'] = function(dt, format) {
+    if (typeof (dt) == "string") {
       // if date is not set, return empty string
-      if (d == "1-01-01") return ""
+      if (dt == "1-01-01") return "";
 
+      // let's strip out everything after the brackets
+      var s = dt;
+      var k = s.indexOf('[');
+      if (k >= 0) {
+        s = s.substring(0, k);
+      }
       const p = format.toLowerCase().split("/");
       const opts = {};
       p.forEach(f => {
@@ -3472,11 +3478,11 @@ var RxHTML = (function () {
       })
 
       // if not datetime, converting to one here to prevent timezone issues
-      const datetime = d.includes("T") ? d : d + "T00:00:00";
+      const datetime = s.includes("T") ? s : s + "T00:00:00";
       return new Date(datetime).toLocaleDateString('en-US', opts);
     } else {
       // do nothing
-      return d;
+      return dt;
     }
   }
 
