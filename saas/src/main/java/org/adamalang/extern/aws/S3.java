@@ -25,7 +25,6 @@ import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.ColdAssetSystem;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.PostDocumentDelete;
-import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.CachedByteCode;
 import org.adamalang.runtime.deploy.ExternalByteCodeSystem;
 import org.adamalang.runtime.natives.NtAsset;
@@ -38,7 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
@@ -285,7 +283,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
     try {
-      base.executeShared(request, new FileWriterHttpResponder(temp, metrics.alarm_file_not_found, new Callback<Void>() {
+      base.executeShared(request, new FileWriterHttpResponder(temp, metrics.alarm_file_not_found, metrics.restore_file_write_file.wrap(new Callback<Void>() {
         @Override
         public void success(Void value) {
           File dest = new File(root, archiveKey);
@@ -305,7 +303,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
           instance.failure(ex.code);
           callback.failure(ex);
         }
-      }));
+      })));
     } catch (ErrorCodeException ex) {
       callback.failure(ex);
     }

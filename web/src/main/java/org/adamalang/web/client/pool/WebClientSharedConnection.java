@@ -127,6 +127,7 @@ public class WebClientSharedConnection {
 
   /** write a request to the connection */
   public void writeRequest(SimpleHttpRequest request, SimpleHttpResponder responder) {
+    metrics.inflight_web_requests.up();
     this.responder = responder;
     group.execute(new Runnable() {
       @Override
@@ -196,6 +197,8 @@ public class WebClientSharedConnection {
         } catch (Exception cause) {
           metrics.web_client_request_failed_send.run();
           responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_SHARED_EXECUTE_FAILED_READ, cause, EXLOGGER));
+        } finally {
+          metrics.inflight_web_requests.down();
         }
       }
     });

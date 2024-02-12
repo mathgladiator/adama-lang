@@ -71,7 +71,7 @@ public class GoogleValidator extends SimpleService  {
       HashMap<String, String> headers = new HashMap<>();
       headers.put("Authorization", "Bearer " + token);
       SimpleHttpRequest get = new SimpleHttpRequest("GET", "https://www.googleapis.com/oauth2/v1/userinfo", headers, SimpleHttpRequestBody.EMPTY);
-      webClientBase.execute(get, new StringCallbackHttpResponder(LOG, metrics.google_validate.start(), new Callback<String>() {
+      webClientBase.executeShared(get, new StringCallbackHttpResponder(LOG, metrics.google_validate.start(), new Callback<String>() {
         @Override
         public void success(String value) {
           try {

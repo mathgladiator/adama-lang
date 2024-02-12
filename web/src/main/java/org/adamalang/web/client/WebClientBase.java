@@ -29,6 +29,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.adamalang.ErrorCodes;
@@ -78,7 +79,7 @@ public class WebClientBase {
   }
 
   public void executeShared(SimpleHttpRequest request, SimpleHttpResponder responder) {
-    pool.get(new WebEndpoint(URI.create(request.url)), new Callback<>() {
+    pool.get(new WebEndpoint(URI.create(request.url)), metrics.web_execute_find_pool_item.wrap(new Callback<>() {
       @Override
       public void success(PoolItem<WebClientSharedConnection> connection) {
         connection.item().writeRequest(request, new SimpleHttpResponder() {
@@ -121,7 +122,7 @@ public class WebClientBase {
       public void failure(ErrorCodeException ex) {
         responder.failure(ex);
       }
-    });
+    }));
   }
 
   /** start of a new simpler execute http request */
@@ -265,10 +266,9 @@ public class WebClientBase {
         if (secure) {
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
         }
+        ch.pipeline().addLast(new IdleStateHandler(config.idleReadSeconds, config.idleWriteSeconds, config.idleAllSeconds, TimeUnit.SECONDS));
         ch.pipeline().addLast(new HttpClientCodec());
-        ch.pipeline().addLast(new HttpObjectAggregator(2424242));
-        ch.pipeline().addLast(new WriteTimeoutHandler(3));
-        ch.pipeline().addLast(new ReadTimeoutHandler(3));
+        ch.pipeline().addLast(new HttpObjectAggregator(config.maxContentLengthSize));
         ch.pipeline().addLast(WebSocketClientCompressionHandler.INSTANCE);
         ch.pipeline().addLast(new WebSocketClientProtocolHandler( //
             URI.create(endpoint), //
@@ -276,7 +276,7 @@ public class WebClientBase {
             null, //
             true, //
             new DefaultHttpHeaders(), //
-            4 * 1024 * 1024));
+            config.maxWebSocketFrameSize));
         ch.pipeline().addLast(new WebClientConnectionInboundHandler(lifecycle));
       }
     });

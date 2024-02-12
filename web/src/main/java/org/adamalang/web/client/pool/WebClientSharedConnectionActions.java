@@ -23,6 +23,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.adamalang.ErrorCodes;
@@ -31,6 +32,8 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.pool.PoolActions;
 import org.adamalang.web.client.WebClientBaseMetrics;
+
+import java.util.concurrent.TimeUnit;
 
 /** how the shared connection pool is acted upon */
 public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint, WebClientSharedConnection> {
@@ -55,22 +58,21 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
         if (request.secure) {
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), request.host, request.port));
         }
+        ch.pipeline().addLast(new IdleStateHandler(10 * 60, 60, 5 * 50, TimeUnit.SECONDS));
         ch.pipeline().addLast(new HttpClientCodec());
-        ch.pipeline().addLast(new WriteTimeoutHandler(60));
-        ch.pipeline().addLast(new ReadTimeoutHandler(10 * 60));
         ch.pipeline().addLast(
-            new SimpleChannelInboundHandler<HttpObject>() {
-              @Override
-              protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
-                connection.handle(msg);
-              }
+          new SimpleChannelInboundHandler<HttpObject>() {
+            @Override
+            protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+              connection.handle(msg);
+            }
 
-              @Override
-              public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-                connection.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
-                ctx.close();
-              }
-            });
+            @Override
+            public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+              connection.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
+              ctx.close();
+            }
+          });
       }
     });
 
