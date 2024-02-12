@@ -24,6 +24,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
+import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.*;
@@ -47,7 +48,7 @@ public class MeteringStateMachineTests {
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
           new DocumentThreadBase(0, new ServiceShield(), new MockMetricsReporter(),
-              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
+              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new MockBackupService(), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
                 public void execute(NamedRunnable command) {
@@ -106,7 +107,7 @@ public class MeteringStateMachineTests {
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
           new DocumentThreadBase(0, new ServiceShield(), new MockMetricsReporter(),
-              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
+              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new MockBackupService(), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
                 public void execute(NamedRunnable command) {
@@ -205,7 +206,7 @@ public class MeteringStateMachineTests {
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
           new DocumentThreadBase(0, new ServiceShield(), new MockMetricsReporter(),
-              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
+              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new MockBackupService(), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
                 public void execute(NamedRunnable command) {

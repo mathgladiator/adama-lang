@@ -21,6 +21,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.remote.MetricsReporter;
@@ -37,6 +38,7 @@ public class DocumentThreadBase {
   public final int threadId;
   public final ServiceShield shield;
   public final DataService service;
+  public final BackupService backup;
   public final CoreMetrics metrics;
   public final SimpleExecutor executor;
   public final HashMap<Key, DurableLivingDocument> map;
@@ -52,11 +54,12 @@ public class DocumentThreadBase {
   private int millisecondsInactivityBeforeCleanup;
   private boolean drained;
 
-  public DocumentThreadBase(int threadId, ServiceShield shield, MetricsReporter metricsReporter, DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(int threadId, ServiceShield shield, MetricsReporter metricsReporter, DataService service, BackupService backup, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.threadId = threadId;
     this.shield = shield;
     this.metricsReporter = metricsReporter;
     this.service = service;
+    this.backup = backup;
     this.metrics = metrics;
     this.executor = executor;
     this.time = time;

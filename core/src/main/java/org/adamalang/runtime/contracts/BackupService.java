@@ -24,6 +24,7 @@ import org.adamalang.runtime.data.Key;
 public interface BackupService {
 
   public static enum Reason {
+    Load,
     Deployment,
     Periodic
   }

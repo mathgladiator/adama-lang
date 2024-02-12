@@ -20,6 +20,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.runtime.async.EphemeralFuture;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.Queryable;
@@ -196,6 +197,7 @@ public class DurableLivingDocument implements Queryable {
                 JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
                 reader.ingestDedupe(doc.__get_intern_strings());
                 doc.__insert(reader);
+                base.backup.backup(key, doc.__seq.get(), BackupService.Reason.Load, documentValue.patch, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
                 DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
                 newDocument.size.set(documentValue.reads);
                 newDocument.load(base.metrics.documentLoadRunLoad.wrap(new Callback<>() {
@@ -367,6 +369,7 @@ public class DurableLivingDocument implements Queryable {
     JsonStreamWriter writer = new JsonStreamWriter();
     document.__dump(writer);
     String prior = writer.toString();
+    base.backup.backup(key, document.__seq.get(), BackupService.Reason.Deployment, prior, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
     newDocument.__insert(new JsonStreamReader(prior));
     int fromSize = prior.length();
     document.__usurp(newDocument);

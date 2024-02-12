@@ -21,6 +21,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
@@ -59,7 +60,9 @@ public class PhaseRun {
       @Override
       public void emitMetrics(Key key, String metricsPayload) {
       }
-    }, dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    }, dds, (key1, seq, reason, document, callback) -> {
+
+    }, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     DurableLivingDocument.fresh(key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", key.key), "{}", "0", monitor, base, acquire);
     DurableLivingDocument doc = acquire.get();
     doc.invalidate(Callback.DONT_CARE_INTEGER);
