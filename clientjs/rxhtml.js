@@ -1725,13 +1725,16 @@ var RxHTML = (function () {
     }, true);
   };
 
-  self.VSP = function(state, vars) {
+  self.VSP = function(dom, state, vars) {
     var sm = {};
     sm.vars = vars;
     sm.last = {};
     sm.params = "";
     sm.mode = "replace";
     sm.ping = debounce(500, function() {
+      if (!document.body.contains(dom)) {
+        return;
+      }
       var args = [];
       for (var k = 0; k < this.vars.length; k++) {
         var arg = this.vars[k];

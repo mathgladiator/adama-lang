@@ -174,7 +174,7 @@ public class Elements {
       }
     }
     var sp = StatePath.resolve("view:/root", env.stateVar);
-    env.writer.tab().append("$.VSP(").append(sp.command).append(",[").append(String.join(",", params)).append("]);").newline();
+    env.writer.tab().append("$.VSP(").append(env.parentVariable).append(",").append(sp.command).append(",[").append(String.join(",", params)).append("]);").newline();
   }
 
   @Deprecated

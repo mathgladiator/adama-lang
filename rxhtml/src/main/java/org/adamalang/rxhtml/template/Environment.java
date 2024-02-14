@@ -109,6 +109,7 @@ public class Environment {
       switch (result.tagName().toLowerCase()) {
         case "inline-template":
         case "inline_template":
+        case "inlinetemplate":
           return null;
       }
     }
