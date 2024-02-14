@@ -62,6 +62,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, SpaceSetPolicyRequest request, SimpleResponder responder);
 
+  public void handle(Session session, PolicyGenerateDefaultRequest request, AccessPolicyResponder responder);
+
   public void handle(Session session, SpaceGetPolicyRequest request, AccessPolicyResponder responder);
 
   public void handle(Session session, SpaceMetricsRequest request, MetricsAggregateResponder responder);
@@ -183,6 +185,7 @@ public interface RootGlobalHandler {
       case "space/set-rxhtml":
       case "space/get-rxhtml":
       case "space/set-policy":
+      case "policy/generate-default":
       case "space/get-policy":
       case "space/metrics":
       case "space/delete":

@@ -62,6 +62,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("encrypt-priv", 15), ANSI.Green) + "Encrypt a private key to store within code");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("encrypt-secret", 15), ANSI.Green) + "Encrypt a secret to store within code");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("generate-key", 15), ANSI.Green) + "Generate a server-side key to use for storing secrets");
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("generate-policy", 15), ANSI.Green) + "Generate a default policy");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("get", 15), ANSI.Green) + "Get a space's plan");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("get-policy", 15), ANSI.Green) + "Get the access control policy for the space");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("get-rxhtml", 15), ANSI.Green) + "Get the frontend RxHTML forest");
@@ -71,7 +72,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("set-policy", 15), ANSI.Green) + "Set the space's access control policy");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("set-role", 15), ANSI.Green) + "Set the role of another developer");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("set-rxhtml", 15), ANSI.Green) + "Set the frontend RxHTML forest");
-    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("upload", 15), ANSI.Green) + "Placeholder");
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("upload", 15), ANSI.Green) + "Upload a file or directory to a space");
   }
   public static void displayAuthorityHelp() {
     System.out.println(ColorUtilTools.prefix("Manage authorities", ANSI.Green));

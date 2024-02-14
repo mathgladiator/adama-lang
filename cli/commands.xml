@@ -419,9 +419,16 @@
             <arg name="output" />
         </command>
 
+        <command name="generate-policy">
+            <documentation>
+                Generate a default policy
+            </documentation>
+            <arg name="output" />
+        </command>
+
         <command name="upload" output="json">
             <documentation>
-                Placeholder
+                Upload a file or directory to a space
             </documentation>
             <arg name="space" />
             <arg name="gc" default="no" />

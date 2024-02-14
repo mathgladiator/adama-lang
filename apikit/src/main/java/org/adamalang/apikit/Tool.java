@@ -64,6 +64,7 @@ public class Tool {
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, sessionImport, methods);
     Map<String, String> javaClientFiles = AssembleJavaClient.make(packageName, responders, methods);
     String devbox = AssembleDevBox.make(packageName, methods);
+    String defaultPolicy = AssembleDefaultPolicy.make_default_policy_as_code(packageName, methods);
     for (String scope : scopes) {
       String scopePrefix = Common.camelize(scope);
       Map<String, ParameterDefinition> isolatedParameters = Isolate.scopeParameters(doc, parameters, scope);
@@ -94,6 +95,7 @@ public class Tool {
     }
 
     apiOutput.put("DevBoxRouter.java", devbox);
+    apiOutput.put("DefaultPolicy.java", defaultPolicy);
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
     apiOutput.putAll(handlerFiles);

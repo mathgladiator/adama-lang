@@ -333,6 +333,21 @@ public class SpaceHandlerImpl implements SpaceHandler {
   }
 
   @Override
+  public void generatePolicy(Arguments.SpaceGeneratePolicyArgs args, Output.YesOrError output) throws Exception {
+    Config config = args.config;
+    String identity = config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "policy/generate-default");
+        request.put("identity", identity);
+        Files.writeString(new File(args.output).toPath(), connection.execute(request).get("policy").toPrettyString());
+        output.out();
+      }
+    }
+  }
+
+  @Override
   public void upload(Arguments.SpaceUploadArgs args, Output.JsonOrError output) throws Exception {
     Uploader.upload(args, output);
   }

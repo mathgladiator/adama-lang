@@ -671,6 +671,11 @@ public class GlobalControlHandler implements RootGlobalHandler {
   }
 
   @Override
+  public void handle(Session session, PolicyGenerateDefaultRequest request, AccessPolicyResponder responder) {
+    responder.complete(DefaultPolicy.make());
+  }
+
+  @Override
   public void handle(Session session, SpaceGetPolicyRequest request, AccessPolicyResponder responder) {
     responder.complete(request.policy.policy);
   }

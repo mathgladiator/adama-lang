@@ -28,6 +28,7 @@ public interface SpaceHandler {
   void encryptPriv(SpaceEncryptPrivArgs args, YesOrError output) throws Exception;
   void encryptSecret(SpaceEncryptSecretArgs args, YesOrError output) throws Exception;
   void generateKey(SpaceGenerateKeyArgs args, YesOrError output) throws Exception;
+  void generatePolicy(SpaceGeneratePolicyArgs args, YesOrError output) throws Exception;
   void get(SpaceGetArgs args, YesOrError output) throws Exception;
   void getPolicy(SpaceGetPolicyArgs args, YesOrError output) throws Exception;
   void getRxhtml(SpaceGetRxhtmlArgs args, YesOrError output) throws Exception;

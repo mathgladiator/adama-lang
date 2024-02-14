@@ -1018,11 +1018,18 @@
         </documentation>
     </method>
 
+    <method name="policy/generate-default" responder="access-policy" policy-manual="true" scope="global">
+        <parameter name="identity"/>
+        <documentation>
+            Generate a default policy template for inspection and use
+        </documentation>
+    </method>
+
     <method name="space/get-policy" responder="access-policy" scope="global" policy="true" policy-failure-code="991435" policy-default="OwnerAndDevelopers">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
-            returns the
+            Returns the policy for a specific space
         </documentation>
     </method>
 

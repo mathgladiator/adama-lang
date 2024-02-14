@@ -42,6 +42,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_SpaceSetRxhtml;
   public final RequestResponseMonitor monitor_SpaceGetRxhtml;
   public final RequestResponseMonitor monitor_SpaceSetPolicy;
+  public final RequestResponseMonitor monitor_PolicyGenerateDefault;
   public final RequestResponseMonitor monitor_SpaceGetPolicy;
   public final RequestResponseMonitor monitor_SpaceMetrics;
   public final RequestResponseMonitor monitor_SpaceDelete;
@@ -113,6 +114,7 @@ public class GlobalApiMetrics {
     this.monitor_SpaceSetRxhtml = factory.makeRequestResponseMonitor("space/set-rxhtml");
     this.monitor_SpaceGetRxhtml = factory.makeRequestResponseMonitor("space/get-rxhtml");
     this.monitor_SpaceSetPolicy = factory.makeRequestResponseMonitor("space/set-policy");
+    this.monitor_PolicyGenerateDefault = factory.makeRequestResponseMonitor("policy/generate-default");
     this.monitor_SpaceGetPolicy = factory.makeRequestResponseMonitor("space/get-policy");
     this.monitor_SpaceMetrics = factory.makeRequestResponseMonitor("space/metrics");
     this.monitor_SpaceDelete = factory.makeRequestResponseMonitor("space/delete");

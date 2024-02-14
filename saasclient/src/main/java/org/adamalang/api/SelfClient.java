@@ -243,6 +243,14 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
   }
 
+  /** policy/generate-default */
+  public void policyGenerateDefault(ClientPolicyGenerateDefaultRequest request, Callback<ClientAccessPolicyResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "policy/generate-default");
+    node.put("identity", request.identity);
+    pool.requestResponse(node, (obj) -> new ClientAccessPolicyResponse(obj), callback);
+  }
+
   /** space/get-policy */
   public void spaceGetPolicy(ClientSpaceGetPolicyRequest request, Callback<ClientAccessPolicyResponse> callback) {
     ObjectNode node = Json.newJsonObject();

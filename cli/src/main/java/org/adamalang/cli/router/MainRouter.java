@@ -116,6 +116,16 @@ public class MainRouter {
                spaceHandler.generateKey(spaceArgs, out);
                return 0;
             }
+            case "generate-policy": {
+              SpaceGeneratePolicyArgs spaceArgs = SpaceGeneratePolicyArgs.from(args, 2);
+              if (spaceArgs == null) {
+                SpaceGeneratePolicyArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               spaceHandler.generatePolicy(spaceArgs, out);
+               return 0;
+            }
             case "get": {
               SpaceGetArgs spaceArgs = SpaceGetArgs.from(args, 2);
               if (spaceArgs == null) {
