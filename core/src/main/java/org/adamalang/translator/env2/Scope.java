@@ -92,6 +92,10 @@ public class Scope {
     return new Scope(this);
   }
 
+  public Scope makeIngestionHandler() {
+    return new Scope(this);
+  }
+
   public Scope makeServiceScope() {
     return new Scope(this);
   }

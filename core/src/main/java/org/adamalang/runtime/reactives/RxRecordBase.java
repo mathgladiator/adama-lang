@@ -163,5 +163,6 @@ public abstract class RxRecordBase<Ty extends RxRecordBase<Ty>> extends RxBase i
     });
   }
 
-  // public abstract void __postIngest();
+  public void __postIngest() {
+  }
 }

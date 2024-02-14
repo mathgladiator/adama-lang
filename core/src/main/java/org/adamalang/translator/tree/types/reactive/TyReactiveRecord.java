@@ -24,6 +24,7 @@ import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -163,6 +164,12 @@ public class TyReactiveRecord extends TyType implements //
         indexVal++;
       }
       sb.append("}").writeNewline();
+    }
+    if (storage.hasPostIngestion()) {
+      sb.append("@Override").writeNewline();
+      sb.append("public void __postIngest() ");
+      storage.getPostIngestion().writeJava(sb, environment);
+      sb.writeNewline();
     }
     sb.append("@Override").writeNewline();
     sb.append("public String __name() {").tabUp().writeNewline();

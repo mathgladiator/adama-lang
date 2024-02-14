@@ -33,6 +33,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
@@ -179,16 +180,28 @@ public class CodeGenIngestion {
               sb.append("// N/A ").append(entryType.getKey());
             }
             if (--countDownUntilTab == 0) {
+              if (((IsStructure) assignType).storage().hasPostIngestion()) {
+                sb.writeNewline();
+                sb.append(assignVar).append(".__postIngest();");
+              }
               sb.tabDown();
             }
             sb.writeNewline();
           }
         } else {
           if (!environment.state.hasNoCost()) {
-            sb.append("__code_cost += 1;").tabDown().writeNewline();
+            if (((IsStructure) assignType).storage().hasPostIngestion()) {
+              sb.append(assignVar).append(".__postIngest();").writeNewline();
+            }
+            sb.append("__code_cost += 1;");
           } else {
-            sb.append("// NOTHING TO INGEST").tabDown().writeNewline();
+            if (((IsStructure) assignType).storage().hasPostIngestion()) {
+              sb.append(assignVar).append(".__postIngest();");
+            } else {
+              sb.append("// NOTHING TO INGEST");
+            }
           }
+          sb.tabDown().writeNewline();
         }
       } else {
         final var ass = new Assignment( //

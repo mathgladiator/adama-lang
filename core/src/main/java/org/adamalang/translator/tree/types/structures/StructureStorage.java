@@ -102,11 +102,27 @@ public class StructureStorage extends DocumentPosition {
     });
   }
 
+  public boolean hasPostIngestion() {
+    return postIngestion != null;
+  }
+
+  public Block getPostIngestion() {
+    return postIngestion;
+  }
+
   public void setPostIngestion(Token token, Block code) {
     emissions.add((c) -> c.accept(token));
     emissions.add((c) -> code.emit(c));
     formatting.add((c) -> code.format(c));
+    if (postIngestion != null) {
+      checker.issueError(this, "The record " + name + " already has a post ingestion event");
+    }
     this.postIngestion = code;
+    FreeEnvironment fe = FreeEnvironment.root();
+    postIngestion.free(fe);
+    checker.register(fe.free, (env) -> {
+      code.typing(env.scope());
+    });
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {

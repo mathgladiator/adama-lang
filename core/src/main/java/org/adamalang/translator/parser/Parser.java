@@ -1412,6 +1412,10 @@ public class Parser {
     return doc -> doc.add(df);
   }
 
+  private Token popIfRecordToken() throws AdamaLangException {
+    return tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join", "ingested"));
+  }
+
   public Consumer<TopLevelDocumentHandler> define_record_trailer(final Token recordToken) throws AdamaLangException {
     Scope scope = rootScope.makeRecordType();
     final var name = id();
@@ -1419,7 +1423,7 @@ public class Parser {
     final var storage = new StructureStorage(name, StorageSpecialization.Record, false, false, consumeExpectedSymbol("{"));
     storage.setSelf(new TyReactiveRef(false, name));
     while (true) {
-      var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join"));
+      var op = popIfRecordToken();
       while (op != null) {
         switch (op.text) {
           case "require": {
@@ -1442,8 +1446,11 @@ public class Parser {
           case "join":
             storage.add(join_assoc(scope, op));
             break;
+          case "ingested":
+            storage.setPostIngestion(op, block(scope.makeIngestionHandler()));
+            break;
         }
-        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join"));
+        op = popIfRecordToken();
       }
       op = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       if (op != null) {

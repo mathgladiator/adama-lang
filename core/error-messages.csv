@@ -726,6 +726,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/ReadOnly_TableIngest_failure.a,3,9,6,25,"'table<R>' is unable to ingest '_AnonObjConvert_129' due to readonly left reference."
 ./test_code/RecordEvents_NotRoot_failure.a,0,0,0,22,"The field 'foo' has an invalidation event which is not valid for the root document"
 ./test_code/RecordEvents_NotRoot_failure.a,1,0,1,12,"The field 's' has an invalidation event which is not valid for the root document"
+./test_code/RecordEvents_TooMany_failure.a,0,9,12,1,"The record R already has a post ingestion event"
 ./test_code/RecordsMethod_CallingMethodReadOnly_failure.a,5,10,5,13,"Read only methods can only call other read-only methods or pure functions"
 ./test_code/RecordsMethod_CallingMethodReadOnly_failure.a,5,18,5,21,"Read only methods can only call other read-only methods or pure functions"
 ./test_code/Records_AssignmentIssues_failure.a,4,0,4,7,"Type check failure: the type 'r<maybe<R>>' is unable to store type 'R'."

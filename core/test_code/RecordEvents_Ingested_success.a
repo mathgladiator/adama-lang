@@ -1,0 +1,27 @@
+record R {
+  public int id;
+  public int count;
+  public principal account;
+  public int sss = 0;
+
+  ingested {
+    count = id * 100;
+    account = Principal.principalOf("" + id);
+    sss++;
+  }
+}
+
+table<R> tbl;
+
+@construct {
+  tbl <- {};
+  foreach (r in (iterate tbl)) {
+    r <- {};
+  }
+  tbl <- {};
+  foreach (r in (iterate tbl)) {
+    r <- {};
+  }
+}
+
+public formula all = iterate tbl;
