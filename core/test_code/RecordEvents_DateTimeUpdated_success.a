@@ -1,0 +1,12 @@
+record R {
+  public datetime foo @updated;
+  public int goo @bump;
+}
+
+table<R> tbl;
+
+@construct {
+  tbl <- {};
+}
+
+public formula all = iterate tbl;

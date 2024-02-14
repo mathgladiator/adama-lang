@@ -22,7 +22,10 @@ import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxKillable;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtDateTime;
 import org.adamalang.runtime.reactives.tables.TablePubSub;
+
+import java.util.function.Supplier;
 
 /** the base object for generated record types */
 public abstract class RxRecordBase<Ty extends RxRecordBase<Ty>> extends RxBase implements Comparable<Ty>, MultiIndexable, RxParent, RxChild, RxKillable {
@@ -145,4 +148,20 @@ public abstract class RxRecordBase<Ty extends RxRecordBase<Ty>> extends RxBase i
   public abstract void __writeRxReport(JsonStreamWriter __writer);
 
   public abstract Object __fieldOf(String name);
+
+  public void __subscribeBump(RxInt32 i) {
+    __subscribe(() -> {
+      i.bumpUpPost();
+      return true;
+    });
+  }
+
+  public void __subscribeUpdated(RxDateTime dt, Supplier<NtDateTime> get) {
+    __subscribe(() -> {
+      dt.set(get.get());
+      return true;
+    });
+  }
+
+  // public abstract void __postIngest();
 }

@@ -1203,7 +1203,7 @@ public class Parser {
       final var id = id();
       final var equalsToken = consumeExpectedSymbol("=");
       final var compute = expression(scope);
-      FieldDefinition fd = new FieldDefinition(policy, isAuto, null, id, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
+      FieldDefinition fd = new FieldDefinition(policy, isAuto, null, id, null, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
       if (cachePolicy != null) {
         fd.enableCache(cachePolicy);
       }
@@ -1213,13 +1213,22 @@ public class Parser {
       final var readonly = tokens.popIf((t) -> t.isIdentifier("readonly"));
       final var type = reactive_type(readonly != null, policy instanceof PrivatePolicy ? false : (policy != null));
       final var id = id();
-      final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
+      Token invalidationRule = null;
+      if (type instanceof TyReactiveDateTime) {
+        invalidationRule = tokens.popIf((t) -> t.isKeyword("@updated"));
+      } else if (type instanceof TyReactiveInteger) {
+        invalidationRule = tokens.popIf((t) -> t.isKeyword("@bump"));
+      }
+      Token equalsToken = null;
       Expression defaultValue = null;
-      if (equalsToken != null) {
-        defaultValue = expression(scope.makeConstant());
+      if (invalidationRule == null) {
+        equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
+        if (equalsToken != null) {
+          defaultValue = expression(scope.makeConstant());
+        }
       }
       Token required = tokens.popIf(t -> t.isIdentifier("required"));
-      return new FieldDefinition(policy, readonly, type, id, equalsToken, null, defaultValue, required, null, consumeExpectedSymbol(";"));
+      return new FieldDefinition(policy, readonly, type, id, invalidationRule, equalsToken, null, defaultValue, required, null, consumeExpectedSymbol(";"));
     }
   }
 
@@ -1328,7 +1337,7 @@ public class Parser {
             unique = tokens.popIf((t) -> t.isIdentifier("unique"));
           }
           Token end = consumeExpectedSymbol(";");
-          FieldDefinition fd = new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, lossy, unique, end);
+          FieldDefinition fd = new FieldDefinition(policy, null, type, field, null, equalsToken, null, defaultValueOverride, lossy, unique, end);
           storage.add(fd);
         }
       }

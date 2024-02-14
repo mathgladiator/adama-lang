@@ -28,6 +28,7 @@ import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
@@ -66,6 +67,7 @@ public class StructureStorage extends DocumentPosition {
   public Token closeBraceToken;
   public final boolean root;
   public final ArrayList<JoinAssoc> joins;
+  private Block postIngestion;
 
   public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final boolean root, final Token openBraceToken) {
     this.name = name;
@@ -91,12 +93,20 @@ public class StructureStorage extends DocumentPosition {
     this.joins = new ArrayList<>();
     ingest(openBraceToken);
     formatting = new ArrayList<>();
+    postIngestion = null;
   }
 
   public void setSelf(TyType ty) {
     checker.define(Token.WRAP("__this"), Collections.emptySet(), (env) -> {
       env.setSelfType(ty);
     });
+  }
+
+  public void setPostIngestion(Token token, Block code) {
+    emissions.add((c) -> c.accept(token));
+    emissions.add((c) -> code.emit(c));
+    formatting.add((c) -> code.format(c));
+    this.postIngestion = code;
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {

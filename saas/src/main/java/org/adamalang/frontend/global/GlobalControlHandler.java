@@ -150,7 +150,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
       @Override
       public void success(ArrayList<S3.BackupListing> listing) {
         for (S3.BackupListing item : listing) {
-          responder.next(item.date + "/" + item.seq + "/" + item.reason.name());
+          responder.next(item.date + "/" + item.seq + "/" + item.reason.name(), item.date, item.seq);
         }
         responder.finish();
       }

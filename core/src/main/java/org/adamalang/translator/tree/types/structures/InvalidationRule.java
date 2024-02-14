@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree.types.structures;
 
-public class Platform {
-  public static final String VERSION = "20240214105649";
-  public static final String JS_VERSION = "5f9fe49dc37d7fb08a33addaa0a7b452";
+/** a simple rule to connect a record's invalidation to a date time */
+public enum InvalidationRule {
+  DateTimeUpdated, //
+  IntegerBump
 }

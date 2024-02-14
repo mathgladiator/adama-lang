@@ -209,6 +209,19 @@ public class CodeGenRecords {
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
+      if (fdInOrder.invalidationRule != null && injectRootObject) {
+        switch (fdInOrder.invalidationRule) {
+          case IntegerBump: {
+            classLinker.append("this.__subscribeBump(").append(fdInOrder.name).append(");").writeNewline();
+
+            break;
+          }
+          case DateTimeUpdated: {
+            classLinker.append("this.__subscribeUpdated(").append(fdInOrder.name).append(", () -> __datetimeNow()").append(");").writeNewline();
+            break;
+          }
+        }
+      }
       if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
         final var lazyType = ((TyReactiveLazy) fieldType).getEmbeddedType(environment);
         String boxType = lazyType.getJavaBoxType(environment);

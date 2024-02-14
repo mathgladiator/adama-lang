@@ -1,0 +1,2 @@
+datetime foo @updated;
+int s @bump;

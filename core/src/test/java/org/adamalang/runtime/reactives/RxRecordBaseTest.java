@@ -21,8 +21,11 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxChild;
 import org.adamalang.runtime.mocks.MockRxParent;
+import org.adamalang.runtime.natives.NtDateTime;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.time.ZonedDateTime;
 
 public class RxRecordBaseTest {
   @Test
@@ -36,6 +39,31 @@ public class RxRecordBaseTest {
     Assert.assertFalse(a.equals(b));
     a.__invalidateSubscribers();
     a.__raiseInvalid();
+  }
+
+  @Test
+  public void subDt() {
+    final var x = new MockRecord(null);
+    RxDateTime dt = new RxDateTime(null, new NtDateTime(ZonedDateTime.parse("2021-04-24T17:57:19.802528800-05:00[America/Chicago]")));
+    x.__subscribeUpdated(dt, () -> new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")));
+    Assert.assertEquals(dt.get().toString(), "2021-04-24T17:57:19.802528800-05:00[America/Chicago]");
+    x.__raiseInvalid();
+    Assert.assertEquals(dt.get().toString(), "2023-04-24T17:57:19.802528800-05:00[America/Chicago]");
+  }
+
+  @Test
+  public void subBump() {
+    final var x = new MockRecord(null);
+    RxInt32 c = new RxInt32(null, 0);
+    x.__subscribeBump(c);
+    Assert.assertEquals(0, (int) c.get());
+    x.__raiseInvalid();
+    x.__raiseInvalid();
+    x.__raiseInvalid();
+    Assert.assertEquals(1, (int) c.get());
+    x.__settle(null);
+    x.__raiseInvalid();
+    Assert.assertEquals(2, (int) c.get());
   }
 
   @Test

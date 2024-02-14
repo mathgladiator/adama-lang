@@ -33,7 +33,6 @@ import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.traits.DetailNeverPublic;
 
-import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
 /** the definition for a field */
@@ -55,7 +54,10 @@ public class FieldDefinition extends StructureComponent {
   private Formatter.FirstAndLastToken fal;
   private CachePolicy cachePolicy;
 
-  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, final Token semicolonToken) {
+  public final Token invalidationRuleToken;
+  public final InvalidationRule invalidationRule;
+
+  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, Token invalidationRuleToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, final Token semicolonToken) {
     this.policy = policy;
     this.introToken = introToken;
     this.type = type;
@@ -69,6 +71,21 @@ public class FieldDefinition extends StructureComponent {
     this.semicolonToken = semicolonToken;
     if (policy != null) {
       ingest(policy);
+    }
+    this.invalidationRuleToken = invalidationRuleToken;
+    if (invalidationRuleToken != null) {
+      switch (invalidationRuleToken.text) {
+        case "@updated":
+          invalidationRule = InvalidationRule.DateTimeUpdated;
+          break;
+        case "@bump":
+          invalidationRule = InvalidationRule.IntegerBump;
+          break;
+        default:
+          this.invalidationRule = null;
+      }
+    } else {
+      this.invalidationRule = null;
     }
     boolean _readonly = false;
     if (introToken != null) {
@@ -123,13 +140,13 @@ public class FieldDefinition extends StructureComponent {
       policy = new PublicPolicy(null);
       policy.ingest(type);
     }
-    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null, null, null);
     fd.ingest(type);
     return fd;
   }
 
   public static FieldDefinition inventId(DocumentPosition dp) {
-    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(false, null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(false, null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null, null);
     fd.ingest(dp);
     return fd;
   }
@@ -149,6 +166,9 @@ public class FieldDefinition extends StructureComponent {
       type.emit(yielder);
     }
     yielder.accept(nameToken);
+    if (invalidationRuleToken != null) {
+      yielder.accept(invalidationRuleToken);
+    }
     if (equalsToken != null) {
       yielder.accept(equalsToken);
       if (computeExpression != null) {
@@ -219,6 +239,11 @@ public class FieldDefinition extends StructureComponent {
     final var environment = envOf(priorEnv, owningStructureStorage);
     if (policy != null) {
       policy.typing(environment, owningStructureStorage);
+    }
+    if (invalidationRule != null) {
+      if (owningStructureStorage.root) {
+        environment.document.createError(this, String.format("The field '%s' has an invalidation event which is not valid for the root document", name));
+      }
     }
     if (type != null) {
       type = environment.rules.Resolve(type, false);

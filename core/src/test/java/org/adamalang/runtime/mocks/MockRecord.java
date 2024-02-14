@@ -202,6 +202,7 @@ public class MockRecord extends RxRecordBase<MockRecord> {
 
   @Override
   public void __settle(Set<Integer> viewers) {
+    __lowerInvalid();
     settled++;
   }
 }
