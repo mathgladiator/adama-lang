@@ -439,6 +439,27 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientBackupStreamResponse(obj), streamback);
   }
 
+  /** document/list-backups */
+  public void documentListBackups(ClientDocumentListBackupsRequest request, Stream<ClientBackupItemResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/list-backups");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    pool.requestStream(node, (obj) -> new ClientBackupItemResponse(obj), streamback);
+  }
+
+  /** document/download-backup */
+  public void documentDownloadBackup(ClientDocumentDownloadBackupRequest request, Stream<ClientBackupStreamResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/download-backup");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("backup-id", request.backupId);
+    pool.requestStream(node, (obj) -> new ClientBackupStreamResponse(obj), streamback);
+  }
+
   /** document/list-push-tokens */
   public void documentListPushTokens(ClientDocumentListPushTokensRequest request, Stream<ClientTokenStreamResponse> streamback) {
     ObjectNode node = Json.newJsonObject();

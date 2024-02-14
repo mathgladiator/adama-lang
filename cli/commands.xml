@@ -303,6 +303,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="backup-id" type="string" short="r" >
+        <documentation>
+            The id of the backup
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="type" type="string" short="t" >
         <documentation>
             Placeholder
@@ -768,6 +774,24 @@
             </documentation>
             <arg name="space" />
             <arg name="key" />
+            <arg name="output" />
+        </command>
+
+        <command name="list-backups" output="json">
+            <documentation>
+                List the available backups
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+        </command>
+
+        <command name="download-backup">
+            <documentation>
+                Download the latest archive backup
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="backup-id" />
             <arg name="output" />
         </command>
 

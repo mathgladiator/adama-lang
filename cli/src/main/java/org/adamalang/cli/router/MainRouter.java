@@ -705,6 +705,16 @@ public class MainRouter {
                documentHandler.downloadArchive(documentArgs, out);
                return 0;
             }
+            case "download-backup": {
+              DocumentDownloadBackupArgs documentArgs = DocumentDownloadBackupArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentDownloadBackupArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               documentHandler.downloadBackup(documentArgs, out);
+               return 0;
+            }
             case "list": {
               DocumentListArgs documentArgs = DocumentListArgs.from(args, 2);
               if (documentArgs == null) {
@@ -713,6 +723,16 @@ public class MainRouter {
                }
                JsonOrError out = output.makeJsonOrError();
                documentHandler.list(documentArgs, out);
+               return 0;
+            }
+            case "list-backups": {
+              DocumentListBackupsArgs documentArgs = DocumentListBackupsArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentListBackupsArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               documentHandler.listBackups(documentArgs, out);
                return 0;
             }
             case "list-push-tokens": {

@@ -102,6 +102,12 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     base.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.delete_backup.start(), callback));
   }
 
+  public void streamBackup(Key key, String backupId, SimpleHttpResponder responder) {
+    String s3key = "snapshots/" + key.space + "/" + key.key + "/" + backupId;
+    SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.backupBucket, "GET", s3key, null).buildWithEmptyBody();
+    base.executeShared(request, responder);
+  }
+
   public void listBackups(Key key, Callback<ArrayList<BackupListing>> callback) {
     final ArrayList<BackupListing> listing = new ArrayList<>();
     final TreeMap<String, String> parameters = new TreeMap<>();

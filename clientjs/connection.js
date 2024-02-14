@@ -414,51 +414,6 @@ class WebSocketAdamaConnection {
       request: {"method":"identity/stash", "id":parId, "identity": identity, "name": name}
     });
   }
-  AuthorityCreate(identity, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"authority/create", "id":parId, "identity": identity}
-    });
-  }
-  AuthoritySet(identity, authority, keyStore, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"authority/set", "id":parId, "identity": identity, "authority": authority, "key-store": keyStore}
-    });
-  }
-  AuthorityGet(identity, authority, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"authority/get", "id":parId, "identity": identity, "authority": authority}
-    });
-  }
-  AuthorityList(identity, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"authority/list", "id":parId, "identity": identity}
-    });
-  }
-  AuthorityDestroy(identity, authority, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"authority/destroy", "id":parId, "identity": identity, "authority": authority}
-    });
-  }
   SpaceCreate(identity, space, template, responder) {
     var self = this;
     var parId = self.__id();
@@ -468,87 +423,6 @@ class WebSocketAdamaConnection {
       request: {"method":"space/create", "id":parId, "identity": identity, "space": space, "template": template}
     });
   }
-  SpaceGenerateKey(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/generate-key", "id":parId, "identity": identity, "space": space}
-    });
-  }
-  SpaceGet(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/get", "id":parId, "identity": identity, "space": space}
-    });
-  }
-  SpaceSet(identity, space, plan, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/set", "id":parId, "identity": identity, "space": space, "plan": plan}
-    });
-  }
-  SpaceRedeployKick(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/redeploy-kick", "id":parId, "identity": identity, "space": space}
-    });
-  }
-  SpaceSetRxhtml(identity, space, rxhtml, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/set-rxhtml", "id":parId, "identity": identity, "space": space, "rxhtml": rxhtml}
-    });
-  }
-  SpaceGetRxhtml(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/get-rxhtml", "id":parId, "identity": identity, "space": space}
-    });
-  }
-  SpaceSetPolicy(identity, space, accessPolicy, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/set-policy", "id":parId, "identity": identity, "space": space, "access-policy": accessPolicy}
-    });
-  }
-  SpaceGetPolicy(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/get-policy", "id":parId, "identity": identity, "space": space}
-    });
-  }
-  SpaceMetrics(identity, space, prefix, metricQuery, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/metrics", "id":parId, "identity": identity, "space": space, "prefix": prefix, "metric-query": metricQuery}
-    });
-  }
   SpaceDelete(identity, space, responder) {
     var self = this;
     var parId = self.__id();
@@ -556,24 +430,6 @@ class WebSocketAdamaConnection {
       id: parId,
       responder: responder,
       request: {"method":"space/delete", "id":parId, "identity": identity, "space": space}
-    });
-  }
-  SpaceSetRole(identity, space, email, role, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/set-role", "id":parId, "identity": identity, "space": space, "email": email, "role": role}
-    });
-  }
-  SpaceListDevelopers(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"space/list-developers", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceReflect(identity, space, key, responder) {
@@ -603,78 +459,6 @@ class WebSocketAdamaConnection {
       request: {"method":"push/register", "id":parId, "identity": identity, "domain": domain, "subscription": subscription, "device-info": deviceInfo}
     });
   }
-  DomainMap(identity, domain, space, certificate, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/map", "id":parId, "identity": identity, "domain": domain, "space": space, "certificate": certificate}
-    });
-  }
-  DomainClaimApex(identity, domain, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/claim-apex", "id":parId, "identity": identity, "domain": domain}
-    });
-  }
-  DomainRedirect(identity, domain, destinationDomain, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/redirect", "id":parId, "identity": identity, "domain": domain, "destination-domain": destinationDomain}
-    });
-  }
-  DomainConfigure(identity, domain, productConfig, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/configure", "id":parId, "identity": identity, "domain": domain, "product-config": productConfig}
-    });
-  }
-  DomainReflect(identity, domain, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/reflect", "id":parId, "identity": identity, "domain": domain}
-    });
-  }
-  DomainMapDocument(identity, domain, space, key, route, certificate, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/map-document", "id":parId, "identity": identity, "domain": domain, "space": space, "key": key, "route": route, "certificate": certificate}
-    });
-  }
-  DomainList(identity, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/list", "id":parId, "identity": identity}
-    });
-  }
-  DomainListBySpace(identity, space, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/list-by-space", "id":parId, "identity": identity, "space": space}
-    });
-  }
   DomainGetVapidPublicKey(identity, domain, responder) {
     var self = this;
     var parId = self.__id();
@@ -682,42 +466,6 @@ class WebSocketAdamaConnection {
       id: parId,
       responder: responder,
       request: {"method":"domain/get-vapid-public-key", "id":parId, "identity": identity, "domain": domain}
-    });
-  }
-  DomainUnmap(identity, domain, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/unmap", "id":parId, "identity": identity, "domain": domain}
-    });
-  }
-  DomainGet(identity, domain, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"domain/get", "id":parId, "identity": identity, "domain": domain}
-    });
-  }
-  DocumentDownloadArchive(identity, space, key, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"document/download-archive", "id":parId, "identity": identity, "space": space, "key": key}
-    });
-  }
-  DocumentListPushTokens(identity, space, key, domain, agent, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_stream({
-      id: parId,
-      responder: responder,
-      request: {"method":"document/list-push-tokens", "id":parId, "identity": identity, "space": space, "key": key, "domain": domain, "agent": agent}
     });
   }
   DocumentAuthorization(space, key, message, responder) {
@@ -781,15 +529,6 @@ class WebSocketAdamaConnection {
       id: parId,
       responder: responder,
       request: {"method":"document/create", "id":parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
-    });
-  }
-  DocumentDelete(identity, space, key, responder) {
-    var self = this;
-    var parId = self.__id();
-    return self.__execute_rr({
-      id: parId,
-      responder: responder,
-      request: {"method":"document/delete", "id":parId, "identity": identity, "space": space, "key": key}
     });
   }
   DocumentList(identity, space, marker, limit, responder) {

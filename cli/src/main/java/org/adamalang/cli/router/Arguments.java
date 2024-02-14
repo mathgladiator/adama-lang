@@ -3525,6 +3525,105 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-o, --output", ANSI.Green) + " " + ColorUtilTools.prefix("<output>", ANSI.White) + " : A file (or directory) to output to.");
 		}
 	}
+	public static class DocumentDownloadBackupArgs {
+		public Config config;
+		public String space;
+		public String key;
+		public String backupId;
+		public String output;
+		public static DocumentDownloadBackupArgs from(String[] args, int start) {
+			DocumentDownloadBackupArgs returnArgs = new DocumentDownloadBackupArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--space", "--key", "--backup-id", "--output", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-s":
+					case "--space": {
+						if (k+1 < args.length) {
+							returnArgs.space = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-k":
+					case "--key": {
+						if (k+1 < args.length) {
+							returnArgs.key = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-r":
+					case "--backup-id": {
+						if (k+1 < args.length) {
+							returnArgs.backupId = args[k+1];
+							k++;
+							missing[2] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-o":
+					case "--output": {
+						if (k+1 < args.length) {
+							returnArgs.output = args[k+1];
+							k++;
+							missing[3] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("Download the latest archive backup", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama document download-backup", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-s, --space", ANSI.Green) + " " + ColorUtilTools.prefix("<space>", ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + ColorUtilTools.prefix("-k, --key", ANSI.Green) + " " + ColorUtilTools.prefix("<key>", ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + ColorUtilTools.prefix("-r, --backup-id", ANSI.Green) + " " + ColorUtilTools.prefix("<backup-id>", ANSI.White) + " : The id of the backup");
+			System.out.println("    " + ColorUtilTools.prefix("-o, --output", ANSI.Green) + " " + ColorUtilTools.prefix("<output>", ANSI.White) + " : A file (or directory) to output to.");
+		}
+	}
 	public static class DocumentListArgs {
 		public Config config;
 		public String space;
@@ -3607,6 +3706,77 @@ public class Arguments {
 			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
 			System.out.println("    " + ColorUtilTools.prefix("-m, --marker", ANSI.Green) + " " + ColorUtilTools.prefix("<marker>", ANSI.White) + " : Items greater than the marker are returned.");
 			System.out.println("    " + ColorUtilTools.prefix("-l, --limit", ANSI.Green) + " " + ColorUtilTools.prefix("<limit>", ANSI.White) + " : Limit the returned items.");
+		}
+	}
+	public static class DocumentListBackupsArgs {
+		public Config config;
+		public String space;
+		public String key;
+		public static DocumentListBackupsArgs from(String[] args, int start) {
+			DocumentListBackupsArgs returnArgs = new DocumentListBackupsArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--space", "--key", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-s":
+					case "--space": {
+						if (k+1 < args.length) {
+							returnArgs.space = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-k":
+					case "--key": {
+						if (k+1 < args.length) {
+							returnArgs.key = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("List the available backups", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama document list-backups", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-s, --space", ANSI.Green) + " " + ColorUtilTools.prefix("<space>", ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + ColorUtilTools.prefix("-k, --key", ANSI.Green) + " " + ColorUtilTools.prefix("<key>", ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
 		}
 	}
 	public static class DocumentListPushTokensArgs {

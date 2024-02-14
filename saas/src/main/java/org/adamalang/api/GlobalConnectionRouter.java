@@ -913,6 +913,52 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
+            case "document/list-backups": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentListBackups.start();
+              DocumentListBackupsRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentListBackupsRequest resolved) {
+                  if (!resolved.policy.checkPolicy("document/list-backups", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(900911));
+                    return;
+                  }
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new BackupItemResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "document/download-backup": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentDownloadBackup.start();
+              DocumentDownloadBackupRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentDownloadBackupRequest resolved) {
+                  if (!resolved.policy.checkPolicy("document/download-backup", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(911911));
+                    return;
+                  }
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new BackupStreamResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "document/list-push-tokens": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentListPushTokens.start();
               DocumentListPushTokensRequest.resolve(session, nexus, request, new Callback<>() {

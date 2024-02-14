@@ -102,6 +102,10 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, DocumentDownloadArchiveRequest request, BackupStreamResponder responder);
 
+  public void handle(Session session, DocumentListBackupsRequest request, BackupItemResponder responder);
+
+  public void handle(Session session, DocumentDownloadBackupRequest request, BackupStreamResponder responder);
+
   public void handle(Session session, DocumentListPushTokensRequest request, TokenStreamResponder responder);
 
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder);
@@ -199,6 +203,8 @@ public interface RootGlobalHandler {
       case "domain/unmap":
       case "domain/get":
       case "document/download-archive":
+      case "document/list-backups":
+      case "document/download-backup":
       case "document/list-push-tokens":
       case "document/list":
       case "super/check-in":

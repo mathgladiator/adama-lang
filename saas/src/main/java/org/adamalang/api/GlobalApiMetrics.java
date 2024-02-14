@@ -62,6 +62,8 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_DomainUnmap;
   public final RequestResponseMonitor monitor_DomainGet;
   public final RequestResponseMonitor monitor_DocumentDownloadArchive;
+  public final RequestResponseMonitor monitor_DocumentListBackups;
+  public final RequestResponseMonitor monitor_DocumentDownloadBackup;
   public final RequestResponseMonitor monitor_DocumentListPushTokens;
   public final RequestResponseMonitor monitor_DocumentList;
   public final RequestResponseMonitor monitor_SuperCheckIn;
@@ -131,6 +133,8 @@ public class GlobalApiMetrics {
     this.monitor_DomainUnmap = factory.makeRequestResponseMonitor("domain/unmap");
     this.monitor_DomainGet = factory.makeRequestResponseMonitor("domain/get");
     this.monitor_DocumentDownloadArchive = factory.makeRequestResponseMonitor("document/download-archive");
+    this.monitor_DocumentListBackups = factory.makeRequestResponseMonitor("document/list-backups");
+    this.monitor_DocumentDownloadBackup = factory.makeRequestResponseMonitor("document/download-backup");
     this.monitor_DocumentListPushTokens = factory.makeRequestResponseMonitor("document/list-push-tokens");
     this.monitor_DocumentList = factory.makeRequestResponseMonitor("document/list");
     this.monitor_SuperCheckIn = factory.makeRequestResponseMonitor("super/check-in");

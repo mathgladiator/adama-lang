@@ -40,6 +40,9 @@ public class AssembleJavaScriptClient {
       if (method.internal) {
         continue;
       }
+      if (!method.partOfJavaScriptSDK) {
+        continue;
+      }
       if (method.handler.startsWith("Root")) {
         js.append("  ").append(method.camelName).append("(");
         boolean append1 = false;

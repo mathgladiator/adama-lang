@@ -30,10 +30,12 @@ import org.adamalang.common.keys.PrivateKeyBundle;
 import org.adamalang.common.keys.PublicPrivateKeyPartnership;
 import org.adamalang.common.keys.VAPIDPublicPrivateKeyPair;
 import org.adamalang.contracts.data.DefaultPolicyBehavior;
+import org.adamalang.extern.aws.S3;
 import org.adamalang.frontend.Session;
 import org.adamalang.frontend.SpaceTemplates;
 import org.adamalang.mysql.data.*;
 import org.adamalang.mysql.model.*;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
@@ -76,6 +78,53 @@ public class GlobalControlHandler implements RootGlobalHandler {
     this.policyLocator = policyLocator;
   }
 
+  private SimpleHttpResponder backupStream(BackupStreamResponder responder) {
+    return new SimpleHttpResponder() {
+      boolean good = false;
+      @Override
+      public void start(SimpleHttpResponseHeader header) {
+        good = header.status == 200;
+        if (!good) {
+          responder.error(new ErrorCodeException(ErrorCodes.CUSTOMER_BACKUP_DOWNLOAD_FAILED));
+        }
+      }
+
+      @Override
+      public void bodyStart(long size) {}
+
+      @Override
+      public void bodyFragment(byte[] chunk, int offset, int len) {
+        if (good) {
+          MessageDigest digest = Hashing.md5();
+          digest.update(chunk, offset, len);
+          String md5 = Hashing.finishAndEncode(digest);
+          final String b64;
+          if (offset == 0 && len == chunk.length) {
+            b64 = new String(Base64.getEncoder().encode(chunk), StandardCharsets.UTF_8);
+          } else {
+            byte[] clone = new byte[len];
+            System.arraycopy(chunk, offset, clone, 0, len);
+            b64 = new String(Base64.getEncoder().encode(clone), StandardCharsets.UTF_8);
+          }
+          responder.next(b64, md5);
+        }
+      }
+
+      @Override
+      public void bodyEnd() {
+        if (good) {
+          responder.finish();
+        }
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        good = false;
+        responder.error(ex);
+      }
+    };
+  }
+
   @Override
   public void handle(Session session, DocumentDownloadArchiveRequest request, BackupStreamResponder responder) {
     Key key = new Key(request.space, request.key);
@@ -86,56 +135,36 @@ public class GlobalControlHandler implements RootGlobalHandler {
           responder.error(new ErrorCodeException(ErrorCodes.CUSTOMER_BACKUP_DOWNLOAD_NO_ARCHIVE_YET));
           return;
         }
-        nexus.s3.streamBackupArchive(key, location.archiveKey, new SimpleHttpResponder() {
-          boolean good = false;
-          @Override
-          public void start(SimpleHttpResponseHeader header) {
-            good = header.status == 200;
-            if (!good) {
-              responder.error(new ErrorCodeException(ErrorCodes.CUSTOMER_BACKUP_DOWNLOAD_FAILED));
-            }
-          }
-
-          @Override
-          public void bodyStart(long size) {}
-
-          @Override
-          public void bodyFragment(byte[] chunk, int offset, int len) {
-            if (good) {
-              MessageDigest digest = Hashing.md5();
-              digest.update(chunk, offset, len);
-              String md5 = Hashing.finishAndEncode(digest);
-              final String b64;
-              if (offset == 0 && len == chunk.length) {
-                b64 = new String(Base64.getEncoder().encode(chunk), StandardCharsets.UTF_8);
-              } else {
-                byte[] clone = new byte[len];
-                System.arraycopy(chunk, offset, clone, 0, len);
-                b64 = new String(Base64.getEncoder().encode(clone), StandardCharsets.UTF_8);
-              }
-              responder.next(b64, md5);
-            }
-          }
-
-          @Override
-          public void bodyEnd() {
-            if (good) {
-              responder.finish();
-            }
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            good = false;
-            responder.error(ex);
-          }
-        });
+        nexus.s3.streamBackupArchive(key, location.archiveKey, backupStream(responder));
       }
       @Override
       public void failure(ErrorCodeException ex) {
         responder.error(ex);
       }
     });
+  }
+
+  @Override
+  public void handle(Session session, DocumentListBackupsRequest request, BackupItemResponder responder) {
+    nexus.s3.listBackups(new Key(request.space, request.key), new Callback<ArrayList<S3.BackupListing>>() {
+      @Override
+      public void success(ArrayList<S3.BackupListing> listing) {
+        for (S3.BackupListing item : listing) {
+          responder.next(item.date + "/" + item.seq + "/" + item.reason.name());
+        }
+        responder.finish();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle(Session session, DocumentDownloadBackupRequest request, BackupStreamResponder responder) {
+    nexus.s3.streamBackup(new Key(request.space, request.key), request.backupId, backupStream(responder));
   }
 
   @Override

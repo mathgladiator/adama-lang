@@ -15,9 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20240214100710";
-  public static final String JS_VERSION = "5f9fe49dc37d7fb08a33addaa0a7b452";
+/** generated request type for document/download-backup */
+public class ClientDocumentDownloadBackupRequest {
+  public String identity;
+  public String space;
+  public String key;
+  public String backupId;
 }

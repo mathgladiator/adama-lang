@@ -37,7 +37,6 @@ public class AssembleAPIDocs {
         if (method.internal) {
           continue;
         }
-
         if (notfirst) {
           markdown.append(", ");
         }
@@ -52,7 +51,11 @@ public class AssembleAPIDocs {
       }
 
       boolean specialHandler = !method.handler.startsWith("Root");
-      markdown.append("\n## Method: ").append(method.camelName).append("\n");
+      markdown.append("\n## Method: ").append(method.camelName);
+      if (method.partOfJavaScriptSDK) {
+        markdown.append(" (JS)");
+      }
+      markdown.append("\n");
       for (String ln : method.documentation.trim().split(Pattern.quote("\n"))) {
         markdown.append(ln.trim()).append("\n");
       }
@@ -71,60 +74,61 @@ public class AssembleAPIDocs {
       } else {
         markdown.append("This method has no parameters.\n");
       }
-
-      markdown.append("\n");
-      markdown.append("### Template\n");
-      markdown.append("```js\n");
-      String methodNameToUse = method.name;
-      if (methodNameToUse.contains("/") && specialHandler) {
-        methodNameToUse = methodNameToUse.substring(methodNameToUse.indexOf('/') + 1);
-      }
-      if (specialHandler) {
-        markdown.append("stream.").append(Common.camelize(methodNameToUse)).append("(");
-      } else {
-        markdown.append("connection.").append(Common.camelize(methodNameToUse)).append("(");
-      }
-      boolean notfirst = false;
-      for (ParameterDefinition pd : method.parameters) {
-        if (specialHandler && pd.name.equals(method.findBy)) {
-          continue;
+      if (method.partOfJavaScriptSDK) {
+        markdown.append("\n");
+        markdown.append("### Template\n");
+        markdown.append("```js\n");
+        String methodNameToUse = method.name;
+        if (methodNameToUse.contains("/") && specialHandler) {
+          methodNameToUse = methodNameToUse.substring(methodNameToUse.indexOf('/') + 1);
+        }
+        if (specialHandler) {
+          markdown.append("stream.").append(Common.camelize(methodNameToUse)).append("(");
+        } else {
+          markdown.append("connection.").append(Common.camelize(methodNameToUse)).append("(");
+        }
+        boolean notfirst = false;
+        for (ParameterDefinition pd : method.parameters) {
+          if (specialHandler && pd.name.equals(method.findBy)) {
+            continue;
+          }
+          if (notfirst) {
+            markdown.append(", ");
+          }
+          notfirst = true;
+          markdown.append(pd.name);
         }
         if (notfirst) {
           markdown.append(", ");
         }
-        notfirst = true;
-        markdown.append(pd.name);
-      }
-      if (notfirst) {
-        markdown.append(", ");
-      }
-      markdown.append("{\n");
-      if (method.responder.stream) {
-        markdown.append("  next: function(payload) {\n");
-        for (FieldDefinition fd : method.responder.fields) {
-          markdown.append("    // payload.").append(fd.camelName).append("\n");
-        }
-        markdown.append("  },\n");
-        markdown.append("  complete: function() {\n");
-        markdown.append("  },\n");
-        markdown.append("  failure: function(reason) {\n");
-        markdown.append("  }\n");
-        markdown.append("});\n");
-      } else {
-        if (method.responder.fields.length > 0) {
-          markdown.append("  success: function(response) {\n");
+        markdown.append("{\n");
+        if (method.responder.stream) {
+          markdown.append("  next: function(payload) {\n");
           for (FieldDefinition fd : method.responder.fields) {
-            markdown.append("    // response.").append(fd.camelName).append("\n");
+            markdown.append("    // payload.").append(fd.camelName).append("\n");
           }
+          markdown.append("  },\n");
+          markdown.append("  complete: function() {\n");
+          markdown.append("  },\n");
+          markdown.append("  failure: function(reason) {\n");
+          markdown.append("  }\n");
+          markdown.append("});\n");
         } else {
-          markdown.append("  success: function() {\n");
+          if (method.responder.fields.length > 0) {
+            markdown.append("  success: function(response) {\n");
+            for (FieldDefinition fd : method.responder.fields) {
+              markdown.append("    // response.").append(fd.camelName).append("\n");
+            }
+          } else {
+            markdown.append("  success: function() {\n");
+          }
+          markdown.append("  },\n");
+          markdown.append("  failure: function(reason) {\n");
+          markdown.append("  }\n");
+          markdown.append("});\n");
         }
-        markdown.append("  },\n");
-        markdown.append("  failure: function(reason) {\n");
-        markdown.append("  }\n");
-        markdown.append("});\n");
+        markdown.append("```\n");
       }
-      markdown.append("```\n");
       markdown.append("\n");
       if (method.responder.fields.length > 0) {
         markdown.append("\n");

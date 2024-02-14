@@ -137,6 +137,56 @@ public class DocumentHandlerImpl implements DocumentHandler {
     }
   }
 
+  private void downloadFile(String output, Connection connection, ObjectNode request) throws Exception {
+    File archiveFileTemp = new File(output + ".temp");
+    File archiveFileFinal = new File(output);
+    FileOutputStream outputStream = new FileOutputStream(archiveFileTemp);
+    CountDownLatch latch = new CountDownLatch(1);
+    AtomicBoolean alive = new AtomicBoolean(true);
+    connection.raw().execute(request, new WebJsonStream() {
+      @Override
+      public void data(int cId, ObjectNode response) {
+        byte[] base64 = Base64.getDecoder().decode(response.get("base64Bytes").textValue());
+        String md5 = response.get("chunkMd5").textValue();
+        MessageDigest digest = Hashing.md5();
+        digest.update(base64);
+        if (!Hashing.finishAndEncode(digest).equals(md5)) {
+          throw new RuntimeException("corruption during transit");
+        }
+        try {
+          outputStream.write(base64);
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        }
+      }
+
+      @Override
+      public void complete() {
+        try {
+          outputStream.flush();
+          outputStream.close();
+          Files.move(archiveFileTemp.toPath(), archiveFileFinal.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+          throw new RuntimeException(ex);
+        } finally {
+          alive.set(false);
+          latch.countDown();
+        }
+      }
+
+      @Override
+      public void failure(int code) {
+        alive.set(false);
+        latch.countDown();
+        throw new RuntimeException("failed downloading:" + code);
+      }
+    });
+    while (alive.get()) {
+      // FUN progress token?
+      latch.await(1000, TimeUnit.MILLISECONDS);
+    }
+  }
+
   @Override
   public void downloadArchive(Arguments.DocumentDownloadArchiveArgs args, Output.YesOrError output) throws Exception {
     String identity = args.config.get_string("identity", null);
@@ -147,54 +197,42 @@ public class DocumentHandlerImpl implements DocumentHandler {
         request.put("identity", identity);
         request.put("space", args.space);
         request.put("key", args.key);
+        downloadFile(args.output, connection, request);
+        output.out();
+      }
+    }
+  }
 
-        File archiveFileTemp = new File(args.output + ".temp");
-        File archiveFileFinal = new File(args.output);
-        FileOutputStream outputStream = new FileOutputStream(archiveFileTemp);
-        CountDownLatch latch = new CountDownLatch(1);
-        AtomicBoolean alive = new AtomicBoolean(true);
-        connection.raw().execute(request, new WebJsonStream() {
-          @Override
-          public void data(int cId, ObjectNode response) {
-            byte[] base64 = Base64.getDecoder().decode(response.get("base64Bytes").textValue());
-            String md5 = response.get("chunkMd5").textValue();
-            MessageDigest digest = Hashing.md5();
-            digest.update(base64);
-            if (!Hashing.finishAndEncode(digest).equals(md5)) {
-              throw new RuntimeException("corruption during transit");
-            }
-            try {
-              outputStream.write(base64);
-            } catch (IOException ex) {
-              throw new RuntimeException(ex);
-            }
-          }
-
-          @Override
-          public void complete() {
-            try {
-              outputStream.flush();
-              outputStream.close();
-              Files.move(archiveFileTemp.toPath(), archiveFileFinal.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ex) {
-              throw new RuntimeException(ex);
-            } finally {
-              alive.set(false);
-              latch.countDown();
-            }
-          }
-
-          @Override
-          public void failure(int code) {
-            alive.set(false);
-            latch.countDown();
-            throw new RuntimeException("failed downloading:" + code);
-          }
+  @Override
+  public void listBackups(Arguments.DocumentListBackupsArgs args, Output.JsonOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/list-backups");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        request.put("key", args.key);
+        connection.stream(request, (cId, response) -> {
+          output.add(response);
         });
-        while (alive.get()) {
-          // FUN progress token?
-          latch.await(1000, TimeUnit.MILLISECONDS);
-        }
+        output.out();
+      }
+    }
+  }
+
+  @Override
+  public void downloadBackup(Arguments.DocumentDownloadBackupArgs args, Output.YesOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/download-backup");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        request.put("key", args.key);
+        request.put("backup-id", args.backupId);
+        downloadFile(args.output, connection, request);
         output.out();
       }
     }

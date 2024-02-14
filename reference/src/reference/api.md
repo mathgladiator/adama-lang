@@ -1,8 +1,8 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [Deinit](#method-deinit), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [Stats](#method-stats), [IdentityHash](#method-identityhash), [IdentityStash](#method-identitystash), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [PushRegister](#method-pushregister), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization), [DocumentAuthorizationDomain](#method-documentauthorizationdomain), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [BillingConnectionCreate](#method-billingconnectioncreate), [AttachmentStart](#method-attachmentstart), [AttachmentStartByDomain](#method-attachmentstartbydomain), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount), [InitConvertGoogleUser](#method-initconvertgoogleuser), [InitCompleteAccount](#method-initcompleteaccount), [Deinit](#method-deinit), [AccountSetPassword](#method-accountsetpassword), [AccountGetPaymentPlan](#method-accountgetpaymentplan), [AccountLogin](#method-accountlogin), [Probe](#method-probe), [Stats](#method-stats), [IdentityHash](#method-identityhash), [IdentityStash](#method-identitystash), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect), [SpaceList](#method-spacelist), [PushRegister](#method-pushregister), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization), [DocumentAuthorizationDomain](#method-documentauthorizationdomain), [DocumentAuthorize](#method-documentauthorize), [DocumentAuthorizeDomain](#method-documentauthorizedomain), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset), [DocumentCreate](#method-documentcreate), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist), [MessageDirectSend](#method-messagedirectsend), [MessageDirectSendOnce](#method-messagedirectsendonce), [ConnectionCreate](#method-connectioncreate), [ConnectionCreateViaDomain](#method-connectioncreateviadomain), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword), [BillingConnectionCreate](#method-billingconnectioncreate), [AttachmentStart](#method-attachmentstart), [AttachmentStartByDomain](#method-attachmentstartbydomain), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
-## Method: InitSetupAccount
+## Method: InitSetupAccount (JS)
 This initiates developer machine via email verification.
 
 ### Parameters
@@ -23,7 +23,7 @@ connection.InitSetupAccount(email, {
 
 This method simply returns void.
 
-## Method: InitConvertGoogleUser
+## Method: InitConvertGoogleUser (JS)
 The converts and validates a google token into an Adama token.
 
 ### Parameters
@@ -49,7 +49,7 @@ connection.InitConvertGoogleUser(access-token, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: InitCompleteAccount
+## Method: InitCompleteAccount (JS)
 This establishes a developer machine via email verification.
 
 Copy the code from the email into this request.
@@ -84,7 +84,7 @@ connection.InitCompleteAccount(email, revoke, code, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: Deinit
+## Method: Deinit (JS)
 This will destroy a developer account. We require all spaces to be deleted along with all authorities.
 
 ### Parameters
@@ -105,7 +105,7 @@ connection.Deinit(identity, {
 
 This method simply returns void.
 
-## Method: AccountSetPassword
+## Method: AccountSetPassword (JS)
 Set the password for an Adama developer.
 
 ### Parameters
@@ -127,7 +127,7 @@ connection.AccountSetPassword(identity, password, {
 
 This method simply returns void.
 
-## Method: AccountGetPaymentPlan
+## Method: AccountGetPaymentPlan (JS)
 Get the payment plan information for the developer.
 
 ### Parameters
@@ -155,7 +155,7 @@ connection.AccountGetPaymentPlan(identity, {
 | payment-plan | String | Payment plan name. The current default is "none" which can be upgraded to "public". |
 | publishable-key | String | The public key from the merchant provider. |
 
-## Method: AccountLogin
+## Method: AccountLogin (JS)
 Sign an Adama developer in with an email and password pair.
 
 ### Parameters
@@ -182,7 +182,7 @@ connection.AccountLogin(email, password, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: Probe
+## Method: Probe (JS)
 This is useful to validate an identity without executing anything.
 
 ### Parameters
@@ -203,7 +203,7 @@ connection.Probe(identity, {
 
 This method simply returns void.
 
-## Method: Stats
+## Method: Stats (JS)
 Get stats for the current connection
 This method has no parameters.
 
@@ -230,7 +230,7 @@ connection.Stats({
 | stat-value | String | The value for a stat |
 | stat-type | String | The type of the stat. |
 
-## Method: IdentityHash
+## Method: IdentityHash (JS)
 Validate an identity and convert to a public and opaque base64 crypto hash.
 
 ### Parameters
@@ -256,7 +256,7 @@ connection.IdentityHash(identity, {
 | --- | --- | --- |
 | identity-hash | String | A hash of an identity |
 
-## Method: IdentityStash
+## Method: IdentityStash (JS)
 Stash an identity locally in the connection as if it was a cookie
 
 ### Parameters
@@ -287,17 +287,6 @@ Create an authority. See [Authentication](/reference/auth.md) for more details.
 | identity | yes | String | Identity is a token to authenticate a user. |
 
 
-### Template
-```js
-connection.AuthorityCreate(identity, {
-  success: function(response) {
-    // response.authority
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Request response fields
 | name | type | documentation |
@@ -315,16 +304,6 @@ Set the public keystore for the authority.
 | key-store | yes | ObjectNode | A collection of public keys used to validate an identity within an authority. |
 
 
-### Template
-```js
-connection.AuthoritySet(identity, authority, key-store, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: AuthorityGet
@@ -336,17 +315,6 @@ Get the public keystore for the authority.
 | identity | yes | String | Identity is a token to authenticate a user. |
 | authority | yes | String | An authority is collection of users held together via a key store. |
 
-
-### Template
-```js
-connection.AuthorityGet(identity, authority, {
-  success: function(response) {
-    // response.keystore
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -362,19 +330,6 @@ List authorities for the given developer.
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
 
-
-### Template
-```js
-connection.AuthorityList(identity, {
-  next: function(payload) {
-    // payload.authority
-  },
-  complete: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Streaming payload fields
@@ -394,19 +349,9 @@ This is exceptionally dangerous as it will break authentication for any users th
 | authority | yes | String | An authority is collection of users held together via a key store. |
 
 
-### Template
-```js
-connection.AuthorityDestroy(identity, authority, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
-## Method: SpaceCreate
+## Method: SpaceCreate (JS)
 Create a space.
 
 ### Parameters
@@ -445,18 +390,6 @@ The developer then generates a public/private key, encrypts the token with the p
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
-### Template
-```js
-connection.SpaceGenerateKey(identity, space, {
-  success: function(response) {
-    // response.keyId
-    // response.publicKey
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Request response fields
 | name | type | documentation |
@@ -473,17 +406,6 @@ Get the deployment plan for a space.
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
-
-### Template
-```js
-connection.SpaceGet(identity, space, {
-  success: function(response) {
-    // response.plan
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -502,16 +424,6 @@ Set the deployment plan for a space.
 | plan | yes | ObjectNode | This 'plan' parameter contains multiple Adama scripts all gated on various rules.              These rules allow for a migration to happen slowly on your schedule.              Note: this value will validated such that the scripts are valid, compile, and will not have any major regressions             during role out. |
 
 
-### Template
-```js
-connection.SpaceSet(identity, space, plan, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: SpaceRedeployKick
@@ -523,16 +435,6 @@ A diagnostic call to optimistically to refresh a space's deployment
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
-
-### Template
-```js
-connection.SpaceRedeployKick(identity, space, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 This method simply returns void.
 
@@ -547,16 +449,6 @@ Set the RxHTML forest for the space when viewed via a domain name.
 | rxhtml | yes | String | A RxHTML forest which provides simplified web hosting. |
 
 
-### Template
-```js
-connection.SpaceSetRxhtml(identity, space, rxhtml, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: SpaceGetRxhtml
@@ -568,17 +460,6 @@ Get the RxHTML forest for the space when viewed via a domain name.
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
-
-### Template
-```js
-connection.SpaceGetRxhtml(identity, space, {
-  success: function(response) {
-    // response.rxhtml
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -597,16 +478,6 @@ Set the access control policy for a space
 | access-policy | yes | ObjectNode | A policy to control who can do what against a space. |
 
 
-### Template
-```js
-connection.SpaceSetPolicy(identity, space, access-policy, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: SpaceGetPolicy
@@ -618,17 +489,6 @@ returns the
 | identity | yes | String | Identity is a token to authenticate a user. |
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
-
-### Template
-```js
-connection.SpaceGetPolicy(identity, space, {
-  success: function(response) {
-    // response.accessPolicy
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -648,18 +508,6 @@ For regional proxies to emit metrics for a document
 | metric-query | no | ObjectNode | A metric query to override the behavior on aggregation for specific fields |
 
 
-### Template
-```js
-connection.SpaceMetrics(identity, space, prefix, metric-query, {
-  success: function(response) {
-    // response.metrics
-    // response.count
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Request response fields
 | name | type | documentation |
@@ -667,7 +515,7 @@ connection.SpaceMetrics(identity, space, prefix, metric-query, {
 | metrics | ObjectNode | A metrics object is a bunch of counters/event-tally |
 | count | Integer | The number of items considered/available. |
 
-## Method: SpaceDelete
+## Method: SpaceDelete (JS)
 Delete a space.
 
 This requires no documents to be within the space, and this removes the space from use until garbage collection ensures no documents were created for that space after deletion.
@@ -706,16 +554,6 @@ Spaces can be shared among Adama developers.
 | role | yes | String | The role of a user may determine their capabilities to perform actions. |
 
 
-### Template
-```js
-connection.SpaceSetRole(identity, space, email, role, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: SpaceListDevelopers
@@ -728,20 +566,6 @@ List the developers with access to this space
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
-### Template
-```js
-connection.SpaceListDevelopers(identity, space, {
-  next: function(payload) {
-    // payload.email
-    // payload.role
-  },
-  complete: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Streaming payload fields
 | name | type | documentation |
@@ -749,7 +573,7 @@ connection.SpaceListDevelopers(identity, space, {
 | email | String | A developer email |
 | role | String | Each developer has a role to a document. |
 
-## Method: SpaceReflect
+## Method: SpaceReflect (JS)
 Get a schema for the space.
 
 ### Parameters
@@ -777,7 +601,7 @@ connection.SpaceReflect(identity, space, key, {
 | --- | --- | --- |
 | reflection | ObjectNode | Schema of a document. |
 
-## Method: SpaceList
+## Method: SpaceList (JS)
 List the spaces available to the user.
 
 ### Parameters
@@ -815,7 +639,7 @@ connection.SpaceList(identity, marker, limit, {
 | enabled | Boolean | Is the item in question enabled. |
 | storage-bytes | Long | The storage used. |
 
-## Method: PushRegister
+## Method: PushRegister (JS)
 Register a device for push notifications
 
 ### Parameters
@@ -851,16 +675,6 @@ Map a domain to a space.
 | certificate | no | String | A TLS/SSL Certificate encoded as json. |
 
 
-### Template
-```js
-connection.DomainMap(identity, domain, space, certificate, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: DomainClaimApex
@@ -872,18 +686,6 @@ Claim an apex domain to be used only by your account
 | identity | yes | String | Identity is a token to authenticate a user. |
 | domain | yes | String | A domain name. |
 
-
-### Template
-```js
-connection.DomainClaimApex(identity, domain, {
-  success: function(response) {
-    // response.claimed
-    // response.txtToken
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -903,16 +705,6 @@ Map a domain to another domain
 | destination-domain | yes | String | A domain name to forward to |
 
 
-### Template
-```js
-connection.DomainRedirect(identity, domain, destination-domain, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: DomainConfigure
@@ -926,16 +718,6 @@ Configure a domain with internal guts that are considered secret.
 | product-config | yes | ObjectNode | Product config for various native app and integrated features. |
 
 
-### Template
-```js
-connection.DomainConfigure(identity, domain, product-config, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: DomainReflect
@@ -947,17 +729,6 @@ Get a schema for the domain
 | identity | yes | String | Identity is a token to authenticate a user. |
 | domain | yes | String | A domain name. |
 
-
-### Template
-```js
-connection.DomainReflect(identity, domain, {
-  success: function(response) {
-    // response.reflection
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -979,16 +750,6 @@ Map a domain to a space.
 | certificate | no | String | A TLS/SSL Certificate encoded as json. |
 
 
-### Template
-```js
-connection.DomainMapDocument(identity, domain, space, key, route, certificate, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: DomainList
@@ -999,23 +760,6 @@ List the domains for the given developer
 | --- | --- | --- | --- |
 | identity | yes | String | Identity is a token to authenticate a user. |
 
-
-### Template
-```js
-connection.DomainList(identity, {
-  next: function(payload) {
-    // payload.domain
-    // payload.space
-    // payload.key
-    // payload.route
-    // payload.forward
-  },
-  complete: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Streaming payload fields
@@ -1037,23 +781,6 @@ List the domains for the given developer
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
-### Template
-```js
-connection.DomainListBySpace(identity, space, {
-  next: function(payload) {
-    // payload.domain
-    // payload.space
-    // payload.key
-    // payload.route
-    // payload.forward
-  },
-  complete: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Streaming payload fields
 | name | type | documentation |
@@ -1064,7 +791,7 @@ connection.DomainListBySpace(identity, space, {
 | route | Boolean | Does the domain route GET to the document or the space. |
 | forward | String | Does the domain have a forwarding address |
 
-## Method: DomainGetVapidPublicKey
+## Method: DomainGetVapidPublicKey (JS)
 Get the public key for the VAPID
 
 ### Parameters
@@ -1101,16 +828,6 @@ Unmap a domain
 | domain | yes | String | A domain name. |
 
 
-### Template
-```js
-connection.DomainUnmap(identity, domain, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: DomainGet
@@ -1123,17 +840,6 @@ Get the domain mapping
 | domain | yes | String | A domain name. |
 
 
-### Template
-```js
-connection.DomainGet(identity, domain, {
-  success: function(response) {
-    // response.space
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Request response fields
 | name | type | documentation |
@@ -1141,7 +847,7 @@ connection.DomainGet(identity, domain, {
 | space | String | A space which is a collection of documents with a common Adama schema. |
 
 ## Method: DocumentDownloadArchive
-Send an authorization request to the document
+Download a complete archive
 
 ### Parameters
 | name | required | type | documentation |
@@ -1151,19 +857,43 @@ Send an authorization request to the document
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 
 
-### Template
-```js
-connection.DocumentDownloadArchive(identity, space, key, {
-  next: function(payload) {
-    // payload.base64Bytes
-    // payload.chunkMd5
-  },
-  complete: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
+
+### Streaming payload fields
+| name | type | documentation |
+| --- | --- | --- |
+| base64-bytes | String | Bytes encoded in base64. |
+| chunk-md5 | String | MD5 of a chunk |
+
+## Method: DocumentListBackups
+List snapshots for a document
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
+| key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
+
+
+
+### Streaming payload fields
+| name | type | documentation |
+| --- | --- | --- |
+| backup-id | String | The id of a backup (encoded) |
+| date | String | The date of a backup |
+| seq | Integer | The sequencer for the item. |
+
+## Method: DocumentDownloadBackup
+Download a specific snapshot
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
+| key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
+| backup-id | yes | String | The reason a backup was made |
+
 
 
 ### Streaming payload fields
@@ -1185,21 +915,6 @@ List push tokens for a given agent within a document
 | agent | yes | String | Agent within a principal |
 
 
-### Template
-```js
-connection.DocumentListPushTokens(identity, space, key, domain, agent, {
-  next: function(payload) {
-    // payload.id
-    // payload.subscriptionInfo
-    // payload.deviceInfo
-  },
-  complete: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Streaming payload fields
 | name | type | documentation |
@@ -1208,7 +923,7 @@ connection.DocumentListPushTokens(identity, space, key, domain, agent, {
 | subscription-info | ObjectNode | Subscription information for a push subscriber. |
 | device-info | ObjectNode | Device information for a push subscriber. |
 
-## Method: DocumentAuthorization
+## Method: DocumentAuthorization (JS)
 Send an authorization request to the document
 
 ### Parameters
@@ -1236,7 +951,7 @@ connection.DocumentAuthorization(space, key, message, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: DocumentAuthorizationDomain
+## Method: DocumentAuthorizationDomain (JS)
 Send an authorization request to a document via a domain
 
 ### Parameters
@@ -1263,7 +978,7 @@ connection.DocumentAuthorizationDomain(domain, message, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: DocumentAuthorize
+## Method: DocumentAuthorize (JS)
 Authorize a username and password against a document.
 
 ### Parameters
@@ -1292,7 +1007,7 @@ connection.DocumentAuthorize(space, key, username, password, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: DocumentAuthorizeDomain
+## Method: DocumentAuthorizeDomain (JS)
 Authorize a username and password against a document via a domain
 
 ### Parameters
@@ -1320,7 +1035,7 @@ connection.DocumentAuthorizeDomain(domain, username, password, {
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: DocumentAuthorizeWithReset
+## Method: DocumentAuthorizeWithReset (JS)
 Authorize a username and password against a document, and set a new password
 
 ### Parameters
@@ -1350,7 +1065,7 @@ connection.DocumentAuthorizeWithReset(space, key, username, password, new_passwo
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: DocumentAuthorizeDomainWithReset
+## Method: DocumentAuthorizeDomainWithReset (JS)
 Authorize a username and password against a document, and set a new password
 
 ### Parameters
@@ -1379,7 +1094,7 @@ connection.DocumentAuthorizeDomainWithReset(domain, username, password, new_pass
 | --- | --- | --- |
 | identity | String | A private token used to authenticate to Adama. |
 
-## Method: DocumentCreate
+## Method: DocumentCreate (JS)
 Create a document.
 
 The entropy allows the randomization of the document to be fixed at construction time.
@@ -1417,19 +1132,9 @@ Delete a document (invokes the @delete document policy).
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 
 
-### Template
-```js
-connection.DocumentDelete(identity, space, key, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
-## Method: DocumentList
+## Method: DocumentList (JS)
 List documents within a space which are after the given marker.
 
 ### Parameters
@@ -1468,7 +1173,7 @@ connection.DocumentList(identity, space, marker, limit, {
 | seq | Integer | The sequencer for the item. |
 | last-backup | String | The time of the last internal backup. |
 
-## Method: MessageDirectSend
+## Method: MessageDirectSend (JS)
 Send a message to a document without a connection
 
 ### Parameters
@@ -1498,7 +1203,7 @@ connection.MessageDirectSend(identity, space, key, channel, message, {
 | --- | --- | --- |
 | seq | Integer | The sequencer for the item. |
 
-## Method: MessageDirectSendOnce
+## Method: MessageDirectSendOnce (JS)
 Send a message to a document without a connection
 
 ### Parameters
@@ -1529,7 +1234,7 @@ connection.MessageDirectSendOnce(identity, space, key, dedupe, channel, message,
 | --- | --- | --- |
 | seq | Integer | The sequencer for the item. |
 
-## Method: ConnectionCreate
+## Method: ConnectionCreate (JS)
 Create a connection to a document.
 
 ### Parameters
@@ -1560,7 +1265,7 @@ connection.ConnectionCreate(identity, space, key, viewer-state, {
 | --- | --- | --- |
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
 
-## Method: ConnectionCreateViaDomain
+## Method: ConnectionCreateViaDomain (JS)
 Create a connection to a document via a domain name.
 
 ### Parameters
@@ -1600,17 +1305,6 @@ Send a message to the document on the given channel.
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
-### Template
-```js
-stream.Send(channel, message, {
-  success: function(response) {
-    // response.seq
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Request response fields
 | name | type | documentation |
@@ -1628,16 +1322,6 @@ Set the viewer's password to the document; requires their old password.
 | new_password | yes | String | The new password for your account or document |
 
 
-### Template
-```js
-stream.Password(username, password, new_password, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: ConnectionSendOnce
@@ -1650,17 +1334,6 @@ Send a message to the document on the given channel with a dedupe key such that 
 | dedupe | no | String | A key used to dedupe request such that at-most once processing is used. |
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
-
-### Template
-```js
-stream.SendOnce(channel, dedupe, message, {
-  success: function(response) {
-    // response.seq
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -1675,17 +1348,6 @@ Ask whether the connection can have attachments attached.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 
-
-### Template
-```js
-stream.CanAttach({
-  success: function(response) {
-    // response.yes
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields
@@ -1709,17 +1371,6 @@ Start an upload for the given document with the given filename and content type.
 | digest-sha384 | yes | String | The SHA384 of an attachment. |
 
 
-### Template
-```js
-stream.Attach(asset-id, filename, content-type, size, digest-md5, digest-sha384, {
-  success: function(response) {
-    // response.seq
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 
 ### Request response fields
 | name | type | documentation |
@@ -1738,16 +1389,6 @@ For example, the viewer state is how a document can provide real-time search or 
 | viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
 
 
-### Template
-```js
-stream.Update(viewer-state, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: ConnectionEnd
@@ -1758,19 +1399,9 @@ Disconnect from the document.
 | --- | --- | --- | --- |
 
 
-### Template
-```js
-stream.End({
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
-## Method: DocumentsHashPassword
+## Method: DocumentsHashPassword (JS)
 For documents that want to hold secrets, then these secrets should not be stored plaintext.
 
 This method provides the client the ability to hash a password for plain text transmission.
@@ -1798,7 +1429,7 @@ connection.DocumentsHashPassword(password, {
 | --- | --- | --- |
 | password-hash | String | The hash of a password. |
 
-## Method: BillingConnectionCreate
+## Method: BillingConnectionCreate (JS)
 Create a connection to the billing document of the given identity.
 
 ### Parameters
@@ -1826,7 +1457,7 @@ connection.BillingConnectionCreate(identity, {
 | --- | --- | --- |
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
 
-## Method: AttachmentStart
+## Method: AttachmentStart (JS)
 Start an upload for the given document with the given filename and content type.
 
 ### Parameters
@@ -1858,7 +1489,7 @@ connection.AttachmentStart(identity, space, key, filename, content-type, {
 | --- | --- | --- |
 | chunk_request_size | Integer | The attachment uploader is asking for a chunk size.             Using the WebSocket leverages a flow control based uploader such that contention on the WebSocket is minimized. |
 
-## Method: AttachmentStartByDomain
+## Method: AttachmentStartByDomain (JS)
 Start an upload for the given document with the given filename and content type.
 
 ### Parameters
@@ -1899,16 +1530,6 @@ Append a chunk with an MD5 to ensure data integrity.
 | base64-bytes | yes | String | Bytes encoded in base64. |
 
 
-### Template
-```js
-stream.Append(chunk-md5, base64-bytes, {
-  success: function() {
-  },
-  failure: function(reason) {
-  }
-});
-```
-
 This method simply returns void.
 
 ## Method: AttachmentFinish
@@ -1918,17 +1539,6 @@ Finishing uploading the attachment upload.
 | name | required | type | documentation |
 | --- | --- | --- | --- |
 
-
-### Template
-```js
-stream.Finish({
-  success: function(response) {
-    // response.assetId
-  },
-  failure: function(reason) {
-  }
-});
-```
 
 
 ### Request response fields

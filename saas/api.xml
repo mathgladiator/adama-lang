@@ -319,6 +319,30 @@
         <field name="chunk-md5" />
     </responder>
 
+    <parameter-definition name="backup-id" type="string" missing-error="494583">
+        <documentation>
+            The reason a backup was made
+        </documentation>
+    </parameter-definition>
+
+    <field-definition name="backup-id" type="string">
+        <documentation>
+            The id of a backup (encoded)
+        </documentation>
+    </field-definition>
+
+    <field-definition name="date" type="string">
+        <documentation>
+            The date of a backup
+        </documentation>
+    </field-definition>
+
+    <responder name="backup-item" stream="true">
+        <field name="backup-id"/>
+        <field name="date"/>
+        <field name="seq"/>
+    </responder>
+
     <parameter-definition name="upload" type="long" missing-error="409609">
         <documentation>
             The id of the upload in progress.
@@ -718,21 +742,21 @@
         <field name="chunk_request_size"/>
     </responder>
 
-    <method name="init/setup-account" responder="simple" scope="global">
+    <method name="init/setup-account" responder="simple" scope="global" js-sdk="true">
         <parameter name="email"/>
         <documentation>
             This initiates developer machine via email verification.
         </documentation>
     </method>
 
-    <method name="init/convert-google-user" responder="initiation" scope="global">
+    <method name="init/convert-google-user" responder="initiation" scope="global" js-sdk="true">
         <parameter name="access-token"/>
         <documentation>
             The converts and validates a google token into an Adama token.
         </documentation>
     </method>
 
-    <method name="init/complete-account" responder="initiation" scope="global">
+    <method name="init/complete-account" responder="initiation" scope="global" js-sdk="true">
         <parameter name="email"/>
         <parameter name="revoke"/>
         <parameter name="code"/>
@@ -748,14 +772,14 @@
         </documentation>
     </method>
 
-    <method name="deinit" responder="simple" scope="global">
+    <method name="deinit" responder="simple" scope="global" js-sdk="true">
         <parameter name="identity"/>
         <documentation>
             This will destroy a developer account. We require all spaces to be deleted along with all authorities.
         </documentation>
     </method>
 
-    <method name="account/set-password" responder="simple" scope="global">
+    <method name="account/set-password" responder="simple" scope="global" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="password"/>
         <documentation>
@@ -801,7 +825,7 @@
         <field name="password-hash"/>
     </responder>
 
-    <method name="account/get-payment-plan" responder="payment" scope="global">
+    <method name="account/get-payment-plan" responder="payment" scope="global" js-sdk="true">
         <parameter name="identity"/>
         <documentation>
             Get the payment plan information for the developer.
@@ -817,7 +841,7 @@
     </method>
     -->
 
-    <method name="account/login" responder="initiation" scope="global">
+    <method name="account/login" responder="initiation" scope="global" js-sdk="true">
         <parameter name="email"/>
         <parameter name="password"/>
         <documentation>
@@ -825,7 +849,7 @@
         </documentation>
     </method>
 
-    <method name="probe" responder="simple" scope="global">
+    <method name="probe" responder="simple" scope="global" js-sdk="true">
         <parameter name="identity"/>
         <documentation>
             This is useful to validate an identity without executing anything.
@@ -860,18 +884,18 @@
         <field name="stat-type" />
     </responder>
 
-    <method name="stats" responder="stats" scope="region" devbox="true">
+    <method name="stats" responder="stats" scope="region" devbox="true" js-sdk="true">
         <documentation>Get stats for the current connection</documentation>
     </method>
 
-    <method name="identity/hash" responder="identity-hash" scope="region" devbox="true">
+    <method name="identity/hash" responder="identity-hash" scope="region" devbox="true" js-sdk="true">
         <parameter name="identity"/>
         <documentation>
             Validate an identity and convert to a public and opaque base64 crypto hash.
         </documentation>
     </method>
 
-    <method name="identity/stash" responder="simple" scope="region" devbox="true">
+    <method name="identity/stash" responder="simple" scope="region" devbox="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="name"/>
         <documentation>
@@ -920,7 +944,7 @@
         </documentation>
     </method>
 
-    <method name="space/create" responder="simple" scope="global" policy-manual="true">
+    <method name="space/create" responder="simple" scope="global" policy-manual="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="template"/>
@@ -1017,7 +1041,7 @@
         </documentation>
     </method>
 
-    <method name="space/delete" responder="simple" scope="global" policy="true" policy-failure-code="904285">
+    <method name="space/delete" responder="simple" scope="global" policy="true" policy-failure-code="904285" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <documentation>
@@ -1048,7 +1072,7 @@
         </documentation>
     </method>
 
-    <method name="space/reflect" responder="reflection" devbox="true" scope="global" policy="true" policy-failure-code="907343" policy-default="OwnerAndDevelopers" gen-service="true">
+    <method name="space/reflect" responder="reflection" devbox="true" scope="global" policy="true" policy-failure-code="907343" policy-default="OwnerAndDevelopers" gen-service="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1057,7 +1081,7 @@
         </documentation>
     </method>
 
-    <method name="space/list" responder="space-listing" scope="global">
+    <method name="space/list" responder="space-listing" scope="global" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="marker"/>
         <parameter name="limit"/>
@@ -1066,7 +1090,7 @@
         </documentation>
     </method>
 
-    <method name="push/register" responder="simple" scope="global" policy-manual="true" devbox="true">
+    <method name="push/register" responder="simple" scope="global" policy-manual="true" devbox="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="subscription" />
@@ -1176,7 +1200,7 @@
         <field name="public-key" />
     </responder>
 
-    <method name="domain/get-vapid-public-key" responder="domain-vapid" scope="global" policy-manual="true" devbox="true">
+    <method name="domain/get-vapid-public-key" responder="domain-vapid" scope="global" policy-manual="true" devbox="true" js-sdk="true">
         <parameter name="identity" />
         <parameter name="domain" />
         <documentation>
@@ -1205,7 +1229,26 @@
         <parameter name="space"/>
         <parameter name="key"/>
         <documentation>
-            Send an authorization request to the document
+            Download a complete archive
+        </documentation>
+    </method>
+
+    <method name="document/list-backups" responder="backup-item" scope="global" policy="true" policy-failure-code="900911" policy-default="Owner">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <documentation>
+            List snapshots for a document
+        </documentation>
+    </method>
+
+    <method name="document/download-backup" responder="backup-stream" scope="global" policy="true" policy-failure-code="911911" policy-default="Owner">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="backup-id" />
+        <documentation>
+            Download a specific snapshot
         </documentation>
     </method>
 
@@ -1238,7 +1281,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorization" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+    <method name="document/authorization" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="message"/>
@@ -1247,7 +1290,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorization-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+    <method name="document/authorization-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="domain"/>
         <parameter name="message"/>
         <documentation>
@@ -1256,7 +1299,7 @@
     </method>
 
     <!-- TO DEPRECATE -->
-    <method name="document/authorize" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+    <method name="document/authorize" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="username"/>
@@ -1267,7 +1310,7 @@
     </method>
 
     <!-- TO DEPRECATE -->
-    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+    <method name="document/authorize-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="domain"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -1277,7 +1320,7 @@
     </method>
 
     <!-- TO DEPRECATE -->
-    <method name="document/authorize-with-reset" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+    <method name="document/authorize-with-reset" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="username"/>
@@ -1289,7 +1332,7 @@
     </method>
 
     <!-- TO DEPRECATE -->
-    <method name="document/authorize-domain-with-reset" responder="initiation" devbox="true" scope="region" policy-via-document="true">
+    <method name="document/authorize-domain-with-reset" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="domain"/>
         <parameter name="username"/>
         <parameter name="password"/>
@@ -1299,7 +1342,7 @@
         </documentation>
     </method>
 
-    <method name="document/create" responder="simple" scope="region" policy-via-document="true" gen-service="true">
+    <method name="document/create" responder="simple" scope="region" policy-via-document="true" gen-service="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1321,7 +1364,7 @@
         </documentation>
     </method>
 
-    <method name="document/list" responder="key-listing" scope="global" policy="true" policy-failure-code="900160" policy-default="OwnerAndDevelopers">
+    <method name="document/list" responder="key-listing" scope="global" policy="true" policy-failure-code="900160" policy-default="OwnerAndDevelopers" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="marker"/>
@@ -1331,7 +1374,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send" responder="seq" scope="region" policy-via-document="true" gen-service="true">
+    <method name="message/direct-send" responder="seq" scope="region" policy-via-document="true" gen-service="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1342,7 +1385,7 @@
         </documentation>
     </method>
 
-    <method name="message/direct-send-once" responder="seq" scope="region" policy-via-document="true" gen-service="true">
+    <method name="message/direct-send-once" responder="seq" scope="region" policy-via-document="true" gen-service="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1354,7 +1397,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create" responder="data" create="document-stream" devbox="true" scope="region" policy-via-document="true">
+    <method name="connection/create" responder="data" create="document-stream" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1364,7 +1407,7 @@
         </documentation>
     </method>
 
-    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true" scope="region" policy-via-document="true">
+    <method name="connection/create-via-domain" responder="data" create="document-stream" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="viewer-state"/>
@@ -1442,7 +1485,7 @@
         </documentation>
     </method>
 
-    <method name="documents/hash-password" responder="hashed-password" devbox="true" scope="region">
+    <method name="documents/hash-password" responder="hashed-password" devbox="true" scope="region" js-sdk="true">
         <parameter name="password"/>
         <documentation>
             For documents that want to hold secrets, then these secrets should not be stored plaintext.
@@ -1451,7 +1494,7 @@
         </documentation>
     </method>
 
-    <method name="billing-connection/create" responder="data" create="document-stream" scope="region">
+    <method name="billing-connection/create" responder="data" create="document-stream" scope="region" js-sdk="true">
         <parameter name="identity"/>
         <documentation>
             Create a connection to the billing document of the given identity.
@@ -1503,7 +1546,7 @@
     </method>
     -->
 
-    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region" policy-via-document="true">
+    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1514,7 +1557,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/start-by-domain" responder="progress" create="attachment-upload" scope="region" policy-via-document="true">
+    <method name="attachment/start-by-domain" responder="progress" create="attachment-upload" scope="region" policy-via-document="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="filename"/>
@@ -2343,11 +2386,6 @@
 460783
 405484
 492535
-463863
-494583
-455668
-
-
 
 -->
 

@@ -28,25 +28,27 @@ import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
-/** Download a complete archive */
-public class DocumentDownloadArchiveRequest {
+/** Download a specific snapshot */
+public class DocumentDownloadBackupRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
   public final String key;
+  public final String backupId;
 
-  public DocumentDownloadArchiveRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key) {
+  public DocumentDownloadBackupRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final String backupId) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
     this.key = key;
+    this.backupId = backupId;
   }
 
-  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<DocumentDownloadArchiveRequest> callback) {
+  public static void resolve(Session session, GlobalConnectionNexus nexus, JsonRequest request, Callback<DocumentDownloadBackupRequest> callback) {
     try {
-      final BulkLatch<DocumentDownloadArchiveRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
+      final BulkLatch<DocumentDownloadBackupRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getStringNormalize("space", true, 461828);
@@ -54,11 +56,12 @@ public class DocumentDownloadArchiveRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
-      _latch.with(() -> new DocumentDownloadArchiveRequest(identity, who.get(), space, policy.get(), key));
+      final String backupId = request.getString("backup-id", true, 494583);
+      _latch.with(() -> new DocumentDownloadBackupRequest(identity, who.get(), space, policy.get(), key, backupId));
       nexus.identityService.execute(session, identity, who);
       nexus.spaceService.execute(session, space, policy);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("documentdownloadarchive-error") {
+      nexus.executor.execute(new NamedRunnable("documentdownloadbackup-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);
