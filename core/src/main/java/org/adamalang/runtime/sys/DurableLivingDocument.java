@@ -55,6 +55,7 @@ public class DurableLivingDocument implements Queryable {
   private static final Logger LOG = LoggerFactory.getLogger(DurableLivingDocument.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOG);
   private static final int INTERNAL_INVALIDATION_LIMIT = 128;
+  private static final long BACKUP_HOURS = 90 * 24;
 
   private static final Callback<LivingDocumentChange> DONT_CARE_CHANGE = new Callback<>() {
     @Override
@@ -198,6 +199,7 @@ public class DurableLivingDocument implements Queryable {
                 reader.ingestDedupe(doc.__get_intern_strings());
                 doc.__insert(reader);
                 base.backup.backup(key, doc.__seq.get(), BackupService.Reason.Load, documentValue.patch, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
+                base.getOrCreateInventory(key.space).backup(documentValue.patch.length() * BACKUP_HOURS);
                 DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
                 newDocument.size.set(documentValue.reads);
                 newDocument.load(base.metrics.documentLoadRunLoad.wrap(new Callback<>() {
@@ -327,12 +329,15 @@ public class DurableLivingDocument implements Queryable {
         writer.enableAssetTracking();
         document.__dump(writer);
         int toCompactNow = Math.max(0, size.get() - currentFactory.maximum_history);
-        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history, writer.getAssetBytes()), base.metrics.document_snapshot.wrap(new Callback<>() {
+        String snapshot = writer.toString();
+        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), snapshot, currentFactory.maximum_history, writer.getAssetBytes()), base.metrics.document_snapshot.wrap(new Callback<>() {
           @Override
           public void success(Integer value) {
             base.executor.execute(new NamedRunnable("compact-complete") {
               @Override
               public void execute() throws Exception {
+                base.backup.backup(key, document.__seq.get(), BackupService.Reason.Snapshot, snapshot, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
+                base.getOrCreateInventory(key.space).backup(snapshot.length() * BACKUP_HOURS);
                 if (failedLastSnapshot) {
                   base.metrics.snapshot_recovery.run();
                 }
@@ -363,13 +368,14 @@ public class DurableLivingDocument implements Queryable {
     return document;
   }
 
-  public void deploy(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
+  public void deployWhileInExecutor(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
     LivingDocument newDocument = factory.create(document.__monitor);
     newDocument.__lateBind(key.space, key.key, factory.deliverer, factory.registry);
     JsonStreamWriter writer = new JsonStreamWriter();
     document.__dump(writer);
     String prior = writer.toString();
     base.backup.backup(key, document.__seq.get(), BackupService.Reason.Deployment, prior, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
+    base.getOrCreateInventory(key.space).backup(prior.length() * BACKUP_HOURS);
     newDocument.__insert(new JsonStreamReader(prior));
     int fromSize = prior.length();
     document.__usurp(newDocument);

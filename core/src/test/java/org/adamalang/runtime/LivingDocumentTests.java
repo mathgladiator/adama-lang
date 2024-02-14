@@ -60,7 +60,6 @@ import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiFunction;
 
 public class LivingDocumentTests {
   private static final NtAsset EXAMPLE =
@@ -952,7 +951,7 @@ public class LivingDocumentTests {
     setup.document.createPrivateView(NtPrincipal.NO_ONE, linked, new JsonStreamReader("{}"), gv);
     gv.view.link(new StreamHandle(gv.view));
     setup.document.apply(NtPrincipal.NO_ONE, "{\"x\":4242}", new RealDocumentSetup.AssertInt(3));
-    setup.document.deploy(
+    setup.document.deployWhileInExecutor(
         new RealDocumentSetup("public formula x = 50;").factory,
         new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(3, list.size());

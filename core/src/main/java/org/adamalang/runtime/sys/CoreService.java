@@ -709,7 +709,7 @@ public class CoreService implements Deliverer, Queryable {
             monitor.bumpDocument(toChange);
             if (toChange) {
               try {
-                document.deploy(newFactory, metrics.deploy.wrap(new Callback<Integer>() {
+                document.deployWhileInExecutor(newFactory, metrics.deploy.wrap(new Callback<Integer>() {
                   @Override
                   public void success(Integer value) {
                     monitor.finished((int) (System.currentTimeMillis() - startedAt));

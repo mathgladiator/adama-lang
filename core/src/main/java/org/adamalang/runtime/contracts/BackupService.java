@@ -26,6 +26,7 @@ public interface BackupService {
   public static enum Reason {
     Load,
     Deployment,
+    Snapshot,
     Periodic
   }
   public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback);
