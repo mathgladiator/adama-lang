@@ -134,6 +134,14 @@ public class TyNativeTable extends TyType implements //
     if ("size".equals(name)) {
       return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, messageNameToken.item).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
+    if ("to_csv".equals(name)) {
+      TyNativeMessage messageType = (TyNativeMessage) getEmbeddedType(environment);
+      if (messageType.storage.isCommaSeperateValueEnabled()) {
+        return new TyNativeFunctional("to_csv", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("RTx" + messageType.name + ".__to_csv", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, messageNameToken.item).withPosition(this), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      } else {
+        environment.document.createError(this, "to_csv function is only available on a table when " + messageType.name + " has @csv enabled");
+      }
+    }
     if ("delete".equals(name)) {
       return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("delete", null, new ArrayList<>(), FunctionPaint.NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }

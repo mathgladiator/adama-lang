@@ -16,3 +16,7 @@
 @web get /id {
   return {identity:"anonymous:alice"};
 }
+
+@web get /csv {
+  return { csv: "" };
+}

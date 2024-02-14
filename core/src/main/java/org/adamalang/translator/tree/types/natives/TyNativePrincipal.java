@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
+import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
@@ -41,6 +42,7 @@ public class TyNativePrincipal extends TySimpleNative implements //
     CanBeMapDomain, //
     DetailTypeHasMethods, //
     DetailCanExtractForUnique, //
+    IsCSVCompatible, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;

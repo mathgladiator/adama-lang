@@ -15,9 +15,34 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.natives.algo;
 
-public class Platform {
-  public static final String VERSION = "20240214130926";
-  public static final String JS_VERSION = "5f9fe49dc37d7fb08a33addaa0a7b452";
+import org.adamalang.common.csv.LineWriter;
+import org.adamalang.runtime.natives.*;
+
+public class MessageCSVWriter extends LineWriter {
+
+  public void write(NtTime t) {
+    write(t.toString());
+  }
+
+  public void write(NtDateTime t) {
+    write(t.toString());
+  }
+
+  public void write(NtDate t) {
+    write(t.toString());
+  }
+
+  public void write(NtTimeSpan t) {
+    write(t.seconds);
+  }
+
+  public void write(NtPrincipal p) {
+    write(p.agent + "@" + p.authority);
+  }
+
+  public void write(NtComplex c) {
+    write(c.toString());
+  }
 }

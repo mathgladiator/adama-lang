@@ -137,6 +137,32 @@ public class CodeGenMessage {
     }
   }
 
+  public static void generateCSV(final StructureStorage storage, final StringBuilderWithTabs sb) {
+    {
+      sb.append("public static String __to_csv(NtTable<RTx").append(storage.name.text).append("> __table) {").tabUp().writeNewline();
+      sb.append("MessageCSVWriter __header = new MessageCSVWriter();").writeNewline();
+      for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
+        sb.append("__header.write(\"").append(e.getKey()).append("\");").writeNewline();
+      }
+      sb.append("return __table.to_csv(__header.toString(), (x) -> x);").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+    }
+    {
+      sb.append("@Override").writeNewline();
+      int countDown = storage.fields.size();
+      sb.append("public void __write_csv_row(MessageCSVWriter __writer) {").tabUp().writeNewline();
+      for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
+        sb.append("__writer.write(").append(e.getKey()).append(");");
+        countDown--;
+        if (countDown == 0) {
+          sb.tabDown();
+        }
+        sb.writeNewline();
+      }
+      sb.append("}").writeNewline();
+    }
+  }
+
   public static void writeValueReader(final String name, final TyType type, final StringBuilderWithTabs sb, final Environment environment, final AtomicInteger localVar) {
     if (type instanceof TySimpleNative) {
       if (type instanceof TyNativeEnum) {

@@ -145,6 +145,9 @@ public class Return extends Statement {
         if (consider("css", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }
+        if (consider("csv", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
+          body++;
+        }
         if (consider("error", webReturnType, (ty) -> environment.rules.IsString(ty, false), webFields)) {
           body++;
         }

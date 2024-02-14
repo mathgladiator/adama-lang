@@ -1,0 +1,8 @@
+message xyz {
+  int x;
+}
+
+@construct {
+  table<xyz> tbl;
+  string s = tbl.to_csv();
+}

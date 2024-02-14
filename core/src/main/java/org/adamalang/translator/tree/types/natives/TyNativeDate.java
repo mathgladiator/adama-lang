@@ -33,6 +33,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
+import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
@@ -47,6 +48,7 @@ public class TyNativeDate extends TySimpleNative implements //
     IsNativeValue, //
     IsOrderable, //
     DetailHasDeltaType, //
+    IsCSVCompatible, //
     DetailCanExtractForUnique, //
     DetailTypeHasMethods, //
     AssignmentViaNative {

@@ -15,9 +15,9 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.natives.algo;
 
-public class Platform {
-  public static final String VERSION = "20240214130926";
-  public static final String JS_VERSION = "5f9fe49dc37d7fb08a33addaa0a7b452";
+/** used on messages to produce CSV rows */
+public interface CanWriteCSV {
+  public void __write_csv_row(MessageCSVWriter __writer);
 }

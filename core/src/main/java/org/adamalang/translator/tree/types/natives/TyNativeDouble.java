@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
+import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
@@ -44,6 +45,7 @@ public class TyNativeDouble extends TySimpleNative implements //
     IsNativeValue, //
     DetailHasDeltaType, //
     DetailCanExtractForUnique, //
+    IsCSVCompatible, //
     DetailTypeHasMethods, //
     AssignmentViaNative //
 {

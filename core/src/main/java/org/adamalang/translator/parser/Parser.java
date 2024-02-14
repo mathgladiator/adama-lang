@@ -1320,25 +1320,34 @@ public class Parser {
       if (indexToken != null) {
         storage.add(define_indexing(indexToken));
       } else {
-        Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
-        if (methodToken != null) {
-          storage.add(define_method_trailer(scope, methodToken, storage));
+        Token keywordOption = tokens.popIf((t) -> t.isKeyword("@csv"));
+        if (keywordOption != null) {
+          switch (keywordOption.text) {
+            case "@csv":
+              storage.enableCSV(keywordOption, consumeExpectedSymbol(";"));
+              break;
+          }
         } else {
-          final var type = native_type(false);
-          final var field = id();
-          final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
-          Expression defaultValueOverride = null;
-          if (equalsToken != null) {
-            defaultValueOverride = expression(rootScope.makeConstant());
+          Token methodToken = tokens.popIf((t) -> t.isIdentifier("method"));
+          if (methodToken != null) {
+            storage.add(define_method_trailer(scope, methodToken, storage));
+          } else {
+            final var type = native_type(false);
+            final var field = id();
+            final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
+            Expression defaultValueOverride = null;
+            if (equalsToken != null) {
+              defaultValueOverride = expression(rootScope.makeConstant());
+            }
+            Token lossy = tokens.popIf((t) -> t.isIdentifier("lossy"));
+            Token unique = null;
+            if ("id".equals(field.text)) {
+              unique = tokens.popIf((t) -> t.isIdentifier("unique"));
+            }
+            Token end = consumeExpectedSymbol(";");
+            FieldDefinition fd = new FieldDefinition(policy, null, type, field, null, equalsToken, null, defaultValueOverride, lossy, unique, end);
+            storage.add(fd);
           }
-          Token lossy = tokens.popIf((t) -> t.isIdentifier("lossy"));
-          Token unique = null;
-          if ("id".equals(field.text)) {
-            unique = tokens.popIf((t) -> t.isIdentifier("unique"));
-          }
-          Token end = consumeExpectedSymbol(";");
-          FieldDefinition fd = new FieldDefinition(policy, null, type, field, null, equalsToken, null, defaultValueOverride, lossy, unique, end);
-          storage.add(fd);
         }
       }
       endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));

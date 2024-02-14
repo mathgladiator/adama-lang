@@ -91,7 +91,11 @@ public class TyNativeMessage extends TyType implements //
     for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
       fields.add(e.getValue());
     }
-    sb.append("private static class RTx" + name + " extends NtMessageBase {").tabUp().writeNewline();
+    sb.append("private static class RTx" + name + " extends NtMessageBase");
+    if (storage.isCommaSeperateValueEnabled()) {
+      sb.append(" implements CanWriteCSV");
+    }
+    sb.append(" {").tabUp().writeNewline();
     sb.append("private final RTx" + name + " __this;").writeNewline();
     for (final FieldDefinition fd : fields) {
       sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
@@ -117,6 +121,9 @@ public class TyNativeMessage extends TyType implements //
     CodeGenIndexing.writeIndexConstant(name, storage, sb, environment);
     CodeGenIndexing.writeIndices(name, storage, sb, environment);
     CodeGenMessage.generateJsonReaders(name, storage, sb, environment);
+    if (storage.isCommaSeperateValueEnabled()) {
+      CodeGenMessage.generateCSV(storage, sb);
+    }
     for (final DefineMethod dm : storage.methods) {
       dm.writeFunctionJava(sb, environment.scopeStatic());
     }

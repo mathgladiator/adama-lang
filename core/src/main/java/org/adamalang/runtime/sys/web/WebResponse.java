@@ -156,6 +156,12 @@ public class WebResponse {
     return this;
   }
 
+  public WebResponse csv(String body) {
+    this.contentType = "text/csv";
+    this.body = body;
+    return this;
+  }
+
   public WebResponse cors(boolean cors) {
     this.cors = cors;
     return this;

@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
+import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
@@ -42,6 +43,7 @@ import java.util.function.Consumer;
 public class TyNativeDateTime extends TySimpleNative implements //
     IsNativeValue, //
     IsOrderable, //
+    IsCSVCompatible, //
     DetailCanExtractForUnique, //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //

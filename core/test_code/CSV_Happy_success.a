@@ -1,0 +1,22 @@
+message xyz {
+  @csv;
+  int x;
+  double y;
+  string z;
+}
+
+@web get / {
+  table<xyz> z;
+  z <- {};
+  return {
+    csv: z.to_csv()
+  };
+}
+
+function foo() -> string {
+  table<xyz> z;
+  z <- {x:42,y:3.14,z:"hi"};
+  return z.to_csv();
+}
+
+public formula fff = foo();

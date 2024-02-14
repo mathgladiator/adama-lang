@@ -18,9 +18,12 @@
 package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.contracts.RxChild;
+import org.adamalang.runtime.natives.algo.CanWriteCSV;
+import org.adamalang.runtime.natives.algo.MessageCSVWriter;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /** a table defined within code */
@@ -59,5 +62,17 @@ public class NtTable<Ty extends NtMessageBase> implements RxChild {
 
   public int size() {
     return items.size();
+  }
+
+  public String to_csv(String header, Function<Ty, CanWriteCSV> cast) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(header);
+    for (Ty item : items) {
+      sb.append("\r\n");
+      MessageCSVWriter writer = new MessageCSVWriter();
+      cast.apply(item).__write_csv_row(writer);
+      sb.append(writer.toString());
+    }
+    return sb.toString();
   }
 }

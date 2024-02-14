@@ -37,6 +37,7 @@ import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.topo.TypeCheckerStructure;
+import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
@@ -68,6 +69,7 @@ public class StructureStorage extends DocumentPosition {
   public final boolean root;
   public final ArrayList<JoinAssoc> joins;
   private Block postIngestion;
+  private boolean csvEnabled;
 
   public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final boolean root, final Token openBraceToken) {
     this.name = name;
@@ -94,11 +96,29 @@ public class StructureStorage extends DocumentPosition {
     ingest(openBraceToken);
     formatting = new ArrayList<>();
     postIngestion = null;
+    csvEnabled = false;
+  }
+
+  public boolean isCommaSeperateValueEnabled() {
+    return csvEnabled;
   }
 
   public void setSelf(TyType ty) {
     checker.define(Token.WRAP("__this"), Collections.emptySet(), (env) -> {
       env.setSelfType(ty);
+    });
+  }
+
+  public void enableCSV(Token csv, Token semicolon) {
+    emissions.add((t) -> t.accept(csv));
+    emissions.add((t) -> t.accept(semicolon));
+    csvEnabled = true;
+    checker.register(Collections.emptySet(), env -> {
+      for(FieldDefinition fd : fieldsByOrder) {
+        if (!(fd.type instanceof IsCSVCompatible)) {
+          env.document.createError(fd, "this type is not compatible with @csv");
+        }
+      }
     });
   }
 

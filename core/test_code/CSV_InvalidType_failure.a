@@ -1,0 +1,4 @@
+message xyz {
+  @csv;
+  map<int, int> m;
+}

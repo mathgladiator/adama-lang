@@ -33,6 +33,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.traits.DetailCanExtractForUnique;
+import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
@@ -49,6 +50,7 @@ public class TyNativeTime extends TySimpleNative implements //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //
     DetailCanExtractForUnique, //
+    IsCSVCompatible, //
     AssignmentViaNative {
   public final Token readonlyToken;
   public final Token token;
