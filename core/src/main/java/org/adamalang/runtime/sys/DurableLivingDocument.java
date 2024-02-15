@@ -198,9 +198,8 @@ public class DurableLivingDocument implements Queryable {
                 JsonStreamReader reader = new JsonStreamReader(documentValue.patch);
                 reader.ingestDedupe(doc.__get_intern_strings());
                 doc.__insert(reader);
-                base.backup.backup(key, doc.__seq.get(), BackupService.Reason.Load, documentValue.patch, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
-                base.getOrCreateInventory(key.space).backup(documentValue.patch.length() * BACKUP_HOURS);
                 DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
+                newDocument.issueBackupWhileInExecutor(BackupService.Reason.Load, documentValue.patch);
                 newDocument.size.set(documentValue.reads);
                 newDocument.load(base.metrics.documentLoadRunLoad.wrap(new Callback<>() {
                   @Override
@@ -315,6 +314,11 @@ public class DurableLivingDocument implements Queryable {
     }
   }
 
+  private void issueBackupWhileInExecutor(BackupService.Reason reason, String copy) {
+    base.backup.backup(key, document.__seq.get(), reason, copy, base.metrics.document_backup.wrap(Callback.DONT_CARE_VOID));
+    base.getOrCreateInventory(key.space).backup(copy.length() * BACKUP_HOURS);
+  }
+
   private void queueCompact() {
     base.executor.execute(new NamedRunnable("document-compacting") {
       @Override
@@ -336,8 +340,7 @@ public class DurableLivingDocument implements Queryable {
             base.executor.execute(new NamedRunnable("compact-complete") {
               @Override
               public void execute() throws Exception {
-                base.backup.backup(key, document.__seq.get(), BackupService.Reason.Snapshot, snapshot, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
-                base.getOrCreateInventory(key.space).backup(snapshot.length() * BACKUP_HOURS);
+                issueBackupWhileInExecutor(BackupService.Reason.Snapshot, snapshot);
                 if (failedLastSnapshot) {
                   base.metrics.snapshot_recovery.run();
                 }
@@ -374,8 +377,7 @@ public class DurableLivingDocument implements Queryable {
     JsonStreamWriter writer = new JsonStreamWriter();
     document.__dump(writer);
     String prior = writer.toString();
-    base.backup.backup(key, document.__seq.get(), BackupService.Reason.Deployment, prior, base.metrics.document_backup_deployment.wrap(Callback.DONT_CARE_VOID));
-    base.getOrCreateInventory(key.space).backup(prior.length() * BACKUP_HOURS);
+    issueBackupWhileInExecutor(BackupService.Reason.Deployment, prior);
     newDocument.__insert(new JsonStreamReader(prior));
     int fromSize = prior.length();
     document.__usurp(newDocument);

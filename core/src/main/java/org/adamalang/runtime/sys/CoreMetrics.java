@@ -69,9 +69,7 @@ public class CoreMetrics {
   public final Runnable trigger_deployment;
   public final Runnable invalidation_limit_reached;
 
-  public final CallbackMonitor document_backup_load;
-  public final CallbackMonitor document_backup_deployment;
-  public final CallbackMonitor document_backup_on_schedule;
+  public final CallbackMonitor document_backup;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -120,8 +118,6 @@ public class CoreMetrics {
     invalidation_limit_reached = metricsFactory.counter("core_invalidation_limit_reached");
     snapshot_recovery = metricsFactory.counter("core_document_snapshot_recovery");
 
-    document_backup_load = metricsFactory.makeCallbackMonitor("core_document_backup_load");
-    document_backup_deployment = metricsFactory.makeCallbackMonitor("core_document_backup_deployment");
-    document_backup_on_schedule = metricsFactory.makeCallbackMonitor("core_document_backup_on_schedule");
+    document_backup = metricsFactory.makeCallbackMonitor("core_document_backup");
   }
 }
