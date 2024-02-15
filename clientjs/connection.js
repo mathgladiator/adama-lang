@@ -459,6 +459,15 @@ class WebSocketAdamaConnection {
       request: {"method":"push/register", "id":parId, "identity": identity, "domain": domain, "subscription": subscription, "device-info": deviceInfo}
     });
   }
+  DomainReflect(identity, domain, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"domain/reflect", "id":parId, "identity": identity, "domain": domain}
+    });
+  }
   DomainGetVapidPublicKey(identity, domain, responder) {
     var self = this;
     var parId = self.__id();

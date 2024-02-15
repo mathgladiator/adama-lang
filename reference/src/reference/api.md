@@ -735,7 +735,7 @@ Configure a domain with internal guts that are considered secret.
 
 This method simply returns void.
 
-## Method: DomainReflect
+## Method: DomainReflect (JS)
 Get a schema for the domain
 
 ### Parameters
@@ -744,6 +744,17 @@ Get a schema for the domain
 | identity | yes | String | Identity is a token to authenticate a user. |
 | domain | yes | String | A domain name. |
 
+
+### Template
+```js
+connection.DomainReflect(identity, domain, {
+  success: function(response) {
+    // response.reflection
+  },
+  failure: function(reason) {
+  }
+});
+```
 
 
 ### Request response fields

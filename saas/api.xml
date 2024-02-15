@@ -1160,7 +1160,7 @@
         </documentation>
     </method>
 
-    <method name="domain/reflect" responder="reflection" devbox="true" scope="global" policy-manual="true">
+    <method name="domain/reflect" responder="reflection" devbox="true" scope="global" policy-manual="true" js-sdk="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <documentation>
