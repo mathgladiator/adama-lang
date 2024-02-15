@@ -69,6 +69,7 @@
 - [RxHTML](./rxhtml/ref.md)
   - [Recipes](./rxhtml/recipes.md)
   - [Escape Hatches](./rxhtml/escape.md)
+  - [TODO and Future](./rxhtml/todo-future.md)
 - [History and Motivations behind Adama (i.e. Why!?!)](./history/it-began.md)
   - [Origin Story](./history/origins.md)
   - [Embracing Laziness](./history/laziness.md)
