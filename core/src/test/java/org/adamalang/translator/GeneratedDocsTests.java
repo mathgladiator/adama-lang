@@ -767,7 +767,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  private void __FUNC_0_reset() {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    NtList<RxInt32> _auto_2 = (_records.iterate(true)).transform((RTxR item) -> (RxInt32) (item.x));");
+    gold.append("\n    NtList<RxInt32> _auto_2 = (_records.iterate(true)).transform((RTxR __item) -> (RxInt32) (__item.x));");
     gold.append("\n    for (RxInt32 _auto_3 : _auto_2) {");
     gold.append("\n      _auto_3.set(0);");
     gold.append("\n    }");
@@ -776,7 +776,7 @@ public class GeneratedDocsTests extends GeneratedBase {
     gold.append("\n  private void __FUNC_1_bump() {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
-    gold.append("\n    (_records.iterate(true)).transform((RTxR item) -> (RxInt32) (item.x)).transform((item) -> item.bumpUpPost());");
+    gold.append("\n    (_records.iterate(true)).transform((RTxR __item) -> (RxInt32) (__item.x)).transform((item) -> item.bumpUpPost());");
     gold.append("\n  }");
     gold.append("\n  public static HashMap<String, HashMap<String, Object>> __services() {");
     gold.append("\n    HashMap<String, HashMap<String, Object>> __map = new HashMap<>();");

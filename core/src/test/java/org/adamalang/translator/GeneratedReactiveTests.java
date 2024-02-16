@@ -1686,7 +1686,7 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n      }");
     gold.append("\n      __track(15);");
-    gold.append("\n      return LibString.join((tbl.iterate(true)).transform((RTxJustStr item) -> (String) (item.str)), \", \");");
+    gold.append("\n      return LibString.join((tbl.iterate(true)).transform((RTxJustStr __item) -> (String) (__item.str)), \", \");");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");

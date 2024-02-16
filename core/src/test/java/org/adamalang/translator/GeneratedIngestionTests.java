@@ -6869,7 +6869,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __track(8);");
     gold.append("\n    {");
     gold.append("\n      NtTable<RTxM> _AutoRef30 = tbl;");
-    gold.append("\n      RTxM _AutoExpr32 = new RTxM((rrr.iterate(true)).lookup(0).unpack((item) -> ((RTxR) item).name.get()));");
+    gold.append("\n      RTxM _AutoExpr32 = new RTxM((rrr.iterate(true)).lookup(0).unpack((__item) -> ((RTxR) __item).name.get()));");
     gold.append("\n      RTxM _CreateRef31 = _AutoRef30.make();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      NtMaybe<String> _AutoCondition__unwrap_name_33_34;");
@@ -6883,7 +6883,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __track(10);");
     gold.append("\n    {");
     gold.append("\n      NtTable<RTxM> _AutoRef35 = tbl;");
-    gold.append("\n      RTxM _AutoExpr37 = new RTxM((rrr2.iterate(true)).lookup(0).unpack((item) -> ((RTxR) item).name.get()));");
+    gold.append("\n      RTxM _AutoExpr37 = new RTxM((rrr2.iterate(true)).lookup(0).unpack((__item) -> ((RTxR) __item).name.get()));");
     gold.append("\n      RTxM _CreateRef36 = _AutoRef35.make();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      NtMaybe<String> _AutoCondition__unwrap_name_38_39;");
@@ -6897,7 +6897,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    __track(12);");
     gold.append("\n    {");
     gold.append("\n      NtTable<RTxM> _AutoRef40 = tbl;");
-    gold.append("\n      RTx_AnonObjConvert_1 _AutoExpr42 = new RTx_AnonObjConvert_1((String) ((rrr.iterate(true)).lookup(0).unpack((item) -> ((RTxR) item).name.get()).getOrDefaultTo(\"name\")));");
+    gold.append("\n      RTx_AnonObjConvert_1 _AutoExpr42 = new RTx_AnonObjConvert_1((String) ((rrr.iterate(true)).lookup(0).unpack((__item) -> ((RTxR) __item).name.get()).getOrDefaultTo(\"name\")));");
     gold.append("\n      RTxM _CreateRef41 = _AutoRef40.make();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      _CreateRef41.name.set(_AutoExpr42.name);");

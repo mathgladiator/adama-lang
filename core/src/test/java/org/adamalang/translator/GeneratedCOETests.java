@@ -1502,7 +1502,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public Integer getPrimaryKey() {");
-    gold.append("\n      return LibMath.forceId((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((item) -> ((RTxPerson) item).family_id.get()));");
+    gold.append("\n      return LibMath.forceId((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((__item) -> ((RTxPerson) __item).family_id.get()));");
     gold.append("\n    }");
     gold.append("\n    private __CLOSURE_WhereClause2(NtPrincipal __who, RxTable<RTxPerson> _people) {");
     gold.append("\n      this.__who = __who;");
@@ -1512,7 +1512,7 @@ public class GeneratedCOETests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxFamily __obj) {");
     gold.append("\n      int id = __obj.id.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibMath.equality((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((item) -> ((RTxPerson) item).family_id.get()), id, (__x, __y) -> __x.intValue() == (int) __y);");
+    gold.append("\n      return LibMath.equality((_people.iterate(false).where(true, new __CLOSURE_WhereClause3(__who))).lookup(0).unpack((__item) -> ((RTxPerson) __item).family_id.get()), id, (__x, __y) -> __x.intValue() == (int) __y);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxPerson> {");

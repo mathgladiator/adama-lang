@@ -211,13 +211,13 @@ public class FieldLookup extends Expression {
         fieldNameToUse = overrideFieldName;
       }
       if (requiresMaybeUnpack) {
-        sb.append("unpack").append(doubleMaybeUnpack ? "Transfer" : "").append("((item) -> ((").append(maybeCastType).append(")").append(" item).").append(fieldNameToUse);
+        sb.append("unpack").append(doubleMaybeUnpack ? "Transfer" : "").append("((__item) -> ((").append(maybeCastType).append(")").append(" __item).").append(fieldNameToUse);
         if (addGet) {
           sb.append(".get()");
         }
         sb.append(")");
       } else if (makeList && aggregateType != null) {
-        sb.append("transform((").append(elementTypeIfList.getJavaBoxType(environment)).append(" item) -> (").append(aggregateType.getJavaBoxType(environment)).append(") (item.").append(fieldNameToUse);
+        sb.append("transform((").append(elementTypeIfList.getJavaBoxType(environment)).append(" __item) -> (").append(aggregateType.getJavaBoxType(environment)).append(") (__item.").append(fieldNameToUse);
         if (addGet) {
           sb.append(".get()");
         }

@@ -1618,7 +1618,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    final boolean x = !b.get();");
     gold.append("\n    __track(1);");
-    gold.append("\n    ((t.iterate(true)).transform((RTxX item) -> (Boolean) (item.b.get()))).transform((item) -> !item);");
+    gold.append("\n    ((t.iterate(true)).transform((RTxX __item) -> (Boolean) (__item.b.get()))).transform((item) -> !item);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -3559,9 +3559,9 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
-    gold.append("\n    ((t.iterate(true)).transform((RTxX item) -> (RxInt32) (item.x)).transform((item) -> item.bumpUpPost())).transform((item) -> item++);");
+    gold.append("\n    ((t.iterate(true)).transform((RTxX __item) -> (RxInt32) (__item.x)).transform((item) -> item.bumpUpPost())).transform((item) -> item++);");
     gold.append("\n    __track(1);");
-    gold.append("\n    ((t.iterate(true)).transform((RTxX item) -> (RxInt32) (item.x)).transform((item) -> item.bumpUpPost())).transform((item) -> ++item);");
+    gold.append("\n    ((t.iterate(true)).transform((RTxX __item) -> (RxInt32) (__item.x)).transform((item) -> item.bumpUpPost())).transform((item) -> ++item);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

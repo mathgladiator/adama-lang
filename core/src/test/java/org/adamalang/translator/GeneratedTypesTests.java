@@ -12597,15 +12597,15 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    x.set(123L);");
     gold.append("\n    __track(1);");
-    gold.append("\n    NtList<RxInt64> _auto_0 = (t.iterate(true)).transform((RTxR item) -> (RxInt64) (item.y));");
+    gold.append("\n    NtList<RxInt64> _auto_0 = (t.iterate(true)).transform((RTxR __item) -> (RxInt64) (__item.y));");
     gold.append("\n    for (RxInt64 _auto_1 : _auto_0) {");
     gold.append("\n      _auto_1.set(42);");
     gold.append("\n    }");
     gold.append("\n");
     gold.append("\n    __track(2);");
-    gold.append("\n    (t.iterate(true)).transform((RTxR item) -> (RxInt64) (item.y)).transform((item) -> item.bumpUpPost());");
+    gold.append("\n    (t.iterate(true)).transform((RTxR __item) -> (RxInt64) (__item.y)).transform((item) -> item.bumpUpPost());");
     gold.append("\n    __track(3);");
-    gold.append("\n    LibArithmetic.ListMath.addToLL((t.iterate(true)).transform((RTxR item) -> (RxInt64) (item.y)), 90L);");
+    gold.append("\n    LibArithmetic.ListMath.addToLL((t.iterate(true)).transform((RTxR __item) -> (RxInt64) (__item.y)), 90L);");
     gold.append("\n    __track(4);");
     gold.append("\n    long x = 42;");
     gold.append("\n  }");

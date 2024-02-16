@@ -1157,11 +1157,11 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      _CreateRef2.z.set(_AutoExpr3.z);");
     gold.append("\n    }");
     gold.append("\n    __track(9);");
-    gold.append("\n    (zzz.iterate(true)).transform((RTxX item) -> (RxInt32) (item.z)).transform((item) -> item.bumpUpPost());");
+    gold.append("\n    (zzz.iterate(true)).transform((RTxX __item) -> (RxInt32) (__item.z)).transform((item) -> item.bumpUpPost());");
     gold.append("\n    __track(10);");
-    gold.append("\n    LibArithmetic.ListMath.addToII((zzz.iterate(true)).transform((RTxX item) -> (RxInt32) (item.z)), 100);");
+    gold.append("\n    LibArithmetic.ListMath.addToII((zzz.iterate(true)).transform((RTxX __item) -> (RxInt32) (__item.z)), 100);");
     gold.append("\n    __track(11);");
-    gold.append("\n    LibArithmetic.ListMath.multByII((zzz.iterate(true)).transform((RTxX item) -> (RxInt32) (item.z)), 3);");
+    gold.append("\n    LibArithmetic.ListMath.multByII((zzz.iterate(true)).transform((RTxX __item) -> (RxInt32) (__item.z)), 3);");
     gold.append("\n    __track(12);");
     gold.append("\n    __transitionStateMachine(\"next\", 0);");
     gold.append("\n  }");

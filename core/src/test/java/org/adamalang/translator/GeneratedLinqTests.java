@@ -16793,7 +16793,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      _CreateRef4.x.set(_AutoExpr5.x);");
     gold.append("\n    }");
     gold.append("\n    __track(3);");
-    gold.append("\n    NtList<RxInt32> _auto_6 = __FUNC_0_gotown(1).transform((RTxX item) -> (RxInt32) (item.x));");
+    gold.append("\n    NtList<RxInt32> _auto_6 = __FUNC_0_gotown(1).transform((RTxX __item) -> (RxInt32) (__item.x));");
     gold.append("\n    for (RxInt32 _auto_7 : _auto_6) {");
     gold.append("\n      _auto_7.set(2);");
     gold.append("\n    }");
@@ -17803,7 +17803,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n      _CreateRef2.x.set(_AutoExpr3.x);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
-    gold.append("\n    NtList<RxInt32> _auto_4 = (t.iterate(false).where(true, new __CLOSURE_WhereClause0())).transform((RTxX item) -> (RxInt32) (item.x));");
+    gold.append("\n    NtList<RxInt32> _auto_4 = (t.iterate(false).where(true, new __CLOSURE_WhereClause0())).transform((RTxX __item) -> (RxInt32) (__item.x));");
     gold.append("\n    for (RxInt32 _auto_5 : _auto_4) {");
     gold.append("\n      _auto_5.set(0);");
     gold.append("\n    }");

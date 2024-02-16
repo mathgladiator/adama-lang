@@ -3977,7 +3977,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void handleChannelMessage_flux(CoreRequestContext __context, NtPrincipal __who, RTxFlux f) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
-    gold.append("\n    LibArithmetic.ListMath.addToSO((_chat.iterate(false).where(true, new __CLOSURE_WhereClause0(__who))).transform((RTxLine item) -> (RxString) (item.what)), \"x\");");
+    gold.append("\n    LibArithmetic.ListMath.addToSO((_chat.iterate(false).where(true, new __CLOSURE_WhereClause0(__who))).transform((RTxLine __item) -> (RxString) (__item.what)), \"x\");");
     gold.append("\n");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -6924,7 +6924,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(15);");
     gold.append("\n    int new_order = 0;");
     gold.append("\n    __track(16);");
-    gold.append("\n    NtList<RxInt32> _auto_31 = (deck.iterate(false).shuffle(true, __random)).transform((RTxCard item) -> (RxInt32) (item.ordering));");
+    gold.append("\n    NtList<RxInt32> _auto_31 = (deck.iterate(false).shuffle(true, __random)).transform((RTxCard __item) -> (RxInt32) (__item.ordering));");
     gold.append("\n    for (RxInt32 _auto_32 : _auto_31) {");
     gold.append("\n      _auto_32.set(new_order++);");
     gold.append("\n    }");
@@ -6933,7 +6933,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void __FUNC_4_deal(NtPrincipal player, int count) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(17);");
-    gold.append("\n    NtList<RxPrincipal> _auto_33 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause0()).orderBy(false, __ORDER_Card_ordering_a).limit(true, count)).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n    NtList<RxPrincipal> _auto_33 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause0()).orderBy(false, __ORDER_Card_ordering_a).limit(true, count)).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n    for (RxPrincipal _auto_34 : _auto_33) {");
     gold.append("\n      _auto_34.set(player);");
     gold.append("\n    }");
@@ -6961,7 +6961,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void handleChannelMessage_draw_card(CoreRequestContext __context, NtPrincipal __who, RTxDrawCard dc) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(19);");
-    gold.append("\n    NtList<RxPrincipal> _auto_35 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause1()).orderBy(false, __ORDER_Card_ordering_a).limit(true, dc.count)).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n    NtList<RxPrincipal> _auto_35 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause1()).orderBy(false, __ORDER_Card_ordering_a).limit(true, dc.count)).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n    for (RxPrincipal _auto_36 : _auto_35) {");
     gold.append("\n      _auto_36.set(__who);");
     gold.append("\n    }");
@@ -10366,7 +10366,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    if (((int) decision.action) == ((int) 1) && !ready.get()) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(7);");
-    gold.append("\n      NtList<RxBoolean> _auto_33 = (players.iterate(false).where(true, new __CLOSURE_WhereClause7(decision))).transform((RTxPlayer item) -> (RxBoolean) (item.playing));");
+    gold.append("\n      NtList<RxBoolean> _auto_33 = (players.iterate(false).where(true, new __CLOSURE_WhereClause7(decision))).transform((RTxPlayer __item) -> (RxBoolean) (__item.playing));");
     gold.append("\n      for (RxBoolean _auto_34 : _auto_33) {");
     gold.append("\n        _auto_34.set(true);");
     gold.append("\n      }");
@@ -10374,7 +10374,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    } else if (((int) decision.action) == ((int) 2)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(8);");
-    gold.append("\n      NtList<RxBoolean> _auto_35 = (players.iterate(false).where(true, new __CLOSURE_WhereClause8(decision))).transform((RTxPlayer item) -> (RxBoolean) (item.playing));");
+    gold.append("\n      NtList<RxBoolean> _auto_35 = (players.iterate(false).where(true, new __CLOSURE_WhereClause8(decision))).transform((RTxPlayer __item) -> (RxBoolean) (__item.playing));");
     gold.append("\n      for (RxBoolean _auto_36 : _auto_35) {");
     gold.append("\n        _auto_36.set(false);");
     gold.append("\n      }");
@@ -10382,7 +10382,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    } else if (((int) decision.action) == ((int) 3)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(9);");
-    gold.append("\n      NtList<RxInt32> _auto_37 = (players.iterate(false).where(true, new __CLOSURE_WhereClause9())).transform((RTxPlayer item) -> (RxInt32) (item.play_order));");
+    gold.append("\n      NtList<RxInt32> _auto_37 = (players.iterate(false).where(true, new __CLOSURE_WhereClause9())).transform((RTxPlayer __item) -> (RxInt32) (__item.play_order));");
     gold.append("\n      for (RxInt32 _auto_38 : _auto_37) {");
     gold.append("\n        _auto_38.set(__randomInt());");
     gold.append("\n      }");
@@ -10422,7 +10422,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    __track(17);");
-    gold.append("\n    NtList<RxInt32> _auto_42 = (players.iterate(false).where(true, new __CLOSURE_WhereClause11())).transform((RTxPlayer item) -> (RxInt32) (item.play_order));");
+    gold.append("\n    NtList<RxInt32> _auto_42 = (players.iterate(false).where(true, new __CLOSURE_WhereClause11())).transform((RTxPlayer __item) -> (RxInt32) (__item.play_order));");
     gold.append("\n    for (RxInt32 _auto_43 : _auto_42) {");
     gold.append("\n      _auto_43.set(100);");
     gold.append("\n    }");
@@ -10430,7 +10430,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(18);");
     gold.append("\n    int normativeOrder = 0;");
     gold.append("\n    __track(19);");
-    gold.append("\n    NtList<RxInt32> _auto_44 = (players.iterate(false).where(false, new __CLOSURE_WhereClause12()).orderBy(true, __ORDER_Player_play_order_a)).transform((RTxPlayer item) -> (RxInt32) (item.play_order));");
+    gold.append("\n    NtList<RxInt32> _auto_44 = (players.iterate(false).where(false, new __CLOSURE_WhereClause12()).orderBy(true, __ORDER_Player_play_order_a)).transform((RTxPlayer __item) -> (RxInt32) (__item.play_order));");
     gold.append("\n    for (RxInt32 _auto_45 : _auto_44) {");
     gold.append("\n      _auto_45.set(normativeOrder++);");
     gold.append("\n    }");
@@ -10441,19 +10441,19 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void __step_shuffle_and_distribute() {");
     gold.append("\n    __code_cost += 7;");
     gold.append("\n    __track(21);");
-    gold.append("\n    NtList<RxInt32> _auto_46 = (deck.iterate(true)).transform((RTxCard item) -> (RxInt32) (item.ordering));");
+    gold.append("\n    NtList<RxInt32> _auto_46 = (deck.iterate(true)).transform((RTxCard __item) -> (RxInt32) (__item.ordering));");
     gold.append("\n    for (RxInt32 _auto_47 : _auto_46) {");
     gold.append("\n      _auto_47.set(__randomInt());");
     gold.append("\n    }");
     gold.append("\n");
     gold.append("\n    __track(22);");
-    gold.append("\n    NtList<RxPrincipal> _auto_48 = (deck.iterate(true)).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n    NtList<RxPrincipal> _auto_48 = (deck.iterate(true)).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n    for (RxPrincipal _auto_49 : _auto_48) {");
     gold.append("\n      _auto_49.set(NtPrincipal.NO_ONE);");
     gold.append("\n    }");
     gold.append("\n");
     gold.append("\n    __track(23);");
-    gold.append("\n    NtList<RxEnumInt32> _auto_50 = (deck.iterate(true)).transform((RTxCard item) -> (RxEnumInt32) (item.place));");
+    gold.append("\n    NtList<RxEnumInt32> _auto_50 = (deck.iterate(true)).transform((RTxCard __item) -> (RxEnumInt32) (__item.place));");
     gold.append("\n    for (RxEnumInt32 _auto_51 : _auto_50) {");
     gold.append("\n      _auto_51.set(2);");
     gold.append("\n    }");
@@ -10471,7 +10471,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n          RTxPlayer player = _AutoConditionplayer_52.get();");
     gold.append("\n          __code_cost += 2;");
     gold.append("\n          __track(27);");
-    gold.append("\n          NtList<RxPrincipal> _auto_53 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause14()).orderBy(false, __ORDER_Card_ordering_a).limit(true, 13)).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n          NtList<RxPrincipal> _auto_53 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause14()).orderBy(false, __ORDER_Card_ordering_a).limit(true, 13)).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n          for (RxPrincipal _auto_54 : _auto_53) {");
     gold.append("\n            _auto_54.set(player.link.get());");
     gold.append("\n          }");
@@ -10559,7 +10559,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision1) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(50);");
-    gold.append("\n                NtList<RxPrincipal> _auto_63 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause20(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_63 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause20(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_64 : _auto_63) {");
     gold.append("\n                  _auto_64.set(player2.get());");
     gold.append("\n                }");
@@ -10569,7 +10569,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision2) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(52);");
-    gold.append("\n                NtList<RxPrincipal> _auto_65 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause21(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_65 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause21(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_66 : _auto_65) {");
     gold.append("\n                  _auto_66.set(player3.get());");
     gold.append("\n                }");
@@ -10579,7 +10579,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision3) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(54);");
-    gold.append("\n                NtList<RxPrincipal> _auto_67 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause22(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_67 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause22(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_68 : _auto_67) {");
     gold.append("\n                  _auto_68.set(player4.get());");
     gold.append("\n                }");
@@ -10589,7 +10589,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision4) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(56);");
-    gold.append("\n                NtList<RxPrincipal> _auto_69 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause23(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_69 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause23(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_70 : _auto_69) {");
     gold.append("\n                  _auto_70.set(player1.get());");
     gold.append("\n                }");
@@ -10601,7 +10601,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision1) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(58);");
-    gold.append("\n                NtList<RxPrincipal> _auto_71 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause24(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_71 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause24(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_72 : _auto_71) {");
     gold.append("\n                  _auto_72.set(player4.get());");
     gold.append("\n                }");
@@ -10611,7 +10611,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision2) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(60);");
-    gold.append("\n                NtList<RxPrincipal> _auto_73 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause25(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_73 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause25(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_74 : _auto_73) {");
     gold.append("\n                  _auto_74.set(player1.get());");
     gold.append("\n                }");
@@ -10621,7 +10621,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision3) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(62);");
-    gold.append("\n                NtList<RxPrincipal> _auto_75 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause26(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_75 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause26(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_76 : _auto_75) {");
     gold.append("\n                  _auto_76.set(player2.get());");
     gold.append("\n                }");
@@ -10631,7 +10631,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision4) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(64);");
-    gold.append("\n                NtList<RxPrincipal> _auto_77 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause27(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_77 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause27(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_78 : _auto_77) {");
     gold.append("\n                  _auto_78.set(player3.get());");
     gold.append("\n                }");
@@ -10643,7 +10643,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision1) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(66);");
-    gold.append("\n                NtList<RxPrincipal> _auto_79 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause28(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_79 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause28(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_80 : _auto_79) {");
     gold.append("\n                  _auto_80.set(player3.get());");
     gold.append("\n                }");
@@ -10653,7 +10653,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision2) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(68);");
-    gold.append("\n                NtList<RxPrincipal> _auto_81 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause29(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_81 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause29(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_82 : _auto_81) {");
     gold.append("\n                  _auto_82.set(player4.get());");
     gold.append("\n                }");
@@ -10663,7 +10663,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision3) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(70);");
-    gold.append("\n                NtList<RxPrincipal> _auto_83 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause30(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_83 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause30(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_84 : _auto_83) {");
     gold.append("\n                  _auto_84.set(player1.get());");
     gold.append("\n                }");
@@ -10673,7 +10673,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n              for(RTxCardDecision dec : decision4) {");
     gold.append("\n                __code_cost += 2;");
     gold.append("\n                __track(72);");
-    gold.append("\n                NtList<RxPrincipal> _auto_85 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause31(dec))).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n                NtList<RxPrincipal> _auto_85 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause31(dec))).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n                for (RxPrincipal _auto_86 : _auto_85) {");
     gold.append("\n                  _auto_86.set(player2.get());");
     gold.append("\n                }");
@@ -10725,7 +10725,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      for(RTxCardDecision dec : thePlay) {");
     gold.append("\n        __code_cost += 3;");
     gold.append("\n        __track(85);");
-    gold.append("\n        NtList<RxEnumInt32> _auto_89 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause36(dec))).transform((RTxCard item) -> (RxEnumInt32) (item.place));");
+    gold.append("\n        NtList<RxEnumInt32> _auto_89 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause36(dec))).transform((RTxCard __item) -> (RxEnumInt32) (__item.place));");
     gold.append("\n        for (RxEnumInt32 _auto_90 : _auto_89) {");
     gold.append("\n          _auto_90.set(3);");
     gold.append("\n        }");
@@ -10777,7 +10777,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        RTxCard winner = _AutoConditionwinner_92.get();");
     gold.append("\n        __code_cost += 3;");
     gold.append("\n        __track(98);");
-    gold.append("\n        NtList<RxPrincipal> _auto_93 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause39())).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n        NtList<RxPrincipal> _auto_93 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause39())).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n        for (RxPrincipal _auto_94 : _auto_93) {");
     gold.append("\n          _auto_94.set(winner.owner.get());");
     gold.append("\n        }");
@@ -10786,7 +10786,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        last_winner.set(winner.owner.get());");
     gold.append("\n      }");
     gold.append("\n      __track(100);");
-    gold.append("\n      NtList<RxEnumInt32> _auto_95 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause40())).transform((RTxCard item) -> (RxEnumInt32) (item.place));");
+    gold.append("\n      NtList<RxEnumInt32> _auto_95 = (deck.iterate(false).where(true, new __CLOSURE_WhereClause40())).transform((RTxCard __item) -> (RxEnumInt32) (__item.place));");
     gold.append("\n      for (RxEnumInt32 _auto_96 : _auto_95) {");
     gold.append("\n        _auto_96.set(4);");
     gold.append("\n      }");
@@ -15006,7 +15006,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(1);");
     gold.append("\n    int ordering = 0;");
     gold.append("\n    __track(2);");
-    gold.append("\n    NtList<RxInt32> _auto_41 = (deck.iterate(false).shuffle(true, __random)).transform((RTxCard item) -> (RxInt32) (item.ordering));");
+    gold.append("\n    NtList<RxInt32> _auto_41 = (deck.iterate(false).shuffle(true, __random)).transform((RTxCard __item) -> (RxInt32) (__item.ordering));");
     gold.append("\n    for (RxInt32 _auto_42 : _auto_41) {");
     gold.append("\n      _auto_42.set(ordering++);");
     gold.append("\n    }");
@@ -15015,7 +15015,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void __FUNC_1_deal_cards(NtPrincipal who, int count) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(3);");
-    gold.append("\n    NtList<RxPrincipal> _auto_43 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause0()).orderBy(false, __ORDER_Card_ordering_a).limit(true, count)).transform((RTxCard item) -> (RxPrincipal) (item.owner));");
+    gold.append("\n    NtList<RxPrincipal> _auto_43 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause0()).orderBy(false, __ORDER_Card_ordering_a).limit(true, count)).transform((RTxCard __item) -> (RxPrincipal) (__item.owner));");
     gold.append("\n    for (RxPrincipal _auto_44 : _auto_43) {");
     gold.append("\n      _auto_44.set(who);");
     gold.append("\n    }");
@@ -15227,7 +15227,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public NtMaybe<Integer> apply(NtList<RTxPoint> x) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibStatistics.sumInts(x.get().transform((RTxPoint item) -> (Integer) (item.y.get())));");
+    gold.append("\n      return LibStatistics.sumInts(x.get().transform((RTxPoint __item) -> (Integer) (__item.y.get())));");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private final static Comparator<RTxCard> __ORDER_Card_ordering_a = new Comparator<RTxCard>() {");
@@ -19421,7 +19421,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      ;");
     gold.append("\n");
     gold.append("\n      __track(14);");
-    gold.append("\n      NtList<RxEnumInt32> _auto_9 = (_squares.iterate(false).where(true, new __CLOSURE_WhereClause1(pick))).transform((RTxSquare item) -> (RxEnumInt32) (item.state));");
+    gold.append("\n      NtList<RxEnumInt32> _auto_9 = (_squares.iterate(false).where(true, new __CLOSURE_WhereClause1(pick))).transform((RTxSquare __item) -> (RxEnumInt32) (__item.state));");
     gold.append("\n      for (RxEnumInt32 _auto_10 : _auto_9) {");
     gold.append("\n        _auto_10.set(placed);");
     gold.append("\n      }");
@@ -19466,7 +19466,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void __step_end() {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(27);");
-    gold.append("\n    NtList<RxEnumInt32> _auto_11 = (_squares.iterate(true)).transform((RTxSquare item) -> (RxEnumInt32) (item.state));");
+    gold.append("\n    NtList<RxEnumInt32> _auto_11 = (_squares.iterate(true)).transform((RTxSquare __item) -> (RxEnumInt32) (__item.state));");
     gold.append("\n    for (RxEnumInt32 _auto_12 : _auto_11) {");
     gold.append("\n      _auto_12.set(0);");
     gold.append("\n    }");

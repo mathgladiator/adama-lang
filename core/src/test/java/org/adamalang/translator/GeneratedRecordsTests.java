@@ -5162,7 +5162,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __track(2);");
     gold.append("\n      x.mi.get().delete();");
     gold.append("\n      __track(3);");
-    gold.append("\n      NtList<RxMaybe<RxInt32,Integer>> _auto_2 = (lst.iterate(true)).transform((RTxX item) -> (RxMaybe<RxInt32,Integer>) (item.mi));");
+    gold.append("\n      NtList<RxMaybe<RxInt32,Integer>> _auto_2 = (lst.iterate(true)).transform((RTxX __item) -> (RxMaybe<RxInt32,Integer>) (__item.mi));");
     gold.append("\n      for (RxMaybe<RxInt32,Integer> _auto_3 : _auto_2) {");
     gold.append("\n        _auto_3.make().set(40);");
     gold.append("\n      }");
