@@ -176,6 +176,13 @@ public class DocumentHandlerImpl implements DocumentHandler {
 
       @Override
       public void failure(int code) {
+        System.err.println("failed download:" + code);
+        try {
+          outputStream.flush();
+          outputStream.close();
+          archiveFileTemp.delete();
+        } catch (Exception cleanUpFailed) {
+        }
         alive.set(false);
         latch.countDown();
         throw new RuntimeException("failed downloading:" + code);

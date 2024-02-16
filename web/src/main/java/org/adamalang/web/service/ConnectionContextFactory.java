@@ -33,6 +33,9 @@ import java.util.regex.Pattern;
 public class ConnectionContextFactory {
   public static ConnectionContext of(final ChannelHandlerContext ctx, HttpHeaders headers) {
     String origin = headers.get("origin");
+    if (origin == null) {
+      origin = "https://" + headers.get("host");
+    }
     String ip = ctx.channel().remoteAddress().toString().replaceAll(Pattern.quote("/"), "");
     String xForwardedFor = headers.get("x-forwarded-for");
     if (xForwardedFor != null && !("".equals(xForwardedFor))) {
