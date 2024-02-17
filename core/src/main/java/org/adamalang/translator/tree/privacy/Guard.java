@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.tree.privacy;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
@@ -49,5 +50,13 @@ public class Guard extends DocumentPosition {
   }
 
   public void format(Formatter formatter) {
+  }
+
+  public void writeReflect(JsonStreamWriter writer) {
+    writer.beginArray();
+    for (TokenizedItem<String> policy : policies) {
+      writer.writeString(policy.item);
+    }
+    writer.endArray();
   }
 }

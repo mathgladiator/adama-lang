@@ -39,17 +39,17 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * text
 * transform
 
- ## Pre-processing
+## Pre-processing
 
 * static:content
 * element: common-page (uri-prefix, static: template, init:, authenticate )
 * page's attribute template:use and template:tag
 
 ## Pathing
-* dive into "path0/path1/path2"
-* root "/root"
-* parent "../parpath"
-* pick/switch "view:" "data:"
+* dive into "path0/path1/path2" *A*
+* root "/root" *A*
+* parent "../parpath" *A*
+* pick/switch "view:" "data:" *A*
 
 ## Attributes
 * branching: force-hiding
@@ -69,7 +69,7 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * rx:switch, rx:case
 * rx:wrap (to deprecate)
 * rx:custom (big one)
-* rx:template
+* rx:template *A*
 * feature: "merge"
 
 ## Scoping
@@ -146,7 +146,7 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * lookup refresh
 * trustedhtml (like lookup but for HTML)
 * exit-gate (guard, set)
-* todo-task
+* todo-task *A*
 * title
 * view-state-params
 * view-sync (deprecated?)
@@ -160,7 +160,7 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * input/text-area/select (rx:sync) (TODO, write to multiple places)
 * input/text-area/select (rx:debounce)
 * sign-out
-* inline-template
+* inline-template *A*
 
 # RxObject
 * parameter:

@@ -46,3 +46,16 @@ This attribute is like "change directory" where you scope into a object
 
 # attribute: rx:repeat
 
+# attribute: rx:template
+This attribute is used to control the children of the element by pulling from a &lt;template&gt; element
+
+# element: &lt;inline-template&gt;
+This element is like rx:template except it merges the children of the &lt;template&gt; element into the current parent
+
+* not a real element
+* children are merged into the parent
+
+# element: &lt;todo-task&gt;
+At one point, RxHTML had a vision of having an embedded project management system for tracking TODOs...
+
+* should be deprecated

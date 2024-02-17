@@ -100,7 +100,6 @@ public class UseCustomPolicy extends Policy {
       } else {
         sb.append("__item.__POLICY_").append(policyToCheck).append("(__writer.who)");
       }
-
     }
     sb.append(") {").tabUp().writeNewline();
     return true;
@@ -108,7 +107,11 @@ public class UseCustomPolicy extends Policy {
 
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.writeString("policy");
+    writer.beginArray();
+    for (final String policy : policyToChecks) {
+      writer.writeString(policy);
+    }
+    writer.endArray();
   }
 
   @Override

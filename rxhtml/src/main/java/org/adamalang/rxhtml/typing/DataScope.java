@@ -18,6 +18,10 @@
 package org.adamalang.rxhtml.typing;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.rxhtml.template.sp.PathVisitor;
+
+import java.util.Stack;
+import java.util.function.Consumer;
 
 /** a path/scope into a forest */
 public class DataScope {
@@ -29,7 +33,52 @@ public class DataScope {
     this.path = path;
   }
 
+  public Stack<String> toStackPath() {
+    Stack<String> stack = new Stack<>();
+    for (String p : path) {
+      stack.push(p);
+    }
+    return stack;
+  }
+
   public static DataScope root(ObjectNode forest) {
     return new DataScope(forest, new String[] { "__Root" });
+  }
+
+  public DataScope push(String... append) {
+    String[] next = new String[path.length + append.length];
+    for (int k = 0; k < path.length; k++) {
+      next[k] = path[k];
+    }
+    for (int k = 0; k < append.length; k++) {
+      next[path.length + k] = append[k];
+    }
+    return new DataScope(forest, next);
+  }
+
+  public DataSelector select(PrivacyFilter privacy, String path, Consumer<String> reportError) {
+    DataScopeVisitor dsv = new DataScopeVisitor(privacy, forest, toStackPath());
+    PathVisitor.visit(path, dsv);
+    if (dsv.didSwitchToView()) {
+      return null;
+    }
+    if (dsv.hasErrors()) {
+      for (String error : dsv.getErrors()) {
+        reportError.accept(error);
+      }
+      return null;
+    }
+    String[] newPath = dsv.destroyAndConvertIntoPath();
+    DataScope next = new DataScope(forest, newPath);
+    return new DataSelector(next, dsv.getUseType());
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (String p : path) {
+      sb.append("[").append(p).append("]");
+    }
+    return sb.toString();
   }
 }

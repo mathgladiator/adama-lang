@@ -17,18 +17,45 @@
 */
 package org.adamalang.rxhtml.typing;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.TreeSet;
 
 /** scope of allowed privacy policies */
 public class PrivacyFilter {
   public final TreeSet<String> allowed;
 
-  public PrivacyFilter(String[] allow) {
+  public PrivacyFilter(String... allow) {
     this.allowed = new TreeSet<>();
     for (String x : allow) {
       if (x.length() > 0) {
         allowed.add(x);
       }
+    }
+  }
+
+  public boolean visible(JsonNode privacy) {
+    if (privacy == null) {
+      return false;
+    }
+    if (privacy.isTextual()) {
+      String fieldPolicy = privacy.textValue();
+      if ("private".equals(fieldPolicy)) {
+        return false;
+      }
+      if ("public".equals(fieldPolicy) || "bubble".equals(fieldPolicy)) {
+        return true;
+      }
+      return false;
+    } else if (privacy.isArray()) {
+      for (int k = 0; k < privacy.size(); k++) {
+        if (!allowed.contains(privacy.get(k).textValue())) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -171,7 +171,11 @@ public class StructureStorage extends DocumentPosition {
         bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Structure);
       }
       writer.writeObjectFieldIntro("privacy");
-      writer.writeString("bubble");
+      if (bd.getValue().guard != null) {
+        bd.getValue().guard.writeReflect(writer);
+      } else {
+        writer.writeString("bubble");
+      }
       writer.endObject();
     }
 

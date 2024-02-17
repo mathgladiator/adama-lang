@@ -110,7 +110,8 @@ public class RxRootEnvironment {
   }
 
   private void checkCondition(String condition, PageEnvironment env) {
-    // parse the condition
+    // TODO: parse the condition
+    // TODO: validate condition logic
   }
 
   private void base(Element element, PageEnvironment env) {
@@ -120,15 +121,12 @@ public class RxRootEnvironment {
     if (element.hasAttr("rx:scope")) {
       // TODO: do scoping rules
     }
-
     if (element.hasAttr("rx:iterate")) {
       // TODO: do scoping rules
     }
-
     if (element.hasAttr("rx:repeat")) {
       // TODO: validate the result is an integer
     }
-
     if (element.hasAttr("rx:if")) {
       checkCondition(element.attr("rx:if"), env);
     }
@@ -138,6 +136,9 @@ public class RxRootEnvironment {
     if (element.hasAttr("rx:switch")) {
       // TODO: validate EXISTS as either INT, LONG, ENUM, STRING, BOOL
     }
+    if (element.hasAttr("rx:repeat")) {
+      // TODO: validate EXISTS as either INT, LONG
+    }
 
     if (element.hasAttr("rx:template")) {
       String templateToUse = element.attr("rx:template");
@@ -146,11 +147,23 @@ public class RxRootEnvironment {
         children(template, next.withFragmentProvider(element));
         return;
       } else {
-        // WARNING
+        // TODO: warn about template not found
       }
     }
 
     children(element, env);
+  }
+
+  public void inlinetemplate(Element inlinetemplate, PageEnvironment env) {
+    String templateToUse = inlinetemplate.attr("name");
+    Element template = env.findTemplate(templateToUse);
+    if (template != null) {
+      children(template, env.withFragmentProvider(inlinetemplate));
+      return;
+    } else {
+      // TODO: warn about template not found
+    }
+    children(inlinetemplate, env);
   }
 
   public void fragment(Element fragment, PageEnvironment env) {
@@ -160,6 +173,10 @@ public class RxRootEnvironment {
     } else {
       children(env.getFragmentProvider(), env);
     }
+  }
+
+  public void todotask(Element fragment, PageEnvironment env) {
+    // ignore
   }
 
   public void connection(Element connection, PageEnvironment env) {
