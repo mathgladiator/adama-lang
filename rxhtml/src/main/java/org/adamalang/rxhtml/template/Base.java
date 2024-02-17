@@ -22,6 +22,7 @@ import org.jsoup.nodes.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -253,6 +254,7 @@ public class Base {
     children(env, (x) -> true);
   }
 
+
   public static void children(Environment env, Function<Node, Boolean> filter) {
     ArrayList<Node> nodes = filtered(env);
     for (Node node : nodes) {
@@ -278,6 +280,6 @@ public class Base {
   }
 
   public static String normalizeTag(String tag) {
-    return tag.replaceAll(Pattern.quote("-"), "").replaceAll(Pattern.quote("_"), "");
+    return tag.replaceAll(Pattern.quote("-"), "").replaceAll(Pattern.quote("_"), "").toLowerCase(Locale.ENGLISH);
   }
 }

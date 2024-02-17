@@ -17,22 +17,28 @@
 */
 package org.adamalang.rxhtml.template.sp;
 
-import org.adamalang.rxhtml.typing.ViewScope;
+import org.adamalang.rxhtml.template.StatePath;
 
-/** navigate to the root object */
-public class GoRoot implements PathInstruction {
+/** visitor for a path */
+public interface PathVisitor {
 
-  @Override
-  public ViewScope next(ViewScope vs) {
-    ViewScope result = vs;
-    while (result.parent != null) {
-      result = result.parent;
+  public void data();
+
+  public void view();
+
+  public void root();
+
+  public void parent();
+
+  public void dive(String child);
+
+  public void use(String field);
+
+  public static void visit(String path, PathVisitor v) {
+    StatePath sp = StatePath.resolve(path, "$");
+    for (PathInstruction instruction : sp.instructions) {
+      instruction.visit(v);
     }
-    return result;
-  }
-
-  @Override
-  public void visit(PathVisitor v) {
-    v.root();
+    v.use(sp.name);
   }
 }

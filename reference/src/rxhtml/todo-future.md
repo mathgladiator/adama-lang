@@ -150,12 +150,12 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * title
 * view-state-params
 * view-sync (deprecated?)
-* connection-status
-* connection
+* connection-status *A*
+* connection *A*
 * local-storage-poll
 * document-get (TODO)
 * domain-get
-* pick
+* pick *A*
 * custom-data
 * input/text-area/select (rx:sync) (TODO, write to multiple places)
 * input/text-area/select (rx:debounce)

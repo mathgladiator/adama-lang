@@ -31,4 +31,9 @@ public class DiveInto implements PathInstruction{
   public ViewScope next(ViewScope vs) {
     return vs.child(child);
   }
+
+  @Override
+  public void visit(PathVisitor v) {
+    v.dive(child);
+  }
 }

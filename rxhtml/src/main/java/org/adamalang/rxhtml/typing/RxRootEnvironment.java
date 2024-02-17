@@ -19,6 +19,8 @@ package org.adamalang.rxhtml.typing;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
+import org.adamalang.rxhtml.preprocess.Pagify;
+import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -41,6 +43,7 @@ public class RxRootEnvironment {
 
   public RxRootEnvironment(String forest, File root, Feedback feedback) {
     this.document = Jsoup.parse(forest);
+    Pagify.pagify(document);
     this.feedback = feedback;
     this.reflections = new HashMap<>();
     this.dedupeTemplates = new HashSet<>();
@@ -89,70 +92,123 @@ public class RxRootEnvironment {
     }
   }
 
-  private class StateNode {
-    private final String struct;
-
-    public StateNode(String struct) {
-      this.struct = struct;
-    }
-  }
-
-  private class StatePage {
-    private final String privacy;
-    private final Stack<StateNode> data;
-    private String currentStruct;
-    private ObjectNode dataTypesForest;
-
-    private StatePage(String privacy, String struct, ObjectNode dataTypesForest) {
-      this.privacy = privacy;
-      this.data = new Stack<>();
-      this.data.push(new StateNode(struct));
-      this.currentStruct = struct;
-      this.dataTypesForest = null;
-    }
-
-    public StatePage fork(ObjectNode forest) {
-      return new StatePage(privacy, "__Root", forest);
-    }
-  }
-
-  private void children(Element parent, StatePage state) {
+  private void children(Element parent, PageEnvironment env) {
     for (Element child : parent.children()) {
-      check(child, state);
+      check(child, env);
     }
   }
 
-  private void base(Element element, StatePage state) {
+  private void childrenCase(Element parent, String caseValue, PageEnvironment env) {
+    for (Element child : parent.children()) {
+      if (child.hasAttr("rx:case")) {
+        if (!child.attr("rx:case").equals(caseValue)) {
+          continue;
+        }
+      }
+      check(child, env);
+    }
   }
 
-  public void connection(Element connection, StatePage state) {
+  private void checkCondition(String condition, PageEnvironment env) {
+    // parse the condition
+  }
+
+  private void base(Element element, PageEnvironment env) {
+    PageEnvironment next = env;
+    boolean expand = element.hasAttr("rx:expand-view-state");
+
+    if (element.hasAttr("rx:scope")) {
+      // TODO: do scoping rules
+    }
+
+    if (element.hasAttr("rx:iterate")) {
+      // TODO: do scoping rules
+    }
+
+    if (element.hasAttr("rx:repeat")) {
+      // TODO: validate the result is an integer
+    }
+
+    if (element.hasAttr("rx:if")) {
+      checkCondition(element.attr("rx:if"), env);
+    }
+    if (element.hasAttr("rx:ifnot")) {
+      checkCondition(element.attr("rx:ifnot"), env);
+    }
+    if (element.hasAttr("rx:switch")) {
+      // TODO: validate EXISTS as either INT, LONG, ENUM, STRING, BOOL
+    }
+
+    if (element.hasAttr("rx:template")) {
+      String templateToUse = element.attr("rx:template");
+      Element template = next.findTemplate(templateToUse);
+      if (template != null) {
+        children(template, next.withFragmentProvider(element));
+        return;
+      } else {
+        // WARNING
+      }
+    }
+
+    children(element, env);
+  }
+
+  public void fragment(Element fragment, PageEnvironment env) {
+    if (fragment.hasAttr("case")) {
+      String caseValue = fragment.attr("case");
+      childrenCase(env.getFragmentProvider(), caseValue, env);
+    } else {
+      children(env.getFragmentProvider(), env);
+    }
+  }
+
+  public void connection(Element connection, PageEnvironment env) {
     String backend = defaultBackend;
     if (connection.hasAttr("backend")) {
       backend = connection.attr("backend");
+    }
+    String name = "default";
+    if (connection.hasAttr("name")) {
+      name = connection.attr("name");
     }
     ObjectNode reflect = reflections.get(backend);
     if (reflect == null) {
       if (backend != null) {
         feedback.warn(connection, "The backend '" + backend + "' was not available");
       }
-      children(connection, state);
+      children(connection, env);
     } else {
-      children(connection, state.fork(reflect));
+      DataScope child = DataScope.root(reflect);
+      env.registerConnection(name, child);
+      children(connection, env.withDataScope(child));
     }
   }
 
-  public void lookup(Element lookup, StatePage state) {
+  public void pick(Element pick, PageEnvironment env) {
+    String name = "default";
+    if (pick.hasAttr("name")) {
+      name = pick.attr("name");
+    }
+    PageEnvironment next = env.maybePickConnection(name);
+    if (next != null) {
+      children(pick, next);
+    } else {
+      // TODO: WARN
+      children(pick, env);
+    }
+  }
+
+  public void lookup(Element lookup, PageEnvironment env) {
     String path = lookup.attr("path");
   }
 
-  private void check(Element element, StatePage state) {
-    String tag = element.tagName().replaceAll(Pattern.quote("-"), "").replaceAll(Pattern.quote("_"), "").toLowerCase(Locale.ENGLISH);
+  private void check(Element element, PageEnvironment env) {
+    String tag = Base.normalizeTag(element.tagName());
     try {
-      Method method = RxRootEnvironment.class.getMethod(tag, Element.class, StatePage.class);
-      method.invoke(this, element, state);
+      Method method = RxRootEnvironment.class.getMethod(tag, Element.class, PageEnvironment.class);
+      method.invoke(this, element, env);
     } catch (NoSuchMethodException nme) {
-      base(element, state);
-      children(element, state);
+      base(element, env);
     } catch (Exception ex) {
       feedback.warn(element, "problem:" + ex.getMessage());
     }
@@ -160,12 +216,11 @@ public class RxRootEnvironment {
 
   public void check() {
     for (Element element : document.getElementsByTag("page")) {
-      String privacy = "unknown";
+      String privacy = "";
       if (element.hasAttr("privacy")) {
         privacy = element.attr("privacy");
       }
-      String struct = null;
-      check(element, new StatePage(privacy, struct, null));
+      check(element, PageEnvironment.newPage(privacy, templates));
     }
   }
 }

@@ -15,24 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.rxhtml.template.sp;
+package org.adamalang.rxhtml.typing;
 
-import org.adamalang.rxhtml.typing.ViewScope;
+import java.util.TreeSet;
 
-/** navigate to the root object */
-public class GoRoot implements PathInstruction {
+/** scope of allowed privacy policies */
+public class PrivacyFilter {
+  public final TreeSet<String> allowed;
 
-  @Override
-  public ViewScope next(ViewScope vs) {
-    ViewScope result = vs;
-    while (result.parent != null) {
-      result = result.parent;
+  public PrivacyFilter(String[] allow) {
+    this.allowed = new TreeSet<>();
+    for (String x : allow) {
+      if (x.length() > 0) {
+        allowed.add(x);
+      }
     }
-    return result;
-  }
-
-  @Override
-  public void visit(PathVisitor v) {
-    v.root();
   }
 }

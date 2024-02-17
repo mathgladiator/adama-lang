@@ -28,4 +28,9 @@ public class GoParent implements PathInstruction {
     }
     return vs;
   }
+
+  @Override
+  public void visit(PathVisitor v) {
+    v.parent();
+  }
 }

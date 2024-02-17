@@ -31,4 +31,13 @@ public class SwitchTo implements PathInstruction {
   public ViewScope next(ViewScope vs) {
     return vs;
   }
+
+  @Override
+  public void visit(PathVisitor v) {
+    if (dest.equals("view")) {
+      v.view();
+    } else {
+      v.data();
+    }
+  }
 }

@@ -15,24 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.rxhtml.template.sp;
+package org.adamalang.rxhtml.typing;
 
-import org.adamalang.rxhtml.typing.ViewScope;
+import org.junit.Test;
 
-/** navigate to the root object */
-public class GoRoot implements PathInstruction {
-
-  @Override
-  public ViewScope next(ViewScope vs) {
-    ViewScope result = vs;
-    while (result.parent != null) {
-      result = result.parent;
-    }
-    return result;
-  }
-
-  @Override
-  public void visit(PathVisitor v) {
-    v.root();
+public class DataScopeTests {
+  @Test
+  public void scope() {
   }
 }

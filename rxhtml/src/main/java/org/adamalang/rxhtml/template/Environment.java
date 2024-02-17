@@ -106,10 +106,11 @@ public class Environment {
     }
     if (result != null && result.tagName() != null) {
       // some solo nodes are not actual nodes
-      switch (result.tagName().toLowerCase()) {
-        case "inline-template":
-        case "inline_template":
+      // TODO: use some reflection magic to simplify this
+      switch (Base.normalizeTag(result.tagName())) {
         case "inlinetemplate":
+        case "connection":
+        case "connectionstatus":
           return null;
       }
     }

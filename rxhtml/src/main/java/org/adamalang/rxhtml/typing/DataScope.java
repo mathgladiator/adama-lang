@@ -15,24 +15,21 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.rxhtml.template.sp;
+package org.adamalang.rxhtml.typing;
 
-import org.adamalang.rxhtml.typing.ViewScope;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/** navigate to the root object */
-public class GoRoot implements PathInstruction {
+/** a path/scope into a forest */
+public class DataScope {
+  private final ObjectNode forest;
+  private final String[] path;
 
-  @Override
-  public ViewScope next(ViewScope vs) {
-    ViewScope result = vs;
-    while (result.parent != null) {
-      result = result.parent;
-    }
-    return result;
+  private DataScope(ObjectNode forest, String[] path) {
+    this.forest = forest;
+    this.path = path;
   }
 
-  @Override
-  public void visit(PathVisitor v) {
-    v.root();
+  public static DataScope root(ObjectNode forest) {
+    return new DataScope(forest, new String[] { "__Root" });
   }
 }

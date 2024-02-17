@@ -23,4 +23,6 @@ import org.adamalang.rxhtml.typing.ViewScope;
 public interface PathInstruction {
 
   public ViewScope next(ViewScope vs);
+
+  public void visit(PathVisitor v);
 }
