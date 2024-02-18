@@ -143,8 +143,9 @@ public class FrontendHandlerImpl implements FrontendHandler {
   @Override
   public void bundle(Arguments.FrontendBundleArgs args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
-    aggregateFiles(new File(args.rxhtmlPath), files);
-    String result = Bundler.bundle(files, false);
+    File rxhtmlPath = new File(args.rxhtmlPath);
+    aggregateFiles(rxhtmlPath, files);
+    String result = Bundler.bundle(rxhtmlPath, files, false);
     Files.writeString(new File(args.output).toPath(), result);
     output.out();
   }
@@ -152,8 +153,9 @@ public class FrontendHandlerImpl implements FrontendHandler {
   @Override
   public void measure(Arguments.FrontendMeasureArgs args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
-    aggregateFiles(new File(args.rxhtmlPath), files);
-    String result = Bundler.bundle(files, false);
+    File rxhtmlPath = new File(args.rxhtmlPath);
+    aggregateFiles(rxhtmlPath, files);
+    String result = Bundler.bundle(rxhtmlPath, files, false);
     Document document = Jsoup.parse(result);
     int sourceLevelCompact = 0;
     int attributesToCompact = 0;
@@ -179,10 +181,12 @@ public class FrontendHandlerImpl implements FrontendHandler {
   @Override
   public void validate(Arguments.FrontendValidateArgs args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
-    aggregateFiles(new File(args.rxhtmlPath), files);
-    String result = Bundler.bundle(files, false);
+    File rxhtmlPath = new File(args.rxhtmlPath);
+    aggregateFiles(rxhtmlPath, files);
+    String result = Bundler.bundle(rxhtmlPath, files, true);
     TypeChecker.typecheck(result,  new File(args.types), (el, w) -> {
-      System.err.println("warning:" + w);
+      String location = el.attr("ln:ch");
+      System.err.println("warning:" + w + " @ " + location);
     });
     output.out();
   }
@@ -195,8 +199,9 @@ public class FrontendHandlerImpl implements FrontendHandler {
   @Override
   public void make200(Arguments.FrontendMake200Args args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
-    aggregateFiles(new File(args.rxhtmlPath), files);
-    RxHtmlBundle bundle = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
+    File rxhtmlPath = new File(args.rxhtmlPath);
+    aggregateFiles(rxhtmlPath, files);
+    RxHtmlBundle bundle = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtmlPath, files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
     RxHtmlResult updated = new RxHtmlResult(bundle);
     Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(bundle));
     output.out();
@@ -205,8 +210,9 @@ public class FrontendHandlerImpl implements FrontendHandler {
   @Override
   public void rxhtml(Arguments.FrontendRxhtmlArgs args, Output.YesOrError output) throws Exception {
     ArrayList<File> files = new ArrayList<>();
-    aggregateFiles(new File(args.input), files);
-    Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
+    File rxhtmlPath = new File(args.input);
+    aggregateFiles(rxhtmlPath, files);
+    Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtmlPath, files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
     output.out();
   }
 

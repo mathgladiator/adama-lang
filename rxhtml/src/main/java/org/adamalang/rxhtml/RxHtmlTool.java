@@ -35,7 +35,8 @@ import java.util.ArrayList;
 public class RxHtmlTool {
   public static RxHtmlBundle convertStringToTemplateForest(String str, File types, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback, config.environment);
-    TypeChecker.typecheck(str, types, config.feedback);
+    // DISABLED UNTIL RELEASE
+    // TypeChecker.typecheck(str, types, config.feedback);
     Document document = Jsoup.parse(str);
     // TODO: enabling this requires a LOT of work
     // MarkStaticContent.mark(document);

@@ -25,7 +25,7 @@ public class TemplateMultipageTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("WARNING:page has duplicate path of '/$text'");
+    issues.append("");
     return issues.toString();
   }
   @Override

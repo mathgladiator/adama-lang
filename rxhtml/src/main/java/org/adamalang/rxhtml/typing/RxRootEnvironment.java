@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /** The base environment for checking types */
@@ -87,6 +89,9 @@ public class RxRootEnvironment {
     for (Element element : this.document.getElementsByTag("template")) {
       String name = element.attr("name");
       if (name != null) {
+        if (templates.containsKey(name)) {
+          feedback.warn(element, "template '" + name + "' already defined");
+        }
         templates.put(name, element);
       }
     }
@@ -109,37 +114,78 @@ public class RxRootEnvironment {
     }
   }
 
-  private void checkCondition(String condition, PageEnvironment env) {
+  private void checkCondition(String condition, PageEnvironment env, Consumer<String> reportError) {
     // TODO: parse the condition
     // TODO: validate condition logic
+    /*
+    DataSelector selector = env.scope.select(env.privacy, condition, reportError);
+    if (selector != null) {
+
+    }
+     */
   }
 
   private void base(Element element, PageEnvironment env) {
     PageEnvironment next = env;
     boolean expand = element.hasAttr("rx:expand-view-state");
+    Consumer<String> reportError = (err) -> feedback.warn(element, err);
 
-    if (element.hasAttr("rx:scope")) {
-      // TODO: do scoping rules
+    BiFunction<PageEnvironment, String, String> findScopable = (e, key) -> {
+      if (e.scope == null) {
+        return null;
+      }
+      if (element.hasAttr(key)) {
+        String value = element.attr(key).trim();
+        if ("".equals(value)) {
+          feedback.warn(element, "attribute '" + key + "' is present but empty");
+          return null;
+        }
+        return value;
+      }
+      return null;
+    };
+    String toScopeInto = findScopable.apply(next, "rx:scope");
+    if (toScopeInto != null) {
+      DataSelector selector = next.scope.select(next.privacy, toScopeInto, reportError);
+      if (selector != null) {
+        DataScope scopedInto = selector.scopeInto(reportError);
+        if (scopedInto != null) {
+          next = next.withDataScope(scopedInto);
+        }
+      }
     }
-    if (element.hasAttr("rx:iterate")) {
-      // TODO: do scoping rules
+    String toIterateInto = findScopable.apply(next, "rx:iterate");
+    if (toIterateInto != null) {
+      DataSelector selector = next.scope.select(next.privacy, toIterateInto, reportError);
+      if (selector != null) {
+        DataScope scopedIterate = selector.iterateInto(reportError);
+        if (scopedIterate != null) {
+          next = next.withDataScope(scopedIterate);
+        }
+      }
     }
-    if (element.hasAttr("rx:repeat")) {
-      // TODO: validate the result is an integer
+    String toRepeat = findScopable.apply(next, "rx:repeat");
+    if (toRepeat != null) {
+      DataSelector selector = next.scope.select(next.privacy, toRepeat, reportError);
+      if (selector != null) {
+        selector.validateIntegral(reportError);
+      }
     }
-    if (element.hasAttr("rx:if")) {
-      checkCondition(element.attr("rx:if"), env);
+    String toIfCheck = findScopable.apply(next, "rx:if");
+    if (toIfCheck != null) {
+      checkCondition(toIfCheck, next, reportError);
     }
-    if (element.hasAttr("rx:ifnot")) {
-      checkCondition(element.attr("rx:ifnot"), env);
+    String toIfNotCheck = findScopable.apply(next, "rx:ifnot");
+    if (toIfNotCheck != null) {
+      checkCondition(toIfNotCheck, env, reportError);
     }
-    if (element.hasAttr("rx:switch")) {
-      // TODO: validate EXISTS as either INT, LONG, ENUM, STRING, BOOL
+    String toSwitch = findScopable.apply(next, "rx:switch");
+    if (toSwitch != null) {
+      DataSelector selector = next.scope.select(next.privacy, toSwitch, reportError);
+      if (selector != null) {
+        selector.validateSwitchable(reportError);
+      }
     }
-    if (element.hasAttr("rx:repeat")) {
-      // TODO: validate EXISTS as either INT, LONG
-    }
-
     if (element.hasAttr("rx:template")) {
       String templateToUse = element.attr("rx:template");
       Element template = next.findTemplate(templateToUse);
@@ -147,11 +193,10 @@ public class RxRootEnvironment {
         children(template, next.withFragmentProvider(element));
         return;
       } else {
-        // TODO: warn about template not found
+        reportError.accept("template '" + templateToUse + "' not found");
       }
     }
-
-    children(element, env);
+    children(element, next);
   }
 
   public void inlinetemplate(Element inlinetemplate, PageEnvironment env) {
@@ -177,6 +222,18 @@ public class RxRootEnvironment {
 
   public void todotask(Element fragment, PageEnvironment env) {
     // ignore
+  }
+
+  public void domainget(Element domainGet, PageEnvironment env) {
+    children(domainGet, env.withDataScope(null));
+  }
+
+  public void documentget(Element domainGet, PageEnvironment env) {
+    children(domainGet, env.withDataScope(null));
+  }
+
+  public void localstoragepoll(Element domainGet, PageEnvironment env) {
+    children(domainGet, env.withDataScope(null));
   }
 
   public void connection(Element connection, PageEnvironment env) {

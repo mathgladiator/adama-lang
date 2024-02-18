@@ -177,7 +177,7 @@ public class RxHTMLScanner implements AutoCloseable {
               try {
                 long started = System.currentTimeMillis();
                 // TODO: bring the new type checker in here such that devbox can run type checking every change
-                RxHtmlBundle rxHtmlBundle = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(rxhtml(scanRoot), true), "test"), types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());;
+                RxHtmlBundle rxHtmlBundle = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(scanRoot, rxhtml(scanRoot), true), "test"), types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());;
                 RxHtmlResult updated = new RxHtmlResult(rxHtmlBundle);
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();

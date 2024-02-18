@@ -57,7 +57,7 @@ public class DataScope {
   }
 
   public DataSelector select(PrivacyFilter privacy, String path, Consumer<String> reportError) {
-    DataScopeVisitor dsv = new DataScopeVisitor(privacy, forest, toStackPath());
+    DataScopeVisitor dsv = new DataScopeVisitor(path, privacy, forest, toStackPath());
     PathVisitor.visit(path, dsv);
     if (dsv.didSwitchToView()) {
       return null;

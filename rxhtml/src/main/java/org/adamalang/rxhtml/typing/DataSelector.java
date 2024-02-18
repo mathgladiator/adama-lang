@@ -33,12 +33,20 @@ public class DataSelector {
 
   public DataScope scopeInto(Consumer<String> errors) {
     try {
-      String nature = type.get("nature").textValue();
+      ObjectNode typeToCheck = type;
+      String nature = typeToCheck.get("nature").textValue();
+
+      if (nature.equals("native_maybe") || nature.equals("reactive_maybe")) {
+        typeToCheck = (ObjectNode) typeToCheck.get("type");
+        nature = typeToCheck.get("nature").textValue();
+      }
+
       if (nature.equals("reactive_ref") || nature.equals("native_ref")) {
-        String ref = type.get("ref").textValue();
+        String ref = typeToCheck.get("ref").textValue();
         return scope.push(ref);
       }
-      errors.accept("failed to scope into: " + type);
+
+      errors.accept("failed to scope into: " + typeToCheck);
       return null;
     } catch (Exception reasonsToHateJSON) {
       errors.accept("error parsing reflection tree:" + reasonsToHateJSON.getMessage() + " JSON=" + type.toString());
@@ -48,9 +56,16 @@ public class DataSelector {
 
   public DataScope iterateInto(Consumer<String> errors) {
     try {
-      String nature = type.get("nature").textValue();
-      if (nature.equals("native_list")) {
-        ObjectNode subType = (ObjectNode) type.get("type");
+      ObjectNode typeToCheck = type;
+      String nature = typeToCheck.get("nature").textValue();
+
+      if (nature.equals("native_maybe") || nature.equals("reactive_maybe")) {
+        typeToCheck = (ObjectNode) typeToCheck.get("type");
+        nature = typeToCheck.get("nature").textValue();
+      }
+
+      if (nature.equals("native_list") || nature.equals("native_array")) {
+        ObjectNode subType = (ObjectNode) typeToCheck.get("type");
         String subNature = subType.get("nature").textValue();
         if (subNature.equals("reactive_ref") || subNature.equals("native_ref")) {
           String ref = subType.get("ref").textValue();
@@ -63,5 +78,13 @@ public class DataSelector {
       errors.accept("error parsing reflection tree:" + reasonsToHateJSON.getMessage() + " JSON=" + type.toString());
       return null;
     }
+  }
+
+  public void validateIntegral(Consumer<String> errors) {
+    // TODO: validate INT, LONG
+  }
+
+  public void validateSwitchable(Consumer<String> errors) {
+    // TODO: validate INT, LONG, ENUM, STRING, BOOL
   }
 }

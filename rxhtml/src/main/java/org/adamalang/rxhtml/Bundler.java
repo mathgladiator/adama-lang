@@ -24,17 +24,26 @@ import org.jsoup.nodes.Document;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** simple bundler to repackage a set of RxHTML files into one file */
 public class Bundler {
-  public static String bundle(List<File> files, boolean inject) throws Exception {
+  public static String bundle(File commonPath, List<File> files, boolean inject) throws Exception {
     StringBuilder output = new StringBuilder();
     output.append("<forest>\n");
     for (File file : files) {
       Document useDoc = Jsoup.parse(file);
       String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), "");
       if (inject) {
-        output.append(InjectCoordInline.execute(partial, file.getName()));
+        String nameToReport = file.getName();
+        try {
+          String commonRoot = commonPath.getAbsolutePath();
+          String fullPath = file.getAbsolutePath();
+          nameToReport = fullPath.substring(commonRoot.length()).replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("/"));
+        } catch (Exception failedToResolveAbsolutePath) {
+        }
+        output.append(InjectCoordInline.execute(partial, nameToReport));
       } else {
         output.append(partial);
       }

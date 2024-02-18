@@ -53,8 +53,9 @@ public class MobileCapacitor {
     final String forest;
     { // aggregate the RxHTML files into a forest
       ArrayList<File> files = new ArrayList<>();
-      FrontendHandlerImpl.aggregateFiles(new File(args.rxhtmlPath), files);
-      forest = Bundler.bundle(files, false);
+      File rxhtmlPath = new File(args.rxhtmlPath);
+      FrontendHandlerImpl.aggregateFiles(rxhtmlPath, files);
+      forest = Bundler.bundle(rxhtmlPath, files, false);
     }
 
     CapacitorJSShell shellBuilder = new CapacitorJSShell((el, w) -> {

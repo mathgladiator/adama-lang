@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.typing;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.rxhtml.template.sp.PathVisitor;
 
@@ -25,6 +26,7 @@ import java.util.Stack;
 
 /** visitor for working with paths within a DataScope; this is how to navigate and select data from within a scope */
 public class DataScopeVisitor implements PathVisitor {
+  private final String path;
   private final PrivacyFilter privacy;
   private final ObjectNode forest;
   private final Stack<String> current;
@@ -32,7 +34,8 @@ public class DataScopeVisitor implements PathVisitor {
   private boolean switchToView;
   private ArrayList<String> errors;
 
-  public DataScopeVisitor(PrivacyFilter privacy, ObjectNode forest, Stack<String> current) {
+  public DataScopeVisitor(String path, PrivacyFilter privacy, ObjectNode forest, Stack<String> current) {
+    this.path = path;
     this.privacy = privacy;
     this.forest = forest;
     this.current = current;
@@ -103,8 +106,9 @@ public class DataScopeVisitor implements PathVisitor {
         errors.add("Failed to type '" + child + "' within '" + at + "'");
         return null;
       }
-      if (!privacy.visible(childType.get("privacy"))) {
-        errors.add("Privacy violation; field '" + child + "' was referenced, but is not visible within the privacy filter");
+      JsonNode privacyLevel = childType.get("privacy");
+      if (!privacy.visible(privacyLevel)) {
+        errors.add("Privacy violation; field '" + child + "' was referenced, but is not visible within the privacy filter: " + privacyLevel.toString());
         // TODO: make above error more meaningful
       }
       childType.put("used", true);
@@ -120,7 +124,13 @@ public class DataScopeVisitor implements PathVisitor {
     }
 
     String nature = nextType.get("nature").textValue();
-    if (nature.equals("native_list")) {
+
+    if (nature.equals("native_maybe") || nature.equals("reactive_maybe")) {
+      nextType = (ObjectNode) nextType.get("type");
+      nature = nextType.get("nature").textValue();
+    }
+
+    if (nature.equals("native_list") || nature.equals("native_array")) {
       ObjectNode subType = (ObjectNode) nextType.get("type");
       String subNature = subType.get("nature").textValue();
       if (subNature.equals("reactive_ref") || subNature.equals("native_ref")) {

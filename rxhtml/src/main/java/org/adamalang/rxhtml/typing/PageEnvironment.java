@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.typing;
 
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.nodes.Element;
 
 import java.util.HashMap;
@@ -24,8 +25,8 @@ import java.util.regex.Pattern;
 
 public class PageEnvironment {
   private final HashMap<String, DataScope> connections;
-  private final PrivacyFilter privacy;
-  private final DataScope scope;
+  public final PrivacyFilter privacy;
+  public final DataScope scope;
   private final Element fragmentProvider;
   private final HashMap<String, Element> templates;
 

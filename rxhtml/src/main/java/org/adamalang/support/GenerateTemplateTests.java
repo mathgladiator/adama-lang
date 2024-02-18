@@ -60,7 +60,7 @@ public class GenerateTemplateTests {
           System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
-        RxHtmlBundle result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(Collections.singletonList(file), false), null, ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
+        RxHtmlBundle result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(file, Collections.singletonList(file), false), null, ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
         String gold = fixTestGold(result.toString());
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);

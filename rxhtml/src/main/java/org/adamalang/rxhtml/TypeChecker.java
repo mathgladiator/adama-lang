@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.typing.RxRootEnvironment;
@@ -32,9 +33,8 @@ public class TypeChecker {
   /** Given a bundled forest, produce feedback for the developer */
   public static void typecheck(String forest, File input, Feedback feedback) {
     Document document = Jsoup.parse(forest);
+    Pagify.pagify(document);
     warnDuplicatePages(document, feedback);
-    warnDuplicateTemplates(document, feedback);
-    warnTemplateNotFound(document, feedback);
     if (input != null && input.exists() && input.isDirectory()) {
       new RxRootEnvironment(forest, input, feedback).check();
     }
@@ -53,15 +53,5 @@ public class TypeChecker {
       }
       paths.add(normalizedUri);
     }
-  }
-
-  public static void warnDuplicateTemplates(Document document, Feedback feedback) {
-    // TODO: walk all templates
-    // TODO: ensure the template name is unique else warn
-  }
-
-  public static void warnTemplateNotFound(Document document, Feedback feedback) {
-    // TODO: index all the templates by name
-    // TODO: recurse the document looking for rx:template and then validate that the name exists
   }
 }

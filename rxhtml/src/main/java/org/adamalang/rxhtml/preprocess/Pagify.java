@@ -41,7 +41,7 @@ public class Pagify {
         }
         for (Attribute attr : element.attributes()) {
           String key = attr.getKey();
-          if (key.startsWith("static:") || key.startsWith("template:") || key.startsWith("init:") || "bundle".equals(key) || "authenticate".equals(key)) {
+          if (key.startsWith("static:") || key.startsWith("template:") || key.startsWith("init:") || "bundle".equals(key) || "authenticate".equals(key) || "privacy".equals(key)) {
             clone.put(key, attr.getValue());
           }
         }
