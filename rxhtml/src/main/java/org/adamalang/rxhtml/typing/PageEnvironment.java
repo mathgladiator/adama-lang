@@ -17,10 +17,10 @@
 */
 package org.adamalang.rxhtml.typing;
 
-import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.nodes.Element;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
 public class PageEnvironment {
@@ -29,13 +29,17 @@ public class PageEnvironment {
   public final DataScope scope;
   private final Element fragmentProvider;
   private final HashMap<String, Element> templates;
+  private final HashSet<String> allTemplatesUnusued;
+  private final HashSet<String> templatesUsedByPage;
 
-  public PageEnvironment(PrivacyFilter privacy, DataScope scope, Element fragmentProvider, HashMap<String, Element> templates, HashMap<String, DataScope> connections) {
+  public PageEnvironment(PrivacyFilter privacy, DataScope scope, Element fragmentProvider, HashMap<String, Element> templates, HashMap<String, DataScope> connections, HashSet<String> allTemplatesUnusued, HashSet<String> templatesUsedByPage) {
     this.privacy = privacy;
     this.scope = scope;
     this.fragmentProvider = fragmentProvider;
     this.templates = templates;
     this.connections = connections;
+    this.allTemplatesUnusued = allTemplatesUnusued;
+    this.templatesUsedByPage = templatesUsedByPage;
   }
 
   public void registerConnection(String name, DataScope scope) {
@@ -55,18 +59,23 @@ public class PageEnvironment {
   }
 
   public Element findTemplate(String name) {
-    return templates.get(name);
+    allTemplatesUnusued.remove(name);
+    Element template = templates.get(name);
+    if (template != null) {
+      templatesUsedByPage.add(name);
+    }
+    return template;
   }
 
   public PageEnvironment withFragmentProvider(Element fragmentProvider) {
-    return new PageEnvironment(privacy, scope, fragmentProvider, templates, connections);
+    return new PageEnvironment(privacy, scope, fragmentProvider, templates, connections, allTemplatesUnusued, templatesUsedByPage);
   }
 
   public PageEnvironment withDataScope(DataScope scope) {
-    return new PageEnvironment(privacy, scope, fragmentProvider, templates, connections);
+    return new PageEnvironment(privacy, scope, fragmentProvider, templates, connections, allTemplatesUnusued, templatesUsedByPage);
   }
 
-  public static PageEnvironment newPage(String privacy, HashMap<String, Element> templates) {
-    return new PageEnvironment(new PrivacyFilter(privacy.split(Pattern.quote(","))), null, null, templates, new HashMap<>());
+  public static PageEnvironment newPage(String privacy, HashMap<String, Element> templates, HashSet<String> allTemplatesUnused, HashSet<String> templatesUsedByName) {
+    return new PageEnvironment(new PrivacyFilter(privacy.split(Pattern.quote(","))), null, null, templates, new HashMap<>(), allTemplatesUnused, templatesUsedByName);
   }
 }

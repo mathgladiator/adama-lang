@@ -42,6 +42,7 @@ public class RxRootEnvironment {
   public final HashSet<DedupeTemplateCheck> dedupeTemplates;
   public final String defaultBackend;
   public final HashMap<String, Element> templates;
+  public final HashMap<String, HashSet<String>> templateUsageByPage;
 
   public RxRootEnvironment(String forest, File root, Feedback feedback) {
     this.document = Jsoup.parse(forest);
@@ -49,6 +50,7 @@ public class RxRootEnvironment {
     this.feedback = feedback;
     this.reflections = new HashMap<>();
     this.dedupeTemplates = new HashSet<>();
+    this.templateUsageByPage = new HashMap<>();
     String _defaultBackend = null;
     BiFunction<Element, String, Boolean> load = (element, name) -> {
       if (!reflections.containsKey(name)) {
@@ -289,12 +291,19 @@ public class RxRootEnvironment {
   }
 
   public void check() {
+    HashSet<String> templatesUnused = new HashSet<>(templates.keySet());
     for (Element element : document.getElementsByTag("page")) {
       String privacy = "";
       if (element.hasAttr("privacy")) {
         privacy = element.attr("privacy");
       }
-      check(element, PageEnvironment.newPage(privacy, templates));
+      String uri = element.attr("uri");
+      HashSet<String> templatesUsed = new HashSet<>();
+      templateUsageByPage.put(uri, templatesUsed);
+      check(element, PageEnvironment.newPage(privacy, templates, templatesUnused, templatesUsed));
+    }
+    for (String unused : templatesUnused) {
+      feedback.warn(templates.get(unused), "template '" + unused + "' was not used");
     }
   }
 }
