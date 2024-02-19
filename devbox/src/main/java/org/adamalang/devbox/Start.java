@@ -164,6 +164,8 @@ public class Start {
       LocalServiceBase base = new LocalServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub, metricsFactory);
       Thread webServerThread = base.start();
       terminal.important("people|Enjoy your developer experience... we hope it is pleasurable!");
+      Key focusedKey = verse.domainKeyToUse;
+      CommandProcessor processor = new CommandProcessor(terminal, verse);
       while (alive.get()) {
         Command command = Command.parse(terminal.readline().trim());
         if (command.is("kill", "exit", "quit", "q", "exut")) {
@@ -178,262 +180,207 @@ public class Start {
         if (command.is("help", "h", "?", "")) {
           terminal.info("Help for the Adama DevBox!!");
           terminal.info("");
-          terminal.info("Commands:");
+          if (focusedKey != null) {
+            terminal.info("[current key=" + focusedKey.space + "/" + focusedKey.key + "]");
+          } else {
+            terminal.info("[no focused key, use `use $space $key`]");
+          }
+          terminal.info("DevBox Commands:");
           terminal.info("  `exit` - turn off the devbox");
+          terminal.info("  `flush` - force flush caravan");
+          terminal.info("  `timeslip $delta $unit [$timeframe-seconds]`");
+          terminal.info("                   $unit \\in {ms, sec, min, hr, day, week}");
+          terminal.info("      - change time by $delta $unit over $timeframe-seconds (default is 5 seconds)");
+          terminal.info("  `diagnostics` - get some useful diagnostics");
+
+          terminal.info("");
+          terminal.info("Behavior:");
           terminal.info("  `viewer-updates slow` - slow down viewer updates by 5 seconds");
           terminal.info("  `viewer-updates fast` - disable the 5 second viewer update penalty");
+          terminal.info("  `autotest` - toggle tests to run after a deployment");
+          terminal.info("");
+
+          terminal.info("Old State Commands:");
           terminal.info("  `delete $space $key` - delete a local document by force");
           terminal.info("  `init $space $key $file.json` - initialize a document from the file system");
           terminal.info("  `save $space $key $file.json` - snapshot a document to the file system");
-          terminal.info("  `dump-log $space $key $file.json` - dump a log of all deltas within caravan");
-          terminal.info("  `diagnostics` - get some useful diagnostics");
-          terminal.info("  `flush` - force flush caravan");
+          terminal.info("  `restore $space $key $file.json` - restore a snapshot of the given file to the given space");
+          terminal.info("  `dump-log $space $key $file.log` - dump a log of all deltas within caravan");
           terminal.info("  `query $space $key` - execute an op query against a document");
           terminal.info("  `test $space $key` - run tests for the given key");
-          terminal.info("  `test` - run tests for the domain key (if available)");
-          terminal.info("  `autotest` - toggle tests to run after a deployment");
-          terminal.info("  `timeslip $delta $unit [$timeframe-seconds]`");
-          terminal.info("                   $unit \\in {ms, sec, min, hr, day, week}");
-          terminal.info("      - change by $delta $unit over $timeframe-seconds (default is 5 seconds)");
-        }
-        if (command.is("viewer-updates")) {
-          if (command.argIs(0, "slow")) {
-            terminal.notice("devbox|slowing down view updates by 5 seconds");
-            control.slowViewerStateUpdates.set(true);
-          }
-          if (command.argIs(0, "fast")) {
-            terminal.notice("devbox|normalizing view update speed");
-            control.slowViewerStateUpdates.set(false);
-          }
-        }
-        if (command.is("delete")) {
-          if (command.requireArg(1)) {
-            String space = command.argAt(0);
-            String key = command.argAt(1);
-            verse.service.delete(new CoreRequestContext(new NtPrincipal("terminal", "overlord"), "cli", "127.0.0.1", key), new Key(space, key), new Callback<Void>() {
-              @Override
-              public void success(Void value) {
-                terminal.info(space + "/" + key + " deleted");
-              }
+          terminal.info("");
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                terminal.error("failed delete:" + ex.code);
-              }
-            });
-          } else {
-            terminal.notice("delete $space $key");
-          }
-        }
-        if (command.is("init")) {
-          if (command.requireArg(2)) {
-            String space = command.argAt(0);
-            String key = command.argAt(1);
-            String file = command.argAt(2);
-            try {
-              ObjectNode parsed = Json.parseJsonObject(Files.readString(new File(file).toPath()));
-              parsed.put("__seq", 1);
-              RemoteDocumentUpdate update = new RemoteDocumentUpdate(0, 1, NtPrincipal.NO_ONE, "{}", parsed.toString(), "{}", true, 0, 0, UpdateType.Internal);
-              verse.dataService.initialize(new Key(space, key), update, new Callback<Void>() {
-                @Override
-                public void success(Void value) {
-                  terminal.info("init:loaded");
-                }
+          terminal.info("New State Commands:");
+          terminal.info("  `use $space $key` - focus commands on a specific document");
+          terminal.info("  `delete` - delete the focused document");
+          terminal.info("  `init $file.json` - initialize the focused document with the given file");
+          terminal.info("  `save $file.json` - save the focused document to the given file");
+          terminal.info("  `restore $file.json` - restore the focused document to the given file");
+          terminal.info("  `dump-log $file.log` - dump a log of all deltas within caravan to the given file");
+          terminal.info("  `query` - execute an op query against a document");
+          terminal.info("  `test` - run tests for the focused key key");
+          terminal.info("");
 
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  terminal.error("failed restoring:" + ex.code);
-                }
-              });
-            } catch (Exception ex) {
-              terminal.error("failed loading: " + ex.getMessage());
+        }
+        // Behavior and DevBox commands
+        {
+          if (command.is("viewer-updates")) {
+            if (command.argIs(0, "slow")) {
+              terminal.notice("devbox|slowing down view updates by 5 seconds");
+              control.slowViewerStateUpdates.set(true);
             }
-          } else {
-            terminal.notice("load $space $key $file");
-          }
-        }
-        if (command.is("autotest")) {
-          if (verse != null && verse.domainKeyToUse != null) {
-            terminal.info("verse|auto testing " + (verse.autoTest.get() ? "disabled" : "enabled"));
-            verse.autoTest.set(!verse.autoTest.get());
-          } else {
-            terminal.error("verse|no verse nor domain key to use for autotest");
-          }
-        }
-        if (command.is("test")) {
-          final Key theKey;
-          if (command.requireArg(1)) {
-            theKey = new Key(command.argAt(0), command.argAt(1));
-          } else if (verse != null && verse.domainKeyToUse != null) {
-            theKey = verse.domainKeyToUse;
-          } else {
-            theKey = null;
-            terminal.notice("test $space $key (or test if a domain is mapped)");
-          }
-          if (verse != null && theKey != null) {
-            verse.runTests(theKey);
-          }
-        }
-        if (command.is("save")) {
-          if (command.requireArg(2)) {
-            String space = command.argAt(0);
-            String key = command.argAt(1);
-            String file = command.argAt(2);
-            verse.service.saveCustomerBackup(new Key(space, key), new Callback<String>() {
+            if (command.argIs(0, "fast")) {
+              terminal.notice("devbox|normalizing view update speed");
+              control.slowViewerStateUpdates.set(false);
+            }
+          } else if (command.is("autotest")) {
+            if (verse != null && verse.domainKeyToUse != null) {
+              terminal.info("verse|auto testing " + (verse.autoTest.get() ? "disabled" : "enabled"));
+              verse.autoTest.set(!verse.autoTest.get());
+            } else {
+              terminal.error("verse|no verse nor domain key to use for autotest");
+            }
+          } else if (command.is("diagnostics")) {
+            verse.dataService.diagnostics(new Callback<String>() {
               @Override
               public void success(String value) {
-                try {
-                  Files.writeString(new File(file).toPath(), value);
-                  terminal.info("saved " + file);
-                } catch (Exception ex) {
-                  terminal.error("failed save: " + ex.getMessage());
-                }
+                terminal.info("caravan-diagnostics|" + value);
               }
 
               @Override
               public void failure(ErrorCodeException ex) {
-                terminal.error("failed save from service:" + ex.code);
+                terminal.error("failed to get diagnostics:" + ex.code);
               }
             });
-          } else {
-            terminal.notice("save $space $key $file");
-          }
-        }
-        if (command.is("dump-log")) {
-          if (command.requireArg(2)) {
-            String space = command.argAt(0);
-            String key = command.argAt(1);
-            String output = command.argAt(2);
-            long started = System.currentTimeMillis();
-            FileWriter fw = new FileWriter(output, StandardCharsets.UTF_8);
-            try {
-              CountDownLatch readEverything = new CountDownLatch(1);
-              verse.dataService.dumpLog(new Key(space, key), new Stream<String>() {
-                @Override
-                public void next(String value) {
-                  try {
-                    fw.write(value);
-                    fw.write("\n");
-                    fw.flush();
-                  } catch (Exception ex) {
-                    terminal.error("write exception:" + ex.getMessage());
+            terminal.info("base-diagnostics|" + base.diagnostics());
+          } else if (command.is("time-slip", "timeslip")) {
+            if (verse == null) {
+              terminal.error("time-slip|must have local verse");
+            } else if (command.requireArg(1)) {
+              Integer delta = command.argAtIsInt(0);
+              if (delta != null) {
+                Long deltaMs = null;
+                switch (command.argAt(1)) {
+                  case "ms":
+                    deltaMs = (long) delta;
+                    break;
+                  case "s":
+                  case "sec":
+                  case "second":
+                  case "seconds":
+                    deltaMs = delta * 1000L;
+                    break;
+                  case "m":
+                  case "min":
+                  case "mins":
+                  case "minute":
+                  case "minutes":
+                    deltaMs = delta * 1000L * 60L;
+                    break;
+                  case "h":
+                  case "hr":
+                  case "hour":
+                  case "hours":
+                    deltaMs = delta * 1000L * 60L * 60L;
+                    break;
+                  case "d":
+                  case "day":
+                  case "days":
+                    deltaMs = delta * 1000L * 60L * 60L * 24L;
+                    break;
+                  case "w":
+                  case "wk":
+                  case "week":
+                  case "weeks":
+                    deltaMs = delta * 1000L * 60L * 60L * 24L * 7L;
+                    break;
+                }
+                if (deltaMs != null) {
+                  Integer timeframeSeconds = command.argAtIsInt(2);
+                  if (timeframeSeconds == null) {
+                    timeframeSeconds = 5;
                   }
+                  verse.timeMachine.add(deltaMs, timeframeSeconds);
+                } else {
+                  terminal.notice("time-slip delta unit [timeframe-sec]; unit must ms, sec, min, hr, day, week");
                 }
-
-                @Override
-                public void complete() {
-                  readEverything.countDown();
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-
-                }
-              });
-              readEverything.await(10000, TimeUnit.MILLISECONDS);
-              terminal.notice("dump-log finished in " + (System.currentTimeMillis() - started) + "ms");
-            } finally {
-              fw.flush();
-              fw.close();
-            }
-          }
-        }
-        if (command.is("diagnostics")) {
-          verse.dataService.diagnostics(new Callback<String>() {
-            @Override
-            public void success(String value) {
-              terminal.info("caravan-diagnostics|" + value);
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              terminal.error("failed to get diagnostics:" + ex.code);
-            }
-          });
-          terminal.info("base-diagnostics|" + base.diagnostics());
-        }
-        if (command.is("time-slip", "timeslip")) {
-          if (verse == null) {
-            terminal.error("time-slip|must have local verse");
-          } else if (command.requireArg(1)) {
-            Integer delta = command.argAtIsInt(0);
-            if (delta != null) {
-              Long deltaMs = null;
-              switch (command.argAt(1)) {
-                case "ms":
-                  deltaMs = (long) delta;
-                  break;
-                case "s":
-                case "sec":
-                case "second":
-                case "seconds":
-                  deltaMs = delta * 1000L;
-                  break;
-                case "m":
-                case "min":
-                case "mins":
-                case "minute":
-                case "minutes":
-                  deltaMs = delta * 1000L * 60L;
-                  break;
-                case "h":
-                case "hr":
-                case "hour":
-                case "hours":
-                  deltaMs = delta * 1000L * 60L * 60L;
-                  break;
-                case "d":
-                case "day":
-                case "days":
-                  deltaMs = delta * 1000L * 60L * 60L * 24L;
-                  break;
-                case "w":
-                case "wk":
-                case "week":
-                case "weeks":
-                  deltaMs = delta * 1000L * 60L * 60L * 24L * 7L;
-                  break;
-              }
-              if (deltaMs != null) {
-                Integer timeframeSeconds = command.argAtIsInt(2);
-                if (timeframeSeconds == null) {
-                  timeframeSeconds = 5;
-                }
-                verse.timeMachine.add(deltaMs, timeframeSeconds);
               } else {
-                terminal.notice("time-slip delta unit [timeframe-sec]; unit must ms, sec, min, hr, day, week");
+                terminal.notice("time-slip delta unit [timeframe-sec]; delta must be an integer");
               }
             } else {
-              terminal.notice("time-slip delta unit [timeframe-sec]; delta must be an integer");
+              terminal.notice("time-slip delta unit [timeframe-sec]");
             }
-          } else {
-            terminal.notice("time-slip delta unit [timeframe-sec]");
+          } else if (command.is("flush")) {
+            verse.dataService.flush(true).await(1000, TimeUnit.MILLISECONDS);
+            terminal.info("caravan|flushed");
           }
         }
-        if (command.is("flush")) {
-          verse.dataService.flush(true).await(1000, TimeUnit.MILLISECONDS);
-          terminal.info("caravan|flushed");
-        }
-        if (command.is("query")) {
-          if (command.requireArg(1)) {
-            TreeMap<String, String> query = new TreeMap<>();
-            query.put("space", command.argAt(0));
-            query.put("key", command.argAt(1));
-            verse.service.query(query, new Callback<>() {
-              @Override
-              public void success(String value) {
-                terminal.notice("query-result|" + value);
-              }
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                terminal.error("query|failed to query:" + ex.code);
-              }
-            });
-          } else {
-            terminal.notice("query $space $key");
+        // DOCUMENT COMMANDS
+        {
+          if (command.is("use")) {
+            focusedKey = command.extractKeyAsFirstTwoArgs(focusedKey);
+            if (focusedKey != null) {
+              terminal.notice("using " + focusedKey.space + "/" + focusedKey.key);
+            } else {
+              terminal.notice("required key; `focus $space $key");
+            }
+          } else if (command.is("delete")) {
+            Key keyToDelete = command.extractKeyAsFirstTwoArgs(focusedKey);
+            if (keyToDelete != null) {
+              processor.delete(keyToDelete);
+            } else {
+              terminal.notice("required key for deletion; either `delete $space $key` or `use $space $key` -> `delete`");
+            }
+          } else if (command.is("init")) {
+            Key keyToInit = command.extractKeyAsFirstTwoArgs(focusedKey);
+            File file = command.lastArgAsFileThatMustExist(terminal);
+            if (keyToInit != null && file != null) {
+              processor.init(keyToInit, file);
+            } else {
+              terminal.notice("required key and file for init; either `init $space $key $file` or `use $space $key` -> `init $file`");
+            }
+          } else if (command.is("restore")) {
+            Key keyToRestore = command.extractKeyAsFirstTwoArgs(focusedKey);
+            File file = command.lastArgAsFileThatMustExist(terminal);
+            if (keyToRestore != null && file != null) {
+              processor.restore(keyToRestore, file);
+            } else {
+              terminal.notice("required key and file for restore; either `restore $space $key $file` or `use $space $key` -> `init $file`");
+            }
+          } else if (command.is("save")) {
+            Key keyToSave = command.extractKeyAsFirstTwoArgs(focusedKey);
+            File file = command.lastArgAsFileThatMustNotExist(terminal);
+            if (keyToSave != null && file != null) {
+              processor.save(keyToSave, file);
+            } else {
+              terminal.notice("required key and file for save; either `save $space $key $file` or `use $space $key` -> `save $file`");
+            }
+          } else if (command.is("dump-log")) {
+            Key keyToLog = command.extractKeyAsFirstTwoArgs(focusedKey);
+            File file = command.lastArgAsFileThatMustNotExist(terminal);
+            if (keyToLog != null && file != null) {
+              processor.log(keyToLog, file);
+            } else {
+              terminal.notice("required key and file for init; either `dump-log $space $key $file` or `use $space $key` -> `dump-log $file`");
+            }
+          } else if (command.is("test")) {
+            Key keyToTest = command.extractKeyAsFirstTwoArgs(focusedKey);
+            if (verse != null && keyToTest != null) {
+              verse.runTests(keyToTest);
+            } else {
+              terminal.notice("required key; either `test $space $key` or `use $space $key` -> `test`");
+            }
+          } else if (command.is("query")) {
+            Key keyToQuery = command.extractKeyAsFirstTwoArgs(focusedKey);
+            if (verse != null && keyToQuery != null) {
+              processor.query(keyToQuery);
+            } else {
+              terminal.notice("required key; either `query $space $key` or `use $space $key` -> `query`");
+            }
           }
         }
+
       }
     }
   }

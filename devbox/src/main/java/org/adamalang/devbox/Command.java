@@ -17,6 +17,9 @@
 */
 package org.adamalang.devbox;
 
+import org.adamalang.runtime.data.Key;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.PrimitiveIterator;
 
@@ -124,6 +127,48 @@ public class Command {
         return Integer.parseInt(args[index]);
       }
     } catch (NumberFormatException nfe) {
+    }
+    return null;
+  }
+
+  public Key extractKeyAsFirstTwoArgs(Key defaultKey) {
+    if (requireArg(1)) {
+      return new Key(argAt(0), argAt(1));
+    }
+    return defaultKey;
+  }
+
+  public String lastArg() {
+    if (args.length > 0) {
+      return args[args.length - 1];
+    }
+    return null;
+  }
+
+  public File lastArgAsFileThatMustExist(TerminalIO io) {
+    String arg = lastArg();
+    if (arg != null) {
+      File f = new File(arg);
+      if (f.exists() && !f.isDirectory()) {
+        return f;
+      }
+      io.error("File '" + arg + "' does not exist");
+    } else {
+      io.error("No file specified");
+    }
+    return null;
+  }
+
+  public File lastArgAsFileThatMustNotExist(TerminalIO io) {
+    String arg = lastArg();
+    if (arg != null) {
+      File f = new File(arg);
+      if (!f.exists()) {
+        return f;
+      }
+      io.error("File '" + arg + "' already exist");
+    } else {
+      io.error("No file specified");
     }
     return null;
   }
