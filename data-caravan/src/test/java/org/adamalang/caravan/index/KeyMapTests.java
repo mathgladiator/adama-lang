@@ -23,6 +23,8 @@ import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
+
 public class KeyMapTests {
   @Test
   public void flow() {
@@ -44,5 +46,23 @@ public class KeyMapTests {
       Assert.assertEquals(43, (int) km.get(k1));
     }
     Assert.assertEquals(42, (int) km.get(new Key("s", "k")));
+  }
+
+  @Test
+  public void hack() throws Exception {
+    KeyMap km = new KeyMap();
+    {
+      MapKey mkInvent = km.inventAndApply(new Key("space", "key_invent1"));
+      Assert.assertEquals(1, mkInvent.id);
+    }
+
+    Field f = km.getClass().getDeclaredField("idgen");
+    f.setAccessible(true);
+    f.set(km, 0);
+
+    {
+      MapKey mkInvent = km.inventAndApply(new Key("space", "key_invent2"));
+      Assert.assertEquals(2, mkInvent.id);
+    }
   }
 }

@@ -15,9 +15,23 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys;
 
-public class Platform {
-  public static final String VERSION = "20240219105313";
-  public static final String JS_VERSION = "f4ce80ebbbb4d68797f461fedf639954";
+import org.adamalang.common.Callback;
+import org.adamalang.runtime.data.DocumentRestore;
+import org.adamalang.runtime.data.Key;
+
+/** a restore request */
+public class QueuedRestoreRequest {
+  public final CoreRequestContext context;
+  public final Key key;
+  public final DocumentRestore snapshot;
+  public final Callback<Void> callback;
+
+  public QueuedRestoreRequest(CoreRequestContext context, Key key, DocumentRestore snapshot, Callback<Void> callback) {
+    this.context = context;
+    this.key = key;
+    this.snapshot = snapshot;
+    this.callback = callback;
+  }
 }

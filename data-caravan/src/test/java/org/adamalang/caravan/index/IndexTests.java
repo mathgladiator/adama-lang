@@ -19,7 +19,9 @@ package org.adamalang.caravan.index;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.index.heaps.IndexedHeap;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -86,5 +88,18 @@ public class IndexTests {
     assertEquals("", index);
     Assert.assertEquals("[0,1024)", heap.toString());
     Assert.assertNull(index.trim(500, 1));
+  }
+
+  @Test
+  public void histogram() {
+    Index index = new Index();
+    long at = 0;
+    int size = 1;
+    for (int pow10 = 0; pow10 < 9; pow10++) {
+      index.append(1, new AnnotatedRegion(at, size, 0, 0));
+      at += size;
+      size *= 10;
+    }
+    index.report(new DiskMetrics(new NoOpMetricsFactory()));
   }
 }

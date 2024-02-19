@@ -22,6 +22,7 @@ import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.DataService;
+import org.adamalang.runtime.data.DocumentRestore;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -590,7 +591,21 @@ public class CoreService implements Deliverer, Queryable {
         callback.failure(exOriginal);
       }
     });
+  }
 
+  public void restore(CoreRequestContext context, Key key, DocumentRestore snapshot, Callback<Void> callback) {
+    QueuedRestoreRequest request = new QueuedRestoreRequest(context, key, snapshot, callback);
+    load(key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.restoreWhileInExecutor(request);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   /** internal: do the connect with retry when connect executes create */

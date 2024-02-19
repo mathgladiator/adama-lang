@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Queue;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -86,6 +87,7 @@ public class DurableLivingDocument implements Queryable {
   private boolean disableMetrics;
   private boolean invalidationScheduled;
   private boolean failedLastSnapshot;
+  private QueuedRestoreRequest restoreRequest;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -107,6 +109,7 @@ public class DurableLivingDocument implements Queryable {
     this.disableMetrics = false;
     this.invalidationScheduled = false;
     this.failedLastSnapshot = false;
+    this.restoreRequest = null;
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final CoreRequestContext context, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -432,8 +435,9 @@ public class DurableLivingDocument implements Queryable {
   }
 
   private void finishSuccessDataServicePatchWhileInExecutor(boolean checkInvalidate) {
-    this.inflightPatch = false;
     if (pending.size() == 0) {
+      this.inflightPatch = false;
+      settledWhileInExecutor();
       outstandingExecutionsWhichRequireDrain = 0;
       if (requiresInvalidateMilliseconds != null && checkInvalidate && !invalidationScheduled) {
         invalidationScheduled = true;
@@ -475,6 +479,10 @@ public class DurableLivingDocument implements Queryable {
     }
     observers.clear();
     cleanupWhileInExecutor(shed);
+    if (restoreRequest != null) {
+      restoreRequest.callback.failure(ex);
+      restoreRequest = null;
+    }
   }
 
   public void cleanupWhileInExecutor(boolean shed) {
@@ -806,6 +814,10 @@ public class DurableLivingDocument implements Queryable {
       request.callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_SHEDDING_LOAD));
       return;
     }
+    if (restoreRequest != null) {
+      request.callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_SHEDDING_LOAD));
+      return;
+    }
     if (inflightPatch) {
       if (outstandingExecutionsWhichRequireDrain >= MAGIC_MAXIMUM_DOCUMENT_QUEUE && !forceIntoQueue) {
         base.metrics.document_queue_running_behind.run();
@@ -1059,6 +1071,52 @@ public class DurableLivingDocument implements Queryable {
         callback.failure(ex);
       }
     }), false, false);
+  }
+
+  private void executeRestoreWhileInExecutor() {
+    final QueuedRestoreRequest queued = restoreRequest;
+    base.service.recover(queued.key, queued.snapshot, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        base.executor.execute(new NamedRunnable("recover-success") {
+          @Override
+          public void execute() throws Exception {
+            restoreRequest.callback.success(null);
+            restoreRequest = null;
+            catastrophicFailureWhileInExecutor(ErrorCodes.RESTORE_COMPLETED);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        base.executor.execute(new NamedRunnable("recover-failure") {
+          @Override
+          public void execute() throws Exception {
+            restoreRequest.callback.failure(ex);
+            restoreRequest = null;
+            catastrophicFailureWhileInExecutor(ex.code);
+          }
+        });
+      }
+    });
+  }
+
+  private void settledWhileInExecutor() {
+    if (restoreRequest != null) {
+      executeRestoreWhileInExecutor();
+    }
+  }
+
+  public void restoreWhileInExecutor(QueuedRestoreRequest restore) {
+    if (this.restoreRequest != null) {
+      restore.callback.failure(new ErrorCodeException(ErrorCodes.RESTORE_ALREADY_IN_FLIGHT));
+      return;
+    }
+    this.restoreRequest = restore;
+    if (!inflightPatch) {
+      executeRestoreWhileInExecutor();
+    }
   }
 
   public String json() {

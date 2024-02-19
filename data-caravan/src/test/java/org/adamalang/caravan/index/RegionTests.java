@@ -15,9 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.caravan.index;
 
-public class Platform {
-  public static final String VERSION = "20240219105313";
-  public static final String JS_VERSION = "f4ce80ebbbb4d68797f461fedf639954";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class RegionTests {
+  @Test
+  public void trivial() {
+    Assert.assertEquals("[100,142)", new Region(100L, 42).toString());
+  }
 }

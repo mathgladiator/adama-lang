@@ -26,6 +26,7 @@ import org.adamalang.caravan.mocks.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.Stream;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.data.*;
@@ -360,6 +361,13 @@ public class CaravanDataServiceTests {
         cb_Close2.assertSuccess();
       }
 
+      {
+        SimpleStringCallback cb_Diag = new SimpleStringCallback();
+        setup.service.diagnostics(cb_Diag);
+        cb_Diag.assertSuccess();
+        System.err.println(cb_Diag.value);
+      }
+
       final String archiveKey;
       {
         SimpleBackupCallback cb_Backup = new SimpleBackupCallback();
@@ -380,6 +388,34 @@ public class CaravanDataServiceTests {
         cb_GetIsMergedResults.assertSuccess();
         Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetIsMergedResults.value);
         Assert.assertEquals(4, cb_GetIsMergedResults.reads);
+      }
+
+      {
+        CountDownLatch finished = new CountDownLatch(1);
+        ArrayList<String> log = new ArrayList<>();
+        setup.service.dumpLog(KEY2, new Stream<String>() {
+          @Override
+          public void next(String ln) {
+            log.add(ln);
+          }
+
+          @Override
+          public void complete() {
+            finished.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(finished.await(10000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals(5, log.size());
+        Assert.assertEquals("[1:1-->1] REQUEST:REQUEST ; REDO:{\"x\":1,\"y\":4} ; UNDO={\"x\":0,\"y\":0} (active=false)", log.get(0));
+        Assert.assertEquals("[2:2-->2] REQUEST:REQUEST ; REDO:{\"x\":2} ; UNDO={\"x\":1,\"z\":42} (active=true)", log.get(1));
+        Assert.assertEquals("BATCH:2", log.get(2));
+        Assert.assertEquals("[4:3-->3] REQUEST:REQUEST ; REDO:{\"x\":3} ; UNDO={\"x\":2,\"z\":42} (active=true)", log.get(3));
+        Assert.assertEquals("[4:4-->4] REQUEST:REQUEST ; REDO:{\"x\":4} ; UNDO={\"x\":3,\"z\":42} (active=true)", log.get(4));
       }
 
       {
@@ -424,6 +460,120 @@ public class CaravanDataServiceTests {
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
         Assert.assertEquals(2, cb_GetCompactedResults.reads);
       }
+
+      {
+        SimpleStringCallback cb_Diag = new SimpleStringCallback();
+        setup.service.diagnostics(cb_Diag);
+        cb_Diag.assertSuccess();
+        System.err.println(cb_Diag.value);
+      }
+
+      {
+        CountDownLatch finished = new CountDownLatch(1);
+        ArrayList<String> log = new ArrayList<>();
+        setup.service.dumpLog(KEY2, new Stream<String>() {
+          @Override
+          public void next(String ln) {
+            log.add(ln);
+          }
+
+          @Override
+          public void complete() {
+            finished.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(finished.await(10000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals(4, log.size());
+        Assert.assertEquals("BATCH:2", log.get(0));
+        Assert.assertEquals("[4:3-->3] REQUEST:REQUEST ; REDO:{\"x\":3} ; UNDO={\"x\":2,\"z\":42} (active=true)", log.get(1));
+        Assert.assertEquals("[4:4-->4] REQUEST:REQUEST ; REDO:{\"x\":4} ; UNDO={\"x\":3,\"z\":42} (active=true)", log.get(2));
+        Assert.assertEquals("[4] SNAPSHOT:{\"x\":10,\"y\":10} (history=1, assets=1234)", log.get(3));
+      }
+    });
+  }
+
+  @Test
+  public void recovery_flow() throws Exception {
+    flow((setup) -> {
+      SimpleDataCallback cb_GetFailed = new SimpleDataCallback();
+      setup.service.get(KEY1, cb_GetFailed);
+      cb_GetFailed.assertFailure(625676);
+
+      SimpleMockCallback cb_PatchFailsFNF = new SimpleMockCallback();
+      setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb_PatchFailsFNF);
+      cb_PatchFailsFNF.assertFailure(625676);
+
+      SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
+      setup.service.snapshot(KEY1, new DocumentSnapshot(1, "{}", 1, 1234L), cb_CompactFailsFNF);
+      cb_CompactFailsFNF.assertFailure(625676);
+
+      SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
+      setup.service.compute(KEY1, ComputeMethod.Rewind, 1, cb_ComputeFailsFNF_Rewind);
+      cb_ComputeFailsFNF_Rewind.assertFailure(625676);
+
+      SimpleDataCallback cb_ComputeFailsFNF_HeadPatch= new SimpleDataCallback();
+      setup.service.compute(KEY1, ComputeMethod.HeadPatch, 1, cb_ComputeFailsFNF_HeadPatch);
+      cb_ComputeFailsFNF_HeadPatch.assertFailure(625676);
+
+      SimpleMockCallback cb_DeleteSuccessFNF = new SimpleMockCallback();
+      setup.service.delete(KEY1, DeleteTask.TRIVIAL, cb_DeleteSuccessFNF);
+      cb_DeleteSuccessFNF.assertSuccess();
+
+      {
+        SimpleMockCallback cb_Restore = new SimpleMockCallback();
+        setup.service.recover(KEY1, new DocumentRestore(100, "{\"z\":123}", NtPrincipal.NO_ONE), cb_Restore);
+        cb_Restore.assertFailure(625676);
+      }
+
+      SimpleMockCallback cb_InitSuccess = new SimpleMockCallback();
+      setup.service.initialize(KEY1, UPDATE_1, cb_InitSuccess);
+      cb_InitSuccess.assertSuccess();
+
+      {
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.service.get(KEY1, cb_Get);
+        cb_Get.assertSuccess();
+        Assert.assertEquals("{\"x\":1,\"y\":4}", cb_Get.value);
+      }
+
+      {
+        SimpleMockCallback cb_Restore = new SimpleMockCallback();
+        setup.service.recover(KEY1, new DocumentRestore(100, "{\"z\":123}", NtPrincipal.NO_ONE), cb_Restore);
+        cb_Restore.assertSuccess();
+
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.service.get(KEY1, cb_Get);
+        cb_Get.assertSuccess();
+        Assert.assertEquals("{\"z\":123}", cb_Get.value);
+      }
+
+      CountDownLatch finished = new CountDownLatch(1);
+      ArrayList<String> log = new ArrayList<>();
+      setup.service.dumpLog(KEY1, new Stream<String>() {
+        @Override
+        public void next(String ln) {
+          log.add(ln);
+        }
+
+        @Override
+        public void complete() {
+          finished.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+      Assert.assertTrue(finished.await(10000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals(2, log.size());
+      Assert.assertEquals("[1:1-->1] REQUEST:REQUEST ; REDO:{\"x\":1,\"y\":4} ; UNDO={\"x\":0,\"y\":0} (active=false)", log.get(0));
+      Assert.assertEquals("RECOVER:100", log.get(1));
     });
   }
 

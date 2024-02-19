@@ -86,7 +86,10 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
 
   @Override
   public void handle(Events.Recover payload) {
-    // TODO
+    redos.clear();
+    undos.clear();
+    seq = payload.seq;
+    document = new SeqString(seq, payload.document);
   }
 
   public ArrayList<byte[]> filter(ArrayList<byte[]> writes) {
@@ -120,12 +123,9 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
 
         @Override
         public void handle(Events.Recover payload) {
-          // TODO
-          /*
           reduced.clear();
           reduced.add(write);
           checkSeq.set(payload.seq);
-          */
         }
       });
     }

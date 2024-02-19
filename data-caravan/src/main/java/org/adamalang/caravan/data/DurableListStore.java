@@ -39,7 +39,6 @@ import java.util.Set;
 
 public class DurableListStore {
   private static final Logger LOGGER = LoggerFactory.getLogger(DurableListStore.class);
-  private static final boolean IS_NOISY = System.getProperty("NOISY_DLS") != null;
   // the data structures to manage the giant linear space
   private final DiskMetrics metrics;
   private final Index index;
@@ -87,11 +86,6 @@ public class DurableListStore {
     // build the buffer
     this.walRoot = walRoot;
     this.buffer = Unpooled.buffer(flushCutOffBytes * 8 / 7);
-    if (IS_NOISY) {
-      LOGGER.error("created buffer:" + buffer.getClass() + " (ideal:" + (flushCutOffBytes * 5 / 4));
-      LOGGER.error("buffer capacity:" + buffer.capacity());
-      LOGGER.error("platform has unsafe:" + PlatformDependent.hasUnsafe());
-    }
     this.output = null;
     this.flushCutOffBytes = flushCutOffBytes;
     this.pageBuffer = new byte[flushCutOffBytes];
@@ -191,9 +185,6 @@ public class DurableListStore {
     DataOutputStream newOutput = new DataOutputStream(new FileOutputStream(newWalFile));
     ByteBuf first = Unpooled.buffer();
     new OrganizationSnapshot(heap, index, keymap).write(first);
-    if (IS_NOISY) {
-      LOGGER.error("preparing new WAL file;" + keymap.toString());
-    }
     writePage(newOutput, first);
     newOutput.flush();
     newOutput.close();
@@ -214,9 +205,6 @@ public class DurableListStore {
   private boolean writePage(DataOutputStream dos, ByteBuf page) throws IOException {
     if (page.writerIndex() == 0) {
       return false;
-    }
-    if (IS_NOISY) {
-      LOGGER.error("writePage(WI:" + page.writerIndex() + ", IR:" + page.isReadable() + ", HA:" + page.hasArray() + ", CAP:" + buffer.capacity() + ")");
     }
     dos.writeInt(page.writerIndex());
     bytesWrittenToLog += page.writerIndex();
@@ -265,10 +253,6 @@ public class DurableListStore {
 
   /** append a byte array to the given id */
   public Integer append(Key key, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
-    if (IS_NOISY) {
-      LOGGER.error("appending to " + key.space + "/" + key.key + " [batch:" + batch.size() + "] " + buffer.writerIndex());
-    }
-
     // allocate the items in the batch
     ArrayList<RegionByteArrayPairing> wheres = new ArrayList<>();
     for (byte[] bytes : batch) {
@@ -307,10 +291,6 @@ public class DurableListStore {
 
   /** flush to disk */
   public void flush(boolean forceCutOver) {
-    if (IS_NOISY) {
-      LOGGER.error("flushing :" + forceCutOver + "::" + bytesWrittenToLog);
-    }
-
     try {
       metrics.flush.run();
       if (writePage(output, buffer)) {
@@ -340,9 +320,6 @@ public class DurableListStore {
 
   /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
   private void cutOver() throws IOException {
-    if (IS_NOISY) {
-      LOGGER.error("cutting over to new log");
-    }
     storage.flush();
     output.close();
     File newFile = prepare();
@@ -351,9 +328,6 @@ public class DurableListStore {
   }
 
   public Integer append(Key key, byte[] bytes, int seq, long assetBytes, Runnable notification) {
-    if (IS_NOISY) {
-      LOGGER.error("appending to " + key.space + "/" + key.key + " [solo] size=" + bytes.length + ":before:" + buffer.writerIndex());
-    }
     Region where = heap.ask(bytes.length);
     if (where == null) {
       LOGGER.error("store-full for " + key.space + "/" + key.key);
@@ -370,9 +344,6 @@ public class DurableListStore {
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
       flush(false);
-    }
-    if (IS_NOISY) {
-      LOGGER.error("appended to " + key.space + "/" + key.key + " [solo] :after:" + buffer.writerIndex());
     }
     return size;
   }
@@ -396,10 +367,6 @@ public class DurableListStore {
 
   /** remove the $count appends from the head of the object */
   public boolean trim(Key key, int maxSize, Runnable notification) {
-    if (IS_NOISY) {
-      LOGGER.error("TRIM" + key.space + "/" + key.key + " max:" + maxSize);
-    }
-
     Integer id = keymap.get(key);
     if (maxSize > 0 && id != null) {
       ArrayList<AnnotatedRegion> regions = index.trim(id, maxSize);
@@ -423,9 +390,6 @@ public class DurableListStore {
 
   /** delete the given object by id */
   public boolean delete(Key key, Runnable notification) {
-    if (IS_NOISY) {
-      LOGGER.error("DELETE" + key.space + "/" + key.key);
-    }
     Integer id = keymap.get(key);
     if (id == null) {
       return false;

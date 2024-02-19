@@ -364,7 +364,7 @@ public class CaravanDataService implements ArchivingDataService {
             EventCodec.route(Unpooled.wrappedBuffer(value), new EventCodec.HandlerEvent() {
               @Override
               public void handle(Events.Snapshot payload) {
-                stream.next("[" + (seq == payload.seq ? seq : (seq + "/" + payload.seq)  + "] SNAPSHOT:" + payload.document + " (history=" + payload.history + ", assets=" + payload.assetBytes + ")"));
+                stream.next("[" + (seq == payload.seq ? seq : (seq + "/" + payload.seq) ) + "] SNAPSHOT:" + payload.document + " (history=" + payload.history + ", assets=" + payload.assetBytes + ")");
               }
 
               @Override
@@ -550,8 +550,25 @@ public class CaravanDataService implements ArchivingDataService {
 
   @Override
   public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
-    // NOT SUPPORTED YET
-    callback.failure(new ErrorCodeException(0));
+    Events.Recover recover = new Events.Recover();
+    recover.seq = restore.seq;
+    recover.agent = restore.who.agent;
+    recover.authority = restore.who.authority;
+    recover.document = restore.document;
+    ByteBuf buf = Unpooled.buffer();
+    EventCodec.write(buf, recover);
+    byte[] bytes = ByteArrayHelper.convert(buf);
+    execute("recover", key, true, callback, (cached) -> {
+      Integer size = store.append(key, bytes, restore.seq, 0, () -> {
+      });
+      if (size == null) {
+        LOGGER.error("out-of-space: caravan unable to recover document:" + key.space + "/" + key.key);
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
+      } else {
+        cached.handle(recover);
+        callback.success(null);
+      }
+    });
   }
 
   @Override

@@ -190,6 +190,9 @@ public class MockInstantDataService implements DataService {
   public void recover(Key key, DocumentRestore restore, Callback<Void> callback) {
     println("RECOVER:" + key.space + "/" + key.key);
     if (logByKey.containsKey(key)) {
+      ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
+      log.clear();
+      log.add(new RemoteDocumentUpdate(restore.seq, restore.seq, restore.who, "{}", restore.document, "{}", false, 10, 0, UpdateType.Restore));
       callback.success(null);
     } else {
       callback.failure(new ErrorCodeException(-404));

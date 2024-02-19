@@ -61,6 +61,7 @@ public class AssetByteAccountant implements EventCodec.HandlerEvent {
   public void handle(Events.Change payload) {
     if (payload.seq_begin < minimumSeq) {
       minimumSeq = payload.seq_begin;
+      bytes += payload.dAssetBytes;
     }
   }
 

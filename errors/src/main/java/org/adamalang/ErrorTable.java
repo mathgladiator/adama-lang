@@ -358,6 +358,12 @@ public class ErrorTable {
     descriptions.put(162036, "no description of error (yet)");
     names.put(127732, "CACHED_BYTE_CODE_FAILED_UNPACK");
     descriptions.put(127732, "no description of error (yet)");
+    names.put(197872, "RESTORE_ALREADY_IN_FLIGHT");
+    descriptions.put(197872, "no description of error (yet)");
+    names.put(111347, "RESTORE_IN_PROGRESS");
+    descriptions.put(111347, "no description of error (yet)");
+    names.put(193264, "RESTORE_COMPLETED");
+    descriptions.put(193264, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
     descriptions.put(684039, "no description of error (yet)");
     names.put(605208, "USER_NOT_FOUND_GET_BALANCE");
@@ -780,8 +786,6 @@ public class ErrorTable {
     descriptions.put(787440, "no description of error (yet)");
     names.put(720955, "ADAMA_NET_CREATE_TIMEOUT");
     descriptions.put(720955, "no description of error (yet)");
-    names.put(717952, "ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE");
-    descriptions.put(717952, "no description of error (yet)");
     names.put(789668, "ADAMA_NET_DELETE_FOUND_REGION_RATHER_THAN_MACHINE");
     descriptions.put(789668, "no description of error (yet)");
     names.put(750799, "ADAMA_NET_DIRECTSEND_FOUND_REGION_RATHER_THAN_MACHINE");
@@ -883,6 +887,8 @@ public class ErrorTable {
     descriptions.put(729311, "no description of error (yet)");
     names.put(785490, "CARAVAN_OUT_OF_SPACE_SNAPSHOT");
     descriptions.put(785490, "no description of error (yet)");
+    names.put(717952, "CARAVAN_OUT_OF_SPACE_RESTORE");
+    descriptions.put(717952, "no description of error (yet)");
     names.put(788560, "CARAVAN_OUT_OF_SPACE_PATCH");
     descriptions.put(788560, "no description of error (yet)");
     names.put(773242, "CARAVAN_OUT_OF_SPACE_INITIALIZE");

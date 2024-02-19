@@ -58,17 +58,19 @@ public class Index {
     int over_50K = 0;
     int over_100K = 0;
     for (List<AnnotatedRegion> regions : index.values()) {
-      if (regions.size() > 10000) {
-        over_10K++;
-      }
-      if (regions.size() > 20000) {
-        over_20K++;
-      }
-      if (regions.size() > 50000) {
-        over_50K++;
-      }
-      if (regions.size() > 100000) {
-        over_100K++;
+      for (AnnotatedRegion region : regions) {
+        if (region.size > 10000) {
+          over_10K++;
+        }
+        if (region.size > 20000) {
+          over_20K++;
+        }
+        if (region.size > 50000) {
+          over_50K++;
+        }
+        if (region.size > 100000) {
+          over_100K++;
+        }
       }
     }
     metrics.items_over_tenk.set(over_10K);
