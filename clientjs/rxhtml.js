@@ -889,6 +889,22 @@ var RxHTML = (function () {
     templates[name] = foo;
   };
 
+  // config:if="key=value"
+  self.CFGt = function (config, key, value) {
+    if (key in config) {
+      return config[key] == value;
+    }
+    return false;
+  };
+  // config:if="key"
+  self.CFGb = function (config, key) {
+    console.log(config);
+    if (key in config) {
+      return config[key] === true;
+    }
+    return false;
+  };
+
   // RUNTIME | <tag rx:template=$name>
   self.UT = function (parent, state, name, child_maker, cfg) {
     var foo = templates[name];

@@ -51,9 +51,9 @@ public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
     gold.append("\n    var f=$.E('div');");
     gold.append("\n    $.UT(f,a,'temp', function(g,h,i) {");
     gold.append("\n      g.append($.T(' This is data within the template, and this is shown always. '));");
-    gold.append("\n      if (i == 'foo') {");
     gold.append("\n");
-    gold.append("\n        // <div rx:case=\"foo\">");
+    gold.append("\n      // <div rx:case=\"foo\">");
+    gold.append("\n      if (i == 'foo') {");
     gold.append("\n        var j=$.E('div');");
     gold.append("\n        j.append($.T(' This only shows up when the case is foo. '));");
     gold.append("\n        g.append(j);");
@@ -87,9 +87,9 @@ public class TemplateTemplatesMultiSlotTests extends BaseRxHtmlTest {
     gold.append("\n    var f=$.E('div');");
     gold.append("\n    $.UT(f,a,'temp', function(g,h,i) {");
     gold.append("\n      g.append($.T(' This is data within the template, and this is shown always. '));");
-    gold.append("\n      if (i == 'foo') {");
     gold.append("\n");
-    gold.append("\n        // <div rx:case=\"foo\">");
+    gold.append("\n      // <div rx:case=\"foo\">");
+    gold.append("\n      if (i == 'foo') {");
     gold.append("\n        var j=$.E('div');");
     gold.append("\n        j.append($.T(' This only shows up when the case is foo. '));");
     gold.append("\n        g.append(j);");

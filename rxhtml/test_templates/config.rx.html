@@ -1,6 +1,17 @@
 <forest>
     <template name="foo">
-
+        <div config:if="t">
+            Show if T is true
+        </div>
+        <div config:if="!f">
+            Show if f is False
+        </div>
+        <div config:if="i=123">
+            Show if i is 123
+        </div>
+        <div config:if="!i=123">
+            Show if i is not 123
+        </div>
     </template>
     <page uri="/">
         <div rx:template="foo" config:t="true" config:f="false" config:i="123" config:d="3.14" config:s="hello world">

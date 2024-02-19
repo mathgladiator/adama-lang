@@ -155,7 +155,7 @@ public class Base {
     for (Attribute attr : element.attributes()) {
       if (attr.getKey().startsWith("config:")) {
         removal.add(attr.getKey());
-        String key = attr.getKey().substring(7);
+        String key = attr.getKey().substring(7).trim().toLowerCase(Locale.ENGLISH);
         String value = "true";
         if (attr.hasDeclaredValue()) {
           value = attr.getValue();
@@ -184,6 +184,29 @@ public class Base {
   }
 
   public static String write(Environment env, boolean returnVariable) {
+    env.writeElementDebugIfTest();
+
+    boolean hasConfigCheck = env.element.hasAttr("config:if");
+    if (hasConfigCheck) {
+      String configExpr = env.element.attr("config:if").trim();
+      env.element.removeAttr("config:if");
+      if (env.configVar != null) {
+        boolean not = configExpr.startsWith("!");
+        if (not) {
+          configExpr = configExpr.substring(1).trim();
+        }
+        int kEq = configExpr.indexOf('=');
+        if (kEq >= 0) {
+          String key = configExpr.substring(0, kEq).trim().toLowerCase(Locale.ENGLISH);
+          String value = Escapes.constantOf(configExpr.substring(kEq + 1).trim());
+          env.writer.tab().append("if(").append(not ? "!" : "").append("$.CFGt(").append(env.configVar).append(",'").append(key).append("',").append(value).append(")) ").append("{").tabUp().newline();
+        } else {
+          env.writer.tab().append("if(").append(not ? "!" : "").append("$.CFGb(").append(env.configVar).append(",'").append(configExpr.toLowerCase(Locale.ENGLISH)).append("')) ").append("{").tabUp().newline();
+        }
+      } else {
+        hasConfigCheck = false;
+      }
+    }
     // get the namespace of the element
     String xmlns = xmlnsOf(env);
 
@@ -195,8 +218,6 @@ public class Base {
     if (hasStaticContent) {
       env.element.removeAttr("static:content");
     }
-
-    env.writeElementDebugIfTest();
 
     ObjectNode config = extractConfig(env.element);
 
@@ -249,6 +270,9 @@ public class Base {
       handoff.rx._behavior();
     }
     wrapUpRxCase(env, hasCase);
+    if (hasConfigCheck) {
+      env.writer.tabDown().tab().append("}").newline();
+    }
     if (returnVariable) {
       return eVar;
     } else {
