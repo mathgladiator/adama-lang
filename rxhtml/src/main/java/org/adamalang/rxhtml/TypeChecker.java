@@ -17,11 +17,9 @@
 */
 package org.adamalang.rxhtml;
 
-import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.typing.RxRootEnvironment;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -32,8 +30,7 @@ import java.util.TreeSet;
 public class TypeChecker {
   /** Given a bundled forest, produce feedback for the developer */
   public static void typecheck(String forest, File input, Feedback feedback) {
-    Document document = Jsoup.parse(forest);
-    Pagify.pagify(document);
+    Document document = Loader.parseForest(forest, ProductionMode.Web);
     warnDuplicatePages(document, feedback);
     if (input != null && input.exists() && input.isDirectory()) {
       new RxRootEnvironment(forest, input, feedback).check();

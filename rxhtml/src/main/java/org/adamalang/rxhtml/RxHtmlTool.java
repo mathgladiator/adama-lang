@@ -17,14 +17,11 @@
 */
 package org.adamalang.rxhtml;
 
-import org.adamalang.rxhtml.preprocess.MarkStaticContent;
-import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.adamalang.rxhtml.typing.ViewSchemaBuilder;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -37,10 +34,7 @@ public class RxHtmlTool {
     Environment env = Environment.fresh(config.feedback, config.environment);
     // DISABLED UNTIL RELEASE
     // TypeChecker.typecheck(str, types, config.feedback);
-    Document document = Jsoup.parse(str);
-    // TODO: enabling this requires a LOT of work
-    // MarkStaticContent.mark(document);
-    Pagify.pagify(document);
+    Document document = Loader.parseForest(str, ProductionMode.Web);
     Root.start(env, buildCustomJavaScript(document));
     String style = buildInternStyle(document);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);

@@ -19,6 +19,8 @@ package org.adamalang.rxhtml.typing;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
+import org.adamalang.rxhtml.Loader;
+import org.adamalang.rxhtml.ProductionMode;
 import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -45,8 +47,7 @@ public class RxRootEnvironment {
   public final HashMap<String, HashSet<String>> templateUsageByPage;
 
   public RxRootEnvironment(String forest, File root, Feedback feedback) {
-    this.document = Jsoup.parse(forest);
-    Pagify.pagify(document);
+    this.document = Loader.parseForest(forest, ProductionMode.Web);
     this.feedback = feedback;
     this.reflections = new HashMap<>();
     this.dedupeTemplates = new HashSet<>();

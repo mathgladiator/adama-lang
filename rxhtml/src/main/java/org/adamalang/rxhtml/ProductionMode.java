@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml;
 
-public class Platform {
-  public static final String VERSION = "20240219152348";
-  public static final String JS_VERSION = "f4ce80ebbbb4d68797f461fedf639954";
+/** how to render the RxHTML */
+public enum ProductionMode {
+  Web,
+  MobileApp
 }

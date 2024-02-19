@@ -15,9 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml;
 
-public class Platform {
-  public static final String VERSION = "20240219152348";
-  public static final String JS_VERSION = "f4ce80ebbbb4d68797f461fedf639954";
+import org.adamalang.rxhtml.preprocess.Mobilify;
+import org.adamalang.rxhtml.preprocess.Pagify;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+public class Loader {
+  public static Document parseForest(String forest, ProductionMode mode) {
+    Document document = Jsoup.parse(forest);
+    Mobilify.go(document, mode);
+    // TODO: enabling this requires a LOT of work
+    // MarkStaticContent.mark(document);
+    Pagify.pagify(document);
+    return document;
+  }
 }

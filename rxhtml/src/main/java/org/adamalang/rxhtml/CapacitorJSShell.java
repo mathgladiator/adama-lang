@@ -17,6 +17,8 @@
 */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.preprocess.Mobilify;
+import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -65,7 +67,7 @@ public class CapacitorJSShell {
   public String make(String forest) throws Exception {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
-    Document document = Jsoup.parse(forest);
+    Document document = Loader.parseForest(forest, ProductionMode.MobileApp);
     Element mobileShell = findMobileShell(document);
     String workerIdentity = mobileShell.hasAttr("worker-identity-name") ? mobileShell.attr("worker-identity-name") : "default";
     sb.append("<!DOCTYPE html>\n<html");
