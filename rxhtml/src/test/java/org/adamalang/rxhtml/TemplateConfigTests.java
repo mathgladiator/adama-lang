@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplatePagifyTemplateEasyTests extends BaseRxHtmlTest {
+public class TemplateConfigTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -36,32 +36,17 @@ public class TemplatePagifyTemplateEasyTests extends BaseRxHtmlTest {
     gold.append("\n  // <template name=\"foo\">");
     gold.append("\n  $.TP('foo', function(a,b,c,d) {");
     gold.append("\n    var e=$.X();");
-    gold.append("\n    a.append($.T(' THIS IS A TEMPLATE '));");
-    gold.append("\n    c(a,b,'');");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/a\" template:use=\"foo\">");
-    gold.append("\n  $.PG(['fixed','a'], function(b,a) {");
+    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:template=\"foo\">");
+    gold.append("\n    // <div rx:template=\"foo\" config:t=\"true\" config:f=\"false\" config:i=\"123\" config:d=\"3.14\" config:s=\"hello world\">");
     gold.append("\n    var f=$.E('div');");
     gold.append("\n    $.UT(f,a,'foo', function(g,h,i) {");
-    gold.append("\n      g.append($.T(' BODY '));");
-    gold.append("\n    },{});");
+    gold.append("\n    },{\"t\":true,\"f\":false,\"i\":123,\"d\":3.14,\"s\":\"hello world\"});");
     gold.append("\n    b.append(f);");
-    gold.append("\n  });");
-    gold.append("\n");
-    gold.append("\n  // <page uri=\"/b\" template:use=\"foo\" template:tag=\"adama\">");
-    gold.append("\n  $.PG(['fixed','b'], function(b,a) {");
-    gold.append("\n    var f=$.X();");
-    gold.append("\n");
-    gold.append("\n    // <adama rx:template=\"foo\">");
-    gold.append("\n    var g=$.E('adama');");
-    gold.append("\n    $.UT(g,a,'foo', function(h,i,j) {");
-    gold.append("\n      h.append($.T(' BODY '));");
-    gold.append("\n    },{});");
-    gold.append("\n    b.append(g);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -74,32 +59,17 @@ public class TemplatePagifyTemplateEasyTests extends BaseRxHtmlTest {
     gold.append("\n  // <template name=\"foo\">");
     gold.append("\n  $.TP('foo', function(a,b,c,d) {");
     gold.append("\n    var e=$.X();");
-    gold.append("\n    a.append($.T(' THIS IS A TEMPLATE '));");
-    gold.append("\n    c(a,b,'');");
     gold.append("\n  });");
     gold.append("\n");
-    gold.append("\n  // <page uri=\"/a\" template:use=\"foo\">");
-    gold.append("\n  $.PG(['fixed','a'], function(b,a) {");
+    gold.append("\n  // <page uri=\"/\">");
+    gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:template=\"foo\">");
+    gold.append("\n    // <div rx:template=\"foo\" config:t=\"true\" config:f=\"false\" config:i=\"123\" config:d=\"3.14\" config:s=\"hello world\">");
     gold.append("\n    var f=$.E('div');");
     gold.append("\n    $.UT(f,a,'foo', function(g,h,i) {");
-    gold.append("\n      g.append($.T(' BODY '));");
-    gold.append("\n    },{});");
+    gold.append("\n    },{\"t\":true,\"f\":false,\"i\":123,\"d\":3.14,\"s\":\"hello world\"});");
     gold.append("\n    b.append(f);");
-    gold.append("\n  });");
-    gold.append("\n");
-    gold.append("\n  // <page uri=\"/b\" template:use=\"foo\" template:tag=\"adama\">");
-    gold.append("\n  $.PG(['fixed','b'], function(b,a) {");
-    gold.append("\n    var f=$.X();");
-    gold.append("\n");
-    gold.append("\n    // <adama rx:template=\"foo\">");
-    gold.append("\n    var g=$.E('adama');");
-    gold.append("\n    $.UT(g,a,'foo', function(h,i,j) {");
-    gold.append("\n      h.append($.T(' BODY '));");
-    gold.append("\n    },{});");
-    gold.append("\n    b.append(g);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -118,13 +88,11 @@ public class TemplatePagifyTemplateEasyTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <template name=\"foo\">");
-    source.append("\n        THIS IS A TEMPLATE <fragment />");
+    source.append("\n");
     source.append("\n    </template>");
-    source.append("\n    <page uri=\"/a\" template:use=\"foo\">");
-    source.append("\n        BODY");
-    source.append("\n    </page>");
-    source.append("\n    <page uri=\"/b\" template:use=\"foo\" template:tag=\"adama\">");
-    source.append("\n        BODY");
+    source.append("\n    <page uri=\"/\">");
+    source.append("\n        <div rx:template=\"foo\" config:t=\"true\" config:f=\"false\" config:i=\"123\" config:d=\"3.14\" config:s=\"hello world\">");
+    source.append("\n        </div>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
@@ -133,8 +101,7 @@ public class TemplatePagifyTemplateEasyTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/a\" : { },");
-    gold.append("\n  \"/b\" : { }");
+    gold.append("\n  \"/\" : { }");
     gold.append("\n}");
     return gold.toString();
   }

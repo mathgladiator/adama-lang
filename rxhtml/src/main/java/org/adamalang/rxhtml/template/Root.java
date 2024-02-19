@@ -45,13 +45,14 @@ public class Root {
     String parentVar = env.pool.ask();
     String stateVar = env.pool.ask();
     String fragmentFunc = env.pool.ask();
+    String configVar = env.pool.ask();
     String name = env.element.attr("name");
     env.writeElementDebugIfTest();
-    env.writer.tab().append("$.TP('").append(name).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(") {").newline().tabUp();
+    env.writer.tab().append("$.TP('").append(name).append("', function(").append(parentVar).append(",").append(stateVar).append(",").append(fragmentFunc).append(",").append(configVar).append(") {").newline().tabUp();
     String autoVar = env.pool.ask();
     env.writer.tab().append("var ").append(autoVar).append("=$.X();").newline();
     Feedback feedback = env.feedback;
-    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback("template " + name, (e, msg) -> feedback.warn(e, "template " + name + ":" + msg)).autoVar(autoVar));
+    Base.children(env.stateVar(stateVar).parentVariable(parentVar).fragmentFunc(fragmentFunc).feedback("template " + name, (e, msg) -> feedback.warn(e, "template " + name + ":" + msg)).autoVar(autoVar).configVar(configVar));
     env.pool.give(parentVar);
     env.pool.give(stateVar);
     env.pool.give(fragmentFunc);

@@ -17,7 +17,9 @@
 */
 package org.adamalang.rxhtml.template;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Escaping;
+import org.adamalang.common.Json;
 import org.jsoup.nodes.*;
 
 import java.lang.reflect.Method;
@@ -118,7 +120,7 @@ public class Base {
     return count;
   }
 
-  private static void body(Environment env, String eVar) {
+  private static void body(Environment env, String eVar, ObjectNode config) {
     if (countAttr(env.element, "rx:iterate", "rx:repeat", "rx:if", "rx:ifnot", "rx:wrap", "rx:custom", "rx:switch", "rx:template") > 1) {
       env.feedback.warn(env.element, "Too many incompatible rx:flags");
     }
@@ -138,13 +140,47 @@ public class Base {
     } else if (env.element.hasAttr("rx:switch")) {
       rx._switch();
     } else if (env.element.hasAttr("rx:template")) {
-      rx._template();
+      rx._template(config);
     } else {
       children(env);
     }
     if (env.element.hasAttr("rx:monitor")) {
       rx._monitor();
     }
+  }
+
+  public static ObjectNode extractConfig(Element element) {
+    ObjectNode config = Json.newJsonObject();
+    ArrayList<String> removal = new ArrayList<>();
+    for (Attribute attr : element.attributes()) {
+      if (attr.getKey().startsWith("config:")) {
+        removal.add(attr.getKey());
+        String key = attr.getKey().substring(7);
+        String value = "true";
+        if (attr.hasDeclaredValue()) {
+          value = attr.getValue();
+        }
+        try {
+          config.put(key, Integer.parseInt(value));
+        } catch (NumberFormatException nfe1) {
+          try {
+            config.put(key, Double.parseDouble(value));
+          } catch (NumberFormatException nfe2) {
+            if (value.equals("true")) {
+              config.put(key, true);
+            } else if (value.equals("false")) {
+              config.put(key, false);
+            } else {
+              config.put(key, value);
+            }
+          }
+        }
+      }
+    }
+    for (String toRemove : removal) {
+      element.removeAttr(toRemove);
+    }
+    return config;
   }
 
   public static String write(Environment env, boolean returnVariable) {
@@ -161,6 +197,8 @@ public class Base {
     }
 
     env.writeElementDebugIfTest();
+
+    ObjectNode config = extractConfig(env.element);
 
     // introduce the element
     IntroHandoff handoff = writeIntro(env, xmlns);
@@ -201,7 +239,7 @@ public class Base {
     }
 
     // write the body of the element (the children and more)
-    body(next, eVar);
+    body(next, eVar, config);
 
     // if we have a parent variable, then append it
     if (env.parentVariable != null) {

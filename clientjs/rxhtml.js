@@ -890,10 +890,10 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | <tag rx:template=$name>
-  self.UT = function (parent, state, name, child_maker) {
+  self.UT = function (parent, state, name, child_maker, cfg) {
     var foo = templates[name];
     if (typeof(foo) == "function") {
-      foo(parent, state, child_maker);
+      foo(parent, state, child_maker, cfg);
     } else {
       console.error("failed to find template: " + name);
     }

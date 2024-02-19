@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.template;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.rxhtml.acl.commands.BulkCommand;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.acl.commands.Set;
@@ -226,14 +227,14 @@ public class Attributes {
     obj.finish();
   }
 
-  public void _template() {
+  public void _template(ObjectNode config) {
     String name = env.element.attr("rx:template");
     String parentVar = env.pool.ask();
     String childStateVar = env.pool.ask();
     String caseVar = env.pool.ask();
     env.writer.tab().append("$.UT(").append(eVar).append(",").append(env.stateVar).append(",'").append(name).append("', function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("},").append(config.toString()).append(");").newline();
     env.pool.give(childStateVar);
     env.pool.give(parentVar);
     env.pool.give(caseVar);

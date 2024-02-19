@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.template;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Escaping;
 import org.adamalang.common.Hashing;
 import org.jsoup.nodes.Attribute;
@@ -423,6 +424,7 @@ public class Elements {
   }
 
   public static void inlinetemplate(Environment env) {
+    ObjectNode config = Base.extractConfig(env.element);
     String eVar = env.parentVariable;
     String name = env.element.attr("name");
     String parentVar = env.pool.ask();
@@ -430,7 +432,7 @@ public class Elements {
     String caseVar = env.pool.ask();
     env.writer.tab().append("$.UT(").append(eVar).append(",").append(env.stateVar).append(",'").append(name).append("', function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("},").append(config.toString()).append(");").newline();
     env.pool.give(childStateVar);
     env.pool.give(parentVar);
     env.pool.give(caseVar);
