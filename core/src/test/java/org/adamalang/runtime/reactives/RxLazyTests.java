@@ -19,6 +19,7 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxParent;
 import org.junit.Assert;
 import org.junit.Test;
@@ -104,6 +105,19 @@ public class RxLazyTests {
     Assert.assertTrue(val.__raiseInvalid());
     parent.alive = false;
     Assert.assertFalse(val.__raiseInvalid());
+  }
+
+  @Test
+  public void chase_id() {
+    MockRecord root = new MockRecord(null) {
+      @Override
+      public int __id() {
+        return 1000;
+      }
+    };
+    MockRecord proxy = new MockRecord(root);
+    final var lz = new RxLazy(proxy, () -> 123, null);
+    Assert.assertEquals(65521001, lz.getGeneration());
   }
 
   @Test

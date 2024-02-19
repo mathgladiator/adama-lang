@@ -75,9 +75,12 @@ public class RxLazy<Ty> extends RxDependent {
   }
 
   private void inc() {
-    if (__parent instanceof RxRecordBase && generation == 0) {
-      generation = ((RxRecordBase) __parent).__id();
-    } else if (generation == 0 && cached != null) {
+    RxParent parentToQuery = __parent;
+    while (parentToQuery != null && parentToQuery instanceof RxRecordBase && generation == 0) {
+      generation = ((RxRecordBase) parentToQuery).__id();
+      parentToQuery = ((RxRecordBase) parentToQuery).__parent;
+    }
+    if (generation == 0 && cached != null) {
       generation = cached.hashCode();
     }
     generation *= 65521;
