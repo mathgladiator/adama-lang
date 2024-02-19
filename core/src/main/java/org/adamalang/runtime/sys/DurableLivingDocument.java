@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -208,7 +207,6 @@ public class DurableLivingDocument implements Queryable {
                   @Override
                   public void success(LivingDocumentChange change) {
                     callback.success(newDocument);
-                    newDocument.queueCompact();
                   }
 
                   @Override
@@ -311,61 +309,65 @@ public class DurableLivingDocument implements Queryable {
     });
   }
 
-  private void testQueueSizeAndThenMaybeCompact() {
-    if (size.get() * 2 > currentFactory.maximum_history * 3) {
-      queueCompact();
-    }
-  }
-
   private void issueBackupWhileInExecutor(BackupService.Reason reason, String copy) {
     base.backup.backup(key, document.__seq.get(), reason, copy, base.metrics.document_backup.wrap(Callback.DONT_CARE_VOID));
     base.getOrCreateInventory(key.space).backup(copy.length() * BACKUP_HOURS);
+  }
+
+  private void testQueueSizeAndThenMaybeCompactWhileInExecutor() {
+    if (size.get() * 2 > currentFactory.maximum_history * 3) {
+      queueCompactWhileInExecutor();
+    }
+  }
+
+  private void queueCompactWhileInExecutor() {
+    if (inflightCompact) {
+      base.metrics.document_compacting_skipped.run();
+      return;
+    }
+    inflightCompact = true;
+    base.metrics.document_compacting.run();
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.enableAssetTracking();
+    document.__dump(writer);
+    int toCompactNow = Math.max(0, size.get() - currentFactory.maximum_history);
+    String snapshot = writer.toString();
+    base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), snapshot, currentFactory.maximum_history, writer.getAssetBytes()), base.metrics.document_snapshot.wrap(new Callback<>() {
+      @Override
+      public void success(Integer value) {
+        base.executor.execute(new NamedRunnable("compact-complete") {
+          @Override
+          public void execute() throws Exception {
+            issueBackupWhileInExecutor(BackupService.Reason.Snapshot, snapshot);
+            if (failedLastSnapshot) {
+              base.metrics.snapshot_recovery.run();
+            }
+            failedLastSnapshot = false;
+            inflightCompact = false;
+            size.getAndAdd(-toCompactNow);
+            testQueueSizeAndThenMaybeCompactWhileInExecutor();
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        base.executor.execute(new NamedRunnable("compact-failed") {
+          @Override
+          public void execute() throws Exception {
+            inflightCompact = false;
+            failedLastSnapshot = true;
+          }
+        });
+      }
+    }));
   }
 
   private void queueCompact() {
     base.executor.execute(new NamedRunnable("document-compacting") {
       @Override
       public void execute() throws Exception {
-        if (inflightCompact) {
-          base.metrics.document_compacting_skipped.run();
-          return;
-        }
-        inflightCompact = true;
-        base.metrics.document_compacting.run();
-        JsonStreamWriter writer = new JsonStreamWriter();
-        writer.enableAssetTracking();
-        document.__dump(writer);
-        int toCompactNow = Math.max(0, size.get() - currentFactory.maximum_history);
-        String snapshot = writer.toString();
-        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), snapshot, currentFactory.maximum_history, writer.getAssetBytes()), base.metrics.document_snapshot.wrap(new Callback<>() {
-          @Override
-          public void success(Integer value) {
-            base.executor.execute(new NamedRunnable("compact-complete") {
-              @Override
-              public void execute() throws Exception {
-                issueBackupWhileInExecutor(BackupService.Reason.Snapshot, snapshot);
-                if (failedLastSnapshot) {
-                  base.metrics.snapshot_recovery.run();
-                }
-                failedLastSnapshot = false;
-                inflightCompact = false;
-                size.getAndAdd(-toCompactNow);
-                testQueueSizeAndThenMaybeCompact();
-              }
-            });
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            base.executor.execute(new NamedRunnable("compact-failed") {
-              @Override
-              public void execute() throws Exception {
-                inflightCompact = false;
-                failedLastSnapshot = true;
-              }
-            });
-          }
-        }));
+        queueCompactWhileInExecutor();
       }
     });
   }
@@ -691,7 +693,7 @@ public class DurableLivingDocument implements Queryable {
                 if (shouldCleanUp && document.__canRemoveFromMemory()) {
                   scheduleCleanup();
                 }
-                testQueueSizeAndThenMaybeCompact();
+                testQueueSizeAndThenMaybeCompactWhileInExecutor();
               } finally {
                 finishSuccessDataServicePatchWhileInExecutor(true);
               }
@@ -1125,14 +1127,14 @@ public class DurableLivingDocument implements Queryable {
     return writer.toString();
   }
 
-  public void afterLoad() {
+  public void afterLoadWhileInExecutor() {
     for (NtPrincipal client : document.__reconcileClientsToForceDisconnect()) {
       disconnect(new CoreRequestContext(client, "adama", "127.0.0.1", key.key), Callback.DONT_CARE_INTEGER);
     }
     if (document.__state.has() && !document.__blocked.get()) {
       invalidate(Callback.DONT_CARE_INTEGER);
     }
-    testQueueSizeAndThenMaybeCompact();
+    testQueueSizeAndThenMaybeCompactWhileInExecutor();
   }
 
   private static class IngestRequest {

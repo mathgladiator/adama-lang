@@ -344,7 +344,7 @@ public class CoreService implements Deliverer, Queryable {
                       base.executor.schedule(new NamedRunnable("post-load-reconcile") {
                         @Override
                         public void execute() throws Exception {
-                          document.afterLoad();
+                          document.afterLoadWhileInExecutor();
                         }
                       }, base.getMillisecondsAfterLoadForReconciliation());
                     }
