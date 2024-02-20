@@ -25,7 +25,7 @@ public class InjectCoordInlineTests {
   public void foo() {
     Assert.assertEquals("<element ln:ch=\"0;0;0;9;name\">", InjectCoordInline.execute("<element>", "name"));
     Assert.assertEquals("<element ln:ch=\"0;0;0;10;name\" />", InjectCoordInline.execute("<element/>", "name"));
-    Assert.assertEquals("<element ln:ch=\"0;0;0;18;name\">", InjectCoordInline.execute("<element         >", "name"));
+    Assert.assertEquals("<element ln:ch=\"0;0;0;18;name\"         >", InjectCoordInline.execute("<element         >", "name"));
 
     Assert.assertEquals("<!--comment-->HI", InjectCoordInline.execute("<!--comment-->HI", "name"));
   }
