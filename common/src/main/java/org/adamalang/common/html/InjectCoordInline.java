@@ -27,11 +27,18 @@ public class InjectCoordInline {
     while (it.hasNext()) {
       Token token = it.next();
       if (token.type == Type.ElementOpen) {
+        final String prefix;
+        final String suffix;
        if (token.text.endsWith("/>")) {
-         sb.append(token.text.substring(0, token.text.length() - 2).stripTrailing() + " ln:ch=\"" + token.coords() + ";" +  name + "\" />");
+         prefix = token.text.substring(0, token.text.length() - 2);
+         suffix = " />";
         } else {
-         sb.append(token.text.substring(0, token.text.length() - 1).stripTrailing() + " ln:ch=\"" + token.coords() + ";" + name + "\">");
+         prefix = token.text.substring(0, token.text.length() - 1);
+         suffix = ">";
        }
+       int leftCut = prefix.stripTrailing().length();
+       String right = leftCut == prefix.length() ? "" : prefix.substring(leftCut);
+       sb.append(prefix, 0, leftCut).append(" ln:ch=\"").append(token.coords()).append(";").append(name).append("\"").append(right).append(suffix);
       } else {
         sb.append(token.text);
       }

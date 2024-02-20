@@ -23,6 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,20 +34,20 @@ public class Bundler {
     StringBuilder output = new StringBuilder();
     output.append("<forest>\n");
     for (File file : files) {
-      Document useDoc = Jsoup.parse(file);
-      String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), "");
-      if (inject) {
-        String nameToReport = file.getName();
-        try {
-          String commonRoot = commonPath.getAbsolutePath();
-          String fullPath = file.getAbsolutePath();
-          nameToReport = fullPath.substring(commonRoot.length()).replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("/"));
-        } catch (Exception failedToResolveAbsolutePath) {
-        }
-        output.append(InjectCoordInline.execute(partial, nameToReport));
-      } else {
-        output.append(partial);
+      String nameToReport = file.getName();
+      try {
+        String commonRoot = commonPath.getAbsolutePath();
+        String fullPath = file.getAbsolutePath();
+        nameToReport = fullPath.substring(commonRoot.length()).replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("/"));
+      } catch (Exception failedToResolveAbsolutePath) {
       }
+      Document useDoc;
+      if (inject) {
+        useDoc = Jsoup.parse(InjectCoordInline.execute(Files.readString(file.toPath()), nameToReport));
+      } else {
+        useDoc = Jsoup.parse(file);
+      }
+      output.append(StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), ""));
     }
     output.append("</forest>\n");
     return output.toString();

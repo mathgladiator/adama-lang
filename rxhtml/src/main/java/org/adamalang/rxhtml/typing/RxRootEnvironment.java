@@ -110,17 +110,6 @@ public class RxRootEnvironment {
     }
   }
 
-  private void childrenCase(Element parent, String caseValue, PageEnvironment env) {
-    for (Element child : parent.children()) {
-      if (child.hasAttr("rx:case")) {
-        if (!child.attr("rx:case").equals(caseValue)) {
-          continue;
-        }
-      }
-      check(child, env);
-    }
-  }
-
   private void checkCondition(String condition, PageEnvironment env, Consumer<String> reportError) {
     Consumer<String> acceptChannel = (channel) -> {
       if (env.scope == null) {
@@ -139,7 +128,6 @@ public class RxRootEnvironment {
       acceptChannel.accept(condition.substring(9));
       return;
     }
-
     if (condition.startsWith("eval:")) {
       // TODO:
       return;
@@ -153,32 +141,22 @@ public class RxRootEnvironment {
       }
     };
 
-
     int kEq = condition.indexOf('=');
     if (kEq > 0) {
       checkBranch.accept(condition.substring(0, kEq).trim());
       checkBranch.accept(condition.substring(kEq + 1).trim());
     } else {
       DataSelector selector = env.scope.select(env.privacy, condition, reportError);
-      if ("read_this_bulletin".equals(condition)) {
-        System.err.println("FOUND:" + selector);
-      }
       if (selector != null) {
         selector.validateBoolean(reportError);
       }
     }
-
-    // TODO: parse the condition
-    // TODO: validate condition logic
-    /*
-    DataSelector selector = env.scope.select(env.privacy, condition, reportError);
-    if (selector != null) {
-
-    }
-     */
   }
 
   private void _checkExpression(Element element, PageEnvironment env, String... attributes) {
+    if (env.scope == null) {
+      return;
+    }
     Consumer<String> reportError = (err) -> feedback.warn(element, err);
     for (String attr : attributes) {
       if (element.attributes().hasDeclaredValueForKey(attr)) {
@@ -200,13 +178,15 @@ public class RxRootEnvironment {
 
 
   private void _checkPath(Element element, PageEnvironment env, String... attributes) {
-    Consumer<String> reportError = (err) -> feedback.warn(element, err);
-    for (String attr : attributes) {
-      if (element.attributes().hasDeclaredValueForKey(attr)) {
-        String pathToCheck = element.attr(attr);
-        DataSelector selector = env.scope.select(env.privacy, pathToCheck, reportError);
-        if (selector != null) {
-          selector.validateAttribute(reportError);
+    if (env.scope != null) {
+      Consumer<String> reportError = (err) -> feedback.warn(element, err);
+      for (String attr : attributes) {
+        if (element.attributes().hasDeclaredValueForKey(attr)) {
+          String pathToCheck = element.attr(attr);
+          DataSelector selector = env.scope.select(env.privacy, pathToCheck, reportError);
+          if (selector != null) {
+            selector.validateAttribute(reportError);
+          }
         }
       }
     }
@@ -293,7 +273,7 @@ public class RxRootEnvironment {
 
     for (Attribute attr : element.attributes()) {
       if (attr.hasDeclaredValue()) {
-        _checkExpression(element, env, attr.getValue());
+        _checkExpression(element, env, attr.getKey());
       }
     }
     children(element, next);
@@ -429,7 +409,7 @@ public class RxRootEnvironment {
     } catch (NoSuchMethodException nme) {
       base(element, env);
     } catch (Exception ex) {
-      feedback.warn(element, "problem:" + ex.getMessage());
+      feedback.warn(element, "[" + element.tagName() + "] problem:" + ex.getMessage());
     }
   }
 
