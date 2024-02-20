@@ -22,6 +22,7 @@ import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 public class AutoVar implements Tree {
   @Override
@@ -50,5 +51,10 @@ public class AutoVar implements Tree {
 
   @Override
   public void writeTypes(ViewScope vs) {
+  }
+
+  @Override
+  public Set<String> queries() {
+    return Collections.emptySet();
   }
 }

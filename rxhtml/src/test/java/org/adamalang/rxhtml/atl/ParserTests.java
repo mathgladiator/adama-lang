@@ -49,6 +49,7 @@ public class ParserTests {
     Assert.assertEquals("\"xyz\"", tree.js(Context.DEFAULT, "$X"));
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(0, vars.size());
+    Assert.assertEquals(0, tree.queries().size());
   }
 
   @Test
@@ -56,6 +57,8 @@ public class ParserTests {
     Tree tree = org.adamalang.rxhtml.atl.Parser.parse("/#project/{view:space}/manage");
     Assert.assertEquals("[TEXT(/#project/),LOOKUP[space],TEXT(/manage)]", tree.debug());
     Assert.assertEquals("\"/#project/\" + $.F($X,'space') + \"/manage\"", tree.js(Context.DEFAULT, "$X"));
+    Assert.assertEquals(1, tree.queries().size());
+    Assert.assertTrue(tree.queries().contains("view:space"));
   }
 
   @Test
@@ -67,6 +70,9 @@ public class ParserTests {
     Assert.assertEquals(2, vars.size());
     Assert.assertTrue(vars.containsKey("first"));
     Assert.assertTrue(vars.containsKey("last"));
+    Assert.assertEquals(2, tree.queries().size());
+    Assert.assertTrue(tree.queries().contains("first"));
+    Assert.assertTrue(tree.queries().contains("last"));
   }
 
   @Test
@@ -122,5 +128,7 @@ public class ParserTests {
     Map<String, String> vars = tree.variables();
     Assert.assertEquals(1, vars.size());
     Assert.assertTrue(vars.containsKey("b"));
+    Assert.assertEquals(1, tree.queries().size());
+    Assert.assertTrue(tree.queries().contains("b"));
   }
 }

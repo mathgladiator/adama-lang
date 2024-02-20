@@ -113,6 +113,11 @@ public class Environment {
         case "inlinetemplate":
         case "connection":
         case "connectionstatus":
+        case "viewstateparams":
+        case "viewwrite":
+        case "title":
+        case "exitgate":
+        case "monitor":
           return null;
       }
     }

@@ -23,7 +23,9 @@ import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /** a simple way of doing string equality */
 public class Operate implements Tree {
@@ -73,5 +75,13 @@ public class Operate implements Tree {
   public void writeTypes(ViewScope vs) {
     tree.writeTypes(vs);
     value.writeTypes(vs);
+  }
+
+  @Override
+  public Set<String> queries() {
+    TreeSet<String> all = new TreeSet<>();
+    all.addAll(tree.queries());
+    all.addAll(value.queries());
+    return all;
   }
 }

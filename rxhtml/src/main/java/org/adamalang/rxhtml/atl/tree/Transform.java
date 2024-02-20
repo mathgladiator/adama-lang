@@ -20,7 +20,9 @@ package org.adamalang.rxhtml.atl.tree;
 import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.typing.ViewScope;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /** Transform a node */
 public class Transform implements Tree {
@@ -56,5 +58,10 @@ public class Transform implements Tree {
   @Override
   public void writeTypes(ViewScope vs) {
     base.writeTypes(vs);
+  }
+
+  @Override
+  public Set<String> queries() {
+    return base.queries();
   }
 }

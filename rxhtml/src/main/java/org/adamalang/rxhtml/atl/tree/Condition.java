@@ -21,7 +21,9 @@ import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /** an if/then/else node */
 public class Condition implements Tree {
@@ -64,5 +66,14 @@ public class Condition implements Tree {
     guard.writeTypes(vs);
     branchTrue.writeTypes(vs);
     branchFalse.writeTypes(vs);
+  }
+
+  @Override
+  public Set<String> queries() {
+    TreeSet<String> all = new TreeSet<>();
+    all.addAll(guard.queries());
+    all.addAll(branchTrue.queries());
+    all.addAll(branchFalse.queries());
+    return all;
   }
 }

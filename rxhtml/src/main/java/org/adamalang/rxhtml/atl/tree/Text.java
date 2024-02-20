@@ -23,6 +23,7 @@ import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /** Raw Text */
 public class Text implements Tree {
@@ -69,5 +70,10 @@ public class Text implements Tree {
 
   @Override
   public void writeTypes(ViewScope vs) {
+  }
+
+  @Override
+  public Set<String> queries() {
+    return Collections.emptySet();
   }
 }

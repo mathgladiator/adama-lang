@@ -21,6 +21,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.rxhtml.Loader;
 import org.adamalang.rxhtml.ProductionMode;
+import org.adamalang.rxhtml.atl.ParseException;
+import org.adamalang.rxhtml.atl.Parser;
+import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.preprocess.Pagify;
 import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.config.Feedback;
@@ -117,7 +120,51 @@ public class RxRootEnvironment {
     }
   }
 
-  private void checkCondition(String condition, PageEnvironment env, Consumer<String> reportError) {
+  private void checkCondition(String condition, PageEnvironment env, BiFunction<PageEnvironment, String, String> findScopable, Consumer<String> reportError) {
+    if (condition.startsWith("decide:")) {
+      String decider = condition.substring(7);
+      // TODO
+      return;
+    }
+    if (condition.startsWith("choose:") || condition.startsWith("chosen:")) {
+      String choose = condition.substring(7);
+      // TODO
+      return;
+    }
+    if (condition.startsWith("finalize:")) {
+      String choose = condition.substring(9);
+      // TODO:
+      return;
+    }
+
+    if (condition.startsWith("eval:")) {
+      // TODO:
+      return;
+    }
+    Consumer<String> checkBranch = (branch) -> {
+      if (branch != null) {
+        DataSelector selector = env.scope.select(env.privacy, branch, reportError);
+        if (selector != null) {
+          selector.validateAttribute(reportError);
+        }
+      }
+    };
+
+
+    int kEq = condition.indexOf('=');
+    if (kEq > 0) {
+      checkBranch.accept(findScopable.apply(env, condition.substring(0, kEq).trim()));
+      checkBranch.accept(findScopable.apply(env, condition.substring(kEq + 1).trim()));
+    } else {
+      String b = findScopable.apply(env, condition);
+      if (b != null) {
+        DataSelector selector = env.scope.select(env.privacy, b, reportError);
+        if (selector != null) {
+          selector.validateBoolean(reportError);
+        }
+      }
+    }
+
     // TODO: parse the condition
     // TODO: validate condition logic
     /*
@@ -126,6 +173,26 @@ public class RxRootEnvironment {
 
     }
      */
+  }
+
+  private void _checkValue(Element element, PageEnvironment env, String... attributes) {
+    Consumer<String> reportError = (err) -> feedback.warn(element, err);
+    for (String attr : attributes) {
+      if (element.attributes().hasDeclaredValueForKey(attr)) {
+        String valueToCheck = element.attr(attr);
+        try {
+          Tree tree = Parser.parse(valueToCheck);
+          for (String query : tree.queries()) {
+            DataSelector selector = env.scope.select(env.privacy, query, reportError);
+            if (selector != null) {
+              selector.validateAttribute(reportError);
+            }
+          }
+        } catch (ParseException pe) {
+          reportError.accept("failed to parse ATL: " + valueToCheck);
+        }
+      }
+    }
   }
 
   private void base(Element element, PageEnvironment env) {
@@ -174,13 +241,20 @@ public class RxRootEnvironment {
         selector.validateIntegral(reportError);
       }
     }
+    String toMonitor = findScopable.apply(next, "rx:monitor");
+    if (toMonitor != null) {
+      DataSelector selector = next.scope.select(next.privacy, toMonitor, reportError);
+      if (selector != null) {
+        selector.validateIntegral(reportError);
+      }
+    }
     String toIfCheck = findScopable.apply(next, "rx:if");
     if (toIfCheck != null) {
-      checkCondition(toIfCheck, next, reportError);
+      checkCondition(toIfCheck, next, findScopable, reportError);
     }
     String toIfNotCheck = findScopable.apply(next, "rx:ifnot");
     if (toIfNotCheck != null) {
-      checkCondition(toIfNotCheck, env, reportError);
+      checkCondition(toIfNotCheck, env, findScopable, reportError);
     }
     String toSwitch = findScopable.apply(next, "rx:switch");
     if (toSwitch != null) {
@@ -199,8 +273,16 @@ public class RxRootEnvironment {
         reportError.accept("template '" + templateToUse + "' not found");
       }
     }
+
+    for (Attribute attr : element.attributes()) {
+      if (attr.hasDeclaredValue()) {
+        _checkValue(element, env, attr.getValue());
+      }
+    }
     children(element, next);
   }
+
+
 
   public void inlinetemplate(Element inlinetemplate, PageEnvironment env) {
     String templateToUse = inlinetemplate.attr("name");
@@ -215,16 +297,59 @@ public class RxRootEnvironment {
   }
 
   public void fragment(Element fragment, PageEnvironment env) {
-    if (fragment.hasAttr("case")) {
-      String caseValue = fragment.attr("case");
-      childrenCase(env.getFragmentProvider(), caseValue, env);
-    } else {
-      children(env.getFragmentProvider(), env);
-    }
+    children(env.getFragmentProvider(), env);
+  }
+
+  public void lookup(Element lookup, PageEnvironment env) {
+    _checkValue(lookup, env, "path");
+  }
+
+  public void monitor(Element monitor, PageEnvironment env) {
+    _checkValue(monitor, env, "path");
+  }
+
+  public void title(Element title, PageEnvironment env) {
+    _checkValue(title, env, "title");
+  }
+
+  public void viewwrite(Element viewwrite, PageEnvironment env) {
+    _checkValue(viewwrite, env, "value");
   }
 
   public void todotask(Element fragment, PageEnvironment env) {
     // ignore
+  }
+
+  public void viewstateparams(Element vsp, PageEnvironment env) {
+    ArrayList<String> sync = new ArrayList<>();
+    for (Attribute attr : vsp.attributes()) {
+      if (attr.hasDeclaredValue() && attr.getKey().startsWith("sync:")) {
+        sync.add(attr.getValue());
+      }
+    }
+    _checkValue(vsp, env, sync.toArray(new String[sync.size()]));
+  }
+
+  public void form(Element form, PageEnvironment env) {
+    if (form.hasAttr("rx:action")) {
+      String action = form.attr("rx:action");
+      if (action.startsWith("send:")) {
+        String channel = action.substring(5);
+        if (env.scope == null) {
+          feedback.warn(form, "no data channel for a form to send channel '" + channel + "' on");
+        } else {
+          if(!env.scope.hasChannel(channel)) {
+            feedback.warn(form, "channel '" + channel + "' was not found");
+          }
+        }
+      }
+      // TODO: all the strange things
+    }
+    children(form, env);
+  }
+
+  public void exitgate(Element exitgate, PageEnvironment env) {
+    // TODO: both guard and set are related to the view:
   }
 
   public void domainget(Element domainGet, PageEnvironment env) {
@@ -247,6 +372,10 @@ public class RxRootEnvironment {
     String name = "default";
     if (connection.hasAttr("name")) {
       name = connection.attr("name");
+    }
+    _checkValue(connection, env, "identity", "redirect", "name");
+    if (!(connection.hasAttr("use-domain") || connection.hasAttr("billing"))) {
+      _checkValue(connection, env, "space", "key");
     }
     ObjectNode reflect = reflections.get(backend);
     if (reflect == null) {
@@ -273,10 +402,6 @@ public class RxRootEnvironment {
       // TODO: WARN
       children(pick, env);
     }
-  }
-
-  public void lookup(Element lookup, PageEnvironment env) {
-    String path = lookup.attr("path");
   }
 
   private void check(Element element, PageEnvironment env) {

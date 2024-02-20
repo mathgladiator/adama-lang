@@ -80,7 +80,15 @@ public class DataSelector {
     }
   }
 
+  public void validateAttribute(Consumer<String> errors) {
+    // TODO: validate as finite string
+  }
+
   public void validateIntegral(Consumer<String> errors) {
+    // TODO: validate INT, LONG
+  }
+
+  public void validateBoolean(Consumer<String> errors) {
     // TODO: validate INT, LONG
   }
 

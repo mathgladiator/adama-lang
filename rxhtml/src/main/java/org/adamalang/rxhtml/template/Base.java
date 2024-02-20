@@ -219,11 +219,23 @@ public class Base {
       env.element.removeAttr("static:content");
     }
 
+    // for rx:case, only inject the children with "children-only" attribute
+    boolean childrenOnly = hasCase && env.element.hasAttr("children-only") && env.parentVariable != null && !returnVariable && !hasStaticContent;
+
     ObjectNode config = extractConfig(env.element);
 
     // introduce the element
-    IntroHandoff handoff = writeIntro(env, xmlns);
-    String eVar = handoff.eVar;
+    IntroHandoff handoff = null;
+    final String eVar;
+    final boolean eVarCreated;
+    if (hasCase && childrenOnly) {
+      eVar = env.parentVariable;
+      eVarCreated = false;
+    } else {
+      handoff = writeIntro(env, xmlns);
+      eVar = handoff.eVar;
+      eVarCreated = true;
+    }
 
     if (hasStaticContent) {
       // flush out the static content in an isolate innerHTML set
@@ -237,7 +249,9 @@ public class Base {
       if (returnVariable) {
         return eVar;
       } else {
-        env.pool.give(eVar);
+        if (eVarCreated) {
+          env.pool.give(eVar);
+        }
         return null;
       }
     }
@@ -266,7 +280,7 @@ public class Base {
     if (env.parentVariable != null) {
       env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
     }
-    if (env.element.hasAttr("rx:behavior")) {
+    if (handoff != null && env.element.hasAttr("rx:behavior")) {
       handoff.rx._behavior();
     }
     wrapUpRxCase(env, hasCase);
@@ -276,7 +290,9 @@ public class Base {
     if (returnVariable) {
       return eVar;
     } else {
-      env.pool.give(eVar);
+      if (eVarCreated) {
+        env.pool.give(eVar);
+      }
       return null;
     }
   }

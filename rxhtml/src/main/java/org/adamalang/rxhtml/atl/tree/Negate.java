@@ -21,6 +21,7 @@ import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
+import java.util.Set;
 
 /** Negate a node (i.e. not for boolean) */
 public class Negate implements Tree {
@@ -53,5 +54,10 @@ public class Negate implements Tree {
   @Override
   public void writeTypes(ViewScope vs) {
     value.writeTypes(vs);
+  }
+
+  @Override
+  public Set<String> queries() {
+    return value.queries();
   }
 }

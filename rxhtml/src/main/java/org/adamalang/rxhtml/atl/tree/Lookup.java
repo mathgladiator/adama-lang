@@ -23,6 +23,7 @@ import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /** lookup a variable */
 public class Lookup implements Tree {
@@ -39,6 +40,11 @@ public class Lookup implements Tree {
   @Override
   public Map<String, String> variables() {
     return Collections.singletonMap(name, complete);
+  }
+
+  @Override
+  public Set<String> queries() {
+    return Collections.singleton(complete);
   }
 
   @Override

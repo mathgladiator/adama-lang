@@ -1009,6 +1009,11 @@ var RxHTML = (function () {
         try {
           n = typeof (value) == 'number' ? value : parseInt(value);
         } catch (failedParsingN) {
+          if (value === true || value == "true") {
+            n = 1;
+          } else if (value === false || value == "false") {
+            n = 0;
+          }
         }
         if (this.first) {
           this.at = n;

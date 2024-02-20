@@ -21,6 +21,7 @@ import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
+import java.util.Set;
 
 /** common interface for the tree nodes */
 public interface Tree {
@@ -34,7 +35,12 @@ public interface Tree {
   /** javascript expression to build the string */
   String js(Context context, String env);
 
+  /** does the tree have an auto variable */
   boolean hasAuto();
 
+  /** write out the types */
   public void writeTypes(ViewScope vs);
+
+  /** produce a set of queries made */
+  public Set<String> queries();
 }

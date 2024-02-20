@@ -395,9 +395,8 @@ public class Elements {
     String inputVar = Base.write(env, true);
     if (env.element.hasAttr("rx:sync")) {
       String path = env.element.attr("rx:sync");
-      boolean tuned = path.startsWith("view:") | path.startsWith("data:");
       double ms = _rxdebounce(env);
-      StatePath _path = StatePath.resolve(tuned ? path : ("view:" + path), env.stateVar);
+      StatePath _path = StatePath.resolve(("view:" + path), env.stateVar);
       env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
     }
     env.pool.give(inputVar);

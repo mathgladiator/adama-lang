@@ -52,29 +52,37 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * pick/switch "view:" "data:" *A*
 
 ## Attributes
-* branching: force-hiding
-* branching: rx:if, rx:ifnot
-* source: boolean mode
-* source: decide:
-* source: choose:
-* source: chosen:
-* source: finalize: 
-* source: compare mode ($pathL=$pathR)
+* branching: force-hiding *A*
+* branching: rx:if, rx:ifnot *A*
+* source: boolean mode *A*
+* source: decide: *A*
+* source: choose: *A*
+* source: chosen: *A*
+* source: finalize:  *A*
+* source: compare mode ($pathL=$pathR) *A*
 * future source: eval:
-* branching: rx:else / rx:disconnected / rx:failed
-* rx:monitor
-* rx:behavior
-* rx:repeat (solo child)
-* rx:iterate (solo child) (rx:expand-view-state)
+* branching: rx:else / rx:disconnected / rx:failed *A*
+* rx:monitor *A*
+* rx:behavior *A*
+* rx:repeat (solo child) *A*
+* rx:iterate (solo child) (rx:expand-view-state) *A*
 * rx:switch, rx:case
-* rx:wrap (to deprecate)
-* rx:custom (big one)
+* rx:wrap (to deprecate) *A*
+* rx:custom (big one) *A*
 * rx:template *A*
 * feature: "merge"
+* rx:link (what is this?)
 
-## Scoping
-* rx:scope
-* rx:expand-view-state
+## Config
+* config:$name=$value on a template
+* config:if=$b within a template
+* config:if=!$b within a template
+* config:if=$k=$v within a template
+* config:if=!$k=$v within a template
+* 
+* ## Scoping
+* rx:scope *A*
+* rx:expand-view-state *A*
 
 ## Attribute Setting
 * boolean inputs
@@ -138,18 +146,18 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * shell
 
 # Elements
-* fragment / fragment &amp case
-* monitor
-* view-write
-* lookup
-* lookup transforms
-* lookup refresh
-* trustedhtml (like lookup but for HTML)
-* exit-gate (guard, set)
+* fragment / fragment &amp case *A*
+* monitor *A*
+* view-write *A*
+* lookup *A*
+* lookup transforms *A*
+* lookup refresh *A*
+* trustedhtml (like lookup but for HTML) *A*
+* exit-gate (guard, set) *A*
 * todo-task *A*
-* title
-* view-state-params
-* view-sync (deprecated?)
+* title *A*
+* view-state-params *A*
+* view-sync (to deprecated?)
 * connection-status *A*
 * connection *A*
 * local-storage-poll
@@ -157,9 +165,9 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * domain-get
 * pick *A*
 * custom-data
-* input/text-area/select (rx:sync) (TODO, write to multiple places)
-* input/text-area/select (rx:debounce)
-* sign-out
+* input/text-area/select (rx:sync) (TODO, write to multiple places) *A*
+* input/text-area/select (rx:debounce) *A*
+* sign-out *A*
 * inline-template *A*
 
 # RxObject

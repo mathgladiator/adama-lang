@@ -41,6 +41,10 @@ public class DataScope {
     return stack;
   }
 
+  public boolean hasChannel(String channel) {
+    return forest.get("channels").has(channel);
+  }
+
   public static DataScope root(ObjectNode forest) {
     return new DataScope(forest, new String[] { "__Root" });
   }

@@ -47,7 +47,7 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('textarea');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    b.append(d);");
-    gold.append("\n    $.SY(d,$.pD(a),'foo',100.0);");
+    gold.append("\n    $.SY(d,$.pV(a),'foo',100.0);");
     gold.append("\n");
     gold.append("\n    // <select name=\"email\" rx:sync=\"view:foo\">");
     gold.append("\n    var d=$.E('select');");
@@ -83,7 +83,7 @@ public class TemplateInputSyncTests extends BaseRxHtmlTest {
     gold.append("\n    var d=$.E('textarea');");
     gold.append("\n    $.SA(d,'name',\"email\");");
     gold.append("\n    b.append(d);");
-    gold.append("\n    $.SY(d,$.pD(a),'foo',100.0);");
+    gold.append("\n    $.SY(d,$.pV(a),'foo',100.0);");
     gold.append("\n");
     gold.append("\n    // <select name=\"email\" rx:sync=\"view:foo\">");
     gold.append("\n    var d=$.E('select');");

@@ -21,7 +21,9 @@ import org.adamalang.rxhtml.atl.Context;
 import org.adamalang.rxhtml.typing.ViewScope;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Concat implements Tree {
   public final Tree[] children;
@@ -84,5 +86,14 @@ public class Concat implements Tree {
     for (Tree child : children) {
       child.writeTypes(vs);
     }
+  }
+
+  @Override
+  public Set<String> queries() {
+    TreeSet<String> all = new TreeSet<>();
+    for (Tree child : children) {
+      all.addAll(child.queries());
+    }
+    return all;
   }
 }

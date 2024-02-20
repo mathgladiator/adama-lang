@@ -67,6 +67,10 @@ public class Attributes {
       String channel = value.substring(9);
       env.writer.tab().append("$.FIN(").append(eVar).append(",").append(env.stateVar).append(",'").append(channel).append("',");
       env.writer.append(version.equals("rx:if") ? "true" : "false").append(",").append(expand ? "true" : "false").append(",function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+    } else if (value.startsWith("eval:")) {
+      String expression = value.substring(5);
+      // TODO: (1) compile the expression
+      throw new UnsupportedOperationException("not implemented yet");
     } else {
       int kEq = value.indexOf('=');
       if (kEq > 0) {
