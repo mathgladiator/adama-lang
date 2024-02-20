@@ -3438,7 +3438,8 @@ var RxHTML = (function () {
       // it wasn't 90 seconds ago or less, so let's refine towards minutes
       delta /= 60; // now it is minutes
       if (delta < 60) {
-        return Math.floor(delta) + " minutes ago";
+        const deltaInt = Math.floor(delta);
+        return `${deltaInt} minute${deltaInt > 1 ? 's': ''} ago`;
       }
       if (delta > 2.628e+7) {
         return "Never";
