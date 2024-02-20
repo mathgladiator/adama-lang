@@ -187,8 +187,12 @@ public class FrontendHandlerImpl implements FrontendHandler {
     aggregateFiles(rxhtmlPath, files);
     String result = Bundler.bundle(rxhtmlPath, files, true);
     TypeChecker.typecheck(result,  new File(args.types), (el, w) -> {
-      String location = el.attr("ln:ch");
-      System.err.println("warning:" + w + " @ " + location);
+      if (el.hasAttr("ln:ch")) {
+        String location = el.attr("ln:ch");
+        System.err.println("warning:" + w + " @ " + location);
+      } else {
+        System.err.println("warning:" + w);
+      }
     });
     output.out();
   }

@@ -17,6 +17,7 @@
 */
 package org.adamalang.rxhtml.typing;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.rxhtml.Loader;
@@ -120,20 +121,22 @@ public class RxRootEnvironment {
     }
   }
 
-  private void checkCondition(String condition, PageEnvironment env, BiFunction<PageEnvironment, String, String> findScopable, Consumer<String> reportError) {
-    if (condition.startsWith("decide:")) {
-      String decider = condition.substring(7);
-      // TODO
-      return;
-    }
-    if (condition.startsWith("choose:") || condition.startsWith("chosen:")) {
-      String choose = condition.substring(7);
-      // TODO
+  private void checkCondition(String condition, PageEnvironment env, Consumer<String> reportError) {
+    Consumer<String> acceptChannel = (channel) -> {
+      if (env.scope == null) {
+        reportError.accept(condition + " has no data scope");
+      } else {
+        if (!env.scope.hasChannel(channel)) {
+          reportError.accept(condition + " failed to find channel '" + channel + "'");
+        }
+      }
+    };
+    if (condition.startsWith("decide:") || condition.startsWith("choose:") || condition.startsWith("chosen:")) {
+      acceptChannel.accept(condition.substring(7));
       return;
     }
     if (condition.startsWith("finalize:")) {
-      String choose = condition.substring(9);
-      // TODO:
+      acceptChannel.accept(condition.substring(9));
       return;
     }
 
@@ -153,15 +156,15 @@ public class RxRootEnvironment {
 
     int kEq = condition.indexOf('=');
     if (kEq > 0) {
-      checkBranch.accept(findScopable.apply(env, condition.substring(0, kEq).trim()));
-      checkBranch.accept(findScopable.apply(env, condition.substring(kEq + 1).trim()));
+      checkBranch.accept(condition.substring(0, kEq).trim());
+      checkBranch.accept(condition.substring(kEq + 1).trim());
     } else {
-      String b = findScopable.apply(env, condition);
-      if (b != null) {
-        DataSelector selector = env.scope.select(env.privacy, b, reportError);
-        if (selector != null) {
-          selector.validateBoolean(reportError);
-        }
+      DataSelector selector = env.scope.select(env.privacy, condition, reportError);
+      if ("read_this_bulletin".equals(condition)) {
+        System.err.println("FOUND:" + selector);
+      }
+      if (selector != null) {
+        selector.validateBoolean(reportError);
       }
     }
 
@@ -175,7 +178,7 @@ public class RxRootEnvironment {
      */
   }
 
-  private void _checkValue(Element element, PageEnvironment env, String... attributes) {
+  private void _checkExpression(Element element, PageEnvironment env, String... attributes) {
     Consumer<String> reportError = (err) -> feedback.warn(element, err);
     for (String attr : attributes) {
       if (element.attributes().hasDeclaredValueForKey(attr)) {
@@ -190,6 +193,20 @@ public class RxRootEnvironment {
           }
         } catch (ParseException pe) {
           reportError.accept("failed to parse ATL: " + valueToCheck);
+        }
+      }
+    }
+  }
+
+
+  private void _checkPath(Element element, PageEnvironment env, String... attributes) {
+    Consumer<String> reportError = (err) -> feedback.warn(element, err);
+    for (String attr : attributes) {
+      if (element.attributes().hasDeclaredValueForKey(attr)) {
+        String pathToCheck = element.attr(attr);
+        DataSelector selector = env.scope.select(env.privacy, pathToCheck, reportError);
+        if (selector != null) {
+          selector.validateAttribute(reportError);
         }
       }
     }
@@ -250,11 +267,11 @@ public class RxRootEnvironment {
     }
     String toIfCheck = findScopable.apply(next, "rx:if");
     if (toIfCheck != null) {
-      checkCondition(toIfCheck, next, findScopable, reportError);
+      checkCondition(toIfCheck, next, reportError);
     }
     String toIfNotCheck = findScopable.apply(next, "rx:ifnot");
     if (toIfNotCheck != null) {
-      checkCondition(toIfNotCheck, env, findScopable, reportError);
+      checkCondition(toIfNotCheck, env, reportError);
     }
     String toSwitch = findScopable.apply(next, "rx:switch");
     if (toSwitch != null) {
@@ -276,7 +293,7 @@ public class RxRootEnvironment {
 
     for (Attribute attr : element.attributes()) {
       if (attr.hasDeclaredValue()) {
-        _checkValue(element, env, attr.getValue());
+        _checkExpression(element, env, attr.getValue());
       }
     }
     children(element, next);
@@ -301,19 +318,19 @@ public class RxRootEnvironment {
   }
 
   public void lookup(Element lookup, PageEnvironment env) {
-    _checkValue(lookup, env, "path");
+    _checkPath(lookup, env, "path");
   }
 
   public void monitor(Element monitor, PageEnvironment env) {
-    _checkValue(monitor, env, "path");
+    _checkPath(monitor, env, "path");
   }
 
   public void title(Element title, PageEnvironment env) {
-    _checkValue(title, env, "title");
+    _checkExpression(title, env, "title");
   }
 
   public void viewwrite(Element viewwrite, PageEnvironment env) {
-    _checkValue(viewwrite, env, "value");
+    _checkExpression(viewwrite, env, "value");
   }
 
   public void todotask(Element fragment, PageEnvironment env) {
@@ -327,7 +344,7 @@ public class RxRootEnvironment {
         sync.add(attr.getValue());
       }
     }
-    _checkValue(vsp, env, sync.toArray(new String[sync.size()]));
+    _checkExpression(vsp, env, sync.toArray(new String[sync.size()]));
   }
 
   public void form(Element form, PageEnvironment env) {
@@ -373,9 +390,9 @@ public class RxRootEnvironment {
     if (connection.hasAttr("name")) {
       name = connection.attr("name");
     }
-    _checkValue(connection, env, "identity", "redirect", "name");
+    _checkExpression(connection, env, "identity", "redirect", "name");
     if (!(connection.hasAttr("use-domain") || connection.hasAttr("billing"))) {
-      _checkValue(connection, env, "space", "key");
+      _checkExpression(connection, env, "space", "key");
     }
     ObjectNode reflect = reflections.get(backend);
     if (reflect == null) {
@@ -430,6 +447,26 @@ public class RxRootEnvironment {
     }
     for (String unused : templatesUnused) {
       feedback.warn(templates.get(unused), "template '" + unused + "' was not used");
+    }
+    for (Map.Entry<String, ObjectNode> entry : reflections.entrySet()) {
+      ObjectNode types = (ObjectNode) entry.getValue().get("types");
+      Iterator<Map.Entry<String, JsonNode>> typeIt = types.fields();
+      while (typeIt.hasNext()) {
+        ObjectNode type = (ObjectNode) typeIt.next().getValue();
+        if ("reactive_record".equals(type.get("nature").textValue())) {
+          String recordName = type.get("name").textValue();
+          Iterator<Map.Entry<String, JsonNode>> fieldIt = type.get("fields").fields();
+          while (fieldIt.hasNext()) {
+            Map.Entry<String, JsonNode> fieldEntry = fieldIt.next();
+            String fieldName = fieldEntry.getKey();
+            ObjectNode field = (ObjectNode) fieldEntry.getValue();
+            boolean isPrivate = "private".equals(field.get("privacy").textValue());
+            if (!field.has("used") && !isPrivate) {
+              feedback.warn(document, recordName + "::" + fieldName + " is unused");
+            }
+          }
+        }
+      }
     }
   }
 }

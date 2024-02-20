@@ -33,7 +33,8 @@ public class TypeChecker {
     Document document = Loader.parseForest(forest, ProductionMode.Web);
     warnDuplicatePages(document, feedback);
     if (input != null && input.exists() && input.isDirectory()) {
-      new RxRootEnvironment(forest, input, feedback).check();
+      RxRootEnvironment env = new RxRootEnvironment(forest, input, feedback);
+      env.check();
     }
   }
 
