@@ -1406,6 +1406,7 @@ var RxHTML = (function () {
   // RUNTIME: <tag .. rx:event="... force-auth=name,token ...">
   self.onFORCE_AUTH = function (dom, type, identityName, identity) {
     reg_event(null, dom, type, function () {
+      // TODO: remove this
       identities[identityName] = identity;
       localStorage.setItem("identity_" + identityName, identity);
     });
@@ -2428,6 +2429,54 @@ var RxHTML = (function () {
 
   var identities = {};
 
+  var stash_identity = function(name, identity, connection) {
+    // TODO: blow away connections (OK, what does this mean)
+    identities[name] = identity;
+    localStorage.setItem("identity_" + name, identity);
+    var req = {};
+    req['name'] = name;
+    req['identity'] = identity;
+    req['max-age'] = 5529600;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          localStorage.setItem("last_stashed_identity_" + name, "" + Date.now())
+          if (connection != null) {
+            connection.IdentityStash(identity, name, {
+              success: function () {
+                // THIS HAS DRAGONS UNTIL A FULL PRODUCTION DEPLOYMENT
+                // localStorage.setItem("identity_" + name, "cookie:" + name);
+              },
+              failure: function (xyz) {
+
+              }
+            });
+          }
+        }
+      }
+    };
+    xhttp.open("PUT", self.protocol + "//" + self.host + "/~stash/" + Date.now(), true);
+    xhttp.withCredentials = true;
+    xhttp.send(JSON.stringify(req));
+  };
+
+  var should_stash_identity = function(name) {
+    var stash_key = "last_stashed_identity_" + name;
+    var lastStash = localStorage.getItem(stash_key);
+    try {
+      var parsed = parseFloat(lastStash);
+      if (isNaN(parsed)) {
+        return true;
+      }
+      var age = Date.now() - new Date(parsed).getTime();
+      return age >= 1.44e+7;
+    } catch (ex) {
+      return true;
+    }
+  };
+
   self.SIGNOUT = function () {
     identities = {};
     for (var identityName in identities) {
@@ -2450,8 +2499,7 @@ var RxHTML = (function () {
   self.GOOGLE_SIGN_ON = function (accessToken) {
     connection.InitConvertGoogleUser(accessToken, {
       success: function (payload) {
-        identities["default"] = payload.identity;
-        localStorage.setItem("identity_default", payload.identity);
+        stash_identity("default", payload.identity, connection);
         self.goto("/", false);
       },
       failure: function (reason) {
@@ -2494,6 +2542,9 @@ var RxHTML = (function () {
     var val = localStorage.getItem("identity_" + identityName);
     if (val) {
       identities[identityName] = val;
+      if (should_stash_identity(identityName)) {
+        stash_identity(identityName, val, null);
+      }
     }
 
     if (identityName.startsWith("direct:")) {
@@ -3092,32 +3143,7 @@ var RxHTML = (function () {
     form.target = iframeTarget.name;
   };
 
-  var stash_identity = function(name, identity, connection) {
-    var req = {};
-    req['name'] = name;
-    req['identity'] = identity;
-    req['max-age'] = 5529600;
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-      if (this.readyState == 4) {
-        if (this.status == 200) {
-          connection.IdentityStash(identity, name, {
-            success: function() {
-              // THIS HAS DRAGONS UNTIL A FULL PRODUCTION DEPLOYMENT
-              // localStorage.setItem("identity_" + name, "cookie:" + name);
-            },
-            failure: function(xyz) {
-
-            }
-          });
-        }
-      }
-    };
-    xhttp.open("PUT", self.protocol + "//" + self.host + "/~stash/" + Date.now(), true);
-    xhttp.withCredentials = true;
-    xhttp.send(JSON.stringify(req));
-  };
 
   var get_form_and_pw = function(form) {
     var passwords = {};
@@ -3139,10 +3165,7 @@ var RxHTML = (function () {
         var sm = {attempts:0};
         sm.responder = {
           success: function (payload) {
-            identities[identityName] = payload.identity;
-            localStorage.setItem("identity_" + identityName, payload.identity);
             stash_identity(identityName, payload.identity, connection);
-            // TODO: blow away connections
             self.goto(rxobj.rx_forward, false);
             fire_success(form);
           },
@@ -3225,8 +3248,6 @@ var RxHTML = (function () {
       var sm = {attempts:0};
       sm.responder = {
         success: function (payload) {
-          identities[identityName] = payload.identity;
-          localStorage.setItem("identity_" + identityName, payload.identity);
           stash_identity(identityName, payload.identity, connection);
           // TODO: blow away connections
           self.goto(rxobj.rx_forward, false);
@@ -3248,8 +3269,7 @@ var RxHTML = (function () {
       var req = get_form_and_pw(form);
       connection.DocumentAuthorize(req.space, req.key, req.username, req.password, {
         success: function (payload) {
-          identities[identityName] = payload.identity;
-          localStorage.setItem("identity_" + identityName, payload.identity);
+          stash_identity(identityName, payload.identity, connection);
           // TODO: blow away connections
           self.goto(rxobj.rx_forward, false);
           fire_success(form);
@@ -3269,8 +3289,7 @@ var RxHTML = (function () {
       var req = get_form_and_pw(form);
       connection.DocumentAuthorizeDomainWithReset(self.domain, req.username, req.password, req.new_password,{
         success: function (payload) {
-          identities[identityName] = payload.identity;
-          localStorage.setItem("identity_" + identityName, payload.identity);
+          stash_identity(identityName, payload.identity, connection);
           // TODO: blow away connections
           self.goto(rxobj.rx_forward, false);
           fire_success(form);
@@ -3290,8 +3309,7 @@ var RxHTML = (function () {
       var req = get_form_and_pw(form);
       connection.DocumentAuthorizeWithReset(req.space, req.key, req.username, req.password, req.new_password,{
         success: function (payload) {
-          identities[identityName] = payload.identity;
-          localStorage.setItem("identity_" + identityName, payload.identity);
+          stash_identity(identityName, payload.identity, connection);
           // TODO: blow away connections
           self.goto(rxobj.rx_forward, false);
           fire_success(form);
@@ -3576,8 +3594,7 @@ var RxHTML = (function () {
               } else if (type == "application/json") {
                 var payload = JSON.parse(this.responseText);
                 if ('identity' in payload) {
-                  identities[identityName] = payload.identity;
-                  localStorage.setItem("identity_" + identityName, payload.identity);
+                  stash_identity(identityName, payload.identity, null);
                 }
               }
               self.goto(rxobj.rx_forward, false);
@@ -3640,8 +3657,7 @@ var RxHTML = (function () {
       }
       connection.AccountLogin(req.email, req.password, {
         success: function (payload) {
-          identities[identityName] = payload.identity;
-          localStorage.setItem("identity_" + identityName, payload.identity);
+          stash_identity(identityName, payload.identity, connection);
           self.goto(rxobj.rx_forward, false);
           fire_success(form);
         },
@@ -3683,7 +3699,7 @@ var RxHTML = (function () {
           var identity = init.identity;
           connection.AccountSetPassword(init.identity, req.password, {
             success: function () {
-              localStorage.setItem("identity_default", identity);
+              stash_identity("default", identity, connection);
               self.goto(forwardTo, false);
               fire_success(form);
             },
