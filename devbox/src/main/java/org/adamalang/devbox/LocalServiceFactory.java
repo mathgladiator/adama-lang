@@ -22,10 +22,7 @@ import org.adamalang.caravan.CaravanMetrics;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DiskMetrics;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.common.Callback;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeMachine;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.Key;
@@ -52,8 +49,10 @@ public class LocalServiceFactory {
   private final AtomicBoolean alive;
   private final SimpleExecutor caravanExecutor;
   private final Thread flusher;
+  private final DevBoxStats stats;
 
-  public LocalServiceFactory(TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
+  public LocalServiceFactory(DevBoxStats stats, TerminalIO io, AtomicBoolean alive, File caravanPath, File cloudPath, MetricsFactory metricsFactory) throws Exception {
+    this.stats = stats;
     this.alive = alive;
     this.caravanExecutor = SimpleExecutor.create("caravan");
     File walRoot = new File(caravanPath, "wal");
@@ -114,7 +113,10 @@ public class LocalServiceFactory {
     });
     this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run());
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
-    }, (key, metricsPayload) -> io.info("metrics:" + metricsPayload), dataService, new BackupService() {
+    }, (key, metricsPayload) -> {
+      io.info("metrics:" + metricsPayload);
+      stats.metrics(Json.parseJsonObject(metricsPayload));
+    }, dataService, new BackupService() {
       @Override
       public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
         callback.success(null);

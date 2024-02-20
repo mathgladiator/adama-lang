@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 public class LocalAdama extends DevBoxRouter implements ServiceConnection {
   private static final Logger PERF_LOG = LoggerFactory.getLogger("perf");
   private final static ConcurrentHashMap<String, String> LOCALHOST_COOKIES = new ConcurrentHashMap<>();
+  private final DevBoxStats stats;
   private final SimpleExecutor executor;
   private final ConnectionContext context;
   private final DynamicControl control;
@@ -55,7 +56,8 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
   private final Runnable death;
   private final RxPubSub rxPubSub;
 
-  public LocalAdama(SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, AdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
+  public LocalAdama(DevBoxStats stats, SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, AdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
+    this.stats = stats;
     this.executor = executor;
     this.context = context;
     this.control = control;
@@ -430,6 +432,7 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
 
       @Override
       public void next(String data) {
+        stats.payload(key.space, key.key, data);
         io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
         ObjectNode delta = Json.parseJsonObject(data);
         responder.next(delta);

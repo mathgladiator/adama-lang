@@ -62,6 +62,7 @@ public class AdamaMicroVerse {
   public final DevPush devPush;
   public final TimeMachine timeMachine;
   public final AtomicBoolean autoTest;
+  private final DevBoxStats stats;
   private final TerminalIO io;
   private final AtomicBoolean alive;
   private final WatchService watchService;
@@ -69,7 +70,8 @@ public class AdamaMicroVerse {
   private final DiagnosticsSubscriber diagnostics;
   private final CountDownLatch firstBuild;
 
-  private AdamaMicroVerse(WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics) throws Exception {
+  private AdamaMicroVerse(DevBoxStats stats, WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics) throws Exception {
+    this.stats = stats;
     this.io = io;
     this.alive = alive;
     this.factory = factory;
@@ -106,10 +108,6 @@ public class AdamaMicroVerse {
     this.devPush = devPush;
   }
 
-  public void waitForFirstBuild() throws Exception {
-    firstBuild.await(5000, TimeUnit.MILLISECONDS);
-  }
-
   private void rebuild() {
     for (LocalSpaceDefn defn : spaces) {
       try {
@@ -128,6 +126,7 @@ public class AdamaMicroVerse {
           if (newReflection != null) {
             if (defn.lastReflection != null) {
               List<String> issues = Linter.compare(defn.lastReflection, newReflection);
+              stats.lintIssues(defn.spaceName, issues.size());
               if (issues.size() == 0) {
                 io.notice("adama|no lint issues: " + defn.spaceName);
               } else {
@@ -167,6 +166,7 @@ public class AdamaMicroVerse {
             Files.writeString(defn.reflectFile.toPath(), Json.parseJsonObject(newReflection).toPrettyString());
             awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
             io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
+            stats.backendDeployment(defn.spaceName);
             if (domainKeyToUse != null && autoTest.get()) {
               runTests(domainKeyToUse);
             }
@@ -199,7 +199,51 @@ public class AdamaMicroVerse {
     Thread.sleep(1000);
   }
 
-  public static AdamaMicroVerse load(AtomicBoolean alive, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics, MetricsFactory metricsFactory) throws Exception {
+  public void runTests(Key key) {
+    service.saveCustomerBackup(key, new Callback<String>() {
+      @Override
+      public void success(String snapshot) {
+        io.info("test|snapshot made for testing");
+        factory.base.fetch(key, new Callback<LivingDocumentFactory>() {
+          @Override
+          public void success(LivingDocumentFactory factory) {
+            try {
+              LivingDocument doc = factory.create(null);
+              // TODO: FIGURE OUT A WAY TO MAKE ALL SERVICES SYNC... that would be neat-o
+              doc.__lateBind(key.space, key.key, Deliverer.FAILURE, new ServiceRegistry());
+              doc.__insert(new JsonStreamReader(snapshot));
+              String[] tests = doc.__getTests();
+              TestReportBuilder builder = new TestReportBuilder();
+              for (String test : tests) {
+                doc.__test(builder, test);
+              }
+              if (builder.getFailures() > 0) {
+                stats.testFailures(key.space, builder.getFailures());
+              }
+              String report = builder.toString();
+              for (String ln : report.split(Pattern.quote("\n"))) {
+                io.info("test-result|" + ln);
+              }
+            } catch (ErrorCodeException ex) {
+              failure(ex);
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            io.error("test|failed creation; reason=" + ex.code);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        io.error("test|failed snapshot; reason=" + ex.code);
+      }
+    });
+  }
+
+  public static AdamaMicroVerse load(AtomicBoolean alive, DevBoxStats stats, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics, MetricsFactory metricsFactory) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -234,7 +278,7 @@ public class AdamaMicroVerse {
         }
       }
     }
-    LocalServiceFactory factory = new LocalServiceFactory(io, alive, caravanPath, cloudPath, metricsFactory);
+    LocalServiceFactory factory = new LocalServiceFactory(stats, io, alive, caravanPath, cloudPath, metricsFactory);
     JsonNode spacesNode = defn.get("spaces");
     if (spacesNode == null || !spacesNode.isArray()) {
       io.notice("verse|lacked a spaces array in microverse config");
@@ -286,47 +330,11 @@ public class AdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new AdamaMicroVerse(watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics);
+    return new AdamaMicroVerse(stats, watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics);
   }
 
-  public void runTests(Key key) {
-    service.saveCustomerBackup(key, new Callback<String>() {
-      @Override
-      public void success(String snapshot) {
-        io.info("test|snapshot made for testing");
-        factory.base.fetch(key, new Callback<LivingDocumentFactory>() {
-          @Override
-          public void success(LivingDocumentFactory factory) {
-            try {
-              LivingDocument doc = factory.create(null);
-              // TODO: FIGURE OUT A WAY TO MAKE ALL SERVICES SYNC... that would be neat-o
-              doc.__lateBind(key.space, key.key, Deliverer.FAILURE, new ServiceRegistry());
-              doc.__insert(new JsonStreamReader(snapshot));
-              String[] tests = doc.__getTests();
-              TestReportBuilder builder = new TestReportBuilder();
-              for (String test : tests) {
-                doc.__test(builder, test);
-              }
-              String report = builder.toString();
-              for(String ln : report.split(Pattern.quote("\n"))) {
-                io.info("test-result|" + ln);
-              }
-            } catch (ErrorCodeException ex) {
-              failure(ex);
-            }
-          }
-          @Override
-          public void failure(ErrorCodeException ex) {
-            io.error("test|failed creation; reason=" + ex.code);
-          }
-        });
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        io.error("test|failed snapshot; reason=" + ex.code);
-      }
-    });
+  public void waitForFirstBuild() throws Exception {
+    firstBuild.await(5000, TimeUnit.MILLISECONDS);
   }
 
   public void shutdown() throws Exception {
@@ -342,9 +350,9 @@ public class AdamaMicroVerse {
     private final WatchService watchService;
     private final DeploymentFactoryBase base;
     private final File reflectFile;
+    private final HashMap<String, WatchKey> watchKeyCache;
     public String lastDeployedPlan;
     public String lastReflection;
-    private final HashMap<String, WatchKey> watchKeyCache;
 
     public LocalSpaceDefn(WatchService watchService, String spaceName, String mainFile, String includePath, File reflectFile, DeploymentFactoryBase base) {
       this.watchService = watchService;

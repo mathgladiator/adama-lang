@@ -25,12 +25,8 @@ import org.adamalang.language.LanguageServer;
 import org.adamalang.region.AdamaDeploymentSync;
 import org.adamalang.region.AdamaDeploymentSyncMetrics;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
-import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.deploy.Undeploy;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
@@ -40,11 +36,10 @@ import org.adamalang.web.client.socket.MultiWebClientRetryPoolMetrics;
 import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -59,8 +54,9 @@ public class Start {
     MultiWebClientRetryPoolConfig config = new MultiWebClientRetryPoolConfig(new ConfigObject(Json.parseJsonObject("{\"multi-connection-count\":1}")));
     MultiWebClientRetryPool productionPool = new MultiWebClientRetryPool(offload, webClientBase, new MultiWebClientRetryPoolMetrics(metricsFactory), config, ConnectionReady.TRIVIAL, "wss://aws-us-east-2.adama-platform.com/~s");
     SelfClient production = new SelfClient(productionPool);
+    DevBoxStats stats = new DevBoxStats();
     AdamaDeploymentSync sync = new AdamaDeploymentSync(new AdamaDeploymentSyncMetrics(metricsFactory), production, offload, developerIdentity, new Deploy() {
-      private HashSet<String> ignoredFirst = new HashSet<>();
+      private final HashSet<String> ignoredFirst = new HashSet<>();
 
       @Override
       public void deploy(String space, Callback<Void> callback) {
@@ -120,7 +116,7 @@ public class Start {
         }
         LanguageServer server = new LanguageServer(args.lspPort, terminal, alive);
         Services.install(defn, webClientBase, offload, (line) -> terminal.info(line), metricsFactory);
-        verse = AdamaMicroVerse.load(alive, terminal, defn, webClientBase, new File(args.types), server.pubsub, metricsFactory);
+        verse = AdamaMicroVerse.load(alive, stats, terminal, defn, webClientBase, new File(args.types), server.pubsub, metricsFactory);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
@@ -155,13 +151,13 @@ public class Start {
 
     AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
     RxPubSub pubSub = new RxPubSub(preserveView);
-    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub, new File(args.types))) {
+    try (RxHTMLScanner scanner = new RxHTMLScanner(alive, stats, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub, new File(args.types))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.webConfig));
       webConfig.validateForServerUse();
       terminal.notice("devbox|starting webserver on port " + webConfig.port);
       File attachmentsPath = new File("attachments");
       attachmentsPath.mkdirs();
-      LocalServiceBase base = new LocalServiceBase(control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub, metricsFactory);
+      LocalServiceBase base = new LocalServiceBase(stats, control, terminal, webConfig, bundle, new File(args.assetPath), localLibAdamaJSFile, attachmentsPath, verse, debuggerAvailable, pubSub, metricsFactory);
       Thread webServerThread = base.start();
       terminal.important("people|Enjoy your developer experience... we hope it is pleasurable!");
       Key focusedKey = verse.domainKeyToUse;
@@ -224,7 +220,10 @@ public class Start {
         }
         // Behavior and DevBox commands
         {
-          if (command.is("viewer-updates")) {
+          if (command.is("reset")) {
+            stats.reset();
+            terminal.notice("devbox|reset stats");
+          } else if (command.is("viewer-updates")) {
             if (command.argIs(0, "slow")) {
               terminal.notice("devbox|slowing down view updates by 5 seconds");
               control.slowViewerStateUpdates.set(true);

@@ -19,7 +19,9 @@ package org.adamalang.devbox;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.metrics.*;
+import org.adamalang.common.metrics.CallbackMonitor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.metrics.RequestResponseMonitor;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -40,36 +42,30 @@ public class DevBoxMetricsFactory extends NoOpMetricsFactory {
     this.println = println;
   }
 
-  private void time(String name, long started, AtomicBoolean finished) {
-    finished.set(true);
-    long delta = System.currentTimeMillis() - started;
-    if (delta > 10000) {
-      println.accept(" [very slow] " + name + " took: " + delta + "ms");
-    } else if (delta > 1500) {
-      println.accept(" [slow] " + name + " took: " + delta + "ms");
+  @Override
+  public RequestResponseMonitor makeRequestResponseMonitor(String name) {
+    if (ignore(name)) {
+      return super.makeRequestResponseMonitor(name);
     }
-  }
-
-  private AtomicBoolean create(String name) {
-    AtomicBoolean finished = new AtomicBoolean(false);
-    timeout.schedule(new NamedRunnable("timeout") {
-      @Override
-      public void execute() throws Exception {
-        if (!finished.get()) {
-          println.accept(" [!!timeout!!] " + name);
+    return () -> {
+      long started = System.currentTimeMillis();
+      AtomicBoolean finished = create(name);
+      return new RequestResponseMonitor.RequestResponseMonitorInstance() {
+        @Override
+        public void success() {
+          time(name, started, finished);
         }
-      }
-    }, 60000);
-    return finished;
-  }
 
-  private boolean ignore(String name) {
-    switch (name) {
-      case "adamasync_connected":
-        return true;
-      default:
-        return false;
-    }
+        @Override
+        public void extra() {
+        }
+
+        @Override
+        public void failure(int code) {
+          time(name, started, finished);
+        }
+      };
+    };
   }
 
   @Override
@@ -97,29 +93,33 @@ public class DevBoxMetricsFactory extends NoOpMetricsFactory {
     };
   }
 
-  @Override
-  public RequestResponseMonitor makeRequestResponseMonitor(String name) {
-    if (ignore(name)) {
-      return super.makeRequestResponseMonitor(name);
+  private boolean ignore(String name) {
+    if ("adamasync_connected".equals(name)) {
+      return true;
     }
-    return () -> {
-      long started = System.currentTimeMillis();
-      AtomicBoolean finished = create(name);
-      return new RequestResponseMonitor.RequestResponseMonitorInstance() {
-        @Override
-        public void success() {
-          time(name, started, finished);
-        }
+    return false;
+  }
 
-        @Override
-        public void extra() {
+  private AtomicBoolean create(String name) {
+    AtomicBoolean finished = new AtomicBoolean(false);
+    timeout.schedule(new NamedRunnable("timeout") {
+      @Override
+      public void execute() throws Exception {
+        if (!finished.get()) {
+          println.accept(" [!!timeout!!] " + name);
         }
+      }
+    }, 60000);
+    return finished;
+  }
 
-        @Override
-        public void failure(int code) {
-          time(name, started, finished);
-        }
-      };
-    };
+  private void time(String name, long started, AtomicBoolean finished) {
+    finished.set(true);
+    long delta = System.currentTimeMillis() - started;
+    if (delta > 10000) {
+      println.accept(" [very slow] " + name + " took: " + delta + "ms");
+    } else if (delta > 1500) {
+      println.accept(" [slow] " + name + " took: " + delta + "ms");
+    }
   }
 }

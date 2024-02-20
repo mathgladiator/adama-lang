@@ -56,6 +56,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LocalServiceBase implements ServiceBase {
+  private final DevBoxStats stats;
   private final SimpleExecutor executor;
   private final DynamicControl control;
   private final TerminalIO io;
@@ -71,7 +72,8 @@ public class LocalServiceBase implements ServiceBase {
   private final RxPubSub rxPubSub;
   private final MetricsFactory metricsFactory;
 
-  public LocalServiceBase(DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
+  public LocalServiceBase(DevBoxStats stats, DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
+    this.stats = stats;
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
     this.io = io;
@@ -102,7 +104,7 @@ public class LocalServiceBase implements ServiceBase {
   public ServiceConnection establish(ConnectionContext context) {
     // if we have a service and a table, then let's use it!
     int id = inflightId.incrementAndGet();
-    LocalAdama devbox = new LocalAdama(executor, context, this.control, this.io, verse, () -> {
+    LocalAdama devbox = new LocalAdama(stats, executor, context, this.control, this.io, verse, () -> {
       inflight.remove(id);
     }, rxPubSub);
     inflight.put(id, devbox);
@@ -169,6 +171,11 @@ public class LocalServiceBase implements ServiceBase {
         RxHTMLScanner.RxHTMLBundle current = bundle.get();
         if (current == null) {
           callback.failure(new ErrorCodeException(500));
+          return;
+        }
+        if (uri.equals("/~stats")) {
+          String html = stats.dumpHTML(context);
+          callback.success(new HttpResult(200, "text/html", html.getBytes(StandardCharsets.UTF_8), false));
           return;
         }
         if (uri.startsWith("/~d/")) {

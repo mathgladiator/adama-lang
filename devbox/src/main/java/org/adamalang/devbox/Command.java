@@ -113,14 +113,6 @@ public class Command {
     return false;
   }
 
-  public boolean requireArg(int index) {
-    return args.length > index;
-  }
-
-  public String argAt(int index) {
-    return args[index];
-  }
-
   public Integer argAtIsInt(int index) {
     try {
       if (index < args.length) {
@@ -138,11 +130,12 @@ public class Command {
     return defaultKey;
   }
 
-  public String lastArg() {
-    if (args.length > 0) {
-      return args[args.length - 1];
-    }
-    return null;
+  public boolean requireArg(int index) {
+    return args.length > index;
+  }
+
+  public String argAt(int index) {
+    return args[index];
   }
 
   public File lastArgAsFileThatMustExist(TerminalIO io) {
@@ -155,6 +148,13 @@ public class Command {
       io.error("File '" + arg + "' does not exist");
     } else {
       io.error("No file specified");
+    }
+    return null;
+  }
+
+  public String lastArg() {
+    if (args.length > 0) {
+      return args[args.length - 1];
     }
     return null;
   }

@@ -22,7 +22,7 @@ import org.adamalang.translator.tree.SymbolIndex;
 
 /** since diagnostics flow indirectly and optionally, we use a subscriber model */
 public interface DiagnosticsSubscriber {
-  public void updated(ArrayNode report);
+  void updated(ArrayNode report);
 
-  public void indexed(SymbolIndex index);
+  void indexed(SymbolIndex index);
 }

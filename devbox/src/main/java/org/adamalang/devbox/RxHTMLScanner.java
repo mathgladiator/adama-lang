@@ -21,9 +21,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.html.InjectCoordInline;
-import org.adamalang.rxhtml.Bundler;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlResult;
+import org.adamalang.rxhtml.Bundler;
 import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.RxHtmlTool;
 import org.adamalang.rxhtml.template.Task;
@@ -49,6 +48,7 @@ import java.util.zip.GZIPOutputStream;
 public class RxHTMLScanner implements AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(RxHTMLScanner.class);
   private final AtomicBoolean alive;
+  private final DevBoxStats stats;
   private final TerminalIO io;
   private final File scanRoot;
   private final boolean useLocalAdamaJavascript;
@@ -63,8 +63,9 @@ public class RxHTMLScanner implements AutoCloseable {
   private final RxPubSub rxPubSub;
   private final File types;
 
-  public RxHTMLScanner(AtomicBoolean alive, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, RxPubSub rxPubSub, File types) throws Exception {
+  public RxHTMLScanner(AtomicBoolean alive, DevBoxStats stats, TerminalIO io, File scanRoot, boolean useLocalAdamaJavascript, String env, Consumer<RxHTMLBundle> onBuilt, RxPubSub rxPubSub, File types) throws Exception {
     this.alive = alive;
+    this.stats = stats;
     this.io = io;
     this.scanRoot = scanRoot;
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
@@ -177,7 +178,10 @@ public class RxHTMLScanner implements AutoCloseable {
               try {
                 long started = System.currentTimeMillis();
                 // TODO: bring the new type checker in here such that devbox can run type checking every change
-                RxHtmlBundle rxHtmlBundle = RxHtmlTool.convertStringToTemplateForest(InjectCoordInline.execute(Bundler.bundle(scanRoot, rxhtml(scanRoot), true), "test"), types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());;
+                String forest = Bundler.bundle(scanRoot, rxhtml(scanRoot), true);
+                RxHtmlBundle rxHtmlBundle = RxHtmlTool.convertStringToTemplateForest(forest, types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
+                stats.frontendDeployment(forest);
+                stats.frontendSize(rxHtmlBundle.javascript.length());
                 RxHtmlResult updated = new RxHtmlResult(rxHtmlBundle);
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
