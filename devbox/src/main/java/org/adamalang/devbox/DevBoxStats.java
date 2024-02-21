@@ -17,10 +17,16 @@
 */
 package org.adamalang.devbox;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.web.io.ConnectionContext;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -35,6 +41,7 @@ public class DevBoxStats {
   private final AtomicLong bytes;
   private final AtomicInteger frontendByteSize;
   private final AtomicReference<ObjectNode> metrics;
+  private final ConcurrentHashMap<String, ConcurrentHashMap<String, AtomicInteger>> payload_shred;
 
   public DevBoxStats() {
     lintIssues = new AtomicInteger(0);
@@ -45,6 +52,7 @@ public class DevBoxStats {
     bytes = new AtomicLong(0);
     frontendByteSize = new AtomicInteger(0);
     metrics = new AtomicReference<>(Json.newJsonObject());
+    payload_shred = new ConcurrentHashMap<>();
   }
 
   public void lintIssues(String space, int count) {
@@ -66,6 +74,26 @@ public class DevBoxStats {
   public void payload(String space, String key, String payload) {
     bytes.addAndGet(payload.length());
     payloads.incrementAndGet();
+    // shred the payload
+    ConcurrentHashMap<String, AtomicInteger> shred = payload_shred.get(space + "/" + key);
+    if (shred == null) {
+      shred = new ConcurrentHashMap<>();
+      payload_shred.put(space + "/" + key, shred);
+    }
+    JsonNode parsed = Json.parse(payload);
+    if (parsed.has("data")) {
+      parsed = parsed.get("data");
+    }
+    Iterator<Map.Entry<String, JsonNode>> it = parsed.fields();
+    while (it.hasNext()) {
+      Map.Entry<String, JsonNode> entry = it.next();
+      AtomicInteger sum = shred.get(entry.getKey());
+      if (sum == null) {
+        sum = new AtomicInteger();
+        shred.put(entry.getKey(), sum);
+      }
+      sum.addAndGet(entry.getValue().toString().length());
+    }
   }
 
   public void testFailures(String space, int failures) {
@@ -85,6 +113,7 @@ public class DevBoxStats {
     testFailures.set(0);
     frontendByteSize.set(0);
     metrics.set(Json.newJsonObject());
+    payload_shred.clear();
   }
 
   public String dumpHTML(ConnectionContext context) {
@@ -100,7 +129,32 @@ public class DevBoxStats {
     writeSimple(sb, "bytes", bytes);
     writeSimple(sb, "test-failures", testFailures);
     sb.append("</ul>\n");
+    sb.append("<h1>Metrics</h1>\n");
     sb.append("<pre>").append(metrics.get().toPrettyString()).append("</pre>");
+    sb.append("<h1>Payload Shred</h1>\n");
+
+    for (Map.Entry<String, ConcurrentHashMap<String, AtomicInteger>> pick : payload_shred.entrySet()) {
+      sb.append("<h2>").append(pick.getKey()).append("</h2><br/>\n");
+      ArrayList<Map.Entry<String, AtomicInteger>> entries = new ArrayList<>(pick.getValue().entrySet());
+      entries.sort(Comparator.comparingInt(a -> -a.getValue().get()));
+      long total = 0;
+      for (Map.Entry<String, AtomicInteger> entry : entries) {
+        total += entry.getValue().get();
+      }
+      for (Map.Entry<String, AtomicInteger> entry : entries) {
+        int bytes = entry.getValue().get();
+        if (bytes > 1024 * 64) {
+          sb.append("<b>");
+        }
+        sb.append(entry.getKey()).append(" = ").append(bytes);
+        double percent = Math.round(1000.0 * entry.getValue().get() / total) / 10.0;
+        sb.append(" (").append(percent).append("%)");
+        if (bytes > 1024 * 64) {
+          sb.append("</b>");
+        }
+        sb.append("<br />");
+      }
+    }
     sb.append("</body></html>");
     return sb.toString();
   }

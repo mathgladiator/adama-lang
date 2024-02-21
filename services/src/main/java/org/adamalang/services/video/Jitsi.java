@@ -101,7 +101,6 @@ public class Jitsi extends SimpleService {
 
   private static String tokenize(RSAPrivateKey privateKey, String sub, ObjectNode requestNode) {
     LinkedHashMap<String, Object> claims = new LinkedHashMap<>();
-    claims.put("aud", "jitsi");
     claims.put("iss", "chat");
     claims.put("iat", System.currentTimeMillis() / 1000);
     claims.put("exp", System.currentTimeMillis() / 1000 + 60 * 60 * 24 * 7);
@@ -130,6 +129,6 @@ public class Jitsi extends SimpleService {
       claims.put("context", context);
     }
     claims.put("room", requestNode.get("room").textValue());
-    return Jwts.builder().claims(claims).header().add("kid", sub).add("typ", "JWT").and().signWith(privateKey).compact();
+    return Jwts.builder().claims(claims).audience().single("jitsi").header().add("kid", sub).add("typ", "JWT").and().signWith(privateKey).compact();
   }
 }
