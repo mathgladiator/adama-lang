@@ -54,7 +54,6 @@ async function LinkCapacitor($, identityName) {
 
   // handles email deep linking or any types of url links that points to our app launcher
   // this only works on simple format(e.g, www.google.com/search?/page) the target for this are the sub-folders, paths and pages
-  // TODO: to test iOS devices i doubt this works with iOS but if it doesn't then will add new condition for platform specific codes
   CapacitorApp.addListener("appUrlOpen", (data) => {
     // TODO : add logger
     console.log("App opened with URL:", data);
