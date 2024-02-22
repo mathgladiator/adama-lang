@@ -50,19 +50,18 @@ async function LinkCapacitor($, identityName) {
         window.history.back();
       }
     });
-
-    // handles email deep linking or any types of url links that points to our app launcher
-    // this only works on simple format(e.g, www.google.com/search?/page) the target for this are the sub-folders, paths and pages
-    // TODO: to test iOS devices i doubt this works with iOS but if it doesn't then will add new condition for platform specific codes
-    CapacitorApp.addListener("appUrlOpen", (data) => {
-      // TODO : add logger
-      console.log("App opened with URL:", data);
-      const navigation = data.url.split(".com");
-      if (navigation.length > 1) {
-        window.rxhtml.goto(navigation[1], true);
-      }
-    });
   }
+
+  // handles email deep linking or any types of url links that points to our app launcher
+  // this only works on simple format(e.g, www.google.com/search?/page) the target for this are the sub-folders, paths and pages
+  CapacitorApp.addListener("appUrlOpen", (data) => {
+    // TODO : add logger
+    console.log("App opened with URL:", data);
+    const navigation = data.url.split(".com");
+    if (navigation.length > 1) {
+      window.rxhtml.goto(navigation[1], true);
+    }
+  });
 
   PushNotifications.requestPermissions().then(result => {
     $.bump("nps"); // setup
@@ -121,14 +120,14 @@ async function LinkCapacitor($, identityName) {
     });
   });
 
-// Some issue with our setup and push will not work
+  // Some issue with our setup and push will not work
   PushNotifications.addListener('registrationError', function (error) {
     console.log(error);
     $.bump("npf4");
     window.rxhtml.setPushStatus("failed");
   });
 
-// Show us the notification payload if the app is open on our device
+  // Show us the notification payload if the app is open on our device
   PushNotifications.addListener('pushNotificationReceived', function (notification) {
     console.log('Push received: ' + JSON.stringify(notification));
     // TODO: get the tracking id from the notification, call into RxHTML to trigger a logging message
@@ -147,7 +146,7 @@ async function LinkCapacitor($, identityName) {
 
   });
 
-// Method called when tapping on a notification
+  // Method called when tapping on a notification
   PushNotifications.addListener('pushNotificationActionPerformed', function (action) {
     console.log('Push action performed: ' + JSON.stringify(action));
     $.bump("npap");
@@ -162,7 +161,7 @@ async function LinkCapacitor($, identityName) {
 
   let status = await Network.getStatus();
 
-// TODO: feed into RxHTML
+  // TODO: feed into RxHTML
   console.log("Starting...");
   console.log(status);
   console.log("rxcap ready...");
