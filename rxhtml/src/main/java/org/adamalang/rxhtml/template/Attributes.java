@@ -119,11 +119,11 @@ public class Attributes {
     env.element.removeAttr("rx:monitor");
   }
 
-  public void _behavior() {
+  public void _behavior(ObjectNode config) {
     String behavior = env.element.attr("rx:behavior");
     if (behavior != null) {
       env.element.removeAttr("rx:behavior");
-      env.writer.tab().append("$.BHV(").append(eVar).append(",'").append(behavior).append("');").newline();
+      env.writer.tab().append("$.BHV(").append(eVar).append(",").append(env.stateVar).append(",'").append(behavior).append("',").append(config.toString()).append(");").newline();
     }
   }
 
@@ -188,7 +188,7 @@ public class Attributes {
     obj.finish();
   }
 
-  public void _custom() {
+  public void _custom(ObjectNode config) {
     String childStateVar = env.pool.ask();
     String parentVar = env.pool.ask();
     String caseVar = env.pool.ask();
@@ -224,7 +224,7 @@ public class Attributes {
     env.writer.tab().append("$.C(").append(eVar).append(",").append(env.stateVar).append(",'").append(env.element.attr("rx:custom")).append("',").append(obj.rxObj).append(",").append(writerObj);
     env.writer.append(",function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
     Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("},").append(config.toString()).append(");").newline();
     env.pool.give(caseVar);
     env.pool.give(childStateVar);
     env.pool.give(parentVar);

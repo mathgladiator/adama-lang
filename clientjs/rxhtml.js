@@ -2031,13 +2031,14 @@ var RxHTML = (function () {
     }
     return writer;
   };
-  self.C = function (dom, state, name, rxobj, writer, childMakerWithCase) {
+  self.C = function (dom, state, name, rxobj, writer, childMakerWithCase, config) {
     var obj = {
       dom: dom,
       state: state,
       inputs: rxobj,
       outputs: writer,
       maker: childMakerWithCase,
+      config: config,
       framework: self
     };
     if (name in customs_components) {
@@ -2085,9 +2086,13 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | rx:behavior=$name
-  self.BHV = function(dom, name) {
+  self.BHV = function(dom, state, name, config) {
     if (name in behaviors) {
-      behaviors[name](dom, self);
+      var conn = null;
+      try {
+        conn = state.data.connection.ptr;
+      } catch (e) {}
+      behaviors[name](dom, conn, config, self);
     } else {
       console.log("couldn't find behavior:" + name);
     }

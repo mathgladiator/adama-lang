@@ -53,7 +53,7 @@ public class TemplateCustomTests extends BaseRxHtmlTest {
     gold.append("\n      var j=$.E('span');");
     gold.append("\n      j.append($.T('A child element'));");
     gold.append("\n      f.append(j);");
-    gold.append("\n    });");
+    gold.append("\n    },{});");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -84,7 +84,7 @@ public class TemplateCustomTests extends BaseRxHtmlTest {
     gold.append("\n      var j=$.E('span');");
     gold.append("\n      j.append($.T('A child element'));");
     gold.append("\n      f.append(j);");
-    gold.append("\n    });");
+    gold.append("\n    },{});");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

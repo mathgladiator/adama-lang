@@ -137,7 +137,7 @@ public class Base {
     } else if (env.element.hasAttr("rx:wrap")) {
       rx._wrap();
     } else if (env.element.hasAttr("rx:custom")) {
-      rx._custom();
+      rx._custom(config);
     } else if (env.element.hasAttr("rx:switch")) {
       rx._switch();
     } else if (env.element.hasAttr("rx:template")) {
@@ -299,7 +299,7 @@ public class Base {
       env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
     }
     if (handoff != null && env.element.hasAttr("rx:behavior")) {
-      handoff.rx._behavior();
+      handoff.rx._behavior(config);
     }
     wrapUpRxCase(env, hasCase);
     if (hasConfigCheck) {

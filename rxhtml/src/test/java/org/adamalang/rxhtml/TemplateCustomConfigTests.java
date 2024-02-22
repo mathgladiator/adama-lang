@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-public class TemplateBehaviorTests extends BaseRxHtmlTest {
+public class TemplateCustomConfigTests extends BaseRxHtmlTest {
   @Override
   public boolean dev() {
     return false;
@@ -37,17 +37,24 @@ public class TemplateBehaviorTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:iterate=\"foo\" rx:behavior=\"my_behavior\" config:x=\"123\">");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\" port:y=\"my_error\" config:foo=\"donkey\">");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IT(d,a,'foo',false,function(e) {");
+    gold.append("\n    var h=$.WX(['y',$.pV(a),'my_error']);");
+    gold.append("\n");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\">");
+    gold.append("\n    var i=$.RX(['x']);");
+    gold.append("\n    $.Y2(a,i,'x','xyz',function(j) {");
+    gold.append("\n      i.x=\"hi \" + $.F(j,'xyz')");
+    gold.append("\n      i.__();");
+    gold.append("\n    });");
+    gold.append("\n    $.C(d,a,'c',i,h,function(f,e,g) {");
     gold.append("\n");
     gold.append("\n      // <span>");
-    gold.append("\n      var f=$.E('span');");
-    gold.append("\n      f.append($.T('A child element'));");
-    gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n      var j=$.E('span');");
+    gold.append("\n      j.append($.T('A child element'));");
+    gold.append("\n      f.append(j);");
+    gold.append("\n    },{\"foo\":\"donkey\"});");
     gold.append("\n    b.append(d);");
-    gold.append("\n    $.BHV(d,a,'my_behavior',{\"x\":123});");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
@@ -61,17 +68,24 @@ public class TemplateBehaviorTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n");
-    gold.append("\n    // <div rx:iterate=\"foo\" rx:behavior=\"my_behavior\" config:x=\"123\">");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\" port:y=\"my_error\" config:foo=\"donkey\">");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.IT(d,a,'foo',false,function(e) {");
+    gold.append("\n    var h=$.WX(['y',$.pV(a),'my_error']);");
+    gold.append("\n");
+    gold.append("\n    // <div rx:custom=\"c\" parameter:x=\"hi {xyz}\">");
+    gold.append("\n    var i=$.RX(['x']);");
+    gold.append("\n    $.Y2(a,i,'x','xyz',function(j) {");
+    gold.append("\n      i.x=\"hi \" + $.F(j,'xyz')");
+    gold.append("\n      i.__();");
+    gold.append("\n    });");
+    gold.append("\n    $.C(d,a,'c',i,h,function(f,e,g) {");
     gold.append("\n");
     gold.append("\n      // <span>");
-    gold.append("\n      var f=$.E('span');");
-    gold.append("\n      f.append($.T('A child element'));");
-    gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n      var j=$.E('span');");
+    gold.append("\n      j.append($.T('A child element'));");
+    gold.append("\n      f.append(j);");
+    gold.append("\n    },{\"foo\":\"donkey\"});");
     gold.append("\n    b.append(d);");
-    gold.append("\n    $.BHV(d,a,'my_behavior',{\"x\":123});");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -90,7 +104,7 @@ public class TemplateBehaviorTests extends BaseRxHtmlTest {
     StringBuilder source = new StringBuilder();
     source.append("<forest>");
     source.append("\n    <page uri=\"/\">");
-    source.append("\n        <div rx:iterate=\"foo\" rx:behavior=\"my_behavior\" config:x=\"123\">");
+    source.append("\n        <div rx:custom=\"c\" parameter:x=\"hi {xyz}\" port:y=\"my_error\" config:foo=\"donkey\">");
     source.append("\n            <span>A child element</span>");
     source.append("\n        </div>");
     source.append("\n    </page>");
