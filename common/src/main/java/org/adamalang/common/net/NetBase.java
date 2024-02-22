@@ -129,7 +129,7 @@ public class NetBase {
         metrics.net_create_server_handler.run();
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LengthFieldPrepender(4));
-        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
+        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(67108864, 0, 4, 0, 4));
         ch.pipeline().addLast(new ChannelServer(ch, set, handler, engine));
       }
     });
