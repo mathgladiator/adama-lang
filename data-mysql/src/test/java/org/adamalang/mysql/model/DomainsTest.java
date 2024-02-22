@@ -46,6 +46,8 @@ public class DomainsTest {
         Domain result = Domains.get(dataBase, "www.domain.com");
         Assert.assertNull(result);
         Assert.assertTrue(Domains.map(dataBase, 141, "www.domain.com", "my-space", null, true, "certificate-yay"));
+        result = Domains.get(dataBase, "www.domain.com");
+        Assert.assertFalse(result.configured);
         try {
           Domains.getNativeAppConfig(dataBase, "www.domain.com");
           Assert.fail();
@@ -53,6 +55,8 @@ public class DomainsTest {
           Assert.assertEquals(736243, ex.code);
         }
         Domains.putNativeAppConfig(dataBase, "www.domain.com", "some-config");
+        result = Domains.get(dataBase, "www.domain.com");
+        Assert.assertTrue(result.configured);
         Assert.assertEquals("some-config", Domains.getNativeAppConfig(dataBase, "www.domain.com"));
         result = Domains.get(dataBase, "www.domain.com");
         Assert.assertEquals(1, Domains.listBySpace(dataBase, "my-space").size());

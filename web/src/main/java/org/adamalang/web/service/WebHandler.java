@@ -94,7 +94,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         for (String suffix : webConfig.globalDomains) {
           if (domain.endsWith("." + suffix)) {
             String space = domain.substring(0, domain.length() - suffix.length() - 1);
-            callback.success(new Domain(domain, -0, space, "default-document", null, false, null, null, 0));
+            callback.success(new Domain(domain, -0, space, "default-document", null, false, null, null, 0, false));
             return;
           }
         }

@@ -650,7 +650,7 @@ public class CoreService implements Deliverer, Queryable {
           document.createPrivateView(context.who, perspective, viewerState, metrics.create_private_view.wrap(new Callback<>() {
             @Override
             public void success(PrivateView view) {
-              stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, mode, new StreamHandle(view)));
+              stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, mode, view.getHandle()));
               stream.status(Streamback.StreamStatus.Connected);
               String viewStateFilter = document.document().__getViewStateFilter();
               if (!"[]".equals(viewStateFilter)) {

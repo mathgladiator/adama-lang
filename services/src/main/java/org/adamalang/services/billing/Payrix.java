@@ -153,17 +153,25 @@ public class Payrix  extends SimpleService {
   }
 
   private static Callback<String> createGetTokenTeardown(ServiceLogger.LogInstance instance, Callback<String> callback) {
-    return new Callback<String>() {
+    return new Callback<>() {
       @Override
       public void success(String value) {
         ObjectNode resultFromPayrix = Json.parseJsonObject(value);
         instance.annotate("payrix_response", resultFromPayrix);
         ObjectNode handoffResult = Json.newJsonObject();
         try {
+          if (hasErrors(resultFromPayrix)) {
+            callback.failure(new ErrorCodeException(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_ISSUE_HAS_ERRORS));
+            return;
+          }
           ObjectNode payment = (ObjectNode) resultFromPayrix.get("response").get("data").get(0).get("payment");
           ObjectNode bin = (ObjectNode) payment.get("bin");
           handoffResult.put("method", payment.get("method").intValue());
-          handoffResult.put("type", bin.get("type").textValue());
+          String type = bin.get("type").textValue();
+          if (type == null) {
+            type = "unknown";
+          }
+          handoffResult.put("type", type);
           callback.success(handoffResult.toString());
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FIRST_PARTY_SERVICES_PAYRIX_ISSUE_PARSING, ex, EXLOGGER));

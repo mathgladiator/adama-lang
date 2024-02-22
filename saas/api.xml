@@ -1186,7 +1186,20 @@
         <field name="key" />
         <field name="route" />
         <field name="forward" />
+        <field name="configured" />
+        <field name="apex_managed" />
     </responder>
+    <field-definition name="configured" type="boolean">
+        <documentation>
+            Is the domain configured?
+        </documentation>
+    </field-definition>
+
+    <field-definition name="apex_managed" type="boolean">
+        <documentation>
+            Is the domain managed by an apex domain?
+        </documentation>
+    </field-definition>
 
     <method name="domain/list" responder="domain-listing" scope="global">
         <parameter name="identity" />
@@ -1656,6 +1669,7 @@
         <field name="route"/>
         <field name="certificate"/>
         <field name="timestamp"/>
+        <field name="configured"/>
     </responder>
 
     <method name="regional/domain-lookup" responder="domain-raw" scope="global" internal="true">

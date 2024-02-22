@@ -45,7 +45,7 @@ public class RegionDomainFinder implements DomainFinder {
     client.regionalDomainLookup(request, new Callback<>() {
       @Override
       public void success(ClientDomainRawResponse raw) {
-        callback.success(new Domain(raw.domain, raw.owner, raw.space, raw.key, raw.forward, raw.route, raw.certificate, new Date(raw.timestamp), raw.timestamp));
+        callback.success(new Domain(raw.domain, raw.owner, raw.space, raw.key, raw.forward, raw.route, raw.certificate, new Date(raw.timestamp), raw.timestamp, raw.configured));
       }
 
       @Override

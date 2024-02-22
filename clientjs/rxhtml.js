@@ -2087,7 +2087,7 @@ var RxHTML = (function () {
   // RUNTIME | rx:behavior=$name
   self.BHV = function(dom, name) {
     if (name in behaviors) {
-      behaviors[name];
+      behaviors[name](dom, self);
     } else {
       console.log("couldn't find behavior:" + name);
     }

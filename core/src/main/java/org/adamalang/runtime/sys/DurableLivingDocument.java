@@ -895,8 +895,25 @@ public class DurableLivingDocument implements Queryable {
   public void createPrivateView(final NtPrincipal who, final Perspective perspective, JsonStreamReader viewerState, Callback<PrivateView> callback) {
     try {
       PrivateView result = document.__createView(who, perspective);
+      new StreamHandle(result); // does a link
       result.ingest(viewerState);
-      invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
+      invalidate(new Callback<Integer>() {
+        @Override
+        public void success(Integer value) {
+          callback.success(result);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          base.executor.execute(new NamedRunnable("failed-private-view-creation") {
+            @Override
+            public void execute() throws Exception {
+              result.kill();
+              callback.failure(ex);
+            }
+          });
+        }
+      });
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_FAILURE_CREATE_PRIVATE_VIEW, ex, EXLOGGER));
     }

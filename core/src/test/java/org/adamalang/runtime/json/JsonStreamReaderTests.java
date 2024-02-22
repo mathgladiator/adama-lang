@@ -122,6 +122,12 @@ public class JsonStreamReaderTests {
   }
 
   @Test
+  public void str_as_null() {
+    JsonStreamReader reader = new JsonStreamReader("null");
+    Assert.assertEquals("", reader.readString());
+  }
+
+  @Test
   public void complex_downpromote() {
     JsonStreamReader reader = new JsonStreamReader("\"x\"");
     Assert.assertEquals(0, (int) reader.readNtComplex().real);

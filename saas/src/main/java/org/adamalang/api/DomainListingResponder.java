@@ -30,13 +30,15 @@ public class DomainListingResponder {
     this.responder = responder;
   }
 
-  public void next(String domain, String space, String key, Boolean route, String forward) {
+  public void next(String domain, String space, String key, Boolean route, String forward, Boolean configured, Boolean apex_managed) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("domain", domain);
     _obj.put("space", space);
     _obj.put("key", key);
     _obj.put("route", route);
     _obj.put("forward", forward);
+    _obj.put("configured", configured);
+    _obj.put("apex_managed", apex_managed);
     responder.stream(_obj.toString());
   }
 

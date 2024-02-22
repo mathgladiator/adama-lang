@@ -289,6 +289,9 @@ public class JsonStreamReader {
       return "";
     }
     String lookup = next.data;
+    if (lookup == null) {
+      return "";
+    }
     String test = dedupeStrings.get(lookup);
     if (test == null) {
       dedupeStrings.put(lookup, lookup);

@@ -30,7 +30,7 @@ public class DomainRawResponder {
     this.responder = responder;
   }
 
-  public void complete(String domain, Integer owner, String space, String key, String forward, Boolean route, String certificate, Long timestamp) {
+  public void complete(String domain, Integer owner, String space, String key, String forward, Boolean route, String certificate, Long timestamp, Boolean configured) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("domain", domain);
     _obj.put("owner", owner);
@@ -40,6 +40,7 @@ public class DomainRawResponder {
     _obj.put("route", route);
     _obj.put("certificate", certificate);
     _obj.put("timestamp", timestamp);
+    _obj.put("configured", configured);
     responder.finish(_obj.toString());
   }
 

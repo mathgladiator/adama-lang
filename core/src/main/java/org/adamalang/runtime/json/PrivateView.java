@@ -46,6 +46,10 @@ public abstract class PrivateView {
     this.handle = handle;
   }
 
+  public StreamHandle getHandle() {
+    return this.handle;
+  }
+
   /** this is an optimized way to update the viewer without causing an invalidate */
   public void setRefresh(Runnable refresh) {
     this.refresh = refresh;

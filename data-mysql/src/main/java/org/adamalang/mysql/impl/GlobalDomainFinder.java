@@ -45,7 +45,7 @@ public class GlobalDomainFinder implements DomainFinder {
       if (result != null) {
         if (result.certificate != null) {
           String cert = MasterKey.decrypt(masterKey, result.certificate);
-          result = new Domain(result.domain, result.owner, result.space, result.key, result.forwardTo, result.routeKey, cert, result.updated, result.timestamp);
+          result = new Domain(result.domain, result.owner, result.space, result.key, result.forwardTo, result.routeKey, cert, result.updated, result.timestamp, result.configured);
         }
       }
       callback.success(result);

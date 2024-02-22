@@ -630,7 +630,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
     try {
       if (request.who.isAdamaDeveloper) {
         for (Domain domain : Domains.list(nexus.database, request.who.id)) {
-          responder.next(domain.domain, domain.space, domain.key, domain.routeKey, domain.forwardTo);
+          responder.next(domain.domain, domain.space, domain.key, domain.routeKey, domain.forwardTo, domain.configured, false);
         }
         responder.finish();
       } else {
@@ -645,7 +645,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
   public void handle(Session session, DomainListBySpaceRequest request, DomainListingResponder responder) {
     try {
       for (Domain domain : Domains.listBySpace(nexus.database, request.space)) {
-        responder.next(domain.domain, domain.space, domain.key, domain.routeKey, domain.forwardTo);
+        responder.next(domain.domain, domain.space, domain.key, domain.routeKey, domain.forwardTo, domain.configured, false);
       }
       responder.finish();
     } catch (Exception ex) {
@@ -1070,7 +1070,7 @@ public class GlobalControlHandler implements RootGlobalHandler {
         if (domain.certificate != null) {
           cert = MasterKey.decrypt(nexus.masterKey, cert);
         }
-        responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.forwardTo, domain.routeKey, cert, domain.timestamp);
+        responder.complete(domain.domain, domain.owner, domain.space, domain.key, domain.forwardTo, domain.routeKey, cert, domain.timestamp, domain.configured);
       } catch (Exception ex) {
         responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.GLOBAL_DOMAIN_FIND_EXCEPTION, ex, LOGGER));
       }

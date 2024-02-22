@@ -31,7 +31,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 public class Domains {
-  private static final String SELECT_DOMAIN = "SELECT `domain`, `owner`, `space`, `key`, `forward`, `route`, `certificate`,`updated`, `automatic_timestamp`";
+  private static final String SELECT_DOMAIN = "SELECT `domain`, `owner`, `space`, `key`, `forward`, `route`, `certificate`,`updated`, `automatic_timestamp`, (`config` IS NOT NULL AND `config` <> '')";
 
   public static VAPIDPublicPrivateKeyPair getOrCreateVapidKeyPair(DataBase dataBase, String domain, VAPIDFactory factory) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
@@ -220,7 +220,8 @@ public class Domains {
         rs.getBoolean(6),
         cert, //
         rs.getDate(8), //
-        rs.getLong(9));
+        rs.getLong(9),
+        rs.getBoolean(10));
   }
 
   public static ArrayList<Domain> list(DataBase dataBase, int owner) throws Exception {

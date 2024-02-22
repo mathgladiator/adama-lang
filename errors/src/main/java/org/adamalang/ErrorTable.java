@@ -1001,6 +1001,8 @@ public class ErrorTable {
     descriptions.put(717820, "no description of error (yet)");
     names.put(785405, "FIRST_PARTY_SERVICES_PAYRIX_ISSUE_PARSING");
     descriptions.put(785405, "no description of error (yet)");
+    names.put(705535, "FIRST_PARTY_SERVICES_PAYRIX_ISSUE_HAS_ERRORS");
+    descriptions.put(705535, "no description of error (yet)");
     names.put(888888, "FIRST_PARTY_SERVICES_METHOD_NOT_FOUND");
     descriptions.put(888888, "no description of error (yet)");
     names.put(888889, "FIRST_PARTY_SERVICES_METHOD_NOT_IMPLEMENTED");

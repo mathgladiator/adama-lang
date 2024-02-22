@@ -328,7 +328,7 @@ public class LocalServiceBase implements ServiceBase {
       @Override
       public void find(String domain, Callback<Domain> callback) {
         if (verse != null && verse.domainKeyToUse != null) {
-          callback.success(new Domain(domain, 0, verse.domainKeyToUse.space, verse.domainKeyToUse.key, null, true, null, null, 0));
+          callback.success(new Domain(domain, 0, verse.domainKeyToUse.space, verse.domainKeyToUse.key, null, true, null, null, 0, false));
         } else {
           callback.failure(new ErrorCodeException(-404));
         }

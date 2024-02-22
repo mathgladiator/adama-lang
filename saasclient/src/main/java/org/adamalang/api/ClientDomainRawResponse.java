@@ -31,6 +31,7 @@ public class ClientDomainRawResponse {
   public final Boolean route;
   public final String certificate;
   public final Long timestamp;
+  public final Boolean configured;
 
   public ClientDomainRawResponse(ObjectNode response) {
     this._original = response;
@@ -42,6 +43,7 @@ public class ClientDomainRawResponse {
     this.route = Json.readBool(response, "route");
     this.certificate = Json.readString(response, "certificate");
     this.timestamp = Json.readLong(response, "timestamp");
+    this.configured = Json.readBool(response, "configured");
   }
   public String toInternalJson() {
     ObjectNode _next = Json.newJsonObject();
@@ -53,6 +55,7 @@ public class ClientDomainRawResponse {
     _next.put("route", route);
     _next.put("certificate", certificate);
     _next.put("timestamp", timestamp);
+    _next.put("configured", configured);
     return _next.toString();
   }
 }

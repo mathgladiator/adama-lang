@@ -796,6 +796,8 @@ List the domains for the given developer
 | key | String | The key. |
 | route | Boolean | Does the domain route GET to the document or the space. |
 | forward | String | Does the domain have a forwarding address |
+| configured | Boolean | Is the domain configured? |
+| apex_managed | Boolean | Is the domain managed by an apex domain? |
 
 ## Method: DomainListBySpace
 List the domains for the given developer
@@ -816,6 +818,8 @@ List the domains for the given developer
 | key | String | The key. |
 | route | Boolean | Does the domain route GET to the document or the space. |
 | forward | String | Does the domain have a forwarding address |
+| configured | Boolean | Is the domain configured? |
+| apex_managed | Boolean | Is the domain managed by an apex domain? |
 
 ## Method: DomainGetVapidPublicKey (JS)
 Get the public key for the VAPID

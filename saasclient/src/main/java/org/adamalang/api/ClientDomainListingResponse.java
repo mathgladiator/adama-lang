@@ -28,6 +28,8 @@ public class ClientDomainListingResponse {
   public final String key;
   public final Boolean route;
   public final String forward;
+  public final Boolean configured;
+  public final Boolean apex_managed;
 
   public ClientDomainListingResponse(ObjectNode response) {
     this._original = response;
@@ -36,6 +38,8 @@ public class ClientDomainListingResponse {
     this.key = Json.readString(response, "key");
     this.route = Json.readBool(response, "route");
     this.forward = Json.readString(response, "forward");
+    this.configured = Json.readBool(response, "configured");
+    this.apex_managed = Json.readBool(response, "apex_managed");
   }
   public String toInternalJson() {
     ObjectNode _next = Json.newJsonObject();
@@ -44,6 +48,8 @@ public class ClientDomainListingResponse {
     _next.put("key", key);
     _next.put("route", route);
     _next.put("forward", forward);
+    _next.put("configured", configured);
+    _next.put("apex_managed", apex_managed);
     return _next.toString();
   }
 }
