@@ -948,11 +948,14 @@ var RxHTML = (function () {
       }
     };
 
+    var signals = {isNew:false};
+
     var sub = {
       "+": function (key) {
         var new_state = fork(self.pIE(it_state, key, expandView));
         var unsub = make_unsub();
         var dom = maker(new_state);
+        signals.isNew = true;
         domByKey[key] = dom;
         viewUnSubByKey[key] = unsub;
         parentDom.append(dom);
@@ -996,6 +999,10 @@ var RxHTML = (function () {
           parentDom.value = valueToSet;
         }
         parentDom.dispatchEvent(new Event("ordered"));
+        if (signals.isNew) {
+          parentDom.dispatchEvent(new Event("new"));
+          signals.isNew = false;
+        }
       }
     };
     subscribe(state, name, sub);
@@ -1042,6 +1049,7 @@ var RxHTML = (function () {
         n = typeof (value) == 'number' ? value : parseInt(value);
       } catch (failedParsingN) {
       }
+      var isNew = false;
       while (this.at < n - 1) {
         this.at ++;
         this.track ++;
@@ -1054,6 +1062,7 @@ var RxHTML = (function () {
           state.view.tree.update(path_to(new_state.view, {"$index": this.track}));
         }
         subscribe_state(new_state, unsub);
+        isNew = true;
       }
       while (this.at >= n && this.at >= 0) {
         fire_unsub(this.items[this.at].unsub);
@@ -1061,6 +1070,9 @@ var RxHTML = (function () {
         this.items[this.at] = null;
         delete this.items[this.at];
         this.at--;
+      }
+      if (isNew) {
+        parentDom.dispatchEvent(new Event("new"));
       }
     }.bind({items:[], at:-1, track:0});
     subscribe(state, name, sub);
@@ -1508,6 +1520,52 @@ var RxHTML = (function () {
     });
   };
 
+  self.pUs = function(dom, msDelay) {
+    dom.addEventListener('scroll', function(ev) {
+      if (dom.isProtected) {
+        // TODO: if elToScroll.last_scroll_command is max and the scroll is there, then lower isProtected
+      }
+      if (dom.ignoreEvent || dom.isProtected) {
+        return;
+      }
+      dom.isProtected = true;
+      window.setTimeout(function() {
+        dom.isProtected = false;
+      }, msDelay);
+    });
+  };
+
+  self.oSCR = function (dom, type, state, originalCommand) {
+    reg_event(state, dom, type, function (event) {
+      var elToScroll = dom;
+      var command = originalCommand;
+      while (command.startsWith('parent-')) {
+        if (elToScroll.parentElement) {
+          elToScroll = elToScroll.parentElement;
+        }
+        command = command.substring(7);
+      }
+      if (elToScroll.isProtected) {
+        return;
+      }
+      elToScroll.ignoreEvent = true;
+      window.setTimeout(function() {
+        elToScroll.ignoreEvent = false;
+      }, 100);
+      switch (command) {
+        case 'min': {
+          elToScroll.last_scroll_command = 'min';
+          elToScroll.scrollTo(0, 0);
+          return;
+        }
+        case 'max': {
+          elToScroll.last_scroll_command = 'max';
+          elToScroll.scrollTo(0, elToScroll.scrollHeight);
+          return;
+        }
+      }
+    });
+  };
 
   self.oUCK = function (dom, type, state) {
     reg_event(state, dom, type, function (event) {

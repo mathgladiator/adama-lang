@@ -393,11 +393,13 @@ public class Elements {
 
   public static void input(Environment env) {
     String inputVar = Base.write(env, true);
-    if (env.element.hasAttr("rx:sync")) {
-      String path = env.element.attr("rx:sync");
-      double ms = _rxdebounce(env);
-      StatePath _path = StatePath.resolve(("view:" + path), env.stateVar);
-      env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
+    for (Attribute attr : env.element.attributes()) {
+      if (attr.hasDeclaredValue() && (attr.getKey().equals("rx:sync") || attr.getKey().startsWith("rx:sync:"))) {
+        String path = attr.getValue();
+        double ms = _rxdebounce(env);
+        StatePath _path = StatePath.resolve(("view:" + path), env.stateVar);
+        env.writer.tab().append("$.SY(").append(inputVar).append(",").append(_path.command).append(",'").append(_path.name).append("',").append("" + ms).append(");").newline();
+      }
     }
     env.pool.give(inputVar);
   }

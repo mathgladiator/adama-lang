@@ -25,6 +25,7 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * TogglePassword
 * TransferError
 * TransferMouse
+* Scroll
 * Uncheck (to deprecate)
 
 ## Attribute Template Language
@@ -103,10 +104,11 @@ So, The documentation for RxHTML and the reality have drifted a bunch. This docu
 * rx:check, rx:uncheck
 * rx:keyup, rx:keydown
 * rx:settle, rx:settle-once
-* rx:ordered
+* rx:ordered - fire after a rx:iterate ordered an array
 * rx:success, rx:failure
 * rx:submit, rx:submitted
 * rx:aftersync
+* rx:new - fire after a new element was introduced into an rx:iterate or rx:repeat was incremented
 
 ## Forms
 * rx:identity (should this be just identity)

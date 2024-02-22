@@ -35,6 +35,7 @@ public class Base {
     "blur", "focus", "change", // inputs
     "rise", "fall", // monitor
     "check", "uncheck", // checkboxes
+    "new", // a new item appeared in a list
     "keyup", "keydown", // keyboard antics
     "settle", "settle-once", // RxHTML: fires when the data tree has settled
     "load", // RxHTML: fires after 1ms of creating the DOM
@@ -220,7 +221,21 @@ public class Base {
     }
 
     // for rx:case, only inject the children with "children-only" attribute
-    boolean childrenOnly = hasCase && env.element.hasAttr("children-only") && env.parentVariable != null && !returnVariable && !hasStaticContent;
+    boolean hasChildrenOnlyAttribute = env.element.hasAttr("children-only");
+    if (hasChildrenOnlyAttribute) {
+      env.element.removeAttr("children-only");
+    }
+    boolean childrenOnly = hasCase && hasChildrenOnlyAttribute && env.parentVariable != null && !returnVariable && !hasStaticContent;
+
+    Integer protectUserScrollDelay = null;
+    if (env.element.hasAttr("protect-user-scroll")) {
+      protectUserScrollDelay = 10000;
+      try {
+        protectUserScrollDelay = Integer.parseInt(env.element.attr("protect-user-scroll"));
+      } catch (Exception ex) {
+      }
+      env.element.removeAttr("protect-user-scroll");
+    }
 
     ObjectNode config = extractConfig(env.element);
 
@@ -235,6 +250,9 @@ public class Base {
       handoff = writeIntro(env, xmlns);
       eVar = handoff.eVar;
       eVarCreated = true;
+      if (protectUserScrollDelay != null) {
+        env.writer.tab().append("$.pUs(").append(eVar).append(",").append("" + protectUserScrollDelay).append(");").newline();
+      }
     }
 
     if (hasStaticContent) {

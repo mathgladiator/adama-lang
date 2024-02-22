@@ -103,6 +103,10 @@ public class Parser {
             commands.add(new TransferError(body));
             break;
           }
+          case "scroll": {
+            commands.add(new Scroll(body));
+            break;
+          }
           case "tm": {
             String[] parts = body.split(Pattern.quote("|"));
             int offX = parts.length > 1 ? TransferMouse.parseIntOrZero(parts[0]) : 0;

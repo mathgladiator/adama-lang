@@ -15,9 +15,24 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.acl.commands;
 
-public class Platform {
-  public static final String VERSION = "20240221180139";
-  public static final String JS_VERSION = "d8d30545b0d9bb902862f8aa4fa0b487";
+import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.typing.ViewScope;
+
+/** scroll the current item to the max */
+public class Scroll implements Command  {
+  private final String command;
+  public Scroll(String command) {
+    this.command = command;
+  }
+
+  @Override
+  public void writeTypes(ViewScope vs) {
+  }
+
+  @Override
+  public void write(Environment env, String type, String eVar) {
+    env.writer.tab().append("$.oSCR(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(",'").append(command).append("');").newline();
+  }
 }
