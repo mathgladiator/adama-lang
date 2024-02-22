@@ -905,11 +905,11 @@ public class DurableLivingDocument implements Queryable {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          base.executor.execute(new NamedRunnable("failed-private-view-creation") {
+          callback.failure(ex);
+          base.executor.execute(new NamedRunnable("kill-private-view") {
             @Override
             public void execute() throws Exception {
               result.kill();
-              callback.failure(ex);
             }
           });
         }
