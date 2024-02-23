@@ -97,7 +97,7 @@ async function LinkCapacitor($, identityName) {
             device.ua = window.navigator.userAgent;
           }
           var val = localStorage.getItem(pushTokenKey);
-          if (val && val == token) {
+          if (val && val == token.value) {
             $.bump("npa"); // ready
             $.setPushStatus("success");
             return;
@@ -106,7 +106,7 @@ async function LinkCapacitor($, identityName) {
             success: function() {
               $.bump("npr"); // ready
               $.setPushStatus("success");
-              localStorage.setItem(pushTokenKey, token);
+              localStorage.setItem(pushTokenKey, token.value);
             },
             failure: function() {
               $.bump("npf3");
