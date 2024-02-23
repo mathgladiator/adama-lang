@@ -239,6 +239,7 @@ public class Installer {
             "  `domain` VARCHAR(254) NOT NULL," + //
             "  `agent` VARCHAR(128) NOT NULL," + //
             "  `authority_hash` VARCHAR(32) NOT NULL," + //
+            "  `dedupe` VARCHAR(64) NOT NULL," + //
             "  `authority` TEXT NOT NULL," + //
             "  `subscription` LONGTEXT NOT NULL," + //
             "  `device_info` LONGTEXT NOT NULL," + //

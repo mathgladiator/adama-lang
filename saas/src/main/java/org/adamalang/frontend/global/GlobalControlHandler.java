@@ -607,8 +607,8 @@ public class GlobalControlHandler implements RootGlobalHandler {
   @Override
   public void handle(Session session, PushRegisterRequest request, SimpleResponder responder) {
     try {
-      // TODO: ask if the domain allows push notifications
-      PushSubscriptions.registerSubscription(nexus.database, request.domain, request.who.who, request.subscription.toString(), request.deviceInfo.toString(), System.currentTimeMillis() + 14 * 90000);
+      String dedupe = PushSubscriptions.dedupeHash(request.subscription);
+      PushSubscriptions.registerSubscription(nexus.database, request.domain, request.who.who, dedupe, request.subscription.toString(), request.deviceInfo.toString(), System.currentTimeMillis() + 14 * 90000);
       responder.complete();
     } catch (Exception ex) {
       responder.error(new ErrorCodeException(ErrorCodes.PUSH_REGISTER_UNKNOWN_FAILURE));

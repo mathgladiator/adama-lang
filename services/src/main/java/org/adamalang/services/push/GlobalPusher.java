@@ -190,6 +190,7 @@ public class GlobalPusher implements Pusher {
           for (DeviceSubscription subscription : subs) {
             ObjectNode raw = Json.parseJsonObject(subscription.subscription);
             String method = raw.get("@method").textValue();
+            // TODO: if we introduce a new method, then update the appropriate branch in data-mysql/src/main/java/org/adamalang/mysql/model/PushSubscriptions.java
             if ("webpush".equals(method)) {
               webPush(raw, subscription, pair, payload);
             } else if ("capacitor".equals(method)) { // use firebase stuff

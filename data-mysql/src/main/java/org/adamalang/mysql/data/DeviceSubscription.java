@@ -21,10 +21,12 @@ public class DeviceSubscription {
   public final int id;
   public final String subscription;
   public final String deviceInfo;
+  public final String dedupe;
 
-  public DeviceSubscription(int id, String subscription, String deviceInfo) {
+  public DeviceSubscription(int id, String subscription, String deviceInfo, String dedupe) {
     this.id = id;
     this.subscription = subscription;
     this.deviceInfo = deviceInfo;
+    this.dedupe = dedupe;
   }
 }
