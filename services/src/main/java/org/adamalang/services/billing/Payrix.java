@@ -220,7 +220,12 @@ public class Payrix  extends SimpleService {
       if (!(at != null && at.isObject() && at.has("status"))) {
         return null;
       }
-      return Integer.parseInt(at.get("status").textValue());
+      at = at.get("status");
+      if (at.isIntegralNumber()) {
+        return at.intValue();
+      } else {
+        return Integer.parseInt(at.get("status").textValue());
+      }
     } catch (Exception shrug) {
       return null;
     }
