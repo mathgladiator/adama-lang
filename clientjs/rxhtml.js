@@ -961,6 +961,12 @@ var RxHTML = (function () {
         parentDom.append(dom);
         var item_delta = new_state.data.delta;
         new_state.data.delta = {};
+        // RESTORE THIS FOR PRODUCTION
+        /*
+        if (new_state.data.parent && new_state.data.path && new_state.data.parent.delta) {
+          new_state.data.parent.delta[new_state.data.path] = new_state.data.delta;
+        }
+        */
         subscribe_state(new_state, unsub);
         if (expandView) {
           state.view.tree.update(path_to(new_state.view, {"$key": key}));
