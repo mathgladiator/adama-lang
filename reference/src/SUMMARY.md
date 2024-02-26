@@ -64,6 +64,7 @@
   - [Deployment Plan](./reference/deployment-plan.md)
   - [JavaScript API](./reference/api.md)
   - [JSON Delta Format](./reference/deltas.md)
+  - [Testing](./reference/testing.md)
 - [Web Serving](./web/ref.md)
   - [Multi-tenant products](./web/multi-tenant.md)
 - [RxHTML](./rxhtml/ref.md)
