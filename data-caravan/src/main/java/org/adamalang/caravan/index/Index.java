@@ -57,8 +57,11 @@ public class Index {
     int over_20K = 0;
     int over_50K = 0;
     int over_100K = 0;
+    int over_1M = 0;
+    int total = 0;
     for (List<AnnotatedRegion> regions : index.values()) {
       for (AnnotatedRegion region : regions) {
+        total++;
         if (region.size > 10000) {
           over_10K++;
         }
@@ -71,12 +74,17 @@ public class Index {
         if (region.size > 100000) {
           over_100K++;
         }
+        if (region.size > 1000000) {
+          over_1M++;
+        }
       }
     }
+    metrics.items_total.set(total);
     metrics.items_over_tenk.set(over_10K);
     metrics.items_over_twentyk.set(over_20K);
     metrics.items_over_fiftyk.set(over_50K);
     metrics.items_over_onehundredk.set(over_100K);
+    metrics.items_over_onemega.set(over_1M);
   }
 
   public Set<Long> list() {
