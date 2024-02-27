@@ -66,7 +66,6 @@ public class CapacitorJSShell {
 
   public String make(String forest) throws Exception {
     StringBuilder sb = new StringBuilder();
-    StringBuilder scripts = new StringBuilder();
     Document document = Loader.parseForest(forest, ProductionMode.MobileApp);
     Element mobileShell = findMobileShell(document);
     String workerIdentity = mobileShell.hasAttr("worker-identity-name") ? mobileShell.attr("worker-identity-name") : "default";
@@ -90,7 +89,7 @@ public class CapacitorJSShell {
       sb.append("  ").append(element.toString()).append("\n");
     }
     for (Element element : mobileShell.getElementsByTag("script")) {
-      scripts.append(element.toString()).append("\n");
+      sb.append("  ").append(element.toString()).append("\n");
     }
     if (devmode) {
       sb.append("  <script src=\"/connection.js\"></script>").append("\n");
