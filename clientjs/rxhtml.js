@@ -3013,7 +3013,6 @@ var RxHTML = (function () {
   // RUNTIME(mobile) | rx:action="manifest-use:"
   self.MD_u = function(dom, type, value) {
     reg_event(null, dom, type, function() {
-      console.log(value);
       self.useManifest(typeof(value) == 'function' ? value() : value);
     });
   };
