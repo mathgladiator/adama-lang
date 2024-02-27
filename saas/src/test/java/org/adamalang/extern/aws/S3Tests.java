@@ -386,6 +386,30 @@ public class S3Tests {
         }
       });
       Assert.assertTrue(latchRestore.await(30000, TimeUnit.MILLISECONDS));
+      CountDownLatch latchProtectBudget = new CountDownLatch(2);
+      s3.backup(new Key("ide", null), 100, BackupService.Reason.Deployment, null, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          latchProtectBudget.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.fail();
+        }
+      });
+      s3.backup(new Key("billing", null), 100, BackupService.Reason.Deployment, null, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          latchProtectBudget.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.fail();
+        }
+      });
+      Assert.assertTrue(latchProtectBudget.await(50000, TimeUnit.MILLISECONDS));
       archiveObject = new File(root, archiveKey);
       Assert.assertTrue(archiveObject.exists());
       Assert.assertEquals(expected.toString(), Files.readString(archiveObject.toPath()));

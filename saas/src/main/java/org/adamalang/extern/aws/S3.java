@@ -69,6 +69,11 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
 
   @Override
   public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
+    if ("billing".equals(key.space) || "ide".equals(key.space)) {
+      // we simply ignore these for now as they are owned by the platform
+      callback.success(null);
+      return;
+    }
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.backup_key.start();
     String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
     String s3key = "snapshots/" + key.space + "/" + key.key + "/" + date + "/" + seq + "/" + reason.name();
