@@ -88,9 +88,6 @@ public class CapacitorJSShell {
     for (Element element : mobileShell.getElementsByTag("link")) {
       sb.append("  ").append(element.toString()).append("\n");
     }
-    for (Element element : mobileShell.getElementsByTag("script")) {
-      sb.append("  ").append(element.toString()).append("\n");
-    }
     if (devmode) {
       sb.append("  <script src=\"/connection.js\"></script>").append("\n");
       sb.append("  <script src=\"/tree.js\"></script>").append("\n");
@@ -99,6 +96,9 @@ public class CapacitorJSShell {
       sb.append("  <script src=\"/libadama.js\"></script>").append("\n");
     }
     sb.append("  <script src=\"/rxcapacitor.js\"></script>").append("\n");
+    for (Element element : mobileShell.getElementsByTag("script")) {
+      sb.append("  ").append(element.toString()).append("\n");
+    }
     Environment env = Environment.fresh(feedback, "mobile");
     Root.start(env, RxHtmlTool.buildCustomJavaScript(document));
     for (Element element : document.getElementsByTag("template")) {
