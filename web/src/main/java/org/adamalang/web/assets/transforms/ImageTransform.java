@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 
 public class ImageTransform implements Transform {
@@ -64,7 +65,7 @@ public class ImageTransform implements Transform {
     }
   }
 
-  public void execute(File input, File output) throws Exception {
+  public void execute(InputStream input, File output) throws Exception {
     BufferedImage src = ImageIO.read(input);
     if (desiredHeight != null && desiredWidth == null) {
       desiredWidth = src.getWidth() * desiredHeight / src.getHeight();

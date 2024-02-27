@@ -17,11 +17,35 @@
 */
 package org.adamalang.web.assets.transforms;
 
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.cache.Measurable;
+import org.adamalang.web.assets.AssetStream;
+
+import java.io.File;
 
 public class TransformAsset implements Measurable {
-  public void evict() {
+  private final SimpleExecutor executor;
+  private final File cache;
+  private byte[] serveFromMemory;
 
+  public TransformAsset(SimpleExecutor executor, File cache) {
+    this.executor = executor;
+    this.cache = cache;
+    this.serveFromMemory = null;
+  }
+
+  public void serve(AssetStream response) {
+
+  }
+
+  public void evict() {
+    executor.schedule(new NamedRunnable("evict") {
+      @Override
+      public void execute() throws Exception {
+        cache.delete();
+      }
+    }, 1000);
   }
 
   @Override

@@ -15,12 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.web.assets.transforms;
+package org.adamalang.web.assets.transforms.capture;
 
-import java.io.File;
 import java.io.InputStream;
 
-public interface Transform {
-  /** execute the transform */
-  public void execute(InputStream input, File output) throws Exception;
+/** an inflight asset is an asset that is sitting in memory or on disk temporarily to be transformed */
+public interface InflightAsset {
+  public InputStream open() throws Exception;
+
+  public void finished();
 }

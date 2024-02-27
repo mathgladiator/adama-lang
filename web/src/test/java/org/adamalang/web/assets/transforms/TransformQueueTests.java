@@ -17,10 +17,5 @@
 */
 package org.adamalang.web.assets.transforms;
 
-import java.io.File;
-import java.io.InputStream;
-
-public interface Transform {
-  /** execute the transform */
-  public void execute(InputStream input, File output) throws Exception;
+public class TransformQueueTests {
 }

@@ -921,9 +921,9 @@ public class ErrorTable {
     descriptions.put(722034, "no description of error (yet)");
     names.put(716912, "FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION");
     descriptions.put(716912, "no description of error (yet)");
-    names.put(736347, "PROXY_TIMEOUT");
+    names.put(736347, "ASSET_TRANSFORM_DISK_CAPTURE_EXCEPTION");
     descriptions.put(736347, "no description of error (yet)");
-    names.put(799836, "PROXY_REJECTED");
+    names.put(799836, "ASSET_TRANSFORM_FAILED_TRANSFORM");
     descriptions.put(799836, "no description of error (yet)");
     names.put(735344, "MANAGED_STORAGE_WRONG_MACHINE");
     descriptions.put(735344, "no description of error (yet)");

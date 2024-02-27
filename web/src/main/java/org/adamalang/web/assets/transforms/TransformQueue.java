@@ -17,6 +17,7 @@
 */
 package org.adamalang.web.assets.transforms;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.cache.AsyncSharedLRUCache;
 import org.adamalang.common.cache.SyncCacheLRU;
@@ -25,9 +26,12 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.web.assets.AssetRequest;
 import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
-import org.adamalang.web.assets.cache.CachedAsset;
+import org.adamalang.web.assets.transforms.capture.DiskCapture;
+import org.adamalang.web.assets.transforms.capture.InflightAsset;
+import org.adamalang.web.assets.transforms.capture.MemoryCapture;
 
 import java.io.File;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -35,10 +39,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** A queue for executing transforms */
 public class TransformQueue {
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(TransformQueue.class);
   private final TimeSource time;
   private final File transformRoot;
   private final SimpleExecutor executorCache;
   private final SimpleExecutor executorTransform;
+  private final SimpleExecutor executorDisk;
   private final AtomicBoolean alive;
   private final SyncCacheLRU<TransformTask, TransformAsset> cache;
   private final AsyncSharedLRUCache<TransformTask, TransformAsset> async;
@@ -49,6 +55,7 @@ public class TransformQueue {
     this.transformRoot = transformRoot;
     this.executorCache = SimpleExecutor.create("transforms-cache");
     this.executorTransform = SimpleExecutor.create("transforms-transform");
+    this.executorDisk = SimpleExecutor.create("transforms-disk");
     this.alive = new AtomicBoolean(true);
     this.assets = assets;
     this.cache = new SyncCacheLRU<>(time, 10, 2000, 128 * 1024 * 1024L, 30 * 60000, (key, item) -> {
@@ -70,12 +77,14 @@ public class TransformQueue {
     public final String instruction;
     public final Transform transform;
     public final NtAsset asset;
+    public final String hash;
 
-    public TransformTask(Key key, String instruction, Transform transform, NtAsset asset) {
+    public TransformTask(Key key, String instruction, Transform transform, NtAsset asset, String hash) {
       this.key = key;
       this.instruction = instruction;
       this.transform = transform;
       this.asset = asset;
+      this.hash = hash;
     }
 
     @Override
@@ -83,18 +92,51 @@ public class TransformQueue {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       TransformTask that = (TransformTask) o;
-      return Objects.equals(key, that.key) && Objects.equals(instruction, that.instruction) && Objects.equals(asset, that.asset);
+      return Objects.equals(key, that.key) && Objects.equals(instruction, that.instruction) && Objects.equals(asset, that.asset) && Objects.equals(hash, that.hash);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(key, instruction, asset);
+      return Objects.hash(key, instruction, asset, hash);
     }
 
     public void execute(Callback<TransformAsset> callback) {
       AssetRequest request = new AssetRequest(key.space, key.key, asset.id);
-      // assets.request(request, );
+      Callback<InflightAsset> thingToTransform = new Callback<InflightAsset>() {
+        @Override
+        public void success(InflightAsset inflight) {
+          executorTransform.execute(new NamedRunnable("running-transform") {
+            @Override
+            public void execute() throws Exception {
+              File output = new File(transformRoot, asset.id + "." + hash + ".result");
+              try {
+                InputStream input = inflight.open();
+                try {
+                  transform.execute(input, output);
+                  callback.success(new TransformAsset(executorDisk, output));
+                } finally {
+                  input.close();
+                }
+              } catch (Exception ex) {
+                callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.ASSET_TRANSFORM_FAILED_TRANSFORM, ex, EXLOGGER));
+              }
+              inflight.finished();
+            }
+          });
+        }
 
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      };
+      AssetStream streamToUse;
+      if (asset.size < 1024 * 1024) {
+        streamToUse = new MemoryCapture(thingToTransform);
+      } else {
+        streamToUse = new DiskCapture(executorDisk, asset, transformRoot, thingToTransform);
+      }
+      assets.request(request, streamToUse);
     }
   }
 
@@ -106,11 +148,11 @@ public class TransformQueue {
       hash = Hashing.finishAndEncodeHex(sha);
     }
 
-    TransformTask task = new TransformTask(key, instruction, transform, asset);
+    TransformTask task = new TransformTask(key, instruction, transform, asset, hash);
 
     async.get(task, new Callback<TransformAsset>() {
       @Override
-      public void success(TransformAsset asset) {
+      public void success(TransformAsset result) {
 
       }
 
@@ -129,6 +171,10 @@ public class TransformQueue {
     }
     try {
       this.executorTransform.shutdown().await(1000, TimeUnit.MILLISECONDS);
+    } catch (Exception ex) {
+    }
+    try {
+      this.executorDisk.shutdown().await(1000, TimeUnit.MILLISECONDS);
     } catch (Exception ex) {
     }
   }

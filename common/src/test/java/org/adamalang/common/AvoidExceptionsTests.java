@@ -15,12 +15,27 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.web.assets.transforms;
+package org.adamalang.common;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 
-public interface Transform {
-  /** execute the transform */
-  public void execute(InputStream input, File output) throws Exception;
+public class AvoidExceptionsTests {
+  @Test
+  public void flow_null() {
+    Assert.assertFalse(AvoidExceptions.deleteFile(null));
+    Assert.assertFalse(AvoidExceptions.close(null));
+    Assert.assertFalse(AvoidExceptions.flushAndClose(null));
+  }
+
+  @Test
+  public void flow_valid() throws Exception {
+    Assert.assertTrue(AvoidExceptions.close(new ByteArrayInputStream("xyz".getBytes())));
+    Assert.assertTrue(AvoidExceptions.flushAndClose(new ByteArrayOutputStream()));
+    Assert.assertTrue(AvoidExceptions.deleteFile(File.createTempFile("adama_test", "y")));
+  }
 }

@@ -15,12 +15,46 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.web.assets.transforms;
+package org.adamalang.common;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 
-public interface Transform {
-  /** execute the transform */
-  public void execute(InputStream input, File output) throws Exception;
+/** common utils to avoid exceptions */
+public class AvoidExceptions {
+
+  /** delete a file */
+  public static boolean deleteFile(File f) {
+    try {
+      return f.delete();
+    } catch (Exception ex) {
+      return false;
+    }
+  }
+
+  /** flush and close */
+  public static boolean close(InputStream input) {
+    try {
+      input.close();
+      return true;
+    } catch (Exception ie) {
+      return false;
+    }
+  }
+
+  /** flush and close */
+  public static boolean flushAndClose(OutputStream output) {
+    try {
+      try {
+        output.flush();
+      } catch (Exception ef) {
+
+      }
+      output.close();
+      return true;
+    } catch (Exception ie) {
+      return false;
+    }
+  }
 }

@@ -751,8 +751,8 @@ public class ErrorCodes {
   public static final int FINDER_SERVICE_MYSQL_CANT_BACKUP = 722034;
   public static final int FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION = 716912;
 
-  public static final int PROXY_TIMEOUT = 736347;
-  public static final int PROXY_REJECTED = 799836;
+  public static final int ASSET_TRANSFORM_DISK_CAPTURE_EXCEPTION = 736347;
+  public static final int ASSET_TRANSFORM_FAILED_TRANSFORM = 799836;
 
   public static final int MANAGED_STORAGE_WRONG_MACHINE = 735344;
   public static final int MANAGED_STORAGE_NULL_ARCHIVE = 778433;
