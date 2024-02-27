@@ -35,35 +35,47 @@ public class ImageTransformTests {
     throw new UnsupportedOperationException("failed to find images directory:" + file.getAbsolutePath());
   }
 
-  private static String transformHash(String file, String transform) throws Exception {
+  private static void transformForAudit(String file, String transform) throws Exception {
     ImageTransform it = new ImageTransform("png", transform);
     FileInputStream input = new FileInputStream(new File(imageRoot(), file));
+    File tempDir = new File(imageRoot(), "output");
+    tempDir.mkdirs();
     try {
-      File output = File.createTempFile("adama_imaging", ".png");
-      try {
-        it.execute(input, output);
-        MessageDigest md = Hashing.md5();
-        md.update(Files.readAllBytes(output.toPath()));
-        return Hashing.finishAndEncodeHex(md);
-      } finally {
+      File output = new File(tempDir, "result_" + transform + "_" + file);
+      if (output.exists()) {
         output.delete();
       }
+      it.execute(input, output);
     } finally {
       input.close();
     }
   }
 
-  @Test
-  public void flow_square_w48_h48_sq() throws Exception{
-    transformHash("square.png", "w90_h48_fc");
+  private void battery(String file) throws Exception{
+    transformForAudit(file, "gray");
+    transformForAudit(file, "w100_h50_fc");
+    transformForAudit(file, "w50_h100_fc");
+    transformForAudit(file, "w50_sq");
+    transformForAudit(file, "h50_sq");
   }
 
   @Test
-  public void flow_square_w48_sq() throws Exception{
-    transformHash("wide.png", "w90_sq");
+  public void square() throws Exception{
+    battery("square.png");
+  }
+
+  @Test
+  public void tall() throws Exception{
+    battery("tall.png");
+  }
+
+  @Test
+  public void wide() throws Exception{
+    battery("wide.png");
   }
 
   // test runner for validating things
+  /*
   @Test
   public void flow_new_stuff() throws Exception{
     ImageTransform it = new ImageTransform("png", "w500_sq_gray");
@@ -79,4 +91,5 @@ public class ImageTransformTests {
       input.close();
     }
   }
+  */
 }
