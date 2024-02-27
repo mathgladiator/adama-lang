@@ -62,7 +62,7 @@ async function LinkCapacitor($, identityName) {
     if (!localStorage.getItem("mdo_host")) {
       $.registerManifest(`${url.origin}/~d/.product-manifest.json`, true);
     }
-    if (url.parthname > 1) {
+    if (url.pathname > 1) {
       window.rxhtml.goto(url.pathname, true);
     }
   });
