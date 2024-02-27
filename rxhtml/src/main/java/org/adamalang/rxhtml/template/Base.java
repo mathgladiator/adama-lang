@@ -327,18 +327,7 @@ public class Base {
       } else if (node instanceof Comment) {
         // ignore comments
       } else if (node instanceof org.jsoup.nodes.Element) {
-        if (node.hasAttr("for-env")) {
-          boolean contains = false;
-          for (String e : node.attr("for-env").split(Pattern.quote("|"))) {
-            if(env.environment.equals(e)) {
-              contains = true;
-            }
-          }
-          if(contains) {
-            node.removeAttr("for-env");
-            filtered.add(node);
-          }
-        } else {
+        if (checkEnv((Element) node, env.environment)) {
           filtered.add(node);
         }
       }
@@ -348,6 +337,30 @@ public class Base {
 
   public static void children(Environment env) {
     children(env, (x) -> true);
+  }
+
+  public static boolean checkEnv(Element node, String env) {
+    if (node.hasAttr("for-env")) {
+      boolean contains = false;
+      for (String e : node.attr("for-env").split(Pattern.quote("|"))) {
+        if (env.equalsIgnoreCase(e.trim())) {
+          contains = true;
+        }
+      }
+      node.removeAttr("for-env");
+      return contains;
+    } else if (node.hasAttr("for-env-except")) {
+      boolean contains = false;
+      for (String e : node.attr("for-env-except").split(Pattern.quote("|"))) {
+        if(env.equalsIgnoreCase(e.trim())) {
+          contains = true;
+        }
+      }
+      node.removeAttr("for-env-except");
+      return !contains;
+    } else {
+      return true;
+    }
   }
 
 

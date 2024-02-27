@@ -90,7 +90,7 @@ public class EveryMachine {
       configObjectForWeb.intOf("http-port", 8081);
     }
     String identityFileName = config.get_string("identity-filename", "me.identity");
-    this.environment = config.get_string("environment", "production");
+    this.environment = config.get_string("environment", "prod").trim();
     this.regionalIdentity = config.get_string("regional-identity", null);
     this.identity = MachineIdentity.fromFile(identityFileName);
     KeyPair keyPair = PublicKeyCodec.inventHostKey();

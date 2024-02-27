@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml.template.config;
 
 import org.adamalang.common.Platform;
+import org.adamalang.rxhtml.template.Base;
 import org.jsoup.nodes.Element;
 
 import java.util.regex.Pattern;
@@ -79,19 +80,6 @@ public class ShellConfig {
   }
 
   public boolean includeInShell(Element element) {
-    if (element.hasAttr("for-env")) {
-      boolean contains = false;
-      for (String e : element.attr("for-env").split(Pattern.quote("|"))) {
-        if (environment.equals(e)) {
-          contains = true;
-        }
-      }
-      if (contains) {
-        element.removeAttr("for-env");
-      }
-      return contains;
-    }
-    return true;
+    return Base.checkEnv(element, environment);
   }
-
 }
