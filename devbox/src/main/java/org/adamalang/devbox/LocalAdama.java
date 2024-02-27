@@ -433,7 +433,9 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
       @Override
       public void next(String data) {
         stats.payload(key.space, key.key, data);
-        io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
+        if (control.showDataFeed.get()) {
+          io.info("adama|connection[" + key.space + "/" + key.key + "]:" + data);
+        }
         ObjectNode delta = Json.parseJsonObject(data);
         responder.next(delta);
         JsonNode force = delta.get("force-disconnect");

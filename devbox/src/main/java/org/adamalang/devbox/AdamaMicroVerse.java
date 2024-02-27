@@ -61,7 +61,6 @@ public class AdamaMicroVerse {
   public final String vapidPrivateKey;
   public final DevPush devPush;
   public final TimeMachine timeMachine;
-  public final AtomicBoolean autoTest;
   private final DevBoxStats stats;
   private final TerminalIO io;
   private final AtomicBoolean alive;
@@ -69,8 +68,9 @@ public class AdamaMicroVerse {
   private final Thread scanner;
   private final DiagnosticsSubscriber diagnostics;
   private final CountDownLatch firstBuild;
+  private final DynamicControl control;
 
-  private AdamaMicroVerse(DevBoxStats stats, WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics) throws Exception {
+  private AdamaMicroVerse(DevBoxStats stats, WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics, DynamicControl control) throws Exception {
     this.stats = stats;
     this.io = io;
     this.alive = alive;
@@ -82,7 +82,7 @@ public class AdamaMicroVerse {
     this.spaces = spaces;
     this.watchService = watchService;
     this.diagnostics = diagnostics;
-    this.autoTest = new AtomicBoolean(false);
+    this.control = control;
     AtomicBoolean signalFirstBuild = new AtomicBoolean(true);
     this.firstBuild = new CountDownLatch(1);
     this.scanner = new Thread(() -> {
@@ -167,7 +167,7 @@ public class AdamaMicroVerse {
             awaitDeployment.await(1000, TimeUnit.MILLISECONDS);
             io.notice("adama|deployed: " + defn.spaceName + "; took " + (System.currentTimeMillis() - start) + "ms");
             stats.backendDeployment(defn.spaceName);
-            if (domainKeyToUse != null && autoTest.get()) {
+            if (domainKeyToUse != null && control.autoTest.get() && defn.spaceName.equals(domainKeyToUse.space)) {
               runTests(domainKeyToUse);
             }
           } else {
@@ -243,7 +243,7 @@ public class AdamaMicroVerse {
     });
   }
 
-  public static AdamaMicroVerse load(AtomicBoolean alive, DevBoxStats stats, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics, MetricsFactory metricsFactory) throws Exception {
+  public static AdamaMicroVerse load(AtomicBoolean alive, DevBoxStats stats, TerminalIO io, ObjectNode defn, WebClientBase webClientBase, File types, DiagnosticsSubscriber diagnostics, MetricsFactory metricsFactory, DynamicControl control) throws Exception {
     String caravanLocation = "caravan";
     String cloudLocation = "cloud";
     if (defn.has("caravan-path")) {
@@ -330,7 +330,7 @@ public class AdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new AdamaMicroVerse(stats, watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics);
+    return new AdamaMicroVerse(stats, watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics, control);
   }
 
   public void waitForFirstBuild() throws Exception {

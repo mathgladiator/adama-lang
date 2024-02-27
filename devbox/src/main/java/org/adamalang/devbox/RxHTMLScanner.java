@@ -170,9 +170,14 @@ public class RxHTMLScanner implements AutoCloseable {
                 @Override
                 public void warn(Element element, String warning) {
                   errorCount.incrementAndGet();
-                  String location = element.attr("ln:ch");
-                  errors.append("<li><b>").append(location).append("</b> : ").append(warning).append("</li>\n");
-                  io.notice("rxhtml|warning:" + warning + " @ " + location);
+                  if (element.hasAttr("ln:ch")) {
+                    String location = element.attr("ln:ch");
+                    errors.append("<li><b>").append(location).append("</b> : ").append(warning).append("</li>\n");
+                    io.notice("rxhtml|warning:" + warning + " @ " + location);
+                  } else {
+                    errors.append("<li>").append(warning).append("</li>\n");
+                    io.notice("rxhtml|warning:" + warning);
+                  }
                 }
               };
               try {

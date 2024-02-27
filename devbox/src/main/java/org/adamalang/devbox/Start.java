@@ -116,7 +116,7 @@ public class Start {
         }
         LanguageServer server = new LanguageServer(args.lspPort, terminal, alive);
         Services.install(defn, webClientBase, offload, (line) -> terminal.info(line), metricsFactory);
-        verse = AdamaMicroVerse.load(alive, stats, terminal, defn, webClientBase, new File(args.types), server.pubsub, metricsFactory);
+        verse = AdamaMicroVerse.load(alive, stats, terminal, defn, webClientBase, new File(args.types), server.pubsub, metricsFactory, control);
         if (verse == null) {
           terminal.error("verse|microverse: '" + args.microverse + "' failed, using production");
         } else {
@@ -194,6 +194,7 @@ public class Start {
           terminal.info("  `viewer-updates slow` - slow down viewer updates by 5 seconds");
           terminal.info("  `viewer-updates fast` - disable the 5 second viewer update penalty");
           terminal.info("  `autotest` - toggle tests to run after a deployment");
+          terminal.info("  `data-feed` - toggle showing the data feed in terminal");
           terminal.info("");
 
           terminal.info("Old State Commands:");
@@ -233,11 +234,18 @@ public class Start {
               control.slowViewerStateUpdates.set(false);
             }
           } else if (command.is("autotest")) {
-            if (verse != null && verse.domainKeyToUse != null) {
-              terminal.info("verse|auto testing " + (verse.autoTest.get() ? "disabled" : "enabled"));
-              verse.autoTest.set(!verse.autoTest.get());
+            control.autoTest.set(!control.autoTest.get());
+            if (control.showDataFeed.get()) {
+              terminal.notice("autotest is enabled");
             } else {
-              terminal.error("verse|no verse nor domain key to use for autotest");
+              terminal.notice("autotest is disabled");
+            }
+          } else if (command.is("data-feed")) {
+            control.showDataFeed.set(!control.showDataFeed.get());
+            if (control.showDataFeed.get()) {
+              terminal.notice("data-feed is enabled");
+            } else {
+              terminal.notice("data-feed is disabled");
             }
           } else if (command.is("diagnostics")) {
             verse.dataService.diagnostics(new Callback<String>() {
