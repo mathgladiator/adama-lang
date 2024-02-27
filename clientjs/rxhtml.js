@@ -2960,9 +2960,9 @@ var RxHTML = (function () {
   var saveManifests = function(db) {
     localStorage.setItem("__domain_manifests", JSON.stringify(db));
   };
-  self.registerManifest = function(url) {
+  self.registerManifest = function(url, use = false) {
+    var db = getOrCreateManifests();
     var add = function(manifest) {
-      var db = getOrCreateManifests();
       manifest.source = url;
       manifest.id = db.seq;
       db.seq++;
@@ -2981,6 +2981,17 @@ var RxHTML = (function () {
       if (this.readyState == 4) {
         if (this.status == 200) {
           add(JSON.parse(this.responseText));
+
+          if(use) {
+            if (db.manifests.length > 0) {
+              for (var k = 0; k < db.manifests.length; k++) {
+                if (db.manifests[k].source == url) {
+                  self.useManifest(db.manifests[k].id);
+                  return;
+                }
+              }
+            }
+          }
         }
       }
     };
@@ -2993,10 +3004,8 @@ var RxHTML = (function () {
       self.registerManifest(typeof(value) == 'function' ? value() : value);
     });
   };
-  // RUNTIME(mobile) | rx:action="manifest-use:"
-  self.MD_u = function(dom, type, value) {
-    reg_event(null, dom, type, function() {
-      var id = parseInt(typeof(value) == 'function' ? value() : value);
+
+  self.useManifest = function(id) {
       var db = getOrCreateManifests();
       for (var k = 0; k < db.manifests.length; k++) {
         var manifest = db.manifests[k];
@@ -3011,6 +3020,11 @@ var RxHTML = (function () {
           window.location.href = "/";
         }
       }
+    }
+  // RUNTIME(mobile) | rx:action="manifest-use:"
+  self.MD_u = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
+      self.useManifest(typeof(value) == 'function' ? value() : value);
     });
   };
   self.mobileLoad = function(url) {
