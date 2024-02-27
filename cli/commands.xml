@@ -938,7 +938,7 @@
             </documentation>
             <arg name="input" />
             <arg name="output" />
-            <arg name="environment" default="production" />
+            <arg name="environment" default="prod" />
             <arg name="types" default="types" />
         </command>
         <command name="dev-server">
@@ -971,7 +971,7 @@
             </documentation>
             <arg name="rxhtml-path" default="." />
             <arg name="output" default="200.html" />
-            <arg name="environment" default="production" />
+            <arg name="environment" default="prod" />
             <arg name="types" default="types" />
         </command>
         <command name="bundle">

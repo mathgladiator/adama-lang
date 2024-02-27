@@ -4865,7 +4865,7 @@ public class Arguments {
 		public Config config;
 		public String rxhtmlPath = ".";
 		public String output = "200.html";
-		public String environment = "production";
+		public String environment = "prod";
 		public String types = "types";
 		public static FrontendMake200Args from(String[] args, int start) {
 			FrontendMake200Args returnArgs = new FrontendMake200Args();
@@ -5145,7 +5145,7 @@ public class Arguments {
 		public Config config;
 		public String input;
 		public String output;
-		public String environment = "production";
+		public String environment = "prod";
 		public String types = "types";
 		public static FrontendRxhtmlArgs from(String[] args, int start) {
 			FrontendRxhtmlArgs returnArgs = new FrontendRxhtmlArgs();
