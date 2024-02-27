@@ -2993,10 +2993,8 @@ var RxHTML = (function () {
       self.registerManifest(typeof(value) == 'function' ? value() : value);
     });
   };
-  // RUNTIME(mobile) | rx:action="manifest-use:"
-  self.MD_u = function(dom, type, value) {
-    reg_event(null, dom, type, function() {
-      var id = parseInt(typeof(value) == 'function' ? value() : value);
+
+  self.useManifest = function(id) {
       var db = getOrCreateManifests();
       for (var k = 0; k < db.manifests.length; k++) {
         var manifest = db.manifests[k];
@@ -3011,6 +3009,12 @@ var RxHTML = (function () {
           window.location.href = "/";
         }
       }
+    }
+  // RUNTIME(mobile) | rx:action="manifest-use:"
+  self.MD_u = function(dom, type, value) {
+    reg_event(null, dom, type, function() {
+      console.log(value);
+      self.useManifest(typeof(value) == 'function' ? value() : value);
     });
   };
   self.mobileLoad = function(url) {

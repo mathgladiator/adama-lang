@@ -58,6 +58,11 @@ async function LinkCapacitor($, identityName) {
     // TODO : add logger
     console.log("App opened with URL:", data);
     const navigation = data.url.split(".com");
+    // if the user has not added a host, grab it from appUrlOpen and use it
+    if (!localStorage.getItem("mdo_host")) {
+      $.registerManifest(`${navigation[0]}/~d/.product-manifest.json`)
+      $.useManifest(0);  // since mdo_host was not set, safe use the first manifest
+    }
     if (navigation.length > 1) {
       window.rxhtml.goto(navigation[1], true);
     }
