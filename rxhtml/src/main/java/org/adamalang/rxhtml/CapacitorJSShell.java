@@ -66,7 +66,6 @@ public class CapacitorJSShell {
 
   public String make(String forest) throws Exception {
     StringBuilder sb = new StringBuilder();
-    StringBuilder scripts = new StringBuilder();
     Document document = Loader.parseForest(forest, ProductionMode.MobileApp);
     Element mobileShell = findMobileShell(document);
     String workerIdentity = mobileShell.hasAttr("worker-identity-name") ? mobileShell.attr("worker-identity-name") : "default";
@@ -89,9 +88,6 @@ public class CapacitorJSShell {
     for (Element element : mobileShell.getElementsByTag("link")) {
       sb.append("  ").append(element.toString()).append("\n");
     }
-    for (Element element : mobileShell.getElementsByTag("script")) {
-      scripts.append(element.toString()).append("\n");
-    }
     if (devmode) {
       sb.append("  <script src=\"/connection.js\"></script>").append("\n");
       sb.append("  <script src=\"/tree.js\"></script>").append("\n");
@@ -100,6 +96,9 @@ public class CapacitorJSShell {
       sb.append("  <script src=\"/libadama.js\"></script>").append("\n");
     }
     sb.append("  <script src=\"/rxcapacitor.js\"></script>").append("\n");
+    for (Element element : mobileShell.getElementsByTag("script")) {
+      sb.append("  ").append(element.toString()).append("\n");
+    }
     Environment env = Environment.fresh(feedback, "mobile");
     Root.start(env, RxHtmlTool.buildCustomJavaScript(document));
     for (Element element : document.getElementsByTag("template")) {
