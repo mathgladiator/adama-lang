@@ -34,6 +34,7 @@ import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.deploy.Linter;
 import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.ops.TestMockUniverse;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -210,8 +211,8 @@ public class AdamaMicroVerse {
           public void success(LivingDocumentFactory factory) {
             try {
               LivingDocument doc = factory.create(null);
-              // TODO: FIGURE OUT A WAY TO MAKE ALL SERVICES SYNC... that would be neat-o
-              doc.__lateBind(key.space, key.key, Deliverer.FAILURE, new ServiceRegistry());
+              TestMockUniverse tmu = new TestMockUniverse(doc);
+              doc.__lateBind(key.space, key.key, tmu, tmu);
               doc.__insert(new JsonStreamReader(snapshot));
               String[] tests = doc.__getTests();
               TestReportBuilder builder = new TestReportBuilder();

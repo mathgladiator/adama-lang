@@ -27,6 +27,7 @@ import org.adamalang.runtime.deploy.SyncCompiler;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.ops.TestMockUniverse;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.ServiceRegistry;
@@ -160,7 +161,8 @@ public class LivingDocumentFactory {
 
   private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, final String entropy) throws Exception {
     final var candidate = create(monitor);
-    candidate.__lateBind("space", "key", Deliverer.FAILURE, ServiceRegistry.NOT_READY);
+    TestMockUniverse tmu = new TestMockUniverse(candidate);
+    candidate.__lateBind("space", "key", tmu, tmu);
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.beginObject();
     writer.writeObjectFieldIntro("command");

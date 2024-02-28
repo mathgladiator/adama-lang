@@ -36,6 +36,7 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.json.TrivialPrivateView;
 import org.adamalang.runtime.natives.*;
 import org.adamalang.runtime.ops.AssertionStats;
+import org.adamalang.runtime.ops.TestMockUniverse;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
 import org.adamalang.runtime.remote.*;
@@ -105,6 +106,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected  long __optimisticNextCronCheck;
   protected final EnqueuedTaskManager __enqueued;
   private long __cpu_ms;
+  private TestMockUniverse __mock_universe;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -162,6 +164,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __graph = new Graph();
     __optimisticNextCronCheck = 0L;
     __enqueued = new EnqueuedTaskManager();
+    __mock_universe = null;
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -309,6 +312,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     this.__deliverer = deliverer;
     __link(registry);
     __bindReplication();
+    if (registry instanceof TestMockUniverse) {
+      // this is related to testing such that blocks can play with services
+      __mock_universe = (TestMockUniverse) registry;
+    }
   }
 
   protected abstract void __link(ServiceRegistry registry);
@@ -1584,6 +1591,14 @@ public abstract class LivingDocument implements RxParent, Caller {
     reverse.endObject();
     RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), NtPrincipal.NO_ONE, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
     return new LivingDocumentChange(update, null, null, false);
+  }
+
+  public boolean __forceDeliverForTest(int deliveryId, RemoteResult result) {
+    RxCache route = __routing.get(deliveryId);
+    if (route == null) {
+      return false;
+    }
+    return route.deliver(deliveryId, result);
   }
 
   private LivingDocumentChange __transaction_deliver(final String request, NtPrincipal who, int deliveryId, RemoteResult result) throws ErrorCodeException {

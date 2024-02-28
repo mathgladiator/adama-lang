@@ -4,7 +4,7 @@ message X {
 }
 
 int z;
-bool ran = false
+bool ran = false;
 
 channel foo(X x) {
   z = x.x + x.y;
