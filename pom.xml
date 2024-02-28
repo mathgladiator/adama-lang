@@ -36,6 +36,7 @@
         <module>devbox</module>
         <module>rxhtml</module>
         <module>data-train</module>
+        <module>metering</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

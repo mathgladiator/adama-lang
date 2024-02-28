@@ -15,9 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package adama.metering;
 
-public class Platform {
-  public static final String VERSION = "20240228071855";
-  public static final String JS_VERSION = "70bdcd354a869a2f1d489b4f93060bed";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+public interface BillSender {
+  public void send(int userId, int hour, ObjectNode usage);
 }
