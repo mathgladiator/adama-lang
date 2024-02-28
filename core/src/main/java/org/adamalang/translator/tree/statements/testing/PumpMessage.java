@@ -91,9 +91,9 @@ public class PumpMessage extends Statement {
 
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("__queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"").append(channelToken.text).append("\", 0, \"origin\", \"ip\", ");
+    sb.append("__test_send(\"").append(channelToken.text).append("\",NtPrincipal.NO_ONE,");
     expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
-    sb.append("));");
+    sb.append(");");
   }
 
   @Override

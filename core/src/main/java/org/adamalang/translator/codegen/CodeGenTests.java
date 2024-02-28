@@ -27,11 +27,13 @@ public class CodeGenTests {
     // generate test bodies
     if (!environment.state.options.removeTests) {
       for (final DefineTest test : environment.document.tests) {
-        sb.append("public void __test_").append(test.name).append("(TestReportBuilder __report) {").tabUp().writeNewline();
+        sb.append("public void __test_").append(test.name).append("(TestReportBuilder __report) throws AbortMessageException {").tabUp().writeNewline();
         sb.append("__report.begin(\"").append(test.name).append("\");").writeNewline();
+        sb.append("try ");
         test.code.writeJava(sb, environment.scopeAsUnitTest());
-        sb.writeNewline();
+        sb.append(" finally {").tabUp().writeNewline();
         sb.append("__report.end(getAndResetAssertions());").tabDown().writeNewline();
+        sb.append("}").tabDown().writeNewline();
         sb.append("}").writeNewline();
       }
     }
@@ -53,7 +55,7 @@ public class CodeGenTests {
     sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     if (environment.document.tests.size() > 0 && !environment.state.options.removeTests) {
-      sb.append("public void __test(TestReportBuilder report, String testName) {").tabUp().writeNewline();
+      sb.append("public void __test(TestReportBuilder report, String testName) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("switch(testName) {").writeNewline();
       for (final DefineTest test : environment.document.tests) {
         sb.tab().append("case \"").append(test.name).append("\":").writeNewline();
@@ -63,7 +65,7 @@ public class CodeGenTests {
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
     } else {
-      sb.append("public void __test(TestReportBuilder report, String testName) {}").writeNewline();
+      sb.append("public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}").writeNewline();
     }
   }
 }

@@ -2129,7 +2129,7 @@ public class Parser {
     if (op != null && op.isSymbolWithTextEq("{")) {
       return new ScopeWrap(block(scope));
     }
-    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward"));
+    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "switch", "case", "default", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump", "@forward", "@aborts", "@send"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "log", "preempt"));
     }
@@ -2205,6 +2205,18 @@ public class Parser {
           final var channelName = id();
           final var semiColon = consumeExpectedSymbol(";");
           return new PumpMessage(op, toAssert, intoToken, channelName, semiColon);
+        }
+        case "@send": {
+          final var channelName = id();
+          final var open = consumeExpectedSymbol("(");
+          final var exprWho = expression(scope);
+          final var comma = consumeExpectedSymbol(",");
+          final var exprMessage = expression(scope);
+          final var close = consumeExpectedSymbol(")");
+          return new Send(op, channelName, open, exprWho, comma, exprMessage, close);
+        }
+        case "@aborts": {
+          return new Aborts(op, block(scope));
         }
         case "break":
           return new AlterControlFlow(op, AlterControlFlowMode.Break, consumeExpectedSymbol(";"));

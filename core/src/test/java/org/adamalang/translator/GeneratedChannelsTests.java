@@ -822,9 +822,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_drive_it(TestReportBuilder __report) {");
+    gold.append("\n  public void __test_drive_it(TestReportBuilder __report) throws AbortMessageException {");
     gold.append("\n    __report.begin(\"drive_it\");");
-    gold.append("\n    {");
+    gold.append("\n    try {");
     gold.append("\n      __code_cost += 18;");
     gold.append("\n      __track(8);");
     gold.append("\n      __assert_truth(!(__blocked.get()), 24, 2, 24, 21);");
@@ -837,7 +837,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __track(12);");
     gold.append("\n      __assert_truth((status.get()).equals(\"\"), 28, 2, 28, 22);");
     gold.append("\n      __track(13);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(4, 8)));");
+    gold.append("\n      __test_send(\"chan\",NtPrincipal.NO_ONE,new RTxX(4, 8));");
     gold.append("\n      __track(14);");
     gold.append("\n      __assert_truth(__blocked.get(), 30, 2, 30, 18);");
     gold.append("\n      __track(15);");
@@ -849,7 +849,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __track(18);");
     gold.append("\n      __assert_truth((status.get()).equals(\"\"), 34, 2, 34, 22);");
     gold.append("\n      __track(19);");
-    gold.append("\n      __queue.add(new AsyncTask(0, NtPrincipal.NO_ONE, null, \"chan\", 0, \"origin\", \"ip\", new RTxX(5, 10)));");
+    gold.append("\n      __test_send(\"chan\",NtPrincipal.NO_ONE,new RTxX(5, 10));");
     gold.append("\n      __track(20);");
     gold.append("\n      __assert_truth(__blocked.get(), 36, 2, 36, 18);");
     gold.append("\n      __track(21);");
@@ -860,15 +860,16 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      __assert_truth(!(__blocked.get()), 39, 2, 39, 21);");
     gold.append("\n      __track(24);");
     gold.append("\n      __assert_truth((status.get()).equals(\"Value:4/8:5/10\"), 40, 2, 40, 36);");
+    gold.append("\n    } finally {");
+    gold.append("\n      __report.end(getAndResetAssertions());");
     gold.append("\n    }");
-    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {\"drive_it\"};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {");
     gold.append("\n    switch(testName) {");
     gold.append("\n      case \"drive_it\":");
     gold.append("\n          __test_drive_it(report);");
@@ -1959,7 +1960,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -2750,7 +2751,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
@@ -3522,7 +3523,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -4400,7 +4401,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -5150,7 +5151,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
@@ -5969,7 +5970,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
@@ -6745,7 +6746,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");

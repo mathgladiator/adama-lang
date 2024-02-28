@@ -32,6 +32,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.deploy.Linter;
+import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Deliverer;
@@ -215,7 +216,11 @@ public class AdamaMicroVerse {
               String[] tests = doc.__getTests();
               TestReportBuilder builder = new TestReportBuilder();
               for (String test : tests) {
-                doc.__test(builder, test);
+                try {
+                  doc.__test(builder, test);
+                } catch (AbortMessageException ame) {
+                  builder.aborted();
+                }
               }
               if (builder.getFailures() > 0) {
                 stats.testFailures(key.space, builder.getFailures());

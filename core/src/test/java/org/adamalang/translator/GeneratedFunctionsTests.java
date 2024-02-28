@@ -841,7 +841,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
@@ -1864,7 +1864,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 7;");
     gold.append("\n    __track(3);");
@@ -2735,7 +2735,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -3487,7 +3487,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 5;");
     gold.append("\n    __track(1);");
@@ -4659,7 +4659,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 14;");
     gold.append("\n    __track(5);");
@@ -5571,7 +5571,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -6713,7 +6713,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  private void __construct_0(CoreRequestContext __context, NtPrincipal __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(10);");
@@ -7409,7 +7409,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -8199,7 +8199,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -8863,7 +8863,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -9744,9 +9744,9 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    return __map;");
     gold.append("\n  }");
-    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder __report) {");
+    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder __report) throws AbortMessageException {");
     gold.append("\n    __report.begin(\"PrimaryTest\");");
-    gold.append("\n    {");
+    gold.append("\n    try {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      __track(0);");
     gold.append("\n      String x = \"xyz\";");
@@ -9754,12 +9754,13 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      final String y = LibString.reverse(x);");
     gold.append("\n      __track(2);");
     gold.append("\n      __assert_truth(((int) x.length()) == ((int) 3), 7, 2, 7, 25);");
+    gold.append("\n    } finally {");
+    gold.append("\n      __report.end(getAndResetAssertions());");
     gold.append("\n    }");
-    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
-    gold.append("\n  public void __test_SecondTest(TestReportBuilder __report) {");
+    gold.append("\n  public void __test_SecondTest(TestReportBuilder __report) throws AbortMessageException {");
     gold.append("\n    __report.begin(\"SecondTest\");");
-    gold.append("\n    {");
+    gold.append("\n    try {");
     gold.append("\n      __code_cost += 7;");
     gold.append("\n      __track(3);");
     gold.append("\n      y.set(\"xyz\");");
@@ -9773,15 +9774,16 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      mi.get().delete();");
     gold.append("\n      __track(8);");
     gold.append("\n      __assert_truth(((int) t.size()) == ((int) 0), 24, 2, 24, 23);");
+    gold.append("\n    } finally {");
+    gold.append("\n      __report.end(getAndResetAssertions());");
     gold.append("\n    }");
-    gold.append("\n    __report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {\"PrimaryTest\", \"SecondTest\"};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {");
     gold.append("\n    switch(testName) {");
     gold.append("\n      case \"PrimaryTest\":");
     gold.append("\n          __test_PrimaryTest(report);");

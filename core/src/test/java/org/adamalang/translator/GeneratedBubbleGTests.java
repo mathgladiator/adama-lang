@@ -752,7 +752,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");
@@ -1684,7 +1684,7 @@ public class GeneratedBubbleGTests extends GeneratedBase {
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) throws AbortMessageException {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __construct_intern(CoreRequestContext _c, NtMessageBase _m) {}");
     gold.append("\n  @Override");

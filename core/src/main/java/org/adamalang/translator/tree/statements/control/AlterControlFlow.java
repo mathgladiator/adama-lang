@@ -52,7 +52,7 @@ public class AlterControlFlow extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    if (how == AlterControlFlowMode.Abort && !(environment.state.isMessageHandler() || environment.state.isAbortable() || environment.state.isAuthorize() )) {
+    if (how == AlterControlFlowMode.Abort && !(environment.state.isMessageHandler() || environment.state.isAbortable() || environment.state.isAuthorize() || environment.state.isTesting() )) {
       environment.document.createError(this, String.format("Can only 'abort' from a message handler or an abortable procedure/method"));
     }
     if (how == AlterControlFlowMode.Block && !environment.state.isStateMachineTransition()) {

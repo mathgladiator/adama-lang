@@ -1217,7 +1217,11 @@ public abstract class LivingDocument implements RxParent, Caller {
    * available to the test runner... me thinks this can be done... mucho better (requires precommit)
    */
   public String __run_test(final TestReportBuilder report, final String testName) {
-    __test(report, testName);
+    try {
+      __test(report, testName);
+    } catch (AbortMessageException aborted) {
+      report.aborted();
+    }
     final var writer = new JsonStreamWriter();
     writer.beginObject();
     __commit(null, writer, new JsonStreamWriter());
@@ -1226,7 +1230,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** code generated: run the test for the given test name */
-  public abstract void __test(TestReportBuilder report, String testName);
+  public abstract void __test(TestReportBuilder report, String testName) throws AbortMessageException;
 
   /** code generated: commit the tree, and push data into the given delta */
   public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
@@ -1254,6 +1258,11 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     memory += __graph.memory();
     return memory;
+  }
+
+  protected void __test_send(final String channel, NtPrincipal __who, final Object message) throws AbortMessageException {
+    AsyncTask task = new AsyncTask(__message_id.bumpUpPre(), __who, 0, channel, __time.get(), "origin", "127.0.0.1", message);
+    __queue.add(task);
   }
 
   /** exposed: @step; for testing */

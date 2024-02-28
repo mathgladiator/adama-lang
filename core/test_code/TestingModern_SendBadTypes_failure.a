@@ -1,0 +1,12 @@
+message X {
+  int x;
+  int y;
+}
+
+channel foo(X x) {
+}
+
+test drive_it {
+  @send foo(123, {x:4, y:8});
+  @send foo(@no_one, 123);
+}

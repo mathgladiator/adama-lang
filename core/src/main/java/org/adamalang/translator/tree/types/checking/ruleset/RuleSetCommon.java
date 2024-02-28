@@ -337,7 +337,7 @@ public class RuleSetCommon {
       if (tyType instanceof TyNativePrincipal || tyType instanceof TyNativeSecurePrincipal || tyType instanceof TyReactivePrincipal) {
         return true;
       }
-      SignalTypeFailure(environment, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }

@@ -57,6 +57,10 @@ public class TestReportBuilder {
     }
   }
 
+  public void aborted() {
+    report.append(" ABORTED!");
+  }
+
   public void begin(final String name) {
     current = name;
     report.append("TEST[").append(name).append("]");

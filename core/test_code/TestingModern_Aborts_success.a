@@ -1,0 +1,19 @@
+test it_aborts {
+  @aborts {
+    abort;
+  }
+}
+
+procedure thing_that_aborts() aborts {
+  abort;
+}
+
+test p_aborts {
+  @aborts {
+    thing_that_aborts();
+  }
+}
+
+test just_abort {
+  abort;
+}

@@ -1,0 +1,22 @@
+message X {
+  int x;
+  int y;
+}
+
+int z;
+bool ran = false
+
+channel foo(X x) {
+  z = x.x + x.y;
+  ran = true;
+}
+
+test drive_it {
+  X v;
+  v.x = 10;
+  v.y = 100;
+  assert !ran;
+  @send foo(@no_one, v);
+  assert z == 110;
+  assert ran;
+}
