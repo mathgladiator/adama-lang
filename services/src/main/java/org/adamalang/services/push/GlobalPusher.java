@@ -115,6 +115,7 @@ public class GlobalPusher implements Pusher {
   }
 
   private void capacitorPush(int subId, String registrationToken, ObjectNode payload, FirebaseCachePayload cache) {
+    // See https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages/send
     ObjectNode root = Json.newJsonObject();
     ObjectNode message = root.putObject("message");
     ObjectNode notif = message.putObject("notification");
@@ -132,10 +133,24 @@ public class GlobalPusher implements Pusher {
       data.put("domain", payload.get("domain").textValue());
     }
     message.put("token", registrationToken);
-    ObjectNode android = message.putObject("android");
-    ObjectNode androidNotif = android.putObject("notification");
-    if (payload.has("icon")) {
-      androidNotif.put("icon", payload.get("icon").textValue());
+    boolean needsAndroid = payload.has("icon");
+    if (needsAndroid) {
+      ObjectNode android = message.putObject("android");
+      ObjectNode androidNotif = android.putObject("notification");
+      if (payload.has("icon")) {
+        androidNotif.put("icon", payload.get("icon").textValue());
+      }
+    }
+
+    boolean needsAPNS = payload.has("badge");
+    if (needsAPNS) {
+      // https://developer.apple.com/documentation/usernotifications/generating-a-remote-notification
+      ObjectNode apns = message.putObject("apns");
+      ObjectNode apnsPayload = apns.putObject("payload");
+      ObjectNode aps = apnsPayload.putObject("aps");
+      if (payload.has("badge") && payload.get("badge").isIntegralNumber()) {
+        aps.put("aps", payload.get("badge").intValue());
+      }
     }
     try {
       cache.credentials.refreshIfExpired();
