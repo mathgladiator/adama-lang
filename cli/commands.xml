@@ -194,6 +194,18 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="payload" type="string" short="pf">
+        <documentation>
+            A payload file (JSON) for a push notification
+        </documentation>
+    </arg-definition>
+
+    <arg-definition name="token" type="string" short="tk">
+        <documentation>
+            A push token
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="agent" type="string" short="ag">
         <documentation>
             The user id or agent part of a principal.
@@ -878,6 +890,15 @@
                 Summarize the archive in a meaningful way
             </documentation>
             <arg name="input" />
+        </command>
+
+        <command name="test-firebase-push">
+            <documentation>
+                Test a push notification
+            </documentation>
+            <arg name="token" />
+            <arg name="payload" />
+            <arg name="product" />
         </command>
 
         <command name="explain">

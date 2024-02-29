@@ -26,20 +26,35 @@ import org.adamalang.caravan.events.RestoreLoader;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.OpsHandler;
 import org.adamalang.cli.runtime.Output;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ConfigObject;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
+import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.json.JsonAlgebra;
+import org.adamalang.services.push.GlobalPusher;
+import org.adamalang.web.client.StringCallbackHttpResponder;
+import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientBaseMetrics;
+import org.adamalang.web.service.WebConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class OpsHandlerImpl implements OpsHandler {
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpsHandlerImpl.class);
 
   private static long jsonStateMachine(RandomAccessFile store, long start, long max) throws IOException  {
     int bracketCount = 0;
@@ -288,5 +303,36 @@ public class OpsHandlerImpl implements OpsHandler {
       });
     }
     output.out();
+  }
+
+  @Override
+  public void testFirebasePush(Arguments.OpsTestFirebasePushArgs args, Output.YesOrError output) throws Exception {
+    MetricsFactory metrics = new NoOpMetricsFactory();
+    ObjectNode productConfig = Json.parseJsonObject(Files.readString(new File(args.product).toPath()));
+    ObjectNode payload = Json.parseJsonObject(Files.readString(new File(args.payload).toPath()));
+    GlobalPusher.FirebaseCacheConfig firebase = GlobalPusher.convertProductConfigToFirebaseCacheConfig(productConfig);
+    WebClientBase base = new WebClientBase(new WebClientBaseMetrics(metrics), new WebConfig(new ConfigObject(Json.newJsonObject())));
+    try {
+      CountDownLatch timeout = new CountDownLatch(1);
+      GlobalPusher.interactWithFirebase(base, args.token, payload, firebase, new StringCallbackHttpResponder(LOGGER, metrics.makeRequestResponseMonitor("xyz").start(), new Callback<String>() {
+        @Override
+        public void success(String result) {
+          System.out.println(result);
+          output.out();
+          timeout.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("error:" + ex.code);
+          timeout.countDown();
+        }
+      }));
+      if (!timeout.await(60000, TimeUnit.MILLISECONDS)) {
+        System.err.println("timed out");
+      }
+    } finally {
+      base.shutdown();
+    }
   }
 }

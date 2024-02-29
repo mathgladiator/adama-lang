@@ -813,6 +813,16 @@ public class MainRouter {
                opsHandler.summarize(opsArgs, out);
                return 0;
             }
+            case "test-firebase-push": {
+              OpsTestFirebasePushArgs opsArgs = OpsTestFirebasePushArgs.from(args, 2);
+              if (opsArgs == null) {
+                OpsTestFirebasePushArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               opsHandler.testFirebasePush(opsArgs, out);
+               return 0;
+            }
             case "--help":
             case "-h":
             case "help": {

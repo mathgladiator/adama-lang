@@ -152,6 +152,8 @@ async function LinkCapacitor($, identityName) {
 
   // Method called when tapping on a notification
   PushNotifications.addListener('pushNotificationActionPerformed', function (action) {
+    // clear notifs when opened
+    PushNotifications.removeAllDeliveredNotifications();
     console.log('Push action performed: ' + JSON.stringify(action));
     $.bump("npap");
     if (action.notification.data.url) {

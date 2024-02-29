@@ -95,6 +95,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"ops", "explain", "--help"});
     Main.testMain(new String[]{"ops", "forensics", "--help"});
     Main.testMain(new String[]{"ops", "summarize", "--help"});
+    Main.testMain(new String[]{"ops", "test-firebase-push", "--help"});
     Main.testMain(new String[]{"domain", "--help"});
     Main.testMain(new String[]{"domain", "configure", "--help"});
     Main.testMain(new String[]{"domain", "list", "--help"});

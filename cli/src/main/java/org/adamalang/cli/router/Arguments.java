@@ -4219,6 +4219,91 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-i, --input", ANSI.Green) + " " + ColorUtilTools.prefix("<input>", ANSI.White) + " : An input file");
 		}
 	}
+	public static class OpsTestFirebasePushArgs {
+		public Config config;
+		public String token;
+		public String payload;
+		public String product;
+		public static OpsTestFirebasePushArgs from(String[] args, int start) {
+			OpsTestFirebasePushArgs returnArgs = new OpsTestFirebasePushArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--token", "--payload", "--product", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-tk":
+					case "--token": {
+						if (k+1 < args.length) {
+							returnArgs.token = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-pf":
+					case "--payload": {
+						if (k+1 < args.length) {
+							returnArgs.payload = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-p":
+					case "--product": {
+						if (k+1 < args.length) {
+							returnArgs.product = args[k+1];
+							k++;
+							missing[2] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("Test a push notification", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama ops test-firebase-push", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-tk, --token", ANSI.Green) + " " + ColorUtilTools.prefix("<token>", ANSI.White) + " : A push token");
+			System.out.println("    " + ColorUtilTools.prefix("-pf, --payload", ANSI.Green) + " " + ColorUtilTools.prefix("<payload>", ANSI.White) + " : A payload file (JSON) for a push notification");
+			System.out.println("    " + ColorUtilTools.prefix("-p, --product", ANSI.Green) + " " + ColorUtilTools.prefix("<product>", ANSI.White) + " : Product configuration for native apps on the platform");
+		}
+	}
 	public static class DomainConfigureArgs {
 		public Config config;
 		public String domain;

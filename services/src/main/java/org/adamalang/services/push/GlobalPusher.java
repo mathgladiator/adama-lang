@@ -55,14 +55,14 @@ public class GlobalPusher implements Pusher {
   private final SimpleExecutor executor;
   private final WebClientBase webClientBase;
   private final WebPushRequestFactory128 webPushFactory128;
-  private final ConcurrentHashMap<String, FirebaseCachePayload> firebaseCache;
+  private final ConcurrentHashMap<String, FirebaseCacheConfig> firebaseCache;
 
-  private class FirebaseCachePayload {
+  public static class FirebaseCacheConfig {
     private final String productId;
     private final GoogleCredentials credentials;
     private final long created;
 
-    public FirebaseCachePayload(String productId, GoogleCredentials credentials) {
+    private FirebaseCacheConfig(String productId, GoogleCredentials credentials) {
       this.productId = productId;
       this.credentials = credentials;
       this.created = System.currentTimeMillis();
@@ -114,7 +114,75 @@ public class GlobalPusher implements Pusher {
     webClientBase.executeShared(request, new VoidCallbackHttpResponder(LOGGER, metrics.webpush_send.start(), pushFailure(subscription.id)));
   }
 
-  private void capacitorPush(int subId, String registrationToken, ObjectNode payload, FirebaseCachePayload cache) {
+  @Override
+  public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
+    executor.execute(new NamedRunnable("notify") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory); // TODO: cache under a 10 minute timer
+          ObjectNode payloadNode = Json.parseJsonObject(payload);
+          FirebaseCacheConfig firebaseCacheConfig = firebaseCache.get(domain);
+          if (firebaseCacheConfig != null && firebaseCacheConfig.age() > 5 * 60000) { // TODO: capture as a magic number
+            firebaseCacheConfig = null;
+          }
+          if (firebaseCacheConfig == null) {
+            try {
+              ObjectNode productConfig = Json.parseJsonObject(MasterKey.decrypt(masterKey, Domains.getNativeAppConfig(dataBase, domain)));
+              if (productConfig != null) {
+                firebaseCacheConfig = convertProductConfigToFirebaseCacheConfig(productConfig);
+                firebaseCache.put(domain, firebaseCacheConfig);
+              }
+            } catch (Exception ex) {
+              if ((ex instanceof ErrorCodeException)) {
+                if (((ErrorCodeException) ex).code != ErrorCodes.CONFIG_NOT_FOUND_FOR_DOMAIN) {
+                  LOGGER.error("create-firebase-cache: " + ((ErrorCodeException) ex).code);
+                }
+              } else {
+                LOGGER.error("unknown-create-firebase-cache", ex);
+              }
+            }
+          }
+
+          var subs = PushSubscriptions.list(dataBase, domain, who);
+          for (DeviceSubscription subscription : subs) {
+            ObjectNode raw = Json.parseJsonObject(subscription.subscription);
+            String method = raw.get("@method").textValue();
+            // TODO: if we introduce a new method, then update the appropriate branch in data-mysql/src/main/java/org/adamalang/mysql/model/PushSubscriptions.java
+            if ("webpush".equals(method)) {
+              webPush(raw, subscription, pair, payload);
+            } else if ("capacitor".equals(method)) { // use firebase stuff
+              if (firebaseCacheConfig != null) {
+                String registrationToken = raw.get("token").textValue();
+                interactWithFirebase(webClientBase, registrationToken, payloadNode, firebaseCacheConfig, new StringCallbackHttpResponder(LOGGER, metrics.capacitor_send.start(), pushFailure(subscription.id)));
+              } else {
+                LOGGER.error("no-product-config:" + domain);
+              }
+            }
+          }
+          callback.success(null);
+        } catch (Exception ex) {
+          LOGGER.error("failed-notify", ex);
+          callback.failure(new ErrorCodeException(ErrorCodes.GLOBAL_PUSHER_UNKNOWN_FAILURE));
+        }
+      }
+    });
+  }
+
+  public void install() {
+    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, GlobalPusher.this));
+  }
+
+  public static FirebaseCacheConfig convertProductConfigToFirebaseCacheConfig(ObjectNode productConfig) throws Exception {
+    JsonNode firebaseNode = productConfig.get("firebase");
+    GoogleCredentials credentials = GoogleCredentials //
+        .fromStream(new ByteArrayInputStream(firebaseNode.toString().getBytes(StandardCharsets.UTF_8))) //
+        .createScoped(Arrays.asList(new String[]{"https://www.googleapis.com/auth/firebase.messaging"}));
+    credentials.refresh();
+    return new FirebaseCacheConfig(firebaseNode.get("project_id").textValue(), credentials);
+  }
+
+  public static void interactWithFirebase(WebClientBase webClientBase, String registrationToken, ObjectNode payload, FirebaseCacheConfig cache, StringCallbackHttpResponder responder) {
     // See https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages/send
     ObjectNode root = Json.newJsonObject();
     ObjectNode message = root.putObject("message");
@@ -160,74 +228,9 @@ public class GlobalPusher implements Pusher {
       headers.put("Authorization", "Bearer " + authToken);
       headers.put("Content-Type", "application/json; UTF-8");
       SimpleHttpRequest request = new SimpleHttpRequest("POST", postUrl, headers, SimpleHttpRequestBody.WRAP(root.toString().getBytes(StandardCharsets.UTF_8)));
-      webClientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, metrics.capacitor_send.start(), pushFailure(subId)));
+      webClientBase.executeShared(request, responder);
     } catch (Exception ex) {
       LOGGER.error("send-firebase-notif", ex);
     }
-  }
-
-  @Override
-  public void notify(String pushTrackingToken, String domain, NtPrincipal who, String payload, Callback<Void> callback) {
-    executor.execute(new NamedRunnable("notify") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          VAPIDPublicPrivateKeyPair pair = Domains.getOrCreateVapidKeyPair(dataBase, domain, factory); // TODO: cache under a 10 minute timer
-          ObjectNode payloadNode = Json.parseJsonObject(payload);
-          FirebaseCachePayload firebaseCachePayload = firebaseCache.get(domain);
-          if (firebaseCachePayload != null && firebaseCachePayload.age() > 5 * 60000) { // TODO: capture as a magic number
-            firebaseCachePayload = null;
-          }
-          if (firebaseCachePayload == null) {
-            try {
-              ObjectNode productConfig = Json.parseJsonObject(MasterKey.decrypt(masterKey, Domains.getNativeAppConfig(dataBase, domain)));
-              if (productConfig != null) {
-                JsonNode firebaseNode = productConfig.get("firebase");
-                GoogleCredentials credentials = GoogleCredentials //
-                    .fromStream(new ByteArrayInputStream(firebaseNode.toString().getBytes(StandardCharsets.UTF_8))) //
-                    .createScoped(Arrays.asList(new String[]{"https://www.googleapis.com/auth/firebase.messaging"}));
-                credentials.refresh();
-                firebaseCachePayload = new FirebaseCachePayload(firebaseNode.get("project_id").textValue(), credentials);
-                firebaseCache.put(domain, firebaseCachePayload);
-              }
-            } catch (Exception ex) {
-              if ((ex instanceof ErrorCodeException)) {
-                if (((ErrorCodeException) ex).code != ErrorCodes.CONFIG_NOT_FOUND_FOR_DOMAIN) {
-                  LOGGER.error("create-firebase-cache: " + ((ErrorCodeException) ex).code);
-                }
-              } else {
-                LOGGER.error("unknown-create-firebase-cache", ex);
-              }
-            }
-          }
-
-          var subs = PushSubscriptions.list(dataBase, domain, who);
-          for (DeviceSubscription subscription : subs) {
-            ObjectNode raw = Json.parseJsonObject(subscription.subscription);
-            String method = raw.get("@method").textValue();
-            // TODO: if we introduce a new method, then update the appropriate branch in data-mysql/src/main/java/org/adamalang/mysql/model/PushSubscriptions.java
-            if ("webpush".equals(method)) {
-              webPush(raw, subscription, pair, payload);
-            } else if ("capacitor".equals(method)) { // use firebase stuff
-              if (firebaseCachePayload != null) {
-                String registrationToken = raw.get("token").textValue();
-                capacitorPush(subscription.id, registrationToken, payloadNode, firebaseCachePayload);
-              } else {
-                LOGGER.error("no-product-config:" + domain);
-              }
-            }
-          }
-          callback.success(null);
-        } catch (Exception ex) {
-          LOGGER.error("failed-notify", ex);
-          callback.failure(new ErrorCodeException(ErrorCodes.GLOBAL_PUSHER_UNKNOWN_FAILURE));
-        }
-      }
-    });
-
-  }
-
-  public void install() {
-    ServiceRegistry.add("push", Push.class, (space, configRaw, keys) -> new Push(metrics, GlobalPusher.this));
   }
 }

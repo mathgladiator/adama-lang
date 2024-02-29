@@ -189,6 +189,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("explain", 15), ANSI.Green) + "Explain the history of a value at a path");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("forensics", 15), ANSI.Green) + "Dive into a data store and recover snapshots");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("summarize", 15), ANSI.Green) + "Summarize the archive in a meaningful way");
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("test-firebase-push", 15), ANSI.Green) + "Test a push notification");
   }
   public static void displayDomainHelp() {
     System.out.println(ColorUtilTools.prefix("Manage custom domains", ANSI.Green));

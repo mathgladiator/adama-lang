@@ -25,4 +25,5 @@ public interface OpsHandler {
   void explain(OpsExplainArgs args, YesOrError output) throws Exception;
   void forensics(OpsForensicsArgs args, YesOrError output) throws Exception;
   void summarize(OpsSummarizeArgs args, YesOrError output) throws Exception;
+  void testFirebasePush(OpsTestFirebasePushArgs args, YesOrError output) throws Exception;
 }
