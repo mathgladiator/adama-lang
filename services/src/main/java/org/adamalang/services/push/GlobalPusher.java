@@ -217,7 +217,7 @@ public class GlobalPusher implements Pusher {
       ObjectNode apnsPayload = apns.putObject("payload");
       ObjectNode aps = apnsPayload.putObject("aps");
       if (payload.has("badge") && payload.get("badge").isIntegralNumber()) {
-        aps.put("aps", payload.get("badge").intValue());
+        aps.put("badge", payload.get("badge").intValue());
       }
     }
     try {
