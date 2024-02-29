@@ -49,7 +49,9 @@ public class TemplateGoodDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:delay:500=\"submit\">");
     gold.append("\n    var g=$.E('div');");
-    gold.append("\n    $.oSBMT(g,'delay:500',a);");
+    gold.append("\n    var h=[];");
+    gold.append("\n    h.push($.bSB(g));");
+    gold.append("\n    $.onB(g,'delay:500',a,h);");
     gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -77,7 +79,9 @@ public class TemplateGoodDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:delay:500=\"submit\">");
     gold.append("\n    var g=$.E('div');");
-    gold.append("\n    $.oSBMT(g,'delay:500',a);");
+    gold.append("\n    var h=[];");
+    gold.append("\n    h.push($.bSB(g));");
+    gold.append("\n    $.onB(g,'delay:500',a,h);");
     gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");

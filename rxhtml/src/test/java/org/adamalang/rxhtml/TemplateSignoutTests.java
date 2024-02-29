@@ -38,6 +38,19 @@ public class TemplateSignoutTests extends BaseRxHtmlTest {
     gold.append("\n    var c=$.X();");
     gold.append("\n    $.SIGNOUT();");
     gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/yolo\">");
+    gold.append("\n  $.PG(['fixed','yolo'], function(b,a) {");
+    gold.append("\n    var d=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"sign-out\">");
+    gold.append("\n    var e=$.E('button');");
+    gold.append("\n    var f=[];");
+    gold.append("\n    f.push($.bSO());");
+    gold.append("\n    $.onB(e,'click',a,f);");
+    gold.append("\n    e.append($.T('Sign Out'));");
+    gold.append("\n    b.append(e);");
+    gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
@@ -50,6 +63,19 @@ public class TemplateSignoutTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    $.SIGNOUT();");
+    gold.append("\n  });");
+    gold.append("\n");
+    gold.append("\n  // <page uri=\"/yolo\">");
+    gold.append("\n  $.PG(['fixed','yolo'], function(b,a) {");
+    gold.append("\n    var d=$.X();");
+    gold.append("\n");
+    gold.append("\n    // <button rx:click=\"sign-out\">");
+    gold.append("\n    var e=$.E('button');");
+    gold.append("\n    var f=[];");
+    gold.append("\n    f.push($.bSO());");
+    gold.append("\n    $.onB(e,'click',a,f);");
+    gold.append("\n    e.append($.T('Sign Out'));");
+    gold.append("\n    b.append(e);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
     gold.append("\n");
@@ -70,6 +96,10 @@ public class TemplateSignoutTests extends BaseRxHtmlTest {
     source.append("\n    <page uri=\"/\">");
     source.append("\n        <signout />");
     source.append("\n    </page>");
+    source.append("\n");
+    source.append("\n    <page uri=\"/yolo\">");
+    source.append("\n        <button rx:click=\"sign-out\">Sign Out</button>");
+    source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();
   }
@@ -77,7 +107,8 @@ public class TemplateSignoutTests extends BaseRxHtmlTest {
   public String schema() {
     StringBuilder gold = new StringBuilder();
     gold.append("{");
-    gold.append("\n  \"/\" : { }");
+    gold.append("\n  \"/\" : { },");
+    gold.append("\n  \"/yolo\" : { }");
     gold.append("\n}");
     return gold.toString();
   }

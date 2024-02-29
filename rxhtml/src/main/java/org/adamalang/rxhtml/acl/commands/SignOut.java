@@ -18,16 +18,12 @@
 package org.adamalang.rxhtml.acl.commands;
 
 import org.adamalang.rxhtml.template.Environment;
-import org.adamalang.rxhtml.template.Escapes;
 import org.adamalang.rxhtml.typing.ViewScope;
 
-/** search for a parent form and then submit it */
-public class Submit implements BulkCommand, Command {
-  public Submit() {
-  }
-
+public class SignOut implements BulkCommand, Command {
   @Override
-  public void writeTypes(ViewScope vs) {
+  public void writeBulk(Environment env, String eVar, String appendTo) {
+    env.writer.tab().append(appendTo).append(".push(").append("$.bSO());").newline();
   }
 
   @Override
@@ -36,7 +32,5 @@ public class Submit implements BulkCommand, Command {
   }
 
   @Override
-  public void writeBulk(Environment env, String eVar, String appendTo) {
-    env.writer.tab().append(appendTo).append(".push(").append("$.bSB(").append(eVar).append("));").newline();
-  }
+  public void writeTypes(ViewScope vs) {}
 }

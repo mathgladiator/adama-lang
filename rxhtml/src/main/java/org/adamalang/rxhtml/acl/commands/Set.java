@@ -50,22 +50,7 @@ public class Set implements Command, BulkCommand {
 
   @Override
   public void write(Environment env, String type, String eVar) {
-    StatePath pathSet = StatePath.resolve(this.path, env.stateVar);
-    if (tree.hasAuto()) {
-      env.feedback.warn(env.element, "set's can't use auto variables");
-    }
-    Map<String, String> vars = tree.variables();
-    if (vars.size() == 0) {
-      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',").append(Escapes.constantOf(value)).append(");").newline();
-    } else {
-      var oVar = env.pool.ask();
-      env.writer.tab().append("var ").append(oVar).append("={};").newline();
-      for (Map.Entry<String, String> ve : vars.entrySet()) {
-        StatePath pathVar = StatePath.resolve(ve.getValue(), env.stateVar);
-        env.writer.tab().append("$.YS(").append(pathVar.command).append(",").append(oVar).append(",'").append(pathVar.name).append("');").newline();
-      }
-      env.writer.tab().append("$.onS(").append(eVar).append(",'").append(type).append("',").append(pathSet.command).append(",'").append(pathSet.name).append("',function(){ return ").append(tree.js(env.contextOf("event:" + type), oVar)).append(";});").newline();
-    }
+    throw new UnsupportedOperationException();
   }
 
   @Override

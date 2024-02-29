@@ -1298,7 +1298,15 @@ var RxHTML = (function () {
     }
   }
 
-
+  // RUNTIME: <tag ... rx:event="sign-out" ...>
+  self.bSO = function () {
+    return {
+      run: function() {
+        self.SIGNOUT();
+      },
+      merge : function() { return {}; }
+    };
+  };
 
   // RUNTIME: <tag .. rx:event="... set:name=value ...">
   self.bS = function (dom, state, name, value) {
@@ -1427,20 +1435,6 @@ var RxHTML = (function () {
     });
   };
 
-  // RUNTIME: <tag .. rx:event="... set:name=value ...">
-  self.onS = function (dom, type, state, name, value) {
-    reg_event(state, dom, type, function () {
-      var obj = {};
-      if (typeof (value) == "function") {
-        obj[name] = value();
-      } else {
-        obj[name] = value;
-      }
-      var delta = path_to(state.view, obj);
-      state[state.current].tree.update(delta);
-    });
-  };
-
   // RUNTIME: <tag .. rx:event="... te:name ...">
   self.onTM = function (dom, type, state, name, ox, oy) {
     reg_event(state, dom, type, function (event) {
@@ -1483,7 +1477,24 @@ var RxHTML = (function () {
     });
   };
 
+  self.bSB = function(dom) {
+    return {
+      run: function() {
+        var f = form_of(dom);
+        if (f != null) {
+          var e = new SubmitEvent('submit', {
+            'bubbles'    : true,
+            'cancelable' : true
+          });
+          f.dispatchEvent(e);
+        }
+      },
+      merge: function() { return {}; }
+    };
+  };
+
   // RUNTIME: <tag .. rx:event="... submit ...">
+  // TODO: DEPRECATE
   self.oSBMT = function (dom, type, state) {
     reg_event(state, dom, type, function (event) {
       var f = form_of(dom);
@@ -1510,6 +1521,21 @@ var RxHTML = (function () {
       }
     });
   };
+
+  self.bNK = function (dom) {
+    return {
+      run: function() {
+        var cur = dom;
+        while (cur.tagName.toUpperCase() != "NUCLEAR") {
+          cur = cur.parentElement;
+        }
+        if (cur != null) {
+          nuke(cur);
+        }
+      },
+      merge: function() {}
+    };
+  }
 
   self.oNK = function (dom, type, state) {
     reg_event(state, dom, type, function (event) {

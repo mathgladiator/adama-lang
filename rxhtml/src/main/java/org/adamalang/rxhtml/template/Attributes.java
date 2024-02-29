@@ -359,6 +359,28 @@ public class Attributes {
     }
   }
 
+  private void _writeCommands(ArrayList<Command> commands, String event) {
+    String arrVar = null;
+    for (Command command : commands) {
+      if (command instanceof BulkCommand) {
+        if (env.optimizeForPageLoad && "load".equals(event) && command instanceof Set && ((Set) command).constant) {
+          env.writer.tab().append(env.stateVar).append(".view.init['").append(((Set) command).name).append("']=").append(Escapes.constantOf(((Set) command).value)).append(";").newline();
+        } else {
+          if (arrVar == null) {
+            arrVar = env.pool.ask();
+            env.writer.tab().append("var ").append(arrVar).append("=[];").newline();
+          }
+          ((BulkCommand) command).writeBulk(env, eVar, arrVar);
+        }
+      } else {
+        command.write(env, event, eVar);
+      }
+    }
+    if (arrVar != null) {
+      env.writer.tab().append("$.onB(").append(eVar).append(",'").append(event).append("',").append(env.stateVar).append(",").append(arrVar).append(");").newline();
+    }
+  }
+
   public void _event(String event) {
     if (!env.element.hasAttr("rx:" + event)) {
       return;
@@ -366,26 +388,7 @@ public class Attributes {
     try {
       ArrayList<Command> commands = org.adamalang.rxhtml.acl.Parser.parse(env.element.attr("rx:" + event));
       env.element.removeAttr("rx:" + event);
-      String arrVar = null;
-
-      for (Command command : commands) {
-        if (command instanceof BulkCommand) {
-          if (env.optimizeForPageLoad && "load".equals(event) && command instanceof Set && ((Set) command).constant) {
-            env.writer.tab().append(env.stateVar).append(".view.init['").append(((Set) command).name).append("']=").append(Escapes.constantOf(((Set) command).value)).append(";").newline();
-          } else {
-            if (arrVar == null) {
-              arrVar = env.pool.ask();
-              env.writer.tab().append("var ").append(arrVar).append("=[];").newline();
-            }
-            ((BulkCommand) command).writeBulk(env, eVar, arrVar);
-          }
-        } else {
-          command.write(env, event, eVar);
-        }
-      }
-      if (arrVar != null) {
-        env.writer.tab().append("$.onB(").append(eVar).append(",'").append(event).append("',").append(env.stateVar).append(",").append(arrVar).append(");").newline();
-      }
+      _writeCommands(commands, event);
     } catch (ParseException ex) {
       env.feedback.warn(env.element, "event '" + event + "' has parser problems:" + ex.getMessage());
     }
@@ -406,10 +409,7 @@ public class Attributes {
         }
       }
       env.element.removeAttr("rx:" + event);
-      env.pool.ask();
-      for (Command command : commands) {
-        command.write(env, event, eVar);
-      }
+      _writeCommands(commands, event);
     } catch (ParseException ex) {
       env.feedback.warn(env.element, "event '" + event + "' has parser problems:" + ex.getMessage());
     }

@@ -50,7 +50,9 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:delayx=\"submit\">");
     gold.append("\n    var g=$.E('div');");
-    gold.append("\n    $.oSBMT(g,'delayx',a);");
+    gold.append("\n    var h=[];");
+    gold.append("\n    h.push($.bSB(g));");
+    gold.append("\n    $.onB(g,'delayx',a,h);");
     gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -66,7 +68,9 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:delay:x=\"submit\">");
     gold.append("\n    var j=$.E('div');");
-    gold.append("\n    $.oSBMT(j,'delay:x',a);");
+    gold.append("\n    var k=[];");
+    gold.append("\n    k.push($.bSB(j));");
+    gold.append("\n    $.onB(j,'delay:x',a,k);");
     gold.append("\n    d.append(j);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -94,7 +98,9 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:delayx=\"submit\">");
     gold.append("\n    var g=$.E('div');");
-    gold.append("\n    $.oSBMT(g,'delayx',a);");
+    gold.append("\n    var h=[];");
+    gold.append("\n    h.push($.bSB(g));");
+    gold.append("\n    $.onB(g,'delayx',a,h);");
     gold.append("\n    d.append(g);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -110,7 +116,9 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div rx:delay:x=\"submit\">");
     gold.append("\n    var j=$.E('div');");
-    gold.append("\n    $.oSBMT(j,'delay:x',a);");
+    gold.append("\n    var k=[];");
+    gold.append("\n    k.push($.bSB(j));");
+    gold.append("\n    $.onB(j,'delay:x',a,k);");
     gold.append("\n    d.append(j);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");

@@ -20,7 +20,7 @@ package org.adamalang.rxhtml.acl.commands;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.typing.ViewScope;
 
-public class Nuke implements Command {
+public class Nuke implements BulkCommand, Command {
   public Nuke() {
   }
 
@@ -30,6 +30,11 @@ public class Nuke implements Command {
 
   @Override
   public void write(Environment env, String type, String eVar) {
-    env.writer.tab().append("$.oNK(").append(eVar).append(",'").append(type).append("',").append(env.stateVar).append(");").newline();
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void writeBulk(Environment env, String eVar, String appendTo) {
+    env.writer.tab().append(appendTo).append(".push(").append("$.bNK(").append(eVar).append("));").newline();
   }
 }

@@ -51,7 +51,11 @@ public class ParserTests {
 
   private static void assertIs(Command command, String expected) {
     Environment env = Environment.fresh(Feedback.NoOp, "test");
-    command.write(env.stateVar("State"), "type", "DOM");
+    if (command instanceof BulkCommand) {
+      Assert.fail();
+    } else {
+      command.write(env.stateVar("State"), "type", "DOM");
+    }
     Assert.assertEquals(expected, env.writer.toString());
   }
 
@@ -170,7 +174,6 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("set:xyz=val").get(0));
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("val", set.value);
-    assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyz','val');\n");
     assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyz','val'));\n");
   }
 
@@ -179,7 +182,6 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("set:data:xyz=true").get(0));
     Assert.assertEquals("data:xyz", set.path);
     Assert.assertEquals("true", set.value);
-    assertIs(set, "$.onS(DOM,'type',$.pD(State),'xyz',true);\n");
     assertIsBulk(set, "$ARR.push($.bS(DOM,$.pD(State),'xyz',true));\n");
   }
 
@@ -188,7 +190,6 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("set:xyz=123").get(0));
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("123", set.value);
-    assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyz',123);\n");
     assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyz',123));\n");
   }
 
@@ -197,7 +198,6 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("set:xyz={xyz}").get(0));
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("{xyz}", set.value);
-    assertIs(set, "var a={};\n" + "$.YS(State,a,'xyz');\n" + "$.onS(DOM,'type',$.pV(State),'xyz',function(){ return $.F(a,'xyz');});\n");
     assertIsBulk(set, "var a={};\n" + "$.YS(State,a,'xyz');\n" + "$ARR.push($.bS(DOM,$.pV(State),'xyz',function(){ return $.F(a,'xyz');}));\n");
   }
 
@@ -206,7 +206,6 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("raise:xyx").get(0));
     Assert.assertEquals("view:xyx", set.path);
     Assert.assertEquals("true", set.value);
-    assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyx',true);\n");
     assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyx',true));\n");
   }
 
@@ -215,7 +214,18 @@ public class ParserTests {
     Set set = (Set) (Parser.parse("lower:xyz").get(0));
     Assert.assertEquals("view:xyz", set.path);
     Assert.assertEquals("false", set.value);
-    assertIs(set, "$.onS(DOM,'type',$.pV(State),'xyz',false);\n");
     assertIsBulk(set, "$ARR.push($.bS(DOM,$.pV(State),'xyz',false));\n");
+  }
+
+  @Test
+  public void submit() throws Exception {
+    Submit set = (Submit) (Parser.parse("submit").get(0));
+    assertIsBulk(set, "$ARR.push($.bSB(DOM));\n");
+  }
+
+  @Test
+  public void nuke() throws Exception {
+    BulkCommand nuke = (BulkCommand) (Parser.parse("nuke").get(0));
+    assertIsBulk(nuke, "$ARR.push($.bNK(DOM));\n");
   }
 }
