@@ -438,4 +438,21 @@ public class Elements {
     env.pool.give(parentVar);
     env.pool.give(caseVar);
   }
+
+  public static void inlineiterate(Environment env) {
+    boolean expand = env.element.hasAttr("rx:expand-view-state");
+    StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
+    String childStateVar = env.pool.ask();
+    env.writer.tab().append("$.IIT(").append(env.parentVariable).append(",").append(env.siblingVar != null ? env.siblingVar : "null").append(",").append(path.command).append(",'").append(path.name).append("',").append(expand ? "true" : "false").append(",function(").append(childStateVar).append(") {").tabUp().newline();
+    Element soloChild = env.soloChildIfPossible();
+    if (soloChild == null) {
+      soloChild = new Element("div");
+      soloChild.appendChildren(env.element.children());
+    }
+    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true, null), true);
+    env.writer.tab().append("return ").append(childDomVar).append(";").newline();
+    env.pool.give(childDomVar);
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
+  }
 }

@@ -1021,6 +1021,74 @@ var RxHTML = (function () {
     subscribe(state, name, sub);
   };
 
+  // RUNTIME | <inline-iterate path="...">...</inline-template>
+  // RUNTIME | <tag rx:replicate="..." ...>...</tag>
+  self.IIT = function (parentDom, siblingDom, state, name, expandView, maker) {
+    var it_state = self.pIE(state, name, expandView);
+    var domByKey = {};
+    var viewUnSubByKey = {};
+    var kill = function () {
+      for (var key in viewUnSubByKey) {
+        fire_unsub(viewUnSubByKey[key]);
+        delete viewUnSubByKey[key];
+      }
+      for (var key in domByKey) {
+        delete domByKey[key];
+      }
+    };
+    var signals = {isNew:false};
+    var sub = {
+      "+": function (key) {
+        var new_state = fork(self.pIE(it_state, key, expandView));
+        var unsub = make_unsub();
+        var dom = maker(new_state);
+        signals.isNew = true;
+        domByKey[key] = dom;
+        viewUnSubByKey[key] = unsub;
+        var before = siblingDom == null ? parentDom.firstChild : siblingDom.nextSibling;
+        parentDom.insertBefore(dom, before);
+        var item_delta = new_state.data.delta;
+        new_state.data.delta = {};
+        if (new_state.data.parent && new_state.data.path && new_state.data.parent.delta) {
+          new_state.data.parent.delta[new_state.data.path] = new_state.data.delta;
+        }
+        subscribe_state(new_state, unsub);
+        if (expandView) {
+          state.view.tree.update(path_to(new_state.view, {"$key": key}));
+        };
+        return item_delta;
+      },
+      "-": function (key) {
+        if (key in domByKey) {
+          try {
+            parentDom.removeChild(domByKey[key]);
+          } catch (ex) {}
+          delete domByKey[key];
+        }
+        if (key in viewUnSubByKey) {
+          fire_unsub(viewUnSubByKey[key]);
+          delete viewUnSubByKey[key];
+        }
+      },
+      "~": function (ord) {
+        if (ord == null) {
+          kill();
+          return;
+        }
+        for (var k = ord.length - 1; k >= 0; k--) {
+          var before = siblingDom == null ? parentDom.firstChild : siblingDom.nextSibling;
+          parentDom.insertBefore(domByKey[ord[k]], before);
+        }
+        parentDom.dispatchEvent(new Event("ordered"));
+        if (signals.isNew) {
+          parentDom.dispatchEvent(new Event("new"));
+          signals.isNew = false;
+        }
+      }
+    };
+    subscribe(state, name, sub);
+  };
+
   // RUNTIME: <tag ... rx:monitor="state-path" rx:rise="commands..." rx:fall="commands..."
   self.MN = function (dom, state, name, skipFirst, delay) {
     var sub = function (value) {

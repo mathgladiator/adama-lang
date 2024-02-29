@@ -24,6 +24,8 @@ import org.jsoup.nodes.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -315,20 +317,38 @@ public class Base {
     }
   }
 
-  private static ArrayList<Node> filtered(Environment env) {
+  private static ArrayList<Node> filteredAndRewrite(Environment env, Function<Node, Boolean> filter) {
     ArrayList<Node> filtered = new ArrayList<>();
+    boolean skipText = normalizeTag(env.element.tagName()).equals("select");
     for (int k = 0; k < env.element.childNodeSize(); k++) {
       Node node = env.element.childNode(k);
+      if (!filter.apply(node)) {
+        continue;
+      }
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
-        if (!text.text().trim().equalsIgnoreCase("")) {
+        if (!text.text().trim().equalsIgnoreCase("") && !skipText) {
           filtered.add(node);
         }
       } else if (node instanceof Comment) {
         // ignore comments
       } else if (node instanceof org.jsoup.nodes.Element) {
-        if (checkEnv((Element) node, env.environment)) {
-          filtered.add(node);
+        Element element = (Element) node;
+        if (checkEnv(element, env.environment)) {
+          if (element.hasAttr("rx:replicate")) {
+            Element injectedInline = new Element("inline-iterate");
+            if (element.hasAttr("rx:expand-view-state")) {
+              injectedInline.attr("rx:expand-view-state", "true");
+              element.removeAttr("rx:expand-view-state");
+            }
+            injectedInline.attr("path", element.attr("rx:replicate"));
+            element.removeAttr("rx:replicate");
+            element.remove();
+            injectedInline.appendChild(element);
+            filtered.add(injectedInline);
+          } else {
+            filtered.add(node);
+          }
         }
       }
     }
@@ -363,26 +383,70 @@ public class Base {
     }
   }
 
+  private static boolean needsSiblingNode(Node node) {
+    if (node instanceof Element) {
+      String tag = normalizeTag(((Element) node).tagName());
+      switch (tag) {
+        case "inlineiterate":
+          return true;
+      }
+    }
+    return false;
+  }
+
+  private static String tagToInjectForAnchorSibling(Element element) {
+    String tag = normalizeTag(element.tagName());
+    switch (tag) {
+      case "select":
+        return null;
+      default:
+        return "div";
+    }
+  }
 
   public static void children(Environment env, Function<Node, Boolean> filter) {
-    ArrayList<Node> nodes = filtered(env);
-    for (Node node : nodes) {
-      if (!filter.apply(node)) {
-        continue;
+    ArrayList<Node> nodes = filteredAndRewrite(env, filter);
+    boolean[] keep = new boolean[nodes.size()];
+    for (int k = 0; k < nodes.size(); k++) {
+      keep[k] = false;
+      Node node = nodes.get(k);
+      if (needsSiblingNode(node) && k > 0) {
+        keep[k-1] = true;
       }
+    }
+    String sibling = null;
+    for (int k = 0; k < nodes.size(); k++) {
+      Node node = nodes.get(k);
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
-        env.writer.tab().append(env.parentVariable).append(".append($.T('").append(new Escaping(text.text()).switchQuotes().go()).append("'));").newline();
+        if (keep[k]) {
+          sibling = env.pool.ask();
+          env.writer.tab().append("var ").append(sibling).append("=$.T('").append(new Escaping(text.text()).switchQuotes().go()).append("');").newline();
+          env.writer.tab().append(env.parentVariable).append(".append(").append(sibling).append(");").newline();
+        } else {
+          env.writer.tab().append(env.parentVariable).append(".append($.T('").append(new Escaping(text.text()).switchQuotes().go()).append("'));").newline();
+        }
       } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
-        Environment childEnv = env.element(child, nodes.size() == 1);
+        if (needsSiblingNode(child) && k > 0 && sibling == null) {
+          String injectedAnchorSibling = tagToInjectForAnchorSibling(child);
+          if (injectedAnchorSibling != null) {
+            sibling = env.pool.ask();
+            env.writer.tab().append("var ").append(sibling).append("=$.E('").append(injectedAnchorSibling).append("');").newline();
+            env.writer.tab().append(env.parentVariable).append(".append(").append(sibling).append(");").newline();
+          } else {
+            env.feedback.warn(env.element, "Unable to inject a sibling anchor");
+          }
+        }
+        Environment childEnv = env.element(child, nodes.size() == 1, sibling);
         try {
           // use reflection to see if Elements has an override for this normalized tag name.
           String tagNameNormal = normalizeTag(child.tagName());
           Method method = Elements.class.getMethod(tagNameNormal, Environment.class);
           method.invoke(null, childEnv);
+          sibling = null; // we can't anchor on virtual elements
         } catch (Exception ex) {
-          Base.write(childEnv, false);
+          sibling = Base.write(childEnv, keep[k]);
         }
       }
     }

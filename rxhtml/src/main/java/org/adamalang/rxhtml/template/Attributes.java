@@ -141,7 +141,7 @@ public class Attributes {
       soloChild = new Element("div");
       soloChild.appendChildren(env.element.children());
     }
-    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true), true);
+    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true, null), true);
     env.writer.tab().append("return ").append(childDomVar).append(";").newline();
     env.pool.give(childDomVar);
     env.writer.tabDown().tab().append("},").append(hide ? "true" : "false").append(");").newline();
@@ -162,7 +162,7 @@ public class Attributes {
       soloChild = new Element("div");
       soloChild.appendChildren(env.element.children());
     }
-    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true), true);
+    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true, null), true);
     env.writer.tab().append("return ").append(childDomVar).append(";").newline();
     env.pool.give(childDomVar);
     env.writer.tabDown().tab().append("},").append(hide ? "true" : "false").append(");").newline();

@@ -50,8 +50,9 @@ public class Environment {
   public final String autoVar;
   public final String environment;
   public final String configVar;
+  public final String siblingVar;
 
-  private Environment(Environment parent, String section, Context classContext, Feedback feedback, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc, ArrayList<Task> tasks, boolean optimizeForPageLoad, String autoVar, String environment, String configVar) {
+  private Environment(Environment parent, String section, Context classContext, Feedback feedback, Writer writer, VariablePool pool, Element element, boolean elementAlone, String parentVariable, String stateVar, String caseVar, String xmlns, String fragmentFunc, ArrayList<Task> tasks, boolean optimizeForPageLoad, String autoVar, String environment, String configVar, String siblingVar) {
     this.section = section;
     this.parent = parent;
     this.classContext = classContext;
@@ -71,10 +72,11 @@ public class Environment {
     this.autoVar = autoVar;
     this.environment = environment;
     this.configVar = configVar;
+    this.siblingVar = siblingVar;
   }
 
   public static Environment fresh(Feedback feedback, String environment) {
-    return new Environment(null, "fresh", Context.makeClassContext(), feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null, new ArrayList<>(), false, null, environment, null);
+    return new Environment(null, "fresh", Context.makeClassContext(), feedback, new Writer(), new VariablePool(), null, false, null, null, null, null, null, new ArrayList<>(), false, null, environment, null, null);
   }
 
   public HashMap<String, Integer> getCssFreq() {
@@ -124,46 +126,46 @@ public class Environment {
     return result;
   }
 
-  public Environment element(Element element, boolean elementAlone) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+  public Environment element(Element element, boolean elementAlone, String siblingVar) {
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment parentVariable(String parentVariable) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment stateVar(String stateVar) {
     // we lower the optimize because we are creating a new state variable
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, false, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, false, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment caseVar(String caseVar) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment xmlns(String xmlns) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment fragmentFunc(String fragmentFunc) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment autoVar(String autoVar) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment feedback(String section, Feedback feedback) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment configVar(String configVar) {
-    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar);
+    return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, optimizeForPageLoad, autoVar, environment, configVar, siblingVar);
   }
 
   public Environment raiseOptimize() {
     if (!optimizeForPageLoad) {
-      return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, true, autoVar, environment, configVar);
+      return new Environment(this, section, classContext, feedback, writer, pool, element, elementAlone, parentVariable, stateVar, caseVar, xmlns, fragmentFunc, tasks, true, autoVar, environment, configVar, siblingVar);
     }
     return this;
   }

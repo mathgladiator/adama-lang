@@ -103,12 +103,12 @@ public class CapacitorJSShell {
     Root.start(env, RxHtmlTool.buildCustomJavaScript(document));
     for (Element element : document.getElementsByTag("template")) {
       // TODO: detect if this template is used by any mobile pages
-      Root.template(env.element(element, true));
+      Root.template(env.element(element, true, null));
     }
     ArrayList<String> defaultRedirects = RxHtmlTool.getDefaultRedirect(document);
     for (Element element : document.getElementsByTag("page")) {
       // TODO: discriminate for a mobile page (and also, get a dependency tree of templates)
-      Root.page(env.element(element, true), defaultRedirects);
+      Root.page(env.element(element, true, null), defaultRedirects);
     }
     String javascript = Root.finish(env).trim();
     sb.append("  <script>\n").append(javascript).append("\n  </script>\n");

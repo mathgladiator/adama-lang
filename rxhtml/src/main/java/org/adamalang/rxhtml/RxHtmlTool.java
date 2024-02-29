@@ -42,11 +42,11 @@ public class RxHtmlTool {
     ViewSchemaBuilder vb = new ViewSchemaBuilder(document, config.feedback);
     ArrayList<String> patterns = new ArrayList<>();
     for (Element element : document.getElementsByTag("template")) {
-      Root.template(env.element(element, true));
+      Root.template(env.element(element, true, null));
     }
     for (Element element : document.getElementsByTag("page")) {
       patterns.add(element.attr("uri"));
-      Root.page(env.element(element, true), defaultRedirects);
+      Root.page(env.element(element, true, null), defaultRedirects);
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
