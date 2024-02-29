@@ -131,6 +131,9 @@ public class GlobalPusher implements Pusher {
     if (payload.has("domain")) {
       data.put("domain", payload.get("domain").textValue());
     }
+    if (payload.has("badge")) {
+      data.put("badge", payload.get("badge").textValue());
+    }
     message.put("token", registrationToken);
     ObjectNode android = message.putObject("android");
     ObjectNode androidNotif = android.putObject("notification");
