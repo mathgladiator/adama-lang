@@ -45,7 +45,7 @@ public class TemplateBehaviorTests extends BaseRxHtmlTest {
     gold.append("\n      var f=$.E('span');");
     gold.append("\n      f.append($.T('A child element'));");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n    $.BHV(d,a,'my_behavior',{\"x\":123});");
     gold.append("\n  });");
@@ -69,7 +69,7 @@ public class TemplateBehaviorTests extends BaseRxHtmlTest {
     gold.append("\n      var f=$.E('span');");
     gold.append("\n      f.append($.T('A child element'));");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n    $.BHV(d,a,'my_behavior',{\"x\":123});");
     gold.append("\n  });");

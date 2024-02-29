@@ -103,7 +103,7 @@ public class TemplateSchemaTests extends BaseRxHtmlTest {
     gold.append("\n      },{});");
     gold.append("\n      n.append(o);");
     gold.append("\n      return n;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(i);");
     gold.append("\n    b.append($.L(a,'should_no_be_in_view'));");
     gold.append("\n    b.append($.L($.pV(a),'w'));");
@@ -215,7 +215,7 @@ public class TemplateSchemaTests extends BaseRxHtmlTest {
     gold.append("\n      },{});");
     gold.append("\n      n.append(o);");
     gold.append("\n      return n;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(i);");
     gold.append("\n    b.append($.L(a,'should_no_be_in_view'));");
     gold.append("\n    b.append($.L($.pV(a),'w'));");

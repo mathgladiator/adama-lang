@@ -46,7 +46,7 @@ public class TemplateIterateNonSoloTests extends BaseRxHtmlTest {
     gold.append("\n      f.append($.L(e,'key'));");
     gold.append("\n      f.append($.L(e,'value'));");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
     gold.append("\n    // <table>");
@@ -67,7 +67,7 @@ public class TemplateIterateNonSoloTests extends BaseRxHtmlTest {
     gold.append("\n      g.append($.L(e,'value'));");
     gold.append("\n      f.append(g);");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
     gold.append("\n    // <table>");
@@ -95,7 +95,7 @@ public class TemplateIterateNonSoloTests extends BaseRxHtmlTest {
     gold.append("\n      f.append($.L(e,'key'));");
     gold.append("\n      f.append($.L(e,'value'));");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
     gold.append("\n    // <table>");
@@ -116,7 +116,7 @@ public class TemplateIterateNonSoloTests extends BaseRxHtmlTest {
     gold.append("\n      g.append($.L(e,'value'));");
     gold.append("\n      f.append(g);");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
     gold.append("\n    // <table>");

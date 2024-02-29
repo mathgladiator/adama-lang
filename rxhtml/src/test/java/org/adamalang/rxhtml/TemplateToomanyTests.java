@@ -44,7 +44,7 @@ public class TemplateToomanyTests extends BaseRxHtmlTest {
     gold.append("\n      // <div>");
     gold.append("\n      var f=$.E('div');");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -66,7 +66,7 @@ public class TemplateToomanyTests extends BaseRxHtmlTest {
     gold.append("\n      // <div>");
     gold.append("\n      var f=$.E('div');");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

@@ -129,6 +129,11 @@ public class Attributes {
 
   public void _repeat() {
     StatePath path = StatePath.resolve(env.element.attr("rx:repeat"), env.stateVar);
+    boolean hide = false;
+    if (env.element.hasAttr("force-hiding")) {
+      hide = true;
+      env.element.removeAttr("force-hiding");
+    }
     String childStateVar = env.pool.ask();
     env.writer.tab().append("$.RP(").append(eVar).append(",").append(path.command).append(",'").append(path.name).append("',").append(expand ? "true" : "false").append(",function(").append(childStateVar).append(") {").tabUp().newline();
     Element soloChild = env.soloChildIfPossible();
@@ -139,12 +144,17 @@ public class Attributes {
     String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true), true);
     env.writer.tab().append("return ").append(childDomVar).append(";").newline();
     env.pool.give(childDomVar);
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("},").append(hide ? "true" : "false").append(");").newline();
     env.pool.give(childStateVar);
   }
 
   public void _iterate() {
     StatePath path = StatePath.resolve(env.element.attr("rx:iterate"), env.stateVar);
+    boolean hide = false;
+    if (env.element.hasAttr("force-hiding")) {
+      hide = true;
+      env.element.removeAttr("force-hiding");
+    }
     String childStateVar = env.pool.ask();
     env.writer.tab().append("$.IT(").append(eVar).append(",").append(path.command).append(",'").append(path.name).append("',").append(expand ? "true" : "false").append(",function(").append(childStateVar).append(") {").tabUp().newline();
     Element soloChild = env.soloChildIfPossible();
@@ -155,7 +165,7 @@ public class Attributes {
     String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(soloChild, true), true);
     env.writer.tab().append("return ").append(childDomVar).append(";").newline();
     env.pool.give(childDomVar);
-    env.writer.tabDown().tab().append("});").newline();
+    env.writer.tabDown().tab().append("},").append(hide ? "true" : "false").append(");").newline();
     env.pool.give(childStateVar);
   }
 

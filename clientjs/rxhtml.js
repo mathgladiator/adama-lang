@@ -934,7 +934,7 @@ var RxHTML = (function () {
   };
 
   // RUNTIME | <tag rx:iterate=path ...>
-  self.IT = function (parentDom, state, name, expandView, maker) {
+  self.IT = function (parentDom, state, name, expandView, maker, hideOnZero) {
     var it_state = self.pIE(state, name, expandView);
     var domByKey = {};
     var viewUnSubByKey = {};
@@ -947,6 +947,9 @@ var RxHTML = (function () {
         delete domByKey[key];
       }
     };
+    if (hideOnZero) {
+      parentDom.style.display = "none";
+    }
 
     var signals = {isNew:false};
 
@@ -989,6 +992,13 @@ var RxHTML = (function () {
         if (!parentDom.value && parentDom.rxvalue != "") {
           valueToSet = parentDom.rxvalue;
           // this value, we want to restore once
+        }
+        if (hideOnZero) {
+          if (ord.length == 0) {
+            parentDom.style.display = "none";
+          } else {
+            parentDom.style.display = "";
+          }
         }
         nuke(parentDom);
         if (ord == null) {
@@ -1044,13 +1054,23 @@ var RxHTML = (function () {
   };
 
   // RUNTIME: <tag ... rx:repeat=$>
-  self.RP = function (parentDom, state, name, expandView, maker) {
+  self.RP = function (parentDom, state, name, expandView, maker, hideOnZero) {
     var it_state = self.pIE(state, "$" + name, expandView);
+    if (hideOnZero) {
+      parentDom.style.display = "none";
+    }
     var sub = function (value) {
       var n = 0;
       try {
         n = typeof (value) == 'number' ? value : parseInt(value);
       } catch (failedParsingN) {
+      }
+      if (hideOnZero) {
+        if (n <= 0) {
+          parentDom.style.display = "none";
+        } else {
+          parentDom.style.display = "";
+        }
       }
       var isNew = false;
       while (this.at < n - 1) {

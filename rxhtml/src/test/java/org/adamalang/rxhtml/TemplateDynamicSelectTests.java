@@ -72,7 +72,7 @@ public class TemplateDynamicSelectTests extends BaseRxHtmlTest {
     gold.append("\n        h();");
     gold.append("\n      }");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");
@@ -122,7 +122,7 @@ public class TemplateDynamicSelectTests extends BaseRxHtmlTest {
     gold.append("\n        h();");
     gold.append("\n      }");
     gold.append("\n      return f;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
     gold.append("\n})(RxHTML);");

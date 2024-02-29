@@ -53,7 +53,7 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      h.append($.L(f,'value'));");
     gold.append("\n      g.append(h);");
     gold.append("\n      return g;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -73,7 +73,7 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      h.append($.L(f,'value'));");
     gold.append("\n      g.append(h);");
     gold.append("\n      return g;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -105,7 +105,7 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      h.append($.L(f,'value'));");
     gold.append("\n      g.append(h);");
     gold.append("\n      return g;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -125,7 +125,7 @@ public class TemplateIterateSimpleTests extends BaseRxHtmlTest {
     gold.append("\n      h.append($.L(f,'value'));");
     gold.append("\n      g.append(h);");
     gold.append("\n      return g;");
-    gold.append("\n    });");
+    gold.append("\n    },false);");
     gold.append("\n    d.append(e);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
