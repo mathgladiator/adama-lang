@@ -605,6 +605,8 @@ public class ErrorTable {
     descriptions.put(934083, "no description of error (yet)");
     names.put(977091, "WEB_BASE_EXECUTE_SHARED_TOO_MANY_INFLIGHT");
     descriptions.put(977091, "no description of error (yet)");
+    names.put(969987, "WEB_BASE_EXECUTE_TIMEOUT");
+    descriptions.put(969987, "no description of error (yet)");
     names.put(990447, "NET_LCSM_PASSWORD_TIMEOUT");
     descriptions.put(990447, "no description of error (yet)");
     names.put(915695, "NET_LCSM_PASSWORD_REJECTED");
