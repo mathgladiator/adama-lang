@@ -693,6 +693,8 @@ public class ErrorTable {
     descriptions.put(920811, "no description of error (yet)");
     names.put(995563, "CACHE_ASSET_FILE_FAILED_CREATE");
     descriptions.put(995563, "no description of error (yet)");
+    names.put(903435, "CACHE_ASSET_SERVE_FAILURE");
+    descriptions.put(903435, "no description of error (yet)");
     names.put(973839, "GLOBAL_CAPACITY_EXCEPTION_ADD");
     descriptions.put(973839, "no description of error (yet)");
     names.put(950322, "GLOBAL_CAPACITY_EXCEPTION_REMOVE");

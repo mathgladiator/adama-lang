@@ -75,6 +75,14 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_DocumentsHashPassword(long requestId, String password, HashedPasswordResponder responder);
 
+  public abstract void handle_AttachmentStart(long requestId, String identity, String space, String key, String filename, String contentType, ProgressResponder responder);
+
+  public abstract void handle_AttachmentStartByDomain(long requestId, String identity, String domain, String filename, String contentType, ProgressResponder responder);
+
+  public abstract void handle_AttachmentAppend(long requestId, Long upload, String chunkMd5, String base64Bytes, SimpleResponder responder);
+
+  public abstract void handle_AttachmentFinish(long requestId, Long upload, AssetIdResponder responder);
+
   public void route(JsonRequest request, JsonResponder responder) {
     try {
       long requestId = request.id();
@@ -268,6 +276,42 @@ public abstract class DevBoxRouter {
           handle_DocumentsHashPassword(requestId, //
             request.getString("password", true, 465917), //
             new HashedPasswordResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "attachment/start":
+          _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));
+          _accessLogItem.put("key", request.getString("key", true, 466947));
+          _accessLogItem.put("filename", request.getString("filename", true, 470028));
+          _accessLogItem.put("content-type", request.getString("content-type", true, 455691));
+          handle_AttachmentStart(requestId, //
+            request.getString("identity", true, 458759), //
+            request.getStringNormalize("space", true, 461828), //
+            request.getString("key", true, 466947), //
+            request.getString("filename", true, 470028), //
+            request.getString("content-type", true, 455691), //
+            new ProgressResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "attachment/start-by-domain":
+          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("filename", request.getString("filename", true, 470028));
+          _accessLogItem.put("content-type", request.getString("content-type", true, 455691));
+          handle_AttachmentStartByDomain(requestId, //
+            request.getString("identity", true, 458759), //
+            request.getString("domain", true, 488444), //
+            request.getString("filename", true, 470028), //
+            request.getString("content-type", true, 455691), //
+            new ProgressResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "attachment/append":
+          handle_AttachmentAppend(requestId, //
+            request.getLong("upload", true, 409609), //
+            request.getString("chunk-md5", true, 462859), //
+            request.getString("base64-bytes", true, 409608), //
+            new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "attachment/finish":
+          handle_AttachmentFinish(requestId, //
+            request.getLong("upload", true, 409609), //
+            new AssetIdResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
       }
       responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));

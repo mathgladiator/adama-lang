@@ -34,6 +34,7 @@ import org.adamalang.web.assets.AssetStream;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.AssetUploadBody;
 import org.adamalang.web.io.ConnectionContext;
+import org.checkerframework.checker.units.qual.K;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -185,6 +186,15 @@ public class LocalAssets implements AssetSystem {
       ex.printStackTrace();
       callback.failure(new ErrorCodeException(42));
     }
+  }
 
+  public void write(Key key, NtAsset asset, byte[] memory) throws Exception {
+    File path = new File(root, key.space + "/" + key.key);
+    path.mkdirs();
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtAsset(asset);
+    Files.writeString(new File(path, asset.id + ".meta").toPath(), writer.toString());
+    File assetData = new File(path, asset.id + ".data");
+    Files.write(assetData.toPath(), memory);
   }
 }

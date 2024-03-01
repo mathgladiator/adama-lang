@@ -58,7 +58,7 @@ public class TransformQueue {
     this.executorDisk = SimpleExecutor.create("transforms-disk");
     this.alive = new AtomicBoolean(true);
     this.assets = assets;
-    this.cache = new SyncCacheLRU<>(time, 10, 2000, 128 * 1024 * 1024L, 30 * 60000, (key, item) -> {
+    this.cache = new SyncCacheLRU<>(time, 10, 10000, 1024L * 1024L * 1024L, 30 * 60000, (key, item) -> {
       item.evict();
     });
     this.async = new AsyncSharedLRUCache<>(executorCache, cache, (task, cb) -> {
@@ -113,7 +113,7 @@ public class TransformQueue {
                 InputStream input = inflight.open();
                 try {
                   transform.execute(input, output);
-                  callback.success(new TransformAsset(executorDisk, output));
+                  callback.success(new TransformAsset(executorDisk, output, asset.contentType));
                 } finally {
                   input.close();
                 }
@@ -153,7 +153,7 @@ public class TransformQueue {
     async.get(task, new Callback<TransformAsset>() {
       @Override
       public void success(TransformAsset result) {
-
+        result.serve(response);
       }
 
       @Override

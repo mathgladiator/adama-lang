@@ -72,7 +72,7 @@ public class LocalServiceBase implements ServiceBase {
   private final RxPubSub rxPubSub;
   private final MetricsFactory metricsFactory;
 
-  public LocalServiceBase(DevBoxStats stats, DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File assetPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
+  public LocalServiceBase(DevBoxStats stats, DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File attachmentPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
     this.stats = stats;
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
@@ -82,7 +82,7 @@ public class LocalServiceBase implements ServiceBase {
     this.staticAssetRoot = staticAssetRoot;
     this.localLibAdamaJS = localLibAdamaJS;
     this.verse = verse;
-    this.assets = new LocalAssets(io, assetPath, verse.service);
+    this.assets = new LocalAssets(io, attachmentPath, verse.service);
     this.debuggerAvailable = debuggerAvailable;
     this.inflight = new ConcurrentHashMap<>();
     this.inflightId = new AtomicInteger(1);
@@ -106,7 +106,7 @@ public class LocalServiceBase implements ServiceBase {
     int id = inflightId.incrementAndGet();
     LocalAdama devbox = new LocalAdama(stats, executor, context, this.control, this.io, verse, () -> {
       inflight.remove(id);
-    }, rxPubSub);
+    }, rxPubSub, assets);
     inflight.put(id, devbox);
     return devbox;
   }

@@ -20,6 +20,7 @@ package org.adamalang.rxhtml.template;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Escaping;
 import org.adamalang.common.Hashing;
+import org.adamalang.common.Json;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -454,5 +455,23 @@ public class Elements {
     env.pool.give(childDomVar);
     env.writer.tabDown().tab().append("});").newline();
     env.pool.give(childStateVar);
+  }
+
+  public static void fileattach(Environment env) {
+    boolean useDomain = env.element.hasAttr("use-domain");
+    final RxObject obj;
+    if (!useDomain) {
+      obj = new RxObject(env, "identity", "name", "redirect");
+    } else {
+      obj = new RxObject(env, "identity", "name", "redirect", "space", "key");
+    }
+    String childStateVar = env.pool.ask();
+    String parentVar = env.pool.ask();
+    env.writer.tab().append("$.FA(").append(env.parentVariable).append(",").append(env.stateVar).append(",").append(obj.rxObj).append(",").append(useDomain ? "true" : "false").append(",function(").append(childStateVar).append(",").append(parentVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
+    env.writer.tabDown().tab().append("}").append(");").newline();
+    obj.finish();
+    env.pool.give(childStateVar);
+    env.pool.give(parentVar);
   }
 }

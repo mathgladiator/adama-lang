@@ -234,11 +234,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       Transform how = TransformFactory.make(asset.contentType, transform);
       if (how == null) {
         sendImmediate(metrics.webhandler_transform_failure_none_available, req, ctx, HttpResponseStatus.BAD_REQUEST, ASSET_TRANSFORM_FAILURE, "text/html; charset=UTF-8", true);
-        return;
       } else {
-        // transformQueue.process(key, transform, how, asset, response);
-        // return;
+        transformQueue.process(key, transform, how, asset, response);
       }
+      return;
     }
 
     if (!WebHandlerAssetCache.canCache(asset)) {

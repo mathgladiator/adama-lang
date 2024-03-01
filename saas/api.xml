@@ -1566,7 +1566,7 @@
     </method>
     -->
 
-    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region" policy-via-document="true" js-sdk="true">
+    <method name="attachment/start" responder="progress" create="attachment-upload" scope="region" policy-via-document="true" js-sdk="true" devbox="true">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1577,7 +1577,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/start-by-domain" responder="progress" create="attachment-upload" scope="region" policy-via-document="true" js-sdk="true">
+    <method name="attachment/start-by-domain" responder="progress" create="attachment-upload" scope="region" policy-via-document="true" js-sdk="true" devbox="true">
         <parameter name="identity"/>
         <parameter name="domain"/>
         <parameter name="filename"/>
@@ -1587,7 +1587,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201" scope="region">
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201" scope="region" devbox="true">
         <parameter name="upload"/>
         <parameter name="chunk-md5"/>
         <parameter name="base64-bytes"/>
@@ -1596,7 +1596,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/finish" responder="asset-id" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true" scope="region">
+    <method name="attachment/finish" responder="asset-id" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true" scope="region" devbox="true">
         <parameter name="upload"/>
         <documentation>
             Finishing uploading the attachment upload.

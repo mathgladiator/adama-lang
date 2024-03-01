@@ -1089,6 +1089,111 @@ var RxHTML = (function () {
     subscribe(state, name, sub);
   };
 
+  self.fidbasis = 0;
+  self.FA = function (dom, state, rxobj, useDomain, maker) {
+
+    var id = "_auto_fid_" + self.fidbasis;
+    self.fidbasis++;
+
+    var input = document.createElement("input");
+    input.id = id;
+    input.type = "file";
+    input.style.display = "none";
+    input.ignore_build_object = true;
+    dom.appendChild(input);
+    var values = document.createElement("div");
+    dom.appendChild(values);
+
+    var label = document.createElement("label");
+    label.htmlFor = id;
+    maker(state, label);
+    dom.appendChild(label);
+
+    // TODO: index label children
+
+    var handle_finding_file = function() {
+      console.log("picking a file");
+    };
+    var handle_started = function() {
+      console.log("upload started");
+    };
+    var handle_failure = function(reason) {
+      console.log("failed:" + reason);
+    };
+    var handle_status = function(at, mx) {
+      console.log("upload status:" + at + "/" + mx);
+    };
+    var handle_success = function(id) {
+      var idAsElement = document.createElement("input");
+      idAsElement.type = "hidden";
+      idAsElement.name = rxobj.name;
+      idAsElement.value = id;
+      if (!idAsElement.name.endsWith("+")) {
+        nuke(values);
+      }
+      values.appendChild(idAsElement);
+      // TODO: add a preview thingy
+    };
+    label.addEventListener('click', handle_finding_file);
+    input.addEventListener(
+      'change',
+      function () {
+        handle_started();
+        var files = input.files;
+        if (files.length != 1) {
+          return;
+        }
+        var file = files[0];
+        // resolve identity
+        var idLookup = self.ID(rxobj.identity, function () { return rxobj.redirect; });
+        if (idLookup.abort) {
+          console.log("abort");
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = (evt) => {
+          var u8 = new Uint8Array( evt.target.result );
+          var progress = {
+            ptr: null,
+            at: 0,
+            next: function(chunkRequest) {
+              var sz = chunkRequest.chunk_request_size;
+              var at = progress.at;
+              var mx = Math.min(at + sz, u8.length);
+              if (at == mx) {
+                progress.ptr.finish({
+                  success: function (happy) {
+                    handle_success(happy.assetId);
+                  },
+                  failure : handle_failure
+                });
+              } else {
+                var sliced = u8.slice(at, mx);
+                at = mx;
+                progress.at = at;
+                var b64 = btoa(String.fromCharCode(...sliced));
+                progress.ptr.append("n/a", b64, {
+                  success: function (seq) {
+                    handle_status(at, mx)
+                  },
+                  failure : handle_failure
+                });
+              }
+            },
+            failure: handle_failure,
+            complete: function() {}
+          };
+          if (useDomain) {
+            progress.ptr = state.service.AttachmentStartByDomain(idLookup.identity, self.domain, file.name, file.type, progress);
+          } else {
+            progress.ptr = state.service.AttachmentStart(idLookup.identity, rxobj.space, rxobj.key, file.name, file.type, progress);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      });
+  };
+
   // RUNTIME: <tag ... rx:monitor="state-path" rx:rise="commands..." rx:fall="commands..."
   self.MN = function (dom, state, name, skipFirst, delay) {
     var sub = function (value) {

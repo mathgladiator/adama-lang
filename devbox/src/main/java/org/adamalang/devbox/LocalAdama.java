@@ -25,6 +25,7 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
@@ -37,8 +38,10 @@ import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -55,8 +58,10 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
   private final AdamaMicroVerse verse;
   private final Runnable death;
   private final RxPubSub rxPubSub;
+  private final LocalAssets assets;
+  private final ConcurrentHashMap<Long, InflightAttachment> attachments;
 
-  public LocalAdama(DevBoxStats stats, SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, AdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub) {
+  public LocalAdama(DevBoxStats stats, SimpleExecutor executor, ConnectionContext context, DynamicControl control, TerminalIO io, AdamaMicroVerse verse, Runnable death, RxPubSub rxPubSub, LocalAssets assets) {
     this.stats = stats;
     this.executor = executor;
     this.context = context;
@@ -64,12 +69,142 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     this.io = io;
     this.verse = verse;
     this.streams = new ConcurrentHashMap<>();
+    this.attachments = new ConcurrentHashMap<>();
     this.death = death;
+    this.assets = assets;
     this.rxPubSub = rxPubSub;
     if (context.identities != null) {
       for (Map.Entry<String, String> entry : context.identities.entrySet()) {
         LOCALHOST_COOKIES.put(entry.getKey(), entry.getValue());
       }
+    }
+  }
+
+  private class InflightAttachment {
+    private final Key key;
+    private final String id;
+    private final String filename;
+    private final String contentType;
+    private final ProgressResponder responder;
+    private final CoreStream stream;
+    private final ByteArrayOutputStream memory;
+
+    public InflightAttachment(Key key, String filename, String contentType, ProgressResponder responder, CoreStream stream) {
+      this.key = key;
+      this.id = ProtectedUUID.generate();
+      this.filename = filename;
+      this.contentType = contentType;
+      this.responder = responder;
+      this.stream = stream;
+      this.memory = new ByteArrayOutputStream();
+    }
+  }
+
+  private void commonAttachBegin(long requestId, String identity, Key key, String filename, String contentType, ProgressResponder responder) {
+    io.notice("attachment|begin for " + filename);
+    CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);
+    verse.service.connect(context, key, "{}", ConnectionMode.WriteOnly, new Streamback() {
+      @Override
+      public void onSetupComplete(CoreStream stream) {
+        stream.canAttach(new Callback<Boolean>() {
+          @Override
+          public void success(Boolean can) {
+            if (can) {
+              io.notice("attachment|acceptable");
+              InflightAttachment attachment = new InflightAttachment(key, filename, contentType, responder, stream);
+              attachments.put(requestId, attachment);
+              responder.next(64 * 1024);
+            } else {
+              responder.error(new ErrorCodeException(403111));
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
+          }
+        });
+      }
+
+      @Override
+      public void status(StreamStatus status) {}
+
+      @Override
+      public void next(String data) {}
+
+      @Override
+      public void failure(ErrorCodeException exception) {
+        responder.error(exception);
+      }
+    });
+  }
+
+
+  @Override
+  public void handle_AttachmentStart(long requestId, String identity, String space, String key, String filename, String contentType, ProgressResponder responder) {
+    commonAttachBegin(requestId, identity, new Key(space, key), filename, contentType, responder);
+  }
+
+  @Override
+  public void handle_AttachmentStartByDomain(long requestId, String identity, String domain, String filename, String contentType, ProgressResponder responder) {
+    commonAttachBegin(requestId, identity, verse.domainKeyToUse, filename, contentType, responder);
+  }
+
+  @Override
+  public void handle_AttachmentAppend(long requestId, Long upload, String chunkMd5, String base64Bytes, SimpleResponder responder) {
+    InflightAttachment attachment = attachments.get(upload);
+    if (attachment != null) {
+      try {
+        io.notice("attachment|chunk");
+        attachment.memory.write(Base64.getDecoder().decode(base64Bytes));
+        attachment.responder.next(64 * 1024);
+        responder.complete();
+      } catch (Exception ex) {
+        attachment.stream.close();
+        attachments.remove(upload);
+        responder.error(new ErrorCodeException(404101));
+      }
+    } else {
+      responder.error(new ErrorCodeException(404100));
+    }
+  }
+
+  @Override
+  public void handle_AttachmentFinish(long requestId, Long upload, AssetIdResponder responder) {
+    InflightAttachment attachment = attachments.remove(upload);
+    if (attachment != null) {
+      try {
+        io.notice("attachment|finish");
+        byte[] memory = attachment.memory.toByteArray();
+        MessageDigest md5 = Hashing.md5();
+        MessageDigest sha384 = Hashing.sha384();
+        md5.update(memory);
+        sha384.update(memory);
+        String md5_str = Hashing.finishAndEncode(md5);
+        String sha384_str = Hashing.finishAndEncode(sha384);
+        NtAsset asset = new NtAsset(attachment.id, attachment.filename, attachment.contentType, memory.length, md5_str, sha384_str);
+        assets.write(attachment.key, asset, memory);
+        attachment.stream.attach(attachment.id, attachment.filename, attachment.contentType, memory.length, md5_str, sha384_str, new Callback<Integer>() {
+          @Override
+          public void success(Integer value) {
+            attachment.stream.close();
+            attachment.responder.finish();
+            responder.complete(attachment.id);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            attachment.stream.close();
+            attachment.responder.error(ex);
+            responder.error(ex);
+          }
+        });
+      } catch (Exception ex) {
+        attachment.stream.close();
+        responder.error(new ErrorCodeException(404103));
+      }
+    } else {
+      responder.error(new ErrorCodeException(404102));
     }
   }
 
@@ -477,7 +612,12 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     for (LocalStream stream : streams.values()) {
       stream.ref.close();
     }
+    for (InflightAttachment attachment : attachments.values()) {
+      attachment.responder.error(new ErrorCodeException(101404));
+      attachment.stream.close();
+    }
     streams.clear();
+    attachments.clear();
     death.run();
   }
 
