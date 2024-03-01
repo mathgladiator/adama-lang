@@ -99,6 +99,14 @@ public class Base {
     if (env.element.tagName().equals("form") && env.element.hasAttr("rx:action")) {
       rx._action();
     }
+    _events(env, rx);
+    if (env.element.hasAttr("rx:link")) {
+      env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(",'").append(env.element.attr("rx:link")).append("',$);").newline();
+    }
+    return new IntroHandoff(eVar, rx);
+  }
+
+  public static void _events(Environment env, Attributes rx) {
     for (String event : EVENTS) {
       if (env.element.hasAttr("rx:" + event)) {
         rx._event(event);
@@ -107,10 +115,6 @@ public class Base {
     for (String delay : extractDelayEvents(env)) {
       rx._delay(delay);
     }
-    if (env.element.hasAttr("rx:link")) {
-      env.writer.tab().append(eVar).append(".link(").append(env.stateVar).append(",'").append(env.element.attr("rx:link")).append("',$);").newline();
-    }
-    return new IntroHandoff(eVar, rx);
   }
 
   private static int countAttr(Element element, String... attrs) {

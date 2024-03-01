@@ -457,7 +457,19 @@ public class Elements {
     env.pool.give(childStateVar);
   }
 
-  public static void fileattach(Environment env) {
+  public static void fileattach(Environment prior) {
+    String newVar = prior.pool.ask();
+    {
+      String tag = "div";
+      if (prior.element.hasAttr("anchor:tag")) {
+        tag = prior.element.attr("anchor:tag");
+      }
+      prior.writer.tab().append("var ").append(newVar).append("=$.E('").append(tag).append("');").newline();
+      prior.writer.tab().append(prior.parentVariable).append(".append(").append(newVar).append(");").newline();
+      Attributes rx = new Attributes(prior, newVar);
+      Base._events(prior, rx);
+    }
+    Environment env = prior.parentVariable(newVar);
     boolean useDomain = env.element.hasAttr("use-domain");
     final RxObject obj;
     if (!useDomain) {
