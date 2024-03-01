@@ -70,6 +70,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
   public void initChannel(final SocketChannel ch) throws Exception {
     logger.info("initializing channel: {}", ch.remoteAddress());
     final var pipeline = ch.pipeline();
+    pipeline.addLast(new ReadTimeoutHandler(webConfig.idleReadSeconds, TimeUnit.SECONDS));
     if (context != null) {
       pipeline.addLast("sni", new SniHandler((domain, promise) -> {
         certificateFinder.fetch(domain, new Callback<SslContext>() {
@@ -90,7 +91,6 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
         return promise;
       }));
     }
-    pipeline.addLast(new IdleStateHandler(webConfig.idleReadSeconds, webConfig.idleWriteSeconds, webConfig.idleAllSeconds, TimeUnit.SECONDS));
     pipeline.addLast(new HttpServerCodec());
     pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());

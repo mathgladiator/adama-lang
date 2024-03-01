@@ -74,6 +74,8 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
       if (good && checkSize) {
         left -= len;
       }
+    } else {
+      good = false;
     }
   }
 
@@ -87,13 +89,17 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
           callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_PREMATURE_END));
         }
       }
+    } else {
+      good = false;
     }
   }
 
   @Override
   public void failure(ErrorCodeException ex) {
-    good = false;
-    callback.failure(ex);
+    if (good) {
+      good = false;
+      callback.failure(ex);
+    }
   }
 
   public static boolean write(FileOutputStream output, byte[] chunk, int offset, int len, Callback<Void> callback) {

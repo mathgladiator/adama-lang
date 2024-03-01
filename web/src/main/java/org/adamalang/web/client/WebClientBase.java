@@ -263,10 +263,10 @@ public class WebClientBase {
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(new ReadTimeoutHandler(config.idleReadSeconds, TimeUnit.SECONDS));
         if (secure) {
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), host, port));
         }
-        ch.pipeline().addLast(new IdleStateHandler(config.idleReadSeconds, config.idleWriteSeconds, config.idleAllSeconds, TimeUnit.SECONDS));
         ch.pipeline().addLast(new HttpClientCodec());
         ch.pipeline().addLast(new HttpObjectAggregator(config.maxContentLengthSize));
         ch.pipeline().addLast(WebSocketClientCompressionHandler.INSTANCE);

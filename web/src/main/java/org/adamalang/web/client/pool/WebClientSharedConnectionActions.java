@@ -23,9 +23,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
+import io.netty.handler.timeout.*;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -55,10 +53,10 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(new ReadTimeoutHandler(60, TimeUnit.SECONDS));
         if (request.secure) {
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), request.host, request.port));
         }
-        ch.pipeline().addLast(new IdleStateHandler(10 * 60, 60, 5 * 50, TimeUnit.SECONDS));
         ch.pipeline().addLast(new HttpClientCodec());
         ch.pipeline().addLast(
           new SimpleChannelInboundHandler<HttpObject>() {
@@ -69,7 +67,11 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
 
             @Override
             public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-              connection.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
+              if (cause instanceof ReadTimeoutException) {
+                connection.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_TIMEOUT));
+              } else {
+                connection.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
+              }
               ctx.close();
             }
           });

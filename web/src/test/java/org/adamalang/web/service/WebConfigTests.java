@@ -73,7 +73,8 @@ public class WebConfigTests {
     ClientTest3(15102),
     ClientTest4(15103),
     ClientTest5(15104),
-    Pool(16000);
+    Pool(16000),
+    HttpExecute1(16001);
 
     public final int port;
 

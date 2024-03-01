@@ -27,23 +27,28 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
   private final Logger logger;
   private final RequestResponseMonitor.RequestResponseMonitorInstance monitor;
   private final Callback<Void> callback;
+  private boolean emissionPossible;
 
   public VoidCallbackHttpResponder(Logger logger, RequestResponseMonitor.RequestResponseMonitorInstance monitor, Callback<Void> callback) {
     this.logger = logger;
     this.monitor = monitor;
     this.callback = callback;
+    this.emissionPossible = true;
   }
 
   @Override
   public void start(SimpleHttpResponseHeader header) {
-    if (200 <= header.status && header.status <= 204) {
-      monitor.success();
-      callback.success(null);
-    } else {
-      logger.error("void-callback-not-20x: {} -> {}", header.status, header.headers.toString());
-      int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
-      monitor.failure(errorCode);
-      callback.failure(new ErrorCodeException(errorCode, header.status + ""));
+    if (emissionPossible) {
+      emissionPossible = false;
+      if (200 <= header.status && header.status <= 204) {
+        monitor.success();
+        callback.success(null);
+      } else {
+        logger.error("void-callback-not-20x: {} -> {}", header.status, header.headers.toString());
+        int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
+        monitor.failure(errorCode);
+        callback.failure(new ErrorCodeException(errorCode, header.status + ""));
+      }
     }
   }
 
@@ -66,8 +71,11 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void failure(ErrorCodeException ex) {
-    logger.error("void-callback-failure:", ex);
-    monitor.failure(ex.code);
-    callback.failure(ex);
+    if (emissionPossible) {
+      emissionPossible = false;
+      logger.error("void-callback-failure:", ex);
+      monitor.failure(ex.code);
+      callback.failure(ex);
+    }
   }
 }

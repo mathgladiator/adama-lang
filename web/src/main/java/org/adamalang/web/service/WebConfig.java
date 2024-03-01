@@ -32,8 +32,6 @@ public class WebConfig {
   public final int timeoutWebsocketHandshake;
   public final int heartbeatTimeMilliseconds;
   public final int idleReadSeconds;
-  public final int idleWriteSeconds;
-  public final int idleAllSeconds;
   public final int bossThreads;
   public final int workerThreads;
   public final TreeSet<String> specialDomains;
@@ -60,8 +58,6 @@ public class WebConfig {
     // WebSocket properties
     this.timeoutWebsocketHandshake = config.intOf("websocket-handshake-timeout-ms", 2500);
     this.idleReadSeconds = config.intOf("http-read-idle-sec", 60);
-    this.idleWriteSeconds = config.intOf("http-write-idle-sec", 60);
-    this.idleAllSeconds = config.intOf("websocket-all-idle-sec", 60);
     this.maxWebSocketFrameSize = config.intOf("websocket-max-frame-size", 4 * 1024 * 1024);
     this.heartbeatTimeMilliseconds = config.intOf("websocket-heart-beat-ms", 1000);
     this.bossThreads = config.intOf("http-boss-threads", 2);

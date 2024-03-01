@@ -18,6 +18,8 @@
 package org.adamalang.web.client;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.socket.WebClientConnection;
@@ -32,12 +34,17 @@ import org.adamalang.web.service.mocks.MockServiceBase;
 import org.adamalang.web.service.mocks.NullCertificateFinder;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class WebClientBaseTests {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebClientBaseTests.class);
+
   @Test
   public void happy() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest1);
@@ -101,6 +108,76 @@ public class WebClientBaseTests {
       clientBase.shutdown();
     }
   }
+
+  @Test
+  public void http_simple() throws Exception {
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.HttpExecute1);
+    MockServiceBase base = new MockServiceBase();
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), new MockDomainFinder(), () -> {});
+    final var thread = new Thread(runnable);
+    thread.start();
+    runnable.waitForReady(1000);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
+    try {
+      SimpleHttpRequest request = new SimpleHttpRequest("GET", "http://localhost:" + webConfig.port + "/foo", new TreeMap<>(), SimpleHttpRequestBody.EMPTY);
+      CountDownLatch done = new CountDownLatch(1);
+      clientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, new NoOpMetricsFactory().makeRequestResponseMonitor("simple").start(), new Callback<String>() {
+        @Override
+        public void success(String value) {
+          Assert.assertEquals("goo", value);
+          done.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          done.countDown();
+        }
+      }));
+      Assert.assertTrue(done.await(10000, TimeUnit.MILLISECONDS));
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    } finally{
+      clientBase.shutdown();
+    }
+  }
+
+  /*
+  @Test
+  public void http_timeout() throws Exception {
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.HttpExecute1);
+    MockServiceBase base = new MockServiceBase();
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, new NullCertificateFinder(), new MockDomainFinder(), () -> {});
+    final var thread = new Thread(runnable);
+    thread.start();
+    runnable.waitForReady(1000);
+    WebClientBase clientBase = new WebClientBase(new WebClientBaseMetrics(new NoOpMetricsFactory()), webConfig);
+    try {
+      SimpleHttpRequest request = new SimpleHttpRequest("GET", "http://localhost:" + webConfig.port + "/timeout", new TreeMap<>(), SimpleHttpRequestBody.EMPTY);
+      CountDownLatch done = new CountDownLatch(1);
+      clientBase.executeShared(request, new StringCallbackHttpResponder(LOGGER, new NoOpMetricsFactory().makeRequestResponseMonitor("simple").start(), new Callback<String>() {
+        @Override
+        public void success(String value) {
+          System.err.println("SUCCESS");
+          Assert.assertEquals("goo", value);
+          done.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("FAILURE");
+          ex.printStackTrace();
+          done.countDown();
+        }
+      }));
+      Assert.assertTrue(done.await(1000000, TimeUnit.MILLISECONDS));
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    } finally{
+      clientBase.shutdown();
+    }
+  }
+  */
 
   @Test
   public void quickclose() throws Exception {

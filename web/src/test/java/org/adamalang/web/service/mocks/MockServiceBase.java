@@ -156,6 +156,9 @@ public class MockServiceBase implements ServiceBase {
           callback.success(new HttpResult("/loc2", 302));
           return;
         }
+        if ("/timeout".equals(uri)) {
+          return;
+        }
         callback.success(null);
       }
 

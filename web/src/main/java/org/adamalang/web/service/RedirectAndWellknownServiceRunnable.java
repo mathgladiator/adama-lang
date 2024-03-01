@@ -83,7 +83,7 @@ public class RedirectAndWellknownServiceRunnable implements Runnable {
               @Override
               protected void initChannel(SocketChannel ch) throws Exception {
                 final var pipeline = ch.pipeline();
-                pipeline.addLast(new IdleStateHandler(webConfig.idleReadSeconds, webConfig.idleWriteSeconds, webConfig.idleAllSeconds, TimeUnit.SECONDS));
+                pipeline.addLast(new ReadTimeoutHandler(webConfig.idleReadSeconds, TimeUnit.SECONDS));
                 pipeline.addLast(new HttpServerCodec());
                 pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
                 pipeline.addLast(new RedirectHandler(webConfig, wellKnownHandler));
