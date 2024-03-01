@@ -1,0 +1,15 @@
+// root level variable
+public int pub_x;
+bubble bub_x = 123;
+private int pri_x;
+
+use_policy<is_admin> int adm_x;
+use_policy<just_user> int ju_x;
+
+policy is_admin {
+  return true;
+}
+
+policy just_user {
+  return true;
+}

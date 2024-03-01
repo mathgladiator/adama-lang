@@ -1,0 +1,24 @@
+<forest>
+    <page uri="/a" privacy="is_admin">
+        <connection use-domain backend="simple">
+            Simple root field testing under the is_admin policy
+            <lookup path="pub_x" />
+            <lookup path="bub_x" />
+            <lookup path="pri_x" />
+            <lookup path="adm_x" />
+            <lookup path="ju_x" />
+            <lookup path="not_found_x" />
+        </connection>
+    </page>
+    <page uri="/b" privacy="just_user">
+        <connection use-domain backend="simple">
+            Simple root field testing under the just user policy
+            <lookup path="pub_x" />
+            <lookup path="bub_x" />
+            <lookup path="pri_x" />
+            <lookup path="adm_x" />
+            <lookup path="ju_x" />
+            <lookup path="not_found_x" />
+        </connection>
+    </page>
+</forest>

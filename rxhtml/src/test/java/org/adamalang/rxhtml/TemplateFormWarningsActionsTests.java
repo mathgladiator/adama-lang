@@ -25,7 +25,9 @@ public class TemplateFormWarningsActionsTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("WARNING:/:The input 'x' is excessive.");
+    issues.append("WARNING:no data channel for a form to send channel 'channel' on");
+    issues.append("\nWARNING:no data channel for a form to send channel 'channel' on");
+    issues.append("\nWARNING:/:The input 'x' is excessive.");
     issues.append("\nWARNING:/:Failed to find an input for 'email'");
     issues.append("\nWARNING:/:Failed to find an input for 'password'");
     issues.append("\nWARNING:/:The input 'x' is excessive.");

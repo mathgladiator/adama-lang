@@ -26,10 +26,7 @@ import org.adamalang.rxhtml.template.config.ShellConfig;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,13 +37,38 @@ public class GenerateTemplateTests {
     return gold.replaceAll("/[0-9]*/devlibadama\\.js", Matcher.quoteReplacement("/DEV.js")).replaceAll("/libadama-worker\\.js/[a-z0-9.\"',]*", Matcher.quoteReplacement("/WORKER.js\",'VERSION'"));
   }
 
+  public static class CompileStep {
+    public final File input;
+    public final File output;
+
+    private CompileStep(File input, File output) {
+      this.input = input;
+      this.output = output;
+    }
+  }
+
+  public static List<CompileStep> prepareScripts(String inputRootPath, String outputJavaPath) {
+    if (isValid(inputRootPath) && isValid(outputJavaPath)) {
+      ArrayList<CompileStep> steps = new ArrayList<>();
+      final var root = new File(inputRootPath);
+      final var scripts = new File(root, "scripts");
+      final var types = new File(root, "types");
+      types.mkdirs();
+      for (File script : scripts.listFiles((dir, name) -> name.endsWith(".adama"))) {
+        steps.add(new CompileStep(script, new File(types, script.getName().replaceAll(Pattern.quote(".adama"), Matcher.quoteReplacement(".json")))));
+      }
+      return steps;
+    }
+    return null;
+  }
+
   public static void generate(String inputRootPath, String outputJavaPath) throws Exception {
     if (isValid(inputRootPath) && isValid(outputJavaPath)) {
       final var root = new File(inputRootPath);
       final var outRoot = new File(outputJavaPath);
       ArrayList<File> files = new ArrayList<>();
       for (File file : root.listFiles()) {
-        if (!file.getName().endsWith(".rx.html")) {
+        if (!file.getName().endsWith(".rx.html") || file.isDirectory()) {
           continue;
         }
         files.add(file);
@@ -60,7 +82,7 @@ public class GenerateTemplateTests {
           System.out.print("  " + warning + "\n");
           issues.append("WARNING:").append(warning).append("\n");
         };
-        RxHtmlBundle result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(file, Collections.singletonList(file), false), null, ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
+        RxHtmlBundle result = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(file, Collections.singletonList(file), false), new File(root, "types"), ShellConfig.start().withEnvironment("test").withVersion("GENMODE").withFeedback(feedback).withUseLocalAdamaJavascript(devMode).end());
         String gold = fixTestGold(result.toString());
         String name = file.getName().substring(0, file.getName().length() - 8).replace(Pattern.quote("."), "_");
         name = name.substring(0, 1).toUpperCase(Locale.ROOT) + name.substring(1);

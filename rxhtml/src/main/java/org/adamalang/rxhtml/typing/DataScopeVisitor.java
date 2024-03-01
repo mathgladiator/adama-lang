@@ -108,7 +108,7 @@ public class DataScopeVisitor implements PathVisitor {
       }
       JsonNode privacyLevel = childType.get("privacy");
       if (!privacy.visible(privacyLevel)) {
-        errors.add("Privacy violation; field '" + child + "' was referenced, but is not visible within the privacy filter: " + privacyLevel.toString());
+        errors.add("Privacy violation; field '" + child + "' was referenced, but is not visible within the privacy filter:" + privacyLevel.toString() + " allowed:" + privacy.toString());
         // TODO: make above error more meaningful
       }
       childType.put("used", true);

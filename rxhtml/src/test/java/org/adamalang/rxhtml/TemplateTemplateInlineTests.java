@@ -49,7 +49,7 @@ public class TemplateTemplateInlineTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
-    gold.append("\n    $.UT(b,a,'', function(f,g,h) {");
+    gold.append("\n    $.UT(b,a,'temp', function(f,g,h) {");
     gold.append("\n");
     gold.append("\n      // <div rx:case=\"foo\">");
     gold.append("\n      if (h == 'foo') {");
@@ -90,7 +90,7 @@ public class TemplateTemplateInlineTests extends BaseRxHtmlTest {
     gold.append("\n  $.PG(['fixed',''], function(b,a) {");
     gold.append("\n    var c=$.X();");
     gold.append("\n    b.append($.T(' This is a page which is going to use the template. '));");
-    gold.append("\n    $.UT(b,a,'', function(f,g,h) {");
+    gold.append("\n    $.UT(b,a,'temp', function(f,g,h) {");
     gold.append("\n");
     gold.append("\n      // <div rx:case=\"foo\">");
     gold.append("\n      if (h == 'foo') {");
@@ -130,7 +130,7 @@ public class TemplateTemplateInlineTests extends BaseRxHtmlTest {
     source.append("\n    </template>");
     source.append("\n    <page uri=\"/\">");
     source.append("\n        This is a page which is going to use the template.");
-    source.append("\n        <inline-template template=\"temp\" config:foo=\"123\">");
+    source.append("\n        <inline-template name=\"temp\" config:foo=\"123\">");
     source.append("\n            <div rx:case=\"foo\"> Foo </div>");
     source.append("\n            <div rx:case=\"boo\"> Boo </div>");
     source.append("\n        </inline-template>");

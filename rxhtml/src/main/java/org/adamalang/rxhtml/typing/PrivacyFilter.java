@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.typing;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 /** scope of allowed privacy policies */
@@ -32,6 +33,13 @@ public class PrivacyFilter {
         allowed.add(x);
       }
     }
+  }
+
+  @Override
+  public String toString() {
+    ArrayList<String> parts = new ArrayList<>();
+    parts.addAll(allowed);
+    return String.join(", ", parts);
   }
 
   public boolean visible(JsonNode privacy) {

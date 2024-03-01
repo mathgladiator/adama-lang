@@ -25,7 +25,9 @@ public class TemplateBadDelayTimeTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("WARNING:/:delay 'delayx' is not a well formed delay");
+    issues.append("WARNING:no data channel for a form to send channel 'foo' on");
+    issues.append("\nWARNING:no data channel for a form to send channel 'foo' on");
+    issues.append("\nWARNING:/:delay 'delayx' is not a well formed delay");
     issues.append("\nWARNING:/:delay 'delay:x' is not a well formed delay (failed to parse x as int)");
     return issues.toString();
   }

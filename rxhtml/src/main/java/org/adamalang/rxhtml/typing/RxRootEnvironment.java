@@ -279,8 +279,6 @@ public class RxRootEnvironment {
     children(element, next);
   }
 
-
-
   public void inlinetemplate(Element inlinetemplate, PageEnvironment env) {
     String templateToUse = inlinetemplate.attr("name");
     Element template = env.findTemplate(templateToUse);
@@ -288,7 +286,7 @@ public class RxRootEnvironment {
       children(template, env.withFragmentProvider(inlinetemplate));
       return;
     } else {
-      // TODO: warn about template not found
+      feedback.warn(inlinetemplate, "Template '" + templateToUse + "' was not found");
     }
     children(inlinetemplate, env);
   }

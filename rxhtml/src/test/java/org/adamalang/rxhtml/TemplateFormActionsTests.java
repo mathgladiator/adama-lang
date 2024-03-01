@@ -25,7 +25,7 @@ public class TemplateFormActionsTests extends BaseRxHtmlTest {
   @Override
   public String issues() {
     StringBuilder issues = new StringBuilder();
-    issues.append("");
+    issues.append("WARNING:no data channel for a form to send channel 'channel' on");
     return issues.toString();
   }
   @Override

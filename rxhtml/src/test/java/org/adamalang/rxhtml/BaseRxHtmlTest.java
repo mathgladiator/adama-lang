@@ -28,17 +28,20 @@ import org.jsoup.nodes.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+
 public abstract class BaseRxHtmlTest {
   private RxHtmlBundle cachedResult = null;
   private StringBuilder issuesLive;
 
   public RxHtmlBundle result() {
     if (cachedResult == null) {
+      File typesFolder = new File("test_templates/types");
       issuesLive = new StringBuilder();
       Feedback feedback = (element, warning) -> issuesLive.append("WARNING:").append(warning).append("\n");
       Document useDoc = Jsoup.parse(source());
       String partial = StringHelper.splitNewlineAndTabify(useDoc.getElementsByTag("forest").html().replaceAll("\r", ""), "");
-      cachedResult = RxHtmlTool.convertStringToTemplateForest(partial, null, ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
+      cachedResult = RxHtmlTool.convertStringToTemplateForest(partial, typesFolder, ShellConfig.start().withVersion("GENMODE").withEnvironment("test").withFeedback(feedback).withUseLocalAdamaJavascript(dev()).end());
     }
     return cachedResult;
   }

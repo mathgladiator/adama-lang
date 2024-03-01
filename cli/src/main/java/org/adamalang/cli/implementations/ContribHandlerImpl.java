@@ -17,18 +17,16 @@
 */
 package org.adamalang.cli.implementations;
 
+import org.adamalang.CoreServices;
+import org.adamalang.CoreServicesNexus;
 import org.adamalang.GenerateTables;
 import org.adamalang.caravan.events.Events;
-import org.adamalang.common.ANSI;
-import org.adamalang.common.ColorUtilTools;
+import org.adamalang.common.*;
 import org.adamalang.devbox.BundleRawJavaScriptForDevBox;
 import org.adamalang.cli.implementations.docgen.BookGenerator;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.ContribHandler;
 import org.adamalang.cli.runtime.Output;
-import org.adamalang.common.DefaultCopyright;
-import org.adamalang.common.Escaping;
-import org.adamalang.common.Hashing;
 import org.adamalang.common.codec.CodecCodeGen;
 import org.adamalang.common.gossip.codec.GossipProtocol;
 import org.adamalang.frontend.EmbedTemplates;
@@ -37,6 +35,7 @@ import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.support.GenerateTemplateTests;
 import org.adamalang.train.message.Messages;
+import org.adamalang.validators.ValidatePlan;
 import org.adamalang.web.service.BundleJavaScript;
 
 import java.io.File;
@@ -44,6 +43,8 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -172,15 +173,29 @@ public class ContribHandlerImpl implements ContribHandler {
   @Override
   public void testsAdama(Arguments.ContribTestsAdamaArgs args, Output.YesOrError output) throws Exception {
     System.out.println(ColorUtilTools.prefix("Generate Adama Tests", ANSI.Cyan));
-    GenerateLanguageTests.generate(args.input, args.output, args.errors);
-    output.out();
+    if (GenerateLanguageTests.generate(args.input, args.output, args.errors)) {
+      output.out();
+    } else {
+      System.out.println(ColorUtilTools.prefix("Unable to generate Adama tests", ANSI.Red));
+    }
   }
 
   @Override
   public void testsRxhtml(Arguments.ContribTestsRxhtmlArgs args, Output.YesOrError output) throws Exception {
-    System.out.println(ColorUtilTools.prefix("Generating RxHTML Tests", ANSI.Cyan));
-    GenerateTemplateTests.generate(args.input, args.output);
-    output.out();
+    List<GenerateTemplateTests.CompileStep> steps = GenerateTemplateTests.prepareScripts(args.input, args.output);
+    if (steps != null) {
+      System.out.println(ColorUtilTools.prefix("Compiling Adama Sample Scripts for RxHTML Testing", ANSI.Cyan));
+      CoreServices.install(CoreServicesNexus.NOOP());
+      for (GenerateTemplateTests.CompileStep step : steps) {
+        String reflection = CodeHandlerImpl.sharedCompileCode(step.input.getName(), Files.readString(step.input.toPath()), new HashMap<>()).reflection;
+        Files.writeString(step.output.toPath(), Json.parseJsonObject(reflection).toPrettyString());
+      }
+      System.out.println(ColorUtilTools.prefix("Generating RxHTML Tests", ANSI.Cyan));
+      GenerateTemplateTests.generate(args.input, args.output);
+      output.out();
+    } else {
+      System.out.println(ColorUtilTools.prefix("Unable to generate RxHTML s", ANSI.Red));
+    }
   }
 
   @Override

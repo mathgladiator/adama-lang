@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class GenerateLanguageTests {
-  public static void generate(String inputRootPath, String outputJavaPath, String outputErrorFile) throws Exception {
+  public static boolean generate(String inputRootPath, String outputJavaPath, String outputErrorFile) throws Exception {
     if (isValid(inputRootPath) && isValid(outputJavaPath)) {
       final var root = new File(inputRootPath);
       final var classMap = TestForge.scan(root);
@@ -49,7 +49,9 @@ public class GenerateLanguageTests {
         entry.getValue().finish(outRoot);
       }
       writeErrorCSV(inputRootPath, outputErrorFile);
+      return true;
     }
+    return false;
   }
 
   private static boolean isValid(String path) {
