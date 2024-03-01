@@ -26,6 +26,7 @@ public class WebClientBaseMetrics {
   public final Runnable web_client_200_or_204;
   public final Runnable web_client_403;
   public final Runnable web_client_404;
+  public final Runnable web_client_410;
   public final Runnable web_client_400;
   public final Runnable web_client_500_plus;
   public final Runnable web_client_code_unknown;
@@ -40,9 +41,10 @@ public class WebClientBaseMetrics {
   public WebClientBaseMetrics(MetricsFactory factory) {
     this.alarm_web_client_null_responder = factory.inflight("alarm_web_client_null_responder");
     this.web_client_200_or_204 = factory.counter("web_client_200_or_204");
+    this.web_client_400 = factory.counter("web_client_400");
     this.web_client_403 = factory.counter("web_client_403");
     this.web_client_404 = factory.counter("web_client_404");
-    this.web_client_400 = factory.counter("web_client_400");
+    this.web_client_410 = factory.counter("web_client_410");
     this.web_client_500_plus = factory.counter("web_client_500_plus");
     this.web_client_code_unknown = factory.counter("web_client_code_unknown");
     this.web_client_request_start = factory.counter("web_client_request_start");

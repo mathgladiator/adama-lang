@@ -99,6 +99,8 @@ public class WebClientSharedConnection {
           metrics.web_client_403.run();
         } else if (code == 404) {
           metrics.web_client_404.run();
+        } else if (code == 410) {
+          metrics.web_client_410.run();
         } else if (code >= 500) {
           metrics.web_client_500_plus.run();
         } else {
