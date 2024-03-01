@@ -2659,6 +2659,8 @@ var RxHTML = (function () {
     var init = {};
     self.currentViewerId++;
     init.viewer_current_page_id = self.currentViewerId;
+    init.viewer_domain = self.domain;
+    init.viewer_url_prefix = self.url_prefix;
     try {
       init.viewer_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       init.viewer_language = navigator.language;
