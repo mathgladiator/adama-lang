@@ -254,6 +254,16 @@ public class LocalServiceBase implements ServiceBase {
               rxhtml = rxhtml.replaceAll(Pattern.quote("\"https://\""), Matcher.quoteReplacement("\"http://\""));
             }
             js.append(rxhtml);
+
+            js.append("/** test agent **/\n\n");
+            String testAgent;
+            if (localLibAdamaJS != null) {
+              testAgent = Files.readString(new File(localLibAdamaJS, "tester.js").toPath());
+            } else {
+              testAgent = JavaScriptResourcesRaw.TESTER;
+            }
+            js.append(testAgent);
+
             callback.success(new HttpResult(200, "text/javascript", js.toString().getBytes(), false));
           } catch (Exception ex) {
             callback.failure(new ErrorCodeException(500));

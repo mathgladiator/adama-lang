@@ -3,6 +3,7 @@ var RxHTML = (function () {
 
   var templates = {};
   var router = {};
+  self._inflight = 0;
 
   var defaultEndpoint = /*ENDPOINT=[*/Adama.Production/*]*/;
 
@@ -2695,9 +2696,11 @@ var RxHTML = (function () {
       state.view.init = init;
       self.gates = [];
       self.resume_uri = path;
+      self._inflight ++;
       foo(where, state);
       state.view.tree.subscribe(state.view.delta);
       state.view.tree.update(init);
+      self._inflight --;
       if (push) {
         window.history.pushState({merge:false}, "", fixHref(path) + search);
       }

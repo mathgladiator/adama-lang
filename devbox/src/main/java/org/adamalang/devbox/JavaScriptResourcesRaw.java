@@ -2802,6 +2802,13 @@ public class JavaScriptResourcesRaw {
     sb.append("Y3JpcHQpOwogIH07CiAgd2luZG93LnJ4aHRtbCA9IHNlbGY7CiAgcmV0dXJuIHNlbGY7Cn0pKCk7Cg==");
     return sb.toString();
   }
+  public static final String TESTER = new String(Base64.getDecoder().decode(make_tester()), StandardCharsets.UTF_8);
+  private static String make_tester() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("ZnVuY3Rpb24gc3RhcnRUZXN0QWdlbnQoKSB7DQogIHJldHVybiB0cnVlOw0KfQ0KDQpmdW5jdGlvbiBw");
+    sb.append("b2xsVGVzdEFnZW50KCkgew0KICBjb25zb2xlLmxvZygicG9sbGVkIik7DQp9");
+    return sb.toString();
+  }
   public static final String CONNECTION = new String(Base64.getDecoder().decode(make_connection()), StandardCharsets.UTF_8);
   private static String make_connection() {
     StringBuilder sb = new StringBuilder();

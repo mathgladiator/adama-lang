@@ -30,6 +30,7 @@ public class BundleRawJavaScriptForDevBox {
     String tree = Files.readString(new File(root, "tree.js").toPath());
     String debugger = Files.readString(new File(root, "debugger.js").toPath());
     String rxhtml = Files.readString(new File(root, "rxhtml.js").toPath());
+    String tester = Files.readString(new File(root, "tester.js").toPath());
     String connection = Files.readString(new File(root, "connection.js").toPath());
     String worker = Files.readString(new File(root, "worker.js").toPath());
     StringBuilder sb = new StringBuilder();
@@ -44,6 +45,8 @@ public class BundleRawJavaScriptForDevBox {
     appendStringInChunks(sb, new String(Base64.getEncoder().encode(debugger.getBytes(StandardCharsets.UTF_8))), "debugger");
     sb.append("  public static final String RXHTML = ");
     appendStringInChunks(sb, new String(Base64.getEncoder().encode(rxhtml.getBytes(StandardCharsets.UTF_8))), "rxhtml");
+    sb.append("  public static final String TESTER = ");
+    appendStringInChunks(sb, new String(Base64.getEncoder().encode(tester.getBytes(StandardCharsets.UTF_8))), "tester");
     sb.append("  public static final String CONNECTION = ");
     appendStringInChunks(sb, new String(Base64.getEncoder().encode(connection.getBytes(StandardCharsets.UTF_8))), "connection");
     sb.append("  public static final String WORKER = ");
