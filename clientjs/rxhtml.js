@@ -782,6 +782,7 @@ var RxHTML = (function () {
   self.DG = function(parent, priorState, rxObj, childMakerFetched, childMakerFailed, delayLimit) {
     var unsub = make_unsub();
     var delayToUse = typeof(delayLimit) == "number" ? delayLimit : 250;
+    var selfParent = self;
     rxObj.__ = debounce(50, delay(delayToUse, function () {
       if (!('url' in rxObj)) {
         return;
@@ -798,7 +799,13 @@ var RxHTML = (function () {
             break;
           case "identity":
             if (typeof(val) == "string") {
-              identity = rxObj[arg];
+              var idLookup = selfParent.ID(rxobj.identity, function () {
+                return rxobj.redirect;
+              });
+              if (idLookup.abort) {
+                return;
+              }
+              identity = idLookup.identity;
             }
             break;
           default:
