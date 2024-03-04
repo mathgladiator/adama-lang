@@ -93,7 +93,21 @@ public class FileWriterHttpResponderTests {
   }
 
   @Test
-  public void not200() throws Exception {
+  public void not200_500() throws Exception {
+    AtomicInteger callbackValue = new AtomicInteger(0);
+    File file = File.createTempFile("ADAMA_tempfile", "suffix");
+    file.deleteOnExit();
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
+    writer.start(new SimpleHttpResponseHeader(500, Collections.emptyMap()));
+    writer.bodyStart(5);
+    writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
+    Assert.assertEquals(903347, callbackValue.get());
+    writer.bodyEnd();
+    Assert.assertEquals(903347, callbackValue.get());
+  }
+
+  @Test
+  public void not200_302() throws Exception {
     AtomicInteger callbackValue = new AtomicInteger(0);
     File file = File.createTempFile("ADAMA_tempfile", "suffix");
     file.deleteOnExit();
@@ -101,9 +115,38 @@ public class FileWriterHttpResponderTests {
     writer.start(new SimpleHttpResponseHeader(302, Collections.emptyMap()));
     writer.bodyStart(5);
     writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
-    Assert.assertEquals(931015, callbackValue.get());
+    Assert.assertEquals(991218, callbackValue.get());
     writer.bodyEnd();
-    Assert.assertEquals(931015, callbackValue.get());
+    Assert.assertEquals(991218, callbackValue.get());
+  }
+
+  @Test
+  public void not200_404() throws Exception {
+    AtomicInteger callbackValue = new AtomicInteger(0);
+    File file = File.createTempFile("ADAMA_tempfile", "suffix");
+    file.deleteOnExit();
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
+    writer.start(new SimpleHttpResponseHeader(404, Collections.emptyMap()));
+    writer.bodyStart(5);
+    writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
+    Assert.assertEquals(986396, callbackValue.get());
+    writer.bodyEnd();
+    Assert.assertEquals(986396, callbackValue.get());
+  }
+
+
+  @Test
+  public void not200_410() throws Exception {
+    AtomicInteger callbackValue = new AtomicInteger(0);
+    File file = File.createTempFile("ADAMA_tempfile", "suffix");
+    file.deleteOnExit();
+    FileWriterHttpResponder writer = new FileWriterHttpResponder(file, alarm, wrap(callbackValue));
+    writer.start(new SimpleHttpResponseHeader(410, Collections.emptyMap()));
+    writer.bodyStart(5);
+    writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
+    Assert.assertEquals(984312, callbackValue.get());
+    writer.bodyEnd();
+    Assert.assertEquals(984312, callbackValue.get());
   }
 
   @Test

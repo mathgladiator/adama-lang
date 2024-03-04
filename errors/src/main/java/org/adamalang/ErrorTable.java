@@ -645,6 +645,8 @@ public class ErrorTable {
     descriptions.put(986396, "no description of error (yet)");
     names.put(982272, "WEB_CALLBACK_RESOURCE_NOT_AUTHORIZED");
     descriptions.put(982272, "no description of error (yet)");
+    names.put(991218, "WEB_CALLBACK_REDIRECT");
+    descriptions.put(991218, "no description of error (yet)");
     names.put(931015, "WEB_VOID_CALLBACK_NOT_200");
     descriptions.put(931015, "no description of error (yet)");
     names.put(979143, "WEB_STRING_CALLBACK_NOT_200");

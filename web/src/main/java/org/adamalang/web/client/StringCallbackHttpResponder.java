@@ -50,20 +50,8 @@ public class StringCallbackHttpResponder implements SimpleHttpResponder {
       if (200 <= header.status && header.status <= 204) {
         invokeSuccess = true;
       } else {
-        switch (header.status) {
-          case 410:
-          case 404:
-          case 403:
-            // these are converted to unique errors
-            break;
-          default:
-            logger.error("get-callback-not-20x: {}, {}", header.status + ":" + header.headers.toString());
-        }
         emissionPossible = false;
-        logBody = true;
-        int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_STRING_CALLBACK_NOT_200);
-        monitor.failure(errorCode);
-        callback.failure(new ErrorCodeException(errorCode, header.status + ""));
+        logBody = HttpError.convert(header, logger,  ErrorCodes.WEB_STRING_CALLBACK_NOT_200, monitor, callback);
       }
     }
   }

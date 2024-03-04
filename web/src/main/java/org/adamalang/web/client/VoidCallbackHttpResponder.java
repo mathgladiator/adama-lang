@@ -44,18 +44,7 @@ public class VoidCallbackHttpResponder implements SimpleHttpResponder {
         monitor.success();
         callback.success(null);
       } else {
-        switch (header.status) {
-          case 410:
-          case 404:
-          case 403:
-            // these are converted to unique errors
-            break;
-          default:
-            logger.error("void-callback-not-20x: {} -> {}", header.status, header.headers.toString());
-        }
-        int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
-        monitor.failure(errorCode);
-        callback.failure(new ErrorCodeException(errorCode, header.status + ""));
+        HttpError.convert(header, logger,  ErrorCodes.WEB_VOID_CALLBACK_NOT_200, monitor, callback);
       }
     }
   }
