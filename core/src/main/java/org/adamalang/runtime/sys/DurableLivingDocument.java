@@ -1137,13 +1137,19 @@ public class DurableLivingDocument implements Queryable {
   }
 
   public void afterLoadWhileInExecutor() {
+    boolean writes = false;
     for (NtPrincipal client : document.__reconcileClientsToForceDisconnect()) {
       disconnect(new CoreRequestContext(client, "adama", "127.0.0.1", key.key), Callback.DONT_CARE_INTEGER);
+      writes = true;
     }
     if (document.__state.has() && !document.__blocked.get()) {
       invalidate(Callback.DONT_CARE_INTEGER);
+      writes = true;
     }
-    testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.Load);
+    // if there is a write, then the post patch will invoke this and it will be more meaningful
+    if (!writes) {
+      testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.Load);
+    }
   }
 
   private static class IngestRequest {
