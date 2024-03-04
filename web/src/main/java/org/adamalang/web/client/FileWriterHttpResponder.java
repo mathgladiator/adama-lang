@@ -66,7 +66,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
         default:
           LOGGER.error("failed-to-write: {} status:{} headers:{}", fileToWrite.toString(), header.status, header.headers.toString());
       }
-      int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
+      int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_BASE_FILE_WRITER_NOT_200);
       callback.failure(new ErrorCodeException(errorCode));
     }
   }
