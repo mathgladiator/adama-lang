@@ -57,8 +57,17 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
       if (header.status == 404) {
         notFoundAlarm.up();
       }
-      LOGGER.error("failed-to-write: {} status:{} headers:{}", fileToWrite.toString(), header.status, header.headers.toString());
-      callback.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_NOT_200));
+      switch (header.status) {
+        case 410:
+        case 404:
+        case 403:
+          // these are converted to unique errors
+          break;
+        default:
+          LOGGER.error("failed-to-write: {} status:{} headers:{}", fileToWrite.toString(), header.status, header.headers.toString());
+      }
+      int errorCode = HttpError.translateHttpStatusCodeToError(header.status, ErrorCodes.WEB_VOID_CALLBACK_NOT_200);
+      callback.failure(new ErrorCodeException(errorCode));
     }
   }
 
