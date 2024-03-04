@@ -22,6 +22,32 @@ import org.junit.Test;
 
 public class TokenizerTests {
   @Test
+  public void code_escaping() {
+    Tokenizer t = Tokenizer.of("<code escape>Hi<b>there</b></code>");
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("<code escape>", tok.text);
+      Assert.assertEquals("0;0;0;13", tok.coords());
+      Assert.assertEquals(Type.ElementOpen, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("Hi&lt;b&gt;there&lt;/b&gt;", tok.text);
+      Assert.assertEquals("0;13;0;27", tok.coords());
+      Assert.assertEquals(Type.EmbeddedText, tok.type);
+    }
+    {
+      Assert.assertTrue(t.hasNext());
+      Token tok = t.next();
+      Assert.assertEquals("</code>", tok.text);
+      Assert.assertEquals("0;27;0;34", tok.coords());
+      Assert.assertEquals(Type.ElementClose, tok.type);
+    }
+  }
+
+  @Test
   public void script_empty() {
     Tokenizer t = Tokenizer.of("Hello<script />Hi there");
     {

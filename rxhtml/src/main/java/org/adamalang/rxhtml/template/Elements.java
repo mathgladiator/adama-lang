@@ -486,4 +486,37 @@ public class Elements {
     env.pool.give(childStateVar);
     env.pool.give(parentVar);
   }
+
+  private static String beginCodeTag(Environment env, String lang) {
+    String preVar = env.pool.ask();
+    env.writer.tab().append("var ").append(preVar).append("=$.E('pre');").newline();
+    env.writer.tab().append(env.parentVariable).append(".append(").append(preVar).append(");").newline();
+    String codeVar = env.pool.ask();
+    env.writer.tab().append("var ").append(codeVar).append("=$.E('code');").newline();
+    env.writer.tab().append(preVar).append(".append(").append(codeVar).append(");").newline();
+    env.writer.tab().append("$.ACLASS(").append(codeVar).append(",'language-").append(lang).append("');").newline();
+    return codeVar;
+  }
+
+  private static void forceHighlight(String codeVar, Environment environment) {
+    environment.writer.tab().append("if (hljs) hljs.highlightElement(").append(codeVar).append(");").newline();
+  }
+
+  public static void highlight(Environment env) {
+    String lang = "html";
+    if (!env.element.hasAttr("lang")) {
+      env.feedback.warn(env.element, "highlight doesn't have lang attribute");
+    } else {
+      lang = env.element.attr("lang");
+    }
+    String codeVar = beginCodeTag(env, lang);
+    Base.children(env.parentVariable(codeVar));
+    forceHighlight(codeVar, env);
+  }
+
+  public static void adama(Environment env) {
+    String codeVar = beginCodeTag(env, "adama");
+    Base.children(env.parentVariable(codeVar));
+    forceHighlight(codeVar, env);
+  }
 }

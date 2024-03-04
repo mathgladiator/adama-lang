@@ -17,12 +17,10 @@
 */
 package org.adamalang.common.html;
 
-import org.adamalang.common.template.tree.T;
-
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.PrimitiveIterator;
+import java.util.regex.Pattern;
 
 /** Convert a string into an iterator of tokens */
 public class Tokenizer implements Iterator<Token> {
@@ -52,7 +50,7 @@ public class Tokenizer implements Iterator<Token> {
     return new Tokenizer(html.codePoints().iterator());
   }
 
-  private static final String[] EMBEDDED_TAGS = new String[] { "<script", "<adama", "<style" };
+  private static final String[] EMBEDDED_TAGS = new String[] { "<script", "<adama", "<style", "<code", "<highlight"};
 
   private void push() {
     String val = current.toString();
@@ -73,7 +71,8 @@ public class Tokenizer implements Iterator<Token> {
     if (type == Type.ElementOpen) {
       String closer = hasEmbeddedContentReturnClosingTag(val);
       if (closer != null) {
-        pushEmbeddedText(closer);
+        boolean escape = val.contains("escape") || val.contains("<highlight") || val.contains("<adama");
+        pushEmbeddedText(closer, escape);
       }
     }
   }
@@ -98,7 +97,14 @@ public class Tokenizer implements Iterator<Token> {
     return null;
   }
 
-  private void pushEmbeddedText(String closingTag) {
+  private String escapeIfNeeded(String value, boolean escape) {
+    if (escape) {
+      return value.replaceAll(Pattern.quote("<"), "&lt;").replaceAll(Pattern.quote(">"), "&gt;");
+    }
+    return value;
+  }
+
+  private void pushEmbeddedText(String closingTag, boolean escape) {
     StringBuilder body = new StringBuilder();
     StringBuilder tagCheck = new StringBuilder();
     boolean checkTag = false;
@@ -109,7 +115,7 @@ public class Tokenizer implements Iterator<Token> {
         String toCheck = tagCheck.toString();
         if (closingTag.startsWith(toCheck)) {
           if (toCheck.length() == closingTag.length()) { // DONE
-            write(Type.EmbeddedText, body.toString());
+            write(Type.EmbeddedText, escapeIfNeeded(body.toString(), escape));
             ch += toCheck.length();
             while (codepoints.hasNext()) {
               int cp2 = codepoints.nextInt();
@@ -142,7 +148,7 @@ public class Tokenizer implements Iterator<Token> {
       }
     }
     // end of stream, flush it out
-    write(Type.EmbeddedText, body.toString());
+    write(Type.EmbeddedText, escapeIfNeeded(body.toString(), escape));
     if (checkTag && tagCheck.length() > 0) {
       ch += tagCheck.length();
       write(Type.ElementClose, tagCheck.toString());
