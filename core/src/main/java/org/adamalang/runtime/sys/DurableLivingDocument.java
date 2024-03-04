@@ -314,13 +314,13 @@ public class DurableLivingDocument implements Queryable {
     base.getOrCreateInventory(key.space).backup(copy.length() * BACKUP_HOURS);
   }
 
-  private void testQueueSizeAndThenMaybeCompactWhileInExecutor() {
+  private void testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource compactSource) {
     if (size.get() * 2 > currentFactory.maximum_history * 3) {
-      queueCompactWhileInExecutor();
+      queueCompactWhileInExecutor(compactSource);
     }
   }
 
-  private void queueCompactWhileInExecutor() {
+  private void queueCompactWhileInExecutor(CompactSource compactSource) {
     if (inflightCompact) {
       base.metrics.document_compacting_skipped.run();
       return;
@@ -345,7 +345,7 @@ public class DurableLivingDocument implements Queryable {
             failedLastSnapshot = false;
             inflightCompact = false;
             size.getAndAdd(-toCompactNow);
-            testQueueSizeAndThenMaybeCompactWhileInExecutor();
+            testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.SnapshotChain);
           }
         });
       }
@@ -355,21 +355,13 @@ public class DurableLivingDocument implements Queryable {
         base.executor.execute(new NamedRunnable("compact-failed") {
           @Override
           public void execute() throws Exception {
+            LOG.error("failed-compact@" + compactSource);
             inflightCompact = false;
             failedLastSnapshot = true;
           }
         });
       }
     }));
-  }
-
-  private void queueCompact() {
-    base.executor.execute(new NamedRunnable("document-compacting") {
-      @Override
-      public void execute() throws Exception {
-        queueCompactWhileInExecutor();
-      }
-    });
   }
 
   public LivingDocument document() {
@@ -693,7 +685,7 @@ public class DurableLivingDocument implements Queryable {
                 if (shouldCleanUp && document.__canRemoveFromMemory()) {
                   scheduleCleanup();
                 }
-                testQueueSizeAndThenMaybeCompactWhileInExecutor();
+                testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.PostPatch);
               } finally {
                 finishSuccessDataServicePatchWhileInExecutor(true);
               }
@@ -1151,7 +1143,7 @@ public class DurableLivingDocument implements Queryable {
     if (document.__state.has() && !document.__blocked.get()) {
       invalidate(Callback.DONT_CARE_INTEGER);
     }
-    testQueueSizeAndThenMaybeCompactWhileInExecutor();
+    testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.Load);
   }
 
   private static class IngestRequest {
