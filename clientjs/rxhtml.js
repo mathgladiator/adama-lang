@@ -799,8 +799,8 @@ var RxHTML = (function () {
             break;
           case "identity":
             if (typeof(val) == "string") {
-              var idLookup = selfParent.ID(rxobj.identity, function () {
-                return rxobj.redirect;
+              var idLookup = selfParent.ID(rxObj.identity, function () {
+                return rxObj.redirect;
               });
               if (idLookup.abort) {
                 return;
