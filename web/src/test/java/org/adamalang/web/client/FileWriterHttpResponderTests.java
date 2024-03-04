@@ -101,9 +101,9 @@ public class FileWriterHttpResponderTests {
     writer.start(new SimpleHttpResponseHeader(302, Collections.emptyMap()));
     writer.bodyStart(5);
     writer.bodyFragment("XYZ".getBytes(StandardCharsets.UTF_8), 0, 3);
-    Assert.assertEquals(903347, callbackValue.get());
+    Assert.assertEquals(931015, callbackValue.get());
     writer.bodyEnd();
-    Assert.assertEquals(903347, callbackValue.get());
+    Assert.assertEquals(931015, callbackValue.get());
   }
 
   @Test
