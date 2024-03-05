@@ -173,7 +173,11 @@ public class FrontendHttpHandler implements HttpHandler {
     for (String suffix : webConfig.globalDomains) {
       if (host.endsWith("." + suffix)) {
         String space = host.substring(0, host.length() - suffix.length() - 1);
-        options(logItem, who, new SpaceKeyRequest(space, "default-document", uri), callback);
+        String uriToRoute = uri;
+        if (uriToRoute.startsWith("/~d/")) {
+          uriToRoute = uriToRoute.substring(3);
+        }
+        options(logItem, who, new SpaceKeyRequest(space, "default-document", uriToRoute), callback);
         return;
       }
     }

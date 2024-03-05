@@ -18,6 +18,7 @@
 package org.adamalang.system.e2e;
 
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpMethod;
 import org.adamalang.api.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
@@ -34,6 +35,7 @@ import org.adamalang.system.support.TestClient;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
@@ -73,6 +75,7 @@ public class CreateWebSiteTests extends BaseE2ETest {
       setRequest.plan = Json.newJsonObject();
       StringBuilder script = new StringBuilder();
       script.append("@static { invent { return true; } create { return true; } }");
+      script.append("@web options / { return { cors:true }; }");
       script.append("@web get / { return { html: \"Hello World\" }; }");
       setRequest.plan.putObject("versions").putObject("x").put("main", script.toString());
       setRequest.plan.put("default", "x");
@@ -94,60 +97,88 @@ public class CreateWebSiteTests extends BaseE2ETest {
       });
       Assert.assertTrue(latchSet.await(50000, TimeUnit.MILLISECONDS));
       Assert.assertTrue(success.get());
+    }
 
-      {
-        CountDownLatch latch = new CountDownLatch(1);
-        TestClient tc = env.newClient();
-        tc.uri("/");
-        tc.execute(new Callback<FullHttpResponse>() {
-          @Override
-          public void success(FullHttpResponse value) {
-            System.err.println(value);
-            latch.countDown();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            ex.printStackTrace();
-            latch.countDown();
-          }
-        });
-        Assert.assertTrue(latch.await(50000, TimeUnit.MILLISECONDS));
-      }
-
-      /*
-
-            String singleScript = Files.readString(new File(args.file).toPath());
-      ObjectNode plan = Json.newJsonObject();
-      ObjectNode version = plan.putObject("versions").putObject("file");
-      version.put("main", singleScript);
-      plan.put("default", "file");
-      plan.putArray("plan");
-      planJson = plan.toString();
-
-      ArrayList<ClientKeyListingResponse> responses = new ArrayList<>();
-      CountDownLatch latchList = new CountDownLatch(1);
-      env.globalClient.documentList(docsList, new Stream<ClientKeyListingResponse>() {
+    { // GRAB THE RxHTML
+      AtomicBoolean success = new AtomicBoolean(false);
+      CountDownLatch latch = new CountDownLatch(1);
+      TestClient tc = env.newClient();
+      tc.headers.add("Host", "testweb.adama.games");
+      tc.uri("/");
+      tc.execute(new Callback<FullHttpResponse>() {
         @Override
-        public void next(ClientKeyListingResponse value) {
-          responses.add(value);
-        }
-
-        @Override
-        public void complete() {
-          latchList.countDown();
+        public void success(FullHttpResponse value) {
+          byte[] body = new byte[value.content().readableBytes()];
+          value.content().readBytes(body);
+          System.err.println(new String(body, StandardCharsets.UTF_8));
+          System.err.println(value);
+          success.set(true);
+          latch.countDown();
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
-
+          ex.printStackTrace();
+          latch.countDown();
         }
       });
-      Assert.assertTrue(latchList.await(60000, TimeUnit.MILLISECONDS));
-      Assert.assertEquals(100, responses.size());
-      */
+      Assert.assertTrue(latch.await(50000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(success.get());
     }
 
-  }
+    { // EXECUTE THE WEB GET
+      AtomicBoolean success = new AtomicBoolean(false);
+      CountDownLatch latch = new CountDownLatch(1);
+      TestClient tc = env.newClient();
+      tc.headers.add("Host", "testweb.adama.games");
+      tc.uri("/~d/");
+      tc.execute(new Callback<FullHttpResponse>() {
+        @Override
+        public void success(FullHttpResponse value) {
+          byte[] body = new byte[value.content().readableBytes()];
+          value.content().readBytes(body);
+          System.err.println(new String(body, StandardCharsets.UTF_8));
+          System.err.println(value);
+          success.set(true);
+          latch.countDown();
+        }
 
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          latch.countDown();
+        }
+      });
+      Assert.assertTrue(latch.await(50000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(success.get());
+    }
+
+    { // EXECUTE OPTIONS ON ROOT
+      AtomicBoolean success = new AtomicBoolean(false);
+      CountDownLatch latch = new CountDownLatch(1);
+      TestClient tc = env.newClient();
+      tc.headers.add("Host", "testweb.adama.games");
+      tc.uri("/~d/");
+      tc.method(HttpMethod.OPTIONS);
+      tc.execute(new Callback<FullHttpResponse>() {
+        @Override
+        public void success(FullHttpResponse value) {
+          byte[] body = new byte[value.content().readableBytes()];
+          value.content().readBytes(body);
+          System.err.println(new String(body, StandardCharsets.UTF_8));
+          System.err.println(value);
+          success.set(true);
+          latch.countDown();
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+          latch.countDown();
+        }
+      });
+      Assert.assertTrue(latch.await(50000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(success.get());
+    }
+  }
 }
