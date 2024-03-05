@@ -185,7 +185,7 @@ public class FrontendHttpHandler implements HttpHandler {
       @Override
       public void success(Domain domain) {
         if (domain != null) {
-          logItem.put("owner", domain.owner);
+          logItem.put("domain", domain.domain);
           String uriToRoute = uri;
           if (uriToRoute.startsWith("/~d/")) {
             uriToRoute = uriToRoute.substring(3);
