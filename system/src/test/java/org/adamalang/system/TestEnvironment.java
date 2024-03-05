@@ -20,6 +20,8 @@ package org.adamalang.system;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lambdaworks.crypto.SCryptUtil;
 import io.jsonwebtoken.Jwts;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.common.keys.MasterKey;
@@ -44,6 +46,7 @@ import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.system.contracts.JsonConfig;
 import org.adamalang.system.distributed.Backend;
 import org.adamalang.system.distributed.Frontend;
+import org.adamalang.system.support.TestClient;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
@@ -92,6 +95,8 @@ public class TestEnvironment {
   public final SelfClient globalClient;
 
   public final List<String> backendHosts;
+  private final int globalWebPort;
+  private final EventLoopGroup group;
 
   public TestEnvironment() throws Exception {
     long started = System.currentTimeMillis();
@@ -113,11 +118,12 @@ public class TestEnvironment {
       }
 
       frontendGlobalConfig = assembleConfig(Role.Web, "central");
-      int globalWebPort = frontendGlobalConfig.get_or_create_child("web").get("http-port").intValue();
+      this.globalWebPort = frontendGlobalConfig.get_or_create_child("web").get("http-port").intValue();
 
       metricsFactory = new NoOpMetricsFactory();
 
       db = new DataBase(new DataBaseConfig(new ConfigObject(frontendGlobalConfig.read())), new DataBaseMetrics(metricsFactory));
+      group = new NioEventLoopGroup();
 
       try {
         new Installer(db).uninstall();
@@ -364,10 +370,15 @@ public class TestEnvironment {
     return new JsonConfig(config);
   }
 
+  public TestClient newClient() {
+    return new TestClient(group, globalWebPort);
+  }
+
   public void shutdown() {
     globalClientPool.shutdown();
     clients.shutdown();
     clientBase.shutdown();
+    group.shutdownGracefully();
     scrub();
   }
 
