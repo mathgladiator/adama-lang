@@ -181,9 +181,13 @@ public class FrontendHttpHandler implements HttpHandler {
       @Override
       public void success(Domain domain) {
         if (domain != null) {
-          logItem.put("domain", domain.domain);
+          logItem.put("owner", domain.owner);
+          String uriToRoute = uri;
+          if (uriToRoute.startsWith("/~d/")) {
+            uriToRoute = uriToRoute.substring(3);
+          }
           if (domain.key != null) {
-            options(logItem, who, new SpaceKeyRequest(domain.space, domain.key, uri), callback);
+            options(logItem, who, new SpaceKeyRequest(domain.space, domain.key, uriToRoute), callback);
           } else {
             KeyPrefixUri kpu = KeyPrefixUri.fromCompleteUri(uri);
             options(logItem, who, new SpaceKeyRequest(domain.space, kpu.key, kpu.uri), callback);
