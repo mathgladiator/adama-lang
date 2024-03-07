@@ -1,0 +1,13 @@
+enum E {
+  A,
+  @default B,
+  C:4
+}
+
+public E c_0 = @convert<E>(0);
+public E c_1 = @convert<E>(1);
+public E c_2 = @convert<E>(2);
+public E c_3 = @convert<E>(3);
+public E c_4 = @convert<E>(4);
+public E c_5 = @convert<E>(5);
+public E c_6 = @convert<E>(6);

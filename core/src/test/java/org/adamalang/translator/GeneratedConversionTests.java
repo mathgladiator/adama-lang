@@ -55,7 +55,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Conversion_CantConvertIntList_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":50},\"end\":{\"line\":4,\"character\":31,\"byte\":59}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `int[]` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.\",\"file\":\"./test_code/Conversion_CantConvertIntList_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":50},\"end\":{\"line\":4,\"character\":31,\"byte\":59}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `int[]` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. Also, if the type is integer, then S must be an enum.\",\"file\":\"./test_code/Conversion_CantConvertIntList_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -135,7 +135,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Conversion_CantInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":50},\"end\":{\"line\":4,\"character\":23,\"byte\":51}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.\",\"file\":\"./test_code/Conversion_CantInteger_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0,\"byte\":0},\"end\":{\"line\":1,\"character\":1,\"byte\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'enum<?>', but the type is actually 'X'\",\"file\":\"./test_code/Conversion_CantInteger_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -175,7 +175,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Conversion_CantMaybeInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":29,\"byte\":57},\"end\":{\"line\":4,\"character\":30,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'record' or 'message', but got a type of 'int'.\",\"file\":\"./test_code/Conversion_CantMaybeInteger_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":50},\"end\":{\"line\":4,\"character\":30,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `maybe<int>` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.\",\"file\":\"./test_code/Conversion_CantMaybeInteger_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":29,\"byte\":57},\"end\":{\"line\":4,\"character\":30,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'record' or 'message', but got a type of 'int'.\",\"file\":\"./test_code/Conversion_CantMaybeInteger_failure.a\"},{\"range\":{\"start\":{\"line\":4,\"character\":22,\"byte\":50},\"end\":{\"line\":4,\"character\":30,\"byte\":58}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type `maybe<int>` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. Also, if the type is integer, then S must be an enum.\",\"file\":\"./test_code/Conversion_CantMaybeInteger_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

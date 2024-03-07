@@ -246,7 +246,7 @@ public class Parser {
           final var openParen = consumeExpectedSymbol("(");
           final var toConvert = expression(scope);
           final var closeParen = consumeExpectedSymbol(")");
-          return new ConvertMessage(token, openType, toType, closeType, openParen, toConvert, closeParen);
+          return new Convert(token, openType, toType, closeType, openParen, toConvert, closeParen);
         }
       }
       // it may be a variable, cool

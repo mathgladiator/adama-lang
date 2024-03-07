@@ -18,7 +18,8 @@
 package org.adamalang.translator.tree.expressions;
 
 /** indicates how message conversion works, a cache-like computation */
-public enum MessageConversionStyle {
+public enum ConversionStyle {
+  Enum, //
   Maybe, //
   Multiple, //
   None, //
