@@ -60,9 +60,7 @@ public class DefineRPC extends Definition {
     yielder.accept(openParen);
     yielder.accept(clientVar);
     for (FunctionArg arg : args) {
-      yielder.accept(arg.commaToken);
-      arg.type.emit(yielder);
-      yielder.accept(arg.argNameToken);
+      arg.emit(yielder);
     }
     yielder.accept(closeParen);
     code.emit(yielder);

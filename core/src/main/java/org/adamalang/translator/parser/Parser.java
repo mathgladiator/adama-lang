@@ -87,6 +87,10 @@ public class Parser {
     return result;
   }
 
+  private Token consumeArgModifier() throws AdamaLangException {
+    return tokens.popIf((t) -> t.isIdentifier("readonly", "mutable"));
+  }
+
   public ArrayList<FunctionArg> arg_list() throws AdamaLangException {
     final var list = new ArrayList<FunctionArg>();
     final var peekCheck = tokens.peek();
@@ -96,17 +100,19 @@ public class Parser {
     if (peekCheck.isSymbolWithTextEq(")")) {
       return list;
     }
+    var mod = consumeArgModifier();
     var argType = native_type(true);
     var name = id();
-    list.add(new FunctionArg(null, argType, name));
+    list.add(new FunctionArg(null, mod, argType, name));
     while (true) {
       final var next = tokens.popIf(t -> t.isSymbolWithTextEq(","));
       if (next == null) {
         return list;
       }
+      mod = consumeArgModifier();
       argType = native_type(true);
       name = id();
-      list.add(new FunctionArg(next, argType, name));
+      list.add(new FunctionArg(next, mod, argType, name));
     }
   }
 
@@ -1290,7 +1296,7 @@ public class Parser {
     ArrayList<FunctionArg> args = new ArrayList<>();
     while ((comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","))) != null) {
       final var paramTyType = native_type(false);
-      args.add(new FunctionArg(comma, paramTyType, id()));
+      args.add(new FunctionArg(comma, null, paramTyType, id()));
     }
     final var closeParen = consumeExpectedSymbol(")");
     final var code = block(rootScope.makeMessageHandler());

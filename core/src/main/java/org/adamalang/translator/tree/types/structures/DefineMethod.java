@@ -85,11 +85,7 @@ public class DefineMethod extends StructureComponent {
     yielder.accept(nameToken);
     yielder.accept(openParen);
     for (final FunctionArg arg : args) {
-      if (arg.commaToken != null) {
-        yielder.accept(arg.commaToken);
-      }
-      arg.type.emit(yielder);
-      yielder.accept(arg.argNameToken);
+      arg.emit(yielder);
     }
     yielder.accept(closeParen);
     if (introduceReturnToken != null) {
@@ -152,7 +148,8 @@ public class DefineMethod extends StructureComponent {
       toUse = toUse.scopeWithViewer(viewerFields);
     }
     for (final FunctionArg arg : args) {
-      toUse.define(arg.argName, arg.type, true, arg.type);
+      boolean readonly = arg.evalReadonly(true, this, environment);
+      toUse.define(arg.argName, arg.type, readonly, arg.type);
     }
     toUse.setReturnType(returnType);
     return toUse;

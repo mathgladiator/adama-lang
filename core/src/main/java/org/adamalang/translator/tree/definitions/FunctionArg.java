@@ -19,26 +19,74 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.natives.TyNativeTable;
+
+import java.util.function.Consumer;
 
 /** argument pair for the tuple (type, name) */
 public class FunctionArg {
-  public final Token argNameToken;
   public final Token commaToken;
-  public String argName;
+  public final Token modifierToken;
   public TyType type;
+  public final Token argNameToken;
+  public String argName;
 
-  public FunctionArg(final Token commaToken, final TyType type, final Token argNameToken) {
+  public FunctionArg(final Token commaToken, final Token modifierToken, final TyType type, final Token argNameToken) {
+    this.modifierToken = modifierToken;
     this.commaToken = commaToken;
     this.type = type;
     this.argNameToken = argNameToken;
     argName = argNameToken.text;
   }
 
+  public void emit(final Consumer<Token> yielder) {
+    if (commaToken != null) {
+      yielder.accept(commaToken);
+    }
+    if (modifierToken != null) {
+      yielder.accept(modifierToken);
+    }
+    type.emit(yielder);
+    yielder.accept(argNameToken);
+  }
+
   public void typing(final Environment environment) {
     type = environment.rules.Resolve(type, false);
     if (type != null) {
       type.typing(environment);
+    }
+  }
+
+  public boolean evalReadonly(boolean previous, DocumentPosition pos, Environment environment) {
+    if (modifierToken != null) {
+      if (modifierToken.text.equals("readonly")) {
+        return true;
+      } else if (modifierToken.text.equals("mutable")) {
+        validateMutableType(pos, environment);
+        return false;
+      }
+    }
+    if (type.behavior == TypeBehavior.ReadOnlyWithGet) {
+      return true;
+    }
+    return previous;
+  }
+
+  public void validateMutableType(DocumentPosition pos, Environment env) {
+    if (type != null) {
+      TyType resolved = env.rules.Resolve(type, false);
+      if (resolved instanceof TyNativeTable) {
+        // tis-valid
+        return;
+      }
+      if (resolved instanceof TyNativeMessage) {
+        return;
+      }
+      env.document.createError(pos, "Type " + type.getAdamaType() + " is not a mutable type.");
     }
   }
 }

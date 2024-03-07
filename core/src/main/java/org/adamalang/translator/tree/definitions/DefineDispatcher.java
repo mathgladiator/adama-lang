@@ -24,6 +24,7 @@ import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -90,11 +91,7 @@ public class DefineDispatcher extends Definition {
     yielder.accept(functionName);
     yielder.accept(openParen);
     for (final FunctionArg arg : args) {
-      if (arg.commaToken != null) {
-        yielder.accept(arg.commaToken);
-      }
-      arg.type.emit(yielder);
-      yielder.accept(arg.argNameToken);
+      arg.emit(yielder);
     }
     yielder.accept(closeParen);
     if (introReturnType != null) {
@@ -134,7 +131,8 @@ public class DefineDispatcher extends Definition {
     final var enumType = environment.document.types.get(enumNameToken.text);
     toUse.define("self", enumType, true, this);
     for (final FunctionArg arg : args) {
-      toUse.define(arg.argName, arg.type, true, arg.type);
+      boolean readonly = arg.evalReadonly(true, this, environment);
+      toUse.define(arg.argName, arg.type, readonly, arg.type);
     }
     toUse.setReturnType(returnType);
     return toUse;

@@ -24,13 +24,11 @@ import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
+import org.adamalang.translator.tree.types.TyTablePtr;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeMessage;
-import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
 import java.util.ArrayList;
@@ -89,11 +87,7 @@ public class DefineFunction extends Definition {
     yielder.accept(nameToken);
     yielder.accept(openParen);
     for (final FunctionArg arg : args) {
-      if (arg.commaToken != null) {
-        yielder.accept(arg.commaToken);
-      }
-      arg.type.emit(yielder);
-      yielder.accept(arg.argNameToken);
+      arg.emit(yielder);
     }
     yielder.accept(closeParen);
     if (introReturnType != null) {
@@ -172,7 +166,8 @@ public class DefineFunction extends Definition {
     }).scopeDefine();
     for (final FunctionArg arg : args) {
       if (arg.type != null) {
-        toUse.define(arg.argName, arg.type, pure || paint.pure || arg.type instanceof TyNativeMessage, arg.type);
+        boolean readonly = arg.evalReadonly(pure || paint.pure || arg.type instanceof TyNativeMessage, this, environment);
+        toUse.define(arg.argName, arg.type, readonly, arg.type);
       }
     }
     toUse.setReturnType(returnType);

@@ -1,0 +1,17 @@
+message M {
+  int x;
+  int y;
+}
+
+procedure mutate_message(mutable M m, int x) -> int readonly {
+  m.x++;
+  return m.x + m.y + x;
+}
+
+procedure mutable_table_ro(mutable table<M> t) readonly {
+  t <- {x:1, y:1};
+}
+
+procedure mutable_table(table<M> t) {
+  t <- {x:1, y:1};
+}

@@ -1,0 +1,12 @@
+message M {
+  int x;
+  int y;
+}
+
+procedure mutable_table1(readonly table<M> t) {
+  t <- {x:1, y:1};
+}
+
+procedure mutable_table2(table<M> t) readonly {
+  t <- {x:1, y:1};
+}
