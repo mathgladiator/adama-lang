@@ -107,6 +107,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final EnqueuedTaskManager __enqueued;
   private long __cpu_ms;
   private TestMockUniverse __mock_universe;
+  private Integer __seq_message;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -252,7 +253,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   protected void __enqueue(String channel, NtPrincipal who, NtMessageBase message) {
     final var msgId = __message_id.bumpUpPost();
-    __enqueued.add(new EnqueuedTask(msgId, who, channel, message.to_dynamic()));
+    __enqueued.add(new EnqueuedTask(msgId, who, channel, __currentViewId, message.to_dynamic()));
   }
 
   /** exposed: set the document's time zone */
@@ -292,6 +293,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** generate a new auto key for a table; all tables share the space id space */
   public int __genNextAutoKey() {
+    // TODO: see if a message has a history of id generation
     return __auto_table_row_id.bumpUpPre();
   }
 
@@ -346,6 +348,9 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** Document.seq() */
   public int __getSeq() {
+    if (__seq_message != null) {
+      return __seq_message;
+    }
     return __seq.get();
   }
 
@@ -410,7 +415,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   private LivingDocumentChange __invalidation_queue_transfer(NtPrincipal who, long timestamp, final String request) {
     EnqueuedTask enqueuedTask = __enqueued.transfer();
-    AsyncTask asyncLiveTask = new AsyncTask(enqueuedTask.messageId, enqueuedTask.who, 0, enqueuedTask.channel, timestamp, "adama", "0.0.0.0", __parse_message(enqueuedTask.channel, new JsonStreamReader(enqueuedTask.message.json)));
+    AsyncTask asyncLiveTask = new AsyncTask(enqueuedTask.messageId, __seq.get(), enqueuedTask.who, enqueuedTask.viewId, enqueuedTask.channel, timestamp, "adama", "0.0.0.0", __parse_message(enqueuedTask.channel, new JsonStreamReader(enqueuedTask.message.json)));
     __queue.add(asyncLiveTask);
 
     final var forward = new JsonStreamWriter();
@@ -954,11 +959,15 @@ public abstract class LivingDocument implements RxParent, Caller {
               String origin = null;
               String ip = null;
               var timestamp = 0L;
+              int seq = 0;
               while (reader.notEndOfObject()) {
                 final var f = reader.fieldName();
                 switch (f) {
                   case "who":
                     who = reader.readNtPrincipal();
+                    break;
+                  case "seq":
+                    seq = reader.readInteger();
                     break;
                   case "channel":
                     channel = reader.readString();
@@ -979,7 +988,7 @@ public abstract class LivingDocument implements RxParent, Caller {
                     reader.skipValue();
                 }
               }
-              final var task = new AsyncTask(msgId, who, null, channel, timestamp, origin, ip, message);
+              final var task = new AsyncTask(msgId, seq, who, null, channel, timestamp, origin, ip, message);
               tasks.put(msgId, task);
             }
           } else {
@@ -1268,7 +1277,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   protected void __test_send(final String channel, NtPrincipal __who, final Object message) throws AbortMessageException {
-    AsyncTask task = new AsyncTask(__message_id.bumpUpPre(), __who, 0, channel, __time.get(), "origin", "127.0.0.1", message);
+    AsyncTask task = new AsyncTask(__message_id.bumpUpPre(), __seq.get(), __who, 0, channel, __time.get(), "origin", "127.0.0.1", message);
     __queue.add(task);
   }
 
@@ -1979,13 +1988,18 @@ public abstract class LivingDocument implements RxParent, Caller {
       try {
         for (final AsyncTask task : __queue) {
           __time.set(task.timestamp);
+          __seq_message = task.docSeq;
           if (task.viewId != null) {
             __currentViewId = task.viewId;
           } else {
             __currentViewId = -1;
           }
-          task.execute();
-          __currentViewId = -1;
+          try {
+            task.execute();
+          } finally {
+            __currentViewId = -1;
+            __seq_message = null;
+          }
           workDone = true;
         }
       } finally {
@@ -2218,7 +2232,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.writeObjectFieldIntro("__messages");
     forward.beginObject();
     forward.writeObjectFieldIntro(msgId);
-    final var task = new AsyncTask(msgId, context.who, viewId, channel, timestamp, context.origin, context.ip, message);
+    final var task = new AsyncTask(msgId, __seq.get(), context.who, viewId, channel, timestamp, context.origin, context.ip, message);
     task.dump(forward);
     forward.endObject();
     reverse.beginObject();

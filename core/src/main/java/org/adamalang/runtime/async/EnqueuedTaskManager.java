@@ -49,6 +49,7 @@ public class EnqueuedTaskManager {
         String _channel = null;
         NtPrincipal _who = null;
         NtDynamic _message = null;
+        int viewId = 0;
         if (reader.startObject()) {
           while (reader.notEndOfObject()) {
             switch (reader.fieldName()) {
@@ -61,12 +62,15 @@ public class EnqueuedTaskManager {
               case "message":
                 _message = reader.readNtDynamic();
                 break;
+              case "view_id":
+                viewId = reader.readInteger();
+                break;
               default:
                 reader.skipValue();
             }
           }
           if (!present.contains(messageId)) {
-            active.add(new EnqueuedTask(messageId, _who, _channel, _message));
+            active.add(new EnqueuedTask(messageId, _who, _channel, viewId, _message));
           }
         } else {
           reader.skipValue();

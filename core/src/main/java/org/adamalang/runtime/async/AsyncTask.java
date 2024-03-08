@@ -34,6 +34,7 @@ public class AsyncTask {
   public final Integer viewId; // note: we don't persist this as it is ephemeral
   public final Object message;
   public final int messageId;
+  public final int docSeq;
   public final long timestamp;
   public final NtPrincipal who;
   public final String origin;
@@ -42,8 +43,9 @@ public class AsyncTask {
   private AsyncAction action;
 
   /** Construct the task around a message */
-  public AsyncTask(final int messageId, final NtPrincipal who, final Integer viewId, final String channel, final long timestamp, final String origin, String ip, final Object message) {
+  public AsyncTask(final int messageId, final int docSeq, final NtPrincipal who, final Integer viewId, final String channel, final long timestamp, final String origin, String ip, final Object message) {
     this.messageId = messageId;
+    this.docSeq = docSeq;
     this.who = who;
     this.viewId = viewId;
     this.channel = channel;
@@ -66,6 +68,8 @@ public class AsyncTask {
     writer.writeNtPrincipal(who);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(channel);
+    writer.writeObjectFieldIntro("seq");
+    writer.writeInteger(docSeq);
     writer.writeObjectFieldIntro("timestamp");
     writer.writeLong(timestamp);
     writer.writeObjectFieldIntro("origin");

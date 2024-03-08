@@ -27,11 +27,13 @@ public class EnqueuedTask {
   public final NtPrincipal who;
   public final String channel;
   public final NtDynamic message;
+  public final int viewId;
 
-  public EnqueuedTask(int messageId, NtPrincipal who, String channel, NtDynamic message) {
+  public EnqueuedTask(int messageId, NtPrincipal who, String channel, int viewId, NtDynamic message) {
     this.messageId = messageId;
     this.who = who;
     this.channel = channel;
+    this.viewId = viewId;
     this.message = message;
   }
 
@@ -41,6 +43,10 @@ public class EnqueuedTask {
     writer.writeNtPrincipal(who);
     writer.writeObjectFieldIntro("channel");
     writer.writeString(channel);
+    if (viewId > 0) {
+      writer.writeObjectFieldIntro("view_id");
+      writer.writeInteger(viewId);
+    }
     writer.writeObjectFieldIntro("message");
     writer.writeNtDynamic(message);
     writer.endObject();

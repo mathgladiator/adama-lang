@@ -15,9 +15,39 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.async;
 
-public class Platform {
-  public static final String VERSION = "20240308084323";
-  public static final String JS_VERSION = "8a095f79036b2fd897ca498306d58615";
+import org.adamalang.runtime.reactives.RxInt32;
+
+import java.util.ArrayList;
+
+/** a memoization of the produced ids. This serves to make injected table ids to be deterministic during an async flow */
+public class IdHistoryLog {
+  private final ArrayList<Integer> history;
+  private int at;
+
+  public IdHistoryLog() {
+    this.history = new ArrayList<>();
+    this.at = 0;
+  }
+
+  public void revert() {
+    at = 0;
+  }
+
+  public void commit() {
+    history.clear();
+  }
+
+  public int next(RxInt32 basis) {
+    final int v;
+    if (at < history.size()) {
+      v = history.get(at);
+    } else {
+      v = basis.bumpUpPre();
+      history.add(v);
+    }
+    at++;
+    return v;
+  }
 }

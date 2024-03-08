@@ -69,7 +69,7 @@ public class NtChannelTests {
   public void flow1() {
     final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, null, "channel", 0, "origin", "ip","message"), "X");
+    sink.enqueue(new AsyncTask(0, 1, NtPrincipal.NO_ONE, null, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.fetchItem(NtPrincipal.NO_ONE);
     Assert.assertTrue(future.exists());
@@ -79,7 +79,7 @@ public class NtChannelTests {
   public void flow2() {
     final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, null, "channel", 0, "origin", "ip","message"), "X");
+    sink.enqueue(new AsyncTask(0, 2, NtPrincipal.NO_ONE, null, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.fetchArray(NtPrincipal.NO_ONE);
     Assert.assertTrue(future.exists());
@@ -97,7 +97,7 @@ public class NtChannelTests {
   public void flow_choose_options_available() {
     final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, null, "channel", 0, "origin", "ip","message"), "X");
+    sink.enqueue(new AsyncTask(0, 3, NtPrincipal.NO_ONE, null, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.choose(NtPrincipal.NO_ONE, new NtMessageBase[] {DEMO, DEMO}, 2);
     future.await();
@@ -128,7 +128,7 @@ public class NtChannelTests {
   public void flow_decide_options_available() {
     final var futures = makeFutures();
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtPrincipal.NO_ONE, 123, "channel", 0, "origin", "ip","message"), "X");
+    sink.enqueue(new AsyncTask(0, 1, NtPrincipal.NO_ONE, 123, "channel", 0, "origin", "ip","message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.decide(NtPrincipal.NO_ONE, new NtMessageBase[] {DEMO, DEMO});
     future.await();
