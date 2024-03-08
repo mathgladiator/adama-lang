@@ -1350,7 +1350,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       String patch = null;
       String entropy = null;
       String marker = null;
-      Integer viewId = null;
+      int viewId = -1;
       String password = null;
       Integer delivery_id = null;
       RemoteResult result = null;
@@ -2213,7 +2213,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     return new LivingDocumentChange(update, broadcasts, null, shouldSignalBroadcast(BroadcastPathway.Send, who));
   }
 
-  private LivingDocumentChange __transaction_send_enqueue(final String request, final Integer viewId, final String dedupeKey, final CoreRequestContext context, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send_enqueue(final String request, final int viewId, final String dedupeKey, final CoreRequestContext context, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     // create the delta
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -2257,7 +2257,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: a person is sending the document a message */
-  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final Integer viewId, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final int viewId, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -2277,11 +2277,7 @@ public abstract class LivingDocument implements RxParent, Caller {
           }
           __dedupe.put(dedupeKey, __time.get());
         }
-        if (viewId != null) {
-          __currentViewId = viewId;
-        } else {
-          __currentViewId = -1;
-        }
+        __currentViewId = viewId;
       } finally {
         perfValidate.run();
       }
@@ -2305,6 +2301,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         } catch (AbortMessageException ame) {
           throw new ErrorCodeException(ame.policyFailure != null ? ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT_POLICY : ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
         } catch (ComputeBlockedException cbe) {
+          int seqToQueue = __seq.get();
           __revert();
           change = __transaction_send_enqueue(request, viewId, dedupeKey, context, marker, channel, timestamp, message, factory);
         } finally {
