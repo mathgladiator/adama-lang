@@ -224,7 +224,7 @@ public class Payrix  extends SimpleService {
       if (at.isIntegralNumber()) {
         return at.intValue();
       } else {
-        return Integer.parseInt(at.get("status").textValue());
+        return Integer.parseInt(at.textValue());
       }
     } catch (Exception shrug) {
       return null;
