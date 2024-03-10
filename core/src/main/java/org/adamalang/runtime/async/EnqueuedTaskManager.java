@@ -49,7 +49,7 @@ public class EnqueuedTaskManager {
         String _channel = null;
         NtPrincipal _who = null;
         NtDynamic _message = null;
-        int viewId = 0;
+        int viewId = -1;
         if (reader.startObject()) {
           while (reader.notEndOfObject()) {
             switch (reader.fieldName()) {
