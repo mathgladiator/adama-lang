@@ -43,7 +43,7 @@ public class EnqueuedTask {
     writer.writeNtPrincipal(who);
     writer.writeObjectFieldIntro("channel");
     writer.writeString(channel);
-    if (viewId > 0) {
+    if (viewId >= 0) {
       writer.writeObjectFieldIntro("view_id");
       writer.writeInteger(viewId);
     }

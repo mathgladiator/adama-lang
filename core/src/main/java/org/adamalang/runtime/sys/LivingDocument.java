@@ -369,11 +369,19 @@ public abstract class LivingDocument implements RxParent, Caller {
     __graph.compute();
   }
 
-  private int __deltaTime() {
-    return Math.max(__state.has() ? 25 : 0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
+  private boolean __again(boolean hasTimeouts) {
+    return __state.has() || __enqueued.size() > 0 || hasTimeouts;
   }
 
-  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again, boolean againDueToDirtyWebQueue, Integer sleepTime) {
+  private int __deltaTime() {
+    int t = Math.max(__state.has() ? 25 : 0, (int) Math.min((Integer.MAX_VALUE / 2), (long) __next_time.get() - __time.get()));
+    if (__enqueued.size() > 0) {
+      t = Math.min(25, t);
+    }
+    return t;
+  }
+
+  private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again, boolean againDueToPendingWork, Integer sleepTime) {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
     forward.beginObject();
@@ -397,10 +405,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     __graph.compute();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
     int timeAgain = __deltaTime();
-    if (againDueToDirtyWebQueue) {
+    if (againDueToPendingWork) {
       timeAgain = Math.max(timeAgain, 10); // 100 web requests/second
     }
-    boolean goAgain = __state.has() || hasTimeouts || again;
+    boolean goAgain = __again(hasTimeouts) || again;
     if (sleepTime != null) {
       if (goAgain) {
         timeAgain = Math.min(timeAgain, sleepTime);
@@ -473,7 +481,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || hasTimeouts, __deltaTime(), assetBytes, UpdateType.AddUserData);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __again(hasTimeouts), __deltaTime(), assetBytes, UpdateType.AddUserData);
     return new LivingDocumentChange(update, broadcasts, response, shouldSignalBroadcast(BroadcastPathway.Other, who));
   }
 
@@ -1955,6 +1963,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private LivingDocumentChange __transaction_invalidate_cron(NtPrincipal who, final String request, long timestamp, boolean didWork, boolean againDueToDirtyWebQueue) {
     boolean againAgain = false;
     Integer sleepTime = null;
+    boolean againDueToPendingWork = againDueToDirtyWebQueue || __enqueued.size() > 0;
     if (!againDueToDirtyWebQueue) {
       if (__optimisticNextCronCheck <= __time.get()) {
         // We set the cron check to MAX VALUE to find the minimum time of the next event
@@ -1969,7 +1978,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         return __invalidation_queue_transfer(who, timestamp, request);
       }
     }
-    return __invalidate_trailer(who, request, againDueToDirtyWebQueue || againAgain, againDueToDirtyWebQueue, sleepTime);
+    return __invalidate_trailer(who, request, againDueToPendingWork || againAgain, againDueToPendingWork, sleepTime);
   }
 
   /** transaction: an invalidation is happening on the document (no monitor) */
@@ -2200,6 +2209,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       forward.writeLong(__time.get());
       forward.endObject();
     }
+    boolean hasTimeouts = __timeouts.needsInvalidationAndUpdateNext(__next_time);
     __randomizeOutOfBand();
     __proxy_commit(null, forward, reverse);
     forward.endObject();
@@ -2209,7 +2219,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       delay = factory.appDelay;
     }
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListSend(sender, factory);
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has() || factory.appMode, delay, 0L, UpdateType.DirectMessageExecute);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __again(hasTimeouts) || factory.appMode, delay, 0L, UpdateType.DirectMessageExecute);
     return new LivingDocumentChange(update, broadcasts, null, shouldSignalBroadcast(BroadcastPathway.Send, who));
   }
 
