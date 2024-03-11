@@ -526,6 +526,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   public PrivateView __createView(final NtPrincipal __who, final Perspective perspective) {
     final var view = __createPrivateView(__who, perspective);
     view.setRefresh(() -> {
+      __resetGoodWill(true);
       String delta = __makeRefreshJustData(view);
       if (delta != null) {
         view.deliver(delta);
@@ -865,11 +866,11 @@ public abstract class LivingDocument implements RxParent, Caller {
   public void __zeroOutCodeCost() {
     __code_cost = 0;
     __cpu_ms = 0;
-    __resetGoodWill();
+    __resetGoodWill(false);
   }
 
-  private void __resetGoodWill() {
-    if (!__state.has()) {
+  private void __resetGoodWill(boolean force) {
+    if (!__state.has() || force) {
       __goodwillBudget = __goodwillLimitOfBudget;
     }
   }
@@ -2272,6 +2273,7 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   /** transaction: a person is sending the document a message */
   private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final int viewId, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+    __resetGoodWill(true);
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
