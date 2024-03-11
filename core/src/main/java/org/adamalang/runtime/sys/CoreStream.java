@@ -55,7 +55,7 @@ public class CoreStream implements AdamaStream {
   public void update(String newViewerState) {
     if (mode.read) {
       JsonStreamReader patch = new JsonStreamReader(newViewerState);
-      document.base.executor.execute(new NamedRunnable("core-stream-send") {
+      document.base.executor.execute(new NamedRunnable("core-stream-update") {
         @Override
         public void execute() throws Exception {
           inventory.message();
