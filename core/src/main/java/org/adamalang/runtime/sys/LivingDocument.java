@@ -147,8 +147,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     __code_cost = 0;
     __trace = new ArrayList<>();
     __clients = new TreeMap<>();
-    __goodwillBudget = 100000;
-    __goodwillLimitOfBudget = 100000;
+    __goodwillBudget = 1000000;
+    __goodwillLimitOfBudget = 1000000;
     __dedupe = new HashMap<>();
     __auto_gen = new RxInt32(this, 0);
     __routing = new TreeMap<>();
@@ -865,6 +865,10 @@ public abstract class LivingDocument implements RxParent, Caller {
   public void __zeroOutCodeCost() {
     __code_cost = 0;
     __cpu_ms = 0;
+    __resetGoodWill();
+  }
+
+  private void __resetGoodWill() {
     if (!__state.has()) {
       __goodwillBudget = __goodwillLimitOfBudget;
     }
