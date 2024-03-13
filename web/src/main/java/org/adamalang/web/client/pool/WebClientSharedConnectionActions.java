@@ -54,6 +54,7 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
         ch.pipeline().addLast(new ReadTimeoutHandler(60, TimeUnit.SECONDS));
+        ch.pipeline().addLast(new WriteTimeoutHandler(240, TimeUnit.SECONDS));
         if (request.secure) {
           ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc(), request.host, request.port));
         }
@@ -67,7 +68,7 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
 
             @Override
             public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-              if (cause instanceof ReadTimeoutException) {
+              if (cause instanceof ReadTimeoutException || cause instanceof WriteTimeoutException) {
                 connection.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_TIMEOUT));
               } else {
                 connection.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_EXECUTE_FAILED_EXCEPTION_CAUGHT, cause, EXLOGGER));
