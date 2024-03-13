@@ -304,7 +304,11 @@ var RxHTML = (function () {
     if (parent != null) {
       parent.delta[ss.path] = new_delta;
     }
-    return { tree: ss.tree, parent: parent, delta: new_delta, path: ss.path };
+    var result = { tree: ss.tree, parent: parent, delta: new_delta, path: ss.path };
+    if ('connection' in ss) {
+      result.connection = ss.connection;
+    }
+    return result;
   };
   self.makeDeltaCopy = new_delta_copy;
 
