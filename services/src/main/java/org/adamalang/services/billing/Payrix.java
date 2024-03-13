@@ -67,7 +67,7 @@ public class Payrix  extends SimpleService {
 
   public static String definition(int uniqueId, String params, HashSet<String> names, Consumer<String> error) {
     StringBuilder sb = new StringBuilder();
-    sb.append("enum PayrixTxStatus { Pending:0, Approved:1, Failed:2, Captured:3, Settled:5, Returned:6, Unknown:100}");
+    sb.append("enum PayrixTxStatus { Pending:0, Approved:1, Failed:2, Captured:3, Settled:4, Returned:5, Unknown:100}");
     sb.append("message PayrixTxResponse {");
     sb.append("  bool success;");
     sb.append("  maybe<string> tx_id;");
