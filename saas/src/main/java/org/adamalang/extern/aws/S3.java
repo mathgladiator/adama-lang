@@ -294,7 +294,14 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     SimpleHttpRequest request = new S3SimpleHttpRequestBuilder(config, config.userDataBucket, "GET", s3key, null).buildWithEmptyBody();
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
     try {
-      base.executeShared(request, new FileWriterHttpResponder(temp, metrics.alarm_file_not_found, metrics.restore_file_write_file.wrap(new Callback<Void>() {
+      FileWriterHttpTimeoutTracker tracker = new FileWriterHttpTimeoutTracker();
+      base.executor.schedule(new NamedRunnable("tracker-audit") {
+        @Override
+        public void execute() throws Exception {
+          tracker.audit();
+        }
+      }, 60000);
+      base.executeShared(request, new FileWriterHttpResponder(temp, metrics.alarm_file_not_found, tracker, metrics.restore_file_write_file.wrap(new Callback<Void>() {
         @Override
         public void success(Void value) {
           File dest = new File(root, archiveKey);
@@ -307,12 +314,14 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
             instance.failure(ErrorCodes.API_CLOUD_RESTORE_FAILED);
             callback.failure(new ErrorCodeException(ErrorCodes.API_CLOUD_RESTORE_FAILED, ex));
           }
+          tracker.finish();
         }
 
         @Override
         public void failure(ErrorCodeException ex) {
           instance.failure(ex.code);
           callback.failure(ex);
+          tracker.finish();
         }
       })));
     } catch (ErrorCodeException ex) {

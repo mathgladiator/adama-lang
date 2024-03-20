@@ -30,28 +30,31 @@ import java.io.FileOutputStream;
 /** write the body of an HTTP response to disk */
 public class FileWriterHttpResponder implements SimpleHttpResponder {
   private static final Logger LOGGER = LoggerFactory.getLogger(FileWriterHttpResponder.class);
-  private final File fileToWrite;
   public final FileOutputStream output;
   public final Callback<Void> callback;
   private boolean good;
   private long left;
   private boolean checkSize;
   private final Inflight notFoundAlarm;
+  private final FileWriterHttpTimeoutTracker tracker;
 
-  public FileWriterHttpResponder(File fileToWrite, Inflight notFoundAlarm, Callback<Void> callback) throws ErrorCodeException {
+  public FileWriterHttpResponder(File fileToWrite, Inflight notFoundAlarm, FileWriterHttpTimeoutTracker tracker, Callback<Void> callback) throws ErrorCodeException {
+    this.notFoundAlarm = notFoundAlarm;
+    this.callback = callback;
+    this.good = true;
+    this.tracker = tracker;
     try {
-      this.fileToWrite = fileToWrite;
-      this.notFoundAlarm = notFoundAlarm;
       this.output = new FileOutputStream(fileToWrite);
-      this.callback = callback;
-      this.good = true;
     } catch (Exception ex) {
+      LOGGER.error("failed-open", ex);
       throw new ErrorCodeException(ErrorCodes.WEB_BASE_FILE_WRITER_IOEXCEPTION_CREATE, ex);
     }
   }
 
   @Override
   public void start(SimpleHttpResponseHeader header) {
+    tracker.started.set(true);
+    tracker.started_status.set(header.status);
     if (good && header.status != 200) {
       this.good = false;
       if (header.status == 404) {
@@ -63,8 +66,11 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void bodyStart(long size) {
+    tracker.body_start.set(true);
+    tracker.body_size.set(size);
     this.left = size;
     this.checkSize = size >= 0;
+    tracker.left.set(left);
   }
 
   @Override
@@ -72,6 +78,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
     if (write(output, chunk, offset, len, callback)) {
       if (good && checkSize) {
         left -= len;
+        tracker.left.set(left);
       }
     } else {
       good = false;
@@ -80,6 +87,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void bodyEnd() {
+    tracker.body_end.set(true);
     if (finish(output, callback)) {
       if (good) {
         if (left == 0 || !checkSize) {
@@ -95,6 +103,7 @@ public class FileWriterHttpResponder implements SimpleHttpResponder {
 
   @Override
   public void failure(ErrorCodeException ex) {
+    tracker.error.set(ex.code);
     if (good) {
       good = false;
       callback.failure(ex);
