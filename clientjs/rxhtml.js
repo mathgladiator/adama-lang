@@ -2189,7 +2189,7 @@ var RxHTML = (function () {
 
     if (justSet) {
       apply(el.value);
-    } else if (isFieldSet) {
+    } else if (isFieldSet && hasName) {
       var nextObject = {};
       if ("children" in el) {
         var arr = el.children;
