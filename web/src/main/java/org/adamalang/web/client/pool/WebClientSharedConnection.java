@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a shared connection to a remote endpoint */
 public class WebClientSharedConnection implements Living {
@@ -44,8 +45,7 @@ public class WebClientSharedConnection implements Living {
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final byte[] EMPTY_BODY = new byte[0];
 
-
-  private boolean alive;
+  private final AtomicBoolean alive;
   private final WebClientBaseMetrics metrics;
   private final WebEndpoint endpoint;
   private final EventLoopGroup group;
@@ -61,17 +61,17 @@ public class WebClientSharedConnection implements Living {
     this.responder = null;
     this.channel = null;
     this.exception = null;
-    this.alive = true;
+    this.alive = new AtomicBoolean(true);
   }
 
   @Override
   public boolean alive() {
-    return this.alive;
+    return this.alive.get();
   }
 
   public void close() {
     channel.close();
-    alive = false;
+    alive.set(false);
   }
 
   // phase 1: if we are connected, then the channel is set
@@ -81,7 +81,7 @@ public class WebClientSharedConnection implements Living {
 
   // a failure happened, respond to the most recent responder
   public void failure(ErrorCodeException ex) {
-    alive = false;
+    alive.set(false);
     exception = ex;
     if (responder != null) {
       responder.failure(ex);
