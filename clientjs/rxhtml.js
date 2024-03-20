@@ -2148,11 +2148,13 @@ var RxHTML = (function () {
     var apply = function (val) { };
 
     var name = "";
-    if (hasName && (justSet || isInputBox || isFieldSet || isPull)) {
-      name = el.name;
-      if (name == "") { // this is a special name for things that don't get picked up
-        return;
+    if (hasName) {
+      name = el.name.trim();
+      if(name == "") {
+        hasName = false;
       }
+    }
+    if (hasName && (justSet || isInputBox || isFieldSet || isPull)) {
       var kDotOrSlash = firstOccur(name.indexOf('.'), name.indexOf('/'));
       while (kDotOrSlash > 0) {
         var par = name.substring(0, kDotOrSlash);
@@ -4088,6 +4090,7 @@ var RxHTML = (function () {
     }, true);
   };
 
+
   // RUNTIME | rx:action=send:$channel
   self.aSD = function (form, state, channel, msToDebounce) {
     // TODO: do debounce if > 0
@@ -4110,6 +4113,9 @@ var RxHTML = (function () {
         if (channel == "__ds") {
           channelToUse = msg['__channel'];
           delete msg['__channel'];
+        }
+        if (Adama.Debugger) {
+          Adama.Debugger.send(state.data.connection.name, channelToUse, msg);
         }
         state.data.connection.ptr.send(channelToUse, msg, {
           success: function (/* payload */) {

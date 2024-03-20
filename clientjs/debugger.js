@@ -14,6 +14,10 @@ Adama.Debugger = (function() {
     }
   };
 
+  self.send = function(name, channel, msg) {
+    console.log("[" + name + "] send: " + channel + " " + JSON.stringify(msg));
+  };
+
   /** Helper | create a simple element with the given content as the innerHTML */
   var simple = function(tag, content) {
     var d = document.createElement(tag);
