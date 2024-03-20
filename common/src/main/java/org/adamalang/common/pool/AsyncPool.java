@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** An async pool designed for asynchronous connection management */
-public class AsyncPool<R, S> {
+public class AsyncPool<R, S extends Living> {
   private final SimpleExecutor executor;
   private final TimeSource time;
   private final int maxLifetimeMilliseconds;
@@ -69,7 +69,7 @@ public class AsyncPool<R, S> {
       while (itValue.hasNext()) {
         RefS candidate = itValue.next();
         long age = now - candidate.created;
-        if (age >= maxLifetimeMilliseconds) {
+        if (age >= maxLifetimeMilliseconds || !candidate.item.alive()) {
           pool.bumpDown();
           itValue.remove();
           actions.destroy(candidate.item);
@@ -94,7 +94,7 @@ public class AsyncPool<R, S> {
         while ((item = pool.next()) != null) {
           long age = time.nowMilliseconds() - item.created;
           // if the item is young enough, then we found it
-          if (age < maxLifetimeMilliseconds) {
+          if (age < maxLifetimeMilliseconds && item.item.alive()) {
             callback.success(item);
             return;
           } else {

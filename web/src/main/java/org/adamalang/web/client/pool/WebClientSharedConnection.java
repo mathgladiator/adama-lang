@@ -24,6 +24,7 @@ import io.netty.handler.codec.http.*;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Living;
 import org.adamalang.web.client.SimpleHttpRequest;
 import org.adamalang.web.client.SimpleHttpResponder;
 import org.adamalang.web.client.SimpleHttpResponseHeader;
@@ -38,17 +39,20 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /** a shared connection to a remote endpoint */
-public class WebClientSharedConnection {
+public class WebClientSharedConnection implements Living {
   private static final Logger LOGGER = LoggerFactory.getLogger(WebClientSharedConnection.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private static final byte[] EMPTY_BODY = new byte[0];
 
+
+  private boolean alive;
   private final WebClientBaseMetrics metrics;
   private final WebEndpoint endpoint;
   private final EventLoopGroup group;
   private SimpleHttpResponder responder;
   private byte[] chunk = new byte[8196];
   private Channel channel;
+  private ErrorCodeException exception;
 
   public WebClientSharedConnection(WebClientBaseMetrics metrics, final WebEndpoint endpoint, EventLoopGroup group) {
     this.metrics = metrics;
@@ -56,10 +60,18 @@ public class WebClientSharedConnection {
     this.group = group;
     this.responder = null;
     this.channel = null;
+    this.exception = null;
+    this.alive = true;
+  }
+
+  @Override
+  public boolean alive() {
+    return this.alive;
   }
 
   public void close() {
     channel.close();
+    alive = false;
   }
 
   // phase 1: if we are connected, then the channel is set
@@ -69,6 +81,8 @@ public class WebClientSharedConnection {
 
   // a failure happened, respond to the most recent responder
   public void failure(ErrorCodeException ex) {
+    alive = false;
+    exception = ex;
     if (responder != null) {
       responder.failure(ex);
     }
@@ -129,6 +143,11 @@ public class WebClientSharedConnection {
 
   /** write a request to the connection */
   public void writeRequest(SimpleHttpRequest request, SimpleHttpResponder responder) {
+    if (exception != null) {
+      metrics.web_client_instant_fail.run();
+      responder.failure(exception);
+      return;
+    }
     metrics.inflight_web_requests.up();
     this.responder = responder;
     group.execute(new Runnable() {

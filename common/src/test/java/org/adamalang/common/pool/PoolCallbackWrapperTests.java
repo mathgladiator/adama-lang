@@ -19,19 +19,32 @@ package org.adamalang.common.pool;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Living;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 public class PoolCallbackWrapperTests {
+  public class LivingString implements Living {
+    public final String value;
+
+    public LivingString(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public boolean alive() {
+      return true;
+    }
+  }
   @Test
   public void coverage() {
     ArrayList<String> events = new ArrayList<>();
-    PoolItem<String> item = new PoolItem<String>() {
+    PoolItem<LivingString> item = new PoolItem<LivingString>() {
       @Override
-      public String item() {
-        return "xyz";
+      public LivingString item() {
+        return new LivingString("xyz");
       }
 
       @Override
@@ -55,7 +68,7 @@ public class PoolCallbackWrapperTests {
         events.add("CB:FAILURE:" + ex.code);
       }
     };
-    PoolCallbackWrapper<String, String> w = new PoolCallbackWrapper<>(cb, item);
+    PoolCallbackWrapper<String, LivingString> w = new PoolCallbackWrapper<>(cb, item);
     w.success("xyz");
     Assert.assertEquals(2, events.size());
     w.failure(new ErrorCodeException(123));

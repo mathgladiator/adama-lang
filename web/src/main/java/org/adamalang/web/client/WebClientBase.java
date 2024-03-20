@@ -65,7 +65,8 @@ public class WebClientBase {
     this.config = config;
     group = new NioEventLoopGroup();
     this.actions = new WebClientSharedConnectionActions(metrics, group);
-    this.pool = new AsyncPool<>(executor, TimeSource.REAL_TIME, //
+    this.pool = new AsyncPool<>(executor, //
+        TimeSource.REAL_TIME, //
         config.sharedConnectionPoolMaxLifetimeMilliseconds, //
         config.sharedConnectionPoolMaxUsageCount, //
         config.sharedConnectionPoolMaxPoolSize, //

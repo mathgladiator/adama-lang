@@ -17,10 +17,7 @@
 */
 package org.adamalang.common.pool;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.common.gossip.MockTime;
 import org.junit.Assert;
 import org.junit.Test;
@@ -143,6 +140,29 @@ public class AsyncPoolTests {
     }
   }
 
+
+  @Test
+  public void death() {
+    MockTime time = new MockTime();
+    ConnManager mgr = new ConnManager();
+    AsyncPool<String, FauxConn> pool = new AsyncPool<>(SimpleExecutor.NOW, time, 5000, 10000, 13, 1234, mgr);
+    for (int k = 0; k < 100; k++) {
+      pool.get("Hello World", new Callback<PoolItem<FauxConn>>() {
+        @Override
+        public void success(PoolItem<FauxConn> value) {
+          value.item().stuff++;
+          value.returnToPool();
+          value.item().alive = false;
+          Assert.assertTrue(value.item().stuff <= 1);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+        }
+      });
+    }
+  }
+
   @Test
   public void max_usage() {
     MockTime time = new MockTime();
@@ -188,6 +208,27 @@ public class AsyncPoolTests {
   }
 
   @Test
+  public void sweep_death() {
+    MockTime time = new MockTime();
+    ConnManager mgr = new ConnManager();
+    AsyncPool<String, FauxConn> pool = new AsyncPool<>(SimpleExecutor.NOW, time, 5000, 5, 13, 1234, mgr);
+    pool.get("Hello World", new Callback<PoolItem<FauxConn>>() {
+      @Override
+      public void success(PoolItem<FauxConn> value) {
+        value.item().alive = false;
+        value.returnToPool();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    Assert.assertEquals(1, pool.sweepInExecutor());
+    Assert.assertEquals(0, pool.sweepInExecutor());
+  }
+
+  @Test
   public void schedule() throws Exception {
     ConnManager mgr = new ConnManager();
     SimpleExecutor executor = SimpleExecutor.create("test");
@@ -212,8 +253,14 @@ public class AsyncPoolTests {
     }
   }
 
-  public class FauxConn {
+  public class FauxConn implements Living {
     public int stuff = 0;
+    public boolean alive = true;
+
+    @Override
+    public boolean alive() {
+      return alive;
+    }
   }
 
   public class ConnManager implements PoolActions<String, FauxConn> {

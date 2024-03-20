@@ -15,18 +15,9 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.pool;
+package org.adamalang.common;
 
-import org.adamalang.common.Living;
-
-/** a wrapper around an item which is used to report status on the item */
-public interface PoolItem<S extends Living> {
-  /** @return the item */
-  S item();
-
-  /** signal the item has a failure and should not be re-used again */
-  void signalFailure();
-
-  /** return the item to the pool */
-  void returnToPool();
+/** a thing that lives */
+public interface Living {
+  public boolean alive();
 }

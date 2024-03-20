@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.MetricsFactory;
 
 public class WebClientBaseMetrics {
   public final Inflight alarm_web_client_null_responder;
+  public final Runnable web_client_instant_fail;
   public final Runnable web_client_200_or_204;
   public final Runnable web_client_403;
   public final Runnable web_client_404;
@@ -40,6 +41,7 @@ public class WebClientBaseMetrics {
 
   public WebClientBaseMetrics(MetricsFactory factory) {
     this.alarm_web_client_null_responder = factory.inflight("alarm_web_client_null_responder");
+    this.web_client_instant_fail = factory.counter("web_client_instant_fail");
     this.web_client_200_or_204 = factory.counter("web_client_200_or_204");
     this.web_client_400 = factory.counter("web_client_400");
     this.web_client_403 = factory.counter("web_client_403");

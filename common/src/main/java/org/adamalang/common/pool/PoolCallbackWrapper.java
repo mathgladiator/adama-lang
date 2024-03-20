@@ -19,9 +19,10 @@ package org.adamalang.common.pool;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Living;
 
 /** adapt an existing callback to register success/failure signals onto a PoolItem */
-public class PoolCallbackWrapper<X, S> implements Callback<X> {
+public class PoolCallbackWrapper<X, S extends Living> implements Callback<X> {
   private final Callback<X> wrapped;
   private final PoolItem<S> item;
 
