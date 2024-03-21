@@ -570,6 +570,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       return true;
     } else if (req.uri().equals("/~adama/once") && req.method() == HttpMethod.OPTIONS) {
       okOpen(ctx, req);
+      return true;
     } else if (req.uri().equals("/~adama/once") && req.method() == HttpMethod.PUT) {
       try {
         byte[] memory = new byte[req.content().readableBytes()];
@@ -606,6 +607,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       } catch (Exception ex) {
         sendImmediate(metrics.webhandler_failed_once_abort, req, ctx, HttpResponseStatus.BAD_REQUEST, BAD_REQUEST, "text/plain", true);
       }
+      return true;
     } else if (req.uri().startsWith("/~upload") && req.method() == HttpMethod.POST) {
       handleAssetUpload(ctx, req);
       return true;
