@@ -86,13 +86,21 @@ message WebRegister {
 We leverage web put because we most likely don't have a connection to the document as we are trying to get credentials to connect to the document.
 The web put allows us to register users, and passwords must be hashed prior to being sent to the server.
 Since a web put will write a message to the change log, we shouldn't use it for authenticating a user.
-Instead, there is an @authorize handler that accepts an username or email along with a plaintext password.
+Instead, there is an @authorization handler that accepts a message and has a complex handshake between the document and platform which you can learn more about [here.](/reference/auth-doc-workflow.md)
 
 ```adama
-@authorize (email, password) {
-  // the password is plaintext, and you should only store a hash
-  if (password_hash.passwordCheck(email)) {
-    return email; // this is going to the agent
+message AuthPipeInvoke {
+  string email;
+}
+
+@authorization (AuthPipeInvoke api) {
+  // find the person
+  if ((iterate _people where email == api.email)[0] as person) {
+    // return the agent and the hash to check
+    return {
+      agent: "" + person.id,
+      hash: person.password_hash,
+    };
   }
   abort;
 }

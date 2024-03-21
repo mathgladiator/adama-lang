@@ -41,7 +41,7 @@ public class AssembleAPIDocs {
           markdown.append(", ");
         }
         notfirst = true;
-        markdown.append("[").append(method.camelName).append("](#method-").append(method.camelName.toLowerCase(Locale.ROOT)).append(")");
+        markdown.append("[").append(method.camelName).append("](#method-").append(method.camelName.toLowerCase(Locale.ROOT)).append(method.partOfJavaScriptSDK ? "-js" : "").append(")");
       }
     }
     markdown.append("\n");
