@@ -24,7 +24,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.frontend.Session;
 import org.adamalang.web.io.*;
 
-/** For documents that want to hold secrets, then these secrets should not be stored plaintext.
+/** For documents that want to hold passwords, then these passwords should not be stored plaintext.
   * 
   * This method provides the client the ability to hash a password for plain text transmission. */
 public class DocumentsHashPasswordRequest {

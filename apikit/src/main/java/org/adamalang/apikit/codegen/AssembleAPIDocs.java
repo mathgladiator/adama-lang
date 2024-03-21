@@ -56,6 +56,7 @@ public class AssembleAPIDocs {
         markdown.append(" (JS)");
       }
       markdown.append("\n");
+      markdown.append("**wire method**:").append(method.name).append("\n\n");
       for (String ln : method.documentation.trim().split(Pattern.quote("\n"))) {
         markdown.append(ln.trim()).append("\n");
       }
@@ -76,7 +77,7 @@ public class AssembleAPIDocs {
       }
       if (method.partOfJavaScriptSDK) {
         markdown.append("\n");
-        markdown.append("### Template\n");
+        markdown.append("### JavaScript SDK Template\n");
         markdown.append("```js\n");
         String methodNameToUse = method.name;
         if (methodNameToUse.contains("/") && specialHandler) {

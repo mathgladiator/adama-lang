@@ -1506,10 +1506,10 @@
         </documentation>
     </method>
 
-    <method name="documents/hash-password" responder="hashed-password" devbox="true" scope="region" js-sdk="true">
+    <method name="documents/hash-password" responder="hashed-password" devbox="true" scope="region" js-sdk="true" once="true">
         <parameter name="password"/>
         <documentation>
-            For documents that want to hold secrets, then these secrets should not be stored plaintext.
+            For documents that want to hold passwords, then these passwords should not be stored plaintext.
 
             This method provides the client the ability to hash a password for plain text transmission.
         </documentation>

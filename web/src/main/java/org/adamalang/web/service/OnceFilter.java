@@ -22,6 +22,7 @@ public class OnceFilter {
     switch(method) {
       case "document/authorization":
       case "document/authorization-domain":
+      case "documents/hash-password":
         return true;
       default:
         return false;

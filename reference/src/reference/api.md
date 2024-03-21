@@ -3,6 +3,8 @@
 [InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount (JS)
+**wire method**:init/setup-account
+
 This initiates developer machine via email verification.
 
 ### Parameters
@@ -11,7 +13,7 @@ This initiates developer machine via email verification.
 | email | yes | String | The email of an Adama developer. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.InitSetupAccount(email, {
   success: function() {
@@ -24,6 +26,8 @@ connection.InitSetupAccount(email, {
 This method simply returns void.
 
 ## Method: InitConvertGoogleUser (JS)
+**wire method**:init/convert-google-user
+
 The converts and validates a google token into an Adama token.
 
 ### Parameters
@@ -32,7 +36,7 @@ The converts and validates a google token into an Adama token.
 | access-token | yes | String | A token from a third party authorization service. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.InitConvertGoogleUser(access-token, {
   success: function(response) {
@@ -50,6 +54,8 @@ connection.InitConvertGoogleUser(access-token, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: InitCompleteAccount (JS)
+**wire method**:init/complete-account
+
 This establishes a developer machine via email verification.
 
 Copy the code from the email into this request.
@@ -67,7 +73,7 @@ A public key will be held onto for 30 days.
 | code | yes | String | A randomly (secure) generated code to validate a user via 2FA auth (via email). |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.InitCompleteAccount(email, revoke, code, {
   success: function(response) {
@@ -85,6 +91,8 @@ connection.InitCompleteAccount(email, revoke, code, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: Deinit (JS)
+**wire method**:deinit
+
 This will destroy a developer account. We require all spaces to be deleted along with all authorities.
 
 ### Parameters
@@ -93,7 +101,7 @@ This will destroy a developer account. We require all spaces to be deleted along
 | identity | yes | String | Identity is a token to authenticate a user. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.Deinit(identity, {
   success: function() {
@@ -106,6 +114,8 @@ connection.Deinit(identity, {
 This method simply returns void.
 
 ## Method: AccountSetPassword (JS)
+**wire method**:account/set-password
+
 Set the password for an Adama developer.
 
 ### Parameters
@@ -115,7 +125,7 @@ Set the password for an Adama developer.
 | password | yes | String | The password for your account or a document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.AccountSetPassword(identity, password, {
   success: function() {
@@ -128,6 +138,8 @@ connection.AccountSetPassword(identity, password, {
 This method simply returns void.
 
 ## Method: AccountGetPaymentPlan (JS)
+**wire method**:account/get-payment-plan
+
 Get the payment plan information for the developer.
 
 ### Parameters
@@ -136,7 +148,7 @@ Get the payment plan information for the developer.
 | identity | yes | String | Identity is a token to authenticate a user. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.AccountGetPaymentPlan(identity, {
   success: function(response) {
@@ -156,6 +168,8 @@ connection.AccountGetPaymentPlan(identity, {
 | publishable-key | String | The public key from the merchant provider. |
 
 ## Method: AccountLogin (JS)
+**wire method**:account/login
+
 Sign an Adama developer in with an email and password pair.
 
 ### Parameters
@@ -165,7 +179,7 @@ Sign an Adama developer in with an email and password pair.
 | password | yes | String | The password for your account or a document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.AccountLogin(email, password, {
   success: function(response) {
@@ -183,6 +197,8 @@ connection.AccountLogin(email, password, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: Probe (JS)
+**wire method**:probe
+
 This is useful to validate an identity without executing anything.
 
 ### Parameters
@@ -191,7 +207,7 @@ This is useful to validate an identity without executing anything.
 | identity | yes | String | Identity is a token to authenticate a user. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.Probe(identity, {
   success: function() {
@@ -204,10 +220,12 @@ connection.Probe(identity, {
 This method simply returns void.
 
 ## Method: Stats (JS)
+**wire method**:stats
+
 Get stats for the current connection
 This method has no parameters.
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.Stats({
   next: function(payload) {
@@ -231,6 +249,8 @@ connection.Stats({
 | stat-type | String | The type of the stat. |
 
 ## Method: IdentityHash (JS)
+**wire method**:identity/hash
+
 Validate an identity and convert to a public and opaque base64 crypto hash.
 
 ### Parameters
@@ -239,7 +259,7 @@ Validate an identity and convert to a public and opaque base64 crypto hash.
 | identity | yes | String | Identity is a token to authenticate a user. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.IdentityHash(identity, {
   success: function(response) {
@@ -257,6 +277,8 @@ connection.IdentityHash(identity, {
 | identity-hash | String | A hash of an identity |
 
 ## Method: IdentityStash (JS)
+**wire method**:identity/stash
+
 Stash an identity locally in the connection as if it was a cookie
 
 ### Parameters
@@ -266,7 +288,7 @@ Stash an identity locally in the connection as if it was a cookie
 | name | yes | String | An identifier to name the resource. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.IdentityStash(identity, name, {
   success: function() {
@@ -279,6 +301,8 @@ connection.IdentityStash(identity, name, {
 This method simply returns void.
 
 ## Method: AuthorityCreate
+**wire method**:authority/create
+
 Create an authority. See [Authentication](/reference/auth.md) for more details.
 
 ### Parameters
@@ -294,6 +318,8 @@ Create an authority. See [Authentication](/reference/auth.md) for more details.
 | authority | String | An authority is collection of third party users authenticated via a public keystore. |
 
 ## Method: AuthoritySet
+**wire method**:authority/set
+
 Set the public keystore for the authority.
 
 ### Parameters
@@ -307,6 +333,8 @@ Set the public keystore for the authority.
 This method simply returns void.
 
 ## Method: AuthorityGet
+**wire method**:authority/get
+
 Get the public keystore for the authority.
 
 ### Parameters
@@ -323,6 +351,8 @@ Get the public keystore for the authority.
 | keystore | ObjectNode | A bunch of public keys to validate tokens for an authority. |
 
 ## Method: AuthorityList
+**wire method**:authority/list
+
 List authorities for the given developer.
 
 ### Parameters
@@ -338,6 +368,8 @@ List authorities for the given developer.
 | authority | String | An authority is collection of third party users authenticated via a public keystore. |
 
 ## Method: AuthorityDestroy
+**wire method**:authority/destroy
+
 Destroy an authority.
 
 This is exceptionally dangerous as it will break authentication for any users that have tokens based on that authority.
@@ -352,6 +384,8 @@ This is exceptionally dangerous as it will break authentication for any users th
 This method simply returns void.
 
 ## Method: SpaceCreate (JS)
+**wire method**:space/create
+
 Create a space.
 
 ### Parameters
@@ -362,7 +396,7 @@ Create a space.
 | template | no | String | When creating a space, the template is a known special identifier for how to bootstrap the defaults. Examples: none (default when template parameter not present). |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.SpaceCreate(identity, space, template, {
   success: function() {
@@ -375,6 +409,8 @@ connection.SpaceCreate(identity, space, template, {
 This method simply returns void.
 
 ## Method: SpaceGenerateKey
+**wire method**:space/generate-key
+
 Generate a secret key for a space.
 
 First party and third party services require secrets such as api tokens or credentials.
@@ -398,6 +434,8 @@ The developer then generates a public/private key, encrypts the token with the p
 | public-key | String | A public key to decrypt a secret with key arrangement. |
 
 ## Method: SpaceGet
+**wire method**:space/get
+
 Get the deployment plan for a space.
 
 ### Parameters
@@ -414,6 +452,8 @@ Get the deployment plan for a space.
 | plan | ObjectNode | A plan is a predictable mapping of keys to implementations.             The core reason for having multiple concurrent implementations is to have a smooth and orderly deployment.             See [deployment plans](/reference/deployment-plan.md) for more information. |
 
 ## Method: SpaceSet
+**wire method**:space/set
+
 Set the deployment plan for a space.
 
 ### Parameters
@@ -427,6 +467,8 @@ Set the deployment plan for a space.
 This method simply returns void.
 
 ## Method: SpaceRedeployKick
+**wire method**:space/redeploy-kick
+
 A diagnostic call to optimistically to refresh a space's deployment
 
 ### Parameters
@@ -439,6 +481,8 @@ A diagnostic call to optimistically to refresh a space's deployment
 This method simply returns void.
 
 ## Method: SpaceSetRxhtml
+**wire method**:space/set-rxhtml
+
 Set the RxHTML forest for the space when viewed via a domain name.
 
 ### Parameters
@@ -452,6 +496,8 @@ Set the RxHTML forest for the space when viewed via a domain name.
 This method simply returns void.
 
 ## Method: SpaceGetRxhtml
+**wire method**:space/get-rxhtml
+
 Get the RxHTML forest for the space when viewed via a domain name.
 
 ### Parameters
@@ -468,6 +514,8 @@ Get the RxHTML forest for the space when viewed via a domain name.
 | rxhtml | String | The RxHTML forest for a space. |
 
 ## Method: SpaceSetPolicy
+**wire method**:space/set-policy
+
 Set the access control policy for a space
 
 ### Parameters
@@ -481,6 +529,8 @@ Set the access control policy for a space
 This method simply returns void.
 
 ## Method: PolicyGenerateDefault
+**wire method**:policy/generate-default
+
 Generate a default policy template for inspection and use
 
 ### Parameters
@@ -496,6 +546,8 @@ Generate a default policy template for inspection and use
 | access-policy | ObjectNode | A policy to control who can do what against a space. |
 
 ## Method: SpaceGetPolicy
+**wire method**:space/get-policy
+
 Returns the policy for a specific space
 
 ### Parameters
@@ -512,6 +564,8 @@ Returns the policy for a specific space
 | access-policy | ObjectNode | A policy to control who can do what against a space. |
 
 ## Method: SpaceMetrics
+**wire method**:space/metrics
+
 For regional proxies to emit metrics for a document
 
 ### Parameters
@@ -531,6 +585,8 @@ For regional proxies to emit metrics for a document
 | count | Integer | The number of items considered/available. |
 
 ## Method: SpaceDelete (JS)
+**wire method**:space/delete
+
 Delete a space.
 
 This requires no documents to be within the space, and this removes the space from use until garbage collection ensures no documents were created for that space after deletion.
@@ -543,7 +599,7 @@ A space may be reserved for 90 minutes until the system is absolutely sure no do
 | space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.SpaceDelete(identity, space, {
   success: function() {
@@ -556,6 +612,8 @@ connection.SpaceDelete(identity, space, {
 This method simply returns void.
 
 ## Method: SpaceSetRole
+**wire method**:space/set-role
+
 Set the role of an Adama developer for a particular space.
 
 Spaces can be shared among Adama developers.
@@ -572,6 +630,8 @@ Spaces can be shared among Adama developers.
 This method simply returns void.
 
 ## Method: SpaceListDevelopers
+**wire method**:space/list-developers
+
 List the developers with access to this space
 
 ### Parameters
@@ -589,6 +649,8 @@ List the developers with access to this space
 | role | String | Each developer has a role to a document. |
 
 ## Method: SpaceReflect (JS)
+**wire method**:space/reflect
+
 Get a schema for the space.
 
 ### Parameters
@@ -599,7 +661,7 @@ Get a schema for the space.
 | key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.SpaceReflect(identity, space, key, {
   success: function(response) {
@@ -617,6 +679,8 @@ connection.SpaceReflect(identity, space, key, {
 | reflection | ObjectNode | Schema of a document. |
 
 ## Method: SpaceList (JS)
+**wire method**:space/list
+
 List the spaces available to the user.
 
 ### Parameters
@@ -627,7 +691,7 @@ List the spaces available to the user.
 | limit | no | Integer | Maximum number of items to return during a streaming list. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.SpaceList(identity, marker, limit, {
   next: function(payload) {
@@ -655,6 +719,8 @@ connection.SpaceList(identity, marker, limit, {
 | storage-bytes | Long | The storage used. |
 
 ## Method: PushRegister (JS)
+**wire method**:push/register
+
 Register a device for push notifications
 
 ### Parameters
@@ -666,7 +732,7 @@ Register a device for push notifications
 | device-info | yes | ObjectNode | Information about a device |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.PushRegister(identity, domain, subscription, device-info, {
   success: function() {
@@ -679,6 +745,8 @@ connection.PushRegister(identity, domain, subscription, device-info, {
 This method simply returns void.
 
 ## Method: DomainMap
+**wire method**:domain/map
+
 Map a domain to a space.
 
 ### Parameters
@@ -693,6 +761,8 @@ Map a domain to a space.
 This method simply returns void.
 
 ## Method: DomainClaimApex
+**wire method**:domain/claim-apex
+
 Claim an apex domain to be used only by your account
 
 ### Parameters
@@ -710,6 +780,8 @@ Claim an apex domain to be used only by your account
 | txt-token | String | The TXT field to introduce under the domain to prove ownership |
 
 ## Method: DomainRedirect
+**wire method**:domain/redirect
+
 Map a domain to another domain
 
 ### Parameters
@@ -723,6 +795,8 @@ Map a domain to another domain
 This method simply returns void.
 
 ## Method: DomainConfigure
+**wire method**:domain/configure
+
 Configure a domain with internal guts that are considered secret.
 
 ### Parameters
@@ -736,6 +810,8 @@ Configure a domain with internal guts that are considered secret.
 This method simply returns void.
 
 ## Method: DomainReflect (JS)
+**wire method**:domain/reflect
+
 Get a schema for the domain
 
 ### Parameters
@@ -745,7 +821,7 @@ Get a schema for the domain
 | domain | yes | String | A domain name. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DomainReflect(identity, domain, {
   success: function(response) {
@@ -763,6 +839,8 @@ connection.DomainReflect(identity, domain, {
 | reflection | ObjectNode | Schema of a document. |
 
 ## Method: DomainMapDocument
+**wire method**:domain/map-document
+
 Map a domain to a space.
 
 ### Parameters
@@ -779,6 +857,8 @@ Map a domain to a space.
 This method simply returns void.
 
 ## Method: DomainList
+**wire method**:domain/list
+
 List the domains for the given developer
 
 ### Parameters
@@ -800,6 +880,8 @@ List the domains for the given developer
 | apex_managed | Boolean | Is the domain managed by an apex domain? |
 
 ## Method: DomainListBySpace
+**wire method**:domain/list-by-space
+
 List the domains for the given developer
 
 ### Parameters
@@ -822,6 +904,8 @@ List the domains for the given developer
 | apex_managed | Boolean | Is the domain managed by an apex domain? |
 
 ## Method: DomainGetVapidPublicKey (JS)
+**wire method**:domain/get-vapid-public-key
+
 Get the public key for the VAPID
 
 ### Parameters
@@ -831,7 +915,7 @@ Get the public key for the VAPID
 | domain | yes | String | A domain name. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DomainGetVapidPublicKey(identity, domain, {
   success: function(response) {
@@ -849,6 +933,8 @@ connection.DomainGetVapidPublicKey(identity, domain, {
 | public-key | String | A public key to decrypt a secret with key arrangement. |
 
 ## Method: DomainUnmap
+**wire method**:domain/unmap
+
 Unmap a domain
 
 ### Parameters
@@ -861,6 +947,8 @@ Unmap a domain
 This method simply returns void.
 
 ## Method: DomainGet
+**wire method**:domain/get
+
 Get the domain mapping
 
 ### Parameters
@@ -877,6 +965,8 @@ Get the domain mapping
 | space | String | A space which is a collection of documents with a common Adama schema. |
 
 ## Method: DocumentDownloadArchive
+**wire method**:document/download-archive
+
 Download a complete archive
 
 ### Parameters
@@ -895,6 +985,8 @@ Download a complete archive
 | chunk-md5 | String | MD5 of a chunk |
 
 ## Method: DocumentListBackups
+**wire method**:document/list-backups
+
 List snapshots for a document
 
 ### Parameters
@@ -914,6 +1006,8 @@ List snapshots for a document
 | seq | Integer | The sequencer for the item. |
 
 ## Method: DocumentDownloadBackup
+**wire method**:document/download-backup
+
 Download a specific snapshot
 
 ### Parameters
@@ -933,6 +1027,8 @@ Download a specific snapshot
 | chunk-md5 | String | MD5 of a chunk |
 
 ## Method: DocumentListPushTokens
+**wire method**:document/list-push-tokens
+
 List push tokens for a given agent within a document
 
 ### Parameters
@@ -954,6 +1050,8 @@ List push tokens for a given agent within a document
 | device-info | ObjectNode | Device information for a push subscriber. |
 
 ## Method: DocumentAuthorization (JS)
+**wire method**:document/authorization
+
 Send an authorization request to the document
 
 ### Parameters
@@ -964,7 +1062,7 @@ Send an authorization request to the document
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentAuthorization(space, key, message, {
   success: function(response) {
@@ -982,6 +1080,8 @@ connection.DocumentAuthorization(space, key, message, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: DocumentAuthorizationDomain (JS)
+**wire method**:document/authorization-domain
+
 Send an authorization request to a document via a domain
 
 ### Parameters
@@ -991,7 +1091,7 @@ Send an authorization request to a document via a domain
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentAuthorizationDomain(domain, message, {
   success: function(response) {
@@ -1009,6 +1109,8 @@ connection.DocumentAuthorizationDomain(domain, message, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: DocumentAuthorize (JS)
+**wire method**:document/authorize
+
 Authorize a username and password against a document.
 
 ### Parameters
@@ -1020,7 +1122,7 @@ Authorize a username and password against a document.
 | password | yes | String | The password for your account or a document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentAuthorize(space, key, username, password, {
   success: function(response) {
@@ -1038,6 +1140,8 @@ connection.DocumentAuthorize(space, key, username, password, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: DocumentAuthorizeDomain (JS)
+**wire method**:document/authorize-domain
+
 Authorize a username and password against a document via a domain
 
 ### Parameters
@@ -1048,7 +1152,7 @@ Authorize a username and password against a document via a domain
 | password | yes | String | The password for your account or a document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentAuthorizeDomain(domain, username, password, {
   success: function(response) {
@@ -1066,6 +1170,8 @@ connection.DocumentAuthorizeDomain(domain, username, password, {
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: DocumentAuthorizeWithReset (JS)
+**wire method**:document/authorize-with-reset
+
 Authorize a username and password against a document, and set a new password
 
 ### Parameters
@@ -1078,7 +1184,7 @@ Authorize a username and password against a document, and set a new password
 | new_password | yes | String | The new password for your account or document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentAuthorizeWithReset(space, key, username, password, new_password, {
   success: function(response) {
@@ -1096,6 +1202,8 @@ connection.DocumentAuthorizeWithReset(space, key, username, password, new_passwo
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: DocumentAuthorizeDomainWithReset (JS)
+**wire method**:document/authorize-domain-with-reset
+
 Authorize a username and password against a document, and set a new password
 
 ### Parameters
@@ -1107,7 +1215,7 @@ Authorize a username and password against a document, and set a new password
 | new_password | yes | String | The new password for your account or document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentAuthorizeDomainWithReset(domain, username, password, new_password, {
   success: function(response) {
@@ -1125,6 +1233,8 @@ connection.DocumentAuthorizeDomainWithReset(domain, username, password, new_pass
 | identity | String | A private token used to authenticate to Adama. |
 
 ## Method: DocumentCreate (JS)
+**wire method**:document/create
+
 Create a document.
 
 The entropy allows the randomization of the document to be fixed at construction time.
@@ -1139,7 +1249,7 @@ The entropy allows the randomization of the document to be fixed at construction
 | arg | yes | ObjectNode | The parameter for a document's @construct event. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentCreate(identity, space, key, entropy, arg, {
   success: function() {
@@ -1152,6 +1262,8 @@ connection.DocumentCreate(identity, space, key, entropy, arg, {
 This method simply returns void.
 
 ## Method: DocumentDelete
+**wire method**:document/delete
+
 Delete a document (invokes the @delete document policy).
 
 ### Parameters
@@ -1165,6 +1277,8 @@ Delete a document (invokes the @delete document policy).
 This method simply returns void.
 
 ## Method: DocumentList (JS)
+**wire method**:document/list
+
 List documents within a space which are after the given marker.
 
 ### Parameters
@@ -1176,7 +1290,7 @@ List documents within a space which are after the given marker.
 | limit | no | Integer | Maximum number of items to return during a streaming list. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentList(identity, space, marker, limit, {
   next: function(payload) {
@@ -1204,6 +1318,8 @@ connection.DocumentList(identity, space, marker, limit, {
 | last-backup | String | The time of the last internal backup. |
 
 ## Method: MessageDirectSend (JS)
+**wire method**:message/direct-send
+
 Send a message to a document without a connection
 
 ### Parameters
@@ -1216,7 +1332,7 @@ Send a message to a document without a connection
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.MessageDirectSend(identity, space, key, channel, message, {
   success: function(response) {
@@ -1234,6 +1350,8 @@ connection.MessageDirectSend(identity, space, key, channel, message, {
 | seq | Integer | The sequencer for the item. |
 
 ## Method: MessageDirectSendOnce (JS)
+**wire method**:message/direct-send-once
+
 Send a message to a document without a connection
 
 ### Parameters
@@ -1247,7 +1365,7 @@ Send a message to a document without a connection
 | message | yes | JsonNode | The object sent to a document which will be the parameter for a channel handler. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.MessageDirectSendOnce(identity, space, key, dedupe, channel, message, {
   success: function(response) {
@@ -1265,6 +1383,8 @@ connection.MessageDirectSendOnce(identity, space, key, dedupe, channel, message,
 | seq | Integer | The sequencer for the item. |
 
 ## Method: ConnectionCreate (JS)
+**wire method**:connection/create
+
 Create a connection to a document.
 
 ### Parameters
@@ -1276,7 +1396,7 @@ Create a connection to a document.
 | viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.ConnectionCreate(identity, space, key, viewer-state, {
   next: function(payload) {
@@ -1296,6 +1416,8 @@ connection.ConnectionCreate(identity, space, key, viewer-state, {
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
 
 ## Method: ConnectionCreateViaDomain (JS)
+**wire method**:connection/create-via-domain
+
 Create a connection to a document via a domain name.
 
 ### Parameters
@@ -1306,7 +1428,7 @@ Create a connection to a document via a domain name.
 | viewer-state | no | ObjectNode | A connection to a document has a side-channel for passing information about the client's view into the evaluation of bubbles.             This allows for developers to implement real-time queries and pagination. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.ConnectionCreateViaDomain(identity, domain, viewer-state, {
   next: function(payload) {
@@ -1326,6 +1448,8 @@ connection.ConnectionCreateViaDomain(identity, domain, viewer-state, {
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
 
 ## Method: ConnectionSend
+**wire method**:connection/send
+
 Send a message to the document on the given channel.
 
 ### Parameters
@@ -1342,6 +1466,8 @@ Send a message to the document on the given channel.
 | seq | Integer | The sequencer for the item. |
 
 ## Method: ConnectionPassword
+**wire method**:connection/password
+
 Set the viewer's password to the document; requires their old password.
 
 ### Parameters
@@ -1355,6 +1481,8 @@ Set the viewer's password to the document; requires their old password.
 This method simply returns void.
 
 ## Method: ConnectionSendOnce
+**wire method**:connection/send-once
+
 Send a message to the document on the given channel with a dedupe key such that sending happens at most once.
 
 ### Parameters
@@ -1372,6 +1500,8 @@ Send a message to the document on the given channel with a dedupe key such that 
 | seq | Integer | The sequencer for the item. |
 
 ## Method: ConnectionCanAttach
+**wire method**:connection/can-attach
+
 Ask whether the connection can have attachments attached.
 
 ### Parameters
@@ -1386,6 +1516,8 @@ Ask whether the connection can have attachments attached.
 | yes | Boolean | The result of a boolean question. |
 
 ## Method: ConnectionAttach
+**wire method**:connection/attach
+
 This is an internal API used only by Adama for multi-region support.
 
 Start an upload for the given document with the given filename and content type.
@@ -1408,6 +1540,8 @@ Start an upload for the given document with the given filename and content type.
 | seq | Integer | The sequencer for the item. |
 
 ## Method: ConnectionUpdate
+**wire method**:connection/update
+
 Update the viewer state of the document.
 
 The viewer state is accessible to bubbles to provide view restriction and filtering.
@@ -1422,6 +1556,8 @@ For example, the viewer state is how a document can provide real-time search or 
 This method simply returns void.
 
 ## Method: ConnectionEnd
+**wire method**:connection/end
+
 Disconnect from the document.
 
 ### Parameters
@@ -1432,7 +1568,9 @@ Disconnect from the document.
 This method simply returns void.
 
 ## Method: DocumentsHashPassword (JS)
-For documents that want to hold secrets, then these secrets should not be stored plaintext.
+**wire method**:documents/hash-password
+
+For documents that want to hold passwords, then these passwords should not be stored plaintext.
 
 This method provides the client the ability to hash a password for plain text transmission.
 
@@ -1442,7 +1580,7 @@ This method provides the client the ability to hash a password for plain text tr
 | password | yes | String | The password for your account or a document |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.DocumentsHashPassword(password, {
   success: function(response) {
@@ -1460,6 +1598,8 @@ connection.DocumentsHashPassword(password, {
 | password-hash | String | The hash of a password. |
 
 ## Method: BillingConnectionCreate (JS)
+**wire method**:billing-connection/create
+
 Create a connection to the billing document of the given identity.
 
 ### Parameters
@@ -1468,7 +1608,7 @@ Create a connection to the billing document of the given identity.
 | identity | yes | String | Identity is a token to authenticate a user. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.BillingConnectionCreate(identity, {
   next: function(payload) {
@@ -1488,6 +1628,8 @@ connection.BillingConnectionCreate(identity, {
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
 
 ## Method: AttachmentStart (JS)
+**wire method**:attachment/start
+
 Start an upload for the given document with the given filename and content type.
 
 ### Parameters
@@ -1500,7 +1642,7 @@ Start an upload for the given document with the given filename and content type.
 | content-type | yes | String | The MIME type like text/json or video/mp4. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.AttachmentStart(identity, space, key, filename, content-type, {
   next: function(payload) {
@@ -1520,6 +1662,8 @@ connection.AttachmentStart(identity, space, key, filename, content-type, {
 | chunk_request_size | Integer | The attachment uploader is asking for a chunk size.             Using the WebSocket leverages a flow control based uploader such that contention on the WebSocket is minimized. |
 
 ## Method: AttachmentStartByDomain (JS)
+**wire method**:attachment/start-by-domain
+
 Start an upload for the given document with the given filename and content type.
 
 ### Parameters
@@ -1531,7 +1675,7 @@ Start an upload for the given document with the given filename and content type.
 | content-type | yes | String | The MIME type like text/json or video/mp4. |
 
 
-### Template
+### JavaScript SDK Template
 ```js
 connection.AttachmentStartByDomain(identity, domain, filename, content-type, {
   next: function(payload) {
@@ -1551,6 +1695,8 @@ connection.AttachmentStartByDomain(identity, domain, filename, content-type, {
 | chunk_request_size | Integer | The attachment uploader is asking for a chunk size.             Using the WebSocket leverages a flow control based uploader such that contention on the WebSocket is minimized. |
 
 ## Method: AttachmentAppend
+**wire method**:attachment/append
+
 Append a chunk with an MD5 to ensure data integrity.
 
 ### Parameters
@@ -1563,6 +1709,8 @@ Append a chunk with an MD5 to ensure data integrity.
 This method simply returns void.
 
 ## Method: AttachmentFinish
+**wire method**:attachment/finish
+
 Finishing uploading the attachment upload.
 
 ### Parameters
