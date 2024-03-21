@@ -54,6 +54,7 @@ public class Tool {
     String packageName = DocumentHelper.attribute(api, "package");
     String sessionImport = DocumentHelper.attribute(api, "session-import");
     String outputAdamaService = DocumentHelper.attribute(api, "output-service");
+    String outputOnceFilter = DocumentHelper.attribute(api, "output-once-filter");
     String docsFile = api.getAttribute("docs");
     String clientFileJs = api.getAttribute("clientjs");
     HashMap<String, String> apiOutput = new HashMap<>();
@@ -120,6 +121,7 @@ public class Tool {
     for (Map.Entry<String, String> javaClient : javaClientFiles.entrySet()) {
       diskWrites.put(new File(clientOutputPath, javaClient.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + javaClient.getValue());
     }
+    diskWrites.put(new File(outputOnceFilter), DefaultCopyright.COPYRIGHT_FILE_PREFIX + AssembleOnceFilter.make(packageName, methods));
     return diskWrites;
   }
 

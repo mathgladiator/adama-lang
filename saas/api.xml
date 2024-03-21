@@ -6,6 +6,7 @@
      client-output-path="./saasclient/src/main/java/org/adamalang/api"
      clientjs="./clientjs/connection.js"
      session-import="org.adamalang.frontend.Session"
+     output-once-filter="./web/src/main/java/org/adamalang/web/service/OnceFilter.java"
      output-service="./services/src/main/java/org/adamalang/services/Adama.java">
     <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
@@ -1301,7 +1302,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorization" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
+    <method name="document/authorization" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true" once="true">
         <parameter name="space"/>
         <parameter name="key"/>
         <parameter name="message"/>
@@ -1310,7 +1311,7 @@
         </documentation>
     </method>
 
-    <method name="document/authorization-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true">
+    <method name="document/authorization-domain" responder="initiation" devbox="true" scope="region" policy-via-document="true" js-sdk="true" once="true">
         <parameter name="domain"/>
         <parameter name="message"/>
         <documentation>

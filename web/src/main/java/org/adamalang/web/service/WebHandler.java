@@ -31,6 +31,7 @@ import io.netty.handler.codec.http.multipart.FileUpload;
 import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
 import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.adamalang.ErrorCodes;
+import org.adamalang.api.OnceFilter;
 import org.adamalang.common.*;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
@@ -44,8 +45,12 @@ import org.adamalang.web.assets.transforms.Transform;
 import org.adamalang.web.assets.transforms.TransformFactory;
 import org.adamalang.web.assets.transforms.TransformQueue;
 import org.adamalang.web.contracts.HttpHandler;
+import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.firewall.WebRequestShield;
 import org.adamalang.web.io.ConnectionContext;
+import org.adamalang.web.io.JsonRequest;
+import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +76,12 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static final byte[] COOKIE_SET_FAILURE = "<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>".getBytes(StandardCharsets.UTF_8);
   private static final byte[] JAR_FAILURE = "<html><head><title>Bad Request; Internal Error Access Jar</title></head><body>Sorry, the download failed.</body></html>".getBytes(StandardCharsets.UTF_8);
 
+  private static final byte[] BAD_REQUEST = "bad request".getBytes(StandardCharsets.UTF_8);
+  private static final byte[] METHOD_NOT_ALLOWED = "method not allowed".getBytes(StandardCharsets.UTF_8);
+
   private final WebConfig webConfig;
   private final WebMetrics metrics;
+  private final ServiceBase serviceBase;
   private final HttpHandler httpHandler;
   private final AssetSystem assets;
   private final WebHandlerAssetCache cache;
@@ -80,11 +89,12 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final DomainFinder domainFinder;
   private final TransformQueue transformQueue;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetSystem assets, WebHandlerAssetCache cache, DomainFinder incomingDomainFinder, TransformQueue transformQueue) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, ServiceBase serviceBase, WebHandlerAssetCache cache, DomainFinder incomingDomainFinder, TransformQueue transformQueue) {
     this.webConfig = webConfig;
     this.metrics = metrics;
-    this.httpHandler = httpHandler;
-    this.assets = assets;
+    this.serviceBase = serviceBase;
+    this.httpHandler = serviceBase.http();
+    this.assets = serviceBase.assets();
     this.cache = cache;
     this.transformQueue = transformQueue;
     this.jarThread = Executors.newSingleThreadExecutor();
@@ -558,6 +568,44 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         }
       });
       return true;
+    } else if (req.uri().equals("/~adama/once") && req.method() == HttpMethod.OPTIONS) {
+      okOpen(ctx, req);
+    } else if (req.uri().equals("/~adama/once") && req.method() == HttpMethod.PUT) {
+      try {
+        byte[] memory = new byte[req.content().readableBytes()];
+        req.content().readBytes(memory);
+        String result = new String(memory, StandardCharsets.UTF_8);
+        ObjectNode request = Json.parseJsonObject(result);
+        request.put("id", 0); // inject a faux-id
+        String method = request.get("method").textValue();
+        if (OnceFilter.allowed(method)) {
+          final ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
+          ServiceConnection connection = serviceBase.establish(context);
+          connection.execute(new JsonRequest(request, context), new JsonResponder() {
+            @Override
+            public void stream(String json) {
+              // we don't hold it open as we don't allow streams
+              finish(json);
+            }
+
+            @Override
+            public void finish(String json) {
+              sendImmediate(metrics.webhandler_success_once, req, ctx, HttpResponseStatus.OK, json.getBytes(StandardCharsets.UTF_8), "application/json", true);
+              connection.kill();
+            }
+
+            @Override
+            public void error(ErrorCodeException ex) {
+              sendImmediate(metrics.webhandler_failed_once_exception, req, ctx, HttpResponseStatus.BAD_REQUEST, ("" + ex.code).getBytes(StandardCharsets.UTF_8), "text/plain", true);
+              connection.kill();
+            }
+          });
+        } else {
+          sendImmediate(metrics.webhandler_failed_once_not_allowed, req, ctx, HttpResponseStatus.BAD_REQUEST, METHOD_NOT_ALLOWED, "text/plain", true);
+        }
+      } catch (Exception ex) {
+        sendImmediate(metrics.webhandler_failed_once_abort, req, ctx, HttpResponseStatus.BAD_REQUEST, BAD_REQUEST, "text/plain", true);
+      }
     } else if (req.uri().startsWith("/~upload") && req.method() == HttpMethod.POST) {
       handleAssetUpload(ctx, req);
       return true;

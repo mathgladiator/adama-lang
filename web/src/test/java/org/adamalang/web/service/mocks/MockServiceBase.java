@@ -43,6 +43,15 @@ public class MockServiceBase implements ServiceBase {
       public void execute(JsonRequest request, JsonResponder responder) {
         try {
           switch (request.method()) {
+            case "document/authorization": {
+              Boolean error = request.getBoolean("failed", false, 5000);
+              if (error != null && error) {
+                responder.error(new ErrorCodeException(111));
+                return;
+              }
+              responder.finish("{\"auth\":true}");
+              return;
+            }
             case "auth": {
               System.out.println("authentication");
               responder.finish("{\"result\":true}");

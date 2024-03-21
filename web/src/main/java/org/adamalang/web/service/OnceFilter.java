@@ -15,9 +15,16 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20240321134332";
-  public static final String JS_VERSION = "69b351417df56566f80bde61cba3ca69";
+public class OnceFilter {
+  public static boolean allowed(String method) {
+    switch(method) {
+      case "document/authorization":
+      case "document/authorization-domain":
+        return true;
+      default:
+        return false;
+    }
+  }
 }

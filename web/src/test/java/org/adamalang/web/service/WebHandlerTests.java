@@ -17,8 +17,10 @@
 */
 package org.adamalang.web.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
@@ -98,6 +100,31 @@ public class WebHandlerTests {
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("<html><head><title>Bad Request; Failed to set cookie</title></head><body>Sorry, the request was incomplete.</body></html>");
+      }
+
+      {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/authorization");
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .put("/~adama/once", request.toString())
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("{\"auth\":true}");
+      }
+
+      {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/authorization");
+        request.put("failed", true);
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .put("/~adama/once", request.toString())
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("111");
       }
 
       {
