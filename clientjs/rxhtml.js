@@ -2150,7 +2150,7 @@ var RxHTML = (function () {
     var name = "";
     if (hasName) {
       name = el.name;
-      if(name == "") {
+      if(name == "" || typeof(name) != "string") {
         hasName = false;
       }
     }
