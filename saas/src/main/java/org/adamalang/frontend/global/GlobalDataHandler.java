@@ -34,6 +34,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.web.assets.AssetUploadBody;
+import org.adamalang.web.features.UrlSummaryGenerator;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonResponder;
 import org.slf4j.Logger;
@@ -598,6 +599,42 @@ public class GlobalDataHandler implements RootRegionHandler {
         request.logInto(node);
       }
     };
+  }
+
+  private void findBillableTarget(Session session, AuthenticatedUser who, Callback<Integer> callback) {
+    if (who.isAdamaDeveloper) {
+      callback.success(who.id);
+      return;
+    }
+    // TODO(1.a): (parse authority to find doc/$space/$key) -> $space
+    // TODO(1.b): (parse origin to find $domain, translate $domain to $space -> $space
+    // TODO(2): convert $space to $owner
+    callback.success(0);
+  }
+
+  @Override
+  public void handle(Session session, FeatureSummarizeUrlRequest request, SummaryResponder responder) {
+    findBillableTarget(session, request.who, new Callback<Integer>() {
+      @Override
+      public void success(Integer billTo) {
+        UrlSummaryGenerator.summarize(nexus.webBase, request.url, new Callback<>() {
+          @Override
+          public void success(ObjectNode summary) {
+            responder.complete(summary);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override

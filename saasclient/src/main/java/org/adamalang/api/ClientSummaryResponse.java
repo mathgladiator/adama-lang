@@ -15,34 +15,23 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.metrics;
+package org.adamalang.api;
 
-/** record success/failure rates, latency, failure codes */
-public interface RequestResponseMonitor {
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 
-  /** start an operation */
-  RequestResponseMonitorInstance start();
+/** generated class for the responder: summary */
+public class ClientSummaryResponse {
+  public final ObjectNode _original;
+  public final ObjectNode summary;
 
-  /** the operation must success or fail. We also capture common bugs */
-  interface RequestResponseMonitorInstance {
-    void success();
-
-    void extra();
-
-    void failure(int code);
+  public ClientSummaryResponse(ObjectNode response) {
+    this._original = response;
+    this.summary = Json.readObject(response, "summary");
   }
-
-  public static RequestResponseMonitorInstance UNMONITORED = new RequestResponseMonitorInstance() {
-    @Override
-    public void success() {
-    }
-
-    @Override
-    public void extra() {
-    }
-
-    @Override
-    public void failure(int code) {
-    }
-  };
+  public String toInternalJson() {
+    ObjectNode _next = Json.newJsonObject();
+    _next.set("summary", summary);
+    return _next.toString();
+  }
 }

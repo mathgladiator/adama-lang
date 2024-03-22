@@ -50,8 +50,9 @@ public class Method {
   public final boolean genService;
   public final boolean partOfJavaScriptSDK;
   public final boolean once;
+  public final boolean noPolicyAvailable;
 
-  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect, boolean devbox, String scope, boolean internal, boolean checkPolicy, int policyErrorCode, String defaultPolicyBehavior, boolean genService, boolean partOfJavaScriptSDK, boolean once) {
+  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect, boolean devbox, String scope, boolean internal, boolean checkPolicy, int policyErrorCode, String defaultPolicyBehavior, boolean genService, boolean partOfJavaScriptSDK, boolean once, boolean noPolicyAvailable) {
     this.name = name;
     this.camelName = Common.camelize(name);
     this.camelName2 = Common.camelize(name, true);
@@ -74,6 +75,7 @@ public class Method {
     this.genService = genService;
     this.partOfJavaScriptSDK = partOfJavaScriptSDK;
     this.once = once;
+    this.noPolicyAvailable = noPolicyAvailable;
   }
 
   public static Method[] methodsOf(Document document, Map<String, ParameterDefinition> parameters, Map<String, Responder> responders) throws Exception {
@@ -111,6 +113,7 @@ public class Method {
       boolean callOnDisconnect = "true".equals(element.getAttribute("call-on-disconnect"));
       boolean partOfJavaScriptSDK = "true".equals(element.getAttribute("js-sdk"));
       boolean once = "true".equals(element.getAttribute("once"));
+      boolean noPolicyAvailable = "true".equals(element.getAttribute("no-policy-available"));
 
       boolean checkPolicy = "true".equals(element.getAttribute("policy"));
       int policyErrorCode = 0;
@@ -156,7 +159,7 @@ public class Method {
         throw new Exception("method has no documentation");
       }
       System.out.println("\u001b[36mAPI:\u001b[0m" + name + (inferedPolicy && !internal ? " \u001b[35m(POLICY INFER)\u001b[0m" : "") + (shouldDoAPolicyCheck && !internal ? " \u001b[36m(POLICY CHECKED)\u001b[0m" : "") + (internal ? " \u001b[31m(INTERNAL)\u001b[0m" : ""));
-      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect, devbox, scope, internal, checkPolicy, policyErrorCode, defaultPolicyBehavior, genService, partOfJavaScriptSDK, once));
+      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect, devbox, scope, internal, checkPolicy, policyErrorCode, defaultPolicyBehavior, genService, partOfJavaScriptSDK, once, noPolicyAvailable));
       boolean hasManualPolicy =  "true".equals(element.getAttribute("policy-manual"));
       boolean hasDocumentPolicy = "true".equals(element.getAttribute("policy-via-document"));
       if (shouldDoAPolicyCheck && !(hasManualPolicy || checkPolicy || hasDocumentPolicy || internal)) {

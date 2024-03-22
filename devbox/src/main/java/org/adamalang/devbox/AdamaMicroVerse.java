@@ -71,8 +71,10 @@ public class AdamaMicroVerse {
   private final DiagnosticsSubscriber diagnostics;
   private final CountDownLatch firstBuild;
   private final DynamicControl control;
+  public final WebClientBase webClientBase;
 
-  private AdamaMicroVerse(DevBoxStats stats, WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics, DynamicControl control) throws Exception {
+  private AdamaMicroVerse(WebClientBase webClientBase, DevBoxStats stats, WatchService watchService, TerminalIO io, AtomicBoolean alive, LocalServiceFactory factory, ArrayList<LocalSpaceDefn> spaces, Key domainKeyToUse, String vapidPublicKey, String vapidPrivateKey, DevPush devPush, DiagnosticsSubscriber diagnostics, DynamicControl control) throws Exception {
+    this.webClientBase = webClientBase;
     this.stats = stats;
     this.io = io;
     this.alive = alive;
@@ -336,7 +338,7 @@ public class AdamaMicroVerse {
     } catch (Exception ex) {
       io.notice("verse|VAPID has no valid keypair, web push is disabled");
     }
-    return new AdamaMicroVerse(stats, watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics, control);
+    return new AdamaMicroVerse(webClientBase, stats, watchService, io, alive, factory, localSpaces, domainKeyToUse, vapidPublic, vapidPrivate, new DevPush(io, new File(pushFile), pushEmail, keyPair, webClientBase, metricsFactory), diagnostics, control);
   }
 
   public void waitForFirstBuild() throws Exception {

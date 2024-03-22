@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [FeatureSummarizeUrl](#method-featuresummarizeurl-js), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount (JS)
 **wire method**:init/setup-account
@@ -1626,6 +1626,35 @@ connection.BillingConnectionCreate(identity, {
 | name | type | documentation |
 | --- | --- | --- |
 | delta | ObjectNode | A json delta representing a change of data. See the [delta format](/reference/deltas.md) for more information. |
+
+## Method: FeatureSummarizeUrl (JS)
+**wire method**:feature/summarize-url
+
+Summarize a URL by parsing it's meta-data.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| url | yes | String | A http(s) URL that resolves to a HTML page. |
+
+
+### JavaScript SDK Template
+```js
+connection.FeatureSummarizeUrl(identity, url, {
+  success: function(response) {
+    // response.summary
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| summary | ObjectNode | A json summary of a URL |
 
 ## Method: AttachmentStart (JS)
 **wire method**:attachment/start

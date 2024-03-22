@@ -771,6 +771,15 @@ class WebSocketAdamaConnection {
       }
     });
   }
+  FeatureSummarizeUrl(identity, url, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"feature/summarize-url", "id":parId, "identity": identity, "url": url}
+    });
+  }
   AttachmentStart(identity, space, key, filename, contentType, responder) {
     var self = this;
     var parId = self.__id();

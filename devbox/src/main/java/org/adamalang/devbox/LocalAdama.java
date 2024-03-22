@@ -32,6 +32,7 @@ import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.features.UrlSummaryGenerator;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
@@ -600,6 +601,21 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     } else {
       responder.error(new ErrorCodeException(-1));
     }
+  }
+
+  @Override
+  public void handle_FeatureSummarizeUrl(long requestId, String identity, String url, SummaryResponder responder) {
+    UrlSummaryGenerator.summarize(verse.webClientBase, url, new Callback<ObjectNode>() {
+      @Override
+      public void success(ObjectNode summary) {
+        responder.complete(summary);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
   }
 
   @Override

@@ -445,6 +445,22 @@
         </documentation>
     </field-definition>
 
+    <parameter-definition name="url" type="string" missing-error="423142">
+        <documentation>
+            A http(s) URL that resolves to a HTML page.
+        </documentation>
+    </parameter-definition>
+
+    <field-definition name="summary" type="json-object">
+        <documentation>
+            A json summary of a URL
+        </documentation>
+    </field-definition>
+
+    <responder name="summary">
+        <field name="summary"/>
+    </responder>
+
     <field-definition name="keystore" type="json-object">
         <documentation>
             A bunch of public keys to validate tokens for an authority.
@@ -1519,6 +1535,14 @@
         <parameter name="identity"/>
         <documentation>
             Create a connection to the billing document of the given identity.
+        </documentation>
+    </method>
+
+    <method name="feature/summarize-url" devbox="true" responder="summary" policy-manual="true" scope="region" js-sdk="true" no-policy-available="true">
+        <parameter name="identity"/>
+        <parameter name="url"/>
+        <documentation>
+            Summarize a URL by parsing it's meta-data.
         </documentation>
     </method>
 

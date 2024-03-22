@@ -15,34 +15,10 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.metrics;
+package org.adamalang.api;
 
-/** record success/failure rates, latency, failure codes */
-public interface RequestResponseMonitor {
-
-  /** start an operation */
-  RequestResponseMonitorInstance start();
-
-  /** the operation must success or fail. We also capture common bugs */
-  interface RequestResponseMonitorInstance {
-    void success();
-
-    void extra();
-
-    void failure(int code);
-  }
-
-  public static RequestResponseMonitorInstance UNMONITORED = new RequestResponseMonitorInstance() {
-    @Override
-    public void success() {
-    }
-
-    @Override
-    public void extra() {
-    }
-
-    @Override
-    public void failure(int code) {
-    }
-  };
+/** generated request type for feature/summarize-url */
+public class ClientFeatureSummarizeUrlRequest {
+  public String identity;
+  public String url;
 }

@@ -33,7 +33,7 @@ public class AssembleDefaultPolicy {
     policyDefault.append("    ObjectNode policy = Json.newJsonObject();\n");
     policyDefault.append("    ObjectNode child;\n");
     for (Method method : methods) {
-      if (method.internal || method.findBy != null) {
+      if (method.internal || method.findBy != null || method.noPolicyAvailable) {
         continue;
       }
       boolean developers = method.defaultPolicyBehavior.contains("Developers");

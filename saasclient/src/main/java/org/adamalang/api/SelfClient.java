@@ -638,6 +638,15 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (wcc, id) -> new DocumentStreamHandler(wcc, id), (obj) -> new ClientDataResponse(obj), callback, streamback);
   }
 
+  /** feature/summarize-url */
+  public void featureSummarizeUrl(ClientFeatureSummarizeUrlRequest request, Callback<ClientSummaryResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "feature/summarize-url");
+    node.put("identity", request.identity);
+    node.put("url", request.url);
+    pool.requestResponse(node, (obj) -> new ClientSummaryResponse(obj), callback);
+  }
+
   /** attachment/start */
   public void attachmentStart(ClientAttachmentStartRequest request, Callback<AttachmentUploadHandler> callback, Stream<ClientProgressResponse> streamback) {
     ObjectNode node = Json.newJsonObject();

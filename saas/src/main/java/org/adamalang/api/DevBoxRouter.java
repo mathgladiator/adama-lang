@@ -75,6 +75,8 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_DocumentsHashPassword(long requestId, String password, HashedPasswordResponder responder);
 
+  public abstract void handle_FeatureSummarizeUrl(long requestId, String identity, String url, SummaryResponder responder);
+
   public abstract void handle_AttachmentStart(long requestId, String identity, String space, String key, String filename, String contentType, ProgressResponder responder);
 
   public abstract void handle_AttachmentStartByDomain(long requestId, String identity, String domain, String filename, String contentType, ProgressResponder responder);
@@ -276,6 +278,12 @@ public abstract class DevBoxRouter {
           handle_DocumentsHashPassword(requestId, //
             request.getString("password", true, 465917), //
             new HashedPasswordResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "feature/summarize-url":
+          handle_FeatureSummarizeUrl(requestId, //
+            request.getString("identity", true, 458759), //
+            request.getString("url", true, 423142), //
+            new SummaryResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "attachment/start":
           _accessLogItem.put("space", request.getStringNormalize("space", true, 461828));

@@ -623,6 +623,25 @@ public class RegionConnectionRouter {
                 }
               });
             } return;
+            case "feature/summarize-url": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_FeatureSummarizeUrl.start();
+              FeatureSummarizeUrlRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(FeatureSummarizeUrlRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new SummaryResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "attachment/start": {
               StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_AttachmentStart.start();
               AttachmentStartRequest.resolve(session, nexus, request, new Callback<>() {
