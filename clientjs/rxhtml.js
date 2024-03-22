@@ -4095,6 +4095,12 @@ var RxHTML = (function () {
   self.aSD = function (form, state, channel, msToDebounce) {
     // TODO: do debounce if > 0
     form.addEventListener('submit', function (evt) {
+      // THIS REQUIRES VERIFICATION
+      /*
+      if (evt.target != form) {
+        return;
+      }
+      */
       evt.preventDefault();
       var passwords = {};
       var msg = get_form(form, passwords);
