@@ -2149,7 +2149,7 @@ var RxHTML = (function () {
 
     var name = "";
     if (hasName) {
-      name = el.name.trim();
+      name = el.name;
       if(name == "") {
         hasName = false;
       }
