@@ -62,7 +62,8 @@ public class AdamaWebRequest {
       }
       headers.put(headerName, entry.getValue());
     }
-    this.identity = bearerIdentity != null ? bearerIdentity :  cookieIdentity;
+
+    String getIdentity = null;
 
     ConnectionContext context = ConnectionContextFactory.of(ctx, req.headers());
     headers.put("origin", context.origin + "");
@@ -74,18 +75,25 @@ public class AdamaWebRequest {
       for (Map.Entry<String, List<String>> param : qsd.parameters().entrySet()) {
         String key = param.getKey();
         List<String> values = param.getValue();
-        if (values.size() == 0) {
-          parametersJson.put(key, "");
+        if ("__IDENTITY_TOKEN".equals(key)) {
+          if (values.size() == 1) {
+            getIdentity = values.get(0);
+          }
         } else {
-          parametersJson.put(key, values.get(0));
-          if (values.size() > 1) {
-            ArrayNode options = parametersJson.putArray(key + "*");
-            for (String val : values) {
-              options.add(val);
+          if (values.size() == 0) {
+            parametersJson.put(key, "");
+          } else {
+            parametersJson.put(key, values.get(0));
+            if (values.size() > 1) {
+              ArrayNode options = parametersJson.putArray(key + "*");
+              for (String val : values) {
+                options.add(val);
+              }
             }
           }
         }
       }
+      this.identity = getIdentity != null ? getIdentity : (bearerIdentity != null ? bearerIdentity :  cookieIdentity);
       this.parameters = parametersJson.toString();
     }
 

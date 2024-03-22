@@ -531,6 +531,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_METHODS, "*");
     res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
     res.headers().set(HttpHeaderNames.CACHE_CONTROL, "no-cache");
+    res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_HEADERS, "content-type");
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 

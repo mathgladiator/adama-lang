@@ -114,6 +114,27 @@ public class WebHandlerTests {
         callback.assertData("{\"auth\":true}");
       }
 
+      { // validate identity token is stripped out
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/inject?__IDENTITY_TOKEN=anonymous:person")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("anonymous:person:{}");
+      }
+
+      { // validate identity token from Authorization header
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("Authorization", "Bearer TOKEN")
+            .get("/inject")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("TOKEN:{}");
+      }
+
       {
         ObjectNode request = Json.newJsonObject();
         request.put("method", "document/authorization");

@@ -132,7 +132,7 @@ public class MockServiceBase implements ServiceBase {
             return;
           case GET:
           default:
-            handleGet(uri, headers, parametersJson, callback);
+            handleGet(identity, uri, headers, parametersJson, callback);
         }
       }
 
@@ -148,9 +148,14 @@ public class MockServiceBase implements ServiceBase {
         callback.failure(new ErrorCodeException(1000));
       }
 
-      public void handleGet(String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+      public void handleGet(String identity, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
         if ("/foo".equals(uri)){
           callback.success(new HttpHandler.HttpResult(200, "text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8), true));
+          return;
+        }
+
+        if ("/inject".equals(uri)){
+          callback.success(new HttpHandler.HttpResult(200, "text/html; charset=UTF-8", (identity + ":" + parametersJson).getBytes(StandardCharsets.UTF_8), true));
           return;
         }
         if ("/crash".equals(uri)) {
