@@ -165,9 +165,15 @@ public class Payrix  extends SimpleService {
             return;
           }
           ObjectNode payment = (ObjectNode) resultFromPayrix.get("response").get("data").get(0).get("payment");
-          ObjectNode bin = (ObjectNode) payment.get("bin");
           handoffResult.put("method", payment.get("method").intValue());
-          String type = bin.get("type").textValue();
+
+          String type = null;
+          try {
+            ObjectNode bin = (ObjectNode) payment.get("bin");
+            type = bin.get("type").textValue();
+          } catch (Exception ex) {
+            // ignore the type not being present because bin is null
+          }
           if (type == null) {
             type = "unknown";
           }
