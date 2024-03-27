@@ -85,6 +85,7 @@ public class WebClientSharedConnection implements Living {
     exception = ex;
     if (responder != null) {
       responder.failure(ex);
+      responder = null;
     }
   }
 
