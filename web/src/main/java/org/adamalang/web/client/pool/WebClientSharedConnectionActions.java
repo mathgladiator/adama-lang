@@ -45,7 +45,8 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
   }
 
   @Override
-  public void create(WebEndpoint request, Callback<WebClientSharedConnection> created) {
+  public void create(WebEndpoint request, Callback<WebClientSharedConnection> createdRaw) {
+    Callback<WebClientSharedConnection> created = metrics.web_create_shared.wrap(createdRaw);
     WebClientSharedConnection connection = new WebClientSharedConnection(metrics, request, group);
     final var b = new Bootstrap();
     b.group(group);

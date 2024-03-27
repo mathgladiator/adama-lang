@@ -17,6 +17,7 @@
 */
 package org.adamalang.web.client;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
@@ -38,10 +39,12 @@ public class WebClientBaseMetrics {
   public final Runnable web_client_request_failed_send;
   public final Inflight inflight_web_requests;
   public final CallbackMonitor web_execute_find_pool_item;
+  public final CallbackMonitor web_create_shared;
 
   public WebClientBaseMetrics(MetricsFactory factory) {
     this.alarm_web_client_null_responder = factory.inflight("alarm_web_client_null_responder");
     this.web_client_instant_fail = factory.counter("web_client_instant_fail");
+    this.web_create_shared = factory.makeCallbackMonitor("web_create_shared");
     this.web_client_200_or_204 = factory.counter("web_client_200_or_204");
     this.web_client_400 = factory.counter("web_client_400");
     this.web_client_403 = factory.counter("web_client_403");
