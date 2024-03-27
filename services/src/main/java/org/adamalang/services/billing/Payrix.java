@@ -169,8 +169,11 @@ public class Payrix  extends SimpleService {
 
           String type = null;
           try {
-            ObjectNode bin = (ObjectNode) payment.get("bin");
-            type = bin.get("type").textValue();
+            JsonNode binNode = payment.get("bin");
+            if (binNode instanceof ObjectNode) {
+              ObjectNode bin = (ObjectNode) binNode;
+              type = bin.get("type").textValue();
+            }
           } catch (Exception ex) {
             // ignore the type not being present because bin is null
           }
