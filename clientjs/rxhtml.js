@@ -4093,14 +4093,18 @@ var RxHTML = (function () {
 
   // RUNTIME | rx:action=send:$channel
   self.aSD = function (form, state, channel, msToDebounce) {
-    // TODO: do debounce if > 0
+    form.lastFired = 0;
     form.addEventListener('submit', function (evt) {
-      // THIS REQUIRES VERIFICATION
-      /*
+      // only execute the send on the form being clicked within (parent)
       if (evt.target != form) {
         return;
       }
-      */
+      // debounce the send so it's not too fast
+      var elapsed = Date.now() - form.lastFired;
+      if (elapsed < msToDebounce) {
+        return;
+      }
+      form.lastFired = Date.now();
       evt.preventDefault();
       var passwords = {};
       var msg = get_form(form, passwords);
