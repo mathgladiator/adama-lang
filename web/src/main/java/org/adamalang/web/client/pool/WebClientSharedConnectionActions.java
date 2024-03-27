@@ -68,6 +68,11 @@ public class WebClientSharedConnectionActions implements PoolActions<WebEndpoint
             }
 
             @Override
+            public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+              connection.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_INACTIVE));
+            }
+
+            @Override
             public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
               if (cause instanceof ReadTimeoutException || cause instanceof WriteTimeoutException) {
                 connection.failure(new ErrorCodeException(ErrorCodes.WEB_BASE_EXECUTE_TIMEOUT));

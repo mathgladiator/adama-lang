@@ -607,6 +607,8 @@ public class ErrorTable {
     descriptions.put(977091, "no description of error (yet)");
     names.put(969987, "WEB_BASE_EXECUTE_TIMEOUT");
     descriptions.put(969987, "no description of error (yet)");
+    names.put(967667, "WEB_BASE_EXECUTE_INACTIVE");
+    descriptions.put(967667, "no description of error (yet)");
     names.put(990447, "NET_LCSM_PASSWORD_TIMEOUT");
     descriptions.put(990447, "no description of error (yet)");
     names.put(915695, "NET_LCSM_PASSWORD_REJECTED");
