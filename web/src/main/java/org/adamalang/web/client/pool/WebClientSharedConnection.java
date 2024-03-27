@@ -150,77 +150,74 @@ public class WebClientSharedConnection implements Living {
     }
     metrics.inflight_web_requests.up();
     this.responder = responder;
-    group.execute(new Runnable() {
-      @Override
-      public void run() {
+    group.execute(() -> {
+      try {
+        URI uri = URI.create(request.url);
+        String requestPath = uri.getRawPath() + (uri.getRawQuery() != null ? ("?" + uri.getRawQuery()) : "");
+        boolean success = false;
         try {
-          URI uri = URI.create(request.url);
-          String requestPath = uri.getRawPath() + (uri.getRawQuery() != null ? ("?" + uri.getRawQuery()) : "");
-          boolean success = false;
-          try {
-            metrics.web_client_request_start.run();
-            // convert the method
-            HttpMethod method = HttpMethod.valueOf(request.method.toUpperCase());
-            // initialiize the headers
-            HttpHeaders headers = new DefaultHttpHeaders(true);
-            headers.set("Host", endpoint.host);
-            // get the body size
-            long bodySize = request.body.size();
-            if (method != HttpMethod.GET || bodySize > 0) {
-              headers.set(HttpHeaderNames.CONTENT_LENGTH, bodySize);
-            }
-            // apply the headers
-            for (Map.Entry<String, String> entry : request.headers.entrySet()) {
-              headers.set(entry.getKey(), entry.getValue());
-            }
-            if (bodySize < 32 * 1024) {
-              final ByteBuf content;
-              if (bodySize == 0) {
-                content = Unpooled.wrappedBuffer(EMPTY_BODY);
-              } else {
-                byte[] buffer = new byte[8196];
-                content = Unpooled.buffer((int) bodySize);
-                int left = (int) bodySize;
-                while (left > 0) {
-                  int sz = request.body.read(buffer);
-                  content.writeBytes(buffer, 0, sz);
-                  left -= sz;
-                }
-              }
-              channel.writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, requestPath, content, headers, new DefaultHttpHeaders(true)));
-              metrics.web_client_request_sent_small_full.run();
-            } else {
-              channel.writeAndFlush(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, requestPath, headers));
-              metrics.web_client_request_send_large_started.run();
-              long left = bodySize;
-              while (left > 0) {
-                byte[] buffer = new byte[8196];
-                int sz = request.body.read(buffer);
-                final ByteBuf content;
-                if (sz == buffer.length) {
-                  content = Unpooled.wrappedBuffer(buffer);
-                } else {
-                  content = Unpooled.wrappedBuffer(Arrays.copyOfRange(buffer, 0, sz));
-                }
-                left -= sz;
-                if (left == 0) {
-                  channel.writeAndFlush(new DefaultLastHttpContent(content));
-                } else {
-                  channel.writeAndFlush(new DefaultHttpContent(content));
-                }
-              }
-            }
-            metrics.web_client_request_send_large_finished.run();
-            success = true;
-          } finally {
-            request.body.finished(success);
+          metrics.web_client_request_start.run();
+          // convert the method
+          HttpMethod method = HttpMethod.valueOf(request.method.toUpperCase());
+          // initialiize the headers
+          HttpHeaders headers = new DefaultHttpHeaders(true);
+          headers.set("Host", endpoint.host);
+          // get the body size
+          long bodySize = request.body.size();
+          if (method != HttpMethod.GET || bodySize > 0) {
+            headers.set(HttpHeaderNames.CONTENT_LENGTH, bodySize);
           }
-        } catch (Exception cause) {
-          metrics.web_client_request_failed_send.run();
-          responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_SHARED_EXECUTE_FAILED_READ, cause, EXLOGGER));
+          // apply the headers
+          for (Map.Entry<String, String> entry : request.headers.entrySet()) {
+            headers.set(entry.getKey(), entry.getValue());
+          }
+          if (bodySize < 32 * 1024) {
+            final ByteBuf content;
+            if (bodySize == 0) {
+              content = Unpooled.wrappedBuffer(EMPTY_BODY);
+            } else {
+              byte[] buffer = new byte[8196];
+              content = Unpooled.buffer((int) bodySize);
+              int left = (int) bodySize;
+              while (left > 0) {
+                int sz = request.body.read(buffer);
+                content.writeBytes(buffer, 0, sz);
+                left -= sz;
+              }
+            }
+            channel.writeAndFlush(new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, method, requestPath, content, headers, new DefaultHttpHeaders(true)));
+            metrics.web_client_request_sent_small_full.run();
+          } else {
+            channel.writeAndFlush(new DefaultHttpRequest(HttpVersion.HTTP_1_1, method, requestPath, headers));
+            metrics.web_client_request_send_large_started.run();
+            long left = bodySize;
+            while (left > 0) {
+              byte[] buffer = new byte[8196];
+              int sz = request.body.read(buffer);
+              final ByteBuf content;
+              if (sz == buffer.length) {
+                content = Unpooled.wrappedBuffer(buffer);
+              } else {
+                content = Unpooled.wrappedBuffer(Arrays.copyOfRange(buffer, 0, sz));
+              }
+              left -= sz;
+              if (left == 0) {
+                channel.writeAndFlush(new DefaultLastHttpContent(content));
+              } else {
+                channel.writeAndFlush(new DefaultHttpContent(content));
+              }
+            }
+          }
+          metrics.web_client_request_send_large_finished.run();
+          success = true;
         } finally {
-          metrics.inflight_web_requests.down();
+          request.body.finished(success);
         }
+      } catch (Throwable cause) {
+        metrics.web_client_request_failed_send.run();
+        responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.WEB_BASE_SHARED_EXECUTE_FAILED_READ, cause, EXLOGGER));
+      } finally {
+        metrics.inflight_web_requests.down();
       }
     });
   }
