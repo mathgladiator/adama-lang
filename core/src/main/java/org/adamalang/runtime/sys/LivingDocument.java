@@ -75,6 +75,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxString __state;
   protected final RxInt64 __time;
   protected final RxLazy<NtDate> __today;
+  protected final RxLazy<Long> __timeDelay;
   protected final RxCache __cache;
   protected final RxString __timezone;
   protected final RxInt32 __webTaskId;
@@ -134,7 +135,18 @@ public abstract class LivingDocument implements RxParent, Caller {
         return true;
       }
     };
+    __timeDelay = new RxLazy<>(this, () -> __datetimeNow().dateTime.toInstant().toEpochMilli(), null) {
+      @Override
+      public boolean __raiseInvalid() {
+        if (this.cached == null || Math.abs(this.cached - formula.get()) > 60000) {
+          super.__raiseInvalid();
+          __forceSettle();
+        }
+        return true;
+      }
+    };
     __time.__subscribe(__today);
+    __time.__subscribe(__timeDelay);
     __next_time = new RxInt64(this, 0L);
     __last_expire_time = new RxInt64(this, 0L);
     __auto_cache_id = new RxInt32(this, 0);
@@ -1474,7 +1486,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         if (who != null && key != null && origin != null && ip != null) {
           context = new CoreRequestContext(who, origin, ip, key);
         }
-        if (timestamp - __time.get() > factory.temporalResolutionMilliseconds) {
+        if (Math.abs(timestamp - __time.get()) > factory.temporalResolutionMilliseconds) {
           __time.set(timestamp);
         }
       } finally {

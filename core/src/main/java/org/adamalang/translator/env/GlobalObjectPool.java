@@ -110,7 +110,7 @@ public class GlobalObjectPool {
     final var time = new TyNativeGlobalObject("Time", null, false);
     time.functions.put("now", subscribe("__time", generateInternalDocumentFunction("__timeNow", tyLng)));
     time.functions.put("today", subscribe("__today", generateInternalDocumentFunction("__dateOfToday", new TyNativeDate(TypeBehavior.ReadOnlyNativeValue, null, null))));
-    time.functions.put("datetime", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    time.functions.put("datetime", subscribe("__timeDelay", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null))));
     time.functions.put("datetimeLive", subscribe("__time", generateInternalDocumentFunction("__datetimeNow", new TyNativeDateTime(TypeBehavior.ReadOnlyNativeValue, null, null))));
     time.functions.put("time", generateInternalDocumentFunction("__timeOfToday", new TyNativeTime(TypeBehavior.ReadOnlyNativeValue, null, null)));
     time.functions.put("zone", generateInternalDocumentFunction("__timeZone", tyStr));

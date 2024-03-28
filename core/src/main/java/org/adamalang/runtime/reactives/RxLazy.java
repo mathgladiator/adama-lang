@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 /** a reactive lazy formula which is computed on demand */
 public class RxLazy<Ty> extends RxDependent {
-  private final Supplier<Ty> formula;
+  protected final Supplier<Ty> formula;
   private final Supplier<Runnable> perf;
   protected Ty cached;
   private int generation;
