@@ -651,7 +651,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n    __optimisticNextCronCheck = __current.integrate(__optimisticNextCronCheck);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __reset_cron() {");
+    gold.append("\n  protected void __reset_cron() {");
     gold.append("\n    long __now = __time.get();");
     gold.append("\n    __foo.set(__now);");
     gold.append("\n    __fozozy.set(__now);");
@@ -1351,7 +1351,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n    __optimisticNextCronCheck = __current.integrate(__optimisticNextCronCheck);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __reset_cron() {");
+    gold.append("\n  protected void __reset_cron() {");
     gold.append("\n    long __now = __time.get();");
     gold.append("\n    __foo.set(__now);");
     gold.append("\n    __fozozy.set(__now);");
@@ -2051,7 +2051,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n    __optimisticNextCronCheck = __current.integrate(__optimisticNextCronCheck);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __reset_cron() {");
+    gold.append("\n  protected void __reset_cron() {");
     gold.append("\n    long __now = __time.get();");
     gold.append("\n    __foo.set(__now);");
     gold.append("\n    __fozozy.set(__now);");
@@ -2845,7 +2845,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n    __optimisticNextCronCheck = __current.integrate(__optimisticNextCronCheck);");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __reset_cron() {");
+    gold.append("\n  protected void __reset_cron() {");
     gold.append("\n    long __now = __time.get();");
     gold.append("\n    __first.set(__now);");
     gold.append("\n    __second.set(__now);");
