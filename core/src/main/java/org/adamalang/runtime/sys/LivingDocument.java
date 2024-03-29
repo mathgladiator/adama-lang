@@ -1102,7 +1102,13 @@ public abstract class LivingDocument implements RxParent, Caller {
 
   public abstract void __make_cron_progress();
 
-  public abstract void __reset_cron();
+
+  public void __execute_reset_cron() {
+    __optimisticNextCronCheck = 0L;
+    __reset_cron();
+  }
+
+  protected abstract void __reset_cron();
 
   public abstract String __traffic(CoreRequestContext __context);
 

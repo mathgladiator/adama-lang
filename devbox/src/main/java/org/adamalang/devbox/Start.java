@@ -262,7 +262,11 @@ public class Start {
             terminal.info("base-diagnostics|" + base.diagnostics());
           } else if (command.is("time-reset", "timereset")) {
             terminal.info("time-machine|reset-scheduled");
-            verse.timeMachine.reset();
+            verse.timeMachine.reset(() -> {});
+          } else if (command.is("cron-reset", "cronreset")) {
+            final AdamaMicroVerse capturedVerse = verse;
+            Key keyToReset = focusedKey;
+            verse.timeMachine.reset(() -> {capturedVerse.service.devBoxCronReset(keyToReset);});
           } else if (command.is("time-slip", "timeslip")) {
             if (verse == null) {
               terminal.error("time-slip|must have local verse");
@@ -310,7 +314,7 @@ public class Start {
                   if (timeframeSeconds == null) {
                     double potential = deltaMs;
                     potential /= 500L * 60L * 60L * 24L;
-                    timeframeSeconds = (int) Math.ceil(potential + 1);
+                    timeframeSeconds = Math.max(5, (int) Math.ceil(potential + 1));
                   }
                   verse.timeMachine.add(deltaMs, timeframeSeconds);
                 } else {

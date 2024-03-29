@@ -807,6 +807,20 @@ public class CoreService implements Deliverer, Queryable {
     });
   }
 
+  // hack for devbox, escapes traditional commit path
+  public void devBoxCronReset(Key key) {
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.document().__execute_reset_cron();
+        document.invalidate(Callback.DONT_CARE_INTEGER);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {}
+    });
+  }
+
   /** execute a web get against the document */
   public void webGet(Key key, WebGet get, Callback<WebResponse> callback) {
     loadOrCreate(get.context.toCoreRequestContext(key), key, new Callback<>() {

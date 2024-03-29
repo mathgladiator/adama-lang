@@ -45,18 +45,20 @@ public class TimeMachine implements TimeSource {
     executor.execute(asm);
   }
 
-  public void reset() {
-    executor.execute(new ResetStateMachine());
+  public void reset(Runnable done) {
+    executor.execute(new ResetStateMachine(done));
   }
 
   private class ResetStateMachine extends NamedRunnable {
     private int ticksLeft;
     private long delta;
+    private Runnable done;
 
-    public ResetStateMachine() {
+    public ResetStateMachine(Runnable done) {
       super("reset-time-machine");
       this.ticksLeft = 10;
       this.delta = -shift / 10;
+      this.done = done;
     }
 
     @Override
@@ -64,13 +66,15 @@ public class TimeMachine implements TimeSource {
       shift += delta;
       ticksLeft--;
       if (ticksLeft > 0) {
+        forceUpdate.run();
         log.accept("shift[" + delta + "]");
         executor.schedule(this,  100);
       } else {
         log.accept("reset complete");
         shift = 0;
+        forceUpdate.run();
+        done.run();
       }
-      forceUpdate.run();
     }
   }
 

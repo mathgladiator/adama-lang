@@ -21,6 +21,7 @@ import org.adamalang.common.gossip.MockTime;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TimeMachineTests {
@@ -45,12 +46,14 @@ public class TimeMachineTests {
       Assert.assertEquals(40, at.get());
       Assert.assertEquals(2678400000L, machine.nowMilliseconds());
       Assert.assertTrue(attempts < 500);
-      machine.reset();
-      while (at.get() < 60 && attempts <= 600 && machine.nowMilliseconds() > 0) {
+      AtomicBoolean done = new AtomicBoolean(false);
+      machine.reset(() -> {done.set(true);});
+      while (at.get() < 65 && attempts <= 600 && machine.nowMilliseconds() > 0) {
         attempts++;
         Thread.sleep(100);
         System.err.println("@" + at.get() + "-->" + machine.nowMilliseconds());
       }
+      Assert.assertTrue(done.get());
     } finally {
       executor.shutdown();
     }

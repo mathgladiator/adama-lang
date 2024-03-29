@@ -48,7 +48,6 @@ public class CronChecker {
     return hourly(lastFired, currentTime, minutes.get(), sysTimeZone, docTimeZone);
   }
 
-
   public static CronTask daily(RxInt64 lastFired, long currentTime, int hour, int minute, ZoneId sysTimeZone, ZoneId docTimeZone) {
     // get the time we last fired within the document's time zone
     ZonedDateTime lastFiredDocTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(lastFired.get().longValue()), sysTimeZone).withZoneSameInstant(docTimeZone);

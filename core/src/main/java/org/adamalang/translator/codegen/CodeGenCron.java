@@ -74,10 +74,10 @@ public class CodeGenCron {
     sb.append("@Override").writeNewline();
     int countdown = env.document.cronTasks.size();
     if (countdown == 0) {
-      sb.append("public void __reset_cron() {}").writeNewline();
+      sb.append("protected void __reset_cron() {}").writeNewline();
       return;
     }
-    sb.append("public void __reset_cron() {").tabUp().writeNewline();
+    sb.append("protected void __reset_cron() {").tabUp().writeNewline();
     sb.append("long __now = __time.get();").writeNewline();
     for (Map.Entry<String, DefineCronTask> entry : env.document.cronTasks.entrySet()) {
       DefineCronTask dct = entry.getValue();
