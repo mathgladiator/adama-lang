@@ -28,10 +28,7 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
-import org.adamalang.runtime.sys.web.WebContext;
-import org.adamalang.runtime.sys.web.WebGet;
-import org.adamalang.runtime.sys.web.WebPut;
-import org.adamalang.runtime.sys.web.WebResponse;
+import org.adamalang.runtime.sys.web.*;
 import org.adamalang.system.FrontendHttpHandler;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.ContentType;
@@ -177,7 +174,20 @@ public class LocalServiceBase implements ServiceBase {
       }
 
       public void handleDelete(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.failure(new ErrorCodeException(0));
+        if (verse != null) {
+          // TODO: differiate between a document/domain put
+          final SpaceKeyRequest skr;
+          if (verse.domainKeyToUse != null) {
+            skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri);
+          } else {
+            skr = SpaceKeyRequest.parse(uri);
+          }
+          Key key = new Key(skr.space, skr.key);
+          WebDelete webDelete = new WebDelete(new WebContext(who, context.origin, context.remoteIp), skr.uri, headers, new NtDynamic(parametersJson));
+          verse.service.webDelete(key, webDelete, route(skr, callback));
+        } else {
+          callback.failure(new ErrorCodeException(0));
+        }
       }
 
       public void handleGet(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
