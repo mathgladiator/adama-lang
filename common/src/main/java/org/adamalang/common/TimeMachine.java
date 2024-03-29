@@ -90,8 +90,8 @@ public class TimeMachine implements TimeSource {
     public void execute() throws Exception {
       shift += addPerTick;
       ticksLeft--;
-      log.accept("shift[" + addPerTick + "]");
-      if (ticksLeft > 0) {
+      if (ticksLeft > 0 && addPerTick > 0) {
+        log.accept("shift[" + addPerTick + "]");
         executor.schedule(this, msPerTick);
       } else {
         log.accept("done");
