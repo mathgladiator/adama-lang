@@ -70,4 +70,24 @@ public class CodeGenCron {
     }
     sb.append("}").writeNewline();
   }
+  public static void writeCronReset(final StringBuilderWithTabs sb, Environment env) {
+    sb.append("@Override").writeNewline();
+    int countdown = env.document.cronTasks.size();
+    if (countdown == 0) {
+      sb.append("public void __reset_cron() {}").writeNewline();
+      return;
+    }
+    sb.append("public void __reset_cron() {").tabUp().writeNewline();
+    sb.append("long __now = __time.get();").writeNewline();
+    for (Map.Entry<String, DefineCronTask> entry : env.document.cronTasks.entrySet()) {
+      DefineCronTask dct = entry.getValue();
+      sb.append("__").append(dct.name.text).append(".set(__now);");
+      countdown--;
+      if (countdown == 0) {
+        sb.tabDown();
+      }
+      sb.writeNewline();
+    }
+    sb.append("}").writeNewline();
+  }
 }

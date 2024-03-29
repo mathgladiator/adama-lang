@@ -72,6 +72,10 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public void __reset_cron() {
+  }
+
+  @Override
   protected boolean __is_direct_channel(String channel) {
     return "__direct".equals(channel);
   }

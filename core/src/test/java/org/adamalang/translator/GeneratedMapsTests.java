@@ -731,6 +731,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1839,6 +1841,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -2790,6 +2794,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -3775,6 +3781,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -4626,6 +4634,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -5654,6 +5664,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -6964,6 +6976,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -8138,6 +8152,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -9255,6 +9271,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -10326,6 +10344,8 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");

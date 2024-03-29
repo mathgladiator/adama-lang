@@ -849,6 +849,8 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1765,6 +1767,8 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -2656,6 +2660,8 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -2866,6 +2872,7 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n    datetime_val = new RxLazy<NtDateTime>(this, () -> (NtDateTime)(__datetimeNow()), null);");
     gold.append("\n    today = new RxLazy<NtDate>(this, () -> (NtDate)(__dateOfToday()), null);");
     gold.append("\n    __time.__subscribe(now);");
+    gold.append("\n    __timeDelay.__subscribe(datetime_val);");
     gold.append("\n    __today.__subscribe(today);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3343,6 +3350,8 @@ public class GeneratedFunctionsRxTests extends GeneratedBase {
     gold.append("\n  public void __password(CoreRequestContext __context, String __pw) {}");
     gold.append("\n  @Override");
     gold.append("\n  public void __make_cron_progress() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __reset_cron() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
