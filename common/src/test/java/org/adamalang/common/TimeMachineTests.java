@@ -48,7 +48,7 @@ public class TimeMachineTests {
       Assert.assertTrue(attempts < 500);
       AtomicBoolean done = new AtomicBoolean(false);
       machine.reset(() -> {done.set(true);});
-      while (at.get() < 65 && attempts <= 600 && machine.nowMilliseconds() > 0) {
+      while (at.get() < 65 && attempts <= 600 && machine.nowMilliseconds() > 0 && !done.get()) {
         attempts++;
         Thread.sleep(100);
         System.err.println("@" + at.get() + "-->" + machine.nowMilliseconds());
