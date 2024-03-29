@@ -160,7 +160,20 @@ public class LocalServiceBase implements ServiceBase {
       }
 
       public void handleOptions(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        callback.failure(new ErrorCodeException(0));
+        if (verse != null) {
+          // TODO: differiate between a document/domain put
+          final SpaceKeyRequest skr;
+          if (verse.domainKeyToUse != null) {
+            skr = new SpaceKeyRequest(verse.domainKeyToUse.space, verse.domainKeyToUse.key, uri);
+          } else {
+            skr = SpaceKeyRequest.parse(uri);
+          }
+          Key key = new Key(skr.space, skr.key);
+          WebGet webGet = new WebGet(new WebContext(who, context.origin, context.remoteIp), skr.uri, headers, new NtDynamic(parametersJson));
+          verse.service.webOptions(key, webGet, route(skr, callback));
+        } else {
+          callback.failure(new ErrorCodeException(0));
+        }
       }
 
       public void handleDelete(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
