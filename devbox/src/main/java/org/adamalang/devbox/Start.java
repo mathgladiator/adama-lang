@@ -187,6 +187,8 @@ public class Start {
           terminal.info("  `timeslip $delta $unit [$timeframe-seconds]`");
           terminal.info("                   $unit \\in {ms, sec, min, hr, day, week}");
           terminal.info("      - change time by $delta $unit over $timeframe-seconds (default is 5 seconds)");
+          terminal.info("  `timereset` - undo the timeslip and bring it back to the present");
+          terminal.info("  `cronreset` - undo the timeslip, bring it back to the present, and reset cron jobs to have a last fired time of the present time");
           terminal.info("  `diagnostics` - get some useful diagnostics");
 
           terminal.info("");
