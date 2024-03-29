@@ -260,6 +260,9 @@ public class Start {
               }
             });
             terminal.info("base-diagnostics|" + base.diagnostics());
+          } else if (command.is("time-reset", "timereset")) {
+            terminal.info("time-machine|reset-scheduled");
+            verse.timeMachine.reset();
           } else if (command.is("time-slip", "timeslip")) {
             if (verse == null) {
               terminal.error("time-slip|must have local verse");
@@ -305,7 +308,9 @@ public class Start {
                 if (deltaMs != null) {
                   Integer timeframeSeconds = command.argAtIsInt(2);
                   if (timeframeSeconds == null) {
-                    timeframeSeconds = 5;
+                    double potential = deltaMs;
+                    potential /= 500L * 60L * 60L * 24L;
+                    timeframeSeconds = (int) Math.ceil(potential + 1);
                   }
                   verse.timeMachine.add(deltaMs, timeframeSeconds);
                 } else {

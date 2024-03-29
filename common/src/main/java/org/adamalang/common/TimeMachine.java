@@ -17,17 +17,21 @@
 */
 package org.adamalang.common;
 
+import java.util.function.Consumer;
+
 public class TimeMachine implements TimeSource {
+  private final Consumer<String> log;
   private final TimeSource proxy;
   private final SimpleExecutor executor;
   private final Runnable forceUpdate;
   private long shift;
 
-  public TimeMachine(TimeSource proxy, SimpleExecutor executor, Runnable forceUpdate) {
+  public TimeMachine(TimeSource proxy, SimpleExecutor executor, Runnable forceUpdate, Consumer<String> log) {
     this.proxy = proxy;
     this.executor = executor;
     this.forceUpdate = forceUpdate;
     this.shift = 0;
+    this.log = log;
   }
 
   @Override
@@ -39,6 +43,35 @@ public class TimeMachine implements TimeSource {
     int ticks = seconds * 10;
     AddStateMachine asm = new AddStateMachine(ticks, 100, deltaMilliseconds / ticks);
     executor.execute(asm);
+  }
+
+  public void reset() {
+    executor.execute(new ResetStateMachine());
+  }
+
+  private class ResetStateMachine extends NamedRunnable {
+    private int ticksLeft;
+    private long delta;
+
+    public ResetStateMachine() {
+      super("reset-time-machine");
+      this.ticksLeft = 10;
+      this.delta = -shift / 10;
+    }
+
+    @Override
+    public void execute() throws Exception {
+      shift += delta;
+      ticksLeft--;
+      if (ticksLeft > 0) {
+        log.accept("shift[" + delta + "]");
+        executor.schedule(this,  100);
+      } else {
+        log.accept("reset complete");
+        shift = 0;
+      }
+      forceUpdate.run();
+    }
   }
 
   private class AddStateMachine extends NamedRunnable {
@@ -57,8 +90,11 @@ public class TimeMachine implements TimeSource {
     public void execute() throws Exception {
       shift += addPerTick;
       ticksLeft--;
+      log.accept("shift[" + addPerTick + "]");
       if (ticksLeft > 0) {
         executor.schedule(this, msPerTick);
+      } else {
+        log.accept("done");
       }
       forceUpdate.run();
     }

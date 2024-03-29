@@ -32,6 +32,8 @@ public class TimeMachineTests {
       AtomicInteger at = new AtomicInteger(0);
       TimeMachine machine = new TimeMachine(mock, executor, () -> {
         at.incrementAndGet();
+      }, (ln) -> {
+        System.err.println(ln);
       });
       int attempts = 0;
       machine.add(2678400000L, 4);
@@ -43,6 +45,12 @@ public class TimeMachineTests {
       Assert.assertEquals(40, at.get());
       Assert.assertEquals(2678400000L, machine.nowMilliseconds());
       Assert.assertTrue(attempts < 500);
+      machine.reset();
+      while (at.get() < 60 && attempts <= 600 && machine.nowMilliseconds() > 0) {
+        attempts++;
+        Thread.sleep(100);
+        System.err.println("@" + at.get() + "-->" + machine.nowMilliseconds());
+      }
     } finally {
       executor.shutdown();
     }

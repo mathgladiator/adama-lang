@@ -111,7 +111,7 @@ public class LocalServiceFactory {
     this.base = new DeploymentFactoryBase(AsyncByteCodeCache.DIRECT, RuntimeEnvironment.Beta);
     AtomicReference<Runnable> sweep = new AtomicReference<>(() -> {
     });
-    this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run());
+    this.timeMachine = new TimeMachine(TimeSource.REAL_TIME, caravanExecutor, () -> sweep.get().run(), (ln) -> io.info("time-machine|" + ln));
     this.service = new CoreService(new CoreMetrics(metricsFactory), base, (samples) -> {
     }, (key, metricsPayload) -> {
       io.info("metrics:" + metricsPayload);
