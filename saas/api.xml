@@ -151,6 +151,13 @@
         <validate service="org.adamalang.validators.ValidateEmail"/>
     </parameter-definition>
 
+    <parameter-definition name="scopes" type="string" missing-error="463103" logged="true">
+        <documentation>
+            The scopes of a social login.
+            For example, * is all scopes which is applicable for a Adama controlled property while another scope is $space1/*,$space2/$key1
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="access-token" type="string" missing-error="407544">
         <documentation>
             A token from a third party authorization service.
@@ -863,6 +870,15 @@
         <parameter name="password"/>
         <documentation>
             Sign an Adama developer in with an email and password pair.
+        </documentation>
+    </method>
+
+    <method name="account/social-login" responder="initiation" scope="global" js-sdk="true">
+        <parameter name="email"/>
+        <parameter name="password"/>
+        <parameter name="scopes"/>
+        <documentation>
+            Sign an Adama user in with an email and password pair.
         </documentation>
     </method>
 

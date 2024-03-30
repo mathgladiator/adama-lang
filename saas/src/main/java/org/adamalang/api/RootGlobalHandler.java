@@ -34,6 +34,8 @@ public interface RootGlobalHandler {
 
   public void handle(Session session, AccountLoginRequest request, InitiationResponder responder);
 
+  public void handle(Session session, AccountSocialLoginRequest request, InitiationResponder responder);
+
   public void handle(Session session, ProbeRequest request, SimpleResponder responder);
 
   public void handle(Session session, AuthorityCreateRequest request, ClaimResultResponder responder);
@@ -171,6 +173,7 @@ public interface RootGlobalHandler {
       case "account/set-password":
       case "account/get-payment-plan":
       case "account/login":
+      case "account/social-login":
       case "probe":
       case "authority/create":
       case "authority/set":

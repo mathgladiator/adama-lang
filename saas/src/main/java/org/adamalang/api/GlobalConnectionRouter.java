@@ -199,6 +199,25 @@ public class GlobalConnectionRouter {
                 }
               });
             } return;
+            case "account/social-login": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountSocialLogin.start();
+              AccountSocialLoginRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(AccountSocialLoginRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "probe": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_Probe.start();
               ProbeRequest.resolve(session, nexus, request, new Callback<>() {

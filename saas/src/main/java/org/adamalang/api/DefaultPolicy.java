@@ -59,6 +59,11 @@ public class DefaultPolicy {
     child.putArray("allowed-authorities");
     child.putArray("allowed-documents");
     child.putArray("allowed-document-spaces");
+    child = policy.putObject("account/social-login");
+    child.put("developers",false);
+    child.putArray("allowed-authorities");
+    child.putArray("allowed-documents");
+    child.putArray("allowed-document-spaces");
     child = policy.putObject("probe");
     child.put("developers",false);
     child.putArray("allowed-authorities");

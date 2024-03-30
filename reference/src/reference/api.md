@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [FeatureSummarizeUrl](#method-featuresummarizeurl-js), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [AccountSocialLogin](#method-accountsociallogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [FeatureSummarizeUrl](#method-featuresummarizeurl-js), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount (JS)
 **wire method**:init/setup-account
@@ -182,6 +182,36 @@ Sign an Adama developer in with an email and password pair.
 ### JavaScript SDK Template
 ```js
 connection.AccountLogin(email, password, {
+  success: function(response) {
+    // response.identity
+  },
+  failure: function(reason) {
+  }
+});
+```
+
+
+### Request response fields
+| name | type | documentation |
+| --- | --- | --- |
+| identity | String | A private token used to authenticate to Adama. |
+
+## Method: AccountSocialLogin (JS)
+**wire method**:account/social-login
+
+Sign an Adama user in with an email and password pair.
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| email | yes | String | The email of an Adama developer. |
+| password | yes | String | The password for your account or a document |
+| scopes | yes | String | The scopes of a social login.             For example, * is all scopes which is applicable for a Adama controlled property while another scope is $space1/*,$space2/$key1 |
+
+
+### JavaScript SDK Template
+```js
+connection.AccountSocialLogin(email, password, scopes, {
   success: function(response) {
     // response.identity
   },

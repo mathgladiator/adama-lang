@@ -319,6 +319,25 @@ public class GlobalControlHandler implements RootGlobalHandler {
     }
   }
 
+  @Override
+  public void handle(Session session, AccountSocialLoginRequest request, InitiationResponder responder) {
+    try {
+      String hash = Users.getPasswordHash(nexus.database, request.userId);
+      if (SCryptUtil.check(request.password, hash)) {
+        // TODO: sign this under a host key
+        KeyPair pair = Jwts.SIG.ES256.keyPair().build();
+        String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+        long expiry = System.currentTimeMillis() + 365 * 24 * 60 * 60000;
+        Users.addKey(nexus.database, request.userId, publicKey, expiry);
+        responder.complete(Jwts.builder().subject("" + request.userId).audience().add(request.scopes).and().expiration(new Date(expiry)).issuer("user").signWith(pair.getPrivate()).compact());
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LOGIN_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
   private void getOrCreateUser(String email, Callback<Integer> callback) {
     try {
       int userId = Users.createUserId(nexus.database, email);

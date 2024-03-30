@@ -15,9 +15,11 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20240330081546";
-  public static final String JS_VERSION = "bc54536dfea70e90956d7e378c05b758";
+/** generated request type for account/social-login */
+public class ClientAccountSocialLoginRequest {
+  public String email;
+  public String password;
+  public String scopes;
 }

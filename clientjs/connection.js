@@ -378,6 +378,15 @@ class WebSocketAdamaConnection {
       request: {"method":"account/login", "id":parId, "email": email, "password": password}
     });
   }
+  AccountSocialLogin(email, password, scopes, responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"account/social-login", "id":parId, "email": email, "password": password, "scopes": scopes}
+    });
+  }
   Probe(identity, responder) {
     var self = this;
     var parId = self.__id();

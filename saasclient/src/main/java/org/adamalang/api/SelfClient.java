@@ -91,6 +91,16 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
   }
 
+  /** account/social-login */
+  public void accountSocialLogin(ClientAccountSocialLoginRequest request, Callback<ClientInitiationResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "account/social-login");
+    node.put("email", request.email);
+    node.put("password", request.password);
+    node.put("scopes", request.scopes);
+    pool.requestResponse(node, (obj) -> new ClientInitiationResponse(obj), callback);
+  }
+
   /** probe */
   public void probe(ClientProbeRequest request, Callback<ClientSimpleResponse> callback) {
     ObjectNode node = Json.newJsonObject();

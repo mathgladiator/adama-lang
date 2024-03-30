@@ -28,6 +28,7 @@ public class GlobalApiMetrics {
   public final RequestResponseMonitor monitor_AccountSetPassword;
   public final RequestResponseMonitor monitor_AccountGetPaymentPlan;
   public final RequestResponseMonitor monitor_AccountLogin;
+  public final RequestResponseMonitor monitor_AccountSocialLogin;
   public final RequestResponseMonitor monitor_Probe;
   public final RequestResponseMonitor monitor_AuthorityCreate;
   public final RequestResponseMonitor monitor_AuthoritySet;
@@ -100,6 +101,7 @@ public class GlobalApiMetrics {
     this.monitor_AccountSetPassword = factory.makeRequestResponseMonitor("account/set-password");
     this.monitor_AccountGetPaymentPlan = factory.makeRequestResponseMonitor("account/get-payment-plan");
     this.monitor_AccountLogin = factory.makeRequestResponseMonitor("account/login");
+    this.monitor_AccountSocialLogin = factory.makeRequestResponseMonitor("account/social-login");
     this.monitor_Probe = factory.makeRequestResponseMonitor("probe");
     this.monitor_AuthorityCreate = factory.makeRequestResponseMonitor("authority/create");
     this.monitor_AuthoritySet = factory.makeRequestResponseMonitor("authority/set");
