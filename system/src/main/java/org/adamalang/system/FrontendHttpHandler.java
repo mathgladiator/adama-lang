@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 
 /** the http handler for the service */
 public class FrontendHttpHandler implements HttpHandler {
+  private static final byte[] EMPTY_BODY = new byte[0];
   private static final Logger LOGGER = LoggerFactory.getLogger(FrontendHttpHandler.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(LOGGER);
   private final MultiRegionClient client;
@@ -468,7 +469,11 @@ public class FrontendHttpHandler implements HttpHandler {
       if (response.asset != null) {
         return new HttpResult(response.status, skr.space, skr.key, response.asset, response.asset_transform, response.cors, response.cache_ttl_seconds);
       } else {
-        return new HttpResult(response.status, response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors);
+        if (response.body != null) {
+          return new HttpResult(response.status, response.contentType, response.body.getBytes(StandardCharsets.UTF_8), response.cors);
+        } else {
+          return new HttpResult(response.status, response.contentType, EMPTY_BODY, response.cors);
+        }
       }
     }
   }
