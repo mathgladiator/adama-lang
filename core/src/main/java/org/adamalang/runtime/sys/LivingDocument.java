@@ -850,6 +850,10 @@ public abstract class LivingDocument implements RxParent, Caller {
       return __blocked.get();
     }
 
+    // HACK: don't allow removal if cron job is active
+    if (__optimisticNextCronCheck < 0 && __optimisticNextCronCheck < Long.MAX_VALUE) {
+      return false;
+    }
     return true;
   }
 

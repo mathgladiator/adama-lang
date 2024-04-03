@@ -251,7 +251,7 @@ class WebSocketAdamaConnection {
     });
   }
 
-  /** execute a requese response with the given state machine */
+  /** execute a request response with the given state machine */
   __execute_rr(sm) {
     var self = this;
     sm.first = true;
