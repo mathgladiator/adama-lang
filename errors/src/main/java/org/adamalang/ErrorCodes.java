@@ -132,6 +132,10 @@ public class ErrorCodes {
   public static final int DOCUMENT_WEB_GET_ABORT = 145659;
 
   @User
+  @Description("The web get was aborted.")
+  public static final int DOCUMENT_WEB_GET_EXCEPTION = 145671;
+
+  @User
   @Description("The web options handler was not found")
   public static final int DOCUMENT_WEB_OPTIONS_NOT_FOUND = 127692;
 

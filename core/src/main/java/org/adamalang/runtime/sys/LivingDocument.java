@@ -159,8 +159,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     __code_cost = 0;
     __trace = new ArrayList<>();
     __clients = new TreeMap<>();
-    __goodwillBudget = 1000000;
-    __goodwillLimitOfBudget = 1000000;
+    __goodwillBudget = 10000000;
+    __goodwillLimitOfBudget = 10000000;
     __dedupe = new HashMap<>();
     __auto_gen = new RxInt32(this, 0);
     __routing = new TreeMap<>();
@@ -1156,6 +1156,9 @@ public abstract class LivingDocument implements RxParent, Caller {
       return true;
     } catch (ComputeBlockedException cbe) {
       return false;
+    } catch (Throwable error) {
+      get.callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DOCUMENT_WEB_GET_EXCEPTION, error, EXLOGGER));
+      return true;
     }
   }
 

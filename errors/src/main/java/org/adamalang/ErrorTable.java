@@ -190,6 +190,9 @@ public class ErrorTable {
     names.put(145659, "DOCUMENT_WEB_GET_ABORT");
     descriptions.put(145659, "The web get was aborted.");
     userspace.add(145659);
+    names.put(145671, "DOCUMENT_WEB_GET_EXCEPTION");
+    descriptions.put(145671, "The web get was aborted.");
+    userspace.add(145671);
     names.put(127692, "DOCUMENT_WEB_OPTIONS_NOT_FOUND");
     descriptions.put(127692, "The web options handler was not found");
     userspace.add(127692);
