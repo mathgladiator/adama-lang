@@ -33,6 +33,7 @@ import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -154,6 +155,8 @@ public class StructureStorage extends DocumentPosition {
         writer.writeObjectFieldIntro("type");
         fd.type.writeTypeReflectionJson(writer, ReflectionSource.Structure);
       }
+      writer.writeObjectFieldIntro("computed");
+      writer.writeBoolean(fd.type instanceof TyReactiveLazy || fd.computeExpression != null);
       writer.writeObjectFieldIntro("privacy");
       if (fd.policy != null) {
         fd.policy.writeTypeReflectionJson(writer);
@@ -170,6 +173,8 @@ public class StructureStorage extends DocumentPosition {
         writer.writeObjectFieldIntro("type");
         bd.getValue().expressionType.writeTypeReflectionJson(writer, ReflectionSource.Structure);
       }
+      writer.writeObjectFieldIntro("computed");
+      writer.writeBoolean(true);
       writer.writeObjectFieldIntro("privacy");
       if (bd.getValue().guard != null) {
         bd.getValue().guard.writeReflect(writer);

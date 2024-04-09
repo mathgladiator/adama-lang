@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.tree.types.reactive;
 
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.Formatter;
@@ -30,6 +31,7 @@ import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresG
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class TyReactiveLazy extends TyType implements //
