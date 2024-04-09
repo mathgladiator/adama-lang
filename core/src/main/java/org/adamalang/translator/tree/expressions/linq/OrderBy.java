@@ -135,16 +135,16 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
       return cmpLine.toString();
     }
     var addLazyGet = false;
-    if (compareType instanceof TyReactiveLazy || compareType instanceof TyNativeRef) {
+    if (compareType instanceof TyReactiveLazy) {
       compareType = environment.rules.ExtractEmbeddedType(compareType, false);
       addLazyGet = true;
-    } else {
-      compareType = RuleSetCommon.Resolve(environment, compareType, false);
     }
+    compareType = RuleSetCommon.Resolve(environment, compareType, false);
+    cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "");
     if (compareType instanceof TyReactiveMaybe || compareType instanceof TyNativeMaybe) {
-      cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.compareTo(__y))");
+      cmpLine.append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.compareTo(__y))");
     } else {
-      cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareTo(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
+      cmpLine.append(".compareTo(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
     }
     return cmpLine.toString();
   }
