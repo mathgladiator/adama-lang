@@ -9,6 +9,7 @@
             "nature" : "reactive_value",
             "type" : "int"
           },
+          "computed" : false,
           "privacy" : "public"
         },
         "pri_x" : {
@@ -16,6 +17,7 @@
             "nature" : "reactive_value",
             "type" : "int"
           },
+          "computed" : false,
           "privacy" : "private"
         },
         "adm_x" : {
@@ -23,6 +25,7 @@
             "nature" : "reactive_value",
             "type" : "int"
           },
+          "computed" : false,
           "privacy" : [ "is_admin" ]
         },
         "ju_x" : {
@@ -30,6 +33,7 @@
             "nature" : "reactive_value",
             "type" : "int"
           },
+          "computed" : false,
           "privacy" : [ "just_user" ]
         },
         "bub_x" : {
@@ -37,6 +41,7 @@
             "nature" : "native_value",
             "type" : "int"
           },
+          "computed" : true,
           "privacy" : "bubble"
         }
       }
