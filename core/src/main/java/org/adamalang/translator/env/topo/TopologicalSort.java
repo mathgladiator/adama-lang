@@ -91,13 +91,13 @@ public class TopologicalSort<T> {
     if (val.handled) {
       return;
     }
+    val.handled = true;
 
     // make sure all the children are present
     for (String depend : val.dependencies) {
       insert(depend, butNot == null ? key : butNot);
     }
 
-    val.handled = true;
     result.add(val.value);
     remain.remove(key);
   }
