@@ -39,11 +39,6 @@ public abstract class RxBase {
     __invalid = false;
   }
 
-  /** disconnect all subscriptions */
-  public void __cancelAllSubscriptions() {
-    __subscribers = null;
-  }
-
   /** commit the changes to the object, and emit a delta */
   public abstract void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta);
 

@@ -126,8 +126,5 @@ public class RxPrincipalTests {
     c.__revert();
     c.__revert();
     child.assertInvalidateCount(2);
-    c.__cancelAllSubscriptions();
-    c.set(B);
-    child.assertInvalidateCount(2);
   }
 }

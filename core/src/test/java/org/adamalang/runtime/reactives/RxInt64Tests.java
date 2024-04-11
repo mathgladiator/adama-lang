@@ -125,9 +125,6 @@ public class RxInt64Tests {
     child.assertInvalidateCount(2);
     l.__revert();
     child.assertInvalidateCount(2);
-    l.__cancelAllSubscriptions();
-    l.set(100);
-    child.assertInvalidateCount(2);
   }
 
   @Test

@@ -102,9 +102,6 @@ public class RxDoubleTests {
     d.__revert();
     d.__revert();
     child.assertInvalidateCount(2);
-    d.__cancelAllSubscriptions();
-    d.set(100);
-    child.assertInvalidateCount(2);
   }
 
   @Test

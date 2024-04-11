@@ -130,8 +130,5 @@ public class RxComplexTests {
     d.__revert();
     d.__revert();
     child.assertInvalidateCount(2);
-    d.__cancelAllSubscriptions();
-    d.set(new NtComplex(7, 8));
-    child.assertInvalidateCount(2);
   }
 }

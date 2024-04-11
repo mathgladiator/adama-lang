@@ -127,8 +127,5 @@ public class RxBooleanTests {
     rx.__revert();
     rx.__revert();
     invalidate.assertInvalidateCount(2);
-    rx.__cancelAllSubscriptions();
-    rx.set(true);
-    invalidate.assertInvalidateCount(2);
   }
 }

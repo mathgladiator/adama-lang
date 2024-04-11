@@ -112,9 +112,6 @@ public class RxInt32Tests {
     child.assertInvalidateCount(2);
     i.__revert();
     child.assertInvalidateCount(2);
-    i.__cancelAllSubscriptions();
-    i.set(100);
-    child.assertInvalidateCount(2);
   }
 
   @Test

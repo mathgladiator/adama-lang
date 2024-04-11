@@ -81,7 +81,6 @@ public class RxMaybe<Ty extends RxBase, Ry> extends RxBase implements RxParent, 
           reverseDelta.writeObjectFieldIntro(name);
           priorValue.__dump(reverseDelta);
         }
-        __cancelAllSubscriptions();
       }
 
       priorValue = value;
@@ -128,8 +127,6 @@ public class RxMaybe<Ty extends RxBase, Ry> extends RxBase implements RxParent, 
       value = priorValue;
       if (value != null) {
         value.__revert();
-      } else { // value is null
-        __cancelAllSubscriptions();
       }
       __lowerDirtyRevert();
     }
