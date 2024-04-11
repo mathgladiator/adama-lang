@@ -245,7 +245,7 @@ public class RxMaybeTests {
     commitCheck(mi, "", "");
     mi.__lowerInvalid();
     mi.make().set(100);
-    child.assertInvalidateCount(1);
+    child.assertInvalidateCount(2);
   }
 
   @Test
