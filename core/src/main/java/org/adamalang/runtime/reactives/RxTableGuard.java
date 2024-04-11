@@ -202,7 +202,9 @@ public class RxTableGuard implements TableSubscription {
   }
 
   public void __settle(Set<Integer> views) {
-    // TODO: debounce and call cleanup child views
+    if (children.size() > 2 * views.size()) {
+      cleanupChildViews(views);
+    }
   }
 
   public void cleanupChildViews(Set<Integer> views) {
