@@ -202,17 +202,13 @@ public class RxTableGuard implements TableSubscription {
   }
 
   public void __settle(Set<Integer> views) {
-    if (children.size() > 2 * views.size()) {
-      cleanupChildViews(views);
-    }
-  }
-
-  public void cleanupChildViews(Set<Integer> views) {
-    if (children != null) {
-      Iterator<Map.Entry<Integer, FireGate>> it = children.entrySet().iterator();
-      while (it.hasNext()) {
-        if (!views.contains(it.next().getKey())) {
-          it.remove();
+    if (children != null && views != null) {
+      if (children.size() > 2 * views.size()) {
+        Iterator<Map.Entry<Integer, FireGate>> it = children.entrySet().iterator();
+        while (it.hasNext()) {
+          if (!views.contains(it.next().getKey())) {
+            it.remove();
+          }
         }
       }
     }
