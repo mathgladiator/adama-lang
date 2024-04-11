@@ -37,6 +37,9 @@ Adama supports four date and time related types:
 ## Date functions
 | Method                                                                      | Description                                                                                                              | Result type           |
 |-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|-----------------------|
+| Date.day()                                          | Get the day as an int                                                                                                              | int     |
+| Date.month()                                          | Get the month as an int                                                                                                              | int     |
+| Date.year()                                          | Get the year as an int                                                                                                              | int     |
 | Date.make(int yr, int mo, int day)                                          | make a date                                                                                                              | maybe&lt;date&gt;     |
 | Date.construct(date dy, time t, double sec, string zone)                    | make a datetime                                                                                                          | maybe&lt;datetime&gt; |
 | Date.calendarViewOf(date&nbsp;d)                                            | Get the surrounding month for the given date                                                                             | list&lt;date&gt;      |
