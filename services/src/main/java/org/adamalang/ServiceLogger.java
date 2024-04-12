@@ -52,7 +52,7 @@ public class ServiceLogger {
         @Override
         public void success(String value) {
           line.set("response", Json.parse(value));
-          line.put("success", false);
+          line.put("success", true);
           line.put("latency", System.currentTimeMillis() - started);
           LOG.error(line.toString());
           callback.success(value);
