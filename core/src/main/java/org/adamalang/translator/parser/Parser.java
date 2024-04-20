@@ -1937,7 +1937,8 @@ public class Parser {
   public OrderPair order_pair(final Token commaToken) throws AdamaLangException {
     final var id = tokens.pop();
     final var followup = tokens.popIf(t -> t.isIdentifier("asc", "desc"));
-    return new OrderPair(commaToken, id, followup);
+    final var insensitive = tokens.popIf(t -> t.isIdentifier("insensitive"));
+    return new OrderPair(commaToken, id, followup, insensitive);
   }
 
   @SuppressWarnings("unchecked")

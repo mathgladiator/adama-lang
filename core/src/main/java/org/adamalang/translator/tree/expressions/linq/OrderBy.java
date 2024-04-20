@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
+import org.adamalang.translator.tree.types.reactive.TyReactiveString;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -140,11 +141,22 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
       addLazyGet = true;
     }
     compareType = RuleSetCommon.Resolve(environment, compareType, false);
+    boolean supportInsensitive;
+    String compareMethod = "compareTo";
+    if (key.insensitive != null) {
+      compareMethod = "compareToIgnoreCase";
+    }
     cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "");
     if (compareType instanceof TyReactiveMaybe || compareType instanceof TyNativeMaybe) {
-      cmpLine.append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.compareTo(__y))");
+      TyType interiorType = RuleSetCommon.Resolve(environment, environment.rules.ExtractEmbeddedType(compareType, false), false);
+      supportInsensitive = interiorType instanceof TyReactiveString || interiorType instanceof TyNativeString;
+      cmpLine.append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.").append(compareMethod).append("(__y))");
     } else {
-      cmpLine.append(".compareTo(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
+      supportInsensitive = compareType instanceof TyReactiveString || compareType instanceof TyNativeString;
+      cmpLine.append(".").append(compareMethod).append("(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
+    }
+    if (!supportInsensitive && key.insensitive != null) {
+      environment.document.createError(fd, "The field '" + fd.name + "' can not be ordered insensitively");
     }
     return cmpLine.toString();
   }

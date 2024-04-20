@@ -1,0 +1,37 @@
+record X {
+  private int id;
+  public string z;
+}
+table<X> t;
+
+@connected {
+  return true;
+}
+
+@construct {
+  t <- {z:"A"};
+  t <- {z:"C"};
+  t <- {z:"B"};
+  t <- {z:"a"};
+  t <- {z:"c"};
+  t <- {z:"b"};
+}
+
+public formula all = iterate t order z insensitive;
+
+message Z {
+  string z;
+}
+
+function make_z() -> list<string> {
+  table<Z> t;
+  t <- {z:"A"};
+  t <- {z:"C"};
+  t <- {z:"B"};
+  t <- {z:"a"};
+  t <- {z:"c"};
+  t <- {z:"b"};
+  return (iterate t order z insensitive).z;
+}
+
+public formula ntv = make_z();

@@ -79,6 +79,10 @@ public class RxString extends RxIndexableBase implements Comparable<RxString>, C
     return value.compareTo(other.value);
   }
 
+  public int compareToIgnoreCase(final RxString other) {
+    return value.compareToIgnoreCase(other.value);
+  }
+
   @Override
   public String get() {
     return value;

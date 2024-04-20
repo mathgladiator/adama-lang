@@ -29,20 +29,21 @@ public class OrderPair extends DocumentPosition {
   public final Token commaToken;
   public final String name;
   public final Token nameToken;
+  public final Token insensitive;
 
-  public OrderPair(final Token commaToken, final Token nameToken, final Token ascToken) {
+  public OrderPair(final Token commaToken, final Token nameToken, final Token ascToken, final Token insensitive) {
     this.commaToken = commaToken;
     this.nameToken = nameToken;
     this.ascToken = ascToken;
     name = nameToken.text;
     asc = ascToken == null || !ascToken.text.equals("desc");
+    this.insensitive = insensitive;
     if (commaToken != null) {
       ingest(commaToken);
     }
     ingest(nameToken);
-    if (ascToken != null) {
-      ingest(ascToken);
-    }
+    ingest(ascToken);
+    ingest(insensitive);
   }
 
   public void emit(final Consumer<Token> yielder) {
@@ -52,6 +53,9 @@ public class OrderPair extends DocumentPosition {
     yielder.accept(nameToken);
     if (ascToken != null) {
       yielder.accept(ascToken);
+    }
+    if (insensitive != null) {
+      yielder.accept(insensitive);
     }
   }
 

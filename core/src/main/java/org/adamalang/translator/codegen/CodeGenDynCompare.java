@@ -52,7 +52,7 @@ public class CodeGenDynCompare {
     int count = orderableFields.size();
     for (FieldDefinition fd : orderableFields) {
       sb.append("case \"").append(fd.name).append("\":").tabUp().writeNewline();
-      sb.append("delta = ").append(OrderBy.getCompareLine(fd, environment, new OrderPair(null, Token.WRAP(fd.name), null))).append(";").writeNewline();
+      sb.append("delta = ").append(OrderBy.getCompareLine(fd, environment, new OrderPair(null, Token.WRAP(fd.name), null, null))).append(";").writeNewline();
       sb.append("break;").tabDown();
       count--;
       if (count == 0) {

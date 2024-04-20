@@ -720,4 +720,9 @@ public class LibString {
       return x;
     }
   }
+
+  @Extension
+  public static int compareInsensitive(String x, String y) {
+    return x.compareToIgnoreCase(y);
+  }
 }
