@@ -23,6 +23,7 @@ import org.adamalang.translator.reflect.HiddenType;
 
 import java.util.ArrayList;
 
+/** generic methods for normalized tokens */
 public class LibToken {
   @Extension
   public static final int[] sortAndUniqueAsIntTokens(@HiddenType(clazz = Integer.class) NtList<Integer> vals) {
@@ -66,5 +67,52 @@ public class LibToken {
       result[k] = unique.get(k);
     }
     return result;
+  }
+
+  @Extension
+  public static final int[] intersect(int[] a, int[] b) {
+    ArrayList<Integer> result = new ArrayList<>();
+    int i = 0;
+    int j = 0;
+    while (i < a.length && j < b.length) {
+      if (a[i] < b[j]) {
+        i++;
+      } else if (a[i] > b[j]) {
+        j++;
+      } else { // equals
+        result.add(a[i]);
+        i++;
+        j++;
+      }
+    }
+    int[] f = new int[result.size()];
+    for (int k = 0; k < f.length; k++) {
+      f[k] = result.get(k);
+    }
+    return f;
+  }
+
+  @Extension
+  public static final String[] intersect(String[] a, String[] b) {
+    ArrayList<String> result = new ArrayList<>();
+    int i = 0;
+    int j = 0;
+    while (i < a.length && j < b.length) {
+      int delta = a[i].compareTo(b[j]);
+      if (delta < 0) {
+        i++;
+      } else if (delta > 0) {
+        j++;
+      } else { // equals
+        result.add(a[i]);
+        i++;
+        j++;
+      }
+    }
+    String[] f = new String[result.size()];
+    for (int k = 0; k < f.length; k++) {
+      f[k] = result.get(k);
+    }
+    return f;
   }
 }
