@@ -1,0 +1,27 @@
+
+record R {
+  string v;
+}
+
+table<R> t;
+
+@construct {
+  t <- { v : "a" };
+  t <- { v : "b" };
+  t <- { v : "c" };
+  t <- { v : "d" };
+  t <- { v : "A" };
+  t <- { v : "B" };
+  t <- { v : "C" };
+  t <- { v : "D" };
+  t <- { v : "a" };
+  t <- { v : "b" };
+  t <- { v : "c" };
+  t <- { v : "d" };
+  t <- { v : "A" };
+  t <- { v : "B" };
+  t <- { v : "C" };
+  t <- { v : "D" };
+}
+
+public formula my_tokens = (iterate t).v.normalizeSortAndUniqueAsStringTokens();

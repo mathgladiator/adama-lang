@@ -1,0 +1,33 @@
+
+record R {
+  int v;
+}
+
+table<R> t;
+
+@construct {
+  t <- { v : 1 };
+  t <- { v : 6 };
+  t <- { v : 2 };
+  t <- { v : 5 };
+  t <- { v : 3 };
+  t <- { v : 7 };
+  t <- { v : 1 };
+  t <- { v : 6 };
+  t <- { v : 2 };
+  t <- { v : 5 };
+  t <- { v : 3 };
+  t <- { v : 7 };
+  t <- { v : 1 };
+  t <- { v : 6 };
+  t <- { v : 2 };
+  t <- { v : 5 };
+  t <- { v : 3 };
+  t <- { v : 7 };
+}
+
+function tokenize(table<R> r) -> int[] {
+  return (iterate r).v.sortAndUniqueAsIntTokens();
+}
+
+public formula my_tokens = tokenize(t);

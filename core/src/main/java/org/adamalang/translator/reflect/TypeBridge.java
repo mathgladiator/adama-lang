@@ -51,6 +51,8 @@ public class TypeBridge {
       return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (String[].class == x) {
       return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), null);
+    } else if (int[].class == x) {
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), null);
     } else if (NtPrincipal.class == x) {
       return new TyNativePrincipal(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (NtComplex.class == x) {
