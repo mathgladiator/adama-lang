@@ -92,3 +92,29 @@ Let's update the /product page by editing the frontend/initial.rx.html file and 
 ```
 
 This will iterate over the tickets and show the request in a table's column. We can use the debugger to populate this column as we are viewing the page!
+
+**(Warning, at this point, this is specification work that hasn't been tested.)**
+
+We can add a form to execute **create_ticket**, 
+
+```html
+    <page uri="/product">
+        This is the product!
+        <connection use-domain name="product">
+            <ul rx:iterate="others">
+                <li><lookup path="email" /></li>
+            </ul>
+            <table>
+                <tbody rx:iterate="tickets">
+                    <tr><td><lookup path="request" /></td></tr>
+                </tbody>
+            </table>
+            <form rx:action="send:create_ticket">
+                <input name="request"> <br />
+                <button type="submit">Create Ticket</button>
+            </form>
+        </connection>
+    </page>
+```
+
+At this point, we now have Read (via data binding) and Write (via forms) and all manner of applications are possible. Check out the reference for [RxHTML](/rxhtml/ref.md)
