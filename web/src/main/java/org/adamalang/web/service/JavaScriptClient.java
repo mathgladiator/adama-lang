@@ -66,7 +66,7 @@ public class JavaScriptClient {
     sb.append("aDtuKyspcihlW25dLHQpO2Vsc2UgaWYoIm9iamVjdCI9PXR5cGVvZiBlKWZvcih2YXIgaSBpbiBlKSJA");
     sb.append("ZSI9PWk/cihlW2ldLHQpOihpIGluIHR8fCh0W2ldPXt9KSxyKGVbaV0sdFtpXSkpO2Vsc2UiZnVuY3Rp");
     sb.append("b24iPT10eXBlb2YgZSYmKCJAZSJpbiB0P3RbIkBlIl0ucHVzaChlKTp0WyJAZSJdPVtlXSl9ZnVuY3Rp");
-    sb.append("b24gdShlKXtpZigib2JqZWN0IiE9dHlwZW9mIGUpcmV0dXJue307dmFyIHQsbj17fTtmb3IodCBpbiBl");
+    sb.append("b24gdShlKXtpZigib2JqZWN0IiE9dHlwZW9mIGUpcmV0dXJuIGU7dmFyIHQsbj17fTtmb3IodCBpbiBl");
     sb.append("KWlmKCIjIiE9dFswXSYmIkBvIiE9dCYmIl9fa2V5IiE9dCl7dmFyIGk9ZVt0XTtpZigiIyIrdCBpbiBl");
     sb.append("KXt2YXIgcj1lWyIjIit0XSxvPXt9O2lmKCJAbyJpbiByKXtmb3IodmFyIGE9W10scz0wO3M8aS5sZW5n");
     sb.append("dGg7cysrKXt2YXIgYz1pW3NdO2MmJihvW2MuX19rZXldPXUoYyksYS5wdXNoKGlbc10uX19rZXkpKX1v");

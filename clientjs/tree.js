@@ -395,7 +395,7 @@ function AdamaTree() {
   // convert the tree to a delta; this tree is assumed to have been merged already
   var make_delta = function (st) {
     if (typeof(st) != "object") {
-      return {};
+      return st;
     }
     var delta = {}; // the delta to construct
     for (var k in st) { // for each key within the object

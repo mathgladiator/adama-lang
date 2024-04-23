@@ -265,7 +265,7 @@ public class JavaScriptResourcesRaw {
     sb.append("Y2FsbGJhY2spOwogICAgICB9CiAgICB9CiAgfTsKCiAgLy8gY29udmVydCB0aGUgdHJlZSB0byBhIGRl");
     sb.append("bHRhOyB0aGlzIHRyZWUgaXMgYXNzdW1lZCB0byBoYXZlIGJlZW4gbWVyZ2VkIGFscmVhZHkKICB2YXIg");
     sb.append("bWFrZV9kZWx0YSA9IGZ1bmN0aW9uIChzdCkgewogICAgaWYgKHR5cGVvZihzdCkgIT0gIm9iamVjdCIp");
-    sb.append("IHsKICAgICAgcmV0dXJuIHt9OwogICAgfQogICAgdmFyIGRlbHRhID0ge307IC8vIHRoZSBkZWx0YSB0");
+    sb.append("IHsKICAgICAgcmV0dXJuIHN0OwogICAgfQogICAgdmFyIGRlbHRhID0ge307IC8vIHRoZSBkZWx0YSB0");
     sb.append("byBjb25zdHJ1Y3QKICAgIGZvciAodmFyIGsgaW4gc3QpIHsgLy8gZm9yIGVhY2gga2V5IHdpdGhpbiB0");
     sb.append("aGUgb2JqZWN0CiAgICAgIGlmIChrWzBdID09ICIjIiB8fCBrID09ICJAbyIgfHwgayA9PSAiX19rZXki");
     sb.append("KSBjb250aW51ZTsgLy8gc2tpcCB0aGVzZQogICAgICB2YXIgdiA9IHN0W2tdOwogICAgICBpZiAoKCIj");
