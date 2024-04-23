@@ -63,7 +63,26 @@ public class GlobalAuthenticator implements Authenticator {
     callback.success(user);
   }
 
+  private boolean authUserByKey(String identity, ParsedToken parsedToken, ConnectionContext context, Callback<AuthenticatedUser> callback) {
+    final Runnable auth;
+    try {
+      PublicKey publicKey = PublicKeyCodec.decode(Hosts.getHostPublicKey(database, parsedToken.key_id));
+      auth = () -> Jwts.parser().verifyWith(publicKey).build().parseSignedClaims(identity);
+    } catch (Exception ex) {
+      callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FORBIDDEN));
+      return false;
+    }
+    auth.run();
+    NtPrincipal who = new NtPrincipal(parsedToken.sub, parsedToken.iss);
+    AuthenticatedUser user = new AuthenticatedUser(Integer.parseInt(parsedToken.sub), who, context);
+    callback.success(user);
+    return true;
+  }
+
   private boolean authAdama(String identity, ParsedToken parsedToken, ConnectionContext context, Callback<AuthenticatedUser> callback) throws Exception {
+    if (parsedToken.key_id > 0) {
+      return authUserByKey(identity, parsedToken, context, callback);
+    }
     int userId = Integer.parseInt(parsedToken.sub);
     for (String publicKey64 : Users.listKeys(database, userId)) {
       PublicKey publicKey = PublicKeyCodec.decode(publicKey64);
@@ -113,6 +132,10 @@ public class GlobalAuthenticator implements Authenticator {
             return;
           } else if ("adama".equals(parsedToken.iss)) {
             if (authAdama(request.identity, parsedToken, request.context, callback)) {
+              return;
+            }
+          } else if ("user".equals(parsedToken.iss)) {
+            if (authUserByKey(request.identity, parsedToken, request.context, callback)) {
               return;
             }
           } else {

@@ -273,12 +273,9 @@ public class GlobalControlHandler implements RootGlobalHandler {
                 if (changedProfile) {
                   Users.setProfileIf(nexus.database, userId, profile.toString(), profileOld);
                 }
-                KeyPair pair = Jwts.SIG.ES256.keyPair().build();
-                String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-                long expiry = System.currentTimeMillis() + 3 * 24 * 60 * 60000;
-                Users.addKey(nexus.database, userId, publicKey, expiry);
                 Users.validateUser(nexus.database, userId);
-                responder.complete(Jwts.builder().subject("" + userId).expiration(new Date(expiry)).issuer("adama").signWith(pair.getPrivate()).compact());
+                String identity = nexus.signingKey.signDeveloper(userId, 0L); // TODO: define expiry
+                responder.complete(identity);
               } catch (Exception ex) {
                 responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CONVERT_TOKEN_VALIDATE_EXCEPTION, ex, LOGGER));
               }
@@ -306,11 +303,8 @@ public class GlobalControlHandler implements RootGlobalHandler {
     try {
       String hash = Users.getPasswordHash(nexus.database, request.userId);
       if (SCryptUtil.check(request.password, hash)) {
-        KeyPair pair = Jwts.SIG.ES256.keyPair().build();
-        String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
         long expiry = System.currentTimeMillis() + 14 * 24 * 60 * 60000;
-        Users.addKey(nexus.database, request.userId, publicKey, expiry);
-        responder.complete(Jwts.builder().subject("" + request.userId).expiration(new Date(expiry)).issuer("adama").signWith(pair.getPrivate()).compact());
+        responder.complete(nexus.signingKey.signDeveloper(request.userId, expiry));
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
       }
@@ -324,12 +318,9 @@ public class GlobalControlHandler implements RootGlobalHandler {
     try {
       String hash = Users.getPasswordHash(nexus.database, request.userId);
       if (SCryptUtil.check(request.password, hash)) {
-        // TODO: sign this under a host key
-        KeyPair pair = Jwts.SIG.ES256.keyPair().build();
-        String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+        Users.validateUser(nexus.database, request.userId);
         long expiry = System.currentTimeMillis() + 365 * 24 * 60 * 60000;
-        Users.addKey(nexus.database, request.userId, publicKey, expiry);
-        responder.complete(Jwts.builder().subject("" + request.userId).audience().add(request.scopes).and().expiration(new Date(expiry)).issuer("user").signWith(pair.getPrivate()).compact());
+        responder.complete(nexus.signingKey.signSocialUser(request.userId, expiry, request.scopes));
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
       }

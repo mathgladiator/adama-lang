@@ -21,6 +21,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
 import java.security.PrivateKey;
+import java.util.Date;
 import java.util.TreeMap;
 
 /** a private key with a public id */
@@ -33,13 +34,28 @@ public class PrivateKeyWithId {
     this.privateKey = privateKey;
   }
 
-  public String signDocumentIdentity(String agent, String space, String key, int expiry) {
+  private String sign(String agent, String authority, long expiry, String scopes) {
     TreeMap<String, Object> claims = new TreeMap<>();
     claims.put("kid", keyId);
+    if (scopes != null) {
+      claims.put("scp", scopes);
+    }
     JwtBuilder builder = Jwts.builder().claims(claims).subject(agent);
     if (expiry > 0) {
-      // TODO
+      builder = builder.expiration(new Date(expiry));
     }
-    return builder.issuer("doc/" + space + "/" + key).signWith(privateKey).compact();
+    return builder.issuer(authority).signWith(privateKey).compact();
+  }
+
+  public String signDocumentIdentity(String agent, String space, String key, long expiry) {
+    return sign(agent, "doc/" + space + "/" + key, expiry, null);
+  }
+
+  public String signSocialUser(int userId, long expiry, String scopes) {
+    return sign("" + userId, "user", expiry, scopes);
+  }
+
+  public String signDeveloper(int userId, long expiry) {
+    return sign("" + userId, "adama", expiry, null);
   }
 }

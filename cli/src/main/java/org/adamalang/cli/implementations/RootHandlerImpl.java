@@ -108,7 +108,7 @@ public class RootHandlerImpl implements RootHandler {
     System.out.println();
     System.out.println(ColorUtilTools.prefix("WARNING!! ", ANSI.Red) + "Please be advised that this is alpha software available as an early release. For more details, please see:");
     System.out.println();
-    System.out.println(ColorUtilTools.prefix("  https://www.adama-platform.com/2022/02/25/early-access-launch-and-confession.html", ANSI.Green));
+    System.out.println(ColorUtilTools.prefix("  https://www.adama-platform.com/2022/03/02/early-access-launch-and-confession.html", ANSI.Green));
     System.out.println();
     System.out.println("Before you begin, you should read " + ColorUtilTools.prefix("terms & conditions", ANSI.Yellow) + " on the website:");
     System.out.println();
