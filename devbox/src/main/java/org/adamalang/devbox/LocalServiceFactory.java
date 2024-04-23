@@ -30,6 +30,8 @@ import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.cron.NoOpWakeService;
+import org.adamalang.runtime.sys.cron.WakeServiceRef;
 import org.adamalang.translator.env.RuntimeEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +123,7 @@ public class LocalServiceFactory {
       public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
         callback.success(null);
       }
-    }, timeMachine, 2);
+    }, new NoOpWakeService(), timeMachine, 2);
     sweep.set(() -> service.invalidateAll());
     base.attachDeliverer(service);
   }

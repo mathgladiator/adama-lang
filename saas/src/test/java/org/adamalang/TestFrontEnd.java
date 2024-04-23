@@ -44,6 +44,7 @@ import org.adamalang.runtime.deploy.*;
 import org.adamalang.runtime.sys.capacity.CapacityAgent;
 import org.adamalang.runtime.sys.capacity.CapacityMetrics;
 import org.adamalang.runtime.sys.ServiceHeatEstimator;
+import org.adamalang.runtime.sys.cron.NoOpWakeService;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.web.assets.AssetStream;
@@ -251,6 +252,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
             metricsReporter,
             dataService, //
             new MockBackupService(), //
+            new NoOpWakeService(), //
             TimeSource.REAL_TIME, //
             1);
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);

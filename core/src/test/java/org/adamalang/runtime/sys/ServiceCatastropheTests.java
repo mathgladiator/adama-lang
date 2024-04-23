@@ -24,6 +24,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.mocks.MockWakeService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
@@ -50,7 +51,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     try {
       Runnable latch = realDataService.latchLogAt(2);
       NullCallbackLatch created = new NullCallbackLatch();
@@ -88,7 +89,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -139,7 +140,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -199,7 +200,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -245,7 +246,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsForCleanupCheck(25);

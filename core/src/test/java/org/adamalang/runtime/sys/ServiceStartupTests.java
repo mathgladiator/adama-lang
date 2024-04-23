@@ -23,6 +23,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.mocks.MockWakeService;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -41,7 +42,7 @@ public class ServiceStartupTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     try {
       CoreService.DONT_CARE_DOCUMENT.failure(null);
       CoreService.DONT_CARE_DOCUMENT.success(null);

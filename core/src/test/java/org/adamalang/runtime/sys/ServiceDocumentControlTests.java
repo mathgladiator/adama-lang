@@ -25,6 +25,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.mocks.MockWakeService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
@@ -54,7 +55,7 @@ public class ServiceDocumentControlTests {
         ServiceConnectTests.wrap(
             "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
         Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
@@ -93,7 +94,7 @@ public class ServiceDocumentControlTests {
         ServiceConnectTests.wrap(
             "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
         Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);

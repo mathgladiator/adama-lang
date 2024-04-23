@@ -19,6 +19,9 @@ package org.adamalang.system.distributed;
 
 import org.adamalang.caravan.CaravanBoot;
 import org.adamalang.mysql.impl.*;
+import org.adamalang.runtime.sys.cron.InMemoryWakeProxy;
+import org.adamalang.runtime.sys.cron.NoOpWakeService;
+import org.adamalang.runtime.sys.cron.WakeServiceRef;
 import org.adamalang.system.CommonServiceInit;
 import org.adamalang.system.Role;
 import org.adamalang.common.*;
@@ -81,7 +84,10 @@ public class Backend {
 
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     GlobalMetricsReporter metricsReporter = new GlobalMetricsReporter(init.database, init.em.metrics);
-    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, init.s3, TimeSource.REAL_TIME, coreThreads);
+    WakeServiceRef wakeRef = new WakeServiceRef();
+    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, init.s3, wakeRef, TimeSource.REAL_TIME, coreThreads);
+    //
+    wakeRef.set(new InMemoryWakeProxy(init.system, service, new NoOpWakeService()));
     delayedDeploy.set(factoryProxy, service);
 
     ServiceHeatEstimator.HeatVector low = config.get_heat("heat-low", 1, 100, 1, 100);

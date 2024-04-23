@@ -70,6 +70,7 @@ public class CoreMetrics {
   public final Runnable invalidation_limit_reached;
 
   public final CallbackMonitor document_backup;
+  public final CallbackMonitor document_wake;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -119,5 +120,6 @@ public class CoreMetrics {
     snapshot_recovery = metricsFactory.counter("core_document_snapshot_recovery");
 
     document_backup = metricsFactory.makeCallbackMonitor("core_document_backup");
+    document_wake = metricsFactory.makeCallbackMonitor("core_document_wake");
   }
 }

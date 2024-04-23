@@ -33,6 +33,8 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.MetricsReporter;
 import org.adamalang.runtime.remote.RemoteResult;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
+import org.adamalang.runtime.sys.cron.KeyAlarm;
+import org.adamalang.runtime.sys.cron.WakeService;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -50,7 +52,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** The core service enables consumers to manage an in-process Adama */
-public class CoreService implements Deliverer, Queryable {
+public class CoreService implements Deliverer, Queryable, KeyAlarm {
   private static final Logger LOGGER = LoggerFactory.getLogger(CoreService.class);
   public static Callback<DurableLivingDocument> DONT_CARE_DOCUMENT = new Callback<DurableLivingDocument>() {
     @Override
@@ -63,6 +65,7 @@ public class CoreService implements Deliverer, Queryable {
   };
   public final DataService dataService;
   public final BackupService backupService;
+  public final WakeService wakeService;
   public final ServiceShield shield;
   public final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
@@ -76,10 +79,11 @@ public class CoreService implements Deliverer, Queryable {
    * @param time the source of time
    * @param nThreads the number of threads to use
    */
-  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, BackupService backupService, TimeSource time, int nThreads) {
+  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, BackupService backupService, WakeService wakeService, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.dataService = dataService;
     this.backupService = backupService;
+    this.wakeService = wakeService;
     this.shield = new ServiceShield();
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
@@ -107,6 +111,17 @@ public class CoreService implements Deliverer, Queryable {
     for (int k = 0; k < bases.length; k++) {
       bases[k].shed(condition);
     }
+  }
+
+  @Override
+  public void wake(Key key) {
+    load(key, metrics.document_wake.wrap(new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument value) {}
+
+      @Override
+      public void failure(ErrorCodeException ex) {}
+    }));
   }
 
   /** this state machine will execute a drain over all the threads one at a time and signal each thread is being drained */

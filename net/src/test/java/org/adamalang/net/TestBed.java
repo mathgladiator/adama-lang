@@ -43,6 +43,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.cron.NoOpWakeService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringBatchReady;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
@@ -112,6 +113,7 @@ public class TestBed implements AutoCloseable {
             metricsReporter, //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             new MockBackupService(), //
+            new NoOpWakeService(), //
             TimeSource.REAL_TIME, //
             2);
 

@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.mocks.MockWakeService;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
@@ -43,7 +44,7 @@ public class DelayedDeployTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(new CoreMetrics(new NoOpMetricsFactory()), factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    CoreService service = new CoreService(new CoreMetrics(new NoOpMetricsFactory()), factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
 
     DelayedDeploy dd = new DelayedDeploy();
     dd.deploy("space", Callback.DONT_CARE_VOID);

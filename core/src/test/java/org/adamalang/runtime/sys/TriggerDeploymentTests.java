@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.mocks.MockWakeService;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
@@ -41,7 +42,7 @@ public class TriggerDeploymentTests {
     MockTime time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {
-    }, new MockMetricsReporter(), dataService, new MockBackupService(), time, 3);
+    }, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
     TriggerDeployment td = new TriggerDeployment(service, Callback.DONT_CARE_VOID);
     td.success(null);
     td.finished(100);
