@@ -90,4 +90,38 @@ public class CodeGenCron {
     }
     sb.append("}").writeNewline();
   }
+
+  public static void writeCronPredict(final StringBuilderWithTabs sb, Environment env) {
+    sb.append("@Override").writeNewline();
+    int countdown = env.document.cronTasks.size();
+    if (countdown == 0) {
+      sb.append("public Long __predict_cron_wake_time() { return null; }").writeNewline();
+      return;
+    }
+    sb.append("public Long __predict_cron_wake_time() {").tabUp().writeNewline();
+    sb.append("Long __predict = null;").writeNewline();
+    sb.append("long __now = __time.get();").writeNewline();
+    sb.append("ZoneId __fromTZ = ZoneId.systemDefault();").writeNewline();
+    sb.append("ZoneId __toTZ = __zoneId();").writeNewline();
+    for (Map.Entry<String, DefineCronTask> entry : env.document.cronTasks.entrySet()) {
+      DefineCronTask dct = entry.getValue();
+      if (dct.schedule[1].isIdentifier()) {
+        sb.append("__predict = CronPredict.").append(dct.schedule[0].text).append("(__predict, __now, ").append(dct.schedule[1].text).append(", __fromTZ, __toTZ);").writeNewline();
+      } else{
+        switch (dct.schedule[0].text) {
+          case "daily":
+            sb.append("__predict = CronPredict.daily(__predict, __now, ").append(dct.schedule[1].text).append(", ").append(dct.schedule[3].text).append(", __fromTZ, __toTZ);").writeNewline();
+            break;
+          case "hourly": // note: these share the same signature with different function names
+          case "monthly":
+            sb.append("__predict = CronPredict.").append(dct.schedule[0].text).append("(__predict, __now, ").append(dct.schedule[1].text).append(", __fromTZ, __toTZ);").writeNewline();
+            break;
+          default:
+            throw new RuntimeException("unknown schedule type:" + dct.schedule[0].text);
+        }
+      }
+    }
+    sb.append("  return __predict;").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+  }
 }

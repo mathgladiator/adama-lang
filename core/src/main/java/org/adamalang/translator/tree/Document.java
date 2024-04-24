@@ -743,6 +743,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenAuth.writeAuth(sb, environment);
     CodeGenCron.writeCronExecution(sb, environment);
     CodeGenCron.writeCronReset(sb, environment);
+    CodeGenCron.writeCronPredict(sb, environment);
     CodeGenWeb.writeWebHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
     CodeGenEventHandlers.writeEventHandlers(sb, environment);

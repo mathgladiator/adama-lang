@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.cron;
 
-public class Platform {
-  public static final String VERSION = "20240424153655";
-  public static final String JS_VERSION = "198cf973f73908bf76fe4136aa4382e8";
+import org.junit.Test;
+
+public class CronTaskTests {
+  @Test
+  public void sanity() {
+
+  }
 }

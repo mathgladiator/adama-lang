@@ -72,6 +72,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public Long __predict_cron_wake_time() {
+    return null;
+  }
+
+  @Override
   public void __reset_cron() {
   }
 

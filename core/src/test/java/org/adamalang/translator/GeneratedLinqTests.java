@@ -879,6 +879,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -1936,6 +1938,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -2774,6 +2778,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -3709,6 +3715,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -4714,6 +4722,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -6633,6 +6643,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -7804,6 +7816,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -9283,6 +9297,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -11186,6 +11202,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -12093,6 +12111,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -13640,6 +13660,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -15403,6 +15425,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -16750,6 +16774,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -17761,6 +17787,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -18939,6 +18967,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
     gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
+    gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
     gold.append("\n    return null;");
@@ -19926,6 +19956,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");
@@ -21094,6 +21126,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  public void __make_cron_progress() {}");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_cron() {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public Long __predict_cron_wake_time() { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  protected WebResponse __get_internal(CoreRequestContext __context, WebGet __request) throws AbortMessageException {");
     gold.append("\n    WebPath __path = new WebPath(__request.uri);");

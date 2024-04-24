@@ -15,9 +15,26 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.mocks;
 
-public class Platform {
-  public static final String VERSION = "20240424153655";
-  public static final String JS_VERSION = "198cf973f73908bf76fe4136aa4382e8";
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.cron.KeyAlarm;
+
+import java.util.ArrayList;
+
+public class MockKeyAlarm implements KeyAlarm {
+  public final ArrayList<String> alarms;
+
+  public MockKeyAlarm() {
+    this.alarms = new ArrayList<>();
+  }
+
+  public String get(int k) {
+    return alarms.get(k);
+  }
+
+  @Override
+  public void wake(Key key) {
+    alarms.add("ALARM:" + key.space + "/" + key.key);
+  }
 }

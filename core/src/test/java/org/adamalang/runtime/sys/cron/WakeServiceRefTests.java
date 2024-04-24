@@ -15,33 +15,33 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.mocks;
+package org.adamalang.runtime.sys.cron;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.sys.cron.WakeService;
+import org.junit.Assert;
+import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-public class MockWakeService implements WakeService {
-  public final ArrayList<String> alarms;
+public class WakeServiceRefTests {
+  @Test
+  public void proxy() throws Exception {
+    WakeServiceRef ref = new WakeServiceRef();
+    ref.set(new NoOpWakeService());
+    CountDownLatch latch = new CountDownLatch(1);
+    ref.wakeIn(null, 0L, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        latch.countDown();
+      }
 
-  public MockWakeService() {
-    this.alarms = new ArrayList<>();
-  }
+      @Override
+      public void failure(ErrorCodeException ex) {
 
-  public String get(int k) {
-    return alarms.get(k);
-  }
-
-  @Override
-  public synchronized void wakeIn(Key key, long when, Callback<Void> callback) {
-    alarms.add("WAKE:" + key.space + "/" + key.key + "@" + when);
-    if (key.key.equals("fail")) {
-      callback.failure(new ErrorCodeException(0));
-      return;
-    }
-    callback.success(null);
+      }
+    });
+    Assert.assertTrue(latch.await(50000, TimeUnit.MILLISECONDS));
   }
 }
