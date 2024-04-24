@@ -35,6 +35,9 @@ public class DataBaseMetrics {
   public final Runnable capacity_duplicate;
   public final Runnable metrics_success;
   public final Runnable metrics_failure;
+  public final CallbackMonitor wake_schedule;
+  public final CallbackMonitor wake_list;
+  public final CallbackMonitor wake_delete;
 
   public DataBaseMetrics(MetricsFactory factory) {
     transaction = factory.makeRequestResponseMonitor("database_transaction");
@@ -51,5 +54,8 @@ public class DataBaseMetrics {
     factory.section("Metric Submission");
     metrics_success = factory.counter("metrics_success");
     metrics_failure = factory.counter("metrics_failure");
+    wake_schedule = factory.makeCallbackMonitor("database_wake_schedule");
+    wake_list = factory.makeCallbackMonitor("database_wake_list");
+    wake_delete = factory.makeCallbackMonitor("database_wake_delete");
   }
 }

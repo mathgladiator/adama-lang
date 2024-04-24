@@ -261,6 +261,23 @@ public class Installer {
             " DEFAULT CHARACTER SET = utf8mb4;" //
         ;
 
+    String createAlarmTableSQL = //
+        "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`alarms` (" + //
+            "  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT," + //
+            "  `space` VARCHAR(128) NOT NULL," + //
+            "  `key` VARCHAR(512) NOT NULL," + //
+            "  `created` DATETIME DEFAULT CURRENT_TIMESTAMP," + //
+            "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," + //
+            "  `region` VARCHAR(64) NOT NULL," + //
+            "  `machine` VARCHAR(512) NOT NULL," + //
+            "  `wake_time` BIGINT UNSIGNED DEFAULT 0," + //
+            "  PRIMARY KEY (`id`)," + //
+            "  UNIQUE `u` (`space`, `key`)," + //
+            "  INDEX `fnd` (`region`, `machine`))" + //
+            " ENGINE = InnoDB" + //
+            " DEFAULT CHARACTER SET = utf8mb4;" //
+        ;
+
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
@@ -279,6 +296,7 @@ public class Installer {
       DataBase.execute(connection, createVapidKeysTableSQL);
       DataBase.execute(connection, createPushSubscriptionTableSQL);
       DataBase.execute(connection, createSentinelTableSQL);
+      DataBase.execute(connection, createAlarmTableSQL);
     } finally {
       connection.close();
     }
@@ -302,6 +320,7 @@ public class Installer {
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`vapid`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`push`;");
       DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`sentinel`;");
+      DataBase.execute(connection, "DROP TABLE IF EXISTS `" + dataBase.databaseName + "`.`alarms`;");
       DataBase.execute(connection, "DROP DATABASE IF EXISTS `" + dataBase.databaseName + "`;");
     } finally {
       connection.close();
