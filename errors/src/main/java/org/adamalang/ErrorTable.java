@@ -1048,5 +1048,7 @@ public class ErrorTable {
     descriptions.put(712700, "no description of error (yet)");
     names.put(753651, "APEX_DOMAIN_CLAIM_NOT_DEVELOPER");
     descriptions.put(753651, "no description of error (yet)");
+    names.put(901104, "MYSQL_WAKE_EXCEPTION");
+    descriptions.put(901104, "no description of error (yet)");
   }
 }
