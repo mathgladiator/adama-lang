@@ -25,6 +25,7 @@ import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.remote.MetricsReporter;
+import org.adamalang.runtime.sys.cron.WakeService;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -39,6 +40,7 @@ public class DocumentThreadBase {
   public final ServiceShield shield;
   public final DataService service;
   public final BackupService backup;
+  public final WakeService wake;
   public final CoreMetrics metrics;
   public final SimpleExecutor executor;
   public final HashMap<Key, DurableLivingDocument> map;
@@ -54,12 +56,13 @@ public class DocumentThreadBase {
   private int millisecondsInactivityBeforeCleanup;
   private boolean drained;
 
-  public DocumentThreadBase(int threadId, ServiceShield shield, MetricsReporter metricsReporter, DataService service, BackupService backup, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(int threadId, ServiceShield shield, MetricsReporter metricsReporter, DataService service, BackupService backup, WakeService wake, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.threadId = threadId;
     this.shield = shield;
     this.metricsReporter = metricsReporter;
     this.service = service;
     this.backup = backup;
+    this.wake = wake;
     this.metrics = metrics;
     this.executor = executor;
     this.time = time;

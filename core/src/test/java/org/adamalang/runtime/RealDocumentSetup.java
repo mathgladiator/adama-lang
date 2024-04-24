@@ -28,6 +28,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.mocks.MockWakeService;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.remote.Deliverer;
@@ -85,7 +86,7 @@ public class RealDocumentSetup implements Deliverer {
               }
             });
     this.dumbDataService = dds;
-    DocumentThreadBase base = new DocumentThreadBase(0, new ServiceShield(), new MockMetricsReporter(), dds, new MockBackupService(), new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    DocumentThreadBase base = new DocumentThreadBase(0, new ServiceShield(), new MockMetricsReporter(), dds, new MockBackupService(), new MockWakeService(), new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code, this);
     this.code = code;

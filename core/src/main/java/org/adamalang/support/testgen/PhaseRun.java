@@ -32,6 +32,7 @@ import org.adamalang.runtime.remote.SampleService;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.*;
+import org.adamalang.runtime.sys.cron.NoOpWakeService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class PhaseRun {
       }
     }, dds, (key1, seq, reason, document, callback) -> {
 
-    }, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    }, new NoOpWakeService(), new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
     DurableLivingDocument.fresh(key, factory, new CoreRequestContext(NtPrincipal.NO_ONE, "origin", "ip", key.key), "{}", "0", monitor, base, acquire);
     DurableLivingDocument doc = acquire.get();
     doc.invalidate(Callback.DONT_CARE_INTEGER);

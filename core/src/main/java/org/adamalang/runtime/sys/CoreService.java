@@ -89,7 +89,7 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      bases[k] = new DocumentThreadBase(k, shield, metricsReporter, dataService, backupService, metrics, SimpleExecutor.create("core-" + k), time);
+      bases[k] = new DocumentThreadBase(k, shield, metricsReporter, dataService, backupService, wakeService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();

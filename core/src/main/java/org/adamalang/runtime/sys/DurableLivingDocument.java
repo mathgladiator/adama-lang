@@ -487,6 +487,8 @@ public class DurableLivingDocument implements Queryable {
       if (getCurrentFactory().delete_on_close) {
         executeDelete(Callback.DONT_CARE_VOID);
       } else {
+        // TODO: compute the time when to wake up
+        // base.wake.wakeIn(key, 0, Callback.DONT_CARE_VOID);
         if (shed) {
           base.service.shed(key);
         } else {
