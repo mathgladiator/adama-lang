@@ -50,17 +50,19 @@ public class MySQLWakeCore {
         database.transact((connection) -> {
           String insertSQL = //
               "INSERT INTO `" + database.databaseName + "`.`alarms` (" + //
-                  "`space`, `key`, `region`, `machine`, `wake_time`) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `region`=?, `machine`=?, `wake_time`=?" //
+                  "`space`, `key`, `region`, `machine`, `wake_time`) VALUES (?, ?, ?, ?, ?) " + //
+                  "ON DUPLICATE KEY UPDATE `region`=?, `machine`=?, `wake_time`=?" //
               ;
+          long wake_time = time.nowMilliseconds() + when;
           try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
             statementInsertIndex.setString(1, key.space);
             statementInsertIndex.setString(2, key.key);
             statementInsertIndex.setString(3, region);
             statementInsertIndex.setString(4, machine);
-            statementInsertIndex.setLong(5, time.nowMilliseconds() + when);
+            statementInsertIndex.setLong(5, wake_time);
             statementInsertIndex.setString(6, region);
             statementInsertIndex.setString(7, machine);
-            statementInsertIndex.setLong(8, time.nowMilliseconds() + when);
+            statementInsertIndex.setLong(8, wake_time);
             statementInsertIndex.execute();
             return null;
           }

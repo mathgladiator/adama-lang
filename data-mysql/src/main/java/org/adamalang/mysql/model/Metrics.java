@@ -17,9 +17,7 @@
 */
 package org.adamalang.mysql.model;
 
-import org.adamalang.common.keys.SigningKeyPair;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.data.Key;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
