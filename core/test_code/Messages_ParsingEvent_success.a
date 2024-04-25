@@ -1,0 +1,7 @@
+message T {
+  int z;
+
+  @parsed {
+    z = z.abs();
+  }
+}

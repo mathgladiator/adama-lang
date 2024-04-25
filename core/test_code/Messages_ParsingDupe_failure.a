@@ -1,0 +1,15 @@
+message T {
+  int z;
+
+  @parsed {
+    if (z < 0) {
+      abort;
+    }
+  }
+
+  @parsed {
+    if (z < 0) {
+      abort;
+    }
+  }
+}

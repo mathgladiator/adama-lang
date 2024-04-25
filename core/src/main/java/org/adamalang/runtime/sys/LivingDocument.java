@@ -2329,6 +2329,19 @@ public abstract class LivingDocument implements RxParent, Caller {
       if (__is_direct_channel(channel)) {
         Runnable perf = __perf.measure("sd_" + channel);
         try {
+          Runnable pd = __perf.measure("pd_" + channel);
+          try {
+            if (message instanceof NtMessageBase) {
+              ((NtMessageBase) message).__parsed();
+            } else if (message instanceof NtMessageBase[]) {
+              NtMessageBase[] arr = (NtMessageBase[]) message;
+              for (int k = 0; k < arr.length; k++) {
+                arr[k].__parsed();
+              }
+            }
+          } finally {
+            pd.run();
+          }
           __random = new Random(Long.parseLong(__entropy.get()) + timestamp);
           Runnable perfExec = __perf.measure("ex_" + channel);
           try {

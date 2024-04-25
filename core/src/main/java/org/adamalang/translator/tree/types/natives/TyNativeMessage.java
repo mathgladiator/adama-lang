@@ -118,7 +118,7 @@ public class TyNativeMessage extends TyType implements //
     sb.append("@Override").writeNewline();
     if (storage.hasPostParse()) {
       sb.append("public void __parsed() throws AbortMessageException");
-      storage.getPostParse().writeJava(sb, environment);
+      storage.getPostParse().writeJava(sb, environment.scopeAsAbortable().scopeAsNoCost().scopeStatic());
       sb.writeNewline();
     } else {
       sb.append("public void __parsed() throws AbortMessageException {}").writeNewline();

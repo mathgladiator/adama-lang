@@ -524,6 +524,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Messages_CantHaveTables_failure.a,0,0,2,1,"Type check failure: must have a type of 'message', but got a type of 'R'."
 ./test_code/Messages_CantHaveTables_failure.a,8,0,11,1,"Messages can't have a field type of 'table<R>'"
 ./test_code/Messages_CantHaveTables_failure.a,8,0,11,1,"Messages can't have a field type of 'table<T>'"
+./test_code/Messages_ParsingDupe_failure.a,0,0,14,1,"The message T already has a post parse event"
 ./test_code/Metrics_BadTypes_failure.a,0,0,0,15,"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'string'"
 ./test_code/Metrics_BadTypes_failure.a,1,0,1,14,"Type check failure: must have a type of int, long, or double; instead, but the type is actually 'complex'"
 ./test_code/Metrics_RequireReadOnly_failure.a,7,11,7,14,"Read only methods can only call other read-only methods or pure functions"
