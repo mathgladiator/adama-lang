@@ -226,6 +226,68 @@ public class LibString {
   }
 
   @Extension
+  public static String proper(String s) {
+    if (s.length() > 1) {
+      return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+    } else {
+      return s.toUpperCase();
+    }
+  }
+
+  @Extension
+  public static @HiddenType(clazz = String.class) NtMaybe<String> proper(final @HiddenType(clazz = String.class) NtMaybe<String> s) {
+    if (s.has()) {
+      return new NtMaybe<>(proper(s.get()));
+    }
+    return s;
+  }
+
+  @Extension
+  public static String camelject(String x, String insert) {
+    PrimitiveIterator.OfInt it = x.codePoints().iterator();
+    StringBuilder result = new StringBuilder();
+    boolean inUpper = true; // ignore first capital letter
+    while (it.hasNext()) {
+      int cp = it.next();
+      if (Character.isAlphabetic(cp)) {
+        boolean isUpper = Character.isUpperCase(cp);
+        if (isUpper && !inUpper) {
+          result.append(insert);
+        }
+        inUpper = isUpper;
+      }
+      result.append(Character.toString(cp));
+    }
+    return result.toString();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = String.class) NtMaybe<String> camelject(final @HiddenType(clazz = String.class) NtMaybe<String> s, String insert) {
+    if (s.has()) {
+      return new NtMaybe<>(camelject(s.get(), insert));
+    }
+    return s;
+  }
+
+  @Extension
+  public static String camelject(String s, final @HiddenType(clazz = String.class) NtMaybe<String> insert) {
+    if (insert.has()) {
+      return camelject(s, insert.get());
+    }
+    return s;
+  }
+
+  @Extension
+  public static @HiddenType(clazz = String.class) NtMaybe<String> camelject(final @HiddenType(clazz = String.class) NtMaybe<String> s, final @HiddenType(clazz = String.class) NtMaybe<String> insert) {
+    if (s.has()) {
+      if (insert.has()) {
+        return new NtMaybe<>(camelject(s.get(), insert.get()));
+      }
+    }
+    return s;
+  }
+
+  @Extension
   public static String lower(String s) {
     return s.toLowerCase();
   }

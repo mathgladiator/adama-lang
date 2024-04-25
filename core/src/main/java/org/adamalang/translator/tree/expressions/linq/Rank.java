@@ -95,16 +95,11 @@ public class Rank extends LinqExpression implements LatentCodeSnippet {
   @Override
   protected TyType typingInternal(Environment environment, TyType suggestion) {
     TyType base = sql.typing(environment, suggestion);
-    if (thresholdValue != null) {
-      TyType thresholdType = thresholdValue.typing(environment.scopeWithComputeContext(ComputeContext.Computation).scopeAsReadOnlyBoundary(), new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, threshold));
-      environment.rules.IsNumeric(thresholdType, false);
-    }
     if (base != null && environment.rules.IsNativeListOfStructure(base, false)) {
       environment.document.add(this);
       generatedClassId = environment.document.inventClassId();
       elementType = environment.rules.Resolve(((TyNativeList) environment.rules.Resolve(base, false)).elementType, false);
       Environment next = environment.scopeAsReadOnlyBoundary().scopeWithComputeContext(ComputeContext.Computation);
-      next.define(name.text, elementType, true, expressionRank);
       final var watch = next.watch((name, tyUn) -> {
         TyType ty = environment.rules.Resolve(tyUn, false);
         if (GlobalObjectPool.ignoreCapture(name, ty)) {
@@ -115,6 +110,11 @@ public class Rank extends LinqExpression implements LatentCodeSnippet {
           closureTypes.put(name, ty.getJavaConcreteType(environment));
         }
       }).captureSpecials();
+      if (thresholdValue != null) {
+        TyType thresholdType = thresholdValue.typing(watch, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, threshold));
+        environment.rules.IsNumeric(thresholdType, false);
+      }
+      watch.define(name.text, elementType, true, expressionRank);
       HashMap<String, TyType> specialsUsed = watch.specials();
       rankType = expressionRank.typing(watch, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, rank));
       for (Map.Entry<String, TyType> entry : specialsUsed.entrySet()) {
@@ -144,7 +144,7 @@ public class Rank extends LinqExpression implements LatentCodeSnippet {
   public void writeJava(StringBuilder sb, Environment environment) {
     if (passedTypeChecking() && rankType != null) {
       sql.writeJava(sb, environment);
-      sb.append(".rank(").append(intermediateExpression ? "false, " : "true, ").append("new __CLOSURE_Ranker" + generatedClassId + "(");
+      sb.append(".rank(new __CLOSURE_Ranker" + generatedClassId + "(");
       var notfirst = false;
       for (final Map.Entry<String, String> entry : closureTypes.entrySet()) {
         if (notfirst) {
@@ -173,7 +173,7 @@ public class Rank extends LinqExpression implements LatentCodeSnippet {
       sb.append("private ").append(entry.getValue()).append(" ").append(entry.getKey()).append(";").writeNewline();
     }
     if (closureTypes.size() > 0) {
-      sb.append("private __CLOSURE_Rank" + generatedClassId + "(");
+      sb.append("private __CLOSURE_Ranker" + generatedClassId + "(");
       var notfirst = false;
       for (final Map.Entry<String, String> entry : closureTypes.entrySet()) {
         if (notfirst) {
@@ -194,10 +194,18 @@ public class Rank extends LinqExpression implements LatentCodeSnippet {
       sb.append("}").writeNewline();
     }
     sb.append("@Override").writeNewline();
-    sb.append("public double test(").append(iterType).append(" ").append(name.text).append(") {").tabUp().writeNewline();
+    sb.append("public double rank(").append(iterType).append(" ").append(name.text).append(") {").tabUp().writeNewline();
     sb.append(String.format("__code_cost ++;")).writeNewline();
     sb.append("return (double) (" + exprRankCode.toString() + ");").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
+    if (threshold != null) {
+      sb.append("public double threshold() {").tabUp().writeNewline();
+      sb.append(String.format("__code_cost ++;")).writeNewline();
+      sb.append("return (double) (" + exprThresholdCode.toString() + ");").tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+    } else {
+      sb.append("public double threshold() { return -Double.MAX_VALUE; }").writeNewline();
+    }
     sb.append("}").writeNewline();
   }
 }

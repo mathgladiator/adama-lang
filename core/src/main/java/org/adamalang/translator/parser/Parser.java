@@ -1534,7 +1534,7 @@ public class Parser {
       base = assignment(scope);
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset", "unique"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "rank", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset", "unique"))) != null) {
       base = wrap_linq(scope, base, op);
     }
     return base;
@@ -2385,6 +2385,17 @@ public class Parser {
           key = id();
         }
         return new Unique(base, op, mode, key);
+      }
+      case "rank": {
+        Token name = id();
+        Token colon = consumeExpectedSymbol(":");
+        Expression rank = assignment(scope);
+        Token threshold = tokens.popIf((t) -> t.isIdentifier("threshold"));
+        Expression thresholdValue = null;
+        if (threshold != null) {
+          thresholdValue = assignment(scope);
+        }
+        return new Rank(base, op, name, colon, rank, threshold, thresholdValue);
       }
       case "where":
         return new Where(base, op, null, null, assignment(scope));

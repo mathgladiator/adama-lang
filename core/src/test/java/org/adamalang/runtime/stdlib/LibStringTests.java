@@ -41,6 +41,29 @@ public class LibStringTests {
   }
 
   @Test
+  public void proper() {
+    Assert.assertEquals("Hello", LibString.proper("HELLO"));
+    Assert.assertEquals("Hello", LibString.proper("hello"));
+    Assert.assertEquals("Hello", LibString.proper(new NtMaybe<>("HELLO")).get());
+    Assert.assertEquals("Hello", LibString.proper(new NtMaybe<>("hello")).get());
+    Assert.assertFalse(LibString.proper(new NtMaybe<>()).has());
+  }
+
+  @Test
+  public void camelject() {
+    Assert.assertEquals("Hello Credit Card", LibString.camelject("HelloCreditCard", " "));
+    Assert.assertEquals("HELLo Credit Card", LibString.camelject("HELLoCreditCard", " "));
+    Assert.assertEquals("Hello Credit Card", LibString.camelject(new NtMaybe<>("HelloCreditCard"), " ").get());
+    Assert.assertEquals("HELLo Credit Card", LibString.camelject(new NtMaybe<>("HELLoCreditCard"), " ").get());
+    Assert.assertEquals("Hello Credit Card", LibString.camelject(new NtMaybe<>("HelloCreditCard"), new NtMaybe<>(" ")).get());
+    Assert.assertEquals("HELLo Credit Card", LibString.camelject(new NtMaybe<>("HELLoCreditCard"), new NtMaybe<>(" ")).get());
+    Assert.assertEquals("Hello Credit Card", LibString.camelject("HelloCreditCard", new NtMaybe<>(" ")));
+    Assert.assertEquals("HELLo Credit Card", LibString.camelject("HELLoCreditCard", new NtMaybe<>(" ")));
+    Assert.assertEquals("HELLoCreditCard", LibString.camelject("HELLoCreditCard", new NtMaybe<>()));
+    Assert.assertEquals("HELLoCreditCard", LibString.camelject(new NtMaybe<>("HELLoCreditCard"), new NtMaybe<>()).get());
+  }
+
+  @Test
   public void listmaybe_empty() {
     ArrayList<NtMaybe<String>> storage = new ArrayList<>();
     storage.add(new NtMaybe<>());

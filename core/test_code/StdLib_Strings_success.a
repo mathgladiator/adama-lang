@@ -25,6 +25,8 @@ public formula zzz2 = "Justice of Doom".initialsOf(true);
 public formula zzz3 = @maybe("Justice of Doom").initialsOf(false);
 public formula zzz4 = @maybe("Justice of Doom").initialsOf(true);
 public formula zzz5 = @maybe<string>.initialsOf(false);
+public formula sug1 = "CreditCard".camelject(" ");
+public formula sug2 = "CreditCard".camelject("_").lower();
 
 record S {
   maybe<string> item;

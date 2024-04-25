@@ -1,0 +1,17 @@
+record X {
+  public double v;
+}
+
+table<X> t;
+
+@construct {
+  t <- {v:6};
+  t <- {v:-2};
+  t <- {v:1};
+  t <- {v:2};
+  t <- {v:4};
+  t <- {v:8};
+}
+
+public formula foo_all = iterate t rank x: x.v;
+public formula foo_3 = iterate t rank x: x.v threshold 3;
