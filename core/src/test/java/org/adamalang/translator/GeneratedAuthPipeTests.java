@@ -487,6 +487,9 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -544,6 +547,9 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTxM extends NtMessageBase {");
     gold.append("\n    private final RTxM __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"M\");");
     gold.append("\n    }");
@@ -603,6 +609,17 @@ public class GeneratedAuthPipeTests extends GeneratedBase {
     gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
     gold.append("\n    private String agent = \"\";");
     gold.append("\n    private String hash = \"\";");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __mem = 64;");
+    gold.append("\n      __mem += Sizing.memoryOf(agent);");
+    gold.append("\n      __mem += Sizing.memoryOf(hash);");
+    gold.append("\n      return __mem;");
+    gold.append("\n    }");
+    gold.append("\n    public void __reset() {");
+    gold.append("\n      this.agent = \"\";");
+    gold.append("\n      this.hash = \"\";");
+    gold.append("\n    }");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"agent\");");
     gold.append("\n      __hash.hashString(this.agent);");

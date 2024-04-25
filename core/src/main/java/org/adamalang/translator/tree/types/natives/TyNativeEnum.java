@@ -68,7 +68,7 @@ public class TyNativeEnum extends TySimpleNative implements //
   public final EnumStorage storage;
 
   public TyNativeEnum(final TypeBehavior behavior, final Token enumToken, final Token nameToken, final Token openBrace, final EnumStorage storage, final Token endBrace) {
-    super(behavior, "int", "Integer");
+    super(behavior, "int", "Integer", 4);
     this.enumToken = enumToken;
     this.nameToken = nameToken;
     name = nameToken.text;

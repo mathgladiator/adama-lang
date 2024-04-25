@@ -2085,6 +2085,10 @@ public class Parser {
         return new TyReactiveStateMachineRef(readonly, token);
       case "text":
         return new TyReactiveText(readonly, token);
+      case "holder": {
+        final var typeParameter = type_parameter();
+        return new TyReactiveHolder(readonly, token, typeParameter);
+      }
       case "table": {
         final var typeParameter = type_parameter();
         TyReactiveTable table =  new TyReactiveTable(readonly, token, typeParameter);

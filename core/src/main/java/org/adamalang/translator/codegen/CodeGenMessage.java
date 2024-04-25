@@ -18,19 +18,117 @@
 package org.adamalang.translator.codegen;
 
 import org.adamalang.common.FirstPrimes;
+import org.adamalang.runtime.natives.NtMap;
+import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.natives.NtPair;
+import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
+import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
+import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CodeGenMessage {
+  public static void writeInitValue(TyNativeMessage self, StringBuilderWithTabs sb, FieldDefinition fd, Environment environment) {
+    final var fieldType = environment.rules.Resolve(fd.type, false);
+    if (fieldType instanceof DetailNativeDeclarationIsNotStandard) {
+      sb.append(" = ").append(((DetailNativeDeclarationIsNotStandard) fieldType).getStringWhenValueNotProvided(environment));
+    } else {
+      Expression defaultValueToUse = null;
+      if (fieldType instanceof DetailInventDefaultValueExpression) {
+        defaultValueToUse = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(self);
+      }
+      if (fd.defaultValueOverride != null) {
+        defaultValueToUse = fd.defaultValueOverride;
+      }
+      if (defaultValueToUse != null) {
+        sb.append(" = ");
+        defaultValueToUse.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+      }
+    }
+  }
+
+  public static void memoryAddForField(String thing, TyType resolved, StringBuilderWithTabs sb, Environment environment, boolean tabDown) {
+    if (resolved instanceof TySimpleNative) {
+      int sz = ((TySimpleNative) resolved).memorySize;
+      if (sz > 0) {
+        sb.append("__mem += ").append("" + sz).append(";");
+      } else {
+        sb.append("__mem += Sizing.memoryOf(").append(thing).append(");");
+      }
+    } else if (resolved instanceof TyNativeMessage) {
+      sb.append("__mem += ").append(thing).append(".__memory();");
+    } else if (resolved instanceof TyNativeArray || resolved instanceof TyNativeList || resolved instanceof TyNativeMap) {
+      TyType element = environment.rules.Resolve(((DetailContainsAnEmbeddedType) resolved).getEmbeddedType(environment), false);
+      String index = "__idx_" + environment.autoVariable();
+      sb.append("for (").append(element.getJavaConcreteType(environment)).append(" ").append(index).append(" : ").append(thing).append(") {").tabUp().writeNewline();
+      memoryAddForField(index, element, sb, environment, true);
+      sb.append("}");
+    } else if (resolved instanceof TyNativeMaybe) {
+      TyType element = environment.rules.Resolve(((DetailContainsAnEmbeddedType) resolved).getEmbeddedType(environment), false);
+      String child = "__child_" + environment.autoVariable();
+      sb.append("if (").append(thing).append(".has()) {").tabUp();
+      sb.append(element.getJavaConcreteType(environment)).append(" ").append(child).append(" = ").append(thing).append(".get();").writeNewline();
+      memoryAddForField(child, element, sb, environment, true);
+      sb.append("}");
+    } else if (resolved instanceof TyNativePair) {
+      memoryAddForField(thing + ".key", ((TyNativePair) resolved).domainType, sb, environment, false);
+      memoryAddForField(thing + ".value", ((TyNativePair) resolved).rangeType, sb, environment, tabDown);
+      return;
+    } else {
+      sb.append(" // TODO:").append(thing).append(" := ").append(resolved.getAdamaType());
+    }
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
+
+  public static void generateMemorySize(TyNativeMessage self, StringBuilderWithTabs sb, Environment environment) {
+    sb.append("@Override").writeNewline();
+    if (self.storage.fieldsByOrder.size() == 0) {
+      sb.append("public long __memory() { return 64; }").writeNewline();
+      return;
+    }
+    sb.append("public long __memory() {").tabUp().writeNewline();
+    sb.append("long __mem = 64;").writeNewline();
+    for (final FieldDefinition fd : self.storage.fieldsByOrder) {
+      TyType resolved = environment.rules.Resolve(fd.type, false);
+      memoryAddForField(fd.name, resolved, sb, environment, false);
+    }
+    sb.append("return __mem;").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+  }
+
+  public static void generateReset(TyNativeMessage self, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+    int countDown = storage.fieldsByOrder.size();
+    if (countDown == 0) {
+      sb.append("public void __reset() {}").writeNewline();
+      return;
+    }
+    sb.append("public void __reset() {").tabUp().writeNewline();
+    for (final FieldDefinition fd : storage.fieldsByOrder) {
+      sb.append("this.").append(fd.name);
+      writeInitValue(self, sb, fd, environment);
+      countDown--;
+      sb.append(";");
+      if (countDown == 0) {
+        sb.tabDown();
+      }
+      sb.writeNewline();
+    }
+    sb.append("}").writeNewline();
+  }
+
   public static void generateHashers(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     AtomicInteger localVar = new AtomicInteger(1);
     sb.append("public void __hash(HashBuilder __hash) {").tabUp().writeNewline();

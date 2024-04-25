@@ -56,7 +56,7 @@ public class TyNativeTimeSpan extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeTimeSpan(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "NtTimeSpan", "NtTimeSpan");
+    super(behavior, "NtTimeSpan", "NtTimeSpan", 80);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

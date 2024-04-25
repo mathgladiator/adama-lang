@@ -59,7 +59,11 @@ public class MaterializedNtListTests {
 
     @Override
     public void __ingest(JsonStreamReader reader) {
+    }
 
+    @Override
+    public long __memory() {
+      return 100000;
     }
   }
 

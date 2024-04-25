@@ -49,6 +49,11 @@ public abstract class NtMessageBase implements NtToDynamic, MultiIndexable {
     public String[] __getIndexColumns() {
       return new String[] {};
     }
+
+    @Override
+    public long __memory() {
+      return 64;
+    }
   };
 
   public abstract void __hash(HashBuilder __hash);
@@ -67,4 +72,6 @@ public abstract class NtMessageBase implements NtToDynamic, MultiIndexable {
   }
 
   public abstract void __ingest(JsonStreamReader reader);
+
+  public abstract long __memory();
 }

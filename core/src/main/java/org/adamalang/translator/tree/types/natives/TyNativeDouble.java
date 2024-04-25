@@ -53,7 +53,7 @@ public class TyNativeDouble extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeDouble(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "double", "Double");
+    super(behavior, "double", "Double", 8);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

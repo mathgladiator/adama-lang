@@ -43,7 +43,7 @@ public class TyNativeDynamic extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeDynamic(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "NtDynamic", "NtDynamic");
+    super(behavior, "NtDynamic", "NtDynamic", -1);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

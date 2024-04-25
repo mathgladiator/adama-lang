@@ -21,6 +21,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.reactive.TyReactiveHolder;
 
 public class RuleSetMessages {
   public static TyNativeMessage FindMessageStructure(final Environment environment, final String name, final DocumentPosition position, final boolean silent) {
@@ -46,6 +47,20 @@ public class RuleSetMessages {
       }
       if (!silent) {
         environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
+      }
+    }
+    return false;
+  }
+
+  public static boolean IsReactiveHolder(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    var tyType = tyTypeOriginal;
+    if (tyType != null) {
+      tyType = RuleSetCommon.Resolve(environment, tyType, silent);
+      if (tyType instanceof TyReactiveHolder) {
+        return true;
+      }
+      if (!silent) {
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must be a holder, but got a type of '%s'.", tyTypeOriginal.getAdamaType()));
       }
     }
     return false;

@@ -54,7 +54,7 @@ public class TyNativeString extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeString(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "String", "String");
+    super(behavior, "String", "String", -1);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

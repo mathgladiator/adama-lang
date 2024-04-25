@@ -57,6 +57,11 @@ public class NtChannelTests {
     public String[] __getIndexColumns() {
       return new String[0];
     }
+
+    @Override
+    public long __memory() {
+      return 128;
+    }
   };
 
   public OutstandingFutureTracker makeFutures() {

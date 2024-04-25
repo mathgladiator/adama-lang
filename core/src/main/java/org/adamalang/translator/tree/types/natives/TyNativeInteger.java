@@ -50,7 +50,7 @@ public class TyNativeInteger extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeInteger(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "int", "Integer");
+    super(behavior, "int", "Integer", 4);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

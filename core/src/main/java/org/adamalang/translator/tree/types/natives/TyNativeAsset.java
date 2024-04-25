@@ -49,7 +49,7 @@ public class TyNativeAsset extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeAsset(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "NtAsset", "NtAsset");
+    super(behavior, "NtAsset", "NtAsset", -1);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

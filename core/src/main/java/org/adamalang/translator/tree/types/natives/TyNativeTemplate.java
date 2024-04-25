@@ -40,7 +40,7 @@ public class TyNativeTemplate extends TySimpleNative implements //
   private final Token templateToken;
 
   public TyNativeTemplate(Token templateToken) {
-    super(TypeBehavior.ReadOnlyNativeValue, "NtTemplate", "NtTemplate");
+    super(TypeBehavior.ReadOnlyNativeValue, "NtTemplate", "NtTemplate", -1);
     this.templateToken = templateToken;
     ingest(templateToken);
   }

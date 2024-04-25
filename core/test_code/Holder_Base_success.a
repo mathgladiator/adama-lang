@@ -1,0 +1,18 @@
+message Foo {
+  int x;
+  int y;
+}
+
+public holder<Foo> foo;
+public int sum;
+
+@construct {
+  Foo f;
+  f.x = 1;
+  f.y = 2;
+  foo = f;
+  sum = foo.x + foo.y;
+  foo.write().x = 100;
+  foo.write().y = 200;
+}
+

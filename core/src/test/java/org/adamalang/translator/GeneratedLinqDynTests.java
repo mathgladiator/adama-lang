@@ -500,6 +500,9 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -773,6 +776,15 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n  private static class RTx_AnonObjConvert_0 extends NtMessageBase {");
     gold.append("\n    private final RTx_AnonObjConvert_0 __this;");
     gold.append("\n    private int z = 0;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __mem = 64;");
+    gold.append("\n      __mem += 4;");
+    gold.append("\n      return __mem;");
+    gold.append("\n    }");
+    gold.append("\n    public void __reset() {");
+    gold.append("\n      this.z = 0;");
+    gold.append("\n    }");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"z\");");
     gold.append("\n      __hash.hashInteger(this.z);");

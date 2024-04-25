@@ -90,4 +90,9 @@ public class MockMessage extends NtMessageBase {
     __writeOut(writer);
     return writer.toString();
   }
+
+  @Override
+  public long __memory() {
+    return 128;
+  }
 }

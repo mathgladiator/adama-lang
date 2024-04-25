@@ -56,7 +56,7 @@ public class TyNativeTime extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeTime(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "NtTime", "NtTime");
+    super(behavior, "NtTime", "NtTime", 64);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

@@ -50,7 +50,7 @@ public class TyNativeLong extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeLong(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "long", "Long");
+    super(behavior, "long", "Long", 8);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

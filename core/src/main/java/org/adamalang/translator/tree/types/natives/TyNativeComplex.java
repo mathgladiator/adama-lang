@@ -58,7 +58,7 @@ public class TyNativeComplex extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeComplex(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "NtComplex", "NtComplex");
+    super(behavior, "NtComplex", "NtComplex", 80);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

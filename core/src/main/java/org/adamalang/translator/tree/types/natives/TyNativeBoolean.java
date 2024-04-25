@@ -54,7 +54,7 @@ public class TyNativeBoolean extends TySimpleNative implements //
   public final Token token;
 
   public TyNativeBoolean(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "boolean", "Boolean");
+    super(behavior, "boolean", "Boolean", 4);
     this.token = token;
     this.readonlyToken = readonlyToken;
     ingest(token);

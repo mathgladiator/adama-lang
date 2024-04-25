@@ -52,7 +52,7 @@ public class TyNativeSecurePrincipal extends TySimpleNative implements //
   public final Token closedToken;
 
   public TyNativeSecurePrincipal(final TypeBehavior behavior, final Token readonlyToken, final Token secureToken, final Token openToken, final Token principalToken, final Token closedToken) {
-    super(behavior, "NtPrincipal", "NtPrincipal");
+    super(behavior, "NtPrincipal", "NtPrincipal", -1);
     this.readonlyToken = readonlyToken;
     this.secureToken = secureToken;
     this.openToken = openToken;

@@ -567,6 +567,9 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -1855,6 +1858,9 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -3136,6 +3142,9 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");

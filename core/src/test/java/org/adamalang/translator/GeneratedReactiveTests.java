@@ -471,6 +471,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -1433,6 +1436,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -1491,6 +1497,15 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  private static class RTxJustStr extends NtMessageBase {");
     gold.append("\n    private final RTxJustStr __this;");
     gold.append("\n    private String str = \"\";");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __mem = 64;");
+    gold.append("\n      __mem += Sizing.memoryOf(str);");
+    gold.append("\n      return __mem;");
+    gold.append("\n    }");
+    gold.append("\n    public void __reset() {");
+    gold.append("\n      this.str = \"\";");
+    gold.append("\n    }");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"str\");");
     gold.append("\n      __hash.hashString(this.str);");
@@ -2703,6 +2718,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");
@@ -3871,6 +3889,9 @@ public class GeneratedReactiveTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  private static class RTx__ViewerType extends NtMessageBase {");
     gold.append("\n    private final RTx__ViewerType __this;");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() { return 64; }");
+    gold.append("\n    public void __reset() {}");
     gold.append("\n    public void __hash(HashBuilder __hash) {");
     gold.append("\n      __hash.hashString(\"anonymous\");");
     gold.append("\n    }");

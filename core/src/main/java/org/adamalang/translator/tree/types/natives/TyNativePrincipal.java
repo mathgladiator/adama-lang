@@ -49,7 +49,7 @@ public class TyNativePrincipal extends TySimpleNative implements //
   public final Token token;
 
   public TyNativePrincipal(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
-    super(behavior, "NtPrincipal", "NtPrincipal");
+    super(behavior, "NtPrincipal", "NtPrincipal", -1);
     this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);

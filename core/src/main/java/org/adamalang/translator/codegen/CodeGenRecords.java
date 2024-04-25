@@ -42,7 +42,14 @@ import java.util.Map;
 /** responsible for writing the code for records */
 public class CodeGenRecords {
   private static boolean isCommitRevertable(final TyType fieldType) {
-    return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveText;
+    return fieldType instanceof TySimpleReactive || //
+        fieldType instanceof TyReactiveMaybe || //
+        fieldType instanceof TyReactiveTable || //
+        fieldType instanceof TyReactiveRef || //
+        fieldType instanceof TyReactiveRecord || //
+        fieldType instanceof TyReactiveMap || //
+        fieldType instanceof TyReactiveText || //
+        fieldType instanceof TyReactiveHolder;
   }
 
   private static boolean isCommitCache(final FieldDefinition fd, TyType fieldType) {
@@ -162,6 +169,8 @@ public class CodeGenRecords {
       result.append("new RxTable<>(__self, ").append(parent).append(", \"").append(className);
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
       result.append("(__parent).__link(), ").append(numberIndicies).append(")");
+    } else if (fieldType instanceof TyReactiveHolder) {
+      result.append("new RxHolder(").append(parent).append(",() -> new RTx").append(((TyReactiveHolder) fieldType).messageTypeName).append("())");
     } else if (fieldType instanceof TyReactiveText) {
       result.append("new RxText(").append(parent).append(",__auto_gen)");
     } else if (fieldType instanceof TyReactiveRecord) {
@@ -292,7 +301,7 @@ public class CodeGenRecords {
       }
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
       classFields.append("private final ").append(javaConcreteType).append(" ").append(fieldName).append(";").writeNewline();
-      if (fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveText || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveRecord) {
+      if (fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveText || fieldType instanceof TyReactiveMap || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveHolder) {
         classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment, false)).append(";").writeNewline();
         if (fieldType instanceof TyReactiveRecord) {
           classLinker.append(fieldName + ".__link();").writeNewline();

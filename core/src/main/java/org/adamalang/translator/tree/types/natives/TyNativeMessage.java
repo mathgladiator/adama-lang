@@ -99,24 +99,11 @@ public class TyNativeMessage extends TyType implements //
     sb.append("private final RTx" + name + " __this;").writeNewline();
     for (final FieldDefinition fd : fields) {
       sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
-      final var fieldType = environment.rules.Resolve(fd.type, false);
-      if (fieldType instanceof DetailNativeDeclarationIsNotStandard) {
-        sb.append(" = ").append(((DetailNativeDeclarationIsNotStandard) fieldType).getStringWhenValueNotProvided(environment));
-      } else {
-        Expression defaultValueToUse = null;
-        if (fieldType instanceof DetailInventDefaultValueExpression) {
-          defaultValueToUse = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(this);
-        }
-        if (fd.defaultValueOverride != null) {
-          defaultValueToUse = fd.defaultValueOverride;
-        }
-        if (defaultValueToUse != null) {
-          sb.append(" = ");
-          defaultValueToUse.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
-        }
-      }
+      CodeGenMessage.writeInitValue(this, sb, fd, environment);
       sb.append(";").writeNewline();
     }
+    CodeGenMessage.generateMemorySize(this, sb, environment);
+    CodeGenMessage.generateReset(this, storage, sb, environment);
     CodeGenMessage.generateHashers(name, storage, sb, environment);
     CodeGenIndexing.writeIndexConstant(name, storage, sb, environment);
     CodeGenIndexing.writeIndices(name, storage, sb, environment);
@@ -283,6 +270,9 @@ public class TyNativeMessage extends TyType implements //
       ArrayList<TyType> args = new ArrayList<>();
       args.add(new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null));
       return new TyNativeFunctional("ingest_dynamic", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("ingest_dynamic", new TyNativeVoid(), args, FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("reset".equals(name)) {
+      return new TyNativeFunctional("__reset", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__reset", new TyNativeVoid(), new ArrayList<>(), FunctionPaint.READONLY_NORMAL)), FunctionStyleJava.ExpressionThenArgs);
     }
     return storage.methodTypes.get(name);
   }

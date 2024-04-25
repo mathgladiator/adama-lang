@@ -241,6 +241,12 @@ public class RuleSetAssignment {
         return true;
       }
     }
+
+    final var aHolder = RuleSetMessages.IsReactiveHolder(environment, typeA, true);
+    if (aHolder) {
+      return RuleSetMessages.IsNativeMessage(environment, typeB, false);
+    }
+
     if (!silent) {
       environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()));
     }
