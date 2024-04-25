@@ -570,6 +570,8 @@ public class GeneratedTableTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -861,6 +863,8 @@ public class GeneratedTableTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(z);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxZ() { __this = this; }");
     gold.append("\n    private RTxZ(String z) {");
     gold.append("\n      this.__this = this;");

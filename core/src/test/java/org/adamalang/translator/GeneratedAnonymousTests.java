@@ -518,6 +518,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -609,6 +611,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxX() { __this = this; }");
     gold.append("\n    private RTxX(int x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -716,6 +720,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxY() { __this = this; }");
     gold.append("\n    private RTxY(int x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -1433,6 +1439,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1594,6 +1602,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(start);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_8() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_8(String class_type, int duration_span, String end, int id, String instructor_name, String name, int overlap_count, int row_start, String start) {");
     gold.append("\n      this.__this = this;");
@@ -1781,6 +1791,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(room_name);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_9() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_9(RTx_AutoMaxRecord_8[] events, boolean has_events, String room_color, String room_name) {");
     gold.append("\n      this.__this = this;");
@@ -2516,6 +2528,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -2863,6 +2877,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(int x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -2960,6 +2976,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(z);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_6() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_6(int z) {");
     gold.append("\n      this.__this = this;");
@@ -3071,6 +3089,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeDouble(z);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_16() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_16(int x, int y, double z) {");
     gold.append("\n      this.__this = this;");
@@ -3838,6 +3858,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -3919,6 +3941,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_4() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_4(int x) {");
     gold.append("\n      this.__this = this;");
@@ -4022,6 +4046,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_9() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_9(NtMaybe<Integer> x) {");
     gold.append("\n      this.__this = this;");
@@ -4129,6 +4155,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_24() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_24(int x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -4236,6 +4264,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_25() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_25(RTx_AutoMaxRecord_24 x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -4373,6 +4403,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_34() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_34(NtMaybe<Integer> x, int[] y) {");
     gold.append("\n      this.__this = this;");
@@ -4487,6 +4519,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(z1);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_36() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_36(int z1) {");
     gold.append("\n      this.__this = this;");
@@ -4590,6 +4624,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_42() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_42(NtMaybe<RTx_AnonObjConvert_36> x) {");
     gold.append("\n      this.__this = this;");
@@ -4697,6 +4733,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(z2);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_58() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_58(int z1, int z2) {");
     gold.append("\n      this.__this = this;");
@@ -4812,6 +4850,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.endArray();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_59() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_59(RTx_AutoMaxRecord_58[] x) {");
     gold.append("\n      this.__this = this;");
@@ -5518,6 +5558,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -5642,6 +5684,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_4() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_4(int x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -5789,6 +5833,8 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(v);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_17() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_17(boolean b, double d, int e, String s, long u, int v) {");
     gold.append("\n      this.__this = this;");

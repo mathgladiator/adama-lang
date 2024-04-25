@@ -525,6 +525,8 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1266,6 +1268,8 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1961,6 +1965,8 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -2052,6 +2058,8 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(seq);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxAppend() { __this = this; }");
     gold.append("\n    private RTxAppend(NtDynamic change, int seq) {");
     gold.append("\n      this.__this = this;");
@@ -2799,6 +2807,8 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -3087,6 +3097,8 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(doc);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(String doc) {");
     gold.append("\n      this.__this = this;");

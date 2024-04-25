@@ -685,6 +685,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -766,6 +768,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(a);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxX() { __this = this; }");
     gold.append("\n    private RTxX(int a) {");
     gold.append("\n      this.__this = this;");
@@ -867,6 +871,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(b);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxY() { __this = this; }");
     gold.append("\n    private RTxY(int a, int b) {");
     gold.append("\n      this.__this = this;");
@@ -1224,6 +1230,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(c);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AutoMaxRecord_2() { __this = this; }");
     gold.append("\n    private RTx_AutoMaxRecord_2(int a, int b, int c) {");
     gold.append("\n      this.__this = this;");
@@ -1969,6 +1977,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -2272,6 +2282,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxM() { __this = this; }");
     gold.append("\n    private RTxM(int x) {");
     gold.append("\n      this.__this = this;");
@@ -2373,6 +2385,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxM2() { __this = this; }");
     gold.append("\n    private RTxM2(int x, int y) {");
     gold.append("\n      this.__this = this;");

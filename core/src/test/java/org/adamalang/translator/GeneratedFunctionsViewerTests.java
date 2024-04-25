@@ -570,6 +570,8 @@ public class GeneratedFunctionsViewerTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n    private RTx__ViewerType(int x) {");
     gold.append("\n      this.__this = this;");

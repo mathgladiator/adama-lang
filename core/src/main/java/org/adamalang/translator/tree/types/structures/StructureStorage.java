@@ -71,6 +71,7 @@ public class StructureStorage extends DocumentPosition {
   public final ArrayList<JoinAssoc> joins;
   private Block postIngestion;
   private boolean csvEnabled;
+  private Block postParse;
 
   public StructureStorage(final Token name, final StorageSpecialization specialization, final boolean anonymous, final boolean root, final Token openBraceToken) {
     this.name = name;
@@ -98,6 +99,7 @@ public class StructureStorage extends DocumentPosition {
     formatting = new ArrayList<>();
     postIngestion = null;
     csvEnabled = false;
+    postParse = null;
   }
 
   public boolean isCommaSeperateValueEnabled() {
@@ -131,6 +133,14 @@ public class StructureStorage extends DocumentPosition {
     return postIngestion;
   }
 
+  public boolean hasPostParse() {
+    return postParse != null;
+  }
+
+  public Block getPostParse() {
+    return postParse;
+  }
+
   public void setPostIngestion(Token token, Block code) {
     emissions.add((c) -> c.accept(token));
     emissions.add((c) -> code.emit(c));
@@ -143,6 +153,21 @@ public class StructureStorage extends DocumentPosition {
     postIngestion.free(fe);
     checker.register(fe.free, (env) -> {
       code.typing(env.scope());
+    });
+  }
+
+  public void setPostParse(Token token, Block code) {
+    emissions.add((c) -> c.accept(token));
+    emissions.add((c) -> code.emit(c));
+    formatting.add((c) -> code.format(c));
+    if (postParse != null) {
+      checker.issueError(this, "The message " + name + " already has a post parse event");
+    }
+    this.postParse = code;
+    FreeEnvironment fe = FreeEnvironment.root();
+    postParse.free(fe);
+    checker.register(fe.free, (env) -> {
+      code.typing(env.scopeAsAbortable());
     });
   }
 

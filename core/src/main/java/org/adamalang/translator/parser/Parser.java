@@ -1326,11 +1326,14 @@ public class Parser {
       if (indexToken != null) {
         storage.add(define_indexing(indexToken));
       } else {
-        Token keywordOption = tokens.popIf((t) -> t.isKeyword("@csv"));
+        Token keywordOption = tokens.popIf((t) -> t.isKeyword("@csv", "@parsed"));
         if (keywordOption != null) {
           switch (keywordOption.text) {
             case "@csv":
               storage.enableCSV(keywordOption, consumeExpectedSymbol(";"));
+              break;
+            case "@parsed":
+              storage.setPostParse(keywordOption, block(scope.makeMessageEvent()));
               break;
           }
         } else {

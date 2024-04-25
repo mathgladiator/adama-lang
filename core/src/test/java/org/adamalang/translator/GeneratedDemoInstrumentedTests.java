@@ -1386,6 +1386,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1934,6 +1936,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxEmpty() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxEmpty implements DeltaNode {");
@@ -2392,6 +2396,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(id);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxLeaderActionMessage() { __this = this; }");
     gold.append("\n    private RTxLeaderActionMessage(int action, int id) {");
     gold.append("\n      this.__this = this;");
@@ -2531,6 +2537,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(id);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxCardDecision() { __this = this; }");
     gold.append("\n    private RTxCardDecision(int id) {");
     gold.append("\n      this.__this = this;");
@@ -2662,6 +2670,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(points);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(boolean leader, NtPrincipal link, int play_order, boolean playing, int points) {");
     gold.append("\n      this.__this = this;");
@@ -2797,6 +2807,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(suit);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_2() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_2(int place, int rank, int suit) {");
     gold.append("\n      this.__this = this;");
@@ -5091,6 +5103,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -5435,6 +5449,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(what);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSay() { __this = this; }");
     gold.append("\n    private RTxSay(String what) {");
     gold.append("\n      this.__this = this;");
@@ -5746,6 +5762,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeNtPrincipal(who);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_2() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_2(String what, long when, NtPrincipal who) {");
     gold.append("\n      this.__this = this;");
@@ -5849,6 +5867,8 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(html);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_4() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_4(String html) {");
     gold.append("\n      this.__this = this;");

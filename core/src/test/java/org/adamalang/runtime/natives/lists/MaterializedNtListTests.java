@@ -19,6 +19,7 @@ package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
+import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
@@ -64,6 +65,10 @@ public class MaterializedNtListTests {
     @Override
     public long __memory() {
       return 100000;
+    }
+
+    @Override
+    public void __parsed() throws AbortMessageException {
     }
   }
 

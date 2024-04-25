@@ -502,6 +502,8 @@ public class GeneratedCSVTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -616,6 +618,8 @@ public class GeneratedCSVTests extends GeneratedBase {
     gold.append("\n      __writer.write(y);");
     gold.append("\n      __writer.write(z);");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxxyz() { __this = this; }");
     gold.append("\n    private RTxxyz(int x, double y, String z) {");
     gold.append("\n      this.__this = this;");
@@ -719,6 +723,8 @@ public class GeneratedCSVTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(csv);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_2() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_2(String csv) {");
     gold.append("\n      this.__this = this;");

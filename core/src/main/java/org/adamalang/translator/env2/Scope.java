@@ -128,6 +128,10 @@ public class Scope {
     return new Scope(this);
   }
 
+  public Scope makeMessageEvent() {
+    return new Scope(this);
+  }
+
   public Scope makeCronTask() {
     return new Scope(this);
   }

@@ -651,6 +651,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -742,6 +744,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx_AnonObjConvert_0() { __this = this; }");
     gold.append("\n    private RTx_AnonObjConvert_0(String message, String phone) {");
     gold.append("\n      this.__this = this;");
@@ -1475,6 +1479,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1566,6 +1572,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSendRequest() { __this = this; }");
     gold.append("\n    private RTxSendRequest(String message, String phone) {");
     gold.append("\n      this.__this = this;");
@@ -1642,6 +1650,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSendResponse() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");
@@ -2290,6 +2300,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -2371,6 +2383,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(message);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxEchoRequestAndResponse_0() { __this = this; }");
     gold.append("\n    private RTxEchoRequestAndResponse_0(String message) {");
     gold.append("\n      this.__this = this;");
@@ -3157,6 +3171,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -3248,6 +3264,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSendRequest() { __this = this; }");
     gold.append("\n    private RTxSendRequest(String message, String phone) {");
     gold.append("\n      this.__this = this;");
@@ -3324,6 +3342,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSendResponse() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");
@@ -4123,6 +4143,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -4214,6 +4236,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(phone);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSendRequest() { __this = this; }");
     gold.append("\n    private RTxSendRequest(String message, String phone) {");
     gold.append("\n      this.__this = this;");
@@ -4290,6 +4314,8 @@ public class GeneratedServiceTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxSendResponse() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTxSendResponse implements DeltaNode {");

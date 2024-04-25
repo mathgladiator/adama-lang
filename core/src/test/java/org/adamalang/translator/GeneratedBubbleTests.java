@@ -514,6 +514,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1203,6 +1205,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -1897,6 +1901,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.beginObject();");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n  }");
     gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
@@ -2590,6 +2596,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      location.__writeOut(__writer);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n    private RTx__ViewerType(RTxCoord location) {");
     gold.append("\n      this.__this = this;");
@@ -2691,6 +2699,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(y);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxCoord() { __this = this; }");
     gold.append("\n    private RTxCoord(int x, int y) {");
     gold.append("\n      this.__this = this;");
@@ -3411,6 +3421,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.writeString(name);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n    private RTx__ViewerType(String name) {");
     gold.append("\n      this.__this = this;");
@@ -4200,6 +4212,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(offset_month);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n    private RTx__ViewerType(String name, int offset_month) {");
     gold.append("\n      this.__this = this;");
@@ -4519,6 +4533,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.writeBoolean(current);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTxDayReport() { __this = this; }");
     gold.append("\n    private RTxDayReport(boolean current) {");
     gold.append("\n      this.__this = this;");
@@ -5306,6 +5322,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __writer.writeInteger(scroll_x);");
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __parsed() throws AbortMessageException {}");
     gold.append("\n    private RTx__ViewerType() { __this = this; }");
     gold.append("\n    private RTx__ViewerType(String name, int[] offsets_z, int scroll_x) {");
     gold.append("\n      this.__this = this;");

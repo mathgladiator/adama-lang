@@ -114,6 +114,16 @@ public class TyNativeMessage extends TyType implements //
     for (final DefineMethod dm : storage.methods) {
       dm.writeFunctionJava(sb, environment.scopeStatic());
     }
+
+    sb.append("@Override").writeNewline();
+    if (storage.hasPostParse()) {
+      sb.append("public void __parsed() throws AbortMessageException");
+      storage.getPostParse().writeJava(sb, environment);
+      sb.writeNewline();
+    } else {
+      sb.append("public void __parsed() throws AbortMessageException {}").writeNewline();
+    }
+
     { // CLOSE UP THE MESSAGE WITH A CONSTRUCTOR FOR ANONYMOUS OBJECTS
       sb.append("private RTx" + name + "() { __this = this; }");
       if (storage.fields.size() == 0) {

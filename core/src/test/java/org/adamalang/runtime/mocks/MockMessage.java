@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.mocks;
 
+import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMessageBase;
@@ -94,5 +95,9 @@ public class MockMessage extends NtMessageBase {
   @Override
   public long __memory() {
     return 128;
+  }
+
+  @Override
+  public void __parsed() throws AbortMessageException {
   }
 }

@@ -21,6 +21,7 @@ import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.async.Sink;
 import org.adamalang.runtime.async.TimeoutTracker;
+import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -61,6 +62,10 @@ public class NtChannelTests {
     @Override
     public long __memory() {
       return 128;
+    }
+
+    @Override
+    public void __parsed() throws AbortMessageException {
     }
   };
 

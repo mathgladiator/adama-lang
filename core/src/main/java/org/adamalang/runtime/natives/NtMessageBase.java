@@ -18,6 +18,7 @@
 package org.adamalang.runtime.natives;
 
 import org.adamalang.runtime.contracts.MultiIndexable;
+import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.algo.HashBuilder;
@@ -54,6 +55,10 @@ public abstract class NtMessageBase implements NtToDynamic, MultiIndexable {
     public long __memory() {
       return 64;
     }
+
+    @Override
+    public void __parsed() throws AbortMessageException {
+    }
   };
 
   public abstract void __hash(HashBuilder __hash);
@@ -74,4 +79,6 @@ public abstract class NtMessageBase implements NtToDynamic, MultiIndexable {
   public abstract void __ingest(JsonStreamReader reader);
 
   public abstract long __memory();
+
+  public abstract void __parsed() throws AbortMessageException;
 }
