@@ -19,6 +19,7 @@ package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.MultiIndexable;
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.natives.NtList;
@@ -182,5 +183,24 @@ public class ArrayNtListTests {
     Assert.assertEquals(2, result.size());
     Assert.assertEquals(2, result.lookup(0).get().b);
     Assert.assertEquals(5, result.lookup(1).get().b);
+  }
+
+  @Test
+  public void ranking() {
+    ArrayNtList<UniqueSample> s = new ArrayNtList<>(samples(1, 0, 3, 2, 5, 4));
+    NtList<UniqueSample> result = s.rank(new Ranker<UniqueSample>() {
+      @Override
+      public double rank(UniqueSample item) {
+        return item.a + item.b;
+      }
+
+      @Override
+      public double threshold() {
+        return 0;
+      }
+    });
+    Assert.assertEquals(4, result.lookup(0).get().b);
+    Assert.assertEquals(2, result.lookup(1).get().b);
+    Assert.assertEquals(0, result.lookup(2).get().b);
   }
 }

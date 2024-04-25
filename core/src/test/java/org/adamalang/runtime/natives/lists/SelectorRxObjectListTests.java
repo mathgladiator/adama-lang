@@ -18,6 +18,7 @@
 package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -385,5 +386,36 @@ public class SelectorRxObjectListTests {
     Assert.assertEquals(13, list.lookup(0).get().index.get().intValue());
     Assert.assertEquals(2, list.lookup(1).get().index.get().intValue());
     Assert.assertEquals(5, list.lookup(2).get().index.get().intValue());
+  }
+
+  @Test
+  public void ranking() {
+    final var document =
+        new MockLivingDocument(
+            new SilentDocumentMonitor() {
+            });
+    while (document.__genNextAutoKey() < 7) {}
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__insert(
+        new JsonStreamReader(
+            "{\"4\":{\"index\":13},\"5\":{\"index\":2},\"6\":{\"index\":5},\"7\":{\"index\":5}}}"));
+    final var list =
+        table
+            .iterate(false)
+            .rank(new Ranker<MockRecord>() {
+              @Override
+              public double rank(MockRecord item) {
+                return item.index.get();
+              }
+
+              @Override
+              public double threshold() {
+                return 0;
+              }
+            });
+    Assert.assertEquals(13, list.lookup(0).get().index.get().intValue());
+    Assert.assertEquals(5, list.lookup(1).get().index.get().intValue());
+    Assert.assertEquals(5, list.lookup(2).get().index.get().intValue());
+    Assert.assertEquals(2, list.lookup(3).get().index.get().intValue());
   }
 }

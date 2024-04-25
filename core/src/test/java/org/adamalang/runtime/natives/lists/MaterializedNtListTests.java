@@ -18,6 +18,7 @@
 package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -102,6 +103,17 @@ public class MaterializedNtListTests {
     list.toArray((n) -> new SortableMessage[n]);
     list.iterator();
     list.__delete();
+    list.rank(new Ranker<SortableMessage>() {
+      @Override
+      public double rank(SortableMessage item) {
+        return 1;
+      }
+
+      @Override
+      public double threshold() {
+        return 0;
+      }
+    });
   }
 
   @Test

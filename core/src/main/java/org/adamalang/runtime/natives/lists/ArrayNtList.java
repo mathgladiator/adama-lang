@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives.lists;
 
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -204,5 +205,33 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
         return new ArrayNtList<>(new ArrayList<>(last.values()));
       }
     }
+  }
+
+  private class ItemWithRank {
+    private final Ty item;
+    private final double score;
+
+    private ItemWithRank(Ty item, double score) {
+      this.item = item;
+      this.score = score;
+    }
+  }
+
+  @Override
+  public NtList<Ty> rank(Ranker<Ty> ranker) {
+    ArrayList<ItemWithRank> scored = new ArrayList<>(list.size());
+    double threshold = ranker.threshold();
+    for (Ty item : list) {
+      double rank = ranker.rank(item);
+      if (rank >= threshold) {
+        scored.add(new ItemWithRank(item, rank));
+      }
+    }
+    scored.sort(Comparator.comparingDouble((ItemWithRank x) -> -x.score));
+    ArrayList<Ty> next = new ArrayList<>(scored.size());
+    for (ItemWithRank item : scored) {
+      next.add(item.item);
+    }
+    return new ArrayNtList<>(next);
   }
 }

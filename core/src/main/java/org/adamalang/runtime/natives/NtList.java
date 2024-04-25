@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.lists.ListUniqueMode;
 
@@ -59,4 +60,6 @@ public interface NtList<Ty> extends Iterable<Ty> {
   NtList<Ty> where(boolean done, WhereClause<Ty> filter);
 
   <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract);
+
+  NtList<Ty> rank(Ranker<Ty> ranker);
 }

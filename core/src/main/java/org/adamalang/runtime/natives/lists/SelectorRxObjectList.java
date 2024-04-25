@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives.lists;
 
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -194,5 +195,11 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
     ensureFinalized();
     return new ArrayNtList<>(finalized).unique(mode, extract);
+  }
+
+  @Override
+  public NtList<Ty> rank(Ranker<Ty> ranker) {
+    ensureFinalized();
+    return new ArrayNtList<>(finalized).rank(ranker);
   }
 }

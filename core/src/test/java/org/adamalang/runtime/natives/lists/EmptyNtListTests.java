@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives.lists;
 
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,5 +47,16 @@ public class EmptyNtListTests {
     list.mapFunction((x) -> x.length());
     Assert.assertEquals(0, list.unique(ListUniqueMode.Last, (x) -> x).size());
     Assert.assertEquals(0, list.unique(ListUniqueMode.First, (x) -> x).size());
+    list.rank(new Ranker<String>() {
+      @Override
+      public double rank(String item) {
+        return item.length();
+      }
+
+      @Override
+      public double threshold() {
+        return 5;
+      }
+    });
   }
 }

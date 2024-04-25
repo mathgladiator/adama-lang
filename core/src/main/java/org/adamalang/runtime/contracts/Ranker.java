@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240425155110";
-  public static final String JS_VERSION = "198cf973f73908bf76fe4136aa4382e8";
+/** rank an item */
+public interface Ranker<Ty> {
+  /** rank the item */
+  public double rank(Ty item);
+
+  /** provide a threshold */
+  public double threshold();
 }

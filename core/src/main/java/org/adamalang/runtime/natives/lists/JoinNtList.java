@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives.lists;
 
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -185,5 +186,17 @@ public class JoinNtList<Ty> implements NtList<Ty> {
   @Override
   public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
     return materialize().unique(mode, extract);
+  }
+
+  @Override
+  public NtList<Ty> rank(Ranker<Ty> ranker) {
+    ArrayList<Ty> sum = new ArrayList<>();
+    for (Ty item : left) {
+      sum.add(item);
+    }
+    for (Ty item : right) {
+      sum.add(item);
+    }
+    return new ArrayNtList<>(sum).rank(ranker);
   }
 }

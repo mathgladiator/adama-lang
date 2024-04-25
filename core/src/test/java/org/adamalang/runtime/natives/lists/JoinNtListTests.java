@@ -18,6 +18,7 @@
 package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -57,6 +58,24 @@ public class JoinNtListTests {
     Assert.assertEquals("d", X.lookup(3).get());
     Assert.assertEquals("e", X.lookup(4).get());
     Assert.assertEquals("f", X.lookup(5).get());
+  }
+
+  @Test
+  public void rank() {
+    NtList<String> X = LibLists.join(make("aaa", "b", "ccc"), make("d", "eee", "f")).rank(new Ranker<String>() {
+      @Override
+      public double rank(String item) {
+        return item.length();
+      }
+
+      @Override
+      public double threshold() {
+        return 2;
+      }
+    });
+    Assert.assertEquals("aaa", X.lookup(0).get());
+    Assert.assertEquals("ccc", X.lookup(1).get());
+    Assert.assertEquals("eee", X.lookup(2).get());
   }
 
   @Test

@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.natives.lists;
 
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -124,6 +125,11 @@ public class EmptyNtList<T> implements NtList<T> {
 
   @Override
   public <KeyT> NtList<T> unique(ListUniqueMode mode, Function<T, KeyT> extract) {
+    return this;
+  }
+
+  @Override
+  public NtList<T> rank(Ranker<T> ranker) {
     return this;
   }
 }

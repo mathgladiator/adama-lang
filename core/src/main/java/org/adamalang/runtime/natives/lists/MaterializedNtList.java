@@ -19,6 +19,7 @@ package org.adamalang.runtime.natives.lists;
 
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.MultiIndexable;
+import org.adamalang.runtime.contracts.Ranker;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.index.EvaluateLookupMode;
 import org.adamalang.runtime.natives.NtList;
@@ -230,5 +231,10 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
   @Override
   public <KeyT> NtList<Ty> unique(ListUniqueMode mode, Function<Ty, KeyT> extract) {
     return list.unique(mode, extract);
+  }
+
+  @Override
+  public NtList<Ty> rank(Ranker<Ty> ranker) {
+    return list.rank(ranker);
   }
 }
