@@ -773,6 +773,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -1697,6 +1700,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2838,6 +2844,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"zzz2\");");
     gold.append("\n    zzz2.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -3931,6 +3940,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -4853,6 +4865,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -5732,6 +5747,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7094,6 +7112,9 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

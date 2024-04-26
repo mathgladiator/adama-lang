@@ -865,6 +865,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -1928,6 +1931,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"instances\");");
     gold.append("\n    instances.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4751,6 +4757,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -6676,6 +6685,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"itbl\");");
     gold.append("\n    itbl.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -7867,6 +7879,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -9366,6 +9381,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    tbl3.debug(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"z0\");");
     gold.append("\n    z0.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11301,6 +11319,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    assocs.debug(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -13834,6 +13855,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -15616,6 +15640,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -16981,6 +17008,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -18010,6 +18040,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -19206,6 +19239,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -20200,6 +20236,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -21375,6 +21414,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

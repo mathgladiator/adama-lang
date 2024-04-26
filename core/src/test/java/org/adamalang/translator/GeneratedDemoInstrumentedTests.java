@@ -2960,6 +2960,9 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"players\");");
     gold.append("\n    players.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -6011,6 +6014,9 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"_chat\");");
     gold.append("\n    _chat.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

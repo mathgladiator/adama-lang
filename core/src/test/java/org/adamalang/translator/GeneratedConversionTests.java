@@ -1329,6 +1329,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -2477,6 +2480,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

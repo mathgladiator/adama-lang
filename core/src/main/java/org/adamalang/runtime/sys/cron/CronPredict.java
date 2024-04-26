@@ -35,11 +35,13 @@ public class CronPredict {
   }
 
   public static Long predictWhen(long now, CronTask task) {
-    if (task.fire) {
-      return 0L;
-    } else {
-      return task.next - now;
+    if (!task.fire) {
+      long delta = task.next - now;
+      if (delta > 0) {
+        return delta;
+      }
     }
+    return 0L;
   }
 
   public static Long hourly(Long prior, long currentTime, int minutes, ZoneId sysTimeZone, ZoneId docTimeZone) {

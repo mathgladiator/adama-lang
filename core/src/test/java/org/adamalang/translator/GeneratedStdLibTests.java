@@ -2543,6 +2543,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"_b\");");
     gold.append("\n    _b.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -3752,6 +3755,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"rows\");");
     gold.append("\n    rows.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5036,6 +5042,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"rows\");");
     gold.append("\n    rows.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -6748,6 +6757,9 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"_s\");");
     gold.append("\n    _s.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

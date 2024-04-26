@@ -303,6 +303,15 @@ public class DurableLivingDocument implements Queryable {
         writer.writeObjectFieldIntro("memory");
         writer.writeLong(document.__memory());
         document.__debug(writer);
+        writer.writeObjectFieldIntro("time");
+        writer.writeLong(document.__timeNow());
+        writer.writeObjectFieldIntro("has_crons");
+        Long predict = document.__predict_cron_wake_time();
+        writer.writeBoolean(predict != null);
+        if (predict != null) {
+          writer.writeObjectFieldIntro("predict_next");
+          writer.writeLong(predict);
+        }
         writer.endObject();
         callback.success(writer.toString());
       }

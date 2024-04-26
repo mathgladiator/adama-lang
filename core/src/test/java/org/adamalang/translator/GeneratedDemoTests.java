@@ -1969,6 +1969,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"_publishes\");");
     gold.append("\n    _publishes.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -4149,6 +4152,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"_chat\");");
     gold.append("\n    _chat.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7241,6 +7247,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    deck.debug(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"recs\");");
     gold.append("\n    recs.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -10592,6 +10601,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"players\");");
     gold.append("\n    players.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -13457,6 +13469,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"_addons\");");
     gold.append("\n    _addons.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -15416,6 +15431,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    pointdb.debug(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tbl\");");
     gold.append("\n    tbl.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -19772,6 +19790,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __writer.writeObjectFieldIntro(\"_squares\");");
     gold.append("\n    _squares.debug(__writer);");
     gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
@@ -21328,6 +21349,9 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"_chat\");");
     gold.append("\n    _chat.debug(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"cron\");");
+    gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");

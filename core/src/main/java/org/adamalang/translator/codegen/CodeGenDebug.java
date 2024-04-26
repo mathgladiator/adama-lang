@@ -19,10 +19,10 @@ package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineCronTask;
 import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 
-import java.util.HashSet;
 import java.util.TreeSet;
 
 public class CodeGenDebug {
@@ -34,7 +34,7 @@ public class CodeGenDebug {
       }
     }
 
-    if (tables.size() == 0) {
+    if (tables.size() == 0 && environment.document.cronTasks.size() == 0) {
       sb.append("@Override").writeNewline();
       sb.append("public void __debug(JsonStreamWriter __writer) {}").writeNewline();
     } else {
@@ -45,6 +45,13 @@ public class CodeGenDebug {
       for (String tbl : tables) {
         sb.append("__writer.writeObjectFieldIntro(\"").append(tbl).append("\");").writeNewline();
         sb.append(tbl).append(".debug(__writer);").writeNewline();
+      }
+      sb.append("__writer.endObject();").writeNewline();
+      sb.append("__writer.writeObjectFieldIntro(\"cron\");").writeNewline();
+      sb.append("__writer.beginObject();").writeNewline();
+      for (DefineCronTask dct : environment.document.cronTasks.values()) {
+        sb.append("__writer.writeObjectFieldIntro(\"").append(dct.name.text).append("\");").writeNewline();
+        sb.append("__writer.writeLong(__").append(dct.name.text).append(".get());").writeNewline();
       }
       sb.append("__writer.endObject();").tabDown().writeNewline();
       sb.append("}").writeNewline();
