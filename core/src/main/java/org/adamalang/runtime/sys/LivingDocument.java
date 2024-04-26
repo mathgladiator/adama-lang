@@ -850,9 +850,10 @@ public abstract class LivingDocument implements RxParent, Caller {
       return __blocked.get();
     }
 
-    // HACK: don't allow removal if cron job is active
-    if (__optimisticNextCronCheck < 0 && __optimisticNextCronCheck < Long.MAX_VALUE) {
-      return false;
+    // don't close the document if the prediction is within five minutes
+    Long predict = __predict_cron_wake_time();
+    if (predict != null) {
+      return predict > 300000;
     }
     return true;
   }
