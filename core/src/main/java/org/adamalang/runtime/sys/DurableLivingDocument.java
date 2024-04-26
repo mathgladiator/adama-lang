@@ -1155,7 +1155,7 @@ public class DurableLivingDocument implements Queryable {
       disconnect(new CoreRequestContext(client, "adama", "127.0.0.1", key.key), Callback.DONT_CARE_INTEGER);
       writes = true;
     }
-    if (document.__state.has() && !document.__blocked.get()) {
+    if (document.__state.has() && !document.__blocked.get() || document.__predict_cron_wake_time() != null) {
       invalidate(Callback.DONT_CARE_INTEGER);
       writes = true;
     }
