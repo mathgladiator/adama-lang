@@ -39,6 +39,8 @@ import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.SymbolIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -54,7 +56,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ValidatePlan {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(ValidatePlan.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ValidatePlan.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LOG);
 
   /** mainline path */
   public static void validate(String space, ObjectNode node) throws ErrorCodeException {
@@ -115,6 +118,7 @@ public class ValidatePlan {
           try {
             sharedCompileCode(mainName, includePath, entry.getValue().textValue(), new HashMap<>(), log, diagnostics, index);
           } catch (Exception e) {
+            LOG.error("failed-compile", e);
             reportVersionFailure(entry.getKey(), e, log);
             success = false;
           }
