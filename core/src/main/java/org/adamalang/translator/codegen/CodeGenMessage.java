@@ -18,9 +18,6 @@
 package org.adamalang.translator.codegen;
 
 import org.adamalang.common.FirstPrimes;
-import org.adamalang.runtime.natives.NtMap;
-import org.adamalang.runtime.natives.NtMaybe;
-import org.adamalang.runtime.natives.NtPair;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;

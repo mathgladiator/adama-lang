@@ -154,7 +154,7 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
         var myField = fields.get(otherField.getKey());
         final var otherFieldType = otherField.getValue().type;
         if (myField == null) {
-          if (otherFieldType != null) {
+          if (otherFieldType != null && otherFieldType instanceof DetailInventDefaultValueExpression) {
             final var newValue = ((DetailInventDefaultValueExpression) otherFieldType).inventDefaultValueExpression(this);
             fields.put(otherField.getKey(), newValue);
           }
