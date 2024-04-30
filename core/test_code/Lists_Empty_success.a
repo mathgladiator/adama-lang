@@ -1,0 +1,11 @@
+message M { int x = 1; int y = 2; }
+
+public formula e_m = @empty<M>;
+public formula nope = (@empty<M>)[0];
+public formula e_s = @empty<string>;
+
+message JS { string val; }
+
+message X {
+  list<JS> js;
+}

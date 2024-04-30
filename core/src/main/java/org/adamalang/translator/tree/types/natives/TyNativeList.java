@@ -23,6 +23,8 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.expressions.constants.EmptyListConstant;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -33,6 +35,7 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
+import org.adamalang.translator.tree.types.reactive.TyReactiveRef;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnlyForSet;
 import org.adamalang.translator.tree.types.traits.details.*;
 
@@ -46,6 +49,7 @@ public class TyNativeList extends TyType implements //
     DetailHasDeltaType, //
     DetailIndexLookup, //
     DetailComputeRequiresGet, //
+    DetailInventDefaultValueExpression, //
     DetailTypeHasMethods {
   public final TyType elementType;
   public final Token listToken;
@@ -227,5 +231,10 @@ public class TyNativeList extends TyType implements //
     } else {
       return this;
     }
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(DocumentPosition forWhatExpression) {
+    return new EmptyListConstant(null, tokenElementType);
   }
 }

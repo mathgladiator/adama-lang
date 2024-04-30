@@ -214,6 +214,9 @@ public class Parser {
           return new NothingAssetConstant(token);
         case "@null":
           return new DynamicNullConstant(token);
+        case "@empty": {
+          return new EmptyListConstant(token, native_parameter_type());
+        }
         case "@stable":
           return new EnvStatus(token, EnvLookupName.Stable);
         case "@pair": {
