@@ -18,12 +18,14 @@
 package org.adamalang.translator.tree.types;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.common.Typable;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 
@@ -60,8 +62,10 @@ public abstract class TyType extends DocumentPosition implements Typable {
   public String getJavaDefaultValue(Environment environment, DocumentPosition position) {
     TyType self = environment.rules.Resolve(this, true);
     if (self instanceof DetailInventDefaultValueExpression) {
+      Expression created = ((DetailInventDefaultValueExpression) self).inventDefaultValueExpression(position);
+      created.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
       StringBuilder sb = new StringBuilder();
-      ((DetailInventDefaultValueExpression) self).inventDefaultValueExpression(position).writeJava(sb, environment);
+      created.writeJava(sb, environment);
       return sb.toString();
     }
     if (self instanceof DetailNativeDeclarationIsNotStandard) {

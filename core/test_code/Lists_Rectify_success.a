@@ -1,0 +1,12 @@
+message JS { string val; }
+
+message X {
+  list<JS> js;
+  int x;
+}
+
+function foo() -> X {
+  return {x:1};
+}
+
+public formula empty = foo();

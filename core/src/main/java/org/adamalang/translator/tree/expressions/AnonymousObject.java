@@ -156,7 +156,10 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
         if (myField == null) {
           if (otherFieldType != null && otherFieldType instanceof DetailInventDefaultValueExpression) {
             final var newValue = ((DetailInventDefaultValueExpression) otherFieldType).inventDefaultValueExpression(this);
-            fields.put(otherField.getKey(), newValue);
+            if (newValue != null) {
+              newValue.typing(environment, null);
+              fields.put(otherField.getKey(), newValue);
+            }
           }
         } else {
           if (otherFieldType instanceof TyNativeMaybe && !(myField.typing(environment, null) instanceof TyNativeMaybe)) {
