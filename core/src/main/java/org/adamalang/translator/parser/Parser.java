@@ -1911,6 +1911,8 @@ public class Parser {
         return new TyNativeString(behavior, readonlyToken, token);
       case "label":
         return new TyNativeStateMachineRef(behavior, readonlyToken, token);
+      case "json":
+        return new TyNativeJson(behavior, readonlyToken, token);
       case "pair":
         return native_pair(behavior, readonlyToken, token);
       case "map":

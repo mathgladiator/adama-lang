@@ -1,0 +1,11 @@
+function foo(dynamic d) -> json {
+  return d.to_json();
+}
+
+@construct {
+  if (Json.parse("{}") as j1) {
+    json j2 = j1;
+  }
+}
+
+public formula pj = Json.parse("{\"x\":123}");

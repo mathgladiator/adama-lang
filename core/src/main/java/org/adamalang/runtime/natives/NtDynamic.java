@@ -38,6 +38,11 @@ public class NtDynamic implements Comparable<NtDynamic>, NtToDynamic {
     return cached;
   }
 
+  public NtJson to_json() {
+    cached = null;
+    return new NtJson(cached());
+  }
+
   @Override
   public NtDynamic to_dynamic() {
     return this;

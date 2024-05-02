@@ -212,6 +212,12 @@ public class RuleSetAssignment {
       return ((TyReactiveTable) typeA).recordName.equals(((TyReactiveTable) typeB).recordName);
     }
 
+    final var aJson = RuleSetCommon.IsJson(environment, typeA, true);
+    final var bJson = RuleSetCommon.IsJson(environment, typeB, true);
+    if (aJson && bJson) {
+      return true;
+    }
+
     if (tweak == StorageTweak.None) {
       final var aMaybe = aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
       if (aMaybe && bEmbedAssign == AssignableEmbedType.None) {

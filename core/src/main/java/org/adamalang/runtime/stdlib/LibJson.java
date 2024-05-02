@@ -15,9 +15,20 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.stdlib;
 
-public class Platform {
-  public static final String VERSION = "20240502150749";
-  public static final String JS_VERSION = "198cf973f73908bf76fe4136aa4382e8";
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.natives.NtJson;
+import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.translator.reflect.HiddenType;
+
+public class LibJson {
+  public static @HiddenType(clazz = NtJson.class) NtMaybe<NtJson> parse(String str) {
+    try {
+      JsonStreamReader reader = new JsonStreamReader(str);
+      return new NtMaybe<>(new NtJson(reader.readJavaTree()));
+    } catch (Exception ex) {
+      return new NtMaybe<>();
+    }
+  }
 }

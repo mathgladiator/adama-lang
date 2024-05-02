@@ -279,21 +279,20 @@ public class JsonStreamWriter {
       writeNull();
       return;
     }
-    if (tree instanceof HashMap) {
-      HashMap<String, Object> map = (HashMap<String, Object>) tree;
+    if (tree instanceof Map<?,?>) {
+      Map<String, Object> map = (Map<String, Object>) tree;
       beginObject();
       for (Map.Entry<String, Object> entry : map.entrySet()) {
         writeObjectFieldIntro(entry.getKey());
         writeTree(entry.getValue());
       }
       endObject();
-    } else if (tree instanceof ArrayList) {
+    } else if (tree instanceof List<?>) {
       beginArray();
-      for (Object element : (ArrayList) tree) {
+      for (Object element : (List) tree) {
         writeTree(element);
       }
       endArray();
-
     } else if (tree instanceof Boolean) {
       writeBoolean((Boolean) tree);
     } else if (tree instanceof Double) {

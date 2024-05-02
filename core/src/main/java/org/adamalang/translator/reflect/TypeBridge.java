@@ -69,6 +69,8 @@ public class TypeBridge {
       return new TyNativeTimeSpan(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (Void.class == x || void.class == x) {
       return null;
+    } else if (NtJson.class == x) {
+       return new TyNativeJson(TypeBehavior.ReadWriteNative, null, null);
     } else if (NtDynamic.class == x) {
       return new TyNativeDynamic(TypeBehavior.ReadWriteNative, null, null);
     } else if (NtComplex.class == x) {

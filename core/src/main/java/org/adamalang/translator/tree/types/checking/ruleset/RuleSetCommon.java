@@ -379,6 +379,17 @@ public class RuleSetCommon {
     return false;
   }
 
+  public static boolean IsJson(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeJson) {
+        return true;
+      }
+      SignalTypeFailure(environment, new TyNativeJson(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
   public static boolean IsAsset(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {

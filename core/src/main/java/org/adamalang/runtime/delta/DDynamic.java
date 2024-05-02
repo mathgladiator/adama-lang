@@ -22,6 +22,7 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtJson;
 
 /** a dynamic that will respect privacy and sends state to client only on changes */
 public class DDynamic implements DeltaNode {
@@ -62,5 +63,9 @@ public class DDynamic implements DeltaNode {
       priorParsed = parsedValue;
       prior = value;
     }
+  }
+
+  public void show(final NtJson json, final PrivateLazyDeltaWriter writer) {
+    show(json.to_dynamic(), writer);
   }
 }
