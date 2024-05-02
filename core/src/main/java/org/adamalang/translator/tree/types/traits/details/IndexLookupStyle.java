@@ -21,5 +21,6 @@ public enum IndexLookupStyle {
   ExpressionLookupMethod, //
   ExpressionGetOrCreateMethod, //
   Unknown, //
-  UtilityFunction
+  UtilityFunction, //
+  DerefJson //
 }

@@ -34,7 +34,11 @@ public class NtDynamic implements Comparable<NtDynamic>, NtToDynamic {
     if (cached != null) {
       return cached;
     }
-    cached = new JsonStreamReader(json).readJavaTree();
+    try {
+      cached = new JsonStreamReader(json).readJavaTree();
+    } catch (Exception ex) {
+      cached = null;
+    }
     return cached;
   }
 

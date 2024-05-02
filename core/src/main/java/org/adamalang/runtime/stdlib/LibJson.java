@@ -31,4 +31,13 @@ public class LibJson {
       return new NtMaybe<>();
     }
   }
+
+  public static NtJson parsen(String str) {
+    try {
+      JsonStreamReader reader = new JsonStreamReader(str);
+      return new NtJson(reader.readJavaTree());
+    } catch (Exception ex) {
+      return new NtJson();
+    }
+  }
 }

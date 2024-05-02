@@ -225,6 +225,10 @@ public class JsonStreamReader {
     return new NtComplex(re, im);
   }
 
+  public NtJson readNtJson() {
+    return readNtDynamic().to_json();
+  }
+
   public NtAsset readNtAsset() {
     String id = "";
     String name = "";

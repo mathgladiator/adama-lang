@@ -24,7 +24,7 @@ import java.util.Map;
 
 /** provides an optimized way for working with Json trees */
 public class NtJson {
-  private Object tree;
+  public final Object tree;
 
   public NtJson() {
     tree = null;

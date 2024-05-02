@@ -229,6 +229,10 @@ public class JsonStreamWriter {
     sb.append(x);
   }
 
+  public void writeNtJson(final NtJson j) {
+    writeTree(j.tree);
+  }
+
   public void writeNtAsset(final NtAsset a) {
     beginObject();
     writeObjectFieldIntro("id");

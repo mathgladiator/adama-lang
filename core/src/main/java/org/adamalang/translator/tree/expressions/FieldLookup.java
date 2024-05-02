@@ -51,6 +51,7 @@ public class FieldLookup extends Expression {
   private boolean doubleMaybeUnpack;
   private String maybeCastType;
   private TyType elementTypeIfList;
+  private boolean jsonDeref;
 
   /**
    * @param expression the expression to evaluate
@@ -70,6 +71,7 @@ public class FieldLookup extends Expression {
     requiresMaybeUnpack = false;
     maybeCastType = null;
     elementTypeIfList = null;
+    jsonDeref = false;
   }
 
   @Override
@@ -154,9 +156,15 @@ public class FieldLookup extends Expression {
           return functional;
         }
       }
+      TyType originalType = eType;
       if (environment.rules.IsMaybe(eType, true)) {
         requiresMaybeUnpack = true;
         eType = ((DetailContainsAnEmbeddedType) eType).getEmbeddedType(environment);
+      }
+      if (eType instanceof TyNativeJson) {
+        maybeCastType = "NtJson";
+        jsonDeref = true;
+        return originalType;
       }
       if (eType instanceof IsStructure) {
         if (!environment.state.isContextComputation() && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
@@ -210,20 +218,32 @@ public class FieldLookup extends Expression {
       if (overrideFieldName != null) {
         fieldNameToUse = overrideFieldName;
       }
+      String finalNameToUse = fieldNameToUse;
+      Runnable injectName = () -> {
+        if (jsonDeref) {
+          sb.append("deref(\"");
+        }
+        sb.append(finalNameToUse);
+        if (jsonDeref) {
+          sb.append("\")");
+        }
+      };
       if (requiresMaybeUnpack) {
-        sb.append("unpack").append(doubleMaybeUnpack ? "Transfer" : "").append("((__item) -> ((").append(maybeCastType).append(")").append(" __item).").append(fieldNameToUse);
+        sb.append("unpack").append(doubleMaybeUnpack ? "Transfer" : "").append("((__item) -> ((").append(maybeCastType).append(")").append(" __item).");
+        injectName.run();
         if (addGet) {
           sb.append(".get()");
         }
         sb.append(")");
       } else if (makeList && aggregateType != null) {
-        sb.append("transform((").append(elementTypeIfList.getJavaBoxType(environment)).append(" __item) -> (").append(aggregateType.getJavaBoxType(environment)).append(") (__item.").append(fieldNameToUse);
+        sb.append("transform((").append(elementTypeIfList.getJavaBoxType(environment)).append(" __item) -> (").append(aggregateType.getJavaBoxType(environment)).append(") (__item.");
+        injectName.run();
         if (addGet) {
           sb.append(".get()");
         }
         sb.append("))");
       } else {
-        sb.append(fieldNameToUse);
+        injectName.run();
         if (addGet) {
           sb.append(".get()");
         }

@@ -26,10 +26,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
-import org.adamalang.translator.tree.types.checking.ruleset.RuleSetLists;
-import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMap;
-import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
-import org.adamalang.translator.tree.types.checking.ruleset.RuleSetTable;
+import org.adamalang.translator.tree.types.checking.ruleset.*;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
@@ -95,6 +92,11 @@ public class IndexLookup extends Expression {
           resultType = maybeElementType;
         }
       }
+    } else if (RuleSetCommon.IsJson(environment, typeExpr, true)) {
+      lookupStyle = IndexLookupStyle.DerefJson;
+      final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
+      RuleSetCommon.IsInteger(environment, typeArg, false);
+      resultType = typeExpr;
     } else if (environment.rules.IsMap(typeExpr)) {
       final var mapType = (IsMap) typeExpr;
       final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), mapType.getDomainType(environment));
@@ -135,6 +137,11 @@ public class IndexLookup extends Expression {
     if (lookupStyle == IndexLookupStyle.ExpressionLookupMethod) {
       expression.writeJava(sb, environment);
       sb.append(".lookup(");
+      arg.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+      sb.append(")");
+    } else if (lookupStyle == IndexLookupStyle.DerefJson) {
+      expression.writeJava(sb, environment);
+      sb.append(".deref(");
       arg.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(")");
     } else if (lookupStyle == IndexLookupStyle.ExpressionGetOrCreateMethod) {
