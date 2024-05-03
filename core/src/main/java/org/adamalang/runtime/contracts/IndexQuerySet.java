@@ -17,25 +17,36 @@
 */
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.runtime.natives.NtMaybe;
+
 /** generalizes the process of building a query set */
-public interface IndexQuerySet {
+public abstract class IndexQuerySet {
   /**
    * intersect the set with the given index (via index datastrcture) and the given value.
    * INDEX_FIELD == VALUE
    */
-  void intersect(int column, int value, LookupMode mode);
+  public abstract void intersect(int column, int value, LookupMode mode);
+
+  public void intersect(int column, NtMaybe<Integer> value, LookupMode mode) {
+    if (value.has()) {
+      intersect(column, value.get(), mode);
+    } else {
+      // treat the null case as a 0
+      intersect(column, 0, mode);
+    }
+  }
 
   /** within a branch, pick a primary key as the value */
-  void primary(int value);
+  public abstract void primary(int value);
 
   /** push the result */
-  void push();
+  public abstract void push();
 
   /** finish up the result */
-  void finish();
+  public abstract void finish();
 
   /** Method of executing the lookup */
-  enum LookupMode {
+  public static enum LookupMode {
     LessThan, LessThanOrEqual, Equals, GreaterThanOrEqual, GreaterThan
   }
 }

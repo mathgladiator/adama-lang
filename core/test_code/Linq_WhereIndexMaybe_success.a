@@ -1,0 +1,28 @@
+record X {
+  public int x;
+  public string y;
+  public date z;
+
+  index x;
+  index y;
+  index z;
+}
+
+table<X> t;
+
+public formula all = iterate t;
+public formula just_x = iterate t where x == 2;
+public formula just_mx = iterate t where x == @maybe(2);
+
+public formula just_y = iterate t where y == "x2";
+public formula just_my = iterate t where y == @maybe("x2");
+
+public formula just_z = iterate t where z == @date 2012/5/10;
+public formula just_mz = iterate t where z == @maybe(@date 2012/5/10);
+
+@construct {
+  t <- {x:1, y:"x1"};
+  t <- {x:2, y:"x2"};
+  t <- {x:3, y:"x3"};
+  t <- {x:4, y:"x4", z: @date 2012/5/10};
+}

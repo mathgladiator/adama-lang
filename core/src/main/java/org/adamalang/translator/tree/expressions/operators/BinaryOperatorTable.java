@@ -55,6 +55,7 @@ public class BinaryOperatorTable {
     TyType tyMaybeDouble = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyDouble));
     TyType tyMaybeComplex = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyComplex));
     TyType tyMaybeString = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyString));
+    TyType tyMaybeDate = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyDate));
 
     TyType tyRxInteger = new TyReactiveInteger(false, Token.WRAP("int"));
     TyType tyRxLong = new TyReactiveLong(false, Token.WRAP("long"));
@@ -356,6 +357,12 @@ public class BinaryOperatorTable {
       insert(tySecurePrincipal, "==", tyPrincipal, tyBoolean, "(%s).equals(%s)", false);
       insert(tySecurePrincipal, "!=", tyPrincipal, tyBoolean, "!((%s).equals(%s))", false);
       insert(tyDate, "==", tyDate, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyMaybeDate, "==", tyDate, tyBoolean, "LibDate.equalsD(%s, %s)", false);
+      insert(tyDate, "==", tyMaybeDate, tyBoolean, "LibDate.equalsD(%s, %s)", true);
+      insert(tyMaybeDate, "==", tyMaybeDate, tyBoolean, "LibDate.equalsD(%s, %s)", false);
+      insert(tyMaybeDate, "!=", tyDate, tyBoolean, "!LibDate.equalsD(%s, %s)", false);
+      insert(tyDate, "!=", tyMaybeDate, tyBoolean, "!LibDate.equalsD(%s, %s)", true);
+      insert(tyMaybeDate, "!=", tyMaybeDate, tyBoolean, "!LibDate.equalsD(%s, %s)", false);
       insert(tyDate, "!=", tyDate, tyBoolean, "!((%s).equals(%s))", false);
       insert(tyDateTime, "==", tyDateTime, tyBoolean, "(%s).equals(%s)", false);
       insert(tyDateTime, "!=", tyDateTime, tyBoolean, "!((%s).equals(%s))", false);

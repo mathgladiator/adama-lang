@@ -155,7 +155,7 @@ public class MaterializedNtList<Ty extends MultiIndexable> implements NtList<Ty>
     return EvaluateLookupMode.of(indicies[column], value, mode);
   }
 
-  public class MaterializedIndexQuerySet implements IndexQuerySet {
+  public class MaterializedIndexQuerySet extends IndexQuerySet {
     private boolean resultAll;
     private TreeSet<Integer> resultComplete;
     private boolean currentAll;

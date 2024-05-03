@@ -21,6 +21,7 @@ import org.adamalang.runtime.natives.*;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
+import org.adamalang.translator.reflect.Skip;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -362,5 +363,26 @@ public class LibDate {
   @Extension
   public static NtDateTime truncateMilliseconds(NtDateTime current) {
     return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.MILLIS));
+  }
+
+
+  @Skip
+  public static boolean equalsD(NtMaybe<NtDate> a, NtDate b) {
+    if (a.has()) {
+      return a.get().equals(b);
+    }
+    return false;
+  }
+
+  @Skip
+  public static boolean equalsD(NtMaybe<NtDate> a, NtMaybe<NtDate> b) {
+    if (a.has()) {
+      if (b.has()) {
+        return a.get().equals(b.get());
+      }
+    } else {
+      return !b.has();
+    }
+    return false;
   }
 }

@@ -9,6 +9,20 @@ public formula x_day = x.day();
 public formula next_x = x.offsetMonth(1);
 public formula prior_x = x.offsetMonth(-1);
 
+public formula eq_a1 = @date 2020/4/2 == @maybe(@date 2020/4/2);
+public formula eq_a2 = @maybe(@date 2020/4/2) == @date 2020/4/2;
+public formula eq_a3 = @maybe(@date 2020/4/2) == @maybe(@date 2020/4/2);
+public formula eq_b1 = @date 2020/4/2 == @maybe(@date 2020/4/3);
+public formula eq_b2 = @maybe(@date 2020/4/2) == @date 2020/4/3;
+public formula eq_b3 = @maybe(@date 2020/4/2) == @maybe(@date 2020/4/3);
+
+public formula neq_a1 = @date 2020/4/2 != @maybe(@date 2020/4/2);
+public formula neq_a2 = @maybe(@date 2020/4/2) != @date 2020/4/2;
+public formula neq_a3 = @maybe(@date 2020/4/2) != @maybe(@date 2020/4/2);
+public formula neq_b1 = @date 2020/4/2 != @maybe(@date 2020/4/3);
+public formula neq_b2 = @maybe(@date 2020/4/2) != @date 2020/4/3;
+public formula neq_b3 = @maybe(@date 2020/4/2) != @maybe(@date 2020/4/3);
+
 message M {
   date a;
   maybe<date> b;

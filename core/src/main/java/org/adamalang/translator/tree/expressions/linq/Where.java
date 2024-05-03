@@ -36,6 +36,7 @@ import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
 import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
@@ -151,17 +152,31 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
             }
           }
           if (indexValue != null) {
+            TyType indexValueType = indexValue.getCachedType();
+            boolean isMaybe = indexValueType instanceof TyNativeMaybe || indexValueType instanceof TyReactiveMaybe;
             intersectModeByName.put(entry.getKey(), indexLookupMode);
             var indexValueString = compileIndexExpr(indexValue, environment);
             if (indexValueString != null) {
               if (classification.useHashCode) {
-                indexValueString += ".hashCode()";
+                if (isMaybe) {
+                  indexValueString = "(" + indexValueString + ").unpack((__item) -> __item.hashCode())";
+                } else {
+                  indexValueString += ".hashCode()";
+                }
               }
               if (classification.requiresToInt) {
-                indexValueString += ".toInt()";
+                if (isMaybe) {
+                  indexValueString = "(" + indexValueString + ").unpack((__item) -> __item.toInt())";
+                } else {
+                  indexValueString += ".toInt()";
+                }
               }
               if (classification.isBoolean) {
-                indexValueString = "((" + indexValueString + ") ? 1 : 0)";
+                if (isMaybe) {
+                  indexValueString = "(" + indexValueString + ").unpack((__item) -> __item ? 1 : 0)";
+                } else {
+                  indexValueString = "((" + indexValueString + ") ? 1 : 0)";
+                }
               }
               intersectCodeByName.put(entry.getKey(), indexValueString);
             }
