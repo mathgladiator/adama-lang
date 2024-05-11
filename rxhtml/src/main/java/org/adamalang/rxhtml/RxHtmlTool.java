@@ -33,7 +33,7 @@ public class RxHtmlTool {
   public static RxHtmlBundle convertStringToTemplateForest(String str, File types, ShellConfig config) {
     Environment env = Environment.fresh(config.feedback, config.environment);
     TypeChecker.typecheck(str, types, config.feedback);
-    Document document = Loader.parseForest(str, ProductionMode.Web);
+    Document document = Loader.parseForest(str, config.feedback, ProductionMode.Web);
     Root.start(env, buildCustomJavaScript(document));
     String style = buildInternStyle(document);
     ArrayList<String> defaultRedirects = getDefaultRedirect(document);

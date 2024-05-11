@@ -66,7 +66,7 @@ public class CapacitorJSShell {
 
   public String make(String forest) throws Exception {
     StringBuilder sb = new StringBuilder();
-    Document document = Loader.parseForest(forest, ProductionMode.MobileApp);
+    Document document = Loader.parseForest(forest, feedback, ProductionMode.MobileApp);
     Element mobileShell = findMobileShell(document);
     String workerIdentity = mobileShell.hasAttr("worker-identity-name") ? mobileShell.attr("worker-identity-name") : "default";
     sb.append("<!DOCTYPE html>\n<html");

@@ -30,7 +30,7 @@ import java.util.TreeSet;
 public class TypeChecker {
   /** Given a bundled forest, produce feedback for the developer */
   public static void typecheck(String forest, File input, Feedback feedback) {
-    Document document = Loader.parseForest(forest, ProductionMode.Web);
+    Document document = Loader.parseForest(forest, feedback, ProductionMode.Web);
     warnDuplicatePages(document, feedback);
     if (input != null && input.exists() && input.isDirectory()) {
       RxRootEnvironment env = new RxRootEnvironment(forest, input, feedback);

@@ -18,17 +18,23 @@
 package org.adamalang.rxhtml;
 
 import org.adamalang.rxhtml.preprocess.Mobilify;
+import org.adamalang.rxhtml.preprocess.ExpandStaticObjects;
 import org.adamalang.rxhtml.preprocess.Pagify;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Loader {
-  public static Document parseForest(String forest, ProductionMode mode) {
+  public static Document parseForest(String forest, Feedback feedback, ProductionMode mode) {
     Document document = Jsoup.parse(forest);
     Mobilify.go(document, mode);
     // TODO: enabling this requires a LOT of work
     // MarkStaticContent.mark(document);
     Pagify.pagify(document);
+    ExpandStaticObjects.expand(document, feedback);
     return document;
   }
 }

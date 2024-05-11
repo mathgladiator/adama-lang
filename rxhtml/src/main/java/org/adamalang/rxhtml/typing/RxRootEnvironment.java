@@ -51,7 +51,7 @@ public class RxRootEnvironment {
   public final HashMap<String, HashSet<String>> templateUsageByPage;
 
   public RxRootEnvironment(String forest, File root, Feedback feedback) {
-    this.document = Loader.parseForest(forest, ProductionMode.Web);
+    this.document = Loader.parseForest(forest, feedback, ProductionMode.Web);
     this.feedback = feedback;
     this.reflections = new HashMap<>();
     this.dedupeTemplates = new HashSet<>();

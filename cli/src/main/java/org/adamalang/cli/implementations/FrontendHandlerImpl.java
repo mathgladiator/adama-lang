@@ -35,6 +35,7 @@ import org.adamalang.rxhtml.*;
 import org.adamalang.rxhtml.preprocess.MeasureAttributeSameness;
 import org.adamalang.rxhtml.preprocess.Mobilify;
 import org.adamalang.rxhtml.preprocess.Pagify;
+import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -158,7 +159,7 @@ public class FrontendHandlerImpl implements FrontendHandler {
     File rxhtmlPath = new File(args.rxhtmlPath);
     aggregateFiles(rxhtmlPath, files);
     String result = Bundler.bundle(rxhtmlPath, files, false);
-    Document document = Loader.parseForest(result, ProductionMode.Web);
+    Document document = Loader.parseForest(result, Feedback.NoOp, ProductionMode.Web);
     int sourceLevelCompact = 0;
     int attributesToCompact = 0;
     System.out.println("name,value,count");
