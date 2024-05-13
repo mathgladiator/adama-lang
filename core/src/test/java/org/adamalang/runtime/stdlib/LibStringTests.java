@@ -18,6 +18,7 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.junit.Assert;
@@ -25,6 +26,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.TreeMap;
 
 public class LibStringTests {
 
@@ -515,5 +517,38 @@ public class LibStringTests {
   @Test
   public void reverse() {
     Assert.assertEquals("zen", LibString.reverse("nez"));
+  }
+
+  private static NtMap<String, String> pairs(String... p) {
+    NtMap<String, String> swap = new NtMap<>();
+    for (int k = 0; k + 1 < p.length; k += 2) {
+      swap.put(p[k], p[k+1]);
+    }
+    return swap;
+  }
+
+  @Test
+  public void bulkReplaceAll_0() {
+    Assert.assertEquals("abc", LibString.bulkReplaceAll("abc", "", pairs()));
+  }
+
+  @Test
+  public void bulkReplaceAll_1() {
+    Assert.assertEquals("abc", LibString.bulkReplaceAll("abc", ".", pairs()));
+    Assert.assertEquals("abyc", LibString.bulkReplaceAll("ab.x.c", ".", pairs("x", "y")));
+    Assert.assertEquals("abyyyc", LibString.bulkReplaceAll("ab.x..x..x.c", ".", pairs("x", "y")));
+    Assert.assertEquals("aby", LibString.bulkReplaceAll("ab.x.", ".", pairs("x", "y")));
+    Assert.assertEquals("yde", LibString.bulkReplaceAll(".x.de", ".", pairs("x", "y")));
+    Assert.assertEquals("truncate", LibString.bulkReplaceAll("truncate.x", ".", pairs("x", "y")));
+  }
+
+  @Test
+  public void bulkReplaceAll_3() {
+    Assert.assertEquals("abc", LibString.bulkReplaceAll("abc", "!!!", pairs()));
+    Assert.assertEquals("abyespleasec", LibString.bulkReplaceAll("ab!!!x1!!!c", "!!!", pairs("x1", "yesplease")));
+    Assert.assertEquals("abyespleasecabyespleasecabyespleasec", LibString.bulkReplaceAll("ab!!!x1!!!cab!!!x1!!!cab!!!x1!!!c", "!!!", pairs("x1", "yesplease")));
+    Assert.assertEquals("abyesplease", LibString.bulkReplaceAll("ab!!!x1!!!", "!!!", pairs("x1", "yesplease")));
+    Assert.assertEquals("yespleasede", LibString.bulkReplaceAll("!!!x1!!!de", "!!!", pairs("x1", "yesplease")));
+    Assert.assertEquals("truncate", LibString.bulkReplaceAll("truncate!!!x", "!!!", pairs("x", "y")));
   }
 }

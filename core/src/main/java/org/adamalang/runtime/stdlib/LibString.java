@@ -19,6 +19,7 @@ package org.adamalang.runtime.stdlib;
 
 import com.lambdaworks.crypto.SCryptUtil;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.translator.reflect.*;
@@ -509,6 +510,35 @@ public class LibString {
   @Extension
   public static String replaceAll(String haystack, String oldNeedle, String newNeedle) {
     return haystack.replaceAll(Pattern.quote(oldNeedle), Matcher.quoteReplacement(newNeedle));
+  }
+
+  @Extension
+  public static String bulkReplaceAll(String haystack, String delimiter, @HiddenTypes2(class1 = String.class, class2 = String.class) NtMap<String, String> map) {
+    if (delimiter.equals("")) {
+      return haystack;
+    }
+    StringBuilder accum = new StringBuilder();
+    int consumed = 0;
+    int start = haystack.indexOf(delimiter);
+    while (start >= 0) {
+      if (start > consumed) {
+        accum.append(haystack, consumed, start);
+      }
+      int end = haystack.indexOf(delimiter, start + 1);
+      if (end > 0) {
+        consumed = end + delimiter.length();
+        String lookup = haystack.substring(start + delimiter.length(), end);
+        String value = map.get(lookup);
+        if (value != null) {
+          accum.append(value);
+        }
+      } else {
+        return accum.toString();
+      }
+      start = haystack.indexOf(delimiter, end + 1);
+    }
+    accum.append(haystack.substring(consumed));
+    return accum.toString();
   }
 
   @Extension

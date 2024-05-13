@@ -60,3 +60,12 @@ table<S> _s;
   _s <- {item:"z"};
   join_maybe = (iterate _s).item.join(", ");
 }
+
+function cleanup(string x) -> string {
+  map<string, string> r;
+  r["xyz"] = "abc";
+  r["abc"] = "xyz";
+  return x.bulkReplaceAll("!!", r);
+}
+
+public formula bulk_replace = cleanup("hi [!!xyz!!], it's [!!abc!!]");

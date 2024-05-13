@@ -26,7 +26,7 @@ import org.adamalang.translator.tree.types.natives.*;
 /** convert a known java type into an Adama type */
 public class TypeBridge {
 
-  public static TyType getAdamaSubType(String core, final Class<?>[] hiddenTypes) {
+  public static TyType getAdamaSubType(String core, final Class<?>... hiddenTypes) {
     if (hiddenTypes == null || hiddenTypes.length == 0) {
       throw new RuntimeException(core + " requires @HiddenType/@HiddenTypes annotation because Java sucks");
     }
@@ -81,6 +81,13 @@ public class TypeBridge {
     } else if (NtMaybe.class == x) {
       TyType subType = getAdamaSubType("NtMaybe<>", hiddenTypes);
       return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
+    } else if (NtMap.class == x) {
+      if (hiddenTypes == null || hiddenTypes.length != 2) {
+        throw new RuntimeException("NtMap<> requires two hidden types");
+      }
+      TyType subTypeDomain = getAdamaSubType("NtMap<>::Domain", hiddenTypes[0]);
+      TyType subTypeRange = getAdamaSubType("NtMap<>::Range", hiddenTypes[1]);
+      return new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, null, subTypeDomain, null, subTypeRange, null);
     }
     throw new RuntimeException("can't find:" + x.toString());
   }
