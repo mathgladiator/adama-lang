@@ -43,19 +43,7 @@ public class Expand {
         replaceWith.add(child);
       }
     }
-    Element parent = element.parent();
-    int k = 0;
-    int found = -1;
-    for (Node child : parent.childNodes()) {
-      if (child == element) {
-        found = k;
-      }
-      k++;
-    }
-    if (found >= 0) {
-      parent.insertChildren(found, replaceWith);
-    }
-    element.remove();
+    Replacement.replace(element, replaceWith);
   }
 
   private static String extractPath(String name, String val) {

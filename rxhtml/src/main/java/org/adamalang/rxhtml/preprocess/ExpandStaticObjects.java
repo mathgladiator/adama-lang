@@ -20,10 +20,7 @@ package org.adamalang.rxhtml.preprocess;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
-import org.adamalang.rxhtml.preprocess.expand.Expand;
-import org.adamalang.rxhtml.preprocess.expand.Extraction;
-import org.adamalang.rxhtml.preprocess.expand.ObjectWrite;
-import org.adamalang.rxhtml.preprocess.expand.StaticConfig;
+import org.adamalang.rxhtml.preprocess.expand.*;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -38,6 +35,31 @@ public class ExpandStaticObjects {
   public static void expand(Document document, Feedback feedback) {
     // for generating unique throw-away values
     AtomicInteger genId = new AtomicInteger(1);
+
+    { // phase 0: static tree cloning and stamping
+      // extract all static-tree fragment elements
+      HashMap<String, Element> treeFragments = new HashMap<>();
+      for (Element element : document.getElementsByTag("static-tree-fragment")) {
+        String name = element.attr("name");
+        if (name != null) {
+          treeFragments.put(name, element.clone());
+        }
+        element.remove();
+      }
+
+      // execute replacements
+      for (Element element : document.getElementsByTag("static-tree-replace")) {
+        String name = element.attr("name");
+        if (name != null) {
+          Element fragment = treeFragments.get(name);
+          if (fragment != null) {
+            Replacement.replace(element, fragment.clone().childNodes());
+          }
+        } else {
+          element.remove();
+        }
+      }
+    }
 
     // extract the configs from the document and provide a way to find/invent them
     HashMap<String, StaticConfig> configs = Extraction.staticConfigs(document);

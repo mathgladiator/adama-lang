@@ -15,9 +15,28 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.preprocess.expand;
 
-public class Platform {
-  public static final String VERSION = "20240515150555";
-  public static final String JS_VERSION = "198cf973f73908bf76fe4136aa4382e8";
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+
+import java.util.List;
+
+/** missing feature in JSoup */
+public class Replacement {
+  public static void replace(Element elementToReplace, List<Node> replaceWith) {
+    Element parent = elementToReplace.parent();
+    int k = 0;
+    int found = -1;
+    for (Node child : parent.childNodes()) {
+      if (child == elementToReplace) {
+        found = k;
+      }
+      k++;
+    }
+    if (found >= 0) {
+      parent.insertChildren(found, replaceWith);
+    }
+    elementToReplace.remove();
+  }
 }
