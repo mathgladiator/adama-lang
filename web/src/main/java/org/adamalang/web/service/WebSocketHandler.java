@@ -25,6 +25,7 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.timeout.ReadTimeoutException;
 import org.adamalang.ErrorCodes;
 import org.adamalang.ErrorTable;
 import org.adamalang.common.ErrorCodeException;
@@ -148,7 +149,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
     try {
       super.exceptionCaught(ctx, cause);
-      if (cause instanceof IOException && "Connection timed out".equals(cause.getMessage())) {
+      if (cause instanceof IOException && "Connection timed out".equals(cause.getMessage()) || cause instanceof ReadTimeoutException) {
         metrics.websockets_timed_out.run();
       } else if (cause instanceof SocketException) {
         metrics.websockets_socket_exception.run();
