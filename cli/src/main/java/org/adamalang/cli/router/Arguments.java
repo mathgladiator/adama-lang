@@ -2125,6 +2125,7 @@ public class Arguments {
 		public String input = "reflected.json";
 		public String output = "mermaid.mmd";
 		public String title = "Schema";
+		public String includeRoot = "true";
 		public static CodeDiagramArgs from(String[] args, int start) {
 			CodeDiagramArgs returnArgs = new CodeDiagramArgs();
 			try {
@@ -2167,6 +2168,17 @@ public class Arguments {
 						}
 						break;
 					}
+					case "-ir":
+					case "--include-root": {
+						if (k+1 < args.length) {
+							returnArgs.includeRoot = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
 						case "--help":
 						case "-h":
 						case "help":
@@ -2192,6 +2204,7 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("-i, --input", ANSI.Green) + " " + ColorUtilTools.prefix("<input>", ANSI.White) + " : An input file");
 			System.out.println("    " + ColorUtilTools.prefix("-o, --output", ANSI.Green) + " " + ColorUtilTools.prefix("<output>", ANSI.White) + " : A file (or directory) to output to.");
 			System.out.println("    " + ColorUtilTools.prefix("-tt, --title", ANSI.Green) + " " + ColorUtilTools.prefix("<title>", ANSI.White) + " : The title of the diagram");
+			System.out.println("    " + ColorUtilTools.prefix("-ir, --include-root", ANSI.Green) + " " + ColorUtilTools.prefix("<include-root>", ANSI.White) + " : Include the root document in the diagram");
 		}
 	}
 	public static class CodeFormatArgs {

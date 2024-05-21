@@ -333,7 +333,7 @@ public class CodeHandlerImpl implements CodeHandler {
   public void diagram(Arguments.CodeDiagramArgs args, Output.YesOrError output) throws Exception {
     ObjectNode reflection = Json.parseJsonObject(Files.readString(new File(args.input).toPath()));
     Diagram diagram = new Diagram("Diagram");
-    diagram.process(reflection);
+    diagram.process(reflection, "true".equalsIgnoreCase(args.includeRoot));
     Files.writeString(new File(args.output).toPath(), diagram.finish());
     output.out();
   }

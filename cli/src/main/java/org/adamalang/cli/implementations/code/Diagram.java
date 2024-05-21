@@ -144,22 +144,26 @@ public class Diagram {
     }
   }
 
-  public void process(ObjectNode reflection) {
+  public void process(ObjectNode reflection, boolean includeRoot) {
     ObjectNode types = (ObjectNode) reflection.get("types");
     ObjectNode doc = (ObjectNode) types.get("__Root");
-    mmd.append("    class Document:::document{\n");
-    TreeSet<String> depends = new TreeSet<>();
-    fieldsOf(doc, true, depends);
-    mmd.append("    }\n");
-    for (String depend : depends) {
-      mmd.append("    Document..>").append(depend).append("\n");
+    if (includeRoot) {
+      mmd.append("    class Document:::document{\n");
+      TreeSet<String> depends = new TreeSet<>();
+      fieldsOf(doc, true, depends);
+      mmd.append("    }\n");
+      for (String depend : depends) {
+        mmd.append("    Document..>").append(depend).append("\n");
+      }
     }
     ObjectNode viewer = (ObjectNode) types.get("__ViewerType");
     mmd.append("    class Viewer{\n");
     fieldsOf(viewer, false, new TreeSet<>());
     mmd.append("    }\n");
     structsOf(types);
-    mmd.append("    Viewer..>Document\n");
+    if (includeRoot) {
+      mmd.append("    Viewer..>Document\n");
+    }
     linkChannels((ObjectNode) reflection.get("channels"));
   }
 

@@ -236,6 +236,12 @@
         </documentation>
     </arg-definition>
 
+    <arg-definition name="include-root" type="bool" short="ir">
+        <documentation>
+            Include the root document in the diagram
+        </documentation>
+    </arg-definition>
+
     <arg-definition name="port" type="string" short="p">
         <documentation>
             Port for a server
@@ -662,6 +668,7 @@
             <arg name="input" default="reflected.json" />
             <arg name="output" default="mermaid.mmd" />
             <arg name="title" default="Schema" />
+            <arg name="include-root" default="true" />
         </command>
 
     </group>
