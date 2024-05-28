@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
@@ -221,7 +222,7 @@ public class FrontendHttpHandler implements HttpHandler {
       callback.failure(new ErrorCodeException(ErrorCodes.FRONTEND_IP_DONT_RESOLVE));
       return null;
     }
-    return host;
+    return host.trim().toLowerCase(Locale.ENGLISH);
   }
 
   public void handleGet(ObjectNode logItem, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {

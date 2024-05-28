@@ -121,26 +121,26 @@ public abstract class DevBoxRouter {
             new ReflectionResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "push/register":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_PushRegister(requestId, //
             request.getString("identity", true, 458759), //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             request.getObject("subscription", true, 407308), //
             request.getObject("device-info", true, 446218), //
             new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "domain/reflect":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_DomainReflect(requestId, //
             request.getString("identity", true, 458759), //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             new ReflectionResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "domain/get-vapid-public-key":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_DomainGetVapidPublicKey(requestId, //
             request.getString("identity", true, 458759), //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             new DomainVapidResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorization":
@@ -153,9 +153,9 @@ public abstract class DevBoxRouter {
             new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorization-domain":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_DocumentAuthorizationDomain(requestId, //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             request.getJsonNode("message", true, 425987), //
             new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
@@ -170,9 +170,9 @@ public abstract class DevBoxRouter {
             new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize-domain":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_DocumentAuthorizeDomain(requestId, //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             request.getString("username", true, 458737), //
             request.getString("password", true, 465917), //
             new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
@@ -189,9 +189,9 @@ public abstract class DevBoxRouter {
             new InitiationResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "document/authorize-domain-with-reset":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_DocumentAuthorizeDomainWithReset(requestId, //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             request.getString("username", true, 458737), //
             request.getString("password", true, 465917), //
             request.getString("new_password", true, 466931), //
@@ -208,10 +208,10 @@ public abstract class DevBoxRouter {
             new DataResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "connection/create-via-domain":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           handle_ConnectionCreateViaDomain(requestId, //
             request.getString("identity", true, 458759), //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             request.getObject("viewer-state", false, 0), //
             new DataResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
@@ -299,12 +299,12 @@ public abstract class DevBoxRouter {
             new ProgressResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "attachment/start-by-domain":
-          _accessLogItem.put("domain", request.getString("domain", true, 488444));
+          _accessLogItem.put("domain", request.getStringNormalize("domain", true, 488444));
           _accessLogItem.put("filename", request.getString("filename", true, 470028));
           _accessLogItem.put("content-type", request.getString("content-type", true, 455691));
           handle_AttachmentStartByDomain(requestId, //
             request.getString("identity", true, 458759), //
-            request.getString("domain", true, 488444), //
+            request.getStringNormalize("domain", true, 488444), //
             request.getString("filename", true, 470028), //
             request.getString("content-type", true, 455691), //
             new ProgressResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));

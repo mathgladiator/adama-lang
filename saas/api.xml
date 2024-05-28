@@ -357,7 +357,7 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="domain" type="string" missing-error="488444" requires-policy="true" logged="true">
+    <parameter-definition name="domain" type="string" missing-error="488444" requires-policy="true" normalize="true" logged="true">
         <documentation>
             A domain name.
         </documentation>

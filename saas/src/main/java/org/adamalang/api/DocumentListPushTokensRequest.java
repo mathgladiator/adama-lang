@@ -61,7 +61,7 @@ public class DocumentListPushTokensRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
-      final String domain = request.getString("domain", true, 488444);
+      final String domain = request.getStringNormalize("domain", true, 488444);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final String agent = request.getString("agent", true, 493556);
       _latch.with(() -> new DocumentListPushTokensRequest(identity, who.get(), space, policy.get(), key, domain, resolvedDomain.get(), agent));

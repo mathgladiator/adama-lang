@@ -42,7 +42,7 @@ public class DocumentAuthorizeDomainRequest {
   public static void resolve(Session session, RegionConnectionNexus nexus, JsonRequest request, Callback<DocumentAuthorizeDomainRequest> callback) {
     try {
       final BulkLatch<DocumentAuthorizeDomainRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
-      final String domain = request.getString("domain", true, 488444);
+      final String domain = request.getStringNormalize("domain", true, 488444);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final String username = request.getString("username", true, 458737);
       final String password = request.getString("password", true, 465917);

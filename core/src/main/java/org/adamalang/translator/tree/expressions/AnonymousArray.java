@@ -183,6 +183,7 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
         if (elementExpr.item instanceof SupportsTwoPhaseTyping) {
           ((SupportsTwoPhaseTyping) elementExpr.item).upgradeType(environment, proposalElement);
         }
+        // TODO: introduce an expression to coerce the type into the proposal element
       }
     }
   }

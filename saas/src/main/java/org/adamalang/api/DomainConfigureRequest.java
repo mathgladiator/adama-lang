@@ -47,7 +47,7 @@ public class DomainConfigureRequest {
       final BulkLatch<DomainConfigureRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String domain = request.getString("domain", true, 488444);
+      final String domain = request.getStringNormalize("domain", true, 488444);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final ObjectNode productConfig = request.getObject("product-config", true, 453621);
       _latch.with(() -> new DomainConfigureRequest(identity, who.get(), domain, resolvedDomain.get(), productConfig));

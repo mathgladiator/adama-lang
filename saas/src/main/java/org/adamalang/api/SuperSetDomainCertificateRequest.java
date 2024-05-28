@@ -49,7 +49,7 @@ public class SuperSetDomainCertificateRequest {
       final BulkLatch<SuperSetDomainCertificateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String domain = request.getString("domain", true, 488444);
+      final String domain = request.getStringNormalize("domain", true, 488444);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final String certificate = request.getString("certificate", false, 0);
       final Long timestamp = request.getLong("timestamp", true, 439292);
