@@ -33,9 +33,60 @@ Adama.Debugger = (function() {
   // we are going to create a document
   var viewJson = document.createElement("div");
   var viewChannels = document.createElement("div");
+  var viewIdentities = document.createElement("div");
 
-  viewJson.style = "font-family: \"JetBrains Mono\", source-code-pro, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: #fff; background-color: #000; width:100%"
-  viewChannels.style = "font-family: \"JetBrains Mono\", source-code-pro, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: #fff; background-color: #000; width:100%"
+  { // construct the identities
+    var stashedRaw = window.localStorage.getItem("stashed_identities");
+    var stashed = typeof(stashedRaw) == "string" ? JSON.parse(stashedRaw) : [];
+    console.log(stashed);
+    if (stashed.length == 0) {
+      var nope = document.createElement("div");
+      nope.innerHTML = "No identities";
+      viewIdentities.appendChild(nope);
+    } else {
+      for (var k = 0; k < stashed.length; k++) {
+        var recall = document.createElement("button");
+        recall.innerHTML = "Recall:" + stashed[k].name;
+        recall.onclick = function() {
+          window.localStorage.setItem("identity_default", this.identity);
+          window.localStorage.setItem("last_identity_used", "0");
+          window.location.reload();
+        }.bind(stashed[k]);
+        recall.style = "padding: 4px; border:#ccc 1px solid; margin:4px;";
+        viewIdentities.appendChild(recall);
+      }
+    }
+    { // break
+      viewIdentities.appendChild(document.createElement("hr"));
+      viewIdentities.appendChild(document.createTextNode("Stash Current Identity; name = "));
+      viewIdentities.appendChild(document.createElement("br"));
+      var name = document.createElement("input");
+      name.style = "color: #fff; background-color:#333";
+      viewIdentities.appendChild(name);
+      viewIdentities.appendChild(document.createElement("br"));
+      var commit = document.createElement("button");
+      commit.style = "padding: 4px; border:#ccc 1px solid; margin:4px;";
+      commit.innerHTML = "Stash It";
+      viewIdentities.appendChild(commit);
+      commit.onclick = function() {
+        var nameToUse = name.value;
+        if (nameToUse.length > 0) {
+          var identity = window.localStorage.getItem("identity_default");
+          if (typeof(identity) == "string") {
+            name.value = "";
+            stashed.push({name:nameToUse, identity:identity});
+            window.localStorage.setItem("stashed_identities", JSON.stringify(stashed));
+            window.location.reload();
+          }
+        }
+      }
+    }
+  }
+
+  var baseStyle = "font-family: \"JetBrains Mono\", source-code-pro, Menlo, Monaco, Consolas, monospace; font-size: 14px; color: #fff; background-color: #000; width:100%;";
+  viewJson.style = baseStyle;
+  viewChannels.style = baseStyle;
+  viewIdentities.style = baseStyle;
 
   /** Reflection | given a reflected type, extract the structure type **/
   var extractStructureType = function(type, types) {
@@ -518,9 +569,22 @@ Adama.Debugger = (function() {
         return false;
       }
       self.root.appendChild(titleBar);
+
+      var makeHeader = function(name, tooltip) {
+        var div = document.createElement("div");
+        div.style = baseStyle + "background:#ccc; color:#000; border: 1px green dashed; margin-top: 10px; padding-top: 2px; padding-bottom-4pm; padding-left:12px; font-size:18px; cursor:pointer";
+        div.innerHTML = name + " &#x1F6C8;";
+        div.title = tooltip;
+        return div;
+      }
+      self.root.appendChild(makeHeader("Select Connection", "An RxHTML application can bind to multiple applications. Use this to select the current connection to debug and interact with."));
       self.root.appendChild(connectionSelector);
+      self.root.appendChild(makeHeader("View Connection Data", "This shows the root document of the current connection"));
       self.root.appendChild(viewJson);
+      self.root.appendChild(makeHeader("View Connection's Channels", "This provides a sane way to invoke a channel without the associated UI."));
       self.root.appendChild(viewChannels);
+      self.root.appendChild(makeHeader("Identity Stash", "Since multi-person experiences are a challenge, this allows easy stashing and recovery of identities"));
+      self.root.appendChild(viewIdentities);
       document.body.appendChild(self.root);
     }
     self.shown = !self.shown;
