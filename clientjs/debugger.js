@@ -38,7 +38,6 @@ Adama.Debugger = (function() {
   { // construct the identities
     var stashedRaw = window.localStorage.getItem("stashed_identities");
     var stashed = typeof(stashedRaw) == "string" ? JSON.parse(stashedRaw) : [];
-    console.log(stashed);
     if (stashed.length == 0) {
       var nope = document.createElement("div");
       nope.innerHTML = "No identities";
