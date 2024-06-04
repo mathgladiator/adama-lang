@@ -48,14 +48,14 @@ public class ObjectWrite {
     } else {
       this.code = null;
     }
-    _id = this.code;
     if (properties.containsKey(config.push)) {
       this.push = properties.remove(config.push);
     } else {
       this.push = null;
     }
+    _id = this.code;
     if (properties.containsKey(config.id)) {
-      _id = properties.remove(config.id);
+      _id = properties.get(config.id);
     }
     this.id = _id;
     if (properties.containsKey(config.parent)) {
