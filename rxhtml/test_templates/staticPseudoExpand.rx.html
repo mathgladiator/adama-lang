@@ -3,8 +3,6 @@
         <static-expand source="nav">
             <ul static:iterate="pages">
                 <a class="%%%code%%%" href="%%%nav:uri%%%"> [<static:lookup name="label" />] </a><br />
-                <div static:guard:has_children:attr_that="only_present_with_children"></div>
-
                 <div static:if="has_children">
                     <ul static:iterate="children">
                         ++ <a class="%%%code%%%" href="%%%nav:uri%%%"> [<static:lookup name="label" />] </a><br />
@@ -19,17 +17,16 @@
     <static-object name="foo">
         {"key":"value"}
     </static-object>
-    <page uri="/page/1" static[nav]:label="Page 1">
+    <pseudo-page uri="/page/1" static[nav]:label="Page 1">
 
-    </page>
-    <page uri="/page/2" static[nav]:label="Page 2">
+    </pseudo-page>
+    <pseudo-page uri="/page/2" static[nav]:label="Page 2">
 
-    </page>
+    </pseudo-page>
     <page uri="/page/3" static[nav]:label="Page 3" static[nav]:code="major">
 
     </page>
+    <pseudo-page uri="/page/3/a" static[nav]:label="Part A" static[nav]:parent="major">
 
-    <page uri="/page/3/a" static[nav]:label="Part A" static[nav]:parent="major">
-
-    </page>
+    </pseudo-page>
 </forest>

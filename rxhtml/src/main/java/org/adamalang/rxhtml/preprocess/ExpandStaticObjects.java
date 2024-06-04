@@ -27,6 +27,7 @@ import org.jsoup.nodes.Element;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ExpandStaticObjects {
@@ -74,7 +75,8 @@ public class ExpandStaticObjects {
 
     // convert the pages into object writes
     HashMap<String, ArrayList<ObjectWrite>> writes = new HashMap<>();
-    for (Element page : document.getElementsByTag("page")) {
+
+    Consumer<Element> handlePage = (page) -> {
       HashMap<String, HashMap<String, String>> properties = Extraction.propertiesByObject(page, feedback, genId);
       for (Map.Entry<String, HashMap<String, String>> entry : properties.entrySet()) {
         ArrayList<ObjectWrite> writesToObject = writes.get(entry.getKey());
@@ -84,6 +86,12 @@ public class ExpandStaticObjects {
         }
         writesToObject.add(new ObjectWrite(findConfig.apply(entry.getKey()), entry.getValue()));
       }
+    };
+    for (Element page : document.getElementsByTag("page")) {
+      handlePage.accept(page);
+    }
+    for (Element page : document.getElementsByTag("pseudo-page")) {
+      handlePage.accept(page);
     }
 
     // assemble the objects

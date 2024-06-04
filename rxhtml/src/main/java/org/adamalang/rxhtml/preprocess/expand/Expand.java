@@ -26,9 +26,13 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 public class Expand {
+  private static final String STATIC_GUARD_PREFIX = "static:guard:";
   private static final Pattern FIND_VARIABLES = Pattern.compile("%%%([:A-Za-z_]*)%%%");
 
   public static void expand(Element element, String name, ObjectNode properties) {
@@ -126,6 +130,8 @@ public class Expand {
   }
 
   public static Node eval(Element element, String name, ObjectNode properties) {
+    TreeSet<String> removals = new TreeSet<>();
+    TreeMap<String, String> additions = new TreeMap<>();
     for (Attribute attr : element.attributes()) {
       if (attr.hasDeclaredValue()) {
         String value = attr.getValue();
@@ -139,7 +145,27 @@ public class Expand {
           });
           attr.setValue(value);
         }
+        String key = attr.getKey();
+        if (key.toLowerCase().startsWith(STATIC_GUARD_PREFIX)) {
+          String conditionColonRealAttributeKey = key.substring(STATIC_GUARD_PREFIX.length());
+          int kColon = conditionColonRealAttributeKey.indexOf(':');
+          if (kColon > 0) {
+            String condition = conditionColonRealAttributeKey.substring(0, kColon);
+            String realKey = conditionColonRealAttributeKey.substring(kColon + 1);
+            removals.add(key);
+            JsonNode toEval = properties.get(condition);
+            if (toEval != null && toEval.isBoolean() && toEval.asBoolean()) {
+              additions.put(realKey, attr.getValue());
+            }
+          }
+        }
       }
+    }
+    for (String removal : removals) {
+      element.removeAttr(removal);
+    }
+    for (Map.Entry<String, String> addition : additions.entrySet()) {
+      element.attr(addition.getKey(), addition.getValue());
     }
     if (element.tagName().equals("static:lookup")) {
       String toLookup = extractPath(name, element.attr("name"));
