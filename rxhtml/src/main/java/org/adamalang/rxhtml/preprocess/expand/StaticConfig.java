@@ -27,6 +27,7 @@ public class StaticConfig {
   public final String code;
   public final String children;
   public final String parent;
+  public final String id;
 
   public StaticConfig(Element element) {
     String _name = null;
@@ -35,6 +36,7 @@ public class StaticConfig {
     String _code = "code";
     String _children = "children";
     String _parent = "parent";
+    String _id = "id";
     if (element != null) {
       for (Attribute attribute : element.attributes()) {
         if (attribute.hasDeclaredValue() || attribute.getValue() == null) {
@@ -60,6 +62,9 @@ public class StaticConfig {
           case "parent":
             _parent = val;
             break;
+          case "id":
+            _id = val;
+            break;
         }
       }
     }
@@ -69,5 +74,6 @@ public class StaticConfig {
     this.code = _code;
     this.children = _children;
     this.parent = _parent;
+    this.id = _id;
   }
 }

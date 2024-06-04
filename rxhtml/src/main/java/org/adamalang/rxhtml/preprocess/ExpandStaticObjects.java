@@ -106,8 +106,8 @@ public class ExpandStaticObjects {
       // establish parents
       for (ObjectWrite write : objectWrites) {
         ObjectNode child = write.convertToNode();
-        if (write.code != null) {
-          parents.put(write.code, child);
+        if (write.id != null) {
+          parents.put(write.id, child);
         }
       }
       // construct the hierarchy

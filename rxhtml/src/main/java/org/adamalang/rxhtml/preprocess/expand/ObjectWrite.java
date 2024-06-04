@@ -29,6 +29,7 @@ public class ObjectWrite {
   public final String code;
   public final String push;
   public final String parent;
+  public final String id;
   public final HashMap<String, String> properties;
 
   private ObjectNode cached;
@@ -36,6 +37,7 @@ public class ObjectWrite {
   public ObjectWrite(StaticConfig config, HashMap<String, String> properties) {
     this.cached = null;
     this.config = config;
+    String _id;
     if (properties.containsKey(config.order)) {
       this.ordering = properties.remove(config.order);
     } else {
@@ -46,11 +48,16 @@ public class ObjectWrite {
     } else {
       this.code = null;
     }
+    _id = this.code;
     if (properties.containsKey(config.push)) {
       this.push = properties.remove(config.push);
     } else {
       this.push = null;
     }
+    if (properties.containsKey(config.id)) {
+      _id = properties.remove(config.id);
+    }
+    this.id = _id;
     if (properties.containsKey(config.parent)) {
       this.parent = properties.remove(config.parent);
     } else {
