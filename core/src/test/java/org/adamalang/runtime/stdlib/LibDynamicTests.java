@@ -236,4 +236,10 @@ public class LibDynamicTests {
     Assert.assertEquals("2023-04-24T17:57:19.802528800-05:00[America/Chicago]", LibDynamic.datetime(new NtDynamic("{\"x\":\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"}"), "x").get().toString());
     Assert.assertEquals("2023-04-24T17:57:19.802528800-05:00[America/Chicago]", LibDynamic.datetime(new NtDynamic("{\"x\":\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"}"), "x", "-").toString());
   }
+
+  @Test
+  public void parse() {
+    Assert.assertTrue(LibDynamic.parse("{}").has());
+    Assert.assertFalse(LibDynamic.parse("xyz").has());
+  }
 }

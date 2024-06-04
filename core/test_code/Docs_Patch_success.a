@@ -1,0 +1,7 @@
+public int x;
+
+@construct {
+  if (Dynamic.parse("{\"x\":123}") as d) {
+    Document.patch(d);
+  }
+}

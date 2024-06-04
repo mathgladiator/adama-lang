@@ -93,6 +93,7 @@ public class GlobalObjectPool {
     document.functions.put("space", generateInternalDocumentFunction("__getSpace", tyStr));
     document.functions.put("seq", generateInternalDocumentFunction("__getSeq", tyInt));
     document.functions.put("disconnect", generateInternalDocumentFunction("__disconnect", tyPrincipal, tyVoid, null, null));
+    document.functions.put("patch", generateInternalDocumentFunction("__applyPatch", tyDyn, tyVoid, null, null));
     pool.add(document);
 
     final var viewer = new TyNativeGlobalObject("ViewState", null, false);

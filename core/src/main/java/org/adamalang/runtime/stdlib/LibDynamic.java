@@ -402,4 +402,13 @@ public class LibDynamic {
   public static String to_str(NtDynamic d) {
     return d.json;
   }
+
+  @Extension
+  public static @HiddenType(clazz = NtDynamic.class) NtMaybe<NtDynamic> parse(String str) {
+    NtDynamic dyn = new NtDynamic(str);
+    if (dyn.cached() != null) {
+      return new NtMaybe<>(dyn);
+    }
+    return new NtMaybe<>();
+  }
 }

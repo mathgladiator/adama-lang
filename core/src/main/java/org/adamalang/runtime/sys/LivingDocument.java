@@ -1237,6 +1237,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     throw new PerformDocumentRewindException(seq);
   }
 
+  protected void __applyPatch(NtDynamic patch) {
+    __patch(new JsonStreamReader(patch.json));
+  }
+
   /** exposed: random number between 0 and n exclusive */
   protected int __randomBoundInt(final int n) {
     if (n < 0) {
