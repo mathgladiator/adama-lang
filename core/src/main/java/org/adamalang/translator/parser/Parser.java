@@ -1626,7 +1626,9 @@ public class Parser {
     if (scan.isSymbolWithTextEq("<")) {
       final var afterScan = tokens.peek(1);
       if (afterScan != null && afterScan.isSymbolWithTextEq("-")) {
-        return null;
+        if (Token.isEmpty(scan.nonSemanticTokensAfter) && Token.isEmpty(afterScan.nonSemanticTokensPrior)) {
+          return null;
+        }
       }
     }
     return tokens.popIf(t -> t.isSymbolWithTextEq("<", ">"));
@@ -2126,15 +2128,31 @@ public class Parser {
     }
   }
 
+  public Expression promote_range_relation(Scope scope, Expression low, Token op1) throws AdamaLangException {
+    Expression body = additive(scope);
+    // experimental start of support for 1 < 2 < 3
+    if (op1.isSymbolWithTextEq("<=", "<")) {
+      Token op2 = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("<="));
+      if (op2 == null) {
+        op2 = tokens.popIf((t) -> t.isSymbolWithTextEq("<"));
+      }
+      if (op2 != null) {
+        Expression high = additive(scope);
+        return new RangeOperator(low, op1, body, op2, high);
+      }
+    }
+    return new BinaryExpression(low, op1, body);
+  }
+
   public Expression relate(Scope scope) throws AdamaLangException {
     final var left = additive(scope);
     var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("<=", ">="));
     if (op != null) {
-      return new BinaryExpression(left, op, additive(scope));
+      return promote_range_relation(scope, left, op);
     }
     op = forwardScanRelate();
     if (op != null) {
-      return new BinaryExpression(left, op, additive(scope));
+      return promote_range_relation(scope, left, op);
     }
     return left;
   }

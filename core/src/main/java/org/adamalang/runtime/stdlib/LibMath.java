@@ -1271,4 +1271,20 @@ public class LibMath {
     }
     return -1;
   }
+
+  public static boolean dRangeII(double low, double x, double high) {
+    return low <= x && x <= high;
+  }
+
+  public static boolean dRangeIE(double low, double x, double high) {
+    return low <= x && x < high;
+  }
+
+  public static boolean dRangeEI(double low, double x, double high) {
+    return low < x && x <= high;
+  }
+
+  public static boolean dRangeEE(double low, double x, double high) {
+    return low < x && x < high;
+  }
 }

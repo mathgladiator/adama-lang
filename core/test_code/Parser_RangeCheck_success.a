@@ -1,0 +1,11 @@
+
+public formula t_1 = 1 < 2 < 3;
+public formula t_2 = 1 <= 2 < 3;
+public formula t_3 = 1 < 2 <= 3;
+public formula t_4 = 1 <= 2 <= 3;
+
+
+public formula f_1 = 1 < 5 < 3;
+public formula f_2 = 1 <= 5 < 3;
+public formula f_3 = 1 < 5 <= 3;
+public formula f_4 = 1 <= 5 <= 3;

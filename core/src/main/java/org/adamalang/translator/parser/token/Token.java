@@ -18,6 +18,7 @@
 package org.adamalang.translator.parser.token;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /** a granular unit of a file, a string sequence */
@@ -236,5 +237,12 @@ public class Token implements Comparable<Token> {
     }
     str.append("}");
     return str.toString();
+  }
+
+  public static boolean isEmpty(List<Token> set) {
+    if (set == null) {
+      return true;
+    }
+    return set.isEmpty();
   }
 }
