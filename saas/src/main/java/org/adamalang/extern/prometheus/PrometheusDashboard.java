@@ -136,7 +136,7 @@ public class PrometheusDashboard implements MetricsFactory {
     current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
     current.append("new PromConsole.Graph({\n");
     current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-    current.append("  expr: \"rate(rr_connectionsend_start_total[1m])\",\n");
+    current.append("  expr: \"delta(rr_connectionsend_start_total[1m])\",\n");
     current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
     current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
     current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -149,7 +149,7 @@ public class PrometheusDashboard implements MetricsFactory {
     current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
     current.append("new PromConsole.Graph({\n");
     current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-    current.append("  expr: \"rate(stream_connectioncreate_start_total[1m])\",\n");
+    current.append("  expr: \"delta(stream_connectioncreate_start_total[1m])\",\n");
     current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
     current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
     current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -251,7 +251,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-      current.append("  expr: \"rate(rr_").append(name).append("_success_total[1m])\",\n");
+      current.append("  expr: \"delta(rr_").append(name).append("_success_total[1m])\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -311,7 +311,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-      current.append("  expr: \"rate(stream_").append(name).append("_progress_total[1m])\",\n");
+      current.append("  expr: \"delta(stream_").append(name).append("_progress_total[1m])\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -326,7 +326,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-      current.append("  expr: \"rate(stream_").append(name).append("_finish_total[1m])\",\n");
+      current.append("  expr: \"delta(stream_").append(name).append("_finish_total[1m])\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -414,7 +414,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-      current.append("  expr: \"rate(cb_").append(name).append("_success_total[1m])\",\n");
+      current.append("  expr: \"delta(cb_").append(name).append("_success_total[1m])\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -448,7 +448,7 @@ public class PrometheusDashboard implements MetricsFactory {
     current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
     current.append("new PromConsole.Graph({\n");
     current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-    current.append("  expr: \"rate(raw_").append(name).append("_total[1m])\",\n");
+    current.append("  expr: \"delta(raw_").append(name).append("_total[1m])\",\n");
     current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
     current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
     current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -530,7 +530,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-      current.append("  expr: \"rate(im_").append(name).append("_rejected_total[1m])\",\n");
+      current.append("  expr: \"delta(im_").append(name).append("_rejected_total[1m])\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -545,7 +545,7 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
-      current.append("  expr: \"rate(im_").append(name).append("_timeout_total[1m])\",\n");
+      current.append("  expr: \"delta(im_").append(name).append("_timeout_total[1m])\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
