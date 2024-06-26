@@ -286,7 +286,7 @@ public class DurableLivingDocument implements Queryable {
         writer.writeString(key.space);
         writer.writeObjectFieldIntro("key");
         writer.writeString(key.key);
-        writer.writeObjectFieldIntro("size");
+        writer.writeObjectFieldIntro("log_size");
         writer.writeInteger(size.get());
         writer.writeObjectFieldIntro("seq");
         writer.writeInteger(document.__getSeq());
