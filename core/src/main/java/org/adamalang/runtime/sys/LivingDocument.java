@@ -82,9 +82,9 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final WebQueue __webQueue;
   protected final ArrayList<EphemeralWebGet> __gets;
   protected final Graph __graph;
-  private final TreeMap<NtPrincipal, Integer> __clients;
-  private final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
-  private final HashMap<Integer, PrivateView> __viewsById;
+  protected final TreeMap<NtPrincipal, Integer> __clients;
+  protected final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
+  protected final HashMap<Integer, PrivateView> __viewsById;
   private final HashMap<String, Long> __dedupe;
   private final TreeMap<Integer, RxCache> __routing;
   public PerfTracker __perf;
