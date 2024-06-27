@@ -482,7 +482,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Linq_IterateNonTable_failure.a,2,11,2,12,"Expression expected to be computed, rather than assigned to"
 ./test_code/Linq_IterateNonTable_failure.a,2,11,2,12,"Type check failure: must have a type of 'table<?>', but got a type of 'int'."
 ./test_code/Linq_MapCantAbort_failure.a,13,34,13,60,"Function '$<shared_sqr>' must not abort within a map function"
-./test_code/Linq_NonOrderable_failure.a,10,31,10,32,"Typing issue: the structure 'Y' has field 'x' but it is not orderable.."
+./test_code/Linq_NonOrderable_failure.a,10,31,10,32,"Typing issue: the structure 'Y' has field 'x' but it is not orderable (type is X)"
 ./test_code/Linq_NonOrderable_failure.a,11,31,11,32,"Field not found: the structure 'Y' does not contain the field 'z'."
 ./test_code/Linq_NotApplicableToNonLists_failure.a,2,10,2,11,"Type check failure: expected an list, but was actually type 'int'."
 ./test_code/Linq_NotApplicableToNonLists_failure.a,3,10,3,11,"Type check failure: expected an list, but was actually type 'int'."

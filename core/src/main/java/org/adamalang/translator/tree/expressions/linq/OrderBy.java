@@ -84,11 +84,14 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
     var fieldType = fd.type;
     if (fieldType instanceof TyReactiveLazy) {
       fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
-    } else {
-      fieldType = RuleSetCommon.Resolve(environment, fieldType, false);
     }
+    fieldType = RuleSetCommon.Resolve(environment, fieldType, false);
     if (fieldType instanceof TyReactiveMaybe || fieldType instanceof TyNativeMaybe) {
       fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
+      if (fieldType instanceof TyReactiveLazy) {
+        fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
+      }
+      fieldType = RuleSetCommon.Resolve(environment, fieldType, false);
     }
     return fieldType;
   }
@@ -103,10 +106,10 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
         elementType = (IsStructure) element;
         for (final OrderPair key : keys) {
           final var fd = ((IsStructure) element).storage().fields.get(key.name);
-          if (fd != null) {
+          if (fd != null && fd.type != null) {
             var fieldType = getOrderableType(fd, environment);
             if (!(fieldType instanceof IsOrderable)) {
-              environment.document.createError(key, String.format("Typing issue: the structure '%s' has field '%s' but it is not orderable..", element.getAdamaType(), key.name));
+              environment.document.createError(key, String.format("Typing issue: the structure '%s' has field '%s' but it is not orderable (type is %s)", element.getAdamaType(), key.name, fd.type.getAdamaType()));
             }
           } else {
             environment.document.createError(key, String.format("Field not found: the structure '%s' does not contain the field '%s'.", element.getAdamaType(), key.name));

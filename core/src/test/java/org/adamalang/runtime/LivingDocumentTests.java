@@ -1496,6 +1496,39 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void ordering_issue_20240627() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "function f(int z) -> int {" +
+                "  return z * z;" +
+                "}" +
+                "" +
+                "record R {" +
+                "  public int id;" +
+                "  public int x;" +
+                "  public formula x2 = f(x);" +
+                "}" +
+                "" +
+                "table<R> tbl;" +
+                "" +
+                "@construct {" +
+                "  tbl <- {x:-1};" +
+                "  tbl <- {x:1};" +
+                "  tbl <- {x:-2};" +
+                "  tbl <- {x:2};" +
+                "}" +
+                "" +
+                "@connected { return true; }" +
+                "" +
+                "public formula all = iterate tbl order by x2;");
+
+    setup.document.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), new RealDocumentSetup.AssertInt(2));
+    final var writes = new RealDocumentSetup.ArrayPerspective();
+    setup.document.createPrivateView(NtPrincipal.NO_ONE, writes, new JsonStreamReader("{}"), new RealDocumentSetup.GotView());
+    Assert.assertEquals("{\"data\":{\"all\":{\"1\":{\"id\":1,\"x\":-1,\"x2\":1},\"2\":{\"id\":2,\"x\":1,\"x2\":1},\"3\":{\"id\":3,\"x\":-2,\"x2\":4},\"4\":{\"id\":4,\"x\":2,\"x2\":4},\"@o\":[1,2,3,4]}},\"seq\":4}", writes.datum.get(0));
+  }
+
+  @Test
   public void blind_send_with_policy() throws Exception {
     final var setup = new RealDocumentSetup("@static { send { return true; } } @construct {} @connected { return true; } message M {} channel<M> foo;");
     setup.document.send(

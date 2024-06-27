@@ -12463,7 +12463,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_NonOrderable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":10,\"character\":31,\"byte\":98},\"end\":{\"line\":10,\"character\":32,\"byte\":99}},\"severity\":1,\"source\":\"error\",\"message\":\"Typing issue: the structure 'Y' has field 'x' but it is not orderable..\",\"file\":\"./test_code/Linq_NonOrderable_failure.a\"},{\"range\":{\"start\":{\"line\":11,\"character\":31,\"byte\":133},\"end\":{\"line\":11,\"character\":32,\"byte\":134}},\"severity\":1,\"source\":\"error\",\"message\":\"Field not found: the structure 'Y' does not contain the field 'z'.\",\"file\":\"./test_code/Linq_NonOrderable_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":10,\"character\":31,\"byte\":98},\"end\":{\"line\":10,\"character\":32,\"byte\":99}},\"severity\":1,\"source\":\"error\",\"message\":\"Typing issue: the structure 'Y' has field 'x' but it is not orderable (type is X)\",\"file\":\"./test_code/Linq_NonOrderable_failure.a\"},{\"range\":{\"start\":{\"line\":11,\"character\":31,\"byte\":133},\"end\":{\"line\":11,\"character\":32,\"byte\":134}},\"severity\":1,\"source\":\"error\",\"message\":\"Field not found: the structure 'Y' does not contain the field 'z'.\",\"file\":\"./test_code/Linq_NonOrderable_failure.a\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
