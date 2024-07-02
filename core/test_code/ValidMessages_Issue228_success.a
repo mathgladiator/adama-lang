@@ -1,0 +1,9 @@
+message M {
+  int x;
+  int y;
+}
+
+message ML {
+  list<M> m_list;
+  list<string> s_list;
+}
