@@ -1,6 +1,6 @@
 /*
 * Adama Platform and Language
-* Copyright (C) 2021 - 2023 by Adama Platform Initiative, LLC
+* Copyright (C) 2021 - 2024 by Adama Platform Engineering, LLC
 * 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Affero General Public License as published

@@ -1,6 +1,6 @@
 /*
 * Adama Platform and Language
-* Copyright (C) 2021 - 2023 by Adama Platform Initiative, LLC
+* Copyright (C) 2021 - 2024 by Adama Platform Engineering, LLC
 * 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU Affero General Public License as published
@@ -18,6 +18,6 @@
 package org.adamalang.common;
 
 public class Platform {
-  public static final String VERSION = "20240702160803";
+  public static final String VERSION = "20240702161102";
   public static final String JS_VERSION = "198cf973f73908bf76fe4136aa4382e8";
 }
