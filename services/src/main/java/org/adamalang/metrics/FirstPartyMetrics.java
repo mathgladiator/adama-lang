@@ -35,6 +35,7 @@ public class FirstPartyMetrics {
   public final RequestResponseMonitor payrix_del_token;
   public final RequestResponseMonitor payrix_get_token;
   public final RequestResponseMonitor payrix_del_customer;
+  public final RequestResponseMonitor discord_apicall;
 
   public FirstPartyMetrics(MetricsFactory factory) {
     amazon_ses_send = factory.makeRequestResponseMonitor("fpm_amazon_ses_send");
@@ -51,5 +52,6 @@ public class FirstPartyMetrics {
     payrix_del_token = factory.makeRequestResponseMonitor("fpm_payrix_del_token");
     payrix_get_token = factory.makeRequestResponseMonitor("fpm_payrix_get_token");
     payrix_del_customer = factory.makeRequestResponseMonitor("fpm_payrix_del_customer");
+    discord_apicall = factory.makeRequestResponseMonitor("fpm_discord_apicall");
   }
 }
