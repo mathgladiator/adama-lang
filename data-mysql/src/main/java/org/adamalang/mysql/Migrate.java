@@ -30,23 +30,24 @@ public class Migrate {
       try (Connection _to = to.pool.getConnection()) {
       {
         status.table("directory");
-        String _walk = "SELECT `id`, `space`, `key`, `created`, `updated`, `head_seq`, `need_gc`, `type`, `region`, `machine`, `archive`, `deleted`, `delta_bytes`, `asset_bytes` FROM `" + from.databaseName + "`.`directory` ORDER BY `id`";
-        String _insert = "INSERT INTO `" + to.databaseName + "`.`directory` (`space`, `key`, `created`, `updated`, `head_seq`, `need_gc`, `type`, `region`, `machine`, `archive`, `deleted`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String _walk = "SELECT `id`, `space`, `key`, `created`, `updated`, `last_backup`, `head_seq`, `need_gc`, `type`, `region`, `machine`, `archive`, `deleted`, `delta_bytes`, `asset_bytes` FROM `" + from.databaseName + "`.`directory` ORDER BY `id`";
+        String _insert = "INSERT INTO `" + to.databaseName + "`.`directory` (`space`, `key`, `created`, `updated`, `last_backup`, `head_seq`, `need_gc`, `type`, `region`, `machine`, `archive`, `deleted`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         DataBase.walk(_from, (rs) -> {
           try (PreparedStatement _ins = _to.prepareStatement(_insert, Statement.RETURN_GENERATED_KEYS)) {
             _ins.setString(1, rs.getString(2));
             _ins.setString(2, rs.getString(3));
             _ins.setDate(3, rs.getDate(4));
             _ins.setDate(4, rs.getDate(5));
-            _ins.setInt(5, rs.getInt(6));
+            _ins.setDate(5, rs.getDate(6));
             _ins.setInt(6, rs.getInt(7));
             _ins.setInt(7, rs.getInt(8));
-            _ins.setString(8, rs.getString(9));
+            _ins.setInt(8, rs.getInt(9));
             _ins.setString(9, rs.getString(10));
             _ins.setString(10, rs.getString(11));
-            _ins.setInt(11, rs.getInt(12));
-            _ins.setLong(12, rs.getLong(13));
+            _ins.setString(11, rs.getString(12));
+            _ins.setInt(12, rs.getInt(13));
             _ins.setLong(13, rs.getLong(14));
+            _ins.setLong(14, rs.getLong(15));
             _ins.execute();
           }
         }, _walk);
@@ -103,8 +104,8 @@ public class Migrate {
       HashMap<Integer, Integer> _index_spaces = new HashMap<>();
       {
         status.table("spaces");
-        String _walk = "SELECT `id`, `owner`, `name`, `enabled`, `storage_bytes`, `plan`, `rxhtml`, `policy`, `hash`, `created`, `updated` FROM `" + from.databaseName + "`.`spaces` ORDER BY `id`";
-        String _insert = "INSERT INTO `" + to.databaseName + "`.`spaces` (`owner`, `name`, `enabled`, `storage_bytes`, `plan`, `rxhtml`, `policy`, `hash`, `created`, `updated`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String _walk = "SELECT `id`, `owner`, `name`, `enabled`, `storage_bytes`, `plan`, `rxhtml`, `policy`, `capacity`, `hash`, `created`, `updated` FROM `" + from.databaseName + "`.`spaces` ORDER BY `id`";
+        String _insert = "INSERT INTO `" + to.databaseName + "`.`spaces` (`owner`, `name`, `enabled`, `storage_bytes`, `plan`, `rxhtml`, `policy`, `capacity`, `hash`, `created`, `updated`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         DataBase.walk(_from, (rs) -> {
           try (PreparedStatement _ins = _to.prepareStatement(_insert, Statement.RETURN_GENERATED_KEYS)) {
             _ins.setInt(1, _index_emails.get(rs.getInt(2)));
@@ -115,8 +116,9 @@ public class Migrate {
             _ins.setString(6, rs.getString(7));
             _ins.setString(7, rs.getString(8));
             _ins.setString(8, rs.getString(9));
-            _ins.setDate(9, rs.getDate(10));
+            _ins.setString(9, rs.getString(10));
             _ins.setDate(10, rs.getDate(11));
+            _ins.setDate(11, rs.getDate(12));
             _ins.execute();
             _index_spaces.put(rs.getInt(1), DataBase.getInsertId(_ins));
           }
@@ -165,20 +167,22 @@ public class Migrate {
       }
       {
         status.table("domains");
-        String _walk = "SELECT `id`, `owner`, `space`, `key`, `route`, `domain`, `certificate`, `automatic`, `automatic_timestamp`, `created`, `updated` FROM `" + from.databaseName + "`.`domains` ORDER BY `id`";
-        String _insert = "INSERT INTO `" + to.databaseName + "`.`domains` (`owner`, `space`, `key`, `route`, `domain`, `certificate`, `automatic`, `automatic_timestamp`, `created`, `updated`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String _walk = "SELECT `id`, `owner`, `space`, `key`, `forward`, `route`, `domain`, `certificate`, `config`, `automatic`, `automatic_timestamp`, `created`, `updated` FROM `" + from.databaseName + "`.`domains` ORDER BY `id`";
+        String _insert = "INSERT INTO `" + to.databaseName + "`.`domains` (`owner`, `space`, `key`, `forward`, `route`, `domain`, `certificate`, `config`, `automatic`, `automatic_timestamp`, `created`, `updated`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         DataBase.walk(_from, (rs) -> {
           try (PreparedStatement _ins = _to.prepareStatement(_insert, Statement.RETURN_GENERATED_KEYS)) {
             _ins.setInt(1, _index_emails.get(rs.getInt(2)));
             _ins.setString(2, rs.getString(3));
             _ins.setString(3, rs.getString(4));
-            _ins.setInt(4, rs.getInt(5));
-            _ins.setString(5, rs.getString(6));
+            _ins.setString(4, rs.getString(5));
+            _ins.setInt(5, rs.getInt(6));
             _ins.setString(6, rs.getString(7));
-            _ins.setInt(7, rs.getInt(8));
-            _ins.setLong(8, rs.getLong(9));
-            _ins.setDate(9, rs.getDate(10));
-            _ins.setDate(10, rs.getDate(11));
+            _ins.setString(7, rs.getString(8));
+            _ins.setString(8, rs.getString(9));
+            _ins.setInt(9, rs.getInt(10));
+            _ins.setLong(10, rs.getLong(11));
+            _ins.setDate(11, rs.getDate(12));
+            _ins.setDate(12, rs.getDate(13));
             _ins.execute();
           }
         }, _walk);
@@ -192,6 +196,38 @@ public class Migrate {
             _ins.setString(1, rs.getString(2));
             _ins.setString(2, rs.getString(3));
             _ins.setString(3, rs.getString(4));
+            _ins.execute();
+          }
+        }, _walk);
+      }
+      {
+        status.table("vapid");
+        String _walk = "SELECT `id`, `domain`, `public_key`, `private_key` FROM `" + from.databaseName + "`.`vapid` ORDER BY `id`";
+        String _insert = "INSERT INTO `" + to.databaseName + "`.`vapid` (`domain`, `public_key`, `private_key`) VALUES (?, ?, ?)";
+        DataBase.walk(_from, (rs) -> {
+          try (PreparedStatement _ins = _to.prepareStatement(_insert, Statement.RETURN_GENERATED_KEYS)) {
+            _ins.setString(1, rs.getString(2));
+            _ins.setString(2, rs.getString(3));
+            _ins.setString(3, rs.getString(4));
+            _ins.execute();
+          }
+        }, _walk);
+      }
+      {
+        status.table("push");
+        String _walk = "SELECT `id`, `domain`, `agent`, `authority_hash`, `dedupe`, `authority`, `subscription`, `device_info`, `created`, `expiry` FROM `" + from.databaseName + "`.`push` ORDER BY `id`";
+        String _insert = "INSERT INTO `" + to.databaseName + "`.`push` (`domain`, `agent`, `authority_hash`, `dedupe`, `authority`, `subscription`, `device_info`, `created`, `expiry`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        DataBase.walk(_from, (rs) -> {
+          try (PreparedStatement _ins = _to.prepareStatement(_insert, Statement.RETURN_GENERATED_KEYS)) {
+            _ins.setString(1, rs.getString(2));
+            _ins.setString(2, rs.getString(3));
+            _ins.setString(3, rs.getString(4));
+            _ins.setString(4, rs.getString(5));
+            _ins.setString(5, rs.getString(6));
+            _ins.setString(6, rs.getString(7));
+            _ins.setString(7, rs.getString(8));
+            _ins.setDate(8, rs.getDate(9));
+            _ins.setDate(9, rs.getDate(10));
             _ins.execute();
           }
         }, _walk);
