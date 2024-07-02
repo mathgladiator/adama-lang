@@ -64,6 +64,7 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Template", LibTemplate.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Search", LibSearch.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Token", LibToken.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("HTML", LibHTML.class, pool.extensions));
 
     switch (runtime) {
       case Tooling:
