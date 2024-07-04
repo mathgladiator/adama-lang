@@ -44,7 +44,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'lookup'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'lookup'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pD(a),e,'lookup',f);");
     gold.append("\n      f();");
@@ -57,7 +57,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'value'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pI($.pD(a),'lookup'),e,'value',f);");
     gold.append("\n      f();");
@@ -70,7 +70,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'root'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'root'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pR($.pV(a)),e,'root',f);");
     gold.append("\n      f();");
@@ -83,7 +83,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'lookup'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'lookup'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pD(a),e,'lookup',f);");
     gold.append("\n      f();");
@@ -96,7 +96,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'value'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pI($.pD(a),'lookup'),e,'value',f);");
     gold.append("\n      f();");
@@ -109,7 +109,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'root'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'root'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pR($.pV(a)),e,'root',f);");
     gold.append("\n      f();");
@@ -135,7 +135,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'lookup'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'lookup'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pD(a),e,'lookup',f);");
     gold.append("\n      f();");
@@ -148,7 +148,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'value'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pI($.pD(a),'lookup'),e,'value',f);");
     gold.append("\n      f();");
@@ -161,7 +161,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'root'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'root'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pR($.pV(a)),e,'root',f);");
     gold.append("\n      f();");
@@ -174,7 +174,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'lookup'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'lookup'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pD(a),e,'lookup',f);");
     gold.append("\n      f();");
@@ -187,7 +187,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'value'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'value'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pI($.pD(a),'lookup'),e,'value',f);");
     gold.append("\n      f();");
@@ -200,7 +200,7 @@ public class TemplatePathWhiteSpaceTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'root'));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'root'));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y($.pR($.pV(a)),e,'root',f);");
     gold.append("\n      f();");

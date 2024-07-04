@@ -43,7 +43,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')<\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')<\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -56,7 +56,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')<=\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')<=\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -69,7 +69,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')==\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')==\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -82,7 +82,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')>=\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')>=\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -95,7 +95,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')>\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')>\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -120,7 +120,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')<\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')<\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -133,7 +133,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')<=\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')<=\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -146,7 +146,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')==\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')==\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -159,7 +159,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')>=\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')>=\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");
@@ -172,7 +172,7 @@ public class TemplateConditionsTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.F(this,'name')>\"val\")) ? (\" X \") : (\"\")));");
+    gold.append("\n        $.AC(this.__dom,((($.F(this,'name')>\"val\")) ? (\" X \") : (\"\")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'name',f);");
     gold.append("\n      f();");

@@ -353,9 +353,9 @@ public class Attributes {
     if (key.equalsIgnoreCase("href")) {
       env.writer.tab().append("$.HREF(").append(var).append(",").append(stateVar).append(",").append(expr).append(",").append(features.contains("merge") ? "true" : "false").append(");").newline();
     } else if (key.equalsIgnoreCase("class")) {
-      env.writer.tab().append("$.ACLASS(").append(var).append(",").append(expr).append(");").newline();
+      env.writer.tab().append("$.AC(").append(var).append(",").append(expr).append(");").newline();
     } else if (key.equalsIgnoreCase("src")) {
-      env.writer.tab().append("$.ASRC(").append(var).append(",").append(expr).append(");").newline();
+      env.writer.tab().append("$.AS(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && key.equalsIgnoreCase("value")) {
       env.writer.tab().append("$.SV(").append(var).append(",").append(expr).append(");").newline();
     } else if (hasValue && isBooleanInputValue(key) || isButton && keyIsDisabled) {
@@ -364,7 +364,12 @@ public class Attributes {
       if (isOption && "label".equalsIgnoreCase(key)) {
         env.writer.tab().append("$.SL(").append(var).append(",").append(expr).append(");").newline();
       } else {
-        env.writer.tab().append("$.SA(").append(var).append(",'").append(key).append("',").append(expr).append(");").newline();
+        String keyToUse = key;
+        if (keyToUse.startsWith("@")) {
+          // fix for https://alpinejs.dev/
+          keyToUse = "x-on:" + key.substring(1);
+        }
+        env.writer.tab().append("$.SA(").append(var).append(",'").append(keyToUse).append("',").append(expr).append(");").newline();
       }
     }
   }

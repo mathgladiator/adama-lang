@@ -44,7 +44,7 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'classy') + (($.F(this,'b')) ? (\" active \") : (\" inactive \")));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'classy') + (($.F(this,'b')) ? (\" active \") : (\" inactive \")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'b',f);");
     gold.append("\n      $.Y(a,e,'classy',f);");
@@ -74,7 +74,7 @@ public class TemplateSimpleAttrTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,$.F(this,'classy') + (($.F(this,'b')) ? (\" active \") : (\" inactive \")));");
+    gold.append("\n        $.AC(this.__dom,$.F(this,'classy') + (($.F(this,'b')) ? (\" active \") : (\" inactive \")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'b',f);");
     gold.append("\n      $.Y(a,e,'classy',f);");

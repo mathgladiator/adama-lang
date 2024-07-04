@@ -39,7 +39,7 @@ public class TemplateBigAttrEscapeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div class=\"`` foo[50px] {id} `\">");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.ACLASS(d,\" foo[50px] {id} \");");
+    gold.append("\n    $.AC(d,\" foo[50px] {id} \");");
     gold.append("\n    d.append($.T(' A big escape '));");
     gold.append("\n    b.append(d);");
     gold.append("\n");
@@ -69,7 +69,7 @@ public class TemplateBigAttrEscapeTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <div class=\"`` foo[50px] {id} `\">");
     gold.append("\n    var d=$.E('div');");
-    gold.append("\n    $.ACLASS(d,\" foo[50px] {id} \");");
+    gold.append("\n    $.AC(d,\" foo[50px] {id} \");");
     gold.append("\n    d.append($.T(' A big escape '));");
     gold.append("\n    b.append(d);");
     gold.append("\n");

@@ -4258,7 +4258,10 @@ var RxHTML = (function () {
     dom.setAttribute("class", value);
   };
   // RUNTIME | <... src="" ...>
-  self.ASRC = function (dom, value) {
+  self.AS = function (dom, value) {
+    dom.setAttribute("src", value);
+  };
+  self.ASRC = function (dom, value) { // to deprecate in the future
     dom.setAttribute("src", value);
   };
 

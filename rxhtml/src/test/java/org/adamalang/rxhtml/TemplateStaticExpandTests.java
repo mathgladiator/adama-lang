@@ -42,7 +42,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"G2\" href=\"/page/1\">");
     gold.append("\n    var g=$.E('a');");
-    gold.append("\n    $.ACLASS(g,\" G2 \");");
+    gold.append("\n    $.AC(g,\" G2 \");");
     gold.append("\n    $.HREF(g,b,\"/page/1\",false);");
     gold.append("\n    g.append($.T(' ['));");
     gold.append("\n    g.append($.T('Page 1'));");
@@ -59,7 +59,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"G3\" href=\"/page/2\">");
     gold.append("\n    var g=$.E('a');");
-    gold.append("\n    $.ACLASS(g,\" G3 \");");
+    gold.append("\n    $.AC(g,\" G3 \");");
     gold.append("\n    $.HREF(g,b,\"/page/2\",false);");
     gold.append("\n    g.append($.T(' ['));");
     gold.append("\n    g.append($.T('Page 2'));");
@@ -76,7 +76,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"major\" href=\"/page/3\">");
     gold.append("\n    var g=$.E('a');");
-    gold.append("\n    $.ACLASS(g,\" major \");");
+    gold.append("\n    $.AC(g,\" major \");");
     gold.append("\n    $.HREF(g,b,\"/page/3\",false);");
     gold.append("\n    g.append($.T(' ['));");
     gold.append("\n    g.append($.T('Page 3'));");
@@ -101,7 +101,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"G4\" href=\"/page/3/a\">");
     gold.append("\n    var i=$.E('a');");
-    gold.append("\n    $.ACLASS(i,\" G4 \");");
+    gold.append("\n    $.AC(i,\" G4 \");");
     gold.append("\n    $.HREF(i,b,\"/page/3/a\",false);");
     gold.append("\n    i.append($.T(' ['));");
     gold.append("\n    i.append($.T('Part A'));");
@@ -152,7 +152,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"G2\" href=\"/page/1\">");
     gold.append("\n    var g=$.E('a');");
-    gold.append("\n    $.ACLASS(g,\" G2 \");");
+    gold.append("\n    $.AC(g,\" G2 \");");
     gold.append("\n    $.HREF(g,b,\"/page/1\",false);");
     gold.append("\n    g.append($.T(' ['));");
     gold.append("\n    g.append($.T('Page 1'));");
@@ -169,7 +169,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"G3\" href=\"/page/2\">");
     gold.append("\n    var g=$.E('a');");
-    gold.append("\n    $.ACLASS(g,\" G3 \");");
+    gold.append("\n    $.AC(g,\" G3 \");");
     gold.append("\n    $.HREF(g,b,\"/page/2\",false);");
     gold.append("\n    g.append($.T(' ['));");
     gold.append("\n    g.append($.T('Page 2'));");
@@ -186,7 +186,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"major\" href=\"/page/3\">");
     gold.append("\n    var g=$.E('a');");
-    gold.append("\n    $.ACLASS(g,\" major \");");
+    gold.append("\n    $.AC(g,\" major \");");
     gold.append("\n    $.HREF(g,b,\"/page/3\",false);");
     gold.append("\n    g.append($.T(' ['));");
     gold.append("\n    g.append($.T('Page 3'));");
@@ -211,7 +211,7 @@ public class TemplateStaticExpandTests extends BaseRxHtmlTest {
     gold.append("\n");
     gold.append("\n    // <a class=\"G4\" href=\"/page/3/a\">");
     gold.append("\n    var i=$.E('a');");
-    gold.append("\n    $.ACLASS(i,\" G4 \");");
+    gold.append("\n    $.AC(i,\" G4 \");");
     gold.append("\n    $.HREF(i,b,\"/page/3/a\",false);");
     gold.append("\n    i.append($.T(' ['));");
     gold.append("\n    i.append($.T('Part A'));");

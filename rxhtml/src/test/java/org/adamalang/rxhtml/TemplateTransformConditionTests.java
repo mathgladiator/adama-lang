@@ -43,7 +43,7 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.TR('is_empty'))($.F(this,'x'))) ? (\" X is empty \") : (\" X is not empty \")));");
+    gold.append("\n        $.AC(this.__dom,((($.TR('is_empty'))($.F(this,'x'))) ? (\" X is empty \") : (\" X is not empty \")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");
@@ -69,7 +69,7 @@ public class TemplateTransformConditionTests extends BaseRxHtmlTest {
     gold.append("\n      var e={};");
     gold.append("\n      e.__dom=d;");
     gold.append("\n      var f=(function() {");
-    gold.append("\n        $.ACLASS(this.__dom,((($.TR('is_empty'))($.F(this,'x'))) ? (\" X is empty \") : (\" X is not empty \")));");
+    gold.append("\n        $.AC(this.__dom,((($.TR('is_empty'))($.F(this,'x'))) ? (\" X is empty \") : (\" X is not empty \")));");
     gold.append("\n      }).bind(e);");
     gold.append("\n      $.Y(a,e,'x',f);");
     gold.append("\n      f();");
