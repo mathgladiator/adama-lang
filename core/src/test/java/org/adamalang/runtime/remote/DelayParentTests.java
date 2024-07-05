@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.runtime.contracts.DelayParent;
 import org.junit.Assert;
 import org.junit.Test;
 

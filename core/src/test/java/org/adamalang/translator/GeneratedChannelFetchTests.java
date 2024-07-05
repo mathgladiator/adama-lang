@@ -107,6 +107,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.tables.*;");
     gold.append("\nimport org.adamalang.runtime.remote.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.replication.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
@@ -986,6 +987,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.tables.*;");
     gold.append("\nimport org.adamalang.runtime.remote.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.replication.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.cron.*;");
@@ -1878,6 +1880,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.reactives.tables.*;");
     gold.append("\nimport org.adamalang.runtime.remote.*;");
+    gold.append("\nimport org.adamalang.runtime.remote.replication.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
     gold.append("\nimport org.adamalang.runtime.sys.cron.*;");

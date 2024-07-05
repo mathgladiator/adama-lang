@@ -18,7 +18,7 @@
 package org.adamalang.runtime.sys.web;
 
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.remote.DelayParent;
+import org.adamalang.runtime.contracts.DelayParent;
 import org.adamalang.runtime.remote.RxCache;
 
 public class EphemeralWebGet {

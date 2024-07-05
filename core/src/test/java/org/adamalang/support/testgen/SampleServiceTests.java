@@ -15,31 +15,34 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.sys.web;
+package org.adamalang.support.testgen;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.contracts.DelayParent;
-import org.adamalang.runtime.remote.RxCache;
+import org.adamalang.support.testgen.SampleService;
+import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class EphemeralWebGetTests {
+public class SampleServiceTests {
   @Test
-  public void trivial() {
-    EphemeralWebGet ewg = new EphemeralWebGet(new RxCache(null, null), new WebGet(new WebContext(NtPrincipal.NO_ONE, "origin", "ip"), "uri", new TreeMap<>(), new NtDynamic("{}")), new Callback<WebResponse>() {
+  public void coverage() {
+    SampleService ss = new SampleService();
+    AtomicBoolean called = new AtomicBoolean(false);
+    ss.request(NtPrincipal.NO_ONE, "method", "{}", new Callback<String>() {
       @Override
-      public void success(WebResponse value) {
-
+      public void success(String value) {
+        Assert.fail();
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-
+        called.set(true);
+        Assert.assertEquals(888888, ex.code);
       }
-    }, new DelayParent());
+    });
+    Assert.assertTrue(called.get());
   }
 }

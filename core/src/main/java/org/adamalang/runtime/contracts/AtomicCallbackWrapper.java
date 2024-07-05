@@ -15,33 +15,32 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote;
+package org.adamalang.runtime.contracts;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.natives.NtPrincipal;
-import org.junit.Assert;
-import org.junit.Test;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+/** an attomic callback for swapping out the end path */
+public class AtomicCallbackWrapper<T> implements Callback<T> {
+  private Callback<T> ref;
 
-public class SampleServiceTests {
-  @Test
-  public void coverage() {
-    SampleService ss = new SampleService();
-    AtomicBoolean called = new AtomicBoolean(false);
-    ss.request(NtPrincipal.NO_ONE, "method", "{}", new Callback<String>() {
-      @Override
-      public void success(String value) {
-        Assert.fail();
-      }
+  public AtomicCallbackWrapper(Callback<T> initial) {
+    this.ref = initial;
+  }
 
-      @Override
-      public void failure(ErrorCodeException ex) {
-        called.set(true);
-        Assert.assertEquals(888888, ex.code);
-      }
-    });
-    Assert.assertTrue(called.get());
+  @Override
+  public synchronized void success(T value) {
+    ref.success(value);
+  }
+
+  @Override
+  public synchronized void failure(ErrorCodeException ex) {
+    ref.failure(ex);
+  }
+
+  public synchronized Callback<T> set(Callback<T> v) {
+    Callback<T> prior = this.ref;
+    this.ref = v;
+    return prior;
   }
 }

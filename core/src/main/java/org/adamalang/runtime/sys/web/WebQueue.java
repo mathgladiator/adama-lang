@@ -21,7 +21,7 @@ import org.adamalang.runtime.async.EphemeralFuture;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.reactives.RxInt32;
-import org.adamalang.runtime.remote.DelayParent;
+import org.adamalang.runtime.contracts.DelayParent;
 import org.adamalang.runtime.remote.RxCache;
 import org.adamalang.runtime.sys.LivingDocument;
 

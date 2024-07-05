@@ -15,11 +15,12 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote;
+package org.adamalang.runtime.remote.replication;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtResult;
+import org.adamalang.runtime.remote.RxCache;
 import org.adamalang.runtime.sys.LivingDocument;
 
 public class ReplicationStatus {

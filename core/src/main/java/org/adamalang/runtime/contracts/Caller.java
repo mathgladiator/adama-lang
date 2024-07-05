@@ -15,32 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote;
+package org.adamalang.runtime.contracts;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.remote.Deliverer;
 
-/** an attomic callback for swapping out the end path */
-public class AtomicCallbackWrapper<T> implements Callback<T> {
-  private Callback<T> ref;
+/** Just enough information about the caller to be dangerous */
+public interface Caller {
+  /** get the pathway to deliver a message */
+  Deliverer __getDeliverer();
 
-  public AtomicCallbackWrapper(Callback<T> initial) {
-    this.ref = initial;
-  }
+  /** the key of the document making the call */
+  String __getKey();
 
-  @Override
-  public synchronized void success(T value) {
-    ref.success(value);
-  }
-
-  @Override
-  public synchronized void failure(ErrorCodeException ex) {
-    ref.failure(ex);
-  }
-
-  public synchronized Callback<T> set(Callback<T> v) {
-    Callback<T> prior = this.ref;
-    this.ref = v;
-    return prior;
-  }
+  /** the space of the document making the call */
+  String __getSpace();
 }

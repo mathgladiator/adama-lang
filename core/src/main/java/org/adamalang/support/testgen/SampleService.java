@@ -15,12 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote;
+package org.adamalang.support.testgen;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.SimpleService;
 
 import java.util.HashSet;
 import java.util.function.Consumer;

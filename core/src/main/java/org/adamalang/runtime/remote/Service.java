@@ -18,7 +18,7 @@
 package org.adamalang.runtime.remote;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.runtime.natives.NtMessageBase;
+import org.adamalang.runtime.contracts.Caller;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.natives.NtToDynamic;
