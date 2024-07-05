@@ -324,7 +324,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     this.__key = key;
     this.__deliverer = deliverer;
     __link(registry);
-    __bindReplication();
     if (registry instanceof TestMockUniverse) {
       // this is related to testing such that blocks can play with services
       __mock_universe = (TestMockUniverse) registry;
@@ -332,8 +331,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   protected abstract void __link(ServiceRegistry registry);
-
-  protected abstract void __bindReplication();
 
   public abstract String __metrics();
 

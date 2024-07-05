@@ -692,8 +692,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
-    gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
@@ -1775,8 +1773,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
@@ -3015,8 +3011,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
-    gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
@@ -3808,8 +3802,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
@@ -4612,8 +4604,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
@@ -5627,8 +5617,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
@@ -6748,8 +6736,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
-    gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
@@ -7720,8 +7706,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
-    gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
@@ -8546,8 +8530,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
@@ -9579,8 +9561,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");

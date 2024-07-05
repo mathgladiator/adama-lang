@@ -596,8 +596,6 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
-    gold.append("\n  @Override");
     gold.append("\n  public String __metrics() {");
     gold.append("\n    JsonStreamWriter __writer = new JsonStreamWriter();");
     gold.append("\n    __writer.beginObject();");
@@ -1315,8 +1313,6 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
-    gold.append("\n  @Override");
     gold.append("\n  public String __metrics() {");
     gold.append("\n    JsonStreamWriter __writer = new JsonStreamWriter();");
     gold.append("\n    __writer.beginObject();");
@@ -1967,8 +1963,6 @@ public class GeneratedMetricsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __bindReplication() {}");
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() {");
     gold.append("\n    JsonStreamWriter __writer = new JsonStreamWriter();");

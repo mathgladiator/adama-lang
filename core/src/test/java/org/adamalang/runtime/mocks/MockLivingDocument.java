@@ -112,10 +112,6 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __bindReplication() {
-  }
-
-  @Override
   public String __getViewStateFilter() {
     return "[]";
   }
