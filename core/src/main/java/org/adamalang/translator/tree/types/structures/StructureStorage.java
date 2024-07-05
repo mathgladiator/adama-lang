@@ -27,13 +27,17 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.definitions.FunctionArg;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.privacy.Policy;
+import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
+import org.adamalang.translator.tree.types.reactive.TyReactiveString;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -243,6 +247,8 @@ public class StructureStorage extends DocumentPosition {
       return;
     }
     replications.put(rd.name.text, rd);
+    FieldDefinition fdReplicationStatus = new FieldDefinition(new PrivatePolicy(rd.name), null, new TyReactiveString(false, rd.name), rd.name.cloneWithNewText("__rs_" + rd.name.text), null, null, null, null, null, null, null);
+    insertField(fdReplicationStatus, fe, checker);
   }
 
   public void add(final ReplicationDefinition rd) {
@@ -324,21 +330,7 @@ public class StructureStorage extends DocumentPosition {
     addCommon(fd, FreeEnvironment.root(), checker);
   }
 
-  public void addCommon(final FieldDefinition fd, FreeEnvironment fe, TypeChecker insertChecker) {
-    emissions.add(emit -> fd.emit(emit));
-    formatting.add(f -> fd.format(f));
-    ingest(fd);
-
-    if (has(fd.nameToken.text)) {
-      insertChecker.issueError(fd, String.format("Field '%s' was already defined", fd.nameToken.text));
-      return;
-    }
-    if (fd.defaultValueOverride != null) {
-      fieldsWithDefaults.add(fd.name);
-    }
-    if (fd.computeExpression != null) {
-      fd.computeExpression.free(fe);
-    }
+  private void insertField(final FieldDefinition fd, FreeEnvironment fe, TypeChecker insertChecker) {
     insertChecker.define(fd.nameToken, fe.free, env -> {
       fd.typing(env.watch(Watcher.makeAuto(env, fd.watching)), this);
       env.define(fd.name, fd.type, false, fd);
@@ -349,6 +341,23 @@ public class StructureStorage extends DocumentPosition {
     } else {
       fieldsByOrder.add(fd);
     }
+  }
+
+  public void addCommon(final FieldDefinition fd, FreeEnvironment fe, TypeChecker insertChecker) {
+    emissions.add(emit -> fd.emit(emit));
+    formatting.add(f -> fd.format(f));
+    ingest(fd);
+    if (has(fd.nameToken.text)) {
+      insertChecker.issueError(fd, String.format("Field '%s' was already defined", fd.nameToken.text));
+      return;
+    }
+    if (fd.defaultValueOverride != null) {
+      fieldsWithDefaults.add(fd.name);
+    }
+    if (fd.computeExpression != null) {
+      fd.computeExpression.free(fe);
+    }
+    insertField(fd, fe, insertChecker);
   }
 
   public void add(final IndexDefinition indexDefn) {

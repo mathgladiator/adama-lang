@@ -21,6 +21,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.AtomicCallbackWrapper;
 import org.adamalang.runtime.contracts.Caller;
+import org.adamalang.runtime.contracts.InstantCallbackWrapper;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;

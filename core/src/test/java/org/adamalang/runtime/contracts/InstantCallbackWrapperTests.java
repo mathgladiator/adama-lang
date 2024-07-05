@@ -15,39 +15,27 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote;
+package org.adamalang.runtime.contracts;
 
-import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.InstantCallbackWrapper;
+import org.junit.Assert;
+import org.junit.Test;
 
-
-/** experimental callback wrapper to instantly detect a return value */
-public class InstantCallbackWrapper implements Callback<String> {
-  private String value;
-  private ErrorCodeException exception;
-
-  public InstantCallbackWrapper() {
-    this.value = null;
-    this.exception = null;
+public class InstantCallbackWrapperTests {
+  @Test
+  public void happy() {
+    InstantCallbackWrapper wrapper = new InstantCallbackWrapper();
+    Assert.assertNull(wrapper.convert());
+    wrapper.success("xyz");
+    Assert.assertEquals("xyz", wrapper.convert().result);
   }
 
-  @Override
-  public void success(String value) {
-    this.value = value;
-  }
-
-  @Override
-  public void failure(ErrorCodeException ex) {
-    this.exception = ex;
-  }
-
-  public RemoteResult convert() {
-    if (value != null) {
-      return new RemoteResult(value, null, null);
-    } else if (exception != null) {
-      return new RemoteResult(null, "" + exception.getMessage(), exception.code);
-    } else {
-      return null;
-    }
+  @Test
+  public void sad() {
+    InstantCallbackWrapper wrapper = new InstantCallbackWrapper();
+    Assert.assertNull(wrapper.convert());
+    wrapper.failure(new ErrorCodeException(-13));
+    Assert.assertEquals(-13, (int) wrapper.convert().failureCode);
   }
 }

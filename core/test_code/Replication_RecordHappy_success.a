@@ -1,0 +1,17 @@
+message SyncRequest {
+  int x;
+}
+
+service sms {
+  internal = "twilio.com";
+
+  replication<SyncRequest> m;
+}
+
+record R {
+  replication<sms:m> foo = {x:123};
+  public int z = 123;
+  replication<sms:m> foo_z = {x:z};
+}
+
+table<R> tbl;

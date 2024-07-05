@@ -1434,7 +1434,7 @@ public class Parser {
   }
 
   private Token popIfRecordToken() throws AdamaLangException {
-    return tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join", "ingested"));
+    return tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index", "join", "ingested", "replication"));
   }
 
   public Consumer<TopLevelDocumentHandler> define_record_trailer(final Token recordToken) throws AdamaLangException {
@@ -1469,6 +1469,9 @@ public class Parser {
             break;
           case "ingested":
             storage.setPostIngestion(op, block(scope.makeIngestionHandler()));
+            break;
+          case "replication":
+            storage.add(define_replication(scope, op));
             break;
         }
         op = popIfRecordToken();
