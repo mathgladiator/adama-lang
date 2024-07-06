@@ -27,6 +27,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.ReplicationDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.DetailNeedsSettle;
@@ -382,6 +383,13 @@ public class CodeGenRecords {
       }
     }
     CodeGenJoins.writeJoins(storage, classLinker, environment);
+
+    // TODO: replications
+    for (Map.Entry<String, ReplicationDefinition> replicationEntry : storage.replications.entrySet()) {
+      classFields.append("private final ReplicationStateMachine __rsm_").append(replicationEntry.getKey()).append(";").writeNewline();
+      classConstructorX.append("__rsm_").append(replicationEntry.getKey()).append(" = new ReplicationStateMachine(__replication, this, __rs_").append(replicationEntry.getKey()).append(",\"").append(replicationEntry.getKey()).append("\");").writeNewline();
+      classLinker.append("__rsm_").append(replicationEntry.getKey()).append(".link();").writeNewline();
+    }
   }
 
   public static void writeFieldOf(final StructureStorage storage, final StringBuilderWithTabs sb) {

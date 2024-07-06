@@ -940,10 +940,6 @@ public abstract class LivingDocument implements RxParent, Caller {
     __replication.load(reader);
   }
 
-  protected RxInvalidate __setupReplication(String name, Service service, String method, Supplier<NtToDynamic> value) {
-    return __replication.init(this, name, service, method, value);
-  }
-
   protected void __hydrateClients(final JsonStreamReader reader) {
     final var killSet = new HashSet<Integer>();
     if (reader.startObject()) {

@@ -17,21 +17,30 @@
 */
 package org.adamalang.runtime.remote.replication;
 
-import org.adamalang.common.Hashing;
-import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.natives.NtPrincipal;
-import org.adamalang.runtime.natives.NtToDynamic;
-import org.adamalang.runtime.contracts.Caller;
-import org.adamalang.runtime.remote.RxInvalidate;
-import org.adamalang.runtime.remote.Service;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.util.function.Supplier;
+import org.adamalang.runtime.reactives.RxString;
 
 public class ReplicationStateMachine {
   private static final NtPrincipal WHO = new NtPrincipal("replication", "adama-host");
+  private final ReplicationEngine engine;
+  private final RxParent parent;
+  private final RxString lastHash;
+  private final String name;
+  private boolean dirty;
+
+  public ReplicationStateMachine(ReplicationEngine engine, RxParent parent, RxString lastHash, String name) {
+    this.engine = engine;
+    this.parent = parent;
+    this.lastHash = lastHash;
+    this.name = name;
+    this.dirty = true;
+  }
+
+  public void link() {
+  }
+
+  /*
   public final RxInvalidate invalidated;
   public final Caller caller;
   public final String name;
@@ -72,4 +81,5 @@ public class ReplicationStateMachine {
       }
     }
   }
+  */
 }

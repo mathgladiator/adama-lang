@@ -225,6 +225,7 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\nimport java.util.Set;");
     gold.append("\npublic class Dynamic_4 extends LivingDocument {");
     gold.append("\n  private final RxString __rs_foo;");
+    gold.append("\n  private final ReplicationStateMachine __rsm_foo;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -234,6 +235,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n  public Dynamic_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __rs_foo = new RxString(this, \"\");");
+    gold.append("\n    __rsm_foo = new ReplicationStateMachine(__replication, this, __rs_foo,\"foo\");");
+    gold.append("\n    __rsm_foo.link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -989,6 +992,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n  private final RxString __rs_foo;");
     gold.append("\n  private final RxInt32 z;");
     gold.append("\n  private final RxString __rs_foo_z;");
+    gold.append("\n  private final ReplicationStateMachine __rsm_foo;");
+    gold.append("\n  private final ReplicationStateMachine __rsm_foo_z;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -1002,6 +1007,10 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    __rs_foo = new RxString(this, \"\");");
     gold.append("\n    z = new RxInt32(this, 123);");
     gold.append("\n    __rs_foo_z = new RxString(this, \"\");");
+    gold.append("\n    __rsm_foo = new ReplicationStateMachine(__replication, this, __rs_foo,\"foo\");");
+    gold.append("\n    __rsm_foo_z = new ReplicationStateMachine(__replication, this, __rs_foo_z,\"foo_z\");");
+    gold.append("\n    __rsm_foo.link();");
+    gold.append("\n    __rsm_foo_z.link();");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -2296,6 +2305,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    private final RxString __rs_foo;");
     gold.append("\n    private final RxInt32 z;");
     gold.append("\n    private final RxString __rs_foo_z;");
+    gold.append("\n    private final ReplicationStateMachine __rsm_foo;");
+    gold.append("\n    private final ReplicationStateMachine __rsm_foo_z;");
     gold.append("\n    private RTxR(RxParent __owner) {");
     gold.append("\n      super(__owner);");
     gold.append("\n      this.__this = this;");
@@ -2303,6 +2314,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n      __rs_foo = new RxString(this, \"\");");
     gold.append("\n      z = new RxInt32(this, 123);");
     gold.append("\n      __rs_foo_z = new RxString(this, \"\");");
+    gold.append("\n      __rsm_foo = new ReplicationStateMachine(__replication, this, __rs_foo,\"foo\");");
+    gold.append("\n      __rsm_foo_z = new ReplicationStateMachine(__replication, this, __rs_foo_z,\"foo_z\");");
     gold.append("\n      if (__owner instanceof RxTable) {");
     gold.append("\n        /* ok */");
     gold.append("\n      } else {");
@@ -2439,6 +2452,8 @@ public class GeneratedReplicationTests extends GeneratedBase {
     gold.append("\n    public void __writeRxReport(JsonStreamWriter __writer) { }");
     gold.append("\n    @Override");
     gold.append("\n    public RTxR __link() {");
+    gold.append("\n      __rsm_foo.link();");
+    gold.append("\n      __rsm_foo_z.link();");
     gold.append("\n      return this;");
     gold.append("\n    }");
     gold.append("\n    @Override");
