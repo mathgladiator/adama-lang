@@ -17,10 +17,12 @@
 */
 package org.adamalang.runtime.remote;
 
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.Caller;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.natives.NtToDynamic;
+import org.adamalang.runtime.remote.replication.Replicator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,6 +55,16 @@ public class ServiceRegistryTests {
     @Override
     public <T> NtResult<T> invoke(Caller caller, String method, RxCache cache, NtPrincipal agent, NtToDynamic request, Function<String, T> result) {
       return null;
+    }
+
+    @Override
+    public Replicator beginCreateReplica(String method, NtToDynamic body) {
+      return null;
+    }
+
+    @Override
+    public void deleteReplica(String method, String key, Callback<Void> callback) {
+
     }
   }
 

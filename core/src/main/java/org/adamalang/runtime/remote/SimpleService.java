@@ -26,6 +26,7 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.natives.NtToDynamic;
+import org.adamalang.runtime.remote.replication.Replicator;
 
 import java.util.function.Function;
 
@@ -69,4 +70,14 @@ public abstract class SimpleService implements Service {
   }
 
   public abstract void request(NtPrincipal who, String method, String request, Callback<String> callback);
+
+  @Override
+  public Replicator beginCreateReplica(String method, NtToDynamic body) {
+    return null;
+  }
+
+  @Override
+  public void deleteReplica(String method, String key, Callback<Void> callback) {
+    Service.UNAVAILABLE.complete(callback);
+  }
 }

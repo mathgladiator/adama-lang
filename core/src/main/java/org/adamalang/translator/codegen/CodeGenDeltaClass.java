@@ -23,10 +23,7 @@ import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.*;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
-import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
-import org.adamalang.translator.tree.types.reactive.TyReactiveText;
+import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -264,7 +261,7 @@ public class CodeGenDeltaClass {
   }
 
   private static void writeShowData(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType sourceType, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
-    if (sourceType instanceof TySimpleNative || sourceType instanceof TyReactiveRecord || sourceType instanceof TyNativeMessage || sourceType instanceof TyReactiveText) {
+    if (sourceType instanceof TySimpleNative || sourceType instanceof TyReactiveRecord || sourceType instanceof TyNativeMessage || sourceType instanceof TyReactiveText || sourceType instanceof TyReactiveReplicationStatus) {
       sb.append(deltaObject).append(".show(").append(sourceData).append(", ").append(targetObjectWriter).append(");");
       if (tabDown) {
         sb.tabDown();

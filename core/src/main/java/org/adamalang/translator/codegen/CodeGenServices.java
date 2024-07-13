@@ -43,20 +43,43 @@ public class CodeGenServices {
       sb.append("@Override").writeNewline();
       sb.append("public void __link(ServiceRegistry __registry) {}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("public void __executeServiceCalls(boolean cancel) {}").writeNewline();
+      sb.append("public Service __findService(String __name) { return null; }").writeNewline();
     } else {
       for (Map.Entry<String, DefineService> serviceEntry : environment.document.services.entrySet()) {
         sb.append("protected Service ").append(serviceEntry.getKey()).append(";").writeNewline();
       }
-      sb.append("@Override").writeNewline();
-      sb.append("public void __link(ServiceRegistry __registry) {").tabUp().writeNewline();
-      for (Map.Entry<String, DefineService> serviceEntry : environment.document.services.entrySet()) {
-        sb.append(serviceEntry.getKey()).append(" = __registry.find(\"").append(serviceEntry.getKey()).append("\");").writeNewline();
+      {
+        int countdown = environment.document.services.size();
+        sb.append("@Override").writeNewline();
+        sb.append("public void __link(ServiceRegistry __registry) {").tabUp().writeNewline();
+        for (Map.Entry<String, DefineService> serviceEntry : environment.document.services.entrySet()) {
+          sb.append(serviceEntry.getKey()).append(" = __registry.find(\"").append(serviceEntry.getKey()).append("\");");
+          countdown--;
+          if (countdown == 0) {
+            sb.tabDown();
+          }
+          sb.writeNewline();
+        }
+        sb.append("}").writeNewline();
       }
-      sb.append(" /* not done yet */").tabDown().writeNewline();
-      sb.append("}").writeNewline();
-      sb.append("@Override").writeNewline();
-      sb.append("public void __executeServiceCalls(boolean cancel) {}").writeNewline();
+      {
+        int countdown = environment.document.services.size();
+        sb.append("@Override").writeNewline();
+        sb.append("public Service __findService(String __name) {").tabUp().writeNewline();
+        sb.append("switch (__name) {").tabUp().writeNewline();
+        for (Map.Entry<String, DefineService> serviceEntry : environment.document.services.entrySet()) {
+          sb.append("case \"").append(serviceEntry.getKey()).append("\":").tabUp().writeNewline();
+          sb.append("return ").append(serviceEntry.getKey()).append(";").tabDown();
+          countdown--;
+          if (countdown == 0) {
+            sb.tabDown();
+          }
+          sb.writeNewline();
+        }
+        sb.append("}").writeNewline();
+        sb.append("return null;").tabDown().writeNewline();
+        sb.append("}").writeNewline();
+      }
     }
   }
 }

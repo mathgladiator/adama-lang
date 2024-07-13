@@ -37,6 +37,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
+import org.adamalang.translator.tree.types.reactive.TyReactiveReplicationStatus;
 import org.adamalang.translator.tree.types.reactive.TyReactiveString;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
@@ -239,15 +240,17 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(e -> rd.emit(e));
     formatting.add(f -> rd.format(f));
     ingest(rd);
+    if (has(rd.name.text)) {
+      checker.issueError(rd, String.format("Replication field has a name ('%s') that was already defined", rd.name.text));
+      return;
+    }
     rd.expression.free(fe);
     fe.free.add("service:" + rd.service.text);
     checker.register(fe.free, env -> rd.typing(env.watch(Watcher.makeAutoSimple(env, rd.variablesToWatch, rd.servicesToWatch))));
-    if (has(rd.name.text)) {
-      checker.issueError(rd, String.format("Replication '%s' was already defined", rd.name.text));
-      return;
-    }
     replications.put(rd.name.text, rd);
-    FieldDefinition fdReplicationStatus = new FieldDefinition(new PrivatePolicy(rd.name), null, new TyReactiveString(false, rd.name), rd.name.cloneWithNewText("__rs_" + rd.name.text), null, null, null, null, null, null, null);
+    FieldDefinition fdReplicationExpression = new FieldDefinition(new PrivatePolicy(rd.name), rd.name, null, rd.name.cloneWithNewText("__" + rd.name + "__value"), null, rd.name, rd.expression, null, null, null, null);
+    insertField(fdReplicationExpression, fe, checker);
+    FieldDefinition fdReplicationStatus = new FieldDefinition(new PrivatePolicy(rd.name), null, new TyReactiveReplicationStatus(rd), rd.name.cloneWithNewText(rd.name.text), null, null, null, null, null, null, null);
     insertField(fdReplicationStatus, fe, checker);
   }
 

@@ -18,6 +18,7 @@
 package org.adamalang.runtime.contracts;
 
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.Service;
 
 /** Just enough information about the caller to be dangerous */
 public interface Caller {
@@ -29,4 +30,7 @@ public interface Caller {
 
   /** the space of the document making the call */
   String __getSpace();
+
+  /** find a service by name */
+  Service __findService(String name);
 }

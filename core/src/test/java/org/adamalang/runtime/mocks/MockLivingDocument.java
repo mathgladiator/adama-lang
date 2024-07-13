@@ -28,6 +28,7 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
@@ -107,6 +108,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public Service __findService(String name) {
+    return null;
+  }
+
+  @Override
   public AuthResponse __authpipe(CoreRequestContext __context, String __messsage) {
     return null;
   }
@@ -119,10 +125,6 @@ public class MockLivingDocument extends LivingDocument {
   @Override
   public boolean __open_channel(String name) {
     return false;
-  }
-
-  @Override
-  protected void __executeServiceCalls(boolean cancel) {
   }
 
   @Override

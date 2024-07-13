@@ -17,5 +17,12 @@
 */
 package org.adamalang.runtime.remote.replication;
 
-public class ReplicationStateMachineTests {
+import org.adamalang.common.Callback;
+
+
+public interface Replicator {
+
+  public String key();
+
+  public void complete(Callback<Void> callback);
 }

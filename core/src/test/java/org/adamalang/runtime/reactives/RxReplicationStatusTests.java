@@ -15,7 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.remote.replication;
+package org.adamalang.runtime.reactives;
 
-public class ReplicationStatusTests {
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class RxReplicationStatusTests {
+  @Test
+  public void dump_after_create() {
+    RxReplicationStatus status = new RxReplicationStatus(null, new RxInt64(null, 10000), "service", "method");
+    JsonStreamWriter writer = new JsonStreamWriter();
+    status.__dump(writer);
+    Assert.assertEquals("{\"state\":100}", writer.toString());
+  }
 }

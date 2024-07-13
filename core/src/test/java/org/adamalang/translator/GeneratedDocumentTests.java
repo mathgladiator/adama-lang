@@ -605,7 +605,8 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"r\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"r\");");
     gold.append("\n    r.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"z2\");");
     gold.append("\n    z2.__dump(__writer);");
@@ -1155,7 +1156,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");

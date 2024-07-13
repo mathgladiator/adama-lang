@@ -958,6 +958,8 @@ public class ErrorTable {
     descriptions.put(721095, "no description of error (yet)");
     names.put(716993, "MULTI_REGION_CLIENT_NO_ROUTE");
     descriptions.put(716993, "no description of error (yet)");
+    names.put(781507, "REPLICATION_NOT_AVAILABLE");
+    descriptions.put(781507, "no description of error (yet)");
     names.put(707675, "CARAVAN_KEY_NOT_LOADED_PATCH");
     descriptions.put(707675, "no description of error (yet)");
     names.put(790622, "CARAVAN_KEY_NOT_LOADED_COMPUTE");

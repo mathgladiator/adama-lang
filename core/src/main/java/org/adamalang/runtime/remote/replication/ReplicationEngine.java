@@ -22,33 +22,26 @@ import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtToDynamic;
-import org.adamalang.runtime.contracts.Caller;
-import org.adamalang.runtime.remote.RxInvalidate;
-import org.adamalang.runtime.remote.Service;
+import org.adamalang.runtime.reactives.RxLazy;
+import org.adamalang.runtime.reactives.RxReplicationStatus;
 import org.adamalang.runtime.sys.LivingDocument;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.ArrayList;
 
+/** engine to replicate data */
 public class ReplicationEngine implements DeleteTask  {
   private final LivingDocument parent;
-  private final HashMap<String, ReplicationStateMachine> machines;
-  private final HashMap<String, ReplicationStatus> status;
+  private final ArrayList<RxReplicationStatus> tasks;
 
   public ReplicationEngine(LivingDocument parent) {
     this.parent = parent;
-    this.machines = new HashMap<>();
-    this.status = new HashMap<>();
+    this.tasks = new ArrayList<>();
   }
 
-  protected ReplicationStatus getOrCreateStatus(String name) {
-    ReplicationStatus value = status.get(name);
-    if (value == null) {
-      value = new ReplicationStatus(parent);
-      status.put(name, value);
-    }
-    return value;
+  public void link(RxReplicationStatus status, RxLazy<? extends NtToDynamic> value) {
+    tasks.add(status);
+    value.__subscribe(status);
+    status.linkToValue(value);
   }
 
   public void load(JsonStreamReader reader) {
@@ -56,7 +49,7 @@ public class ReplicationEngine implements DeleteTask  {
       while (reader.notEndOfObject()) {
         String name = reader.fieldName();
         if (reader.testLackOfNull()) {
-          getOrCreateStatus(name).read(reader);
+          reader.skipValue();
         }
       }
     }
@@ -64,25 +57,18 @@ public class ReplicationEngine implements DeleteTask  {
 
   public void dump(JsonStreamWriter writer) {
     writer.beginObject();
-    for (Map.Entry<String, ReplicationStatus> entry : status.entrySet()) {
-      writer.writeObjectFieldIntro(entry.getKey());
-      entry.getValue().dump(writer);
-    }
     writer.endObject();
   }
 
   public void commit(JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     boolean commitDirty = false;
-    for (Map.Entry<String, ReplicationStatus> entry : status.entrySet()) {
-      if (entry.getValue().peekDirty()) {
-        commitDirty = true;
-      }
-    }
     if (commitDirty) {
       forwardDelta.writeObjectFieldIntro("__replication");
       forwardDelta.beginObject();
       reverseDelta.writeObjectFieldIntro("__replication");
       reverseDelta.beginObject();
+
+      /*
       for (Map.Entry<String, ReplicationStatus> entry : status.entrySet()) {
         if (entry.getValue().getAndClearDirty()) {
           forwardDelta.writeObjectFieldIntro(entry.getKey());
@@ -91,6 +77,7 @@ public class ReplicationEngine implements DeleteTask  {
           reverseDelta.writeNull();
         }
       }
+      */
       forwardDelta.endObject();
       reverseDelta.endObject();
     }
@@ -98,6 +85,7 @@ public class ReplicationEngine implements DeleteTask  {
 
   @Override
   public void executeAfterMark(Callback<Void> callback) {
+    // TODO: execute deletes
     callback.success(null);
   }
 }

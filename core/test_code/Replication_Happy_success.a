@@ -13,3 +13,5 @@ replication<sms:m> foo = {x:123};
 
 public int z = 123;
 replication<sms:m> foo_z = {x:z};
+
+public formula foo_z_status = foo_z;

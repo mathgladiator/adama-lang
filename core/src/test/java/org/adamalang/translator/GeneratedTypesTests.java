@@ -390,7 +390,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"b\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"b\");");
     gold.append("\n    b.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
@@ -614,7 +615,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -1224,7 +1225,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"b1\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"b1\");");
     gold.append("\n    b1.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"b2\");");
     gold.append("\n    b2.__dump(__writer);");
@@ -1535,7 +1537,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -2116,7 +2118,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"__state\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
     gold.append("\n    __constructed.__dump(__writer);");
@@ -2439,7 +2442,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -2954,7 +2957,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n    y.__dump(__writer);");
@@ -3190,7 +3194,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -3668,7 +3672,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n    y.__dump(__writer);");
@@ -3935,7 +3940,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -4435,7 +4440,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n    y.__dump(__writer);");
@@ -4667,7 +4673,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -5164,7 +5170,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"ptr\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"ptr\");");
     gold.append("\n    ptr.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"output\");");
     gold.append("\n    output.__dump(__writer);");
@@ -5396,7 +5403,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -5935,7 +5942,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n    y.__dump(__writer);");
@@ -6163,7 +6171,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -6709,7 +6717,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"d1\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"d1\");");
     gold.append("\n    d1.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"d3\");");
     gold.append("\n    d3.__dump(__writer);");
@@ -6979,7 +6988,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -7526,7 +7535,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"check1\");");
     gold.append("\n    check1.__dump(__writer);");
@@ -7841,7 +7851,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -8318,7 +8328,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"a\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"a\");");
     gold.append("\n    a.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"b\");");
     gold.append("\n    b.__dump(__writer);");
@@ -8546,7 +8557,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -9035,7 +9046,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"assign\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"assign\");");
     gold.append("\n    assign.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"hex\");");
     gold.append("\n    hex.__dump(__writer);");
@@ -9263,7 +9275,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -9804,7 +9816,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"md\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"md\");");
     gold.append("\n    md.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"mi\");");
     gold.append("\n    mi.__dump(__writer);");
@@ -10070,7 +10083,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -10648,7 +10661,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"s1\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"s1\");");
     gold.append("\n    s1.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"s2\");");
     gold.append("\n    s2.__dump(__writer);");
@@ -10968,7 +10982,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -11473,7 +11487,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"big\");");
     gold.append("\n    big.__dump(__writer);");
@@ -11712,7 +11727,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -12188,7 +12203,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"t\");");
     gold.append("\n    t.__dump(__writer);");
@@ -12620,7 +12636,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -13084,7 +13100,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
@@ -13308,7 +13325,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -13826,7 +13843,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"s\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"s\");");
     gold.append("\n    s.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"w00t\");");
     gold.append("\n    w00t.__dump(__writer);");
@@ -14082,7 +14100,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -14691,7 +14709,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n    y.__dump(__writer);");
@@ -14923,7 +14942,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -15413,7 +15432,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"__state\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
     gold.append("\n    __constructed.__dump(__writer);");
@@ -15633,7 +15653,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -16103,7 +16123,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
     gold.append("\n    y.__dump(__writer);");
@@ -16361,7 +16382,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");

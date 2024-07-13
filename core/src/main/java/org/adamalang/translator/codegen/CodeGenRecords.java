@@ -50,6 +50,7 @@ public class CodeGenRecords {
         fieldType instanceof TyReactiveRecord || //
         fieldType instanceof TyReactiveMap || //
         fieldType instanceof TyReactiveText || //
+        fieldType instanceof TyReactiveReplicationStatus || //
         fieldType instanceof TyReactiveHolder;
   }
 
@@ -170,6 +171,10 @@ public class CodeGenRecords {
       result.append("new RxTable<>(__self, ").append(parent).append(", \"").append(className);
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
       result.append("(__parent).__link(), ").append(numberIndicies).append(")");
+    } else if (fieldType instanceof TyReactiveReplicationStatus) {
+      ReplicationDefinition defn = ((TyReactiveReplicationStatus) fieldType).definition;
+      // the memory overhead of the closure is a bit annoying
+      result.append("new RxReplicationStatus(").append(parent).append(",__time,\"").append(defn.service.text).append("\",\"").append(defn.method.text).append("\")");
     } else if (fieldType instanceof TyReactiveHolder) {
       result.append("new RxHolder(").append(parent).append(",() -> new RTx").append(((TyReactiveHolder) fieldType).messageTypeName).append("())");
     } else if (fieldType instanceof TyReactiveText) {
@@ -386,9 +391,8 @@ public class CodeGenRecords {
 
     // TODO: replications
     for (Map.Entry<String, ReplicationDefinition> replicationEntry : storage.replications.entrySet()) {
-      classFields.append("private final ReplicationStateMachine __rsm_").append(replicationEntry.getKey()).append(";").writeNewline();
-      classConstructorX.append("__rsm_").append(replicationEntry.getKey()).append(" = new ReplicationStateMachine(__replication, this, __rs_").append(replicationEntry.getKey()).append(",\"").append(replicationEntry.getKey()).append("\");").writeNewline();
-      classLinker.append("__rsm_").append(replicationEntry.getKey()).append(".link();").writeNewline();
+      String key = replicationEntry.getKey();
+      classLinker.append("__replication.link(").append(key).append(",__").append(key).append("__value);").writeNewline();
     }
   }
 
@@ -604,7 +608,7 @@ public class CodeGenRecords {
     sb.append("__writer.beginObject();").writeNewline();
     if (isRoot) {
       sb.append("__writer.writeObjectFieldIntro(\"__snapshot\");").writeNewline();
-      sb.append("__writer.writeString(__space + \"/\" + __key);");
+      sb.append("__writer.writeString(__space + \"/\" + __key);").writeNewline();
     }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;

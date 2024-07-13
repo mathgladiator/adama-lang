@@ -311,7 +311,8 @@ public class GeneratedCSVTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"__state\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
     gold.append("\n    __constructed.__dump(__writer);");
@@ -790,7 +791,7 @@ public class GeneratedCSVTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");

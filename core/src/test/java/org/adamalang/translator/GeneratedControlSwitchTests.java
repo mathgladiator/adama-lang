@@ -309,7 +309,8 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"x\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
     gold.append("\n    x.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
@@ -534,7 +535,7 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -1173,7 +1174,8 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"v\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"v\");");
     gold.append("\n    v.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"sum\");");
     gold.append("\n    sum.__dump(__writer);");
@@ -1457,7 +1459,7 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
@@ -1945,7 +1947,8 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__snapshot\");");
-    gold.append("\n    __writer.writeString(__space + \"/\" + __key);__writer.writeObjectFieldIntro(\"sum\");");
+    gold.append("\n    __writer.writeString(__space + \"/\" + __key);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"sum\");");
     gold.append("\n    sum.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"sum3\");");
     gold.append("\n    sum3.__dump(__writer);");
@@ -2184,7 +2187,7 @@ public class GeneratedControlSwitchTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __link(ServiceRegistry __registry) {}");
     gold.append("\n  @Override");
-    gold.append("\n  public void __executeServiceCalls(boolean cancel) {}");
+    gold.append("\n  public Service __findService(String __name) { return null; }");
     gold.append("\n  @Override");
     gold.append("\n  public String __getViewStateFilter() {");
     gold.append("\n    return \"[]\";");
