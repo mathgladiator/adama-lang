@@ -334,6 +334,11 @@ public class DefaultPolicy {
     child.putArray("allowed-authorities");
     child.putArray("allowed-documents");
     child.putArray("allowed-document-spaces");
+    child = policy.putObject("documents/create-dedupe");
+    child.put("developers",false);
+    child.putArray("allowed-authorities");
+    child.putArray("allowed-documents");
+    child.putArray("allowed-document-spaces");
     child = policy.putObject("documents/hash-password");
     child.put("developers",false);
     child.putArray("allowed-authorities");

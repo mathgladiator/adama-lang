@@ -328,8 +328,8 @@ public class RxRootEnvironment {
   public void form(Element form, PageEnvironment env) {
     if (form.hasAttr("rx:action")) {
       String action = form.attr("rx:action");
-      if (action.startsWith("send:")) {
-        String channel = action.substring(5);
+      if (action.startsWith("send:") || action.startsWith("send-once:")) {
+        String channel = action.startsWith("send:") ? action.substring(5) : action.substring(10);
         if (env.scope == null) {
           feedback.warn(form, "no data channel for a form to send channel '" + channel + "' on");
         } else {

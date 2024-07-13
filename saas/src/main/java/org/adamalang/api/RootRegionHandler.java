@@ -50,6 +50,8 @@ public interface RootRegionHandler {
 
   public DocumentStreamHandler handle(Session session, ConnectionCreateViaDomainRequest request, DataResponder responder);
 
+  public void handle(Session session, DocumentsCreateDedupeRequest request, DedupeResponder responder);
+
   public void handle(Session session, DocumentsHashPasswordRequest request, HashedPasswordResponder responder);
 
   public DocumentStreamHandler handle(Session session, BillingConnectionCreateRequest request, DataResponder responder);
@@ -86,6 +88,7 @@ public interface RootRegionHandler {
       case "connection/attach":
       case "connection/update":
       case "connection/end":
+      case "documents/create-dedupe":
       case "documents/hash-password":
       case "billing-connection/create":
       case "feature/summarize-url":

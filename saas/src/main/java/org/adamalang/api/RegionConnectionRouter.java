@@ -581,6 +581,25 @@ public class RegionConnectionRouter {
                 }
               });
             } return;
+            case "documents/create-dedupe": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentsCreateDedupe.start();
+              DocumentsCreateDedupeRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(DocumentsCreateDedupeRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(session, resolved, new DedupeResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "documents/hash-password": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_DocumentsHashPassword.start();
               DocumentsHashPasswordRequest.resolve(session, nexus, request, new Callback<>() {

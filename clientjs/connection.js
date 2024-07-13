@@ -268,13 +268,8 @@ class WebSocketAdamaConnection {
           }
         }
       }
-      self.onreconnect.delete(sm.id);
     })) {
-      self.onreconnect.set(sm.id, sm);
-      sm.__retry = function () {
-        self.__execute_rr(sm);
-      };
-      return sm;
+      sm.responder.failure("not connected");
     }
     return null;
   }
@@ -704,6 +699,15 @@ class WebSocketAdamaConnection {
           request: { method: "connection/end", id: subId, "connection":parId}
         });
       }
+    });
+  }
+  DocumentsCreateDedupe(responder) {
+    var self = this;
+    var parId = self.__id();
+    return self.__execute_rr({
+      id: parId,
+      responder: responder,
+      request: {"method":"documents/create-dedupe", "id":parId}
     });
   }
   DocumentsHashPassword(password, responder) {

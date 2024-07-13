@@ -537,6 +537,11 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     responder.complete(SCryptUtil.scrypt(password, 16384, 8, 1));
   }
 
+  @Override
+  public void handle_DocumentsCreateDedupe(long requestId, DedupeResponder responder) {
+    responder.complete(ProtectedUUID.generate());
+  }
+
   private void internalConnect(long requestId, String identity, Key key, ObjectNode viewerState, DataResponder responder) {
     long started = System.currentTimeMillis();
     CoreRequestContext context = new CoreRequestContext(principalOf(identity), this.context.origin, this.context.remoteIp, key.key);

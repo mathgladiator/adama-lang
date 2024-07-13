@@ -73,6 +73,8 @@ public abstract class DevBoxRouter {
 
   public abstract void handle_ConnectionEnd(long requestId, Long connection, SimpleResponder responder);
 
+  public abstract void handle_DocumentsCreateDedupe(long requestId, DedupeResponder responder);
+
   public abstract void handle_DocumentsHashPassword(long requestId, String password, HashedPasswordResponder responder);
 
   public abstract void handle_FeatureSummarizeUrl(long requestId, String identity, String url, SummaryResponder responder);
@@ -273,6 +275,10 @@ public abstract class DevBoxRouter {
           handle_ConnectionEnd(requestId, //
             request.getLong("connection", true, 405505), //
             new SimpleResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
+          return;
+        case "documents/create-dedupe":
+          handle_DocumentsCreateDedupe(requestId, //
+            new DedupeResponder(new DevProxyResponder(responder, _accessLogItem, DEV_ACCESS_LOG)));
           return;
         case "documents/hash-password":
           handle_DocumentsHashPassword(requestId, //

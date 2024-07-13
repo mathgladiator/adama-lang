@@ -632,6 +632,13 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (wcc, id) -> new DocumentStreamHandler(wcc, id), (obj) -> new ClientDataResponse(obj), callback, streamback);
   }
 
+  /** documents/create-dedupe */
+  public void documentsCreateDedupe(ClientDocumentsCreateDedupeRequest request, Callback<ClientDedupeResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "documents/create-dedupe");
+    pool.requestResponse(node, (obj) -> new ClientDedupeResponse(obj), callback);
+  }
+
   /** documents/hash-password */
   public void documentsHashPassword(ClientDocumentsHashPasswordRequest request, Callback<ClientHashedPasswordResponse> callback) {
     ObjectNode node = Json.newJsonObject();

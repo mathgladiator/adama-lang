@@ -791,6 +791,13 @@ public class Attributes {
           .append(",'").append(channel) //
           .append("',").append("" + debounce) //
           .append(");").newline();
+    } else if (action.startsWith("send-once:")) { // Send a message on the given channel
+      convertFailureVariableToEvents(env.element, "send_failed");
+      String channel = action.substring(10);
+      env.writer.tab().append("$.aSD1(").append(eVar) //
+          .append(",").append(env.stateVar) //
+          .append(",'").append(channel) //
+          .append("');").newline();
     } else if (action.startsWith("copy-form:")) {
       String targetFormId = action.substring(10);
       env.writer.tab().append("$.aCF(").append(eVar) //

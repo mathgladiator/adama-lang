@@ -823,6 +823,10 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c173 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:405505", c173.next());
       node.put("connection", 100L);
+      //DocumentsCreateDedupe
+      node = Json.newJsonObject();
+      node.put("id", 173);
+      node.put("method", "documents/create-dedupe");
       //DocumentsHashPassword
       node = Json.newJsonObject();
       node.put("id", 173);

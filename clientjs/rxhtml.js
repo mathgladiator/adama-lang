@@ -4090,11 +4090,20 @@ var RxHTML = (function () {
     }, true);
   };
 
+  self.aSD1 = function(form, state, channel) {
+    self.aSDc(form, state, channel, 0, true);
+  };
+
+  self.aSD = function(form, state, channel, msToDebounce) {
+    self.aSDc(form, state, channel, msToDebounce, false);
+  };
 
   // RUNTIME | rx:action=send:$channel
-  self.aSD = function (form, state, channel, msToDebounce) {
+  self.aSDc = function (form, state, channel, msToDebounce, once) {
     form.lastFired = 0;
+    form.firedAtAll = false;
     form.addEventListener('submit', function (evt) {
+      evt.preventDefault();
       // only execute the send on the form being clicked within (parent)
       if (evt.target != form) {
         return;
@@ -4102,10 +4111,17 @@ var RxHTML = (function () {
       // debounce the send so it's not too fast
       var elapsed = Date.now() - form.lastFired;
       if (elapsed < msToDebounce) {
+        fire_failure(form, "Send failed due to too many clicks too quickly");
         return;
       }
+      if (once) {
+        if (form.firedAtAll) {
+          fire_failure(form, "Send failed due to duplicate");
+          return false;
+        }
+        form.firedAtAll = true;
+      }
       form.lastFired = Date.now();
-      evt.preventDefault();
       var passwords = {};
       var msg = get_form(form, passwords);
 
@@ -4127,14 +4143,32 @@ var RxHTML = (function () {
         if (Adama.Debugger) {
           Adama.Debugger.send(state.data.connection.name, channelToUse, msg);
         }
-        state.data.connection.ptr.send(channelToUse, msg, {
-          success: function (/* payload */) {
-            fire_success(form);
-          },
-          failure: function (reason) {
-            fire_failure(form, "Send failed:" + reason);
-          }
-        });
+        if (once) {
+          connection.DocumentsCreateDedupe({
+            success: function(dedupe) {
+              state.data.connection.ptr.sendOnce(channelToUse, dedupe.dedupe, msg, {
+                success: function (/* payload */) {
+                  fire_success(form);
+                },
+                failure: function (reason) {
+                  fire_failure(form, "Send failed:" + reason);
+                }
+              });
+            },
+            failure: function (reason) {
+              fire_failure(form, "Send failed to get dedupe token:" + reason);
+            }
+          });
+        } else {
+          state.data.connection.ptr.send(channelToUse, msg, {
+            success: function (/* payload */) {
+              fire_success(form);
+            },
+            failure: function (reason) {
+              fire_failure(form, "Send failed:" + reason);
+            }
+          });
+        }
       };
 
       var postPassword = function() {

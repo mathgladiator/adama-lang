@@ -17,16 +17,26 @@
 */
 package org.adamalang.api;
 
-public class OnceFilter {
-  public static boolean allowed(String method) {
-    switch(method) {
-      case "document/authorization":
-      case "document/authorization-domain":
-      case "documents/create-dedupe":
-      case "documents/hash-password":
-        return true;
-      default:
-        return false;
-    }
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.io.*;
+
+public class DedupeResponder {
+  public final JsonResponder responder;
+
+  public DedupeResponder(JsonResponder responder) {
+    this.responder = responder;
+  }
+
+  public void complete(String dedupe) {
+    ObjectNode _obj = new JsonMapper().createObjectNode();
+    _obj.put("dedupe", dedupe);
+    responder.finish(_obj.toString());
+  }
+
+  public void error(ErrorCodeException ex) {
+    responder.error(ex);
   }
 }

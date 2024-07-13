@@ -213,6 +213,11 @@ public class GlobalDataHandler implements RootRegionHandler {
   }
 
   @Override
+  public void handle(Session session, DocumentsCreateDedupeRequest request, DedupeResponder responder) {
+    responder.complete(ProtectedUUID.generate());
+  }
+
+  @Override
   public void handle(Session session, DocumentDeleteRequest request, SimpleResponder responder) {
     nexus.adama.delete(request.who, request.space, request.key, new Callback<>() {
       @Override

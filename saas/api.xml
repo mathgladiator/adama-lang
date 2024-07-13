@@ -316,6 +316,16 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="dedupe" type="string">
+        <documentation>
+            A UUID dedupe string
+        </documentation>
+    </field-definition>
+
+    <responder name="dedupe">
+        <field name="dedupe" />
+    </responder>
+
     <field-definition name="chunk-md5" type="string">
         <documentation>
             MD5 of a chunk
@@ -802,6 +812,8 @@
             This will destroy a developer account. We require all spaces to be deleted along with all authorities.
         </documentation>
     </method>
+
+
 
     <method name="account/set-password" responder="simple" scope="global" js-sdk="true">
         <parameter name="identity"/>
@@ -1535,6 +1547,12 @@
         <parameter name="connection"/>
         <documentation>
             Disconnect from the document.
+        </documentation>
+    </method>
+
+    <method name="documents/create-dedupe" responder="dedupe" devbox="true" scope="region" js-sdk="true" once="true">
+        <documentation>
+            Ask the server to create a dedupe token
         </documentation>
     </method>
 

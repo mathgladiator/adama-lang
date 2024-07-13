@@ -17,16 +17,6 @@
 */
 package org.adamalang.api;
 
-public class OnceFilter {
-  public static boolean allowed(String method) {
-    switch(method) {
-      case "document/authorization":
-      case "document/authorization-domain":
-      case "documents/create-dedupe":
-      case "documents/hash-password":
-        return true;
-      default:
-        return false;
-    }
-  }
+/** generated request type for documents/create-dedupe */
+public class ClientDocumentsCreateDedupeRequest {
 }
