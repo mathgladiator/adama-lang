@@ -44,6 +44,18 @@ public class ReplicationEngine implements DeleteTask  {
     status.linkToValue(value);
   }
 
+  public void progress() {
+    for(RxReplicationStatus status : tasks) {
+      status.progress(parent);
+    }
+  }
+
+  public void commitDurable() {
+    for(RxReplicationStatus status : tasks) {
+      status.commit();
+    }
+  }
+
   public void load(JsonStreamReader reader) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {

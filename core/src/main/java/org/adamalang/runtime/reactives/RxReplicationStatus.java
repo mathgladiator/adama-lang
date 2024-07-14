@@ -17,13 +17,14 @@
 */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Hashing;
 import org.adamalang.runtime.contracts.Caller;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.natives.NtToDynamic;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.replication.Replicator;
@@ -44,19 +45,28 @@ public class RxReplicationStatus extends RxBase implements RxChild {
   private String key;
   private String hash;
   private long time;
+  private int backoff;
 
   // transitory local state
   private boolean invalidated;
-  private boolean sendOwed;
+  private boolean executeRequest;
+
+  // goal state (intention cached and computed on change)
+  private Service goalServiceToUse;
+  private NtToDynamic valueToSync;
+  private Replicator replicatorToUse;
+  private String newKey = null;
+  private String newHash = null;
 
   // the state machine
   private enum State {
-    Fresh(100),
-    Sending_Ready(110),
-    Sending_Inflight(120),
-    Deleting_Inflight(150),
-    Replicated(200),
-    Failed(500);
+    Nothing(100),
+    PutRequested(110),
+    PutInflight(120),
+    PutFailed(150),
+    DeleteRequested(300),
+    DeleteInflight(310),
+    DeleteFailed(350);
 
     public final int code;
 
@@ -70,12 +80,19 @@ public class RxReplicationStatus extends RxBase implements RxChild {
           return state;
         }
       }
-      return Fresh;
+      return Nothing;
     }
 
-    public State inserted() {
-      if (this == State.Sending_Inflight) {
-        return State.Sending_Ready;
+    public State persist() {
+      switch (this) {
+        case Nothing:
+          return Nothing;
+        case PutRequested:
+        case PutInflight:
+          return PutRequested;
+        case DeleteRequested:
+        case DeleteInflight:
+          return DeleteRequested;
       }
       return this;
     }
@@ -86,11 +103,13 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     this.documentTime = documentTime;
     this.service = service;
     this.method = method;
-    this.state = State.Fresh;
+    this.state = State.Nothing;
     this.hash = null;
     this.key = null;
     this.time = 0;
+    this.backoff = 0;
     this.invalidated = true;
+    this.executeRequest = false;
   }
 
   /** link the status to the value */
@@ -108,7 +127,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
   }
 
   @Override
-  public void __dump(JsonStreamWriter writer) {
+  public synchronized void __dump(JsonStreamWriter writer) {
     writer.beginObject();
     writer.writeObjectFieldIntro("state");
     writer.writeInteger(state.code);
@@ -124,17 +143,21 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       writer.writeObjectFieldIntro("time");
       writer.writeLong(time);
     }
+    if (this.backoff > 0) {
+      writer.writeObjectFieldIntro("backoff");
+      writer.writeInteger(backoff);
+    }
     writer.endObject();
   }
 
   @Override
-  public void __insert(JsonStreamReader reader) {
+  public synchronized void __insert(JsonStreamReader reader) {
     if(reader.startObject()) {
       while (reader.notEndOfObject()) {
         String field = reader.fieldName();
         switch (field) {
           case "state":
-            this.state = State.from(reader.readInteger()).inserted();
+            this.state = State.from(reader.readInteger()).persist();
             break;
           case "hash":
             this.hash = reader.readString();
@@ -167,64 +190,168 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     return __parent.__isAlive();
   }
 
-  public void progress(Caller caller) {
-    if (invalidated) {
-      Service serviceToUse = caller.__findService(service);
-      if (serviceToUse == null) {
-        state = State.Failed;
-        return;
+  private boolean updateGoal(Caller caller, boolean updateOnlyIfSameKey) {
+    NtToDynamic newValue = null;
+    String computedKey = null;
+    String computedHash = null;
+    goalServiceToUse = caller.__findService(service);
+    if (goalServiceToUse == null) {
+      return false;
+    }
+    newValue = value.get();
+    replicatorToUse = goalServiceToUse.beginCreateReplica(method, newValue);
+    if (replicatorToUse == null) {
+      return false;
+    }
+    computedKey = replicatorToUse.key();
+    {
+      MessageDigest digest = Hashing.md5();
+      digest.update(newValue.to_dynamic().json.getBytes(StandardCharsets.UTF_8));
+      computedHash = Hashing.finishAndEncode(digest);
+    }
+    if (updateOnlyIfSameKey) {
+      if (this.newKey == null || this.newKey.equals(computedKey)) {
+        this.valueToSync = newValue;
+        this.newKey = computedKey;
+        this.newHash = computedHash;
+        return true;
       }
-      NtToDynamic valueToSync = value.get();
-      Replicator replicator = serviceToUse.beginCreateReplica(method, valueToSync);
-      String newKey = replicator.key();
-      final String newHash;
-      {
-        MessageDigest digest = Hashing.md5();
-        digest.update(valueToSync.to_dynamic().json.getBytes(StandardCharsets.UTF_8));
-        newHash = Hashing.finishAndEncode(digest);
-      }
-
-
-
-      switch (state) {
-        case Sending_Ready:
-          if (sendOwed) {
-            sendOwed = false;
-            send();
-            return;
-          }
-          // TODO: use
-          boolean notYetTimedOut = true;
-          if (notYetTimedOut) {
-            return;
-          }
-        case Sending_Inflight:
-          // ignore
-          return;
-        case Fresh:
-        case Replicated:
-        case Failed:
-          replicate();
-      }
+      return false;
+    } else {
+      this.valueToSync = newValue;
+      this.newKey = computedKey;
+      this.newHash = computedHash;
+      return true;
     }
   }
 
-  private void send() {
-     // get the service
-    // service.method, callback
-    // set inflight
-    state = State.Sending_Inflight;
-    getTime();
+  public void progress(Caller caller) {
+    switch (state) {
+      case Nothing: {
+        if (invalidated) {
+          if (updateGoal(caller, false)) {
+            boolean createDirect = key == null && newKey != null;
+            boolean overwrite = key != null && key.equals(newKey) && hash != null && !hash.equals(newHash);
+            boolean deleteDirect = key != null && newKey == null;
+            boolean deleteChange = key != null && !key.equals(newKey);
+            if (createDirect || overwrite) {
+              transitionToPut();
+            } else if (deleteDirect || deleteChange) {
+              transitionToDelete();
+            }
+          }
+          invalidated = false;
+        }
+        return;
+      }
+      case PutRequested:
+      case DeleteRequested:
+        if (time + 60000 > documentTime.get() && !executeRequest) {
+
+          executeRequest = true;
+        }
+        return;
+      case PutFailed:
+        if (time + backoff > documentTime.get()) {
+          if (invalidated) {
+            if (updateGoal(caller, true)) {
+              invalidated = false;
+            }
+          }
+          transitionToPut();
+        }
+        return;
+      case DeleteFailed:
+        if (time + backoff > documentTime.get()) {
+          transitionToDelete();
+        }
+        return;
+      case PutInflight:
+      case DeleteInflight:
+        // no-op
+        return;
+    }
   }
 
-  private void replicate() {
-    state = State.Sending_Ready;
-    sendOwed = true;
-    getTime();
+  private synchronized void bumpBackoff() {
+    backoff ++;
+    backoff *= 2;
+    if (backoff > 30000) {
+      backoff *=2 ;
+    }
+    if (backoff > 60000 * 60) {
+      backoff = 60000 * 60;
+    }
   }
 
-  private void getTime() {
-    this.time = documentTime.get();
+  private synchronized void transitionToPut() {
+    state = State.PutRequested;
+    key = newKey;
+    executeRequest = true;
+    time = documentTime.get();
+  }
+
+  private synchronized void transitionToDelete() {
+    state = State.DeleteRequested;
+    key = newKey;
+    executeRequest = true;
+    time = documentTime.get();
+  }
+
+  private synchronized void putSuccess() {
+    state = State.Nothing;
+    hash = newHash;
+  }
+
+  private synchronized void putFailure() {
+    state = State.PutFailed;
+    time = documentTime.get();
+    bumpBackoff();
+  }
+
+  private synchronized void deleteSuccess() {
+    state = State.Nothing;
+    key = null;
+    hash = null;
+    time = 0;
+    backoff = 0;
+  }
+
+  private synchronized void deleteFailure() {
+    state = State.DeleteFailed;
+    time = documentTime.get();;
+    bumpBackoff();
+  }
+
+  public void commit() {
+    if (executeRequest) {
+      executeRequest = false;
+      if (state == State.PutRequested) {
+        replicatorToUse.complete(new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            putSuccess();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            putFailure();
+          }
+        });
+      } else if (state == State.DeleteRequested) {
+        goalServiceToUse.deleteReplica(method, key, new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            deleteSuccess();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            deleteFailure();
+          }
+        });
+      }
+    }
   }
 
   @Override

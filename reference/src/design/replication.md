@@ -50,12 +50,13 @@ public void poll(...) {
 
 This is sufficient to create an intention as we will compute (newKey and newHash) to compare against the existing key and hash.
 
-| key       | hash       | intention |
-|-----------|------------|-----------|
-| null      | -          | PUT       |
-| == newKey | != newHash | PUT       |
-| != newKey | -          | DELETE    |
-| == newKey | == newHash | NOTHING   |
+| key                       | hash       | intention |
+|---------------------------|------------|-----------|
+| null                      | -          | PUT       |
+| != null && newKey == null | -          | DELETE    |
+| == newKey                 | != newHash | PUT       |
+| != newKey                 | -          | DELETE    |
+| == newKey                 | == newHash | NOTHING   |
 
 This intention is a goal, but due to high latency we need to model what is happening concurrently as either (1) nothing is happening against the remote service, (2) a PUT is inflight, (3) a DELETE is inflight.
 Thus, we model what is currently happening via a finite state machine.
@@ -80,7 +81,7 @@ The service then must define a timeout such that a stale PutRequested can be con
 This does require a new state machine operation called committed which we examine here.
 
 ```java
-public poll(){
+public void poll(){
   //..
   if(state==State.PutRequested){
     if(!executeRequest&&time+TIMEOUT<now()){
@@ -109,22 +110,21 @@ The emergent state machine of what is happening right now is:
 
 Finally, the goal is to cross the intention with the state.
 
-| state | intention | behavior                                                     |
-| --- | --- |--------------------------------------------------------------|
-| Nothing         | PUT | transition to PutRequested and capture the key, hash, time   |
-| PutRequested    | PUT | do nothing                                                   |
-| PutInflight     | PUT | do nothing                                                   |
-| PutFailed       | PUT | do nothing, if key == newKey, capture hash and the new value |
-| DeleteRequested | PUT | do nothing                                                   |
-| DeleteInflight  | PUT | do nothing                                                   |
-| DeleteFailed    | PUT | do nothing                                                   |
-| Nothing         | DELETE | transition to DeleteRequested and capture the key, time      |
-| PutRequested    | DELETE | do nothing                                                   |
-| PutInflight     | DELETE | do nothing                                                   |
-| PutFailed       | DELETE | do nothing                                                   |
-| DeleteRequested | DELETE | do nothing                                                   |
-| DeleteInflight  | DELETE | do nothing                                                   |
-| DeleteFailed    | DELETE | do nothing                                                   |
+| state           | intention | behavior                                                     |
+|-----------------|-----------|--------------------------------------------------------------|
+| Nothing         | PUT       | transition to PutRequested and capture the key, hash, time   |
+| PutRequested    | PUT       | do nothing                                                   |
+| PutInflight     | PUT       | do nothing                                                   |
+| PutFailed       | PUT       | do nothing, if key == newKey, capture hash and the new value |
+| DeleteRequested | PUT       | do nothing                                                   |
+| DeleteInflight  | PUT       | do nothing                                                   |
+| Nothing         | DELETE    | transition to DeleteRequested and capture the key, time      |
+| PutRequested    | DELETE    | do nothing                                                   |
+| PutInflight     | DELETE    | do nothing                                                   |
+| PutFailed       | DELETE    | do nothing                                                   |
+| DeleteRequested | DELETE    | do nothing                                                   |
+| DeleteInflight  | DELETE    | do nothing                                                   |
+| DeleteFailed    | DELETE    | do nothing                                                   |
 
 ---
 
