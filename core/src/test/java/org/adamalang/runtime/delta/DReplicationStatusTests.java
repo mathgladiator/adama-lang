@@ -35,7 +35,7 @@ public class DReplicationStatusTests {
       final var stream = new JsonStreamWriter();
       final var writer = PrivateLazyDeltaWriter.bind(NtPrincipal.NO_ONE, stream, null, 0);
       delta.show(status, writer);
-      Assert.assertEquals(74, delta.__memory());
+      Assert.assertEquals(78, delta.__memory());
       delta.hide(writer);
       delta.hide(writer);
       delta.hide(writer);
@@ -47,8 +47,8 @@ public class DReplicationStatusTests {
       delta.clear();
       Assert.assertEquals(40, delta.__memory());
       delta.show(status, writer);
-      Assert.assertEquals(74, delta.__memory());
-      Assert.assertEquals("\"Fresh;null;null;0\"null\"Fresh;null;null;0\"\"Fresh;null;null;0\"", stream.toString());
+      Assert.assertEquals(78, delta.__memory());
+      Assert.assertEquals("\"Nothing;null;null;0\"null\"Nothing;null;null;0\"\"Nothing;null;null;0\"", stream.toString());
     }
   }
 }

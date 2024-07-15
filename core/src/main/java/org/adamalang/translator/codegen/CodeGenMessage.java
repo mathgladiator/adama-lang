@@ -130,8 +130,10 @@ public class CodeGenMessage {
     AtomicInteger localVar = new AtomicInteger(1);
     sb.append("public void __hash(HashBuilder __hash) {").tabUp().writeNewline();
     for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
-      sb.append("__hash.hashString(\"").append(e.getKey()).append("\");").writeNewline();
-      writeValueHasher("this." + e.getKey(), environment.rules.Resolve(e.getValue().type, false), sb, environment, localVar, false);
+      if (!e.getValue().isSilent()) {
+        sb.append("__hash.hashString(\"").append(e.getKey()).append("\");").writeNewline();
+        writeValueHasher("this." + e.getKey(), environment.rules.Resolve(e.getValue().type, false), sb, environment, localVar, false);
+      }
     }
     if (storage.anonymous) {
       sb.append("__hash.hashString(\"anonymous\");").tabDown().writeNewline();

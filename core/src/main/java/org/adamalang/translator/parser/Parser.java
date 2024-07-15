@@ -1212,7 +1212,7 @@ public class Parser {
       final var id = id();
       final var equalsToken = consumeExpectedSymbol("=");
       final var compute = expression(scope);
-      FieldDefinition fd = new FieldDefinition(policy, isAuto, null, id, null, equalsToken, compute, null, null, null, consumeExpectedSymbol(";"));
+      FieldDefinition fd = new FieldDefinition(policy, isAuto, null, id, null, equalsToken, compute, null, null, null, null, consumeExpectedSymbol(";"));
       if (cachePolicy != null) {
         fd.enableCache(cachePolicy);
       }
@@ -1237,7 +1237,7 @@ public class Parser {
         }
       }
       Token required = tokens.popIf(t -> t.isIdentifier("required"));
-      return new FieldDefinition(policy, readonly, type, id, invalidationRule, equalsToken, null, defaultValue, required, null, consumeExpectedSymbol(";"));
+      return new FieldDefinition(policy, readonly, type, id, invalidationRule, equalsToken, null, defaultValue, required, null, null, consumeExpectedSymbol(";"));
     }
   }
 
@@ -1356,8 +1356,9 @@ public class Parser {
             if ("id".equals(field.text)) {
               unique = tokens.popIf((t) -> t.isIdentifier("unique"));
             }
+            Token silent = tokens.popIf((t) -> t.isKeyword("@silent"));
             Token end = consumeExpectedSymbol(";");
-            FieldDefinition fd = new FieldDefinition(policy, null, type, field, null, equalsToken, null, defaultValueOverride, lossy, unique, end);
+            FieldDefinition fd = new FieldDefinition(policy, null, type, field, null, equalsToken, null, defaultValueOverride, lossy, unique, silent, end);
             storage.add(fd);
           }
         }

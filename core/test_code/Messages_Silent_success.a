@@ -1,0 +1,7 @@
+message T {
+  int a;
+  int b;
+  int NOPE @silent;
+  int c;
+  int d;
+}

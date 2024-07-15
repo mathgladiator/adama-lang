@@ -57,7 +57,9 @@ public class FieldDefinition extends StructureComponent {
   public final Token invalidationRuleToken;
   public final InvalidationRule invalidationRule;
 
-  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, Token invalidationRuleToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, final Token semicolonToken) {
+  public final Token silent;
+
+  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, Token invalidationRuleToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token lossyOrRequiredToken, final Token uniqueToken, Token silent, final Token semicolonToken) {
     this.policy = policy;
     this.introToken = introToken;
     this.type = type;
@@ -68,6 +70,7 @@ public class FieldDefinition extends StructureComponent {
     this.defaultValueOverride = defaultValueOverride;
     this.lossyOrRequiredToken = lossyOrRequiredToken;
     this.uniqueToken = uniqueToken;
+    this.silent = silent;
     this.semicolonToken = semicolonToken;
     if (policy != null) {
       ingest(policy);
@@ -102,6 +105,7 @@ public class FieldDefinition extends StructureComponent {
     if (defaultValueOverride != null) {
       ingest(defaultValueOverride);
     }
+    ingest(silent);
     if (semicolonToken != null) {
       ingest(semicolonToken);
     }
@@ -140,13 +144,13 @@ public class FieldDefinition extends StructureComponent {
       policy = new PublicPolicy(null);
       policy.ingest(type);
     }
-    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(policy, null, type, Token.WRAP(name), null, null, null, null, null, null, null, null);
     fd.ingest(type);
     return fd;
   }
 
   public static FieldDefinition inventId(DocumentPosition dp) {
-    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(false, null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null, null);
+    FieldDefinition fd = new FieldDefinition(null, null, new TyReactiveInteger(false, null).withPosition(dp), Token.WRAP("id"), null, null, null, null, null, null, null, null);
     fd.ingest(dp);
     return fd;
   }
@@ -184,7 +188,14 @@ public class FieldDefinition extends StructureComponent {
     if (uniqueToken != null) {
       yielder.accept(uniqueToken);
     }
+    if (silent != null) {
+      yielder.accept(silent);
+    }
     yielder.accept(semicolonToken);
+  }
+
+  public boolean isSilent() {
+    return silent != null;
   }
 
   @Override

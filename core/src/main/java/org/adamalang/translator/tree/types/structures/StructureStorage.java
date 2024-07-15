@@ -25,11 +25,8 @@ import org.adamalang.translator.env.topo.TopologicalSort;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
-import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.definitions.FunctionArg;
-import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
-import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.ReflectionSource;
@@ -38,7 +35,6 @@ import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveReplicationStatus;
-import org.adamalang.translator.tree.types.reactive.TyReactiveString;
 import org.adamalang.translator.tree.types.topo.TypeChecker;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -248,9 +244,9 @@ public class StructureStorage extends DocumentPosition {
     fe.free.add("service:" + rd.service.text);
     checker.register(fe.free, env -> rd.typing(env.watch(Watcher.makeAutoSimple(env, rd.variablesToWatch, rd.servicesToWatch))));
     replications.put(rd.name.text, rd);
-    FieldDefinition fdReplicationExpression = new FieldDefinition(new PrivatePolicy(rd.name), rd.name, null, rd.name.cloneWithNewText("__" + rd.name + "__value"), null, rd.name, rd.expression, null, null, null, null);
+    FieldDefinition fdReplicationExpression = new FieldDefinition(new PrivatePolicy(rd.name), rd.name, null, rd.name.cloneWithNewText("__" + rd.name + "__value"), null, rd.name, rd.expression, null, null, null, null, null);
     insertField(fdReplicationExpression, fe, checker);
-    FieldDefinition fdReplicationStatus = new FieldDefinition(new PrivatePolicy(rd.name), null, new TyReactiveReplicationStatus(rd), rd.name.cloneWithNewText(rd.name.text), null, null, null, null, null, null, null);
+    FieldDefinition fdReplicationStatus = new FieldDefinition(new PrivatePolicy(rd.name), null, new TyReactiveReplicationStatus(rd), rd.name.cloneWithNewText(rd.name.text), null, null, null, null, null, null, null, null);
     insertField(fdReplicationStatus, fe, checker);
   }
 

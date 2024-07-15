@@ -453,7 +453,7 @@ public class Document implements TopLevelDocumentHandler {
       typeChecker.issueError(avs, String.format("View field '%s' was already defined.", avs.name.text));
     }
     viewDefined.add(avs.name.text);
-    viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, null, null, null, avs.semicolon));
+    viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, null, null, null, null, avs.semicolon));
     avs.typing(typeChecker);
   }
 
@@ -472,7 +472,7 @@ public class Document implements TopLevelDocumentHandler {
       return;
     }
     defined.add(dct.name.text);
-    FieldDefinition lastTimeBreach = new FieldDefinition(new PrivatePolicy(dct.cron), dct.cron, new TyReactiveLong(false, dct.cron), dct.name.cloneWithNewText("__" + dct.name.text), null, null, null, null, null, null, null);
+    FieldDefinition lastTimeBreach = new FieldDefinition(new PrivatePolicy(dct.cron), dct.cron, new TyReactiveLong(false, dct.cron), dct.name.cloneWithNewText("__" + dct.name.text), null, null, null, null, null, null, null, null);
     root.storage.add(lastTimeBreach);
     cronTasks.put(dct.name.text, dct);
     dct.typing(typeChecker);

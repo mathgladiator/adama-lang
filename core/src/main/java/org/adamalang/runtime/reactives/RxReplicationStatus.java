@@ -247,7 +247,6 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       case PutRequested:
       case DeleteRequested:
         if (time + 60000 > documentTime.get() && !executeRequest) {
-
           executeRequest = true;
         }
         return;
