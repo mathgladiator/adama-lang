@@ -27,15 +27,18 @@ import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /** engine to replicate data */
 public class ReplicationEngine implements DeleteTask  {
   private final LivingDocument parent;
   private final ArrayList<RxReplicationStatus> tasks;
+  private final ArrayList<RxReplicationStatus> deleting;
 
   public ReplicationEngine(LivingDocument parent) {
     this.parent = parent;
     this.tasks = new ArrayList<>();
+    this.deleting = new ArrayList<>();
   }
 
   public void link(RxReplicationStatus status, RxLazy<? extends NtToDynamic> value) {
@@ -44,9 +47,24 @@ public class ReplicationEngine implements DeleteTask  {
     status.linkToValue(value);
   }
 
+  // TODO: move to commit
   public void progress() {
-    for(RxReplicationStatus status : tasks) {
+    for(RxReplicationStatus status : deleting) {
       status.progress(parent);
+    }
+
+    Iterator<RxReplicationStatus> it = tasks.iterator();
+    while (it.hasNext()) {
+      RxReplicationStatus status = it.next();
+      status.progress(parent);
+      if (status.requiresTombstone()) {
+        it.remove();
+        TombStone ts = status.toTombStone();
+        if (ts != null) {
+          deleting.add(status);
+          // record a tombstone
+        }
+      }
     }
   }
 

@@ -58,6 +58,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
   private Replicator replicatorToUse;
   private String newKey = null;
   private String newHash = null;
+  private boolean parentConsideredAlive;
 
   // the state machine
   private enum State {
@@ -68,7 +69,8 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     PutFailed(150),
     DeleteRequested(310),
     DeleteInflight(320),
-    DeleteFailed(350);
+    DeleteFailed(350),
+    Gone(400);
 
     public final int code;
 
@@ -117,6 +119,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     this.invalidated = true;
     this.executeRequest = false;
     this.failureCount = 0;
+    parentConsideredAlive = true;
   }
 
   /** link the status to the value */
@@ -230,24 +233,42 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     return true;
   }
 
+  public boolean requiresTombstone() {
+    return __parent != null && !__parent.__isAlive();
+  }
+
+  public boolean isGone() {
+    return state == State.Gone;
+  }
+
+  public TombStone toTombStone() {
+    if (service != null && method != null && key != null) {
+      return new TombStone(service, method, key);
+    }
+    return null;
+  }
+
   public void progress(Caller caller) {
     switch (state) {
       case Invalid:
         return;
       case Nothing: {
-        if (invalidated) {
+        boolean parentDead = __parent != null && !__parent.__isAlive();
+        if (invalidated || parentConsideredAlive && parentDead) {
           if (updateGoal(caller)) {
-            boolean createDirect = key == null && newKey != null;
-            boolean overwrite = key != null && key.equals(newKey) && hash != null && !hash.equals(newHash);
+            boolean createDirect = key == null && newKey != null && !parentDead;
+            boolean overwrite = key != null && key.equals(newKey) && hash != null && !hash.equals(newHash) && !parentDead;
             boolean deleteDirect = key != null && newKey == null;
             boolean deleteChange = key != null && !key.equals(newKey);
+            boolean deleteDueToLossOfParent = key != null && parentDead;
             if (createDirect || overwrite) {
               state = State.PutRequested;
               key = newKey;
               executeRequest = true;
               time = documentTime.get();
               __raiseDirty();
-            } else if (deleteDirect || deleteChange) {
+            } else if (deleteDirect || deleteChange || deleteDueToLossOfParent) {
+              parentConsideredAlive = false;
               state = State.DeleteRequested;
               executeRequest = true;
               time = documentTime.get();
@@ -353,7 +374,11 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                   @Override
                   public void execute() throws Exception {
                     // delete was successful
-                    state = State.Nothing;
+                    if (__parent == null || __parent != null && __parent.__isAlive()) {
+                      state = State.Nothing;
+                    } else {
+                      state = State.Gone;
+                    }
                     key = null;
                     hash = null;
                     time = 0;

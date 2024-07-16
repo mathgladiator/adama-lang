@@ -708,4 +708,139 @@ public class RxReplicationStatusTests {
     }
     Assert.assertEquals(3600000, status.getBackoff());
   }
+
+  @Test
+  public void never_start() {
+    MockRxParent parent = new MockRxParent();
+    parent.alive = false;
+    MockCallerForReplication caller = new MockCallerForReplication();
+    RxReplicationStatus status = new RxReplicationStatus(parent, new RxInt64(null, 10000), "service", "method");
+    AtomicReference<NtToDynamic> value = new AtomicReference<>(MockReplicationService.SIMPLE_KEY_OBJECT("key2use"));
+    RxLazy<NtToDynamic> lazy = new RxLazy<>(null, () -> value.get(), null);
+    lazy.__subscribe(status);
+    status.linkToValue(lazy);
+    Assert.assertTrue(status.requiresTombstone());
+    Assert.assertNull(status.toTombStone());
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":100}", writer.toString());
+      assertLoadAs(writer.toString(), 100);
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      status.__commit("diff", forward, reverse);
+      Assert.assertEquals("", forward.toString());
+      Assert.assertEquals("", reverse.toString());
+      Assert.assertEquals("Nothing;null;null;0", status.toString());
+    }
+    status.progress(caller);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":100}", writer.toString());
+      assertLoadAs(writer.toString(), 100);
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      status.__commit("diff", forward, reverse);
+      Assert.assertEquals("", forward.toString());
+      Assert.assertEquals("", reverse.toString());
+      Assert.assertEquals("Nothing;null;null;0", status.toString());
+    }
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    status.commit(executor);
+  }
+
+  @Test
+  public void delete_loss_of_parents() {
+    MockRxParent parent = new MockRxParent();
+    MockCallerForReplication caller = new MockCallerForReplication();
+    RxReplicationStatus status = new RxReplicationStatus(parent, new RxInt64(null, 10000), "service", "method");
+    AtomicReference<NtToDynamic> value = new AtomicReference<>(MockReplicationService.SIMPLE_KEY_OBJECT("key2use"));
+    RxLazy<NtToDynamic> lazy = new RxLazy<>(null, () -> value.get(), null);
+    lazy.__subscribe(status);
+    status.linkToValue(lazy);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":100}", writer.toString());
+      assertLoadAs(writer.toString(), 100);
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      status.__commit("diff", forward, reverse);
+      Assert.assertEquals("", forward.toString());
+      Assert.assertEquals("", reverse.toString());
+      Assert.assertEquals("Nothing;null;null;0", status.toString());
+    }
+    status.progress(caller);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":110,\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
+      assertLoadAs(writer.toString(), 110);
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      status.__commit("diff", forward, reverse);
+      Assert.assertEquals("\"diff\":{\"state\":110,\"key\":\"key2use\",\"time\":\"10000\"}", forward.toString());
+      Assert.assertEquals("", reverse.toString());
+    }
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    status.commit(executor);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":110,\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
+      assertLoadAs(writer.toString(), 110);
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      status.__commit("diff", forward, reverse);
+      Assert.assertEquals("", forward.toString());
+      Assert.assertEquals("", reverse.toString());
+    }
+    parent.alive = false;
+    executor.next();
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":120,\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
+      assertLoadAs(writer.toString(), 110);
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      status.__commit("diff", forward, reverse);
+      Assert.assertEquals("\"diff\":{\"state\":120,\"key\":\"key2use\",\"time\":\"10000\"}", forward.toString());
+      Assert.assertEquals("", reverse.toString());
+    }
+    executor.next();
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":100,\"hash\":\"z1Z7GvHQuBJPpoce5G15xg==\",\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
+    }
+    executor.assertEmpty();
+    status.__raiseInvalid();
+    status.progress(caller);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":310,\"hash\":\"z1Z7GvHQuBJPpoce5G15xg==\",\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
+      assertLoadAs(writer.toString(), 310);
+    }
+    status.commit(executor);
+    executor.next();
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":320,\"hash\":\"z1Z7GvHQuBJPpoce5G15xg==\",\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
+    }
+    Assert.assertTrue(status.requiresTombstone());
+    Assert.assertNotNull(status.toTombStone());
+    Assert.assertFalse(status.isGone());
+    executor.next();
+    Assert.assertTrue(status.isGone());
+    Assert.assertNull(status.toTombStone());
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      status.__dump(writer);
+      Assert.assertEquals("{\"state\":400}", writer.toString());
+    }
+  }
 }
