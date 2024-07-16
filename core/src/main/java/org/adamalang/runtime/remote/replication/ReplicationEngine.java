@@ -18,6 +18,7 @@
 package org.adamalang.runtime.remote.replication;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.contracts.DeleteTask;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -49,9 +50,9 @@ public class ReplicationEngine implements DeleteTask  {
     }
   }
 
-  public void commitDurable() {
+  public void commitDurable(SimpleExecutor executor) {
     for(RxReplicationStatus status : tasks) {
-      status.commit();
+      status.commit(executor);
     }
   }
 
