@@ -519,4 +519,11 @@ public class JsonStreamWriterTests {
     writer.writeNtDateTime(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")));
     Assert.assertEquals("\"2023-04-24T17:57:19.802528800-05:00[America/Chicago]\"", writer.toString());
   }
+
+  @Test
+  public void writeNtJson() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeNtJson(new NtJson(new NtDynamic("[{}]").cached()));
+    Assert.assertEquals("[{}]", writer.toString());
+  }
 }

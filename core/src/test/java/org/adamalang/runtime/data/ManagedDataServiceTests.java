@@ -484,6 +484,22 @@ public class ManagedDataServiceTests {
       setup.archive.assertLogAt(23, "CLEAN:space/123");
       setup.archive.assertLogAt(24, "BACKUP:space/456");
       setup.archive.assertLogAt(25, "BACKUP-EXEC:space/456");
+
+      { // not found recovery
+        SimpleVoidCallback cb_Recover = new SimpleVoidCallback();
+        setup.managed.recover(new Key("space", "not-found"), new DocumentRestore(100, "{}", NtPrincipal.NO_ONE), cb_Recover);
+        cb_Recover.assertFailure(625676);
+      }
+
+      {
+        SimpleVoidCallback cb_Recover = new SimpleVoidCallback();
+        setup.managed.recover(KEY2, new DocumentRestore(100, "{\"z\":123}", NtPrincipal.NO_ONE), cb_Recover);
+        cb_Recover.assertSuccess();
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY2, cb_Get);
+        cb_Get.assertSuccess();
+        Assert.assertEquals("{\"z\":123}", cb_Get.value);
+      }
     }
   }
 }

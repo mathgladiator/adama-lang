@@ -31,6 +31,7 @@ public class NtComplexTests {
     Assert.assertNotEquals(a, c);
     Assert.assertNotEquals(a, "z");
     Assert.assertNotEquals("z", a);
+    Assert.assertEquals(-25689151, a.hashCode());
   }
 
   @Test

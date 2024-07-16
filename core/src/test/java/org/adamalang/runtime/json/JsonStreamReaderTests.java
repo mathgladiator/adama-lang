@@ -769,4 +769,10 @@ public class JsonStreamReaderTests {
     JsonStreamReader reader = new JsonStreamReader("\"2021-04-24T17:57:19.802528800-05:00\"");
     Assert.assertEquals(2021, reader.readNtDateTime().dateTime.getYear());
   }
+
+  @Test
+  public void readNtJson() {
+    JsonStreamReader reader = new JsonStreamReader("[{}]");
+    Assert.assertEquals("[{}]", reader.readNtJson().to_dynamic().json);
+  }
 }
