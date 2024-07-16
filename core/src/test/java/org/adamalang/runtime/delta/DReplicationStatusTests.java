@@ -22,7 +22,7 @@ import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.mocks.MockRxParent;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.reactives.RxInt64;
-import org.adamalang.runtime.reactives.RxReplicationStatus;
+import org.adamalang.runtime.remote.replication.RxReplicationStatus;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -15,17 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.reactives;
+package org.adamalang.runtime.remote.replication;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Hashing;
+import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.Caller;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtToDynamic;
+import org.adamalang.runtime.reactives.RxBase;
+import org.adamalang.runtime.reactives.RxInt64;
+import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.replication.Replicator;
 
@@ -235,9 +236,15 @@ public class RxReplicationStatus extends RxBase implements RxChild {
             boolean deleteDirect = key != null && newKey == null;
             boolean deleteChange = key != null && !key.equals(newKey);
             if (createDirect || overwrite) {
-              transitionToPut();
+              state = State.PutRequested;
+              key = newKey;
+              executeRequest = true;
+              time = documentTime.get();
             } else if (deleteDirect || deleteChange) {
-              transitionToDelete();
+              state = State.DeleteRequested;
+              key = newKey;
+              executeRequest = true;
+              time = documentTime.get();
             }
           }
           invalidated = false;
@@ -246,25 +253,13 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       }
       case PutRequested:
       case DeleteRequested:
+        // Cold Restart Condition; TODO: remove magic 60000
         if (time + 60000 > documentTime.get() && !executeRequest) {
           executeRequest = true;
         }
         return;
       case PutFailed:
-        if (time + backoff > documentTime.get()) {
-          if (invalidated) {
-            if (updateGoal(caller, true)) {
-              invalidated = false;
-            }
-          }
-          transitionToPut();
-        }
-        return;
       case DeleteFailed:
-        if (time + backoff > documentTime.get()) {
-          transitionToDelete();
-        }
-        return;
       case PutInflight:
       case DeleteInflight:
         // no-op
@@ -272,85 +267,106 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     }
   }
 
-  private synchronized void bumpBackoff() {
+  private int bumpBackoff() {
     backoff ++;
-    backoff *= 2;
+    backoff = (int) (backoff + Math.random() * backoff);
     if (backoff > 30000) {
-      backoff *=2 ;
+      backoff = (int) (backoff + Math.random() * backoff);
     }
     if (backoff > 60000 * 60) {
       backoff = 60000 * 60;
     }
+    return backoff;
   }
 
-  private synchronized void transitionToPut() {
-    state = State.PutRequested;
-    key = newKey;
-    executeRequest = true;
-    time = documentTime.get();
-  }
+  public void commit(SimpleExecutor executor) {
+    executor.execute(new NamedRunnable("rxreplicate-enter") {
+      @Override
+      public void execute() throws Exception {
+        if (executeRequest) {
+          executeRequest = false;
+          if (state == State.PutRequested) {
+            state = State.PutInflight;
+            replicatorToUse.complete(new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+                executor.execute(new NamedRunnable("rxreplicate-put-success") {
+                  @Override
+                  public void execute() throws Exception {
+                    // put was successful
+                    state = State.Nothing;
+                    hash = newHash;
+                    time = documentTime.get();
+                  }
+                });
+              }
 
-  private synchronized void transitionToDelete() {
-    state = State.DeleteRequested;
-    key = newKey;
-    executeRequest = true;
-    time = documentTime.get();
-  }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                executor.execute(new NamedRunnable("rxreplicate-put-failure") {
+                  @Override
+                  public void execute() throws Exception {
+                    // put failed, so we retry
+                    state = State.PutFailed;
+                    time = documentTime.get();
+                    int backoffToUse = bumpBackoff();
+                    executor.schedule(new NamedRunnable("rxreplicate-put-retry") {
+                      @Override
+                      public void execute() throws Exception {
+                        state = State.PutRequested;
+                        time = documentTime.get();
+                        executeRequest = true;
+                        commit(executor);
+                      }
+                    }, backoffToUse);
+                  }
+                });
+              }
+            });
+          } else if (state == State.DeleteRequested) {
+            state = State.DeleteInflight;
+            goalServiceToUse.deleteReplica(method, key, new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+                executor.execute(new NamedRunnable("rxreplicate-delete-success") {
+                  @Override
+                  public void execute() throws Exception {
+                    // delete was successful
+                    state = State.Nothing;
+                    key = null;
+                    hash = null;
+                    time = 0;
+                    backoff = 0;
+                  }
+                });
+              }
 
-  private synchronized void putSuccess() {
-    state = State.Nothing;
-    hash = newHash;
-  }
-
-  private synchronized void putFailure() {
-    state = State.PutFailed;
-    time = documentTime.get();
-    bumpBackoff();
-  }
-
-  private synchronized void deleteSuccess() {
-    state = State.Nothing;
-    key = null;
-    hash = null;
-    time = 0;
-    backoff = 0;
-  }
-
-  private synchronized void deleteFailure() {
-    state = State.DeleteFailed;
-    time = documentTime.get();;
-    bumpBackoff();
-  }
-
-  public void commit() {
-    if (executeRequest) {
-      executeRequest = false;
-      if (state == State.PutRequested) {
-        replicatorToUse.complete(new Callback<Void>() {
-          @Override
-          public void success(Void value) {
-            putSuccess();
+              @Override
+              public void failure(ErrorCodeException ex) {
+                executor.execute(new NamedRunnable("rxreplicate-delete-failure") {
+                  @Override
+                  public void execute() throws Exception {
+                    // put failed, so we retry
+                    state = State.DeleteFailed;
+                    time = documentTime.get();
+                    int backoffToUse = bumpBackoff();
+                    executor.schedule(new NamedRunnable("rxreplicate-delete-retry") {
+                      @Override
+                      public void execute() throws Exception {
+                        state = State.DeleteRequested;
+                        time = documentTime.get();
+                        executeRequest = true;
+                        commit(executor);
+                      }
+                    }, backoffToUse);
+                  }
+                });
+              }
+            });
           }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            putFailure();
-          }
-        });
-      } else if (state == State.DeleteRequested) {
-        goalServiceToUse.deleteReplica(method, key, new Callback<Void>() {
-          @Override
-          public void success(Void value) {
-            deleteSuccess();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            deleteFailure();
-          }
-        });
+        }
       }
-    }
+    });
   }
 
   @Override
