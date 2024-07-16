@@ -28,7 +28,6 @@ import org.adamalang.runtime.reactives.RxBase;
 import org.adamalang.runtime.reactives.RxInt64;
 import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.remote.Service;
-import org.adamalang.runtime.remote.replication.Replicator;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -47,6 +46,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
   private String hash;
   private long time;
   private int backoff;
+  private int failureCount;
 
   // transitory local state
   private boolean invalidated;
@@ -61,12 +61,13 @@ public class RxReplicationStatus extends RxBase implements RxChild {
 
   // the state machine
   private enum State {
+    Invalid(50),
     Nothing(100),
     PutRequested(110),
     PutInflight(120),
     PutFailed(150),
-    DeleteRequested(300),
-    DeleteInflight(310),
+    DeleteRequested(310),
+    DeleteInflight(320),
     DeleteFailed(350);
 
     public final int code;
@@ -84,19 +85,23 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       return Nothing;
     }
 
-    public State persist() {
+    public State restart() {
       switch (this) {
-        case Nothing:
-          return Nothing;
         case PutRequested:
         case PutInflight:
+        case PutFailed:
           return PutRequested;
         case DeleteRequested:
         case DeleteInflight:
+        case DeleteFailed:
           return DeleteRequested;
       }
       return this;
     }
+  }
+
+  public int code() {
+    return state.code;
   }
 
   public RxReplicationStatus(RxParent __parent, RxInt64 documentTime, String service, String method) {
@@ -111,6 +116,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     this.backoff = 0;
     this.invalidated = true;
     this.executeRequest = false;
+    this.failureCount = 0;
   }
 
   /** link the status to the value */
@@ -144,9 +150,9 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       writer.writeObjectFieldIntro("time");
       writer.writeLong(time);
     }
-    if (this.backoff > 0) {
-      writer.writeObjectFieldIntro("backoff");
-      writer.writeInteger(backoff);
+    if (this.failureCount > 0) {
+      writer.writeObjectFieldIntro("failures");
+      writer.writeInteger(failureCount);
     }
     writer.endObject();
   }
@@ -158,7 +164,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
         String field = reader.fieldName();
         switch (field) {
           case "state":
-            this.state = State.from(reader.readInteger()).persist();
+            this.state = State.from(reader.readInteger()).restart();
             break;
           case "hash":
             this.hash = reader.readString();
@@ -168,6 +174,9 @@ public class RxReplicationStatus extends RxBase implements RxChild {
             break;
           case "time":
             this.time = reader.readLong();
+            break;
+          case "failures":
+            this.failureCount = reader.readInteger();
             break;
         }
       }
@@ -188,20 +197,25 @@ public class RxReplicationStatus extends RxBase implements RxChild {
   @Override
   public boolean __raiseInvalid() {
     invalidated = true;
-    return __parent.__isAlive();
+    if (__parent != null) {
+      return __parent.__isAlive();
+    }
+    return true;
   }
 
-  private boolean updateGoal(Caller caller, boolean updateOnlyIfSameKey) {
+  private boolean updateGoal(Caller caller) {
     NtToDynamic newValue = null;
     String computedKey = null;
     String computedHash = null;
     goalServiceToUse = caller.__findService(service);
     if (goalServiceToUse == null) {
+      state = State.Invalid;
       return false;
     }
     newValue = value.get();
     replicatorToUse = goalServiceToUse.beginCreateReplica(method, newValue);
     if (replicatorToUse == null) {
+      state = State.Invalid;
       return false;
     }
     computedKey = replicatorToUse.key();
@@ -210,27 +224,19 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       digest.update(newValue.to_dynamic().json.getBytes(StandardCharsets.UTF_8));
       computedHash = Hashing.finishAndEncode(digest);
     }
-    if (updateOnlyIfSameKey) {
-      if (this.newKey == null || this.newKey.equals(computedKey)) {
-        this.valueToSync = newValue;
-        this.newKey = computedKey;
-        this.newHash = computedHash;
-        return true;
-      }
-      return false;
-    } else {
-      this.valueToSync = newValue;
-      this.newKey = computedKey;
-      this.newHash = computedHash;
-      return true;
-    }
+    this.valueToSync = newValue;
+    this.newKey = computedKey;
+    this.newHash = computedHash;
+    return true;
   }
 
   public void progress(Caller caller) {
     switch (state) {
+      case Invalid:
+        return;
       case Nothing: {
         if (invalidated) {
-          if (updateGoal(caller, false)) {
+          if (updateGoal(caller)) {
             boolean createDirect = key == null && newKey != null;
             boolean overwrite = key != null && key.equals(newKey) && hash != null && !hash.equals(newHash);
             boolean deleteDirect = key != null && newKey == null;
@@ -243,7 +249,6 @@ public class RxReplicationStatus extends RxBase implements RxChild {
               __raiseDirty();
             } else if (deleteDirect || deleteChange) {
               state = State.DeleteRequested;
-              key = newKey;
               executeRequest = true;
               time = documentTime.get();
               __raiseDirty();
@@ -256,8 +261,10 @@ public class RxReplicationStatus extends RxBase implements RxChild {
       case PutRequested:
       case DeleteRequested:
         // Cold Restart Condition; TODO: remove magic 60000
-        if (time + 60000 > documentTime.get() && !executeRequest) {
-          executeRequest = true;
+        if (documentTime.get() > time + 60000 && !executeRequest) {
+          if (updateGoal(caller)) {
+            executeRequest = true;
+          }
         }
         return;
       case PutFailed:
@@ -270,6 +277,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
   }
 
   private int bumpBackoff() {
+    failureCount++;
     backoff ++;
     backoff = (int) (backoff + Math.random() * backoff);
     if (backoff > 30000) {
@@ -281,6 +289,10 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     return backoff;
   }
 
+  public int getBackoff() {
+    return backoff;
+  }
+
   public void commit(SimpleExecutor executor) {
     executor.execute(new NamedRunnable("rxreplicate-enter") {
       @Override
@@ -289,6 +301,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
           executeRequest = false;
           if (state == State.PutRequested) {
             state = State.PutInflight;
+            __raiseDirty();
             replicatorToUse.complete(new Callback<Void>() {
               @Override
               public void success(Void value) {
@@ -299,6 +312,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     state = State.Nothing;
                     hash = newHash;
                     time = documentTime.get();
+                    failureCount = 0;
                     __raiseDirty();
                   }
                 });
@@ -314,6 +328,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     time = documentTime.get();
                     int backoffToUse = bumpBackoff();
                     __raiseDirty();
+                    invalidated = true;
                     executor.schedule(new NamedRunnable("rxreplicate-put-retry") {
                       @Override
                       public void execute() throws Exception {
@@ -330,6 +345,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
             });
           } else if (state == State.DeleteRequested) {
             state = State.DeleteInflight;
+            __raiseDirty();
             goalServiceToUse.deleteReplica(method, key, new Callback<Void>() {
               @Override
               public void success(Void value) {
@@ -342,6 +358,8 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     hash = null;
                     time = 0;
                     backoff = 0;
+                    failureCount = 0;
+                    invalidated = true;
                     __raiseDirty();
                   }
                 });

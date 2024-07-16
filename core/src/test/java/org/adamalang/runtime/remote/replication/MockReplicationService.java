@@ -57,6 +57,18 @@ public class MockReplicationService implements Service {
     log.add(ln);
   }
 
+
+  private boolean failNextComplete = false;
+  private boolean failNextDelete = false;
+
+  public void raiseFailNextComplete() {
+    failNextComplete = true;
+  }
+
+  public void raiseFailNextDelete() {
+    failNextDelete = true;
+  }
+
   @Override
   public Replicator beginCreateReplica(String method, NtToDynamic body) {
     if ("nope".equals(method)) {
@@ -81,7 +93,8 @@ public class MockReplicationService implements Service {
 
       @Override
       public void complete(Callback<Void> callback) {
-        if ("failure".equals(method)) {
+        if ("failure".equals(method) || failNextComplete) {
+          failNextComplete = false;
           writeLog("FAILED[" + method + "]:" + key);
           callback.failure(new ErrorCodeException(-42));
         } else {
@@ -94,7 +107,8 @@ public class MockReplicationService implements Service {
 
   @Override
   public void deleteReplica(String method, String key, Callback<Void> callback) {
-    if ("failure".equals(method)) {
+    if ("failure".equals(method) || failNextDelete) {
+      failNextDelete = false;
       writeLog("NODELETE[" + method + "]:" + key);
       callback.failure(new ErrorCodeException(-42));
     } else {
