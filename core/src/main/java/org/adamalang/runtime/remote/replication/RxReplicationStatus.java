@@ -240,11 +240,13 @@ public class RxReplicationStatus extends RxBase implements RxChild {
               key = newKey;
               executeRequest = true;
               time = documentTime.get();
+              __raiseDirty();
             } else if (deleteDirect || deleteChange) {
               state = State.DeleteRequested;
               key = newKey;
               executeRequest = true;
               time = documentTime.get();
+              __raiseDirty();
             }
           }
           invalidated = false;
@@ -297,6 +299,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     state = State.Nothing;
                     hash = newHash;
                     time = documentTime.get();
+                    __raiseDirty();
                   }
                 });
               }
@@ -310,12 +313,14 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     state = State.PutFailed;
                     time = documentTime.get();
                     int backoffToUse = bumpBackoff();
+                    __raiseDirty();
                     executor.schedule(new NamedRunnable("rxreplicate-put-retry") {
                       @Override
                       public void execute() throws Exception {
                         state = State.PutRequested;
                         time = documentTime.get();
                         executeRequest = true;
+                        __raiseDirty();
                         commit(executor);
                       }
                     }, backoffToUse);
@@ -337,6 +342,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     hash = null;
                     time = 0;
                     backoff = 0;
+                    __raiseDirty();
                   }
                 });
               }
@@ -350,6 +356,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                     state = State.DeleteFailed;
                     time = documentTime.get();
                     int backoffToUse = bumpBackoff();
+                    __raiseDirty();
                     executor.schedule(new NamedRunnable("rxreplicate-delete-retry") {
                       @Override
                       public void execute() throws Exception {
@@ -357,6 +364,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                         time = documentTime.get();
                         executeRequest = true;
                         commit(executor);
+                        __raiseDirty();
                       }
                     }, backoffToUse);
                   }
