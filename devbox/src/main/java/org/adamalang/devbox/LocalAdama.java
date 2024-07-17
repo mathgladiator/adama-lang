@@ -406,14 +406,43 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
+  private void evalSend(Runnable action) {
+    if (control.slowSends.get()) {
+      executor.schedule(new NamedRunnable("slow send") {
+        @Override
+        public void execute() throws Exception {
+          action.run();
+        }
+      }, 5000);
+    } else {
+      action.run();
+    }
+  }
+
   @Override
   public void handle_ConnectionSend(long requestId, Long connection, String channel, JsonNode message, SeqResponder responder) {
-    LocalStream stream = streams.get(connection);
-    if (stream != null) {
-      stream.ref.send(channel, null, message.toString(), wrap("send", responder));
-    } else {
-      responder.error(new ErrorCodeException(-1));
-    }
+    Runnable action = () -> {
+      LocalStream stream = streams.get(connection);
+      if (stream != null) {
+        stream.ref.send(channel, null, message.toString(), wrap("send", responder));
+      } else {
+        responder.error(new ErrorCodeException(-1));
+      }
+    };
+    evalSend(action);
+  }
+
+  @Override
+  public void handle_ConnectionSendOnce(long requestId, Long connection, String channel, String dedupe, JsonNode message, SeqResponder responder) {
+    Runnable action = () -> {
+      LocalStream stream = streams.get(connection);
+      if (stream != null) {
+        stream.ref.send(channel, dedupe, message.toString(), wrap("send-once", responder));
+      } else {
+        responder.error(new ErrorCodeException(-1));
+      }
+    };
+    evalSend(action);
   }
 
   private static Callback<Integer> wrap(String task, SeqResponder responder) {
@@ -451,16 +480,6 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
           responder.error(ex);
         }
       });
-    } else {
-      responder.error(new ErrorCodeException(-1));
-    }
-  }
-
-  @Override
-  public void handle_ConnectionSendOnce(long requestId, Long connection, String channel, String dedupe, JsonNode message, SeqResponder responder) {
-    LocalStream stream = streams.get(connection);
-    if (stream != null) {
-      stream.ref.send(channel, dedupe, message.toString(), wrap("send-once", responder));
     } else {
       responder.error(new ErrorCodeException(-1));
     }

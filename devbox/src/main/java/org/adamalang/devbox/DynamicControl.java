@@ -23,10 +23,12 @@ public class DynamicControl {
   public final AtomicBoolean slowViewerStateUpdates;
   public final AtomicBoolean showDataFeed;
   public final AtomicBoolean autoTest;
+  public final AtomicBoolean slowSends;
 
   public DynamicControl() {
     this.slowViewerStateUpdates = new AtomicBoolean(false);
     this.showDataFeed = new AtomicBoolean(false);
     this.autoTest = new AtomicBoolean(false);
+    this.slowSends = new AtomicBoolean(false);
   }
 }

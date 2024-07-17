@@ -195,6 +195,8 @@ public class Start {
           terminal.info("Behavior:");
           terminal.info("  `viewer-updates slow` - slow down viewer updates by 5 seconds");
           terminal.info("  `viewer-updates fast` - disable the 5 second viewer update penalty");
+          terminal.info("  `sends slow` - slow down viewer updates by 5 seconds");
+          terminal.info("  `sends fast` - disable the 5 second viewer update penalty");
           terminal.info("  `autotest` - toggle tests to run after a deployment");
           terminal.info("  `data-feed` - toggle showing the data feed in terminal");
           terminal.info("");
@@ -226,7 +228,16 @@ public class Start {
           if (command.is("reset")) {
             stats.reset();
             terminal.notice("devbox|reset stats");
-          } else if (command.is("viewer-updates")) {
+          } else if (command.is("sends", "send")) {
+            if (command.argIs(0, "slow")) {
+              terminal.notice("devbox|slowing down sends by 5 seconds");
+              control.slowSends.set(true);
+            }
+            if (command.argIs(0, "fast")) {
+              terminal.notice("devbox|normalizing send speed");
+              control.slowSends.set(false);
+            }
+          } else if (command.is("viewer-updates", "view-updates", "viewer-update", "view-updates", "vu")) {
             if (command.argIs(0, "slow")) {
               terminal.notice("devbox|slowing down view updates by 5 seconds");
               control.slowViewerStateUpdates.set(true);
