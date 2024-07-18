@@ -90,7 +90,6 @@ public class OndemandDeploymentFactoryBaseTests {
     });
     Assert.assertTrue(happyDeploy.await(10000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(ondemand.spacesAvailable().contains("space"));
-
     HashMap<String, PredictiveInventory.MeteringSample> account = new HashMap<>();
     ondemand.account(account);
     Assert.assertNotNull(account.get("space"));
