@@ -703,6 +703,7 @@ public class DurableLivingDocument implements Queryable {
                   scheduleCleanup();
                 }
                 testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.PostPatch);
+                document.__replication.signalDurableAndExecute(base.executor);
               } finally {
                 finishSuccessDataServicePatchWhileInExecutor(true);
               }
