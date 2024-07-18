@@ -935,7 +935,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   protected void __hydrateReplicationEngine(final JsonStreamReader reader) {
-    __replication.load(reader);
+    __replication.load(reader, __time);
   }
 
   protected void __hydrateClients(final JsonStreamReader reader) {

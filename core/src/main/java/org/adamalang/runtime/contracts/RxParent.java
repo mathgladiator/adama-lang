@@ -35,4 +35,27 @@ public interface RxParent {
 
   /** settle down the reactivity */
   void __settle(Set<Integer> viewers);
+
+  public static final RxParent DEAD = new RxParent() {
+    @Override
+    public void __raiseDirty() {
+    }
+
+    @Override
+    public boolean __isAlive() {
+      return false;
+    }
+
+    @Override
+    public void __cost(int cost) {
+    }
+
+    @Override
+    public void __invalidateUp() {
+    }
+
+    @Override
+    public void __settle(Set<Integer> viewers) {
+    }
+  };
 }

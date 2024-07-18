@@ -20,25 +20,26 @@ package org.adamalang.runtime.remote.replication;
 import org.adamalang.common.Callback;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.contracts.DeleteTask;
+import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtToDynamic;
+import org.adamalang.runtime.reactives.RxInt64;
 import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.sys.LivingDocument;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 /** engine to replicate data */
 public class ReplicationEngine implements DeleteTask  {
-  private final LivingDocument parent;
+  private final LivingDocument document;
   private final ArrayList<RxReplicationStatus> tasks;
-  private final ArrayList<RxReplicationStatus> deleting;
+  private final HashMap<TombStone, RxReplicationStatus> deleting;
 
   public ReplicationEngine(LivingDocument parent) {
-    this.parent = parent;
+    this.document = parent;
     this.tasks = new ArrayList<>();
-    this.deleting = new ArrayList<>();
+    this.deleting = new HashMap<>();
   }
 
   public void link(RxReplicationStatus status, RxLazy<? extends NtToDynamic> value) {
@@ -47,39 +48,15 @@ public class ReplicationEngine implements DeleteTask  {
     status.linkToValue(value);
   }
 
-  // TODO: move to commit
-  public void progress() {
-    for(RxReplicationStatus status : deleting) {
-      status.progress(parent);
-    }
-
-    Iterator<RxReplicationStatus> it = tasks.iterator();
-    while (it.hasNext()) {
-      RxReplicationStatus status = it.next();
-      status.progress(parent);
-      if (status.requiresTombstone()) {
-        it.remove();
-        TombStone ts = status.toTombStone();
-        if (ts != null) {
-          deleting.add(status);
-          // record a tombstone
-        }
-      }
-    }
-  }
-
-  public void commitDurable(SimpleExecutor executor) {
-    for(RxReplicationStatus status : tasks) {
-      status.commit(executor);
-    }
-  }
-
-  public void load(JsonStreamReader reader) {
+  public void load(JsonStreamReader reader, RxInt64 documentTime) {
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         String name = reader.fieldName();
         if (reader.testLackOfNull()) {
-          reader.skipValue();
+          TombStone ts = TombStone.read(reader);
+          RxReplicationStatus status = new RxReplicationStatus(RxParent.DEAD, documentTime, ts.service, ts.method);
+          status.linkToTombstone(ts, document);
+          deleting.put(ts, status);
         }
       }
     }
@@ -87,34 +64,77 @@ public class ReplicationEngine implements DeleteTask  {
 
   public void dump(JsonStreamWriter writer) {
     writer.beginObject();
+    for (Map.Entry<TombStone, RxReplicationStatus> entry : deleting.entrySet()) {
+      writer.writeObjectFieldIntro(entry.getKey().md5);
+      entry.getKey().dump(writer);
+    }
     writer.endObject();
   }
 
   public void commit(JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
-    boolean commitDirty = false;
-    if (commitDirty) {
-      forwardDelta.writeObjectFieldIntro("__replication");
-      forwardDelta.beginObject();
-      reverseDelta.writeObjectFieldIntro("__replication");
-      reverseDelta.beginObject();
+    ArrayList<TombStone> toAdd = new ArrayList<>();
+    ArrayList<String> toDelete = new ArrayList<>();
 
-      /*
-      for (Map.Entry<String, ReplicationStatus> entry : status.entrySet()) {
-        if (entry.getValue().getAndClearDirty()) {
-          forwardDelta.writeObjectFieldIntro(entry.getKey());
-          entry.getValue().dump(forwardDelta);
-          reverseDelta.writeObjectFieldIntro(entry.getKey());
-          reverseDelta.writeNull();
+    { // make progress on items being deleted
+      Iterator<Map.Entry<TombStone, RxReplicationStatus>> itDeleting = deleting.entrySet().iterator();
+      while (itDeleting.hasNext()) {
+        Map.Entry<TombStone, RxReplicationStatus> pair = itDeleting.next();
+        pair.getValue().progress(document);
+        if (pair.getValue().isGone()) {
+          toDelete.add(pair.getKey().md5);
+          itDeleting.remove();
         }
       }
-      */
-      forwardDelta.endObject();
+    }
+
+    { // make progress on items that are live
+      Iterator<RxReplicationStatus> it = tasks.iterator();
+      while (it.hasNext()) {
+        RxReplicationStatus status = it.next();
+        status.progress(document);
+        if (status.requiresTombstone()) {
+          it.remove();
+          TombStone ts = status.toTombStone();
+          if (ts != null) {
+            deleting.put(ts, status);
+            toAdd.add(ts);
+          }
+        }
+      }
+    }
+
+    if (toAdd.size() > 0 || toDelete.size() > 0) {
+      // there is no reverse/undo for replication
+      reverseDelta.writeObjectFieldIntro("__replication");
+      reverseDelta.beginObject();
       reverseDelta.endObject();
+
+      forwardDelta.writeObjectFieldIntro("__replication");
+      forwardDelta.beginObject();
+      for (String del : toDelete) { // remove the tombstones for successful deletions
+        forwardDelta.writeObjectFieldIntro(del);
+        forwardDelta.writeNull();
+      }
+      for (TombStone ts : toAdd) { // persist the tombstone for things being deleted
+        forwardDelta.writeObjectFieldIntro(ts.md5);
+        ts.dump(forwardDelta);
+      }
+      forwardDelta.endObject();
+    }
+  }
+
+  public void signalDurableAndExecute(SimpleExecutor executor) {
+    for (RxReplicationStatus status : deleting.values()) {
+      status.signalDurableAndExecute(executor);
+    }
+    for (RxReplicationStatus status : tasks) {
+      status.signalDurableAndExecute(executor);
     }
   }
 
   @Override
   public void executeAfterMark(Callback<Void> callback) {
+    // This is very tricky! We just marked the document as deleted, so now we need to execute all the things.
     // TODO: execute deletes
     callback.success(null);
   }

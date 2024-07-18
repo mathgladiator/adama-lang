@@ -15,9 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240717215236";
-  public static final String JS_VERSION = "2ecadaea0a66ec78ec547760111c297f";
+import org.junit.Assert;
+import org.junit.Test;
+
+public class RxParentTests {
+  @Test
+  public void coverage() {
+    Assert.assertFalse(RxParent.DEAD.__isAlive());
+    RxParent.DEAD.__cost(0);
+    RxParent.DEAD.__settle(null);
+    RxParent.DEAD.__raiseDirty();
+    RxParent.DEAD.__invalidateUp();
+  }
 }

@@ -27,6 +27,7 @@ import org.adamalang.runtime.natives.NtResult;
 import org.adamalang.runtime.natives.NtToDynamic;
 import org.adamalang.runtime.remote.RxCache;
 import org.adamalang.runtime.remote.Service;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,6 +35,11 @@ import java.util.function.Function;
 
 public class MockReplicationService implements Service {
   private ArrayList<String> log;
+
+  public String at(int k) {
+    Assert.assertTrue(k < log.size());
+    return log.get(k);
+  }
 
   public MockReplicationService() {
     this.log = new ArrayList<>();

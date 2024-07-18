@@ -73,7 +73,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("\"diff\":{\"state\":110,\"key\":\"key2use\",\"time\":\"10000\"}", forward.toString());
       Assert.assertEquals("", reverse.toString());
     }
-    status.commit(SimpleExecutor.NOW);
+    status.signalDurableAndExecute(SimpleExecutor.NOW);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -87,7 +87,7 @@ public class RxReplicationStatusTests {
       status.__dump(writer);
       Assert.assertEquals("{\"state\":310,\"hash\":\"z1Z7GvHQuBJPpoce5G15xg==\",\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
     }
-    status.commit(SimpleExecutor.NOW);
+    status.signalDurableAndExecute(SimpleExecutor.NOW);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -99,7 +99,7 @@ public class RxReplicationStatusTests {
       status.__dump(writer);
       Assert.assertEquals("{\"state\":110,\"key\":\"key2useAfterDelete\",\"time\":\"10000\"}", writer.toString());
     }
-    status.commit(SimpleExecutor.NOW);
+    status.signalDurableAndExecute(SimpleExecutor.NOW);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -124,7 +124,7 @@ public class RxReplicationStatusTests {
       status.__dump(writer);
       Assert.assertEquals("{\"state\":50}", writer.toString());
     }
-    status.commit(SimpleExecutor.NOW);
+    status.signalDurableAndExecute(SimpleExecutor.NOW);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -149,7 +149,7 @@ public class RxReplicationStatusTests {
       status.__dump(writer);
       Assert.assertEquals("{\"state\":50}", writer.toString());
     }
-    status.commit(SimpleExecutor.NOW);
+    status.signalDurableAndExecute(SimpleExecutor.NOW);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -187,7 +187,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("", reverse.toString());
     }
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -262,7 +262,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("", reverse.toString());
     }
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -337,7 +337,7 @@ public class RxReplicationStatusTests {
     }
     executor.assertEmpty();
     status.progress(caller);
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
@@ -365,7 +365,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("\"diff\":{\"state\":310,\"hash\":\"z1Z7GvHQuBJPpoce5G15xg==\",\"key\":\"key2use\",\"time\":\"10000\"}", forward.toString());
       Assert.assertEquals("", reverse.toString());
     }
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
@@ -435,7 +435,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("\"diff\":{\"state\":110,\"key\":\"key2useAfterDelete\",\"time\":\"10000\"}", forward.toString());
       Assert.assertEquals("", reverse.toString());
     }
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -495,7 +495,7 @@ public class RxReplicationStatusTests {
     }
     status.progress(caller);
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
@@ -512,7 +512,7 @@ public class RxReplicationStatusTests {
     executor.assertEmpty();
     documentTime.set(1000000);
     status.progress(caller);
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
@@ -565,7 +565,7 @@ public class RxReplicationStatusTests {
     }
     status.progress(caller);
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
@@ -582,7 +582,7 @@ public class RxReplicationStatusTests {
     executor.assertEmpty();
     documentTime.set(1000000);
     status.progress(caller);
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();
@@ -644,7 +644,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("", reverse.toString());
     }
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -747,7 +747,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("Nothing;null;null;0", status.toString());
     }
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
   }
 
   @Test
@@ -784,7 +784,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("", reverse.toString());
     }
     SequencedTestExecutor executor = new SequencedTestExecutor();
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       status.__dump(writer);
@@ -824,7 +824,7 @@ public class RxReplicationStatusTests {
       Assert.assertEquals("{\"state\":310,\"hash\":\"z1Z7GvHQuBJPpoce5G15xg==\",\"key\":\"key2use\",\"time\":\"10000\"}", writer.toString());
       assertLoadAs(writer.toString(), 310);
     }
-    status.commit(executor);
+    status.signalDurableAndExecute(executor);
     executor.next();
     {
       JsonStreamWriter writer = new JsonStreamWriter();

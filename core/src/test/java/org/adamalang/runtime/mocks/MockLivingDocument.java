@@ -30,6 +30,7 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.remote.Service;
 import org.adamalang.runtime.remote.ServiceRegistry;
+import org.adamalang.runtime.remote.replication.MockReplicationService;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
@@ -45,17 +46,20 @@ import java.util.Set;
 public class MockLivingDocument extends LivingDocument {
   public final ArrayList<NtPrincipal> connects;
   public final ArrayList<NtPrincipal> disconnects;
+  public final MockReplicationService rservice;
 
   public MockLivingDocument() {
     super(null);
     connects = new ArrayList<>();
     disconnects = new ArrayList<>();
+    rservice = new MockReplicationService();
   }
 
   public MockLivingDocument(final DocumentMonitor monitor) {
     super(monitor);
     connects = new ArrayList<>();
     disconnects = new ArrayList<>();
+    rservice = new MockReplicationService();
   }
 
   @Override
@@ -109,6 +113,9 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   public Service __findService(String name) {
+    if ("rservice".equals(name)) {
+      return rservice;
+    }
     return null;
   }
 

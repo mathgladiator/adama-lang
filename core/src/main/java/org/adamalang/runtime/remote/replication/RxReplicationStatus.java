@@ -127,6 +127,15 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     this.value = value;
   }
 
+  public void linkToTombstone(TombStone ts, Caller caller) {
+    this.value = null;
+    this.key = ts.key;
+    this.state = State.DeleteRequested;
+    this.time = documentTime.get();
+    this.executeRequest = true;
+    goalServiceToUse = caller.__findService(service);
+  }
+
   @Override
   public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
@@ -314,7 +323,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
     return backoff;
   }
 
-  public void commit(SimpleExecutor executor) {
+  public void signalDurableAndExecute(SimpleExecutor executor) {
     executor.execute(new NamedRunnable("rxreplicate-enter") {
       @Override
       public void execute() throws Exception {
@@ -357,7 +366,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                         time = documentTime.get();
                         executeRequest = true;
                         __raiseDirty();
-                        commit(executor);
+                        signalDurableAndExecute(executor);
                       }
                     }, backoffToUse);
                   }
@@ -406,7 +415,7 @@ public class RxReplicationStatus extends RxBase implements RxChild {
                         state = State.DeleteRequested;
                         time = documentTime.get();
                         executeRequest = true;
-                        commit(executor);
+                        signalDurableAndExecute(executor);
                         __raiseDirty();
                       }
                     }, backoffToUse);

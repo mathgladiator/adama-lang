@@ -17,19 +17,33 @@
 */
 package org.adamalang.runtime.remote.replication;
 
+import org.adamalang.common.Hashing;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Objects;
+
 /** represents a future delete */
 public class TombStone {
+  private static final byte[] BOUNDARY = ";".getBytes(StandardCharsets.UTF_8);
   public final String service;
   public final String method;
   public final String key;
+  public final String md5;
 
   public TombStone(String service, String method, String key) {
     this.service = service;
     this.method = method;
     this.key = key;
+    MessageDigest digest = Hashing.md5();
+    digest.update(service.getBytes(StandardCharsets.UTF_8));
+    digest.update(BOUNDARY);
+    digest.update(method.getBytes(StandardCharsets.UTF_8));
+    digest.update(BOUNDARY);
+    digest.update(key.getBytes(StandardCharsets.UTF_8));
+    this.md5 = Hashing.finishAndEncode(digest);
   }
 
   public void dump(JsonStreamWriter writer) {
@@ -74,5 +88,18 @@ public class TombStone {
       reader.skipValue();
     }
     return null;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    TombStone tombStone = (TombStone) o;
+    return Objects.equals(service, tombStone.service) && Objects.equals(method, tombStone.method) && Objects.equals(key, tombStone.key);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(service, method, key);
   }
 }

@@ -54,4 +54,15 @@ public class TombStoneTests {
     Assert.assertEquals("method", t.method);
     Assert.assertEquals("key", t.key);
   }
+
+  @Test
+  public void generated() {
+    TombStone t = TombStone.read(new JsonStreamReader("{\"x\":123,\"s\":\"service\",\"nope\":true,\"m\":\"method\",\"yo\":[{}],\"k\":\"key\"}"));
+    TombStone t2 = TombStone.read(new JsonStreamReader("{\"x\":8,\"s\":\"service\",\"nope\":false,\"m\":\"method\",\"yo\":[{}],\"k\":\"key\"}"));
+    Assert.assertEquals(761482098, t.hashCode());
+    Assert.assertEquals(t, t);
+    Assert.assertEquals(t, t2);
+    Assert.assertNotEquals(t, null);
+    Assert.assertNotEquals(t, "nope");
+  }
 }
