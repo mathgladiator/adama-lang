@@ -17,6 +17,8 @@
 */
 package org.adamalang.runtime.async;
 
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.reactives.RxInt32;
 
 import java.util.ArrayList;
@@ -39,10 +41,34 @@ public class IdHistoryLog {
     history.clear();
   }
 
+  public void dump(JsonStreamWriter writer) {
+    writer.beginArray();
+    for (int id : history) {
+      writer.writeInteger(id);
+    }
+    writer.endArray();
+  }
+
+  public static IdHistoryLog read(JsonStreamReader reader) {
+    IdHistoryLog log = new IdHistoryLog();
+    if (reader.startArray()) {
+      while (reader.notEndOfArray()) {
+        log.history.add(reader.readInteger());
+      }
+    } else {
+      reader.skipValue();
+      return null;
+    }
+    return log;
+  }
+
   public int next(RxInt32 basis) {
     final int v;
     if (at < history.size()) {
       v = history.get(at);
+      if (basis.get() < v) {
+        basis.set(v);
+      }
     } else {
       v = basis.bumpUpPre();
       history.add(v);
