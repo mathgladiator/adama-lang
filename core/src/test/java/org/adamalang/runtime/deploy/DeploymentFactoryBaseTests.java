@@ -27,6 +27,8 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class DeploymentFactoryBaseTests {
   @Test
   public void coverage_dumb() {
@@ -49,5 +51,6 @@ public class DeploymentFactoryBaseTests {
     base.attachDeliverer(Deliverer.FAILURE);
     base.deliver(NtPrincipal.NO_ONE, new Key("space", "key"), 400, null, true, Callback.DONT_CARE_INTEGER);
     base.undeploy("space");
+    base.account(new HashMap<>());
   }
 }

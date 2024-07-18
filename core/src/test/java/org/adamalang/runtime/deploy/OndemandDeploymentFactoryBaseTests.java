@@ -22,11 +22,13 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.PlanFetcher;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.translator.env.RuntimeEnvironment;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -88,8 +90,18 @@ public class OndemandDeploymentFactoryBaseTests {
     });
     Assert.assertTrue(happyDeploy.await(10000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(ondemand.spacesAvailable().contains("space"));
+
+    HashMap<String, PredictiveInventory.MeteringSample> account = new HashMap<>();
+    ondemand.account(account);
+    Assert.assertNotNull(account.get("space"));
+    Assert.assertEquals(272970, account.get("space").memory);
+    ondemand.account(account);
+    Assert.assertEquals(545940, account.get("space").memory);
     ondemand.undeploy("space");
     Assert.assertFalse(ondemand.spacesAvailable().contains("space"));
+    account = new HashMap<>();
+    ondemand.account(account);
+    Assert.assertNull(account.get("space"));
   }
 
   @Test

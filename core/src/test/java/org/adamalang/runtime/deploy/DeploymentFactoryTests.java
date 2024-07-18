@@ -68,6 +68,7 @@ public class DeploymentFactoryTests {
         latch.countDown();
       }
     });
+    base.account(new HashMap<>());
     Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
   }
 
@@ -150,6 +151,7 @@ public class DeploymentFactoryTests {
             (t, errorCode) -> {});
     DeploymentFactory newFactory = forge("space", "Space_", new AtomicInteger(1000), null, plan, Deliverer.FAILURE, new TreeMap<>());
     Assert.assertEquals(1, newFactory.spacesAvailable().size());
+    newFactory.account(new HashMap<>());
   }
 
   @Test
