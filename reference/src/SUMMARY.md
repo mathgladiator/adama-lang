@@ -97,3 +97,4 @@
   - [Projection Map](./design/projection.md)
   - [Replication](./design/replication.md)
   - [Durability](./design/durability.md)
+  - [Throughput](./design/throughput.md)
