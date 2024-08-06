@@ -24,6 +24,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.validators.ValidateDomain;
 import org.adamalang.web.io.*;
 
 /** Send an authorization request to a document via a domain */
@@ -42,6 +43,7 @@ public class DocumentAuthorizationDomainRequest {
     try {
       final BulkLatch<DocumentAuthorizationDomainRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String domain = request.getStringNormalize("domain", true, 488444);
+      ValidateDomain.validate(domain);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final JsonNode message = request.getJsonNode("message", true, 425987);
       _latch.with(() -> new DocumentAuthorizationDomainRequest(domain, resolvedDomain.get(), message));

@@ -25,6 +25,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.validators.ValidateDomain;
 import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
@@ -59,6 +60,7 @@ public class DomainMapDocumentRequest {
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String domain = request.getStringNormalize("domain", true, 488444);
+      ValidateDomain.validate(domain);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final String space = request.getStringNormalize("space", true, 461828);
       ValidateSpace.validate(space);

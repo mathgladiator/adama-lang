@@ -15,9 +15,18 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.validators;
 
-public class Platform {
-  public static final String VERSION = "20240806142649";
-  public static final String JS_VERSION = "2ecadaea0a66ec78ec547760111c297f";
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.ErrorCodeException;
+
+public class ValidateDomain {
+  public static void validate(String domain) throws ErrorCodeException  {
+    if (domain.contains("/") || domain.contains("\\")) {
+      throw new ErrorCodeException(ErrorCodes.API_DOMAIN_SHOULDNT_CONTAIN_SLASH);
+    }
+    if (domain.contains(":")) {
+      throw new ErrorCodeException(ErrorCodes.API_DOMAIN_SHOULDNT_CONTAIN_COLON);
+    }
+  }
 }

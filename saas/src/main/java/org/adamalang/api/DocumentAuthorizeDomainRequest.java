@@ -23,6 +23,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.validators.ValidateDomain;
 import org.adamalang.web.io.*;
 
 /** Authorize a username and password against a document via a domain */
@@ -43,6 +44,7 @@ public class DocumentAuthorizeDomainRequest {
     try {
       final BulkLatch<DocumentAuthorizeDomainRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String domain = request.getStringNormalize("domain", true, 488444);
+      ValidateDomain.validate(domain);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final String username = request.getString("username", true, 458737);
       final String password = request.getString("password", true, 465917);

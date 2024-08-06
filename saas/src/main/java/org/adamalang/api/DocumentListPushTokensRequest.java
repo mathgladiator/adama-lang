@@ -25,6 +25,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.contracts.data.SpacePolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.validators.ValidateDomain;
 import org.adamalang.validators.ValidateKey;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
@@ -62,6 +63,7 @@ public class DocumentListPushTokensRequest {
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
       final String domain = request.getStringNormalize("domain", true, 488444);
+      ValidateDomain.validate(domain);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final String agent = request.getString("agent", true, 493556);
       _latch.with(() -> new DocumentListPushTokensRequest(identity, who.get(), space, policy.get(), key, domain, resolvedDomain.get(), agent));

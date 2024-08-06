@@ -582,6 +582,10 @@ public class ErrorTable {
     descriptions.put(908415, "no description of error (yet)");
     names.put(967804, "API_CHANNEL_VALIDATION_BAD_MIDDLE_CHARACTER");
     descriptions.put(967804, "no description of error (yet)");
+    names.put(971023, "API_DOMAIN_SHOULDNT_CONTAIN_SLASH");
+    descriptions.put(971023, "no description of error (yet)");
+    names.put(934159, "API_DOMAIN_SHOULDNT_CONTAIN_COLON");
+    descriptions.put(934159, "no description of error (yet)");
     names.put(950384, "API_GOODWILL_EXCEPTION");
     descriptions.put(950384, "The given document ran out of compute tokens. This is most likely due to an infinite loop.");
     names.put(982212, "AWS_EMAIL_SEND_FAILURE_HARD_EXCEPTION");

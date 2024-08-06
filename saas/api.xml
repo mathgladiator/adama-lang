@@ -376,6 +376,7 @@
                    output-name="resolvedDomain"
                    output-java-type="org.adamalang.contracts.data.DomainWithPolicy"
                    error-code="406514"/>
+        <validate service="org.adamalang.validators.ValidateDomain"/>
     </parameter-definition>
 
     <parameter-definition name="destination-domain" type="string" missing-error="454644" logged="true">

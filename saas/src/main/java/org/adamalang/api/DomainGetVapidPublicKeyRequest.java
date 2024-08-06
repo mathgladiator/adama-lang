@@ -24,6 +24,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.validators.ValidateDomain;
 import org.adamalang.web.io.*;
 
 /** Get the public key for the VAPID */
@@ -46,6 +47,7 @@ public class DomainGetVapidPublicKeyRequest {
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String domain = request.getStringNormalize("domain", true, 488444);
+      ValidateDomain.validate(domain);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       _latch.with(() -> new DomainGetVapidPublicKeyRequest(identity, who.get(), domain, resolvedDomain.get()));
       nexus.identityService.execute(session, identity, who);

@@ -15,9 +15,32 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.validators;
 
-public class Platform {
-  public static final String VERSION = "20240806142649";
-  public static final String JS_VERSION = "2ecadaea0a66ec78ec547760111c297f";
+import org.adamalang.common.ErrorCodeException;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class ValidateDomainTests {
+  @Test
+  public void basics() {
+    try {
+      ValidateDomain.validate("https:");
+      Assert.fail();
+    } catch (ErrorCodeException ex) {
+      Assert.assertEquals(934159, ex.code);
+    }
+    try {
+      ValidateDomain.validate("//");
+      Assert.fail();
+    } catch (ErrorCodeException ex) {
+      Assert.assertEquals(971023, ex.code);
+    }
+    try {
+      ValidateDomain.validate("\\");
+      Assert.fail();
+    } catch (ErrorCodeException ex) {
+      Assert.assertEquals(971023, ex.code);
+    }
+  }
 }

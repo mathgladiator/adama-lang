@@ -24,6 +24,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
+import org.adamalang.validators.ValidateDomain;
 import org.adamalang.web.io.*;
 
 /** Create a connection to a document via a domain name. */
@@ -48,6 +49,7 @@ public class ConnectionCreateViaDomainRequest {
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String domain = request.getStringNormalize("domain", true, 488444);
+      ValidateDomain.validate(domain);
       final LatchRefCallback<DomainWithPolicy> resolvedDomain = new LatchRefCallback<>(_latch);
       final ObjectNode viewerState = request.getObject("viewer-state", false, 0);
       _latch.with(() -> new ConnectionCreateViaDomainRequest(identity, who.get(), domain, resolvedDomain.get(), viewerState));
