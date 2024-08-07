@@ -1,0 +1,15 @@
+filter good_page {
+  return true;
+}
+
+view string current;
+
+filter is_billing_whoops {
+  return current == "billing";
+}
+
+bubble<|is_billing> check1 = "got 2";
+bubble<|is_billing,is_billing> check2 = "got 2";
+
+use<|is_billing> formula f1 = "have 2";
+use<|is_billing,is_billing> formula f2 = "have 4";

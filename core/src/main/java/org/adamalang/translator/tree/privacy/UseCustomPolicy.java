@@ -72,6 +72,11 @@ public class UseCustomPolicy extends Policy {
         }
       }
     }
+    for (TokenizedItem<String> filter : guard.filters) {
+      if (!environment.document.viewerType.storage.viewFilters.containsKey(filter.item)) {
+        environment.document.createError(this, String.format("Filter '%s' was not found", filter.item));
+      }
+    }
   }
 
   @Override

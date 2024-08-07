@@ -100,48 +100,88 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Simple_3 = null;
-  private String get_Simple_3() {
-    if (cached_Simple_3 != null) {
-      return cached_Simple_3;
+  private String cached_NotFound_3 = null;
+  private String get_NotFound_3() {
+    if (cached_NotFound_3 != null) {
+      return cached_NotFound_3;
     }
-    cached_Simple_3 = generateTestOutput(true, "Simple_3", "./test_code/ViewFilter_Simple_success.a");
-    return cached_Simple_3;
+    cached_NotFound_3 = generateTestOutput(false, "NotFound_3", "./test_code/ViewFilter_NotFound_failure.a");
+    return cached_NotFound_3;
+  }
+
+  @Test
+  public void testNotFoundFailure() {
+    assertLiveFail(get_NotFound_3());
+  }
+
+  @Test
+  public void testNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotFound_3());
+  }
+
+  @Test
+  public void testNotFoundExceptionFree() {
+    assertExceptionFree(get_NotFound_3());
+  }
+
+  @Test
+  public void testNotFoundTODOFree() {
+    assertTODOFree(get_NotFound_3());
+  }
+
+  @Test
+  public void stable_NotFound_3() {
+    String live = get_NotFound_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:ViewFilter_NotFound_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":10,\"character\":0,\"byte\":120},\"end\":{\"line\":10,\"character\":37,\"byte\":157}},\"severity\":1,\"source\":\"error\",\"message\":\"Filter 'is_billing' was not found\",\"file\":\"./test_code/ViewFilter_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":11,\"character\":0,\"byte\":158},\"end\":{\"line\":11,\"character\":48,\"byte\":206}},\"severity\":1,\"source\":\"error\",\"message\":\"Filter 'is_billing' was not found\",\"file\":\"./test_code/ViewFilter_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":11,\"character\":0,\"byte\":158},\"end\":{\"line\":11,\"character\":48,\"byte\":206}},\"severity\":1,\"source\":\"error\",\"message\":\"Filter 'is_billing' was not found\",\"file\":\"./test_code/ViewFilter_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":13,\"character\":0,\"byte\":208},\"end\":{\"line\":13,\"character\":16,\"byte\":224}},\"severity\":1,\"source\":\"error\",\"message\":\"Filter 'is_billing' was not found\",\"file\":\"./test_code/ViewFilter_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":14,\"character\":0,\"byte\":248},\"end\":{\"line\":14,\"character\":27,\"byte\":275}},\"severity\":1,\"source\":\"error\",\"message\":\"Filter 'is_billing' was not found\",\"file\":\"./test_code/ViewFilter_NotFound_failure.a\"},{\"range\":{\"start\":{\"line\":14,\"character\":0,\"byte\":248},\"end\":{\"line\":14,\"character\":27,\"byte\":275}},\"severity\":1,\"source\":\"error\",\"message\":\"Filter 'is_billing' was not found\",\"file\":\"./test_code/ViewFilter_NotFound_failure.a\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Simple_4 = null;
+  private String get_Simple_4() {
+    if (cached_Simple_4 != null) {
+      return cached_Simple_4;
+    }
+    cached_Simple_4 = generateTestOutput(true, "Simple_4", "./test_code/ViewFilter_Simple_success.a");
+    return cached_Simple_4;
   }
 
   @Test
   public void testSimpleEmission() {
-    assertEmissionGood(get_Simple_3());
+    assertEmissionGood(get_Simple_4());
   }
 
   @Test
   public void testSimpleSuccess() {
-    assertLivePass(get_Simple_3());
+    assertLivePass(get_Simple_4());
   }
 
   @Test
   public void testSimpleNoFormatException() {
-    assertNoFormatException(get_Simple_3());
+    assertNoFormatException(get_Simple_4());
   }
 
   @Test
   public void testSimpleGoodWillHappy() {
-    assertGoodWillHappy(get_Simple_3());
+    assertGoodWillHappy(get_Simple_4());
   }
 
   @Test
   public void testSimpleExceptionFree() {
-    assertExceptionFree(get_Simple_3());
+    assertExceptionFree(get_Simple_4());
   }
 
   @Test
   public void testSimpleTODOFree() {
-    assertTODOFree(get_Simple_3());
+    assertTODOFree(get_Simple_4());
   }
 
   @Test
-  public void stable_Simple_3() {
-    String live = get_Simple_3();
+  public void stable_Simple_4() {
+    String live = get_Simple_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ViewFilter_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -187,13 +227,13 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Simple_3 extends LivingDocument {");
+    gold.append("\npublic class Simple_4 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Simple_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public Simple_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -462,9 +502,9 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n  public class DeltaPrivacyCache {");
     gold.append("\n    public DeltaPrivacyCache(NtPrincipal __who) {}");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSimple_3 implements DeltaNode {");
+    gold.append("\n  private class DeltaSimple_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSimple_3() {");
+    gold.append("\n    private DeltaSimple_4() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -472,7 +512,7 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public boolean show(Simple_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Simple_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
@@ -503,8 +543,8 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective) {");
-    gold.append("\n    Simple_3 __self = this;");
-    gold.append("\n    DeltaSimple_3 __state = new DeltaSimple_3();");
+    gold.append("\n    Simple_4 __self = this;");
+    gold.append("\n    DeltaSimple_4 __state = new DeltaSimple_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
     gold.append("\n    return new PrivateView(__viewId, __who, ___perspective) {");
@@ -796,48 +836,48 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Used_4 = null;
-  private String get_Used_4() {
-    if (cached_Used_4 != null) {
-      return cached_Used_4;
+  private String cached_Used_5 = null;
+  private String get_Used_5() {
+    if (cached_Used_5 != null) {
+      return cached_Used_5;
     }
-    cached_Used_4 = generateTestOutput(true, "Used_4", "./test_code/ViewFilter_Used_success.a");
-    return cached_Used_4;
+    cached_Used_5 = generateTestOutput(true, "Used_5", "./test_code/ViewFilter_Used_success.a");
+    return cached_Used_5;
   }
 
   @Test
   public void testUsedEmission() {
-    assertEmissionGood(get_Used_4());
+    assertEmissionGood(get_Used_5());
   }
 
   @Test
   public void testUsedSuccess() {
-    assertLivePass(get_Used_4());
+    assertLivePass(get_Used_5());
   }
 
   @Test
   public void testUsedNoFormatException() {
-    assertNoFormatException(get_Used_4());
+    assertNoFormatException(get_Used_5());
   }
 
   @Test
   public void testUsedGoodWillHappy() {
-    assertGoodWillHappy(get_Used_4());
+    assertGoodWillHappy(get_Used_5());
   }
 
   @Test
   public void testUsedExceptionFree() {
-    assertExceptionFree(get_Used_4());
+    assertExceptionFree(get_Used_5());
   }
 
   @Test
   public void testUsedTODOFree() {
-    assertTODOFree(get_Used_4());
+    assertTODOFree(get_Used_5());
   }
 
   @Test
-  public void stable_Used_4() {
-    String live = get_Used_4();
+  public void stable_Used_5() {
+    String live = get_Used_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:ViewFilter_Used_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -894,7 +934,7 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
-    gold.append("\npublic class Used_4 extends LivingDocument {");
+    gold.append("\npublic class Used_5 extends LivingDocument {");
     gold.append("\n  private final RxLazy<String> f1;");
     gold.append("\n  private final RxLazy<String> f2;");
     gold.append("\n  private final RxLazy<String> f3;");
@@ -929,7 +969,7 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n    __sum += f4.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Used_4(DocumentMonitor __monitor) {");
+    gold.append("\n  public Used_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    f1 = new RxLazy<String>(this, () -> (String)(\"have 1\"), null);");
     gold.append("\n    f2 = new RxLazy<String>(this, () -> (String)(\"have 2\"), null);");
@@ -1217,7 +1257,7 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n      this.foo=__POLICY_foo(__who);");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaUsed_4 implements DeltaNode {");
+    gold.append("\n  private class DeltaUsed_5 implements DeltaNode {");
     gold.append("\n    private int __gf1;");
     gold.append("\n    private DString __df1;");
     gold.append("\n    private int __gf2;");
@@ -1235,7 +1275,7 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n    private long __gcheck4;");
     gold.append("\n    private DString __dcheck4;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaUsed_4() {");
+    gold.append("\n    private DeltaUsed_5() {");
     gold.append("\n      __gf1 = -1;");
     gold.append("\n      __df1 = new DString();");
     gold.append("\n      __gf2 = -1;");
@@ -1267,7 +1307,7 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n      __sum += __dcheck4.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public boolean show(Used_4 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public boolean show(Used_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      DeltaPrivacyCache __policy_cache = new DeltaPrivacyCache(__writer.who);");
     gold.append("\n      __writer.setCacheObject(__policy_cache);");
     gold.append("\n      __code_cost += 8;");
@@ -1405,8 +1445,8 @@ public class GeneratedViewFilterTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtPrincipal __who, Perspective ___perspective) {");
-    gold.append("\n    Used_4 __self = this;");
-    gold.append("\n    DeltaUsed_4 __state = new DeltaUsed_4();");
+    gold.append("\n    Used_5 __self = this;");
+    gold.append("\n    DeltaUsed_5 __state = new DeltaUsed_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    int __viewId = __genViewId();");
     gold.append("\n    return new PrivateView(__viewId, __who, ___perspective) {");
