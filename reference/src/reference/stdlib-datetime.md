@@ -37,9 +37,9 @@ Adama supports four date and time related types:
 ## Date functions
 | Method                                                                      | Description                                                                                                              | Result type           |
 |-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|-----------------------|
-| Date.day()                                          | Get the day as an int                                                                                                              | int     |
-| Date.month()                                          | Get the month as an int                                                                                                              | int     |
-| Date.year()                                          | Get the year as an int                                                                                                              | int     |
+| Date.day()                                                                  | Get the day as an int                                                                                                    | int                   |
+| Date.month()                                                                | Get the month as an int                                                                                                  | int                   |
+| Date.year()                                                                 | Get the year as an int                                                                                                   | int                   |
 | Date.make(int yr, int mo, int day)                                          | make a date                                                                                                              | maybe&lt;date&gt;     |
 | Date.construct(date dy, time t, double sec, string zone)                    | make a datetime                                                                                                          | maybe&lt;datetime&gt; |
 | Date.calendarViewOf(date&nbsp;d)                                            | Get the surrounding month for the given date                                                                             | list&lt;date&gt;      |
@@ -59,6 +59,9 @@ Adama supports four date and time related types:
 | Date.between(datetime from, datetime to)                                    | Get the time between two datetimes                                                                                       | timespan              |
 | Date.format(date, string format, string lang)                               | Format the date for the given format in the given language (time component is midnight at 0 seconds using UTC time zone) | maybe&lt;string&gt;   |
 | Date.format(date, string format)                                            | Format the date for the given format using english (time component is midnight at 0 seconds using UTC time zone)         | maybe&lt;string&gt;   |
+| Date.min(date d1, date d2)                                                  | pick the minimum date                                                                                                    | date                  |
+| Date.max(date d1, date d2)                                                  | pick the maximum date                                                                                                    | date                  |
+| Date.overlaps(date a, date b, date c, date d)                               | do the date ranges [a,b] and [c,d] overlap                                                                               | bool                  |
 
 
 ## Timespan functions
@@ -71,24 +74,27 @@ Adama supports four date and time related types:
 | TimeSpan.hours(timespan a) or a.seconds()   | Return the timespan as hours                                                  | double      |
 
 ## DateTime functions
-| Method                                            | Description                                                            | Result type       |
-|---------------------------------------------------|------------------------------------------------------------------------|-------------------|
-| Date.future(datetime d, timespan t)               | Get the future datetime by the given timespan                          | datetime          |
-| Date.past(datetime d, timespan t)                 | Get the past datetime by the given timespan                            | datetime          |
-| Date.date(datetime d)                             | Convert the datetime to a date, throwing away the time                 | date              |
-| Date.time(datetime d)                             | Convert the datetime to a time, throwing away the date                 | time              |
-| Date.adjustTimeZone(datetime d, String tz)        | Adjust the timezone if the timezone exists                             | maybe&lt;datetime&gt; |
-| Date.format(datetime, string format, string lang) | Format the datetime for the given format in the given language         | maybe&lt;string&gt; |
-| Date.format(datetime, string format)              | Format the datetime for the given format using english                 | maybe&lt;string&gt; |
-| Date.withYear(datetime d, int year)               | Replace the year                                                       | maybe&lt;datetime&gt; |
-| Date.withMonth(datetime d, int month)             | Replace the month                                                      | maybe&lt;datetime&gt; |
-| Date.withDayOfMonth(datetime d, int day)          | Replace the day of the month                                           | maybe&lt;datetime&gt; |
-| Date.withHour(datetime d, int hour)               | Replace the hour                                                       | maybe&lt;datetime&gt; |
-| Date.withMinute(datetime d, int minute)           | Replace the minute the month                                           | maybe&lt;datetime&gt; |
-| Date.withTime(datetime d, time t)                 | Replace both the hour and minute and zero out seconds and milliseconds | maybe&lt;datetime&gt; |
-| Date.truncateDay(datetime)                        | Zero out the day, hour, minute, seconds, milliseconds                  | datetime |
-| Date.truncateHour(datetime)                       | Zero out the hour, minute, seconds, milliseconds                       | datetime |
-| Date.truncateMinute(datetime)                     | Zero out the minute, seconds, milliseconds                             | datetime |
-| Date.truncateSeconds(datetime)                    | Zero out the seconds, milliseconds                                     | datetime |
-| Date.truncateMilliseconds(datetime)               | Zero out the milliseconds                                              | datetime |
+| Method                                                        | Description                                                            | Result type           |
+|---------------------------------------------------------------|------------------------------------------------------------------------|-----------------------|
+| Date.future(datetime d, timespan t)                           | Get the future datetime by the given timespan                          | datetime              |
+| Date.past(datetime d, timespan t)                             | Get the past datetime by the given timespan                            | datetime              |
+| Date.date(datetime d)                                         | Convert the datetime to a date, throwing away the time                 | date                  |
+| Date.time(datetime d)                                         | Convert the datetime to a time, throwing away the date                 | time                  |
+| Date.adjustTimeZone(datetime d, String tz)                    | Adjust the timezone if the timezone exists                             | maybe&lt;datetime&gt; |
+| Date.format(datetime, string format, string lang)             | Format the datetime for the given format in the given language         | maybe&lt;string&gt;   |
+| Date.format(datetime, string format)                          | Format the datetime for the given format using english                 | maybe&lt;string&gt;   |
+| Date.withYear(datetime d, int year)                           | Replace the year                                                       | maybe&lt;datetime&gt; |
+| Date.withMonth(datetime d, int month)                         | Replace the month                                                      | maybe&lt;datetime&gt; |
+| Date.withDayOfMonth(datetime d, int day)                      | Replace the day of the month                                           | maybe&lt;datetime&gt; |
+| Date.withHour(datetime d, int hour)                           | Replace the hour                                                       | maybe&lt;datetime&gt; |
+| Date.withMinute(datetime d, int minute)                       | Replace the minute the month                                           | maybe&lt;datetime&gt; |
+| Date.withTime(datetime d, time t)                             | Replace both the hour and minute and zero out seconds and milliseconds | maybe&lt;datetime&gt; |
+| Date.truncateDay(datetime)                                    | Zero out the day, hour, minute, seconds, milliseconds                  | datetime              |
+| Date.truncateHour(datetime)                                   | Zero out the hour, minute, seconds, milliseconds                       | datetime              |
+| Date.truncateMinute(datetime)                                 | Zero out the minute, seconds, milliseconds                             | datetime              |
+| Date.truncateSeconds(datetime)                                | Zero out the seconds, milliseconds                                     | datetime              |
+| Date.truncateMilliseconds(datetime)                           | Zero out the milliseconds                                              | datetime              |
+| Date.min(datetime d1, datetime d2)                            | pick the minimum date                                                  | datetime              |
+| Date.max(datetime d1, datetime d2)                            | pick the maximum date                                                  | datetime              |
+| Date.overlaps(datetime a, datetime b, datetime c, datetime d) | do the datetime ranges [a,b] and [c,d] overlap                         | bool                  |
 
