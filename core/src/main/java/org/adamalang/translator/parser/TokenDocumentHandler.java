@@ -44,6 +44,11 @@ public abstract class TokenDocumentHandler implements Consumer<Token>, TopLevelD
   }
 
   @Override
+  public void add(DefineViewFilter viewFilter) {
+    viewFilter.emit(this);
+  }
+
+  @Override
   public void add(final DefineCustomPolicy customPolicy) {
     customPolicy.emit(this);
   }

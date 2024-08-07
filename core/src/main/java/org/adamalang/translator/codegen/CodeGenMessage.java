@@ -119,6 +119,10 @@ public class CodeGenMessage {
       countDown--;
       sb.append(";");
       if (countDown == 0) {
+        if (storage.viewFilters.size() > 0) {
+          sb.writeNewline();
+          sb.append("__computeViewFilters();");
+        }
         sb.tabDown();
       }
       sb.writeNewline();
@@ -200,7 +204,7 @@ public class CodeGenMessage {
       sb.append("@Override").writeNewline();
       sb.append("public void __ingest(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
       if (storage.fields.size() == 0) {
-        sb.append("__reader.mustSkipObject();").tabDown().writeNewline();
+        sb.append("__reader.mustSkipObject();");
       } else {
         sb.append("__reader.mustStartObject();").writeNewline();
         sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
@@ -217,8 +221,13 @@ public class CodeGenMessage {
         sb.append("default:").tabUp().writeNewline(); // UP
         sb.append("__reader.skipValue();").tabDown().tabDown().writeNewline(); // DOWN
         sb.append("}").tabDown().writeNewline(); // DOWN
-        sb.append("}").tabDown().writeNewline();
+        sb.append("}");
       }
+      if (storage.viewFilters.size() > 0) {
+        sb.writeNewline();
+        sb.append("__computeViewFilters();");
+      }
+      sb.tabDown().writeNewline();
       sb.append("}").writeNewline();
     }
     { // WRITE TO STREAM

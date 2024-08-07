@@ -49,6 +49,11 @@ public class FormatDocumentHandler implements TopLevelDocumentHandler{
   }
 
   @Override
+  public void add(DefineViewFilter viewFilter) {
+    viewFilter.format(formatter);
+  }
+
+  @Override
   public void add(DefineCustomPolicy customPolicy) {
     customPolicy.format(formatter);
   }

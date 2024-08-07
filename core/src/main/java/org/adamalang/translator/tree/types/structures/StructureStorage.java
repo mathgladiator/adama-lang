@@ -25,6 +25,7 @@ import org.adamalang.translator.env.topo.TopologicalSort;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
+import org.adamalang.translator.tree.definitions.DefineViewFilter;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
@@ -63,6 +64,7 @@ public class StructureStorage extends DocumentPosition {
   public final HashMap<String, TyNativeFunctional> internalMethods;
   public final Token openBraceToken;
   public final TreeMap<String, DefineCustomPolicy> policies;
+  public final TreeMap<String, DefineViewFilter> viewFilters;
   public final ArrayList<String> policiesForVisibility;
   public final StorageSpecialization specialization;
   public TypeCheckerStructure checker;
@@ -87,6 +89,7 @@ public class StructureStorage extends DocumentPosition {
     methods = new ArrayList<>();
     fieldsByOrder = new ArrayList<>();
     policies = new TreeMap<>();
+    viewFilters = new TreeMap<>();
     policiesForVisibility = new ArrayList<>();
     emissions = new ArrayList<>();
     indices = new ArrayList<>();

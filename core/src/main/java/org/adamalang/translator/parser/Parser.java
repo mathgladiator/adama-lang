@@ -854,7 +854,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@authorization", "@authorize", "@password", "@disconnected", "@delete", "@attached", "@static", "@can_attach", "@web", "@include", "@import", "@link", "@load", "@cron", "@traffic"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "filter", "bubble", "dispatch", "service", "replication", "metric", "assoc", "join", "template"));
     }
     if (op != null) {
       switch (op.text) {
@@ -924,6 +924,9 @@ public class Parser {
         case "policy":
           final var policy = define_policy_trailer(rootScope.makePolicy(), op);
           return doc -> doc.add(policy);
+        case "filter":
+          final var filter = define_filter_trailer(rootScope.makeFilter(), op);
+          return doc -> doc.add(filter);
         case "replication":
           final var replicate = define_replication(rootScope.makeReplication(), op);
           return doc -> doc.add(replicate);
@@ -1415,6 +1418,12 @@ public class Parser {
     final var id = id();
     index.definitions.add(id);
     return new DefineCustomPolicy(definePolicy, id, block(scope));
+  }
+
+  public DefineViewFilter define_filter_trailer(Scope scope, final Token defineFilter) throws AdamaLangException {
+    final var id = id();
+    index.definitions.add(id);
+    return new DefineViewFilter(defineFilter, id, block(scope));
   }
 
   public Consumer<TopLevelDocumentHandler> define_procedure_trailer(final Token procedureToken) throws AdamaLangException {

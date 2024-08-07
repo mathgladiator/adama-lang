@@ -27,6 +27,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineViewFilter;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.ReflectionSource;
@@ -115,6 +116,33 @@ public class TyNativeMessage extends TyType implements //
       dm.writeFunctionJava(sb, environment.scopeStatic());
     }
 
+    if (storage.viewFilters.size() > 0) { // hey, it's the @viewer
+      Environment available = environment.scopeAsReadOnlyBoundary();
+      for (FieldDefinition fd : fields) {
+        available.define(fd.name, fd.type, true, fd);
+      }
+      for (DefineViewFilter dvf : storage.viewFilters.values()) {
+        sb.append("public boolean __vf_").append(dvf.name.text).append(";").writeNewline();
+      }
+      for (DefineViewFilter dvf : storage.viewFilters.values()) {
+        sb.append("public boolean __CVF_").append(dvf.name.text).append("()");
+        dvf.code.writeJava(sb, environment.scopeAsNoCost().scopeStatic().scopeAsFilter());
+        sb.writeNewline();
+      }
+      sb.append("public void __computeViewFilters() {").tabUp().writeNewline();
+      int countdown = storage.viewFilters.size();
+      for (DefineViewFilter dvf : storage.viewFilters.values()) {
+        sb.append("__vf_").append(dvf.name.text).append(" = __CVF_").append(dvf.name.text).append("();");
+        countdown--;
+        if (countdown == 0) {
+          sb.tabDown();
+        }
+        sb.writeNewline();
+      }
+      sb.append("}").writeNewline();
+    }
+
+
     sb.append("@Override").writeNewline();
     if (storage.hasPostParse()) {
       sb.append("public void __parsed() throws AbortMessageException");
@@ -198,10 +226,20 @@ public class TyNativeMessage extends TyType implements //
     storage.typing(name, checker);
 
     checker.register(Collections.emptySet(), (env) -> {
+      Environment available = env.scopeAsReadOnlyBoundary();
+      boolean isViewer = storage.viewFilters.size() > 0;
       for (FieldDefinition fd : storage.fieldsByOrder) {
         TyType resolved = env.rules.Resolve(fd.type, false);
         if (resolved instanceof IsReactiveValue || resolved instanceof TyReactiveRecord || resolved instanceof TyReactiveTable || resolved instanceof TyNativeTable) {
           env.document.createError(TyNativeMessage.this, String.format("Messages can't have a field type of '%s'", resolved.getAdamaType()));
+        }
+        if (isViewer && resolved != null) { // hey, it's the @viewer
+          available.define(fd.name, resolved, true, fd);
+        }
+      }
+      if (isViewer) { // hey, it's the @viewer
+        for (DefineViewFilter dvf : storage.viewFilters.values()) {
+          dvf.typing(available);
         }
       }
     });

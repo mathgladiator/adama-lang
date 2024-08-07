@@ -1,0 +1,9 @@
+filter good_page {
+  return true;
+}
+
+view string current;
+
+filter is_billing {
+  return current == "billing";
+}

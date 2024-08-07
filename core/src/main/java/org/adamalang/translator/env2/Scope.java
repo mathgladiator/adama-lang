@@ -72,6 +72,10 @@ public class Scope {
     return new Scope(this);
   }
 
+  public Scope makeFilter() {
+    return new Scope(this);
+  }
+
   public Scope makeBubble() {
     return new Scope(this);
   }

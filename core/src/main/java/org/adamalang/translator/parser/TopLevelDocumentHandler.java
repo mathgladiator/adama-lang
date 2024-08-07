@@ -35,6 +35,8 @@ public interface TopLevelDocumentHandler {
 
   void add(DefineConstructor dc);
 
+  void add(DefineViewFilter viewFilter);
+  
   void add(DefineCustomPolicy customPolicy);
 
   void add(DefineDispatcher dd);

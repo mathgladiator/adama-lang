@@ -35,6 +35,7 @@ public class EnvironmentState {
   private boolean define;
   private boolean testing;
   private boolean isPolicy;
+  private boolean isFilter;
   private boolean isBubble;
   private boolean isWeb;
   private boolean isTrafficHint;
@@ -75,6 +76,7 @@ public class EnvironmentState {
     authorize = prior.authorize;
     viewer = prior.viewer;
     inRecord = prior.inRecord;
+    isFilter = prior.isFilter;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -103,6 +105,7 @@ public class EnvironmentState {
     authorize = false;
     viewer = false;
     inRecord = null;
+    isFilter = false;
   }
 
   public boolean hasNoCost() {
@@ -236,6 +239,13 @@ public class EnvironmentState {
   public EnvironmentState scopePolicy() {
     final var next = new EnvironmentState(this);
     next.isPolicy = true;
+    next.define = true;
+    return next;
+  }
+
+  public EnvironmentState scopeFilter() {
+    final var next = new EnvironmentState(this);
+    next.isFilter = true;
     next.define = true;
     return next;
   }

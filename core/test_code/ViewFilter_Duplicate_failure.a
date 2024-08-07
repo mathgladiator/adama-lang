@@ -1,0 +1,7 @@
+filter good_page {
+  return true;
+}
+
+filter good_page {
+  return true;
+}

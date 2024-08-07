@@ -308,6 +308,11 @@ public class Environment {
     return new Environment(document, state.scopePolicy(), this);
   }
 
+  /** create a new environment which is for document policies */
+  public Environment scopeAsFilter() {
+    return new Environment(document, state.scopeFilter(), this);
+  }
+
   /** create a new environment which is a bubble */
   public Environment scopeAsBubble(TreeSet<String> fields) {
     Environment next = new Environment(document, state.scopeBubble(), this);

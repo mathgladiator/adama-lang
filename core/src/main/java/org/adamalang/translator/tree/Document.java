@@ -251,6 +251,15 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
+  public void add(DefineViewFilter viewFilter) {
+    if (viewerType.storage.viewFilters.containsKey(viewFilter.name.text)) {
+      typeChecker.issueError(viewFilter, String.format("Global view filter '%s' was already defined", viewFilter.name.text));
+      return;
+    }
+    viewerType.storage.viewFilters.put(viewFilter.name.text, viewFilter);
+  }
+
+  @Override
   public void add(final DefineCustomPolicy customPolicy) {
     if (root.storage.policies.containsKey(customPolicy.name.text)) {
       typeChecker.issueError(customPolicy, String.format("Global policy '%s' was already defined", customPolicy.name.text));

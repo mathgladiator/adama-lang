@@ -55,22 +55,22 @@ public class GatherResourcesHandler implements TopLevelDocumentHandler {
 
   @Override
   public void add(DefineConstructor dc) {
+  }
 
+  @Override
+  public void add(DefineViewFilter viewFilter) {
   }
 
   @Override
   public void add(DefineCustomPolicy customPolicy) {
-
   }
 
   @Override
   public void add(DefineDispatcher dd) {
-
   }
 
   @Override
   public void add(DefineDocumentEvent dce) {
-
   }
 
   @Override

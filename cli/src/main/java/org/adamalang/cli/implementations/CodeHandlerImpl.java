@@ -146,7 +146,12 @@ public class CodeHandlerImpl implements CodeHandler {
       return Json.parseJsonObject(writer.toString());
     };
     System.out.println("[inserting]");
-    doc.__insert(new JsonStreamReader(Files.readString(new File(args.data).toPath())));
+    long loadStart = System.currentTimeMillis();
+    String jsonLoad = Files.readString(new File(args.data).toPath());
+    report.put("load-time-ms", System.currentTimeMillis() - loadStart);
+    long parseStart = System.currentTimeMillis();
+    doc.__insert(new JsonStreamReader(jsonLoad));
+    report.put("parse-time-ms", System.currentTimeMillis() - parseStart);
     doc.__perf.dump(10.0);
     doc.__perf.measureLightning();
     if (instruction.has("connect") && instruction.get("connect").booleanValue()){
