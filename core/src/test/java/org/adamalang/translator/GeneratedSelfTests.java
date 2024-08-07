@@ -721,11 +721,11 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      DeltaPrivacyCache __policy_cache = (DeltaPrivacyCache) __writer.getCacheObject();");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      if (__gdx2 != __item.dx2.getGeneration()) {");
     gold.append("\n        __ddx2.show(__item.dx2.get(), __obj.planField(\"dx2\"));");
     gold.append("\n        __gdx2 = __item.dx2.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___dx.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gdx != __CHECK)  {");

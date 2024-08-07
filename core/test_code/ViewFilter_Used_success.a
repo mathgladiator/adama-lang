@@ -1,0 +1,23 @@
+filter good_page {
+  return true;
+}
+
+view string current;
+
+filter is_billing {
+  return current == "billing";
+}
+
+policy foo {
+  return true;
+}
+
+bubble<foo|is_billing> check1 = "got 1";
+bubble<|is_billing> check2 = "got 2";
+bubble<foo,foo|is_billing> check3 = "got 3";
+bubble<foo,foo|is_billing,is_billing> check4 = "got 4";
+
+use<foo|is_billing> formula f1 = "have 1";
+use<|is_billing> formula f2 = "have 2";
+use<foo,foo|is_billing> formula f3 = "have 3";
+use<foo,foo|is_billing,is_billing> formula f4 = "have 4";

@@ -20,6 +20,7 @@ package org.adamalang.translator.codegen;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
+import org.adamalang.translator.tree.privacy.UseCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.*;
@@ -169,6 +170,9 @@ public class CodeGenDeltaClass {
     if (forceManifestBecauseRoot) {
       sb.append("__obj.manifest();").writeNewline();
     }
+    if (storage.needsViewerVariable()) {
+      sb.append("RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;").writeNewline();
+    }
     for (final FieldDefinition fd : fds) {
       final var isLazy = fd.type instanceof TyReactiveLazy;
       var fieldType = environment.rules.Resolve(fd.type, false);
@@ -199,7 +203,6 @@ public class CodeGenDeltaClass {
       }
     }
     if (storage.bubbles.size() > 0) {
-      sb.append("RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;").writeNewline();
       sb.append("long __CHECK = 0;").writeNewline();
       for (final BubbleDefinition bd : storage.bubbles.values()) {
         boolean closeItUp = false;

@@ -136,6 +136,14 @@ public class BubbleDefinition extends StructureComponent {
         sb.append("__item.__POLICY_").append(policyToCheck.item).append("(__writer.who)");
       }
     }
+    for (final TokenizedItem<String> filterToRequire : guard.filters) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(" && ");
+      }
+      sb.append("__VIEWER.__vf_").append(filterToRequire.item);
+    }
     sb.append(") {").tabUp().writeNewline();
     return true;
   }

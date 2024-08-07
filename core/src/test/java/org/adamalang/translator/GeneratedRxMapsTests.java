@@ -451,11 +451,11 @@ public class GeneratedRxMapsTests extends GeneratedBase {
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      if (__gme != __item.me.getGeneration()) {");
     gold.append("\n        __dme.show(__item.me.get(), __obj.planField(\"me\"));");
     gold.append("\n        __gme = __item.me.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___boo.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gboo != __CHECK)  {");
@@ -1406,6 +1406,7 @@ public class GeneratedRxMapsTests extends GeneratedBase {
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      if (__gme != __item.me.getGeneration()) {");
     gold.append("\n        if (__item.me.get().has()) {");
     gold.append("\n          RTxR __maybeElement0 = (RTxR)(__item.me.get().get());");
@@ -1416,7 +1417,6 @@ public class GeneratedRxMapsTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n        __gme = __item.me.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___boo.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gboo != __CHECK)  {");

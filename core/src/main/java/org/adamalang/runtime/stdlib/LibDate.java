@@ -365,6 +365,50 @@ public class LibDate {
     return new NtDateTime(current.dateTime.truncatedTo(ChronoUnit.MILLIS));
   }
 
+  @Extension
+  public static NtDateTime min(NtDateTime a, NtDateTime b) {
+    if (a.compareTo(b) < 0) {
+      return a;
+    } else {
+      return b;
+    }
+  }
+
+  @Extension
+  public static NtDateTime max(NtDateTime a, NtDateTime b) {
+    if (a.compareTo(b) > 0) {
+      return a;
+    } else {
+      return b;
+    }
+  }
+
+
+  @Extension
+  public static NtDate min(NtDate a, NtDate b) {
+    if (a.compareTo(b) < 0) {
+      return a;
+    } else {
+      return b;
+    }
+  }
+
+  @Extension
+  public static NtDate max(NtDate a, NtDate b) {
+    if (a.compareTo(b) > 0) {
+      return a;
+    } else {
+      return b;
+    }
+  }
+
+  public static boolean overlaps(NtDateTime a, NtDateTime b, NtDateTime c, NtDateTime d) {
+    return max(a, c).compareTo(min(b, d)) <= 0;
+  }
+
+  public static boolean overlaps(NtDate a, NtDate b, NtDate c, NtDate d) {
+    return max(a, c).compareTo(min(b, d)) <= 0;
+  }
 
   @Skip
   public static boolean equalsD(NtMaybe<NtDate> a, NtDate b) {

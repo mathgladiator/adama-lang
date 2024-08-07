@@ -1029,20 +1029,48 @@ public class Parser {
 
   public Guard define_guard(Token open) throws AdamaLangException {
     ArrayList<TokenizedItem<String>> policies = new ArrayList<>();
-    boolean hasOne = true;
+    ArrayList<TokenizedItem<String>> filters = new ArrayList<>();
+    boolean inPolicy = true;
+    Token switchTo = null;
+    boolean hasMore = true;
     Token last = null;
-    while (hasOne) {
-      Token policy = id();
-      TokenizedItem<String> item = new TokenizedItem<>(policy.text);
-      item.before(policy);
-      last = consumeExpectedSymbol(",", ">");
-      hasOne = last.text.equals(",");
-      if (hasOne) {
-        item.after(last);
+    while (hasMore) {
+      if (switchTo == null) {
+        switchTo = tokens.popIf((t) -> t.isSymbolWithTextEq("|"));
+        if (switchTo != null) {
+          inPolicy = false;
+        }
       }
-      policies.add(item);
+      hasMore = false;
+      if (inPolicy) {
+        Token policy = id();
+        TokenizedItem<String> item = new TokenizedItem<>(policy.text);
+        item.before(policy);
+        last = consumeExpectedSymbol(",", ">", "|");
+        if (last.isSymbolWithTextEq("|")) {
+          switchTo = last;
+          hasMore = true;
+          inPolicy = false;
+        } else {
+          if (last.isSymbolWithTextEq(",")) {
+            item.after(last);
+            hasMore = true;
+          }
+        }
+        policies.add(item);
+      } else {
+        Token filter = id();
+        TokenizedItem<String> item = new TokenizedItem<>(filter.text);
+        item.before(filter);
+        last = consumeExpectedSymbol(",", ">");
+        if (last.isSymbolWithTextEq(",")) {
+          hasMore = true;
+          item.after(last);
+        }
+        filters.add(item);
+      }
     }
-    return new Guard(open, policies, last);
+    return new Guard(open, policies, switchTo, filters, last);
   }
 
   public BubbleDefinition define_bubble(Scope scope, final Token bubbleToken) throws AdamaLangException {
@@ -1557,7 +1585,7 @@ public class Parser {
   }
 
   public Policy field_privacy() throws AdamaLangException {
-    final var policy = tokens.popIf(t -> t.isIdentifier("public", "private", "viewer_is", "use_policy"));
+    final var policy = tokens.popIf(t -> t.isIdentifier("public", "private", "viewer_is", "use_policy", "use"));
     if (policy != null) {
       switch (policy.text) {
         case "public":
@@ -1570,12 +1598,10 @@ public class Parser {
           final var close = consumeExpectedSymbol(">");
           return new ViewerIsPolicy(policy, open, token, close);
         }
+        case "use":
         case "use_policy":
-          TokenizedItem<Token>[] policies = policy_list();
-          for (TokenizedItem<Token> token : policies) {
-            index.usages.add(token.item);
-          }
-          return new UseCustomPolicy(policy, policies);
+          Token open = consumeExpectedSymbol("<");
+          return new UseCustomPolicy(policy, define_guard(open));
       }
     }
     return null;
@@ -1962,26 +1988,6 @@ public class Parser {
     final var followup = tokens.popIf(t -> t.isIdentifier("asc", "desc"));
     final var insensitive = tokens.popIf(t -> t.isIdentifier("insensitive"));
     return new OrderPair(commaToken, id, followup, insensitive);
-  }
-
-  @SuppressWarnings("unchecked")
-  public TokenizedItem<Token>[] policy_list() throws AdamaLangException {
-    final var open = consumeExpectedSymbol("<");
-    final var list = new ArrayList<TokenizedItem<Token>>();
-    var thing = new TokenizedItem<>(id());
-    thing.before(open);
-    list.add(thing);
-    while (true) {
-      final var comma = consumeExpectedSymbol(",", ">");
-      if (comma.isSymbolWithTextEq(",")) {
-        thing = new TokenizedItem<>(id());
-        thing.before(comma);
-        list.add(thing);
-      } else {
-        thing.after(comma);
-        return (TokenizedItem<Token>[]) list.toArray(new TokenizedItem[list.size()]);
-      }
-    }
   }
 
   public Expression postfix(Scope scope) throws AdamaLangException {

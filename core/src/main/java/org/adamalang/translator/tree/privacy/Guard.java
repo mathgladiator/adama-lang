@@ -30,11 +30,15 @@ import java.util.function.Consumer;
 public class Guard extends DocumentPosition {
   public final Token open;
   public final ArrayList<TokenizedItem<String>> policies;
+  public final Token switchToFilter;
+  public final ArrayList<TokenizedItem<String>> filters;
   public final Token close;
 
-  public Guard(Token open, ArrayList<TokenizedItem<String>> policies, Token close) {
+  public Guard(Token open, ArrayList<TokenizedItem<String>> policies, Token switchToFilter, ArrayList<TokenizedItem<String>> filters, Token close) {
     this.open = open;
     this.policies = policies;
+    this.switchToFilter = switchToFilter;
+    this.filters = filters;
     this.close = close;
     ingest(open);
     ingest(close);
@@ -45,6 +49,13 @@ public class Guard extends DocumentPosition {
     for (TokenizedItem<String> policy : policies) {
       policy.emitBefore(yielder);
       policy.emitAfter(yielder);
+    }
+    if (switchToFilter != null) {
+      yielder.accept(switchToFilter);
+      for (TokenizedItem<String> policy : filters) {
+        policy.emitBefore(yielder);
+        policy.emitAfter(yielder);
+      }
     }
     yielder.accept(close);
   }

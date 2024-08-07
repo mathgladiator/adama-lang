@@ -1182,6 +1182,7 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n      __code_cost += 15;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      if (__gpeople != __item.people.getGeneration()) {");
     gold.append("\n        {");
     gold.append("\n          PrivateLazyDeltaWriter __list3 = __obj.planField(\"people\").planObject();");
@@ -1269,7 +1270,6 @@ public class GeneratedDemoInstrumentedTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n        __gin_play = __item.in_play.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___my_take.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gmy_take != __CHECK)  {");

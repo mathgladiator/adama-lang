@@ -424,8 +424,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
-    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
+    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___k.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gk != __CHECK)  {");
@@ -1115,8 +1115,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
-    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
+    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___k.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gk != __CHECK)  {");
@@ -1809,8 +1809,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
-    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
+    gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___k.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gk != __CHECK)  {");

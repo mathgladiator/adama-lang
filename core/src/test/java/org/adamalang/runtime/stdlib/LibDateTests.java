@@ -469,4 +469,60 @@ public class LibDateTests {
     NtDateTime b = LibDate.truncateMilliseconds(a);
     Assert.assertEquals("2023-04-24T17:22:01.102-05:00[America/Chicago]", b.toString());
   }
+
+  @Test
+  public void minmax_datetime() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = new NtDateTime(ZonedDateTime.parse("2024-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertEquals(a, LibDate.min(a, b));
+    Assert.assertEquals(a, LibDate.min(b, a));
+    Assert.assertEquals(b, LibDate.max(a, b));
+    Assert.assertEquals(b, LibDate.max(b, a));
+  }
+
+  @Test
+  public void minmax_date() {
+    NtDate a = LibDate.make(2023, 12, 17).get();
+    NtDate b = LibDate.make(2024, 12, 17).get();
+    Assert.assertEquals(a, LibDate.min(a, b));
+    Assert.assertEquals(a, LibDate.min(b, a));
+    Assert.assertEquals(b, LibDate.max(a, b));
+    Assert.assertEquals(b, LibDate.max(b, a));
+  }
+
+  @Test
+  public void overlaps_datetime1() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = new NtDateTime(ZonedDateTime.parse("2024-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime c = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime d = new NtDateTime(ZonedDateTime.parse("2024-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertTrue(LibDate.overlaps(a, b, c, d));
+  }
+
+  @Test
+  public void overlaps_datetime2() {
+    NtDateTime a = new NtDateTime(ZonedDateTime.parse("2023-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime b = new NtDateTime(ZonedDateTime.parse("2023-05-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime c = new NtDateTime(ZonedDateTime.parse("2023-06-24T17:22:01.102528800-05:00[America/Chicago]"));
+    NtDateTime d = new NtDateTime(ZonedDateTime.parse("2024-04-24T17:22:01.102528800-05:00[America/Chicago]"));
+    Assert.assertFalse(LibDate.overlaps(a, b, c, d));
+  }
+
+  @Test
+  public void overlaps_date1() {
+    NtDate a = LibDate.make(2023, 12, 17).get();
+    NtDate b = LibDate.make(2024, 7, 17).get();
+    NtDate c = LibDate.make(2023, 12, 17).get();
+    NtDate d = LibDate.make(2024, 11, 17).get();
+    Assert.assertTrue(LibDate.overlaps(a, b, c, d));
+  }
+
+  @Test
+  public void overlaps_date2() {
+    NtDate a = LibDate.make(2023, 12, 17).get();
+    NtDate b = LibDate.make(2024, 7, 17).get();
+    NtDate c = LibDate.make(2024, 8, 17).get();
+    NtDate d = LibDate.make(2024, 11, 17).get();
+    Assert.assertFalse(LibDate.overlaps(a, b, c, d));
+  }
 }

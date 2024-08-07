@@ -29,6 +29,7 @@ import org.adamalang.translator.tree.definitions.DefineViewFilter;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
+import org.adamalang.translator.tree.privacy.UseCustomPolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
@@ -531,5 +532,19 @@ public class StructureStorage extends DocumentPosition {
       }
     }
     return depends;
+  }
+
+  public boolean needsViewerVariable() {
+    if (bubbles.size() > 0) {
+      return true;
+    }
+    for (final FieldDefinition fd : fieldsByOrder) {
+      if (fd.policy != null && fd.policy instanceof UseCustomPolicy) {
+        if (((UseCustomPolicy) fd.policy).guard.filters.size() > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

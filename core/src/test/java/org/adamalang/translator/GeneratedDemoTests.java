@@ -5220,6 +5220,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __code_cost += 14;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      __dname.show(__item.name.get(), __obj.planField(\"name\"));");
     gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      __dy.show(__item.y.get(), __obj.planField(\"y\"));");
@@ -5254,7 +5255,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        __dcards_available.show(__item.cards_available.get(), __obj.planField(\"cards_available\"));");
     gold.append("\n        __gcards_available = __item.cards_available.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___hand.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__ghand != __CHECK)  {");
@@ -8844,6 +8844,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __code_cost += 15;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      if (__gpeople != __item.people.getGeneration()) {");
     gold.append("\n        {");
     gold.append("\n          PrivateLazyDeltaWriter __list3 = __obj.planField(\"people\").planObject();");
@@ -8931,7 +8932,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n        __gin_play = __item.in_play.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___my_take.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gmy_take != __CHECK)  {");
@@ -19034,6 +19034,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __code_cost += 8;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
+    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      __dcurrent.show(__item.current.get(), __obj.planField(\"current\"));");
     gold.append("\n      __dwins_X.show(__item.wins_X.get(), __obj.planField(\"wins_X\"));");
     gold.append("\n      __dwins_O.show(__item.wins_O.get(), __obj.planField(\"wins_O\"));");
@@ -19055,7 +19056,6 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n        __gboard = __item.board.getGeneration();");
     gold.append("\n      }");
-    gold.append("\n      RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;");
     gold.append("\n      long __CHECK = 0;");
     gold.append("\n      __CHECK = __item.___your_role.getGeneration(__writer.getViewId());");
     gold.append("\n      if (__gyour_role != __CHECK)  {");

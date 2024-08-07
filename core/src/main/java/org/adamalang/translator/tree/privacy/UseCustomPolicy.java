@@ -34,52 +34,41 @@ import java.util.function.Consumer;
 /** a policy that refers to code within the record */
 public class UseCustomPolicy extends Policy {
   public final Token customToken;
-  public final ArrayList<String> policyToChecks;
-  public final TokenizedItem<Token>[] policyToCheckTokens;
+  public final Guard guard;
   private final HashSet<String> globals;
 
-  public UseCustomPolicy(final Token customToken, final TokenizedItem<Token>[] policyToCheckTokens) {
+  public UseCustomPolicy(final Token customToken, Guard guard) {
     this.customToken = customToken;
-    policyToChecks = new ArrayList<>();
+    this.guard = guard;
     ingest(customToken);
-    for (final TokenizedItem<Token> token : policyToCheckTokens) {
-      policyToChecks.add(token.item.text);
-      ingest(token.item);
-      for (final Token afterToken : token.after) {
-        ingest(afterToken);
-      }
-    }
-    this.policyToCheckTokens = policyToCheckTokens;
+    ingest(guard);
     globals = new HashSet<>();
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(customToken);
-    for (final TokenizedItem<Token> token : policyToCheckTokens) {
-      token.emitBefore(yielder);
-      yielder.accept(token.item);
-      token.emitAfter(yielder);
-    }
+    guard.emit(yielder);
   }
 
   @Override
   public void format(Formatter formatter) {
+    guard.format(formatter);
   }
 
   @Override
   public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
-    for (final String policyToCheck : policyToChecks) {
-      var dcp = owningStructureStorage.policies.get(policyToCheck);
+    for (final TokenizedItem<String> policyToCheck : guard.policies) {
+      var dcp = owningStructureStorage.policies.get(policyToCheck.item);
       if (dcp == null) {
-        globals.add(policyToCheck);
-        dcp = environment.document.root.storage.policies.get(policyToCheck);
+        globals.add(policyToCheck.item);
+        dcp = environment.document.root.storage.policies.get(policyToCheck.item);
         if (dcp == null) {
-          environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck));
+          environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck.item));
         }
       } else {
         if (owningStructureStorage.root) {
-          globals.add(policyToCheck);
+          globals.add(policyToCheck.item);
         }
       }
     }
@@ -89,17 +78,25 @@ public class UseCustomPolicy extends Policy {
   public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
     sb.append("if (");
     var first = true;
-    for (final String policyToCheck : policyToChecks) {
+    for (final TokenizedItem<String> policyToCheck : guard.policies) {
       if (first) {
         first = false;
       } else {
         sb.append(" && ");
       }
-      if (globals.contains(policyToCheck)) {
-        sb.append("__policy_cache.").append(policyToCheck);
+      if (globals.contains(policyToCheck.item)) {
+        sb.append("__policy_cache.").append(policyToCheck.item);
       } else {
-        sb.append("__item.__POLICY_").append(policyToCheck).append("(__writer.who)");
+        sb.append("__item.__POLICY_").append(policyToCheck.item).append("(__writer.who)");
       }
+    }
+    for (final TokenizedItem<String> filterToRequire : guard.filters) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(" && ");
+      }
+      sb.append("__VIEWER.__vf_").append(filterToRequire.item);
     }
     sb.append(") {").tabUp().writeNewline();
     return true;
@@ -107,11 +104,7 @@ public class UseCustomPolicy extends Policy {
 
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginArray();
-    for (final String policy : policyToChecks) {
-      writer.writeString(policy);
-    }
-    writer.endArray();
+    guard.writeReflect(writer);
   }
 
   @Override
