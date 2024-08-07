@@ -17,7 +17,7 @@ hljs.registerLanguage("adama", (() => {
         "requires",
         "create", "send", "invent", "maximum_history", // TODO: scope within @static if possible
         "auto", "var", "let", "formula", "readonly",
-        "public", "private", "viewer_is", "use_policy"];
+        "public", "private", "viewer_is", "use_policy", "use", "filter"];
 
     const LITERALS = [
       "true",

@@ -42,7 +42,7 @@
 				"match": "\\b(record|message|int|bool|double|long|string|client|table|list|maybe|enum|future|channel|map|dynamic|complex|date|datetime|time|timespan|label|pair|tuple)\\b"
 			},{
 				"name": "keyword.privacy.adama",
-				"match": "\\b(public|private|viewer_is|use_policy|policy|secured|bubble|password|view|service)\\b"
+				"match": "\\b(public|private|viewer_is|use_policy|use|filter|policy|secured|bubble|password|view|service)\\b"
 			},{
 				"name": "keyword.auto.adama",
 				"match": "\\b(formula|let|auto)\\b"
