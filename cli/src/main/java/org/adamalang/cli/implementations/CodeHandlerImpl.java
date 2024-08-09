@@ -152,6 +152,14 @@ public class CodeHandlerImpl implements CodeHandler {
     long parseStart = System.currentTimeMillis();
     doc.__insert(new JsonStreamReader(jsonLoad));
     report.put("parse-time-ms", System.currentTimeMillis() - parseStart);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      long dumpStart = System.currentTimeMillis();
+      doc.__dump(writer);
+      report.put("dump-size-bytes", writer.toString().length());
+      report.put("dump-time-ms", System.currentTimeMillis() - dumpStart);
+      report.put("memory-size-bytes", doc.__memory());
+    }
     doc.__perf.dump(10.0);
     doc.__perf.measureLightning();
     if (instruction.has("connect") && instruction.get("connect").booleanValue()){
@@ -174,6 +182,7 @@ public class CodeHandlerImpl implements CodeHandler {
       doc.__transact(writer.toString(), factory.get());
       report.set("connect", Json.parseJsonObject(doc.__perf.dump(5.0)));
       report.set("connect-strike", filteredLightning(doc.__perf));
+      report.put("post-connect-memory-size-bytes", doc.__memory());
     }
     doc.__createView(who, Perspective.DEAD);
     Runnable invalidate = () -> {
@@ -203,11 +212,13 @@ public class CodeHandlerImpl implements CodeHandler {
       invalidate.run();
       report.set("invalidate", Json.parseJsonObject(doc.__perf.dump(5.0)));
       report.set("invalidate-strike", filteredLightning(doc.__perf));
+      report.put("post-invalidate-memory-size-bytes", doc.__memory());
     }
     {
       invalidate.run();
       report.set("invalidate-again", Json.parseJsonObject(doc.__perf.dump(5.0)));
       report.set("invalidate-again-strike", filteredLightning(doc.__perf));
+      report.put("post-invalidate-again-memory-size-bytes", doc.__memory());
     }
     if (instruction.has("channel")) {
       System.out.println("[send]");
