@@ -42,4 +42,9 @@ public class TVariable implements T {
       }
     }
   }
+
+  @Override
+  public long memory() {
+    return 64 + variable.length();
+  }
 }

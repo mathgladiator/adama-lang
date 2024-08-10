@@ -15,26 +15,24 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.template.tree;
+package org.adamalang.runtime.natives.algo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.adamalang.common.template.Settings;
+import org.adamalang.runtime.natives.*;
+import org.junit.Assert;
+import org.junit.Test;
 
-/** constant text to append to document */
-public class TText implements T {
-  public final String text;
+import java.time.ZonedDateTime;
 
-  public TText(String text) {
-    this.text = text;
-  }
-
-  @Override
-  public void render(Settings settings, JsonNode node, StringBuilder output) {
-    output.append(text);
-  }
-
-  @Override
-  public long memory() {
-    return 64 + text.length() * 2;
+public class MessageCSVWriterTests {
+  @Test
+  public void flow() {
+    MessageCSVWriter writer = new MessageCSVWriter();
+    writer.write(new NtTime(1, 2));
+    writer.write(new NtDateTime(ZonedDateTime.parse("2023-04-24T17:57:19.802528800-05:00[America/Chicago]")));
+    writer.write(new NtDate(1,2, 1000));
+    writer.write(new NtTimeSpan(42));
+    writer.write(new NtPrincipal("agent", "auth"));
+    writer.write(new NtComplex(3.14, 2.71));
+    Assert.assertEquals("01:02,2023-04-24T17:57:19.802528800-05:00[America/Chicago],1-02-1000,42.0,agent@auth,3.14 2.71i", writer.toString());
   }
 }

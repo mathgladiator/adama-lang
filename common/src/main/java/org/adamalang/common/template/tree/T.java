@@ -25,4 +25,7 @@ public interface T {
 
   /** render the template fragment to a string builder */
   void render(Settings settings, JsonNode node, StringBuilder output);
+
+  /** return the memory used by the template */
+  long memory();
 }

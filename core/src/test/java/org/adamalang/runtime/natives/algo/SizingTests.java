@@ -15,26 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common.template.tree;
+package org.adamalang.runtime.natives.algo;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.adamalang.common.template.Settings;
+import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.natives.NtTemplate;
+import org.junit.Assert;
+import org.junit.Test;
 
-/** constant text to append to document */
-public class TText implements T {
-  public final String text;
-
-  public TText(String text) {
-    this.text = text;
-  }
-
-  @Override
-  public void render(Settings settings, JsonNode node, StringBuilder output) {
-    output.append(text);
-  }
-
-  @Override
-  public long memory() {
-    return 64 + text.length() * 2;
+public class SizingTests {
+  @Test
+  public void flow() {
+    Assert.assertEquals(86, Sizing.memoryOf("XYZ"));
+    Assert.assertEquals(136, Sizing.memoryOf(new NtAsset("id", "name", "type", 42, "md5", "sha")));
+    Assert.assertEquals(88, Sizing.memoryOf(new NtDynamic("{}")));
+    Assert.assertEquals(148, Sizing.memoryOf(new NtPrincipal("agent", "authority")));
+    Assert.assertEquals(345, Sizing.memoryOf(new NtTemplate("xyz[[msg]]")));
   }
 }

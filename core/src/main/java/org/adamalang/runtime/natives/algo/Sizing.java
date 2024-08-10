@@ -37,7 +37,6 @@ public class Sizing {
     return 120 + (x.agent.length() + x.authority.length()) * 2;
   }
   public static long memoryOf(NtTemplate x) {
-    // TODO
-    return 1024;
+    return 64 + x.template.memory();
   }
 }

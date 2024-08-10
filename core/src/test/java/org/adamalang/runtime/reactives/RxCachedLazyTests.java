@@ -51,6 +51,17 @@ public class RxCachedLazyTests {
   }
 
   @Test
+  public void mirror_parent_life() {
+    final RxInt64 time = new RxInt64(null, 0L);
+    final var val = new RxInt32(null, 42);
+    MockRxParent p = new MockRxParent();
+    final var clz = new RxCachedLazy<>(p, () -> val.get() * val.get(), null, 1, time);
+    Assert.assertTrue(clz.alive());
+    p.alive = false;
+    Assert.assertFalse(clz.alive());
+  }
+
+  @Test
   public void flow_parent_and_perf() {
     MockRxParent parent = new MockRxParent();
     final RxInt64 time = new RxInt64(null, 0L);

@@ -49,6 +49,15 @@ public class ParserTests {
   }
 
   @Test
+  public void memory() {
+    Assert.assertEquals(171, Parser.parse("[[msg]]").memory());
+    Assert.assertEquals(178, Parser.parse("hello").memory());
+    Assert.assertEquals(397, Parser.parse("hello[[a]]world").memory());
+    Assert.assertEquals(575, Parser.parse("hello[[#a]]noice[[/a]]world").memory());
+    Assert.assertEquals(575, Parser.parse("hello[[^a]]noice[[/a]]world").memory());
+  }
+
+  @Test
   public void single_var() {
     Assert.assertEquals("Hi", eval(Parser.parse("[[msg]]"), "msg", "Hi"));
   }

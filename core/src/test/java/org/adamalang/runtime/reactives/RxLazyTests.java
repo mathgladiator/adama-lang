@@ -19,8 +19,10 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxParent;
+import org.adamalang.runtime.sys.PerfTracker;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,6 +54,26 @@ public class RxLazyTests {
     Assert.assertEquals(1, lz.getGeneration());
     Assert.assertEquals(1, lz2.getGeneration());
     lz.__forceSettle();
+  }
+
+  @Test
+  public void mirror_parent_life() {
+    final var val = new RxInt32(null, 42);
+    MockRxParent p = new MockRxParent();
+    final var clz = new RxLazy<>(p, () -> val.get() * val.get(), null);
+    Assert.assertTrue(clz.alive());
+    p.alive = false;
+    Assert.assertFalse(clz.alive());
+  }
+
+  @Test
+  public void perf() {
+    final var val = new RxInt32(null, 42);
+    MockRxParent p = new MockRxParent();
+    PerfTracker tracker = new PerfTracker(new MockLivingDocument());
+    final var clz = new RxLazy<>(p, () -> val.get() * val.get(), () -> tracker.measure("x"));
+    clz.get();
+    System.out.println(tracker.dump(0));
   }
 
   @Test

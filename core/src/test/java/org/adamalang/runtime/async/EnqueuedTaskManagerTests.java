@@ -73,7 +73,6 @@ public class EnqueuedTaskManagerTests {
     }
   }
 
-
   @Test
   public void flow_w_view_id() {
     EnqueuedTaskManager etm = new EnqueuedTaskManager();
@@ -135,6 +134,27 @@ public class EnqueuedTaskManagerTests {
     Assert.assertTrue(etm.readyForTransfer());
     EnqueuedTask et = etm.transfer();
     Assert.assertEquals("ch", et.channel);
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      etm.dump(writer);
+      Assert.assertEquals("", writer.toString());
+    }
+  }
+
+  @Test
+  public void hydration_view_id() {
+    EnqueuedTaskManager etm = new EnqueuedTaskManager();
+    etm.hydrate(new JsonStreamReader("{\"1\":{\"channel\":\"ch\",\"who\":{\"agent\":\"a\",\"authority\":\"b\"},\"view_id\":400,\"message\":{}}}}"));
+    etm.hydrate(new JsonStreamReader("{\"1\":{\"x\":true}}"));
+    {
+      JsonStreamWriter writer = new JsonStreamWriter();
+      etm.dump(writer);
+      Assert.assertEquals("\"__enqueued\":{\"1\":{\"who\":{\"agent\":\"a\",\"authority\":\"b\"},\"channel\":\"ch\",\"view_id\":400,\"message\":{}}}", writer.toString());
+    }
+    Assert.assertTrue(etm.readyForTransfer());
+    EnqueuedTask et = etm.transfer();
+    Assert.assertEquals("ch", et.channel);
+    Assert.assertEquals(400, et.viewId);
     {
       JsonStreamWriter writer = new JsonStreamWriter();
       etm.dump(writer);

@@ -25,13 +25,16 @@ import java.util.ArrayList;
 /** concat multiple T together */
 public class TConcat implements T {
   private final ArrayList<T> children;
+  private long memory;
 
   public TConcat() {
     this.children = new ArrayList<>();
+    this.memory = 64;
   }
 
   public void add(T child) {
     this.children.add(child);
+    this.memory += 40 + child.memory();
   }
 
   @Override
@@ -39,5 +42,10 @@ public class TConcat implements T {
     for (T child : children) {
       child.render(settings, node, output);
     }
+  }
+
+  @Override
+  public long memory() {
+    return memory;
   }
 }

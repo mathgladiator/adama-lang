@@ -37,4 +37,9 @@ public class TIfNot implements T {
       child.render(settings, node, output);
     }
   }
+
+  @Override
+  public long memory() {
+    return 64 + variable.length() + child.memory();
+  }
 }

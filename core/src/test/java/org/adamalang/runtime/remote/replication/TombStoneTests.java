@@ -37,6 +37,7 @@ public class TombStoneTests {
     Assert.assertEquals("service", t.service);
     Assert.assertEquals("method", t.method);
     Assert.assertEquals("key", t.key);
+    Assert.assertNull(TombStone.read(new JsonStreamReader("{}")));
   }
 
   @Test
