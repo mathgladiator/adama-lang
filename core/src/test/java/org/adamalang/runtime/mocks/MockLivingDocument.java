@@ -120,6 +120,11 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  protected long __computeGraphs() {
+    return 0L;
+  }
+
+  @Override
   public AuthResponse __authpipe(CoreRequestContext __context, String __messsage) {
     return null;
   }

@@ -918,6 +918,8 @@ public class GeneratedLinqDynTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected long __computeGraphs() { return 0; }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");

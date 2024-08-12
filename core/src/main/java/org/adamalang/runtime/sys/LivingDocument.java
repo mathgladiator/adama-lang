@@ -27,7 +27,6 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.exceptions.*;
-import org.adamalang.runtime.graph.Graph;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
@@ -80,7 +79,6 @@ public abstract class LivingDocument implements RxParent, Caller {
   protected final RxInt32 __webTaskId;
   protected final WebQueue __webQueue;
   protected final ArrayList<EphemeralWebGet> __gets;
-  protected final Graph __graph;
   protected final TreeMap<NtPrincipal, Integer> __clients;
   protected final HashMap<NtPrincipal, ArrayList<PrivateView>> __trackedViews;
   protected final HashMap<Integer, PrivateView> __viewsById;
@@ -108,6 +106,7 @@ public abstract class LivingDocument implements RxParent, Caller {
   private long __cpu_ms;
   private TestMockUniverse __mock_universe;
   private Integer __seq_message;
+  protected long __graphMemory;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -173,10 +172,10 @@ public abstract class LivingDocument implements RxParent, Caller {
     __gets = new ArrayList<>();
     __replication = new ReplicationEngine(this);
     __perf = new PerfTracker(this);
-    __graph = new Graph();
     __optimisticNextCronCheck = 0L;
     __enqueued = new EnqueuedTaskManager();
     __mock_universe = null;
+    __graphMemory = 0L;
   }
 
   /** exposed: get the document's timestamp as a date */
@@ -372,7 +371,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __webQueue.commit(forward, reverse);
     __replication.commit(forward, reverse);
     __enqueued.commit(forward, reverse);
-    __graph.compute();
+    __graphMemory = __computeGraphs();
   }
 
   private boolean __again(boolean hasTimeouts) {
@@ -386,6 +385,8 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
     return t;
   }
+
+  protected abstract long __computeGraphs();
 
   private LivingDocumentChange __invalidate_trailer(NtPrincipal who, final String request, boolean again, boolean againDueToPendingWork, Integer sleepTime) {
     final var forward = new JsonStreamWriter();
@@ -408,7 +409,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
-    __graph.compute();
+    __graphMemory = __computeGraphs();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastListGameMode();
     int timeAgain = __deltaTime();
     if (againDueToPendingWork) {
@@ -1293,7 +1294,7 @@ public abstract class LivingDocument implements RxParent, Caller {
     __timeouts.commit(forward, reverse);
     __replication.commit(forward, reverse);
     __enqueued.commit(forward, reverse);
-    __graph.compute();
+    __graphMemory = __computeGraphs();
   }
 
   /** estimate the memory of the document */
@@ -1308,7 +1309,7 @@ public abstract class LivingDocument implements RxParent, Caller {
         memory += view.memory();
       }
     }
-    memory += __graph.memory();
+    memory += __graphMemory;
     return memory;
   }
 
@@ -1919,7 +1920,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       reverse.beginObject();
       __commit(null, forward, reverse);
       __replication.commit(forward, reverse);
-      __graph.compute();
+      __graphMemory = __computeGraphs();
       forward.endObject();
       reverse.endObject();
       final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), context.who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
@@ -1955,7 +1956,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       reverse.beginObject();
       __commit(null, forward, reverse);
       __replication.commit(forward, reverse);
-      __graph.compute();
+      __graphMemory = __computeGraphs();
       forward.writeObjectFieldIntro("__clients");
       forward.beginObject();
       forward.writeObjectFieldIntro(id);

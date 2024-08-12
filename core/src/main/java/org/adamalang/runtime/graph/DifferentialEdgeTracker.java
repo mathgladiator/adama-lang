@@ -43,9 +43,9 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
   private final HashMap<Integer, EdgeCache> edgeCache;
   private final HashSet<Integer> invalid;
   private boolean linked;
-  private final SubGraph graph;
+  private final RxAssocGraph graph;
 
-  public DifferentialEdgeTracker(RxTable<B> source, SubGraph graph, EdgeMaker<B> maker) {
+  public DifferentialEdgeTracker(RxTable<B> source, RxAssocGraph graph, EdgeMaker<B> maker) {
     this.source = source;
     this.graph = graph;
     this.maker = maker;
@@ -65,7 +65,7 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
       graph.link(this);
     }
   }
-  private void fill(SubGraph partial, boolean cache) {
+  private void fill(RxAssocGraph partial, boolean cache) {
     for (Integer id : invalid) {
       B row = source.getById(id);
       if (row != null && row.__isAlive()) {
@@ -91,7 +91,7 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
   }
 
   @Override
-  public void populate(SubGraph partial) {
+  public void populate(RxAssocGraph partial) {
     fill(partial, false);
   }
 

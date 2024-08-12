@@ -1225,6 +1225,15 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  RxAssocGraph ___assoc_x = new RxAssocGraph();RxAssocGraph ___assoc_y = new RxAssocGraph();@Override");
+    gold.append("\n  protected long __computeGraphs() {");
+    gold.append("\n    long __gmemory = 0L;");
+    gold.append("\n    ___assoc_x.compute();");
+    gold.append("\n    __gmemory += 1024 + ___assoc_x.memory();");
+    gold.append("\n    ___assoc_y.compute();");
+    gold.append("\n    __gmemory += 1024 + ___assoc_y.memory();");
+    gold.append("\n    return __gmemory;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -1321,7 +1330,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:384");
+    gold.append("\nMEMORY:6528");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -1335,7 +1344,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:502");
+    gold.append("\nMEMORY:6646");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -2445,7 +2454,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n          return id.get();");
     gold.append("\n        }");
     gold.append("\n      };");
-    gold.append("\n      DifferentialEdgeTracker<RTxGroupMember> __DET_1 = new DifferentialEdgeTracker<>(_members,__graph.getOrCreate((short)0),__EDMK__members_0);");
+    gold.append("\n      DifferentialEdgeTracker<RTxGroupMember> __DET_1 = new DifferentialEdgeTracker<>(_members,___assoc_part_of_group,__EDMK__members_0);");
     gold.append("\n      id.__subscribe(__DET_1);");
     gold.append("\n      _members.pump(__DET_1);");
     gold.append("\n      return this;");
@@ -2567,6 +2576,13 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  RxAssocGraph ___assoc_part_of_group = new RxAssocGraph();@Override");
+    gold.append("\n  protected long __computeGraphs() {");
+    gold.append("\n    long __gmemory = 0L;");
+    gold.append("\n    ___assoc_part_of_group.compute();");
+    gold.append("\n    __gmemory += 1024 + ___assoc_part_of_group.memory();");
+    gold.append("\n    return __gmemory;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -2663,7 +2679,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:384");
+    gold.append("\nMEMORY:3456");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -2677,7 +2693,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:502");
+    gold.append("\nMEMORY:3574");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -2802,7 +2818,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n        return x.to.get();");
     gold.append("\n      }");
     gold.append("\n    };");
-    gold.append("\n    DifferentialEdgeTracker<RTxE> __DET_1 = new DifferentialEdgeTracker<>(edges,__graph.getOrCreate((short)0),__EDMK_edges_0);");
+    gold.append("\n    DifferentialEdgeTracker<RTxE> __DET_1 = new DifferentialEdgeTracker<>(edges,___assoc_x,__EDMK_edges_0);");
     gold.append("\n    edges.pump(__DET_1);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -3849,6 +3865,13 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
+    gold.append("\n  RxAssocGraph ___assoc_x = new RxAssocGraph();@Override");
+    gold.append("\n  protected long __computeGraphs() {");
+    gold.append("\n    long __gmemory = 0L;");
+    gold.append("\n    ___assoc_x.compute();");
+    gold.append("\n    __gmemory += 1024 + ___assoc_x.memory();");
+    gold.append("\n    return __gmemory;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -3945,7 +3968,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:4978");
+    gold.append("\nMEMORY:6002");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -3959,7 +3982,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:5096");
+    gold.append("\nMEMORY:6120");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"edges\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

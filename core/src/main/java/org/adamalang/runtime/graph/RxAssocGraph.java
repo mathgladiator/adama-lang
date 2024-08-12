@@ -22,11 +22,11 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 /** within a graph, this represents all the edges for a single assoc */
-public class SubGraph {
+public class RxAssocGraph {
   private final HashMap<Integer, TreeSet<Integer>> edges;
   private final ArrayList<HasPartialGraph> partials;
 
-  public SubGraph() {
+  public RxAssocGraph() {
     this.edges = new HashMap<>();
     this.partials = new ArrayList<>();
   }
@@ -67,7 +67,7 @@ public class SubGraph {
       }
     }
     if (partials.size() > 0) {
-      SubGraph partial = new SubGraph();
+      RxAssocGraph partial = new RxAssocGraph();
       for (HasPartialGraph p : partials) {
         p.populate(partial);
       }

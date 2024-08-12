@@ -20,7 +20,7 @@ package org.adamalang.runtime.graph;
 /** Each thing that contributes to a graph may be in a state of flux; this provides a way of reconstructing the graph from live data */
 public interface HasPartialGraph {
   /** fill the assoc table with data */
-  public void populate(SubGraph sg);
+  public void populate(RxAssocGraph sg);
 
   /** wrap up the computation */
   public void compute();

@@ -548,6 +548,8 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
+    gold.append("\n  protected long __computeGraphs() { return 0; }");
+    gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
@@ -1219,6 +1221,8 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  protected long __computeGraphs() { return 0; }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");
@@ -1908,6 +1912,8 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  protected long __computeGraphs() { return 0; }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __open_channel(String name) {");
     gold.append("\n    return false;");

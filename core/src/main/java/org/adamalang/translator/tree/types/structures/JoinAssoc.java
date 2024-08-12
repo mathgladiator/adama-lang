@@ -129,6 +129,8 @@ public class JoinAssoc extends StructureComponent {
           TyType toType = environment.rules.Resolve(toExpr.typing(itemEnv, suggestion), false);
           environment.rules.IsInteger(fromType, false);
           environment.rules.IsInteger(toType, false);
+        } else {
+          environment.document.createError(this, "'" + tableName.text + "' was not yet registered ");
         }
       } else {
         environment.document.createError(this, "'" + tableName.text + "' was not a table");

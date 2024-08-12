@@ -97,7 +97,6 @@ public class Document implements TopLevelDocumentHandler {
   private final HashSet<String> viewDefined;
   public final LinkedHashMap<String, DefineMetric> metrics;
   public final LinkedHashMap<String, DefineAssoc> assocs;
-  private short assocIdGen;
   public final LinkedHashMap<String, DefineTemplate> templates;
   public final LinkedHashMap<String, DefineCronTask> cronTasks;
   private File includeRoot;
@@ -140,7 +139,6 @@ public class Document implements TopLevelDocumentHandler {
     passwords = new ArrayList<>();
     metrics = new LinkedHashMap<>();
     assocs = new LinkedHashMap<>();
-    assocIdGen = 0;
     templates = new LinkedHashMap<>();
     authPipes = new ArrayList<>();
     cronTasks = new LinkedHashMap<>();
@@ -556,8 +554,6 @@ public class Document implements TopLevelDocumentHandler {
     }
     da.typing(typeChecker);
     assocs.put(da.name.text, da);
-    da.id = assocIdGen;
-    assocIdGen++;
   }
 
   @Override
@@ -748,6 +744,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenMetrics.writeMetricsDump(sb, environment);
     CodeGenTraffic.writeTrafficHint(sb, environment);
     CodeGenDebug.writeDebugInfo(sb, environment);
+    CodeGenJoins.writeGraphs(sb, environment);
     CodeGenAuth.writeAuth(sb, environment);
     CodeGenCron.writeCronExecution(sb, environment);
     CodeGenCron.writeCronReset(sb, environment);

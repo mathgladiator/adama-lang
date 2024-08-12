@@ -22,11 +22,11 @@ import org.junit.Test;
 
 import java.util.TreeSet;
 
-public class SubGraphTests {
+public class RxAssocGraphTests {
 
   @Test
   public void mem() {
-    SubGraph sg = new SubGraph();
+    RxAssocGraph sg = new RxAssocGraph();
     Assert.assertEquals(2048, sg.memory());
     sg.put(5, 10);
     Assert.assertEquals(2368, sg.memory());
@@ -46,7 +46,7 @@ public class SubGraphTests {
 
   @Test
   public void empty() {
-    SubGraph sg = new SubGraph();
+    RxAssocGraph sg = new RxAssocGraph();
     sg.put(5, 10);
     sg.put(2, 7);
     sg.put(2, 4);
@@ -57,7 +57,7 @@ public class SubGraphTests {
 
   @Test
   public void union() {
-    SubGraph sg = new SubGraph();
+    RxAssocGraph sg = new RxAssocGraph();
     sg.put(5, 10);
     sg.put(2, 7);
     sg.put(2, 4);
@@ -75,7 +75,7 @@ public class SubGraphTests {
 
   @Test
   public void single() {
-    SubGraph sg = new SubGraph();
+    RxAssocGraph sg = new RxAssocGraph();
     sg.put(5, 10);
     sg.put(2, 7);
     sg.put(2, 4);
