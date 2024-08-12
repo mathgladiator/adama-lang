@@ -87,6 +87,7 @@ public class GlobalObjectPool {
 
     pool.add(GlobalFactory.makeGlobal("Dynamic", LibDynamic.class, pool.extensions));
     pool.add(GlobalFactory.makeGlobal("Json", LibJson.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Graph", LibGraph.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", tyVoid));
     document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", tyInt, tyVoid, null, null));

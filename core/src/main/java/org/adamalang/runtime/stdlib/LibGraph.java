@@ -15,9 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.stdlib;
 
-public class Platform {
-  public static final String VERSION = "20240812183404";
-  public static final String JS_VERSION = "2ecadaea0a66ec78ec547760111c297f";
+import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.translator.reflect.Skip;
+
+public class LibGraph {
+  @Skip
+  public static Integer int2nullable(NtMaybe<Integer> v) {
+    if (v.has()) {
+      return v.get();
+    }
+    return null;
+  }
 }

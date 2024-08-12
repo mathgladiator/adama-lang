@@ -17,6 +17,7 @@
 */
 package org.adamalang.translator.codegen;
 
+import org.adamalang.runtime.stdlib.LibGraph;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineAssoc;
@@ -58,15 +59,25 @@ public class CodeGenJoins {
       sb.append("@Override").writeNewline();
       sb.append("public Integer from(RTx").append(ja.edgeRecordName).append(" ").append(ja.itemVar.text).append(") {").tabUp().writeNewline();
       sb.append("return ");
-      ja.fromExpr.writeJava(sb, next);
-      // TODO: resolve if maybe
+      if (ja.fromMaybe) {
+        sb.append("LibGraph.int2nullable(");
+        ja.fromExpr.writeJava(sb, next);
+        sb.append(")");
+      } else {
+        ja.fromExpr.writeJava(sb, next);
+      }
       sb.append(";").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
       sb.append("public Integer to(RTx").append(ja.edgeRecordName).append(" ").append(ja.itemVar.text).append(") {").tabUp().writeNewline();
       sb.append("return ");
-      ja.toExpr.writeJava(sb, next);
-      // TODO: resolve if maybe
+      if (ja.toMaybe) {
+        sb.append("LibGraph.int2nullable(");
+        ja.toExpr.writeJava(sb, next);
+        sb.append(")");
+      } else {
+        ja.toExpr.writeJava(sb, next);
+      }
       sb.append(";").tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline();
       sb.append("};").writeNewline();

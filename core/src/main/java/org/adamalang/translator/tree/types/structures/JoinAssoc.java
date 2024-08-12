@@ -27,6 +27,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.Watcher;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
@@ -51,6 +52,8 @@ public class JoinAssoc extends StructureComponent {
   public DefineAssoc foundAssoc;
   public String edgeRecordName;
   private TyType elementType;
+  public boolean fromMaybe;
+  public boolean toMaybe;
 
   public JoinAssoc(Token joinToken, Token assoc, Token via, Token tableName, Token brackOpen, Token itemVar, Token brackClose, Token fromLabel, Expression fromExpr, Token toLabel, Expression toExpr, Token semicolon) {
     this.joinToken = joinToken;
@@ -66,6 +69,8 @@ public class JoinAssoc extends StructureComponent {
     this.toExpr = toExpr;
     this.semicolon = semicolon;
     this.watching = new WatchSet();
+    this.fromMaybe = false;
+    this.toMaybe = false;
     ingest(joinToken);
     ingest(semicolon);
   }
@@ -127,8 +132,10 @@ public class JoinAssoc extends StructureComponent {
           TyType suggestion = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this);
           TyType fromType = environment.rules.Resolve(fromExpr.typing(itemEnv, suggestion), false);
           TyType toType = environment.rules.Resolve(toExpr.typing(itemEnv, suggestion), false);
-          environment.rules.IsInteger(fromType, false);
-          environment.rules.IsInteger(toType, false);
+          RuleSetMaybe.IsMaybeIntegerOrJustInteger(itemEnv, fromType, false);
+          RuleSetMaybe.IsMaybeIntegerOrJustInteger(itemEnv, toType, false);
+          this.fromMaybe = RuleSetMaybe.IsMaybe(itemEnv, fromType, true);
+          this.toMaybe = RuleSetMaybe.IsMaybe(itemEnv, toType, true);
         } else {
           environment.document.createError(this, "'" + tableName.text + "' was not yet registered ");
         }
