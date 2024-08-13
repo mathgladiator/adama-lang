@@ -17,42 +17,51 @@
 */
 package org.adamalang.runtime.graph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /** within a graph, this represents all the edges for a single assoc */
 public class RxAssocGraph {
-  private final HashMap<Integer, TreeSet<Integer>> edges;
-  private final ArrayList<HasPartialGraph> partials;
+  private final HashMap<Integer, TreeMap<Integer, Integer>> edges;
+  private final ArrayList<DifferentialEdgeTracker<?>> partials;
 
   public RxAssocGraph() {
     this.edges = new HashMap<>();
     this.partials = new ArrayList<>();
   }
 
-  public void remove(int from, int to) {
-    TreeSet<Integer> right = edges.get(from);
+  public void incr(int from, int to) {
+    TreeMap<Integer, Integer> right = edges.get(from);
+    if (right == null) {
+      right = new TreeMap<>();
+      edges.put(from, right);
+    }
+    Integer prior = right.get(to);
+    if (prior == null) {
+      prior = 0;
+    }
+    right.put(to, prior + 1);
+  }
+
+  public void decr(int from, int to) {
+    TreeMap<Integer, Integer> right = edges.get(from);
     if (right != null) {
-      right.remove(to);
+      Integer prior = right.get(to);
+      if (prior != null) {
+        if (prior > 1) {
+          right.put(to, prior - 1);
+        } else {
+          right.remove(to);
+        }
+      }
       if (right.size() == 0) {
         edges.remove(from);
       }
     }
   }
 
-  public void put(int from, int to) {
-    TreeSet<Integer> dest = edges.get(from);
-    if (dest == null) {
-      dest = new TreeSet<>();
-      edges.put(from, dest);
-    }
-    dest.add(to);
-  }
-
   public long memory() {
     int mem = 2048;
-    for (TreeSet<Integer> set : edges.values()) {
+    for (TreeMap<Integer, Integer> set : edges.values()) {
       mem += 256 + set.size() * 64;
     }
     return mem;
@@ -61,29 +70,33 @@ public class RxAssocGraph {
   public TreeSet<Integer> traverse(TreeSet<Integer> left) {
     TreeSet<Integer> right = new TreeSet<>();
     for (int l : left) {
-      TreeSet<Integer> pr = edges.get(l);
+      TreeMap<Integer, Integer> pr = edges.get(l);
       if (pr != null) {
-        right.addAll(pr);
+        right.addAll(pr.keySet());
       }
     }
     if (partials.size() > 0) {
-      RxAssocGraph partial = new RxAssocGraph();
-      for (HasPartialGraph p : partials) {
-        p.populate(partial);
+      for (DifferentialEdgeTracker<?> p : partials) {
+        p.traverseInvalid(left, right);
       }
-      right.addAll(partial.traverse(left));
     }
     return right;
   }
 
   public void compute() {
-    for(HasPartialGraph partial : partials) {
-      partial.compute();
+    Iterator<DifferentialEdgeTracker<?>> pit = partials.iterator();
+    while (pit.hasNext()) {
+      DifferentialEdgeTracker<?> det = pit.next();
+      if (det.alive()) {
+        det.compute();
+      } else {
+        pit.remove();
+        det.kill();
+      }
     }
-    partials.clear();
   }
 
-  public void link(HasPartialGraph partial) {
+  public void registerTracker(DifferentialEdgeTracker<?> partial) {
     partials.add(partial);
   }
 }

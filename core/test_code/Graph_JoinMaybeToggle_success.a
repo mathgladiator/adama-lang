@@ -1,0 +1,14 @@
+record F {}
+record T {}
+
+assoc<F, T> x;
+
+record E {
+  int from;
+  int to;
+}
+
+table<E> edges;
+bool enabled;
+
+join x via edges[x] from (enabled ? @maybe(x.from) : @maybe<int>) to (enabled ? @maybe(x.to) : @maybe<int>);

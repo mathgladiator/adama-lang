@@ -109,7 +109,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         @Override
         public boolean primary(int primaryKey) {
           for (DifferentialEdgeTracker<Ty> child : trackers) {
-            child.change(primaryKey);
+            child.primaryKeyChange(primaryKey);
           }
           return false;
         }
@@ -145,7 +145,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
     if (trackers != null) {
       for (DifferentialEdgeTracker<Ty> tracker : trackers) {
-        tracker.removeAll();
+        tracker.kill();
       }
     }
   }
@@ -214,6 +214,11 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public void invalidatePrimaryKey(int key, Ty value) {
     if (pubsub.primary(key)) {
       value.__invalidateIndex(pubsub);
+    } else if (trackerSub != null) {
+      // we do this so when the primary rejects it because
+      // it is no longer indexed as a table subscription,
+      // the signal flows to the tracker subscription regardless
+      trackerSub.primary(key);
     }
   }
 

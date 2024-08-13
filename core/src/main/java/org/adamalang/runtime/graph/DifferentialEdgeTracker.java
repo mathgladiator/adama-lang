@@ -24,9 +24,10 @@ import org.adamalang.runtime.reactives.RxTable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.TreeSet;
 
 /** an assoc table is a container of edges between two tables drive by a source */
-public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChild, HasPartialGraph {
+public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChild {
   private final RxTable<B> source;
   private final EdgeMaker<B> maker;
 
@@ -42,7 +43,6 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
 
   private final HashMap<Integer, EdgeCache> edgeCache;
   private final HashSet<Integer> invalid;
-  private boolean linked;
   private final RxAssocGraph graph;
 
   public DifferentialEdgeTracker(RxTable<B> source, RxAssocGraph graph, EdgeMaker<B> maker) {
@@ -51,21 +51,35 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
     this.maker = maker;
     this.edgeCache = new HashMap<>();
     this.invalid = new HashSet<>();
-    this.linked = false;
+    graph.registerTracker(this);
   }
 
-  public void change(int id) {
+  public void primaryKeyChange(int id) {
     EdgeCache ec = edgeCache.remove(id);
     if (ec != null) {
-      graph.remove(ec.from, ec.to);
+      graph.decr(ec.from, ec.to);
     }
     invalid.add(id);
-    if (!linked) {
-      linked = true;
-      graph.link(this);
+  }
+
+  public void traverseInvalid(TreeSet<Integer> left, TreeSet<Integer> right) {
+    for (Integer id : invalid) {
+      B row = source.getById(id);
+      if (row != null && row.__isAlive()) {
+        Integer from = maker.from(row);
+        if (from != null ) {
+          if (left.contains(from)) {
+            Integer to = maker.to(row);
+            if (to != null) {
+              right.add(to);
+            }
+          }
+        }
+      }
     }
   }
-  private void fill(RxAssocGraph partial, boolean cache) {
+
+  public void compute() {
     for (Integer id : invalid) {
       B row = source.getById(id);
       if (row != null && row.__isAlive()) {
@@ -73,43 +87,34 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
         if (from != null) {
           Integer to = maker.to(row);
           if (to != null) {
-            if (cache) {
-              edgeCache.put(id, new EdgeCache(from, to));
-            }
-            partial.put(from, to);
+            edgeCache.put(id, new EdgeCache(from, to));
+            graph.incr(from, to);
           }
         }
       }
     }
-  }
-
-  @Override
-  public void compute() {
-    fill(graph, true);
     invalid.clear();
-    linked = false;
   }
 
-  @Override
-  public void populate(RxAssocGraph partial) {
-    fill(partial, false);
-  }
-
-  public void removeAll() {
+  public void kill() {
     for (Map.Entry<Integer, EdgeCache> entry : edgeCache.entrySet()) {
-      invalid.add(entry.getKey());
-      graph.remove(entry.getValue().from, entry.getValue().to);
+      graph.decr(entry.getValue().from, entry.getValue().to);
     }
     edgeCache.clear();
-    if (!linked) {
-      linked = true;
-      graph.link(this);
-    }
+    invalid.clear();
   }
 
   @Override
   public boolean __raiseInvalid() {
-    removeAll();
+    for (Map.Entry<Integer, EdgeCache> entry : edgeCache.entrySet()) {
+      invalid.add(entry.getKey());
+      graph.decr(entry.getValue().from, entry.getValue().to);
+    }
+    edgeCache.clear();
+    return source.__isAlive();
+  }
+
+  public boolean alive() {
     return source.__isAlive();
   }
 
