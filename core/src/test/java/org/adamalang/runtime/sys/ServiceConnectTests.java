@@ -25,6 +25,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.data.mocks.SimpleIntCallback;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
@@ -44,6 +45,8 @@ public class ServiceConnectTests {
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+  private static final String SIMPLE_CODE_MSG_READONLY =
+      "@static { create { return true; } readonly=true; } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_ATTACH =
       "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } @can_attach { return true; } @attached (a) { x++; } ";
   private static final String CONNECT_CRASH =
@@ -325,6 +328,40 @@ public class ServiceConnectTests {
       LatchCallback cb1 = new LatchCallback();
       streamback.get().canAttach(cb1.toBool(-5, 5));
       cb1.await_success(5);
+      streamback.get().close();
+      latch2.run();
+      Assert.assertEquals("STATUS:Disconnected", streamback.get(2));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void connect_attach_readonly() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_READONLY, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
+    dataService.patch(
+        KEY,
+        wrap(
+            "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
+        Callback.DONT_CARE_VOID);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
+    try {
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      Runnable latch2 = streamback.latchAt(3);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
+      streamback.await_began();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
+      SimpleIntCallback cb1 = new SimpleIntCallback();
+      streamback.get().attach("id", "name", "type", 1000, "md5", "sha", cb1);
+      cb1.assertFailure(192373);
       streamback.get().close();
       latch2.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(2));

@@ -25,6 +25,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.data.mocks.SimpleIntCallback;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
@@ -45,6 +46,8 @@ public class ServiceTemporalTests {
       "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; transition #bump in 0.25; } #bump { x += 1000; transition #end; } #end {} ";
   private static final String SIMPLE_BOUNCER =
       "@static { create { return true; } } public int x; @connected { return true; } @construct { transition #bounce in 0.05; } #bounce { x += 1; transition #bounce in 0.05; } ";
+  private static final String SIMPLE_CODE_DEAD_READONLY =
+      "@static { create { return true; } readonly=true; } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; transition #bump in 0.25; } #bump { x += 1000; transition #end; } #end {} ";
 
   @Test
   public void transitions_happy_on_time() throws Exception {
@@ -76,6 +79,38 @@ public class ServiceTemporalTests {
       Assert.assertEquals(1142, (int) getX(streamback, 3));
       long delta = System.currentTimeMillis() - started;
       Assert.assertTrue(delta >= 200);
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void transitions_nope_while_readonly() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_DEAD_READONLY, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), TimeSource.REAL_TIME, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(4);
+      service.connect(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", ConnectionMode.Full, streamback);
+      streamback.await_began();
+      LatchCallback cb1 = new LatchCallback();
+      streamback.get().send("foo", null, "{}", cb1);
+      cb1.await_failure(192373);
+      SimpleIntCallback cbReset = new SimpleIntCallback();
+      service.devBoxCronReset(KEY, cbReset);
+      cbReset.assertSuccess(5);
+      streamback.get().close();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
+      Assert.assertEquals("{\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
     } finally {
       service.shutdown();
     }

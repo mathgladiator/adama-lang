@@ -63,9 +63,11 @@ public class DocumentConfig extends StaticPiece {
     switch (name.text) {
       case "maximum_history":
       case "frequency":
+      case "temporal_resolution_ms":
         next.rules.IsInteger(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
         return;
       case "delete_on_close":
+      case "readonly":
         next.rules.IsBoolean(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
         return;
     }

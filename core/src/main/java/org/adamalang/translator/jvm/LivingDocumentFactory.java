@@ -58,6 +58,7 @@ public class LivingDocumentFactory {
   public final boolean appMode;
   public final int appDelay;
   public final int temporalResolutionMilliseconds;
+  public boolean readonly;
 
   public LivingDocumentFactory(CachedByteCode code, Deliverer deliverer, TreeMap<Integer, PrivateKeyBundle> keys) throws ErrorCodeException {
     try {
@@ -77,6 +78,7 @@ public class LivingDocumentFactory {
       HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
       maximum_history = extractMaximumHistory(config);
       delete_on_close = extractDeleteOnClose(config);
+      readonly = extractReadOnlyMode(config);
       int freq = extractFrequency(config);
       appMode = freq > 0;
       appDelay = freq;
@@ -133,6 +135,15 @@ public class LivingDocumentFactory {
 
   private static boolean extractDeleteOnClose(HashMap<String, Object> config) {
     Object value = config.get("delete_on_close");
+    if (value != null && value instanceof Boolean) {
+      return ((Boolean) value).booleanValue();
+    } else {
+      return false;
+    }
+  }
+
+  private static boolean extractReadOnlyMode(HashMap<String, Object> config) {
+    Object value = config.get("readonly");
     if (value != null && value instanceof Boolean) {
       return ((Boolean) value).booleanValue();
     } else {

@@ -43,6 +43,8 @@ public class ServiceDirectSendTests {
       "@static { create { return true; } send { return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_NOPOLICY =
       "@static { create { return true; } send { return @who.isOverlord(); } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+  private static final String SIMPLE_CODE_READONLY =
+      "@static { create { return true; } readonly=true; } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
 
   @Test
   public void by_policy() throws Exception {
@@ -79,6 +81,26 @@ public class ServiceDirectSendTests {
       SimpleIntCallback sic = new SimpleIntCallback();
       service.directSend(ContextSupport.WRAP(new NtPrincipal("overlord", "overlord")), KEY, null, "foo", "{}", sic);
       sic.assertSuccess(2);
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void isreadonly() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_READONLY, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      SimpleIntCallback sic = new SimpleIntCallback();
+      service.directSend(ContextSupport.WRAP(new NtPrincipal("overlord", "overlord")), KEY, null, "foo", "{}", sic);
+      sic.assertFailure(192373);
     } finally {
       service.shutdown();
     }

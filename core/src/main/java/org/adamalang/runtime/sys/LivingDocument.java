@@ -47,7 +47,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.Supplier;
 
 /** The central class for a living document (i.e. a tiny VM) */
 public abstract class LivingDocument implements RxParent, Caller {
@@ -1509,9 +1508,9 @@ public abstract class LivingDocument implements RxParent, Caller {
         switch (command) {
           case "invalidate":
             if (__monitor != null) {
-              return __transaction_invalidate_monitored(who, requestJson);
+              return __transaction_invalidate_monitored(who, requestJson, factory);
             } else {
-              return __transaction_invalidate_body(who, requestJson);
+              return __transaction_invalidate_body(who, requestJson, factory);
             }
           case "construct":
             if (__constructed.get()) {
@@ -1540,6 +1539,9 @@ public abstract class LivingDocument implements RxParent, Caller {
             }
             return __transaction_disconnect(requestJson, context);
           case "attach":
+            if (factory.readonly) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_MUTATE_READONLY);
+            }
             if (context == null) {
               throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
             }
@@ -1548,6 +1550,9 @@ public abstract class LivingDocument implements RxParent, Caller {
             }
             return __transaction_attach(requestJson, context, asset);
           case "send":
+            if (factory.readonly) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_MUTATE_READONLY);
+            }
             if (channel == null) {
               throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
             }
@@ -1583,6 +1588,9 @@ public abstract class LivingDocument implements RxParent, Caller {
             }
             return __transaction_expire(requestJson, limit);
           case "web_put":
+            if (factory.readonly) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_MUTATE_READONLY);
+            }
             if (who == null) {
               throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
             }
@@ -1591,6 +1599,9 @@ public abstract class LivingDocument implements RxParent, Caller {
             }
             return __transaction_web_put(requestJson, put);
           case "web_delete":
+            if (factory.readonly) {
+              throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_MUTATE_READONLY);
+            }
             if (who == null) {
               throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
             }
@@ -2011,7 +2022,10 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: an invalidation is happening on the document (no monitor) */
-  private LivingDocumentChange __transaction_invalidate_body(NtPrincipal who, final String request) {
+  private LivingDocumentChange __transaction_invalidate_body(NtPrincipal who, final String request, LivingDocumentFactory factory) {
+    if (factory.readonly) {
+      return __invalidate_trailer(who, request, false, false, null);
+    }
     __preemptedStateOnNextComputeBlocked = null;
     final var seedUsed = Long.parseLong(__entropy.get());
     final long timeBackup = __time.get();
@@ -2158,12 +2172,12 @@ public abstract class LivingDocument implements RxParent, Caller {
   }
 
   /** transaction: an invalidation is happening on the document (use monitor) */
-  private LivingDocumentChange __transaction_invalidate_monitored(final NtPrincipal who, final String request) {
+  private LivingDocumentChange __transaction_invalidate_monitored(final NtPrincipal who, final String request, LivingDocumentFactory factory) {
     var exception = true;
     final var startedTime = System.nanoTime();
     __monitor.push("TransactionInvalidate");
     try {
-      final var result = __transaction_invalidate_body(who, request);
+      final var result = __transaction_invalidate_body(who, request, factory);
       exception = false; // this is basically useless, but nothing within this function should be a
       // subscribe
       return result;

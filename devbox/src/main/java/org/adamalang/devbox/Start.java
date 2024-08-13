@@ -279,7 +279,7 @@ public class Start {
           } else if (command.is("cron-reset", "cronreset")) {
             final AdamaMicroVerse capturedVerse = verse;
             Key keyToReset = focusedKey;
-            verse.timeMachine.reset(() -> {capturedVerse.service.devBoxCronReset(keyToReset);});
+            verse.timeMachine.reset(() -> {capturedVerse.service.devBoxCronReset(keyToReset, Callback.DONT_CARE_INTEGER);});
           } else if (command.is("time-slip", "timeslip")) {
             if (verse == null) {
               terminal.error("time-slip|must have local verse");

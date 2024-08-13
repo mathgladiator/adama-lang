@@ -823,16 +823,18 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
   }
 
   // hack for devbox, escapes traditional commit path
-  public void devBoxCronReset(Key key) {
+  public void devBoxCronReset(Key key, Callback<Integer> callback) {
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
         document.document().__execute_reset_cron();
-        document.invalidate(Callback.DONT_CARE_INTEGER);
+        document.invalidate(callback);
       }
 
       @Override
-      public void failure(ErrorCodeException ex) {}
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
     });
   }
 

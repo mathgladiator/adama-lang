@@ -57,6 +57,7 @@ public class ErrorCodes {
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL = 160268;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE = 184332;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT = 127155;
+  public static final int LIVING_DOCUMENT_TRANSACTION_CANT_MUTATE_READONLY = 192373;
 
   @User
   @Description("The user was not connected nor was the message handler not open.")

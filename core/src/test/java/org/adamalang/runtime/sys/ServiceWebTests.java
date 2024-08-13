@@ -290,4 +290,63 @@ public class ServiceWebTests {
       service.shutdown();
     }
   }
+
+  private static final String SIMPLE_CODE_MSG_READONLY = "@static { create { return true; } readonly=true; }" +
+      "@web get / {\n" + "  return {html:\"root\"};\n" + "}\n" + "\n" + //
+      "@web get /fixed {\n" + "  return {html:\"fixed path\"};\n" + "}\n" + "\n" + //
+      "@web options /fixed {\n" + "  return {cors:true};\n" + "}\n" + "\n" + //
+      "@web get /path0/$x:int {\n" + "  return {html:\"path integer:\" + x,cache_ttl_seconds:42};\n" + "}\n" + "\n" + //
+      "@web get /path1/$x:double {\n" + "  return {html:\"path double:\" + x};\n" + "}\n" + "\n" + //
+      "@web get /path2/$x:long {\n" + "  return {html:\"path long without child:\" + x};\n" + "}\n" + "\n" + //
+      "@web get /path2/$x:long/child {\n" + "  return {html:\"path long with child: \" + x + \"!\"};\n" + "}\n" + "\n" + //
+      "@web get /path3/$a* {\n" + "  return {html:\"tail:\" + a};\n" + "}\n" + "\n" +
+      "@web delete /medelete/$a* {\n" + "  return {html:\"deleted:\" + a};\n" + "}\n" + "\n" +
+      "message M {int x; } @web put /meput/$a* (M m) {\n" + "  return {html:\"put:\" + a + \":\" + m.x};\n" + "}\n" + "\n" +
+      "@web get /\"something.js\" {\n" + "  return {js:\"function... blah...blah...blah\"};\n" + "}\n" + "\n" +
+      "@web get /\"something.css\" {\n" + "  return {css:\".class{}\"};\n" + "}\n" + "\n" +
+      "@web get /asset/$a* {\n" + "  return {asset:@nothing,asset_transform:\"foo\"};\n" + "}\n" + "\n" +
+      "@web get /path3/$a:string/child {\n" + "  return {html:\"abort tail and go with direct child:\" + a};\n" + "}";
+
+  @Test
+  public void web_readonly() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_READONLY, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);
+      created.await_success();
+      CountDownLatch latch = new CountDownLatch(2);
+            service.webDelete(KEY, new WebDelete(CONTEXT, "/medelete/14", new TreeMap<>(), new NtDynamic("{}")), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(192373, ex.code);
+          System.err.println("web delete failure-" + ex.code);
+          latch.countDown();
+        }
+      });
+      service.webPut(KEY, new WebPut(CONTEXT, "/meput/14", new TreeMap<>(), new NtDynamic("{}"), "{\"x\":123}"), new Callback<>() {
+        @Override
+        public void success(WebResponse value) {
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          Assert.assertEquals(192373, ex.code);
+          System.err.println("web put failure-" + ex.code);
+          latch.countDown();
+        }
+      });
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    } finally {
+      service.shutdown();
+    }
+  }
 }
