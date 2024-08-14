@@ -95,6 +95,8 @@ public class ErrorTable {
     descriptions.put(184332, "no description of error (yet)");
     names.put(127155, "LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT");
     descriptions.put(127155, "no description of error (yet)");
+    names.put(192373, "LIVING_DOCUMENT_TRANSACTION_CANT_MUTATE_READONLY");
+    descriptions.put(192373, "no description of error (yet)");
     names.put(143373, "LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED");
     descriptions.put(143373, "The user was not connected nor was the message handler not open.");
     userspace.add(143373);

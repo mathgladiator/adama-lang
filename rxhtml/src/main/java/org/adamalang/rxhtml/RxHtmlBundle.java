@@ -18,6 +18,7 @@
 package org.adamalang.rxhtml;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.rxhtml.routing.Table;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.Task;
 
@@ -28,19 +29,19 @@ public class RxHtmlBundle {
   public final String javascript;
   public final String style;
   public final Shell shell;
-  public final ArrayList<String> patterns;
   public final HashMap<String, Integer> cssFreq;
   public final ArrayList<Task> tasks;
   public final ObjectNode viewSchema;
+  public final Table table;
 
-  public RxHtmlBundle(String javascript, String style, Shell shell, ArrayList<String> patterns, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks, ObjectNode viewSchema) {
+  public RxHtmlBundle(String javascript, String style, Shell shell, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks, ObjectNode viewSchema, Table table) {
     this.javascript = javascript;
     this.style = style;
     this.shell = shell;
-    this.patterns = patterns;
     this.cssFreq = cssFreq;
     this.tasks = tasks;
     this.viewSchema = viewSchema;
+    this.table = table;
   }
 
   @Override

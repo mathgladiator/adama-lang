@@ -15,9 +15,24 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.routing;
 
-public class Platform {
-  public static final String VERSION = "20240813203928";
-  public static final String JS_VERSION = "fba6fcda053e00ba6151d4dbfb0ab607";
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.TreeMap;
+
+public class TableTests {
+  @Test
+  public void flow() {
+    Table table = new Table();
+    table.add(Instructions.parse("/xyz/$n:number/$t:text/$z*"), new MockTarget(100));
+    TreeMap<String, String> captures = new TreeMap<>();
+    Target target = table.route("/xyz/123/hi/there/joe", captures);
+    Assert.assertEquals(100, ((MockTarget) target).value);
+    Assert.assertEquals("123", captures.get("n"));
+    Assert.assertEquals("hi", captures.get("t"));
+    Assert.assertEquals("there/joe", captures.get("z"));
+    Assert.assertEquals(276, table.memory());
+  }
 }

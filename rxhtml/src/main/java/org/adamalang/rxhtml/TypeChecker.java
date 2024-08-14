@@ -17,7 +17,7 @@
 */
 package org.adamalang.rxhtml;
 
-import org.adamalang.rxhtml.template.Root;
+import org.adamalang.rxhtml.routing.Instructions;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.adamalang.rxhtml.typing.RxRootEnvironment;
 import org.jsoup.nodes.Document;
@@ -45,7 +45,7 @@ public class TypeChecker {
         feedback.warn(element, "page is missing a uri");
         continue;
       }
-      String normalizedUri = Root.uri_to_instructions(element.attr("uri")).normalized;
+      String normalizedUri = Instructions.parse(element.attr("uri")).normalized;
       if (paths.contains(normalizedUri)) {
         feedback.warn(element, "page has duplicate path of '" + normalizedUri + "'");
       }

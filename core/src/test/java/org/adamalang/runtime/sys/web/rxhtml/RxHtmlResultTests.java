@@ -19,6 +19,9 @@ package org.adamalang.runtime.sys.web.rxhtml;
 
 import org.adamalang.common.Json;
 import org.adamalang.rxhtml.RxHtmlBundle;
+import org.adamalang.rxhtml.routing.Instructions;
+import org.adamalang.rxhtml.routing.Table;
+import org.adamalang.rxhtml.routing.targets.DeliverEntireRxHtml;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.junit.Assert;
@@ -30,10 +33,10 @@ import java.util.HashMap;
 public class RxHtmlResultTests {
   @Test
   public void testing() {
-    ArrayList<String> patterns = new ArrayList<>();
-    patterns.add("/hi/there");
-    patterns.add("/hi/$name/ok");
-    RxHtmlResult result = new RxHtmlResult(new RxHtmlBundle("js", "css", new Shell(ShellConfig.start().end()), patterns, new HashMap<>(), new ArrayList<>(), Json.newJsonObject()));
+    Table table = new Table();
+    table.add(Instructions.parse("/hi/xyz/ok"), new DeliverEntireRxHtml());
+    table.add(Instructions.parse("/hi/there"), new DeliverEntireRxHtml());
+    RxHtmlResult result = new RxHtmlResult(new RxHtmlBundle("js", "css", new Shell(ShellConfig.start().end()), new HashMap<>(), new ArrayList<>(), Json.newJsonObject(), table));
     Assert.assertFalse(result.test("/"));
     Assert.assertFalse(result.test("///"));
     Assert.assertFalse(result.test("/////"));

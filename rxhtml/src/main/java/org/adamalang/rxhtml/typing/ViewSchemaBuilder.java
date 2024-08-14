@@ -22,8 +22,8 @@ import org.adamalang.common.Json;
 import org.adamalang.rxhtml.acl.Parser;
 import org.adamalang.rxhtml.acl.commands.Command;
 import org.adamalang.rxhtml.atl.ParseException;
+import org.adamalang.rxhtml.routing.Instructions;
 import org.adamalang.rxhtml.template.Base;
-import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
@@ -52,7 +52,7 @@ public class ViewSchemaBuilder {
     this.fragments = new Stack<>();
     this.results = Json.newJsonObject();
     for (Element element : document.getElementsByTag("page")) {
-      Root.Instructions uriInstructions = Root.uri_to_instructions(element.attr("uri"));
+      Instructions uriInstructions = Instructions.parse(element.attr("uri"));
       String normalizedUri = uriInstructions.normalized;
       ViewScope vs = ViewScope.makeRoot();
       vs.types.putAll(uriInstructions.types);

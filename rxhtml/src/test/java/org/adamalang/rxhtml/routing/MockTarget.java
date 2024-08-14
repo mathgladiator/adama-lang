@@ -15,9 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.routing;
 
-public class Platform {
-  public static final String VERSION = "20240813203928";
-  public static final String JS_VERSION = "fba6fcda053e00ba6151d4dbfb0ab607";
+public class MockTarget implements Target {
+  public final int value;
+
+  public MockTarget(int value) {
+    this.value = value;
+  }
+
+  @Override
+  public long memory() {
+    return 0L;
+  }
 }

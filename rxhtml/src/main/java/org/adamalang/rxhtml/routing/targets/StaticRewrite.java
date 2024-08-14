@@ -15,9 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml.routing.targets;
 
-public class Platform {
-  public static final String VERSION = "20240813203928";
-  public static final String JS_VERSION = "fba6fcda053e00ba6151d4dbfb0ab607";
+import org.adamalang.rxhtml.routing.Target;
+
+public class StaticRewrite implements Target {
+
+  @Override
+  public long memory() {
+    return 0;
+  }
 }

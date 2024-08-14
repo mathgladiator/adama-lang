@@ -18,12 +18,13 @@
 package org.adamalang.runtime.sys.web.rxhtml;
 
 import org.adamalang.common.Callback;
+import org.adamalang.rxhtml.routing.Table;
 
 import java.util.ArrayList;
 
 public class MockRxHtmlFetcher implements RxHtmlFetcher {
   @Override
   public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback) {
-    callback.success(new LiveSiteRxHtmlResult("html", new ArrayList<>()));
+    callback.success(new LiveSiteRxHtmlResult("html", new Table()));
   }
 }

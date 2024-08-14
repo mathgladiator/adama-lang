@@ -15,33 +15,36 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.sys.web.rxhtml;
+package org.adamalang.rxhtml.routing;
 
-import org.adamalang.common.cache.Measurable;
-import org.adamalang.rxhtml.routing.Table;
-
-import java.nio.charset.StandardCharsets;
 import java.util.TreeMap;
+import java.util.function.Function;
 
-public class LiveSiteRxHtmlResult implements Measurable {
-  public final byte[] html;
-  private final Table table;
-  private final long _measure;
+/** a simple table for routing a URI to a Target */
+public class Table {
+  private final Path root;
+  private long memoryCached;
 
-  public LiveSiteRxHtmlResult(String html, Table table) {
-    this.html = html.getBytes(StandardCharsets.UTF_8);
-    this.table = table;
-    long m = html.length();
-    // TODO: account for the size of the table
-    _measure = m + 1024;
+  public Table() {
+    this.root = new Path(null);
+    memoryCached = this.root.memory();
   }
 
-  public boolean test(String uri) {
-    return table.route(uri, new TreeMap<>()) != null;
+  public boolean add(Instructions instructions, Target target) {
+    Path at = root;
+    for (Function<Path, Path> delta : instructions.progress) {
+      at = delta.apply(at);
+    }
+    boolean result = at.set(target);
+    memoryCached = this.root.memory();
+    return result;
   }
 
-  @Override
-  public long measure() {
-    return _measure;
+  public Target route(String path, TreeMap<String, String> captures) {
+    return root.route(0, Path.parsePath(path), captures);
+  }
+
+  public long memory() {
+    return root.memory();
   }
 }

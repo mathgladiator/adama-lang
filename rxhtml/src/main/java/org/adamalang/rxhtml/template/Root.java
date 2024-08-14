@@ -20,13 +20,12 @@ package org.adamalang.rxhtml.template;
 import org.adamalang.rxhtml.atl.ParseException;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
+import org.adamalang.rxhtml.routing.Instructions;
 import org.adamalang.rxhtml.template.config.Feedback;
 import org.jsoup.nodes.Attribute;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Root {
   public static void start(Environment env, String custom) {
@@ -61,7 +60,7 @@ public class Root {
     String rootVar = env.pool.ask();
     Environment envToUse = env.parentVariable(rootVar).stateVar(stateVar).raiseOptimize();
     String uri = env.element.attr("uri");
-    Instructions instructions = uri_to_instructions(uri);
+    Instructions instructions = Instructions.parse(uri);
     env.writeElementDebugIfTest();
     env.writer.tab().append("$.PG(").append(instructions.javascript).append(", function(").append(rootVar).append(",").append(stateVar).append(") {").newline().tabUp();
     for (Attribute attr : env.element.attributes()) {
@@ -134,78 +133,9 @@ public class Root {
     env.pool.give(stateVar);
   }
 
-  /** convert a raw uri to an instruction set */
-  public static Instructions uri_to_instructions(String uriRaw) {
-    HashSet<String> depends = new HashSet<>();
-    String uri = (uriRaw.startsWith("/") ? uriRaw.substring(1) : uriRaw).trim();
-    StringBuilder formula = new StringBuilder();
-    if (uriRaw.startsWith("/")) {
-      formula.append("/");
-    }
-    TreeMap<String, String> types = new TreeMap<>();
-    StringBuilder normalized = new StringBuilder();
-    StringBuilder sb = new StringBuilder();
-    sb.append("[");
-    boolean first = true;
-    do {
-      int kSlash = uri.indexOf('/');
-      String fragment = kSlash >= 0 ? uri.substring(0, kSlash).trim() : uri;
-      uri = kSlash >= 0 ? uri.substring(kSlash + 1).trim() : "";
-      if (!first) {
-        sb.append(",");
-      }
-      first = false;
-      if (fragment.startsWith("$")) {
-        int colon = fragment.indexOf(':');
-        String type = (colon > 0 ? fragment.substring(colon + 1) : "text").trim().toLowerCase();
-        String name = (colon > 0 ? fragment.substring(1, colon) : fragment.substring(1)).trim();
-        switch (type) {
-          case "text":
-          case "string":
-          case "str":
-            type = "text";
-            break;
-          case "number":
-          case "int":
-          case "double":
-            type = "number";
-        }
-        depends.add(name);
-        sb.append("'").append(type).append("','").append(name).append("'");
-        types.put(name, type);
-        formula.append("{").append(name).append("}");
-        normalized.append("/$").append(type);
-      } else {
-        normalized.append("/").append(fragment);
-        sb.append("'fixed','").append(fragment).append("'");
-        formula.append(fragment);
-      }
-      if (kSlash >= 0) {
-        formula.append("/");
-      }
-    } while (uri.length() > 0);
-    sb.append("]");
-    return new Instructions(sb.toString(), depends, formula.toString(), normalized.toString(), types);
-  }
-
   public static String finish(Environment env) {
     env.writer.tabDown().tab().append("})(RxHTML);").newline();
     return env.writer.toString();
   }
 
-  public static class Instructions {
-    public final String javascript;
-    public final HashSet<String> depends;
-    public final String formula;
-    public final String normalized;
-    public final TreeMap<String, String> types;
-
-    public Instructions(final String javascript, HashSet<String> depends, String formula, String normalized, TreeMap<String, String> types) {
-      this.javascript = javascript;
-      this.depends = depends;
-      this.formula = formula;
-      this.normalized = normalized;
-      this.types = types;
-    }
-  }
 }

@@ -22,11 +22,13 @@ import org.adamalang.runtime.sys.web.WebFragment;
 import org.adamalang.runtime.sys.web.WebPath;
 import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlBundle;
+import org.adamalang.rxhtml.routing.Table;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /** result of executing RxHtml */
 public class RxHtmlResult {
@@ -34,53 +36,23 @@ public class RxHtmlResult {
   public final String javascript;
   public final String style;
   public final Shell shell;
-  public final ArrayList<WebPath> paths;
   public final HashMap<String, Integer> cssFreq;
   public final ArrayList<Task> tasks;
   public final ObjectNode viewSchema;
+  public final Table table;
 
   public RxHtmlResult(RxHtmlBundle bundle) {
     this.bundle = bundle;
     this.javascript = bundle.javascript;
     this.style = bundle.style;
     this.shell = bundle.shell;
-    this.paths = new ArrayList<>();
-    for (String pattern : bundle.patterns) {
-      paths.add(new WebPath(pattern));
-    }
+    this.table = bundle.table;
     this.cssFreq = bundle.cssFreq;
     this.tasks = bundle.tasks;
     this.viewSchema = bundle.viewSchema;
   }
 
-  public boolean test(String rawUri) {
-    return testUri(paths, rawUri);
-  }
-
-  public static boolean testUri(ArrayList<WebPath> paths, String rawUri) {
-    String uri = rawUri;
-    // truncate a trailing "/"
-    while (uri.length() > 1 && uri.endsWith("/")) {
-      uri = uri.substring(0, uri.length() - 1);
-    }
-    WebPath test = new WebPath(uri);
-    for (WebPath path : paths) {
-      if (test.size() == path.size()) {
-        boolean good = true;
-        for (int k = 0; k < test.size() && good; k++) {
-          WebFragment t = test.at(k);
-          WebFragment p = path.at(k);
-          if (!p.fragment.startsWith("$")) {
-            if (!p.fragment.equals(t.fragment)) {
-              good = false;
-            }
-          }
-        }
-        if (good) {
-          return true;
-        }
-      }
-    }
-    return false;
+  public boolean test(String uri) {
+    return table.route(uri, new TreeMap<>()) != null;
   }
 }

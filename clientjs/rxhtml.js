@@ -2386,6 +2386,21 @@ var RxHTML = (function () {
           }
         }
       }
+      if ("suffix" in head) {
+        var neck = head["suffix"];
+        var val = parts[at];
+        for (var af = 1; af + at < parts.length; af++) {
+          val += "/" + parts[at + af];
+        }
+        for (var branch in neck) {
+          view[branch] = val;
+          var candidate = route(parts, parts.length, neck[branch], view);
+          if (candidate !== null) {
+            return candidate;
+          }
+          delete view[branch];
+        }
+      }
     } else {
       if ("@" in head) {
         return head["@"];

@@ -17,6 +17,10 @@
 */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.routing.targets.DeliverEntireRxHtml;
+import org.adamalang.rxhtml.routing.Instructions;
+import org.adamalang.rxhtml.routing.Table;
+import org.adamalang.rxhtml.routing.targets.StaticRewrite;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
@@ -40,17 +44,25 @@ public class RxHtmlTool {
     Shell shell = new Shell(config);
     shell.scan(document);
     ViewSchemaBuilder vb = new ViewSchemaBuilder(document, config.feedback);
-    ArrayList<String> patterns = new ArrayList<>();
     for (Element element : document.getElementsByTag("template")) {
       Root.template(env.element(element, true, null));
     }
+    Table table = new Table();
+    DeliverEntireRxHtml entire = new DeliverEntireRxHtml();
     for (Element element : document.getElementsByTag("page")) {
-      patterns.add(element.attr("uri"));
+      String uri = element.attr("uri");
+      table.add(Instructions.parse(uri), entire);
       Root.page(env.element(element, true, null), defaultRedirects);
+    }
+    for (Element element : document.getElementsByTag("static-rewrite")) {
+      String uri = element.attr("uri");
+      StaticRewrite rewrite = new StaticRewrite();
+      // TODO: configure rewrite
+      table.add(Instructions.parse(uri), rewrite);
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlBundle(javascript, style, shell, patterns, env.getCssFreq(), env.tasks, vb.results);
+    return new RxHtmlBundle(javascript, style, shell, env.getCssFreq(), env.tasks, vb.results, table);
   }
 
   public static String buildCustomJavaScript(Document document) {
@@ -85,7 +97,7 @@ public class RxHtmlTool {
     ArrayList<String> defaults = new ArrayList<>();
     for (Element element : document.getElementsByTag("page")) {
       if (element.hasAttr("default-redirect-source")) {
-        defaults.add(Root.uri_to_instructions(element.attr("uri")).formula);
+        defaults.add(Instructions.parse(element.attr("uri")).formula);
       }
     }
     return defaults;
