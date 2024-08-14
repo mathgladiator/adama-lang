@@ -33,6 +33,6 @@ public class TableTests {
     Assert.assertEquals("123", captures.get("n"));
     Assert.assertEquals("hi", captures.get("t"));
     Assert.assertEquals("there/joe", captures.get("z"));
-    Assert.assertEquals(340, table.memory());
+    Assert.assertEquals(340, table.measure());
   }
 }

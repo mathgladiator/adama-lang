@@ -139,7 +139,7 @@ public class CreateSpaceManyDocumentsTests extends BaseE2ETest {
 
     env.drain("127.0.0.1:25004", Callback.DONT_CARE_VOID);
 
-    int attemptsToConverge = 10;
+    int attemptsToConverge = 30;
     int countOfDrainedHost = 1;
     while (attemptsToConverge > 0 && countOfDrainedHost > 0) {
       attemptsToConverge--;

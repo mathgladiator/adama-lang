@@ -30,8 +30,9 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.*;
-import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
+import org.adamalang.rxhtml.routing.Table;
+import org.adamalang.rxhtml.routing.Target;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonLogger;
@@ -438,11 +439,12 @@ public class FrontendHttpHandler implements HttpHandler {
   private void getSpace(ObjectNode logInfo, NtPrincipal who, String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     rxHtmlFetcher.fetch(space, new Callback<>() {
       @Override
-      public void success(LiveSiteRxHtmlResult result) {
-        // TODO: for bundling, the test will have to go with a "resolve"
-        if (result.test(uri)) {
+      public void success(Table result) {
+        Target found = result.route(uri, new TreeMap<>());
+        if (found != null) {
+          // TODO integrate status and headers better
           logInfo.put("rxhtml", true);
-          callback.success(new HttpResult(200, "text/html", result.html, false));
+          callback.success(new HttpResult(200, "text/html", found.body, false));
         } else {
           logInfo.put("rxhtml", false);
           get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);

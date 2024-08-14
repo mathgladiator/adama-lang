@@ -24,10 +24,9 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.data.SpaceInfo;
 import org.adamalang.mysql.model.Spaces;
-import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
 import org.adamalang.runtime.sys.web.rxhtml.RxHtmlFetcher;
-import org.adamalang.runtime.sys.web.rxhtml.RxHtmlResult;
 import org.adamalang.rxhtml.RxHtmlTool;
+import org.adamalang.rxhtml.routing.Table;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 
 /** fetch an RxHTML document from a space */
@@ -42,13 +41,12 @@ public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
   }
 
   @Override
-  public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback) {
+  public void fetch(String space, Callback<Table> callback) {
     try {
       SpaceInfo spaceInfo = Spaces.getSpaceInfo(database, space);
       String rxhtml = Spaces.getRxHtml(database, spaceInfo.id);
-      RxHtmlResult rxhtmlResult = new RxHtmlResult(RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withEnvironment(environment).end()));
-      String html = rxhtmlResult.shell.makeShell(rxhtmlResult.bundle.javascript, rxhtmlResult.bundle.style);
-      callback.success(new LiveSiteRxHtmlResult(html, rxhtmlResult.table));
+      Table table = RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withEnvironment(environment).end()).table;
+      callback.success(table);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_FAILED_RXHTML_LOOKUP, ex, EXLOGGER));
     }

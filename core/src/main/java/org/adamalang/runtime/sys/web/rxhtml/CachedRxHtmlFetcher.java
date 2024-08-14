@@ -22,12 +22,13 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.cache.AsyncSharedLRUCache;
 import org.adamalang.common.cache.SyncCacheLRU;
+import org.adamalang.rxhtml.routing.Table;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CachedRxHtmlFetcher implements RxHtmlFetcher {
-  private final SyncCacheLRU<String, LiveSiteRxHtmlResult> storage;
-  private final AsyncSharedLRUCache<String, LiveSiteRxHtmlResult> cache;
+  private final SyncCacheLRU<String, Table> storage;
+  private final AsyncSharedLRUCache<String, Table> cache;
 
   public CachedRxHtmlFetcher(TimeSource timeSource, int maxSites, long maxAge, SimpleExecutor executor, RxHtmlFetcher fetcher) {
     this.storage = new SyncCacheLRU<>(timeSource, 0, maxSites, 16 * 1024 * 1024, maxAge, (name, record) -> {
@@ -40,7 +41,7 @@ public class CachedRxHtmlFetcher implements RxHtmlFetcher {
   }
 
   @Override
-  public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback) {
+  public void fetch(String space, Callback<Table> callback) {
     cache.get(space, callback);
   }
 }

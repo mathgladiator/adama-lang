@@ -27,6 +27,7 @@ import org.adamalang.region.AdamaDeploymentSyncMetrics;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.Deploy;
 import org.adamalang.runtime.deploy.Undeploy;
+import org.adamalang.rxhtml.routing.Table;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientBaseMetrics;
 import org.adamalang.web.client.socket.ConnectionReady;
@@ -149,7 +150,7 @@ public class Start {
       terminal.info("devbox|not preserving viewstate on auto-reload");
     }
 
-    AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle = new AtomicReference<>();
+    AtomicReference<Table> bundle = new AtomicReference<>();
     RxPubSub pubSub = new RxPubSub(preserveView);
     try (RxHTMLScanner scanner = new RxHTMLScanner(alive, stats, terminal, new File(args.rxhtmlPath), verse != null || localLibAdamaJSFile != null, env, (b) -> bundle.set(b), pubSub, new File(args.types))) {
       WebConfig webConfig = new WebConfig(new ConfigObject(args.webConfig));

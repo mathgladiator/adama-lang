@@ -29,6 +29,8 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.domains.Domain;
 import org.adamalang.runtime.sys.domains.DomainFinder;
 import org.adamalang.runtime.sys.web.*;
+import org.adamalang.rxhtml.routing.Table;
+import org.adamalang.rxhtml.routing.Target;
 import org.adamalang.system.FrontendHttpHandler;
 import org.adamalang.web.assets.AssetSystem;
 import org.adamalang.web.assets.ContentType;
@@ -58,7 +60,7 @@ public class LocalServiceBase implements ServiceBase {
   private final DynamicControl control;
   private final TerminalIO io;
   private final WebConfig webConfig;
-  private final AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle;
+  private final AtomicReference<Table> bundle;
   private final File staticAssetRoot;
   private final File localLibAdamaJS;
   private final AdamaMicroVerse verse;
@@ -69,7 +71,7 @@ public class LocalServiceBase implements ServiceBase {
   private final RxPubSub rxPubSub;
   private final MetricsFactory metricsFactory;
 
-  public LocalServiceBase(DevBoxStats stats, DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<RxHTMLScanner.RxHTMLBundle> bundle, File staticAssetRoot, File localLibAdamaJS, File attachmentPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
+  public LocalServiceBase(DevBoxStats stats, DynamicControl control, TerminalIO io, WebConfig webConfig, AtomicReference<Table> bundle, File staticAssetRoot, File localLibAdamaJS, File attachmentPath, AdamaMicroVerse verse, boolean debuggerAvailable, RxPubSub rxPubSub, MetricsFactory metricsFactory) throws Exception {
     this.stats = stats;
     this.executor = SimpleExecutor.create("executor");
     this.control = control;
@@ -191,7 +193,7 @@ public class LocalServiceBase implements ServiceBase {
       }
 
       public void handleGet(ConnectionContext context, NtPrincipal who, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
-        RxHTMLScanner.RxHTMLBundle current = bundle.get();
+        Table current = bundle.get();
         if (current == null) {
           callback.failure(new ErrorCodeException(500));
           return;
@@ -287,9 +289,13 @@ public class LocalServiceBase implements ServiceBase {
         }
 
         // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
-        if (current.result.test(uri)) {
-          callback.success(new HttpResult(200, "text/html", current.shell.getBytes(), false));
-          return;
+        Target target = current.route(uri, new TreeMap<>());
+        if (target != null && target.headers != null) {
+          // TODO: add headers into HttpResult
+          if ("text/html".equals(target.headers) && target.body != null) {
+            callback.success(new HttpResult(target.status, "text/html", target.body, false));
+            return;
+          }
         }
         if (uri.endsWith("/")) {
           uri += "index.html";

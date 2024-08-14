@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class MockRxHtmlFetcher implements RxHtmlFetcher {
   @Override
-  public void fetch(String space, Callback<LiveSiteRxHtmlResult> callback) {
-    callback.success(new LiveSiteRxHtmlResult("html", new Table()));
+  public void fetch(String space, Callback<Table> callback) {
+    callback.success(new Table());
   }
 }

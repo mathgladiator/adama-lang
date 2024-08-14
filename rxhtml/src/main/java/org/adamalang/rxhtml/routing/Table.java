@@ -17,11 +17,13 @@
 */
 package org.adamalang.rxhtml.routing;
 
+import org.adamalang.common.cache.Measurable;
+
 import java.util.TreeMap;
 import java.util.function.Function;
 
 /** a simple table for routing a URI to a Target */
-public class Table {
+public class Table implements Measurable {
   private final Path root;
   private long memoryCached;
 
@@ -44,7 +46,8 @@ public class Table {
     return root.route(0, Path.parsePath(path), captures);
   }
 
-  public long memory() {
+  @Override
+  public long measure() {
     return root.memory();
   }
 }

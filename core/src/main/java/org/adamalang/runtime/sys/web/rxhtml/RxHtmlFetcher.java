@@ -18,8 +18,10 @@
 package org.adamalang.runtime.sys.web.rxhtml;
 
 import org.adamalang.common.Callback;
+import org.adamalang.rxhtml.routing.Table;
 
+/** for fetching a table */
 public interface RxHtmlFetcher {
 
-  void fetch(String space, Callback<LiveSiteRxHtmlResult> callback);
+  void fetch(String space, Callback<Table> callback);
 }

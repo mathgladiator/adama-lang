@@ -22,7 +22,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.*;
 import org.adamalang.mysql.model.Spaces;
-import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
+import org.adamalang.rxhtml.routing.Table;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,9 +39,9 @@ public class GlobalRxHtmlFetcherTests {
         installer.install();
         GlobalRxHtmlFetcher fetcher = new GlobalRxHtmlFetcher(dataBase, "unittest");
         CountDownLatch latch = new CountDownLatch(2);
-        fetcher.fetch("space", new Callback<LiveSiteRxHtmlResult>() {
+        fetcher.fetch("space", new Callback<Table>() {
           @Override
-          public void success(LiveSiteRxHtmlResult value) {
+          public void success(Table value) {
 
           }
 
@@ -52,9 +52,9 @@ public class GlobalRxHtmlFetcherTests {
         });
         int spaceId = Spaces.createSpace(dataBase, 1, "newspace");
         Spaces.setRxHtml(dataBase, spaceId, "<forest></forest>");
-        fetcher.fetch("newspace", new Callback<LiveSiteRxHtmlResult>() {
+        fetcher.fetch("newspace", new Callback<Table>() {
           @Override
-          public void success(LiveSiteRxHtmlResult value) {
+          public void success(Table value) {
             latch.countDown();
           }
 
