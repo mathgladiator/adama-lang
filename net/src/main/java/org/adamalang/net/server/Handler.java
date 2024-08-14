@@ -738,6 +738,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
       }
       query.put("list", prefix);
       nexus.service.query(query, queryResponder(buf, response));
+      return;
     }
     if ("query".equals(payload.command)) {
       if (payload.args != null && payload.args.length == 2) {
