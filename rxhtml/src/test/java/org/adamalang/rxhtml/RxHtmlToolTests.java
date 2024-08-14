@@ -15,9 +15,22 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml;
 
-public class Platform {
-  public static final String VERSION = "20240814010349";
-  public static final String JS_VERSION = "fba6fcda053e00ba6151d4dbfb0ab607";
+import org.adamalang.rxhtml.routing.Target;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.TreeMap;
+
+public class RxHtmlToolTests {
+  @Test
+  public void redirect_eval() {
+    Target t = RxHtmlTool.createRedirectRule(301, "https://admin.[[$host.apex]]/[[path]]");
+    TreeMap<String, String> map = new TreeMap<>();
+    map.put("$host.apex", "mydomain.com");
+    map.put("path", "xyz/abc");
+    String newLocation = t.mutation.apply(t, map).headers.get("location");
+    Assert.assertEquals("https://admin.mydomain.com/xyz/abc", newLocation);
+  }
 }

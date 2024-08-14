@@ -17,6 +17,11 @@
 */
 package org.adamalang.rxhtml;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
+import org.adamalang.common.template.Parser;
+import org.adamalang.common.template.Settings;
+import org.adamalang.common.template.tree.T;
 import org.adamalang.rxhtml.routing.Target;
 import org.adamalang.rxhtml.routing.Instructions;
 import org.adamalang.rxhtml.routing.Table;
@@ -31,6 +36,7 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
@@ -54,11 +60,6 @@ public class RxHtmlTool {
       urisToMapToEntire.add(element.attr("uri"));
       Root.page(env.element(element, true, null), defaultRedirects);
     }
-    for (Element element : document.getElementsByTag("static-rewrite")) {
-      String uri = element.attr("uri");
-      // TODO: configure rewrite
-      // table.add(Instructions.parse(uri), rewrite);
-    }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
 
@@ -69,9 +70,31 @@ public class RxHtmlTool {
     for (String uri : urisToMapToEntire) {
       table.add(Instructions.parse(uri), entire);
     }
-
+    for (Element element : document.getElementsByTag("static-rewrite")) {
+      String uri = element.attr("uri");
+      String location = element.attr("location");
+      int status = "302".equals(element.attr("status")) ? 302 : 301;
+      if (location != null) {
+        table.add(Instructions.parse(uri), createRedirectRule(status, location));
+      }
+    }
     Diagnostics diagnostics = new Diagnostics(env.getCssFreq(), env.tasks, vb.results, javascript.length());
     return new RxHtmlBundle(javascript, style, shell, diagnostics, table);
+  }
+
+  public static Target createRedirectRule(int status, String location) {
+    final T locationTemplate = Parser.parse(location);
+    return new Target(999, null, null, (t, cap) -> {
+      TreeMap<String, String> headers = new TreeMap<>();
+      StringBuilder result = new StringBuilder();
+      ObjectNode params = Json.newJsonObject();
+      for (Map.Entry<String, String> c : cap.entrySet()) {
+        params.put(c.getKey(), c.getValue());
+      }
+      locationTemplate.render(new Settings(false), params, result);
+      headers.put("location", result.toString());
+      return new Target(status, headers, null, null);
+    });
   }
 
   public static String buildCustomJavaScript(Document document) {

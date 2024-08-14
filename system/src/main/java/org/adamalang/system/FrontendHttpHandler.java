@@ -443,6 +443,8 @@ public class FrontendHttpHandler implements HttpHandler {
       String[] split = host.split(Pattern.quote("."));
       if (split.length > 1) {
         captured.put("$host.apex", split[split.length - 2] + "." + split[split.length - 1]);
+      } else {
+        captured.put("$host.apex", host);
       }
       if (split.length > 2) {
         captured.put("$host.sub", split[split.length - 3]);

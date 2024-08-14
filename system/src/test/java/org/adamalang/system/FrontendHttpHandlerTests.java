@@ -30,4 +30,12 @@ public class FrontendHttpHandlerTests {
     Assert.assertEquals("a.com", captured.get("$host.apex"));
     Assert.assertEquals("www", captured.get("$host.sub"));
   }
+
+  @Test
+  public void localhost() {
+    TreeMap<String, String> captured = FrontendHttpHandler.prepareCapture("localhost");
+    Assert.assertEquals("localhost", captured.get("$host"));
+    Assert.assertEquals("localhost", captured.get("$host.apex"));
+    Assert.assertNull(captured.get("$host.sub"));
+  }
 }
