@@ -26,13 +26,13 @@ import java.util.TreeMap;
 public class TargetTests {
   @Test
   public void flow_null() {
-    Target target = new Target(100, null, null);
+    Target target = new Target(100, null, null, null);
     Assert.assertEquals(64, target.memory());
   }
 
   @Test
   public void flow_good() {
-    Target target = new Target(100, new TreeMap<>(), "xyz".getBytes(StandardCharsets.UTF_8));
+    Target target = new Target(100, new TreeMap<>(), "xyz".getBytes(StandardCharsets.UTF_8), null);
     Assert.assertEquals(131, target.memory());
   }
 }

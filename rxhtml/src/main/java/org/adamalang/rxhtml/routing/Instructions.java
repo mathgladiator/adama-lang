@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+/** instructions represent a parsed URI */
 public class Instructions {
   public final String javascript;
   public final HashSet<String> depends;

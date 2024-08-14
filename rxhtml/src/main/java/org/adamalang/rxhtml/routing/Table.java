@@ -48,6 +48,6 @@ public class Table implements Measurable {
 
   @Override
   public long measure() {
-    return root.memory();
+    return memoryCached;
   }
 }

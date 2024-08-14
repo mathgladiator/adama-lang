@@ -25,7 +25,7 @@ import java.util.TreeMap;
 public class PathTests {
 
   private Target mock(int v) {
-    return new Target(v, null, null);
+    return new Target(v, null, null, null);
   }
 
   @Test

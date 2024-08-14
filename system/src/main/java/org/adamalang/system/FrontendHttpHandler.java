@@ -245,7 +245,7 @@ public class FrontendHttpHandler implements HttpHandler {
           if (uri.startsWith("/~d/")) {
             get(logItem, who, new SpaceKeyRequest(space, "default-document", uri.substring(3)), headers, parametersJson, callback);
           } else {
-            getSpace(logItem, who, space, uri, headers, parametersJson, callback);
+            getSpace(logItem, host, who, space, uri, headers, parametersJson, callback);
           }
           return;
         }
@@ -266,7 +266,7 @@ public class FrontendHttpHandler implements HttpHandler {
             SpaceKeyRequest skr = new SpaceKeyRequest(domain.space, domain.key, uriToRoute);
             get(logItem, who, skr, headers, parametersJson, callback);
           } else {
-            getSpace(logItem, who, domain.space, uri, headers, parametersJson, callback);
+            getSpace(logItem, host, who, domain.space, uri, headers, parametersJson, callback);
           }
         } else {
           LOGGER.error("domain-not-mapped:" + host);
@@ -436,7 +436,26 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
-  public static HttpResult convertRxHTMLTargetToHttpResult(Target target) {
+  public static TreeMap<String, String> prepareCapture(String host) {
+    TreeMap<String, String> captured = new TreeMap<>();
+    if (host != null) {
+      captured.put("$host", host);
+      String[] split = host.split(Pattern.quote("."));
+      if (split.length > 1) {
+        captured.put("$host.apex", split[split.length - 2] + "." + split[split.length - 1]);
+      }
+      if (split.length > 2) {
+        captured.put("$host.sub", split[split.length - 3]);
+      }
+    }
+    return captured;
+  }
+
+  public static HttpResult convertRxHTMLTargetToHttpResult(Target targetRaw, TreeMap<String, String> captured) {
+    Target target = targetRaw;
+    if (target.mutation != null) { // mutate the target based on the captured variables
+      target = target.mutation.apply(target, captured);
+    }
     String contentType = "application/octet-stream";
     if (target.headers != null) {
       String newContentType = target.headers.remove("context/type");
@@ -451,14 +470,15 @@ public class FrontendHttpHandler implements HttpHandler {
     return new HttpResult(target.status, contentType, target.body, false, target.headers);
   }
 
-  private void getSpace(ObjectNode logInfo, NtPrincipal who, String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
+  private void getSpace(ObjectNode logInfo, String host, NtPrincipal who, String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     rxHtmlFetcher.fetch(space, new Callback<>() {
       @Override
       public void success(Table result) {
-        Target found = result.route(uri, new TreeMap<>());
+        TreeMap<String, String> captured = prepareCapture(host);
+        Target found = result.route(uri, captured);
         if (found != null) {
           logInfo.put("rxhtml", true);
-          callback.success(convertRxHTMLTargetToHttpResult(found));
+          callback.success(convertRxHTMLTargetToHttpResult(found, captured));
         } else {
           logInfo.put("rxhtml", false);
           get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);

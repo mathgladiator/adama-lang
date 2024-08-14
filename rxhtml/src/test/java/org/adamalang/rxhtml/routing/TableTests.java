@@ -26,7 +26,7 @@ public class TableTests {
   @Test
   public void flow() {
     Table table = new Table();
-    table.add(Instructions.parse("/xyz/$n:number/$t:text/$z*"), new Target(100, null, null));
+    table.add(Instructions.parse("/xyz/$n:number/$t:text/$z*"), new Target(100, null, null, null));
     TreeMap<String, String> captures = new TreeMap<>();
     Target target = table.route("/xyz/123/hi/there/joe", captures);
     Assert.assertEquals(100, target.status);

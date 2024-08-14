@@ -289,9 +289,14 @@ public class LocalServiceBase implements ServiceBase {
         }
 
         // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
-        Target target = current.route(uri, new TreeMap<>());
+        String hostToUseForCapture = headers.get("x-test-host");
+        if (hostToUseForCapture == null) {
+          hostToUseForCapture = "localhost";
+        }
+        TreeMap<String, String> captured = FrontendHttpHandler.prepareCapture(hostToUseForCapture);
+        Target target = current.route(uri, captured);
         if (target != null) {
-          callback.success(FrontendHttpHandler.convertRxHTMLTargetToHttpResult(target));
+          callback.success(FrontendHttpHandler.convertRxHTMLTargetToHttpResult(target, captured));
           return;
         }
         if (uri.endsWith("/")) {

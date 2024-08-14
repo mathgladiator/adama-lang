@@ -19,6 +19,7 @@ package org.adamalang.rxhtml.routing;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.BiFunction;
 
 /** a simple static target for HTTP */
 public class Target {
@@ -26,8 +27,9 @@ public class Target {
   public final TreeMap<String, String> headers;
   public final byte[] body;
   private final long memory;
+  public final BiFunction<Target, TreeMap<String, String>, Target> mutation;
 
-  public Target(int status, TreeMap<String, String> headers, byte[] body) {
+  public Target(int status, TreeMap<String, String> headers, byte[] body, BiFunction<Target, TreeMap<String, String>, Target> mutation) {
     this.status = status;
     this.headers = headers;
     this.body = body;
@@ -40,7 +42,11 @@ public class Target {
     if (body != null) {
       _memory += 64 + body.length;
     }
+    if (mutation != null) {
+      _memory += 1024;
+    }
     this.memory = _memory;
+    this.mutation = mutation;
   }
 
   public long memory() {

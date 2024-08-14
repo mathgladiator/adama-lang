@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+/** a binding site path for routing */
 public class Path {
   private final String name;
   private final TreeMap<String, Path> fixed;
