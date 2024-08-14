@@ -763,7 +763,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
     if (httpResult.headers != null) {
       for (Map.Entry<String, String> header : httpResult.headers.entrySet()) {
-        res.headers().set(header.getValue(), header.getValue());
+        res.headers().set(header.getKey(), header.getValue());
       }
     }
     transferCors(res, req, httpResult.cors);

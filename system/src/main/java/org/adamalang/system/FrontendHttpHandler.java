@@ -437,13 +437,16 @@ public class FrontendHttpHandler implements HttpHandler {
   }
 
   public static HttpResult convertRxHTMLTargetToHttpResult(Target target) {
-    String contentType = target.headers.remove("context/type");
-    String location = target.headers.remove("location");
-    if ((target.status == 301 || target.status == 302) && location != null) {
-      return new HttpResult(location, target.status);
-    }
-    if (contentType == null) {
-      contentType = "application/octet-stream";
+    String contentType = "application/octet-stream";
+    if (target.headers != null) {
+      String newContentType = target.headers.remove("context/type");
+      if (newContentType != null) {
+        contentType = newContentType;
+      }
+      String location = target.headers.remove("location");
+      if ((target.status == 301 || target.status == 302) && location != null) {
+        return new HttpResult(location, target.status);
+      }
     }
     return new HttpResult(target.status, contentType, target.body, false, target.headers);
   }
