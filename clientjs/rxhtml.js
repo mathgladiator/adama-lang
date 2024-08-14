@@ -4276,6 +4276,9 @@ var RxHTML = (function () {
   self.HREF = function (dom, state, href, merge) {
     dom.setAttribute("href", fixHref(href));
     dom.onclick = function (evt) {
+      if (evt.ctrlKey) {
+        return true;
+      }
       var trimHref = href;
       if (trimHref.startsWith("/")) {
         trimHref = trimHref.substring(1);
