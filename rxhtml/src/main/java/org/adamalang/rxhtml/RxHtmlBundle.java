@@ -17,31 +17,23 @@
 */
 package org.adamalang.rxhtml;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.rxhtml.routing.Table;
 import org.adamalang.rxhtml.template.Shell;
-import org.adamalang.rxhtml.template.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+/** a bundle of the results from producing RxHTML */
 public class RxHtmlBundle {
   public final String javascript;
   public final String style;
   public final Shell shell;
-  public final HashMap<String, Integer> cssFreq;
-  public final ArrayList<Task> tasks;
-  public final ObjectNode viewSchema;
   public final Table table;
+  public final Diagnostics diagnostics;
 
-  public RxHtmlBundle(String javascript, String style, Shell shell, HashMap<String, Integer> cssFreq, ArrayList<Task> tasks, ObjectNode viewSchema, Table table) {
+  public RxHtmlBundle(String javascript, String style, Shell shell, Diagnostics diagnostics, Table table) {
     this.javascript = javascript;
     this.style = style;
     this.shell = shell;
-    this.cssFreq = cssFreq;
-    this.tasks = tasks;
-    this.viewSchema = viewSchema;
     this.table = table;
+    this.diagnostics = diagnostics;
   }
 
   @Override

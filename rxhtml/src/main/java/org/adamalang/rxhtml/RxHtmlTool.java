@@ -62,7 +62,8 @@ public class RxHtmlTool {
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
-    return new RxHtmlBundle(javascript, style, shell, env.getCssFreq(), env.tasks, vb.results, table);
+    Diagnostics diagnostics = new Diagnostics(env.getCssFreq(), env.tasks, vb.results, javascript.length());
+    return new RxHtmlBundle(javascript, style, shell, diagnostics, table);
   }
 
   public static String buildCustomJavaScript(Document document) {

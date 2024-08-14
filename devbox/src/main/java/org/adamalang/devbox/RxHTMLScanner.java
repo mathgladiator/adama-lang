@@ -186,12 +186,12 @@ public class RxHTMLScanner implements AutoCloseable {
                 String forest = Bundler.bundle(scanRoot, rxhtml(scanRoot), true);
                 RxHtmlBundle rxHtmlBundle = RxHtmlTool.convertStringToTemplateForest(forest, types, ShellConfig.start().withFeedback(feedback).withEnvironment(env).withUseLocalAdamaJavascript(useLocalAdamaJavascript).end());
                 stats.frontendDeployment(forest);
-                stats.frontendSize(rxHtmlBundle.javascript.length());
+                stats.frontendSize(rxHtmlBundle.diagnostics.javascriptSize);
                 RxHtmlResult updated = new RxHtmlResult(rxHtmlBundle);
                 long buildTime = System.currentTimeMillis() - started;
                 ObjectNode freq = Json.newJsonObject();
                 int opportunity = 0;
-                for (Map.Entry<String, Integer> e : updated.cssFreq.entrySet()) {
+                for (Map.Entry<String, Integer> e : updated.diagnostics.cssFreq.entrySet()) {
                   freq.put(e.getKey(), e.getValue());
                   if (e.getKey().length() > 3) { // assume we compact to a [a-z][a-z0-9]{2} namespace (26 * 36 * 36 = 33696 classes)
                     opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
@@ -202,7 +202,7 @@ public class RxHTMLScanner implements AutoCloseable {
                 rxPubSub.notifyReload();
                 try {
                   Files.writeString(new File(types, "css.freq.json").toPath(), freq.toPrettyString());
-                  Files.writeString(new File(types, "view.schema.json").toPath(), updated.viewSchema.toPrettyString());
+                  Files.writeString(new File(types, "view.schema.json").toPath(), updated.diagnostics.viewSchema.toPrettyString());
                 } catch (Exception ex) {
                   io.error("rxhtml|css.freq.json failed to be built");
                 }
@@ -223,7 +223,7 @@ public class RxHTMLScanner implements AutoCloseable {
 
                 summary.append("<h1>Open Tasks</h1>\n");
                 summary.append("<table border=1>\n");
-                for (Task task : updated.tasks) {
+                for (Task task : updated.diagnostics.tasks) {
                   summary.append("<tr><td>").append(task.section).append("</td><td>").append(task.description).append("</td></tr>\n");
                 }
                 summary.append("</table>\n");

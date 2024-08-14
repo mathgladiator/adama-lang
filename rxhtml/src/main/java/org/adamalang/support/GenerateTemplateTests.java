@@ -116,7 +116,7 @@ public class GenerateTemplateTests {
         output.append("  }\n");
         output.append("  @Override\n");
         output.append("  public String schema() {\n");
-        writeStringBuilder(result.viewSchema.toPrettyString(), output, "gold");
+        writeStringBuilder(result.diagnostics.viewSchema.toPrettyString(), output, "gold");
         output.append("    return gold.toString();\n");
         output.append("  }\n");
         output.append("}\n");

@@ -17,17 +17,11 @@
 */
 package org.adamalang.runtime.sys.web.rxhtml;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.sys.web.WebFragment;
-import org.adamalang.runtime.sys.web.WebPath;
-import org.adamalang.runtime.sys.web.rxhtml.LiveSiteRxHtmlResult;
+import org.adamalang.rxhtml.Diagnostics;
 import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.routing.Table;
 import org.adamalang.rxhtml.template.Shell;
-import org.adamalang.rxhtml.template.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 /** result of executing RxHtml */
@@ -36,10 +30,8 @@ public class RxHtmlResult {
   public final String javascript;
   public final String style;
   public final Shell shell;
-  public final HashMap<String, Integer> cssFreq;
-  public final ArrayList<Task> tasks;
-  public final ObjectNode viewSchema;
   public final Table table;
+  public final Diagnostics diagnostics;
 
   public RxHtmlResult(RxHtmlBundle bundle) {
     this.bundle = bundle;
@@ -47,9 +39,7 @@ public class RxHtmlResult {
     this.style = bundle.style;
     this.shell = bundle.shell;
     this.table = bundle.table;
-    this.cssFreq = bundle.cssFreq;
-    this.tasks = bundle.tasks;
-    this.viewSchema = bundle.viewSchema;
+    this.diagnostics = bundle.diagnostics;
   }
 
   public boolean test(String uri) {

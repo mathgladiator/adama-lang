@@ -15,9 +15,25 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.rxhtml;
 
-public class Platform {
-  public static final String VERSION = "20240813215508";
-  public static final String JS_VERSION = "fba6fcda053e00ba6151d4dbfb0ab607";
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.rxhtml.template.Task;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/** data from the RxHTML compiler to the tooling */
+public class Diagnostics {
+  public final HashMap<String, Integer> cssFreq;
+  public final ArrayList<Task> tasks;
+  public final ObjectNode viewSchema;
+  public final int javascriptSize;
+
+  public Diagnostics(HashMap<String, Integer> cssFreq, ArrayList<Task> tasks, ObjectNode viewSchema, int javascriptSize) {
+    this.cssFreq = cssFreq;
+    this.tasks = tasks;
+    this.viewSchema = viewSchema;
+    this.javascriptSize = javascriptSize;
+  }
 }

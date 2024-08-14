@@ -63,7 +63,7 @@ public abstract class BaseRxHtmlTest {
   public void stable_schema() {
     RxHtmlBundle result = result();
     ObjectNode expected = Json.parseJsonObject(schema());
-    ObjectNode computed = Json.parseJsonObject(result.viewSchema.toPrettyString());
+    ObjectNode computed = Json.parseJsonObject(result.diagnostics.viewSchema.toPrettyString());
     Assert.assertEquals(expected, computed);
   }
 
