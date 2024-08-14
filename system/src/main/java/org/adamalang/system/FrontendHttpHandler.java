@@ -436,15 +436,26 @@ public class FrontendHttpHandler implements HttpHandler {
     }
   }
 
+  public static HttpResult convertRxHTMLTargetToHttpResult(Target target) {
+    String contentType = target.headers.remove("context/type");
+    String location = target.headers.remove("location");
+    if ((target.status == 301 || target.status == 302) && location != null) {
+      return new HttpResult(location, target.status);
+    }
+    if (contentType == null) {
+      contentType = "application/octet-stream";
+    }
+    return new HttpResult(target.status, contentType, target.body, false, target.headers);
+  }
+
   private void getSpace(ObjectNode logInfo, NtPrincipal who, String space, String uri, TreeMap<String, String> headers, String parametersJson, Callback<HttpResult> callback) {
     rxHtmlFetcher.fetch(space, new Callback<>() {
       @Override
       public void success(Table result) {
         Target found = result.route(uri, new TreeMap<>());
         if (found != null) {
-          // TODO integrate status and headers better
           logInfo.put("rxhtml", true);
-          callback.success(new HttpResult(200, "text/html", found.body, false));
+          callback.success(convertRxHTMLTargetToHttpResult(found));
         } else {
           logInfo.put("rxhtml", false);
           get(logInfo, who, new SpaceKeyRequest("ide", space, uri), headers, parametersJson, callback);

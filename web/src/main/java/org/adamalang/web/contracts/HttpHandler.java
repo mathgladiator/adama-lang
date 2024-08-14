@@ -64,6 +64,7 @@ public interface HttpHandler {
     public final boolean redirect;
     public final String location;
     public final Integer cacheTimeSeconds;
+    public final TreeMap<String, String> headers;
 
     public HttpResult(int status, String contentType, byte[] body, boolean cors) {
       this.status = status;
@@ -77,6 +78,22 @@ public interface HttpHandler {
       this.redirect = false;
       this.location = null;
       this.cacheTimeSeconds = null;
+      this.headers = null;
+    }
+
+    public HttpResult(int status, String contentType, byte[] body, boolean cors, TreeMap<String, String> headers) {
+      this.status = status;
+      this.contentType = contentType != null ? contentType : "";
+      this.body = body;
+      this.space = null;
+      this.key = null;
+      this.asset = null;
+      this.transform = null;
+      this.cors = cors;
+      this.redirect = false;
+      this.location = null;
+      this.cacheTimeSeconds = null;
+      this.headers = headers;
     }
 
     public HttpResult(int status, String space, String key, NtAsset asset, String transform, boolean cors, int cts) {
@@ -91,6 +108,7 @@ public interface HttpHandler {
       this.redirect = false;
       this.location = null;
       this.cacheTimeSeconds = cts > 0 ? cts : null;
+      this.headers = null;
     }
 
     public HttpResult(String location, int code) {
@@ -105,6 +123,7 @@ public interface HttpHandler {
       this.redirect = true;
       this.location = location;
       this.cacheTimeSeconds = null;
+      this.headers = null;
     }
 
     public void logInto(ObjectNode logItem) {

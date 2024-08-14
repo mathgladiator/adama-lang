@@ -290,12 +290,9 @@ public class LocalServiceBase implements ServiceBase {
 
         // lame version for now, need to build a routable tree with type biases if this ever becomes a mainline
         Target target = current.route(uri, new TreeMap<>());
-        if (target != null && target.headers != null) {
-          // TODO: add headers into HttpResult
-          if ("text/html".equals(target.headers) && target.body != null) {
-            callback.success(new HttpResult(target.status, "text/html", target.body, false));
-            return;
-          }
+        if (target != null) {
+          callback.success(FrontendHttpHandler.convertRxHTMLTargetToHttpResult(target));
+          return;
         }
         if (uri.endsWith("/")) {
           uri += "index.html";

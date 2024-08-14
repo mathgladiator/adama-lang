@@ -761,6 +761,11 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     if (httpResult.cacheTimeSeconds != null && httpResult.cacheTimeSeconds > 0) {
       res.headers().set(HttpHeaderNames.CACHE_CONTROL, "max-age=" + httpResult.cacheTimeSeconds);
     }
+    if (httpResult.headers != null) {
+      for (Map.Entry<String, String> header : httpResult.headers.entrySet()) {
+        res.headers().set(header.getValue(), header.getValue());
+      }
+    }
     transferCors(res, req, httpResult.cors);
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
