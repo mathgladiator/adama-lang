@@ -58,6 +58,9 @@ public class Path {
     if (suffix != null) {
       result += suffix.memory();
     }
+    if (target != null) {
+      result += target.memory();
+    }
     return result;
   }
 

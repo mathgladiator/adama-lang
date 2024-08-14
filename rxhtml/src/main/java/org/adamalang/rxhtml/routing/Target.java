@@ -17,6 +17,33 @@
 */
 package org.adamalang.rxhtml.routing;
 
-public interface Target {
-  public long memory();
+import java.util.Map;
+import java.util.TreeMap;
+
+/** a simple static target for HTTP */
+public class Target {
+  public final int status;
+  public final TreeMap<String, String> headers;
+  public final byte[] body;
+  private final long memory;
+
+  public Target(int status, TreeMap<String, String> headers, byte[] body) {
+    this.status = status;
+    this.headers = headers;
+    this.body = body;
+    long _memory = 64;
+    if (headers != null) {
+      for(Map.Entry<String, String> entry : headers.entrySet()) {
+        _memory += 64 + entry.getKey().length() + entry.getValue().length();
+      }
+    }
+    if (body != null) {
+      _memory += 64 + body.length;
+    }
+    this.memory = _memory;
+  }
+
+  public long memory() {
+    return memory;
+  }
 }

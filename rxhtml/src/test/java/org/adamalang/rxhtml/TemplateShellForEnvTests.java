@@ -41,7 +41,7 @@ public class TemplateShellForEnvTests extends BaseRxHtmlTest {
     gold.append("\nStyle:");
     gold.append("\nShell:<!DOCTYPE html>");
     gold.append("\n<html>");
-    gold.append("\n<head><title>Default Title</title><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/show-me\"><script src=\"/libadama.js/GENMODE.js\"></script><script>");
+    gold.append("\n<head><title>Default Title</title><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/yes\"><link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/show-me\"><script src=\"/libadama.js/GENMODE.js\"></script><script>");
     gold.append("\n");
     gold.append("\n(function($){");
     gold.append("\n");

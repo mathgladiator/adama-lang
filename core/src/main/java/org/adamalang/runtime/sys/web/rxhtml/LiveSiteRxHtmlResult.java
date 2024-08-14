@@ -32,8 +32,7 @@ public class LiveSiteRxHtmlResult implements Measurable {
     this.html = html.getBytes(StandardCharsets.UTF_8);
     this.table = table;
     long m = html.length();
-    // TODO: account for the size of the table
-    _measure = m + 1024;
+    _measure = m + table.memory();
   }
 
   public boolean test(String uri) {

@@ -26,13 +26,13 @@ public class TableTests {
   @Test
   public void flow() {
     Table table = new Table();
-    table.add(Instructions.parse("/xyz/$n:number/$t:text/$z*"), new MockTarget(100));
+    table.add(Instructions.parse("/xyz/$n:number/$t:text/$z*"), new Target(100, null, null));
     TreeMap<String, String> captures = new TreeMap<>();
     Target target = table.route("/xyz/123/hi/there/joe", captures);
-    Assert.assertEquals(100, ((MockTarget) target).value);
+    Assert.assertEquals(100, target.status);
     Assert.assertEquals("123", captures.get("n"));
     Assert.assertEquals("hi", captures.get("t"));
     Assert.assertEquals("there/joe", captures.get("z"));
-    Assert.assertEquals(276, table.memory());
+    Assert.assertEquals(340, table.memory());
   }
 }

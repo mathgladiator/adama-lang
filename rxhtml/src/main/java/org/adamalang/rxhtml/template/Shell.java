@@ -43,7 +43,7 @@ public class Shell {
     }
   }
 
-  public String makeShell(RxHtmlBundle result) {
+  public String makeShell(String javascript, String style) {
     StringBuilder sb = new StringBuilder();
     StringBuilder scripts = new StringBuilder();
     boolean worker = false;
@@ -90,8 +90,8 @@ public class Shell {
     } else {
       sb.append("<script src=\"/libadama.js/"+ config.version +".js\"></script>");
     }
-    sb.append("<script>\n\n").append(result.javascript).append("\n\n</script>");
-    sb.append("<style>\n\n").append(result.style).append("\n\n</style>");
+    sb.append("<script>\n\n").append(javascript).append("\n\n</script>");
+    sb.append("<style>\n\n").append(style).append("\n\n</style>");
     sb.append(scripts);
     sb.append("</head>");
     if (shell != null) {

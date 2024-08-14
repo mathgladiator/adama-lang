@@ -197,7 +197,7 @@ public class RxHTMLScanner implements AutoCloseable {
                     opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
                   }
                 }
-                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(rxHtmlBundle)));
+                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(rxHtmlBundle.javascript, rxHtmlBundle.style)));
                 io.notice("rxhtml|rebuilt; javascript-size=" + updated.diagnostics.javascriptSize);
                 rxPubSub.notifyReload();
                 try {
@@ -212,14 +212,6 @@ public class RxHTMLScanner implements AutoCloseable {
                 summary.append("<b>Build Time</b>:" + buildTime + " ms<br />");
                 summary.append("<b>Uncompressed size (javascript)</b>:" + updated.diagnostics.javascriptSize + " bytes<br />");
                 summary.append("<b>CSS compression potential</b>:" + opportunity + " bytes<br />");
-                {
-                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  GZIPOutputStream out = new GZIPOutputStream(baos);
-                  out.write(updated.javascript.getBytes(StandardCharsets.UTF_8));
-                  out.flush();
-                  out.close();
-                  summary.append("<b>Compressed size (javascript)</b>:" + baos.toByteArray().length + "<br />");
-                }
 
                 summary.append("<h1>Open Tasks</h1>\n");
                 summary.append("<table border=1>\n");

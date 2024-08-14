@@ -17,10 +17,9 @@
 */
 package org.adamalang.rxhtml;
 
-import org.adamalang.rxhtml.routing.targets.DeliverEntireRxHtml;
+import org.adamalang.rxhtml.routing.Target;
 import org.adamalang.rxhtml.routing.Instructions;
 import org.adamalang.rxhtml.routing.Table;
-import org.adamalang.rxhtml.routing.targets.StaticRewrite;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Root;
 import org.adamalang.rxhtml.template.Shell;
@@ -30,7 +29,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
@@ -48,20 +49,27 @@ public class RxHtmlTool {
       Root.template(env.element(element, true, null));
     }
     Table table = new Table();
-    DeliverEntireRxHtml entire = new DeliverEntireRxHtml();
+    ArrayList<String> urisToMapToEntire = new ArrayList<>();
     for (Element element : document.getElementsByTag("page")) {
-      String uri = element.attr("uri");
-      table.add(Instructions.parse(uri), entire);
+      urisToMapToEntire.add(element.attr("uri"));
       Root.page(env.element(element, true, null), defaultRedirects);
     }
     for (Element element : document.getElementsByTag("static-rewrite")) {
       String uri = element.attr("uri");
-      StaticRewrite rewrite = new StaticRewrite();
       // TODO: configure rewrite
-      table.add(Instructions.parse(uri), rewrite);
+      // table.add(Instructions.parse(uri), rewrite);
     }
     // TODO: do warnings about cross-page linking, etc...
     String javascript = Root.finish(env);
+
+    // build the table
+    TreeMap<String, String> entireHeaders = new TreeMap<>();
+    entireHeaders.put("content-type", "text/html");
+    Target entire = new Target(200, entireHeaders, shell.makeShell(javascript, style).getBytes(StandardCharsets.UTF_8));
+    for (String uri : urisToMapToEntire) {
+      table.add(Instructions.parse(uri), entire);
+    }
+
     Diagnostics diagnostics = new Diagnostics(env.getCssFreq(), env.tasks, vb.results, javascript.length());
     return new RxHtmlBundle(javascript, style, shell, diagnostics, table);
   }

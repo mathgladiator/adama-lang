@@ -15,13 +15,24 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.rxhtml.routing.targets;
+package org.adamalang.rxhtml.routing;
 
-import org.adamalang.rxhtml.routing.Target;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class DeliverEntireRxHtml implements Target {
-  @Override
-  public long memory() {
-    return 0;
+import java.nio.charset.StandardCharsets;
+import java.util.TreeMap;
+
+public class TargetTests {
+  @Test
+  public void flow_null() {
+    Target target = new Target(100, null, null);
+    Assert.assertEquals(64, target.memory());
+  }
+
+  @Test
+  public void flow_good() {
+    Target target = new Target(100, new TreeMap<>(), "xyz".getBytes(StandardCharsets.UTF_8));
+    Assert.assertEquals(131, target.memory());
   }
 }

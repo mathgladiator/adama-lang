@@ -27,16 +27,12 @@ import java.util.TreeMap;
 /** result of executing RxHtml */
 public class RxHtmlResult {
   public final RxHtmlBundle bundle;
-  public final String javascript;
-  public final String style;
   public final Shell shell;
   public final Table table;
   public final Diagnostics diagnostics;
 
   public RxHtmlResult(RxHtmlBundle bundle) {
     this.bundle = bundle;
-    this.javascript = bundle.javascript;
-    this.style = bundle.style;
     this.shell = bundle.shell;
     this.table = bundle.table;
     this.diagnostics = bundle.diagnostics;

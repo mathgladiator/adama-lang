@@ -22,7 +22,7 @@ import org.adamalang.rxhtml.Diagnostics;
 import org.adamalang.rxhtml.RxHtmlBundle;
 import org.adamalang.rxhtml.routing.Instructions;
 import org.adamalang.rxhtml.routing.Table;
-import org.adamalang.rxhtml.routing.targets.DeliverEntireRxHtml;
+import org.adamalang.rxhtml.routing.Target;
 import org.adamalang.rxhtml.template.Shell;
 import org.adamalang.rxhtml.template.config.ShellConfig;
 import org.junit.Assert;
@@ -35,8 +35,8 @@ public class RxHtmlResultTests {
   @Test
   public void testing() {
     Table table = new Table();
-    table.add(Instructions.parse("/hi/xyz/ok"), new DeliverEntireRxHtml());
-    table.add(Instructions.parse("/hi/there"), new DeliverEntireRxHtml());
+    table.add(Instructions.parse("/hi/xyz/ok"), new Target(100, null, null));
+    table.add(Instructions.parse("/hi/there"), new Target(100, null, null));
     Diagnostics diag = new Diagnostics(new HashMap<>(), new ArrayList<>(), Json.newJsonObject(), 42);
     RxHtmlResult result = new RxHtmlResult(new RxHtmlBundle("js", "css", new Shell(ShellConfig.start().end()), diag, table));
     Assert.assertFalse(result.test("/"));
