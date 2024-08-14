@@ -254,7 +254,36 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
 
   @Override
   public void query(TreeMap<String, String> query, Callback<String> callback) {
-    if (query.containsKey("space") && query.containsKey("key")) {
+    if (query.containsKey("list")) {
+      final JsonStreamWriter result = new JsonStreamWriter();
+      result.beginObject();
+
+      NamedRunnable walker = new NamedRunnable("list-walker") {
+        final String prefix = query.get("list");
+        int at = 0;
+        @Override
+        public void execute() throws Exception {
+          for (Key key : bases[at].map.keySet()) {
+            String search = key.space + "/" + key.key;
+            if (search.startsWith(prefix)) {
+              result.writeObjectFieldIntro(search);
+              result.beginObject();
+              result.writeObjectFieldIntro("ex");
+              result.writeInteger(at);
+              result.endObject();
+            }
+          }
+          at++;
+          if (at < bases.length) {
+            bases[at].executor.execute(this);
+          } else {
+            result.endObject();
+            callback.success(result.toString());
+          }
+        }
+      };
+      bases[0].executor.execute(walker);
+    } else if (query.containsKey("space") && query.containsKey("key")) {
       Key key = new Key(query.get("space"), query.get("key"));
       load(key, new Callback<>() {
         @Override

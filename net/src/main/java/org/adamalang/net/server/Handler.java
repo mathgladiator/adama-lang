@@ -706,32 +706,45 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     upstream.completed();
   }
 
+  private Callback<String> queryResponder(ByteBuf buf, ServerMessage.ProbeCommandResponse response) {
+    return new Callback<String>() {
+      @Override
+      public void success(String json) {
+        response.json = json;
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        response.json = "{\"error\":" + ex.code + "}";
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+    };
+  }
+
   @Override
   public void handle(ClientMessage.ProbeCommandRequest payload) {
     ByteBuf buf = upstream.create(0);
     ServerMessage.ProbeCommandResponse response = new ServerMessage.ProbeCommandResponse();
+    if ("list".equals(payload.command)) {
+      TreeMap<String, String> query = new TreeMap<>();
+      String prefix = "";
+      if (payload.args.length > 0) {
+        prefix = payload.args[0];
+      }
+      query.put("list", prefix);
+      nexus.service.query(query, queryResponder(buf, response));
+    }
     if ("query".equals(payload.command)) {
       if (payload.args != null && payload.args.length == 2) {
         TreeMap<String, String> query = new TreeMap<>();
         query.put("space", payload.args[0]);
         query.put("key", payload.args[1]);
-        nexus.service.query(query, new Callback<String>() {
-          @Override
-          public void success(String json) {
-            response.json = json;
-            ServerCodec.write(buf, response);
-            upstream.next(buf);
-            upstream.completed();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            response.json = "{\"error\":" + ex.code + "}";
-            ServerCodec.write(buf, response);
-            upstream.next(buf);
-            upstream.completed();
-          }
-        });
+        nexus.service.query(query, queryResponder(buf, response));
         return;
       } else {
         response.json = "{}";

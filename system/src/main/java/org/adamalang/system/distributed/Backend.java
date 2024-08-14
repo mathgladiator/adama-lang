@@ -61,7 +61,7 @@ public class Backend {
     // create metrics
     CoreMetrics coreMetrics = new CoreMetrics(init.metricsFactory);
     // pull config
-    int coreThreads = config.get_int("service-thread-count", 8);
+    int coreThreads = config.get_int("service-thread-count", 16);
     String billingRootPath = config.get_string("billing-path", "billing");
 
     PlanFetcher fetcher = new GlobalPlanFetcher(init.database, init.masterKey);

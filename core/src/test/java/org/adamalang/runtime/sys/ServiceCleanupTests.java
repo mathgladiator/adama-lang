@@ -108,6 +108,26 @@ public class ServiceCleanupTests {
         }
       });
       Assert.assertTrue(latchQuery.await(5000, TimeUnit.MILLISECONDS));
+      {
+        TreeMap<String, String> queryList = new TreeMap<>();
+        queryList.put("list", "");
+        AtomicReference<String> queryResult2 = new AtomicReference<>();
+        CountDownLatch latchQuery2 = new CountDownLatch(1);
+        service.query(queryList, new Callback<String>() {
+          @Override
+          public void success(String value) {
+            queryResult2.set(value);
+            latchQuery2.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latchQuery2.await(10000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals("{\"space/key\":{\"ex\":2}}", queryResult2.get());
+      }
       System.err.println(queryResult.get());
       Assert.assertTrue(queryResult.get().startsWith("{\"thread\":2,\"space\":\"space\",\"key\":\"key\""));
       LatchCallback cb1 = new LatchCallback();
