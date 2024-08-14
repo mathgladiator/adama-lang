@@ -197,8 +197,8 @@ public class RxHTMLScanner implements AutoCloseable {
                     opportunity += (e.getValue().intValue() * (e.getKey().length() - 3));
                   }
                 }
-                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(rxHtmlBundle), updated.javascript, updated.style));
-                io.notice("rxhtml|rebuilt; javascript-size=" + updated.javascript.length());
+                onBuilt.accept(new RxHTMLBundle(updated, updated.shell.makeShell(rxHtmlBundle)));
+                io.notice("rxhtml|rebuilt; javascript-size=" + updated.diagnostics.javascriptSize);
                 rxPubSub.notifyReload();
                 try {
                   Files.writeString(new File(types, "css.freq.json").toPath(), freq.toPrettyString());
@@ -210,7 +210,7 @@ public class RxHTMLScanner implements AutoCloseable {
                 summary.append("<!DOCTYPE html>\n<html>\n<head><title>Task Summary</title></head>\n<body>\n");
                 summary.append("<h1>Stats</h1>\n");
                 summary.append("<b>Build Time</b>:" + buildTime + " ms<br />");
-                summary.append("<b>Uncompressed size (javascript)</b>:" + updated.javascript.length() + " bytes<br />");
+                summary.append("<b>Uncompressed size (javascript)</b>:" + updated.diagnostics.javascriptSize + " bytes<br />");
                 summary.append("<b>CSS compression potential</b>:" + opportunity + " bytes<br />");
                 {
                   ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -253,14 +253,10 @@ public class RxHTMLScanner implements AutoCloseable {
   public class RxHTMLBundle {
     public final RxHtmlResult result;
     public final String shell;
-    public final String forestJavaScript;
-    public final String forestStyle;
 
-    public RxHTMLBundle(RxHtmlResult result, String shell, String forestJavaScript, String forestStyle) {
+    public RxHTMLBundle(RxHtmlResult result, String shell) {
       this.result = result;
       this.shell = shell;
-      this.forestJavaScript = forestJavaScript;
-      this.forestStyle = forestStyle;
     }
   }
 }

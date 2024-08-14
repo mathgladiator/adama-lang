@@ -212,14 +212,6 @@ public class LocalServiceBase implements ServiceBase {
             return;
           }
         }
-        if ("/template.js".equals(uri)) {
-          callback.success(new HttpResult(200, "text/javascript", current.forestJavaScript.getBytes(), false));
-          return;
-        }
-        if ("/template.css".equals(uri)) {
-          callback.success(new HttpResult(200, "text/javascript", current.forestStyle.getBytes(), false));
-          return;
-        }
         if (uri != null && uri.endsWith("/devlibadama-worker.js")) {
           StringBuilder js = new StringBuilder();
           try {
