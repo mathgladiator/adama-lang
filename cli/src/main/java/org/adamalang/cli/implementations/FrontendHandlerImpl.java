@@ -204,26 +204,6 @@ public class FrontendHandlerImpl implements FrontendHandler {
   }
 
   @Override
-  public void make200(Arguments.FrontendMake200Args args, Output.YesOrError output) throws Exception {
-    ArrayList<File> files = new ArrayList<>();
-    File rxhtmlPath = new File(args.rxhtmlPath);
-    aggregateFiles(rxhtmlPath, files);
-    RxHtmlBundle bundle = RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtmlPath, files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end());
-    RxHtmlResult updated = new RxHtmlResult(bundle);
-    Files.writeString(new File(args.output).toPath(), updated.shell.makeShell(bundle));
-    output.out();
-  }
-
-  @Override
-  public void rxhtml(Arguments.FrontendRxhtmlArgs args, Output.YesOrError output) throws Exception {
-    ArrayList<File> files = new ArrayList<>();
-    File rxhtmlPath = new File(args.input);
-    aggregateFiles(rxhtmlPath, files);
-    Files.writeString(new File(args.output).toPath(), RxHtmlTool.convertStringToTemplateForest(Bundler.bundle(rxhtmlPath, files, false), new File(args.types), ShellConfig.start().withEnvironment(args.environment).withFeedback((element, warning) -> System.err.println(warning)).end()).javascript);
-    output.out();
-  }
-
-  @Override
   public void setLibadama(Arguments.FrontendSetLibadamaArgs args, Output.YesOrError output) throws Exception {
     args.config.manipulate((node) -> {
       if (args.localLibadamaPath == null || "".equals(args.localLibadamaPath)) {

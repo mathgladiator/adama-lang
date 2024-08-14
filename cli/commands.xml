@@ -960,15 +960,6 @@
         <documentation>
             Frontend tools (rxhtml)
         </documentation>
-        <command name="rxhtml">
-            <documentation>
-                Compile an rxhtml template set
-            </documentation>
-            <arg name="input" />
-            <arg name="output" />
-            <arg name="environment" default="prod" />
-            <arg name="types" default="types" />
-        </command>
         <command name="dev-server">
             <documentation>
                 Host the working directory as a webserver
@@ -992,15 +983,6 @@
             <documentation>
                 Bootstrap an RxHTML project in the working directory with tailwind
             </documentation>
-        </command>
-        <command name="make-200">
-            <documentation>
-                Create a 200.html
-            </documentation>
-            <arg name="rxhtml-path" default="." />
-            <arg name="output" default="200.html" />
-            <arg name="environment" default="prod" />
-            <arg name="types" default="types" />
         </command>
         <command name="bundle">
             <documentation>

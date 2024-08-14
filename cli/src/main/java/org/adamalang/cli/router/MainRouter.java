@@ -950,16 +950,6 @@ public class MainRouter {
                frontendHandler.encryptProductConfig(frontendArgs, out);
                return 0;
             }
-            case "make-200": {
-              FrontendMake200Args frontendArgs = FrontendMake200Args.from(args, 2);
-              if (frontendArgs == null) {
-                FrontendMake200Args.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               frontendHandler.make200(frontendArgs, out);
-               return 0;
-            }
             case "measure": {
               FrontendMeasureArgs frontendArgs = FrontendMeasureArgs.from(args, 2);
               if (frontendArgs == null) {
@@ -988,16 +978,6 @@ public class MainRouter {
                }
                YesOrError out = output.makeYesOrError();
                frontendHandler.pushGenerate(frontendArgs, out);
-               return 0;
-            }
-            case "rxhtml": {
-              FrontendRxhtmlArgs frontendArgs = FrontendRxhtmlArgs.from(args, 2);
-              if (frontendArgs == null) {
-                FrontendRxhtmlArgs.help();
-                return 1;
-               }
-               YesOrError out = output.makeYesOrError();
-               frontendHandler.rxhtml(frontendArgs, out);
                return 0;
             }
             case "set-libadama": {
