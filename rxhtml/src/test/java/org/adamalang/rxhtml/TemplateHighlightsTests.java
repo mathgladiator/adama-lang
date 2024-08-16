@@ -64,7 +64,7 @@ public class TemplateHighlightsTests extends BaseRxHtmlTest {
     gold.append("\n    var h=$.E('code');");
     gold.append("\n    g.append(h);");
     gold.append("\n    $.ACLASS(h,'language-adama');");
-    gold.append("\n    h.append($.T(' public int x; '));");
+    gold.append("\n    h.append($.T('            public int x;\\n        '));");
     gold.append("\n    if (hljs) hljs.highlightElement(h);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -107,7 +107,7 @@ public class TemplateHighlightsTests extends BaseRxHtmlTest {
     gold.append("\n    var h=$.E('code');");
     gold.append("\n    g.append(h);");
     gold.append("\n    $.ACLASS(h,'language-adama');");
-    gold.append("\n    h.append($.T(' public int x; '));");
+    gold.append("\n    h.append($.T('            public int x;\\n        '));");
     gold.append("\n    if (hljs) hljs.highlightElement(h);");
     gold.append("\n    b.append(d);");
     gold.append("\n  });");
@@ -131,12 +131,12 @@ public class TemplateHighlightsTests extends BaseRxHtmlTest {
     source.append("\n        <code escape>");
     source.append("\n            <b>");
     source.append("\n        </code>");
-    source.append("\n        <highlight lang=\"html\">");
+    source.append("\n        <pre highlight=\"html\">");
     source.append("\n            <b>not actually bold</b>");
-    source.append("\n        </highlight>");
-    source.append("\n        <adama>");
+    source.append("\n        </pre>");
+    source.append("\n        <pre adama>");
     source.append("\n            public int x;");
-    source.append("\n        </adama>");
+    source.append("\n        </pre>");
     source.append("\n    </page>");
     source.append("\n</forest>");
     return source.toString();

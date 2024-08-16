@@ -50,4 +50,19 @@ public class SimpleTests {
   public void sanityStyle() {
     drive("<forest><style>XYZ</style></forest>");
   }
+
+  @Test
+  public void preWS() {
+    drive("<forest><page uri=\"/\"><pre>X\nY\nZ\n</page></forest>");
+  }
+
+  @Test
+  public void adamaWS() {
+    drive("<forest><page uri=\"/\"><pre adama>X\nY\nZ\n</pre></page></forest>");
+  }
+
+  @Test
+  public void highlightWS() {
+    drive("<forest><page uri=\"/\"><pre highlight=\"css\">X\nY\nZ\n</pre></forest>");
+  }
 }

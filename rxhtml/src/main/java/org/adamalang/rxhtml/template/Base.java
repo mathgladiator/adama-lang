@@ -409,6 +409,8 @@ public class Base {
   }
 
   public static void children(Environment env, Function<Node, Boolean> filter) {
+    String tag = env.element.tagName();
+    final boolean keepWhiteSpace = tag.equalsIgnoreCase("pre");
     ArrayList<Node> nodes = filteredAndRewrite(env, filter);
     boolean[] keep = new boolean[nodes.size()];
     for (int k = 0; k < nodes.size(); k++) {
@@ -423,12 +425,13 @@ public class Base {
       Node node = nodes.get(k);
       if (node instanceof TextNode) {
         TextNode text = (TextNode) node;
+        String textToUse = keepWhiteSpace ? text.getWholeText() : text.text();
         if (keep[k]) {
           sibling = env.pool.ask();
-          env.writer.tab().append("var ").append(sibling).append("=$.T('").append(new Escaping(text.text()).switchQuotes().go()).append("');").newline();
+          env.writer.tab().append("var ").append(sibling).append("=$.T('").append(new Escaping(textToUse).switchQuotes().go()).append("');").newline();
           env.writer.tab().append(env.parentVariable).append(".append(").append(sibling).append(");").newline();
         } else {
-          env.writer.tab().append(env.parentVariable).append(".append($.T('").append(new Escaping(text.text()).switchQuotes().go()).append("'));").newline();
+          env.writer.tab().append(env.parentVariable).append(".append($.T('").append(new Escaping(textToUse).switchQuotes().go()).append("'));").newline();
         }
       } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
