@@ -131,6 +131,7 @@ public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
       for (RxTable<TyTo> table : tables) {
         TyTo candidate = table.getById(out);
         if (candidate != null) {
+          table.readPrimaryKey(out);
           output.add(candidate);
           break;
         }
