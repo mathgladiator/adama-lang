@@ -59,6 +59,8 @@ public class Traverse extends LinqExpression{
     DefineAssoc da = environment.document.assocs.get(assocToUse.text);
     if (da == null) {
       environment.document.createError(this, String.format("The assoc '%s' being traversed doesn't exist", assocToUse.text));
+    } else {
+      environment.lookup_assoc(assocToUse.text);
     }
     TyType base = sql.typing(environment, suggestion);
     if (base != null && environment.rules.IsNativeListOfStructure(base, false)) {

@@ -24,6 +24,7 @@ import org.adamalang.runtime.reactives.RxRecordBase;
 import org.adamalang.runtime.reactives.RxTable;
 import org.adamalang.runtime.reactives.maps.MapGuardTarget;
 import org.adamalang.runtime.reactives.maps.MapPubSub;
+import org.adamalang.runtime.reactives.maps.MapSubscription;
 
 import java.util.*;
 
@@ -170,5 +171,9 @@ public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> implements MapGuardTa
     } else {
       activeGuard = guardsInflight.peek();
     }
+  }
+
+  public void __subscribe(MapSubscription<?> ms) {
+    pubsub.subscribe(ms);
   }
 }

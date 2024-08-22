@@ -66,5 +66,6 @@ public class WatchSetWatcher implements Watcher {
   @Override
   public void assoc(String name) {
     watching.assocs.add(name);
+    watching.pubsub.add("___assoc_" + name);
   }
 }

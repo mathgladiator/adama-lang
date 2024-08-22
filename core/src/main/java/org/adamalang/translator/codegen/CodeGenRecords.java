@@ -283,6 +283,10 @@ public class CodeGenRecords {
           classFields.append("private final RxMapGuard __").append(fieldName).append("_").append(tableToWatch).append(";").writeNewline();
           classConstructorX.append("__").append(fieldName).append("_").append(tableToWatch).append(" = new RxMapGuard(").append(fieldName).append(");").writeNewline();
         }
+        for (final String assoc : fdInOrder.watching.assocs) {
+          classFields.append("private final RxMapGuard __").append(fieldName).append("____assoc_").append(assoc).append(";").writeNewline();
+          classConstructorX.append("__").append(fieldName).append("____assoc_").append(assoc).append(" = new RxMapGuard(").append(fieldName).append(");").writeNewline();
+        }
         environment.define(fieldName, new TyReactiveLazy(lazyType, fdInOrder.hasCachePolicy()), false, fdInOrder);
         if (!fdInOrder.hasCachePolicy()) {
           for (final String watched : fdInOrder.watching.variables) {
