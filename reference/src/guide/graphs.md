@@ -50,7 +50,7 @@ record Group {
 
 This now binds the group's record (and lifetime) with the elements within the table.
 The table now drives a partial aspect of the graph such that as members come and go, the graph will update.
-This creates an index of users to the associate group id, and we can use this via the **traverse** keyworld.
+This creates an index of users to the associate group id, and we can use this via the **traverse** keyword.
 
 ```adama
 bubble my_groups = iterate _users where account == @who traverse _users_to_groups; 
