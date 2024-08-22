@@ -19,21 +19,31 @@ package org.adamalang.runtime.graph;
 
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
+import org.adamalang.runtime.reactives.RxMapGuard;
 import org.adamalang.runtime.reactives.RxRecordBase;
 import org.adamalang.runtime.reactives.RxTable;
+import org.adamalang.runtime.reactives.maps.MapGuardTarget;
+import org.adamalang.runtime.reactives.maps.MapPubSub;
 
 import java.util.*;
 
 /** within a graph, this represents all the edges for a single assoc */
-public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
+public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> implements MapGuardTarget {
   private final HashMap<Integer, TreeMap<Integer, Integer>> edges;
   private final ArrayList<DifferentialEdgeTracker<?, ?>> partials;
   private final ArrayList<RxTable<TyTo>> tables;
+  private final MapPubSub<Integer> pubsub;
+  private final Stack<RxMapGuard> guardsInflight;
+  private RxMapGuard activeGuard;
+
 
   public RxAssocGraph() {
     this.edges = new HashMap<>();
     this.partials = new ArrayList<>();
     this.tables = new ArrayList<>();
+    this.pubsub = new MapPubSub<>(null);
+    this.guardsInflight = new Stack<>();
+    this.activeGuard = null;
   }
 
   public void incr(int from, int to) {
@@ -47,6 +57,7 @@ public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
       prior = 0;
     }
     right.put(to, prior + 1);
+    pubsub.changed(from);
   }
 
   public void decr(int from, int to) {
@@ -64,6 +75,7 @@ public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
         edges.remove(from);
       }
     }
+    pubsub.changed(from);
   }
 
   public long memory() {
@@ -123,7 +135,11 @@ public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
   public NtList<TyTo> map(NtList<? extends RxRecordBase<?>> list) {
     TreeSet<Integer> ids = new TreeSet<>();
     for (RxRecordBase<?> item : list) {
-      ids.add(item.__id());
+      int from = item.__id();
+      ids.add(from);
+      if (activeGuard != null) {
+        activeGuard.readKey(from);
+      }
     }
     ArrayList<TyTo> output = new ArrayList<>();
     TreeSet<Integer> result = traverse(ids);
@@ -138,5 +154,21 @@ public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
       }
     }
     return new ArrayNtList<>(output);
+  }
+
+  @Override
+  public void pushGuard(RxMapGuard guard) {
+    guardsInflight.push(guard);
+    activeGuard = guard;
+  }
+
+  @Override
+  public void popGuard() {
+    guardsInflight.pop();
+    if (guardsInflight.empty()) {
+      activeGuard = null;
+    } else {
+      activeGuard = guardsInflight.peek();
+    }
   }
 }
