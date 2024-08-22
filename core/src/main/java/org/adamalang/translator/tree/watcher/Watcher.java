@@ -15,9 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree.watcher;
 
-public class Platform {
-  public static final String VERSION = "20240822110453";
-  public static final String JS_VERSION = "15f34a194b944247d34d3fed80767985";
+import org.adamalang.translator.tree.types.TyType;
+
+/** watch for cross boundary calls */
+public interface Watcher {
+  public void observe(String name, TyType type);
+
+  public void assoc(String name);
 }

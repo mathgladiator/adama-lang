@@ -15,48 +15,30 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.translator.tree.types;
+package org.adamalang.translator.tree.watcher;
 
 import org.adamalang.translator.env.Environment;
-import org.adamalang.translator.tree.common.WatchSet;
+import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.natives.TyNativeTemplate;
-import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
-import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
 import java.util.LinkedHashSet;
-import java.util.function.BiConsumer;
 
-public class Watcher {
-  public static BiConsumer<String, TyType> makeAuto(Environment env, WatchSet watching) {    return (name, type) -> {
-      TyType resolved = env.rules.Resolve(type, true);
-      if (resolved instanceof TyNativeGlobalObject) return;
-      if (resolved instanceof TyNativeTemplate) return;
-      if (resolved instanceof TyNativeFunctional) {
-        watching.variables.addAll(((TyNativeFunctional) resolved).gatherDependencies());
-        return;
-      }
-      if (resolved instanceof TyNativeService) {
-        watching.services.add(((TyNativeService) resolved).service.name.text);
-        return;
-      }
-      if (!env.document.functionTypes.containsKey(name)) {
-        if (type instanceof TyReactiveMap) {
-          watching.maps.add(name);
-          watching.pubsub.add(name);
-        } else if (type instanceof TyReactiveTable) {
-          watching.tables.add(name);
-          watching.pubsub.add(name);
-        } else {
-          watching.variables.add(name);
-        }
-      }
-    };
+public class SimpleWatcherForVariablesAndServices implements Watcher {
+  private final Environment env;
+  private final LinkedHashSet<String> variables;
+  private final LinkedHashSet<String> services;
+
+  public SimpleWatcherForVariablesAndServices(Environment env, LinkedHashSet<String> variables, LinkedHashSet<String> services) {
+    this.env = env;
+    this.variables = variables;
+    this.services = services;
   }
 
-  public static BiConsumer<String, TyType> makeAutoSimple(Environment env, LinkedHashSet<String> variables, LinkedHashSet<String> services) {    return (name, type) -> {
+  @Override
+  public void observe(String name, TyType type) {
     TyType resolved = env.rules.Resolve(type, true);
     if (resolved instanceof TyNativeGlobalObject) return;
     if (resolved instanceof TyNativeTemplate) return;
@@ -71,6 +53,10 @@ public class Watcher {
     if (!env.document.functionTypes.containsKey(name)) {
       variables.add(name);
     }
-  };
+  }
+
+  @Override
+  public void assoc(String name) {
+
   }
 }

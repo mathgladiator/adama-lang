@@ -22,7 +22,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.parser.Formatter;
-import org.adamalang.translator.tree.common.WatchSet;
+import org.adamalang.translator.tree.watcher.WatchSet;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.privacy.PublicPolicy;

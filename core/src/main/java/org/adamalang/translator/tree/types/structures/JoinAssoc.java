@@ -21,17 +21,16 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
-import org.adamalang.translator.tree.common.WatchSet;
+import org.adamalang.translator.tree.watcher.WatchSet;
 import org.adamalang.translator.tree.definitions.DefineAssoc;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
+import org.adamalang.translator.tree.watcher.WatchSetWatcher;
 
-import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
 /** Register a differential join operation on a table */
@@ -106,7 +105,7 @@ public class JoinAssoc extends StructureComponent {
   }
 
   public void typing(final Environment environment, StructureStorage owningStructureStorage) {
-    Environment next = environment.watch(Watcher.makeAuto(environment, watching));
+    Environment next = environment.watch(new WatchSetWatcher(environment, watching));
     foundAssoc = environment.document.assocs.get(assoc.text);
     String edgeType = null;
     if (foundAssoc == null) {

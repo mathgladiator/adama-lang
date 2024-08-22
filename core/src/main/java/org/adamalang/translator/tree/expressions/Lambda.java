@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.watcher.LambdaWatcher;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -101,16 +102,7 @@ public class Lambda extends Expression implements LatentCodeSnippet {
         return null;
       }
 
-      final var watch = environment.watch((name, tyUn) -> {
-        TyType ty = environment.rules.Resolve(tyUn, false);
-        if (GlobalObjectPool.ignoreCapture(name, ty)) {
-          return;
-        }
-        if (!closureTypes.containsKey(name) && ty != null) {
-          closureTyTypes.put(name, ty);
-          closureTypes.put(name, ty.getJavaConcreteType(environment));
-        }
-      }).captureSpecials();
+      final var watch = environment.watch(new LambdaWatcher(environment, closureTyTypes, closureTypes)).captureSpecials();
       HashMap<String, TyType> specialsUsed = watch.specials();
       Environment next = watch.scopeDefine().scopeAsReadOnlyBoundary();
       variableType = environment.rules.Resolve(instance.types.get(0), false);

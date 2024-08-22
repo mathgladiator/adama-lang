@@ -15,7 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.translator.tree.common;
+package org.adamalang.translator.tree.watcher;
 
 import java.util.LinkedHashSet;
 
@@ -26,6 +26,7 @@ public class WatchSet {
   public final LinkedHashSet<String> maps;
   public final LinkedHashSet<String> pubsub;
   public final LinkedHashSet<String> services;
+  public final LinkedHashSet<String> assocs;
 
   public WatchSet() {
     this.variables = new LinkedHashSet<>();
@@ -33,5 +34,6 @@ public class WatchSet {
     this.maps = new LinkedHashSet<>();
     this.pubsub = new LinkedHashSet<>();
     this.services = new LinkedHashSet<>();
+    this.assocs = new LinkedHashSet<>();
   }
 }

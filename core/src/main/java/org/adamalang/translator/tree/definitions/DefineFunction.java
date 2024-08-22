@@ -24,12 +24,12 @@ import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
-import org.adamalang.translator.tree.types.TyTablePtr;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
 import org.adamalang.translator.tree.types.topo.TypeCheckerRoot;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.watcher.FunctionalWatcher;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,6 +41,7 @@ public class DefineFunction extends Definition {
   /** write the set of all functions in the environment */
   public final ArrayList<FunctionArg> args;
   public final HashSet<String> depends;
+  public final HashSet<String> assocs;
   public final TreeSet<String> viewerFields;
 
   public final Token closeParen;
@@ -59,6 +60,7 @@ public class DefineFunction extends Definition {
 
   public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final FunctionPaint paint, final Block code) {
     this.depends = new HashSet<>();
+    this.assocs = new HashSet<>();
     this.functionTypeToken = functionTypeToken;
     this.specialization = specialization;
     this.nameToken = nameToken;
@@ -120,6 +122,7 @@ public class DefineFunction extends Definition {
       if (producedInstance != null) {
         producedInstance.dependencies.addAll(depends);
         producedInstance.viewerFields.addAll(viewerFields);
+        producedInstance.assocs.addAll(assocs);
       }
       if (returnType != null && flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text));
@@ -154,16 +157,7 @@ public class DefineFunction extends Definition {
     if (paint.viewer) {
       toUse = toUse.scopeWithViewer(viewerFields);
     }
-    toUse = toUse.watch((escName, type) -> {
-      TyType resolved = environment.rules.Resolve(type, true);
-      if (resolved instanceof TyNativeGlobalObject) return;
-      if (resolved instanceof TyNativeFunctional) {
-        depends.addAll(((TyNativeFunctional) resolved).gatherDependencies());
-        return;
-      }
-      if (resolved instanceof TyNativeService) return;
-      depends.add(escName);
-    }).scopeDefine();
+    toUse = toUse.watch(new FunctionalWatcher(environment, depends, assocs)).scopeDefine();
     for (final FunctionArg arg : args) {
       if (arg.type != null) {
         boolean readonly = arg.evalReadonly(pure || paint.pure || arg.type instanceof TyNativeMessage, this, environment);
@@ -185,6 +179,7 @@ public class DefineFunction extends Definition {
     FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, paint);
     foi.viewerFields.addAll(viewerFields);
     foi.dependencies.addAll(depends);
+    foi.assocs.addAll(assocs);
     foi.ingest(this);
     producedInstance = foi;
     return foi;

@@ -41,6 +41,8 @@ import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+import org.adamalang.translator.tree.watcher.LambdaWatcher;
+import org.adamalang.translator.tree.watcher.RuntimeExceptionWatcher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -203,9 +205,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
 
   private String compileIndexExpr(final Expression indexValue, final Environment prior) {
     try {
-      final var nope = prior.watch((x, ty) -> {
-        throw new RuntimeException();
-      }).scopeWithComputeContext(ComputeContext.Computation);
+      final var nope = prior.watch(new RuntimeExceptionWatcher()).scopeWithComputeContext(ComputeContext.Computation);
       for (final Map.Entry<String, TyType> whatIs : closureTyTypes.entrySet()) {
         nope.define(whatIs.getKey(), whatIs.getValue(), true, whatIs.getValue());
       }
@@ -244,16 +244,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     if (typeFrom != null && environment.rules.IsNativeListOfStructure(typeFrom, false)) {
       final var storageType = (IsStructure) environment.rules.Resolve(((TyNativeList) environment.rules.Resolve(typeFrom, false)).elementType, false);
       structureStorage = storageType.storage();
-      final var watch = environment.watch((name, tyUn) -> {
-        TyType ty = environment.rules.Resolve(tyUn, false);
-        if (GlobalObjectPool.ignoreCapture(name, ty)) {
-          return;
-        }
-        if (!closureTypes.containsKey(name) && ty != null) {
-          closureTyTypes.put(name, ty);
-          closureTypes.put(name, ty.getJavaConcreteType(environment));
-        }
-      }).captureSpecials();
+      final var watch = environment.watch(new LambdaWatcher(environment, closureTyTypes, closureTypes)).captureSpecials();
       HashMap<String, TyType> specialsUsed = watch.specials();
       final var next = watch.scopeWithComputeContext(ComputeContext.Computation);
       iterType = "RTx" + storageType.name();

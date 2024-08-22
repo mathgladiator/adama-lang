@@ -33,7 +33,6 @@ import org.adamalang.translator.tree.privacy.UseCustomPolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.ReflectionSource;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveReplicationStatus;
@@ -45,6 +44,8 @@ import org.adamalang.translator.tree.types.traits.IsCSVCompatible;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
+import org.adamalang.translator.tree.watcher.SimpleWatcherForVariablesAndServices;
+import org.adamalang.translator.tree.watcher.WatchSetWatcher;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -246,7 +247,7 @@ public class StructureStorage extends DocumentPosition {
     }
     rd.expression.free(fe);
     fe.free.add("service:" + rd.service.text);
-    checker.register(fe.free, env -> rd.typing(env.watch(Watcher.makeAutoSimple(env, rd.variablesToWatch, rd.servicesToWatch))));
+    checker.register(fe.free, env -> rd.typing(env.watch(new SimpleWatcherForVariablesAndServices(env, rd.variablesToWatch, rd.servicesToWatch))));
     replications.put(rd.name.text, rd);
     FieldDefinition fdReplicationExpression = new FieldDefinition(new PrivatePolicy(rd.name), rd.name, null, rd.name.cloneWithNewText("__" + rd.name + "__value"), null, rd.name, rd.expression, null, null, null, null, null);
     insertField(fdReplicationExpression, fe, checker);
@@ -275,7 +276,7 @@ public class StructureStorage extends DocumentPosition {
     formatting.add(f -> bd.format(f));
     ingest(bd);
     bd.expression.free(fe);
-    inChecker.register(fe.free, env -> bd.typing(env.watch(Watcher.makeAuto(env, bd.watching)), StructureStorage.this));
+    inChecker.register(fe.free, env -> bd.typing(env.watch(new WatchSetWatcher(env, bd.watching)), StructureStorage.this));
     if (has(bd.nameToken.text)) {
       inChecker.issueError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text));
       return;
@@ -335,7 +336,7 @@ public class StructureStorage extends DocumentPosition {
 
   private void insertField(final FieldDefinition fd, FreeEnvironment fe, TypeChecker insertChecker) {
     insertChecker.define(fd.nameToken, fe.free, env -> {
-      fd.typing(env.watch(Watcher.makeAuto(env, fd.watching)), this);
+      fd.typing(env.watch(new WatchSetWatcher(env, fd.watching)), this);
       env.define(fd.name, fd.type, false, fd);
     });
     fields.put(fd.name, fd);

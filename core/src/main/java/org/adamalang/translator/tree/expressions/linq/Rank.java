@@ -30,6 +30,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeDouble;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
+import org.adamalang.translator.tree.watcher.LambdaWatcher;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,16 +101,7 @@ public class Rank extends LinqExpression implements LatentCodeSnippet {
       generatedClassId = environment.document.inventClassId();
       elementType = environment.rules.Resolve(((TyNativeList) environment.rules.Resolve(base, false)).elementType, false);
       Environment next = environment.scopeAsReadOnlyBoundary().scopeWithComputeContext(ComputeContext.Computation);
-      final var watch = next.watch((name, tyUn) -> {
-        TyType ty = environment.rules.Resolve(tyUn, false);
-        if (GlobalObjectPool.ignoreCapture(name, ty)) {
-          return;
-        }
-        if (!closureTypes.containsKey(name) && ty != null) {
-          closureTyTypes.put(name, ty);
-          closureTypes.put(name, ty.getJavaConcreteType(environment));
-        }
-      }).captureSpecials();
+      final var watch = next.watch(new LambdaWatcher(environment, closureTyTypes, closureTypes)).captureSpecials();
       if (thresholdValue != null) {
         TyType thresholdType = thresholdValue.typing(watch, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, threshold));
         environment.rules.IsNumeric(thresholdType, false);

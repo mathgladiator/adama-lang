@@ -27,6 +27,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeDate;
 import org.adamalang.translator.tree.types.natives.TyNativeLazyWrap;
 import org.adamalang.translator.tree.types.natives.TyNativeService;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
+import org.adamalang.translator.tree.watcher.Watcher;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,7 +49,7 @@ public class Environment {
   private TyType caseType;
   private TyType selfType;
   private Function<String, TyType> trap = null;
-  private BiConsumer<String, TyType> watch = null;
+  private Watcher watch = null;
   private HashMap<String, TyType> specialConstants;
   private boolean hasDefaultCase;
   private TreeSet<String> collectViewerFields;
@@ -178,7 +179,7 @@ public class Environment {
 
   private TyType lookup_return(String name, TyType result) {
     if (watch != null) {
-      watch.accept(name, result);
+      watch.observe(name, result);
     }
     return result;
   }
@@ -418,9 +419,19 @@ public class Environment {
   }
 
   /** create a new environment (scoped) that will watch for variables that escape */
-  public Environment watch(final BiConsumer<String, TyType> watch) {
+  public Environment watch(final Watcher watcher) {
     final var next = scope();
-    next.watch = watch;
+    next.watch = watcher;
     return next;
+  }
+
+  /** signal that an assoc has been used */
+  public void lookup_assoc(String name) {
+    if (watch != null) {
+      watch.assoc(name);
+    }
+    if (parent != null) {
+      parent.lookup_assoc(name);
+    }
   }
 }

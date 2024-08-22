@@ -129,4 +129,12 @@ public class TyNativeFunctional extends TyType implements DetailNeverPublic {
     }
     return set;
   }
+
+  public Set<String> gatherAssocs() {
+    HashSet<String> set = new HashSet<>();
+    for (FunctionOverloadInstance foi : overloads) {
+      set.addAll(foi.assocs);
+    }
+    return set;
+  }
 }

@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FunctionOverloadInstance extends DocumentPosition {
   public final ArrayList<String> hiddenSuffixArgs;
   public final LinkedHashSet<String> dependencies;
+  public final LinkedHashSet<String> assocs;
   public final AtomicReference<String> withinRecord;
   public final LinkedHashSet<String> recordDependencies;
   public final TreeSet<String> viewerFields;
@@ -56,6 +57,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
     this.viewer = paint.viewer;
     this.hiddenSuffixArgs = new ArrayList<>();
     this.dependencies = new LinkedHashSet<>();
+    this.assocs = new LinkedHashSet<>();
     if (this.viewer) {
       hiddenSuffixArgs.add("__viewer");
     }

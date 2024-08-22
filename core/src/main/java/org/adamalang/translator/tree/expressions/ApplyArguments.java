@@ -32,6 +32,7 @@ import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
+import org.adamalang.translator.tree.watcher.AggregateApplyWatcher;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -99,15 +100,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       var environmentToUse = environmentX;
       if (isAggregate) {
         closureTyTypes = new TreeMap<>();
-        environmentToUse = environmentX.watch((String name, TyType tyUn) -> {
-          TyType ty = environmentX.rules.Resolve(tyUn, false);
-          if (ty instanceof TyNativeGlobalObject) {
-            return;
-          }
-          if (!closureTyTypes.containsKey(name) && ty != null) {
-            closureTyTypes.put(name, ty);
-          }
-        });
+        environmentToUse = environmentToUse.watch(new AggregateApplyWatcher(environmentToUse, closureTyTypes));
         environmentToUse.document.add(this);
       }
       final var argTypes = new ArrayList<TyType>();
@@ -131,6 +124,9 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       functionInstance = ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
       for (String depend : functionInstance.dependencies) {
         environmentToUse.lookup(depend, true, this, true);
+      }
+      for (String assoc : functionInstance.assocs) {
+        environmentToUse.lookup_assoc(assoc);
       }
       for (String vf : functionInstance.viewerFields) {
         environmentToUse.registerViewerField(vf);

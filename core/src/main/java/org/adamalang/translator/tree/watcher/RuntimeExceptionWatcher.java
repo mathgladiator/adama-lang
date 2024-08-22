@@ -15,9 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.translator.tree.watcher;
 
-public class Platform {
-  public static final String VERSION = "20240822110453";
-  public static final String JS_VERSION = "15f34a194b944247d34d3fed80767985";
+import org.adamalang.translator.tree.types.TyType;
+
+/** a dumb watcher to throw a runtime exception when things go wrong */
+public class RuntimeExceptionWatcher implements Watcher {
+  @Override
+  public void observe(String name, TyType type) {
+    throw new RuntimeException();
+  }
+
+  @Override
+  public void assoc(String name) {
+
+  }
 }

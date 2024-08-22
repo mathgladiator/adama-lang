@@ -21,14 +21,13 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.Formatter;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
-import org.adamalang.translator.tree.common.WatchSet;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.Watcher;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionPaint;
+import org.adamalang.translator.tree.watcher.SimpleWatcherForVariablesAndServices;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -140,7 +139,7 @@ public class DefineMethod extends StructureComponent {
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
     var toUse = paint.pure ? environment.scopeAsReadOnlyBoundary() : environment.scopeWithCache("__cache");
-    toUse = toUse.watch(Watcher.makeAutoSimple(toUse, depends, services)).scopeDefine();
+    toUse = toUse.watch(new SimpleWatcherForVariablesAndServices(environment, depends, services)).scopeDefine();
     if (paint.aborts) {
       toUse = toUse.scopeAsAbortable();
     }
