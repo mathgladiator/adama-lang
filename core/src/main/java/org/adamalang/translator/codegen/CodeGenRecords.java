@@ -390,6 +390,10 @@ public class CodeGenRecords {
         classFields.append("private final RxMapGuard __").append(bubble.nameToken.text).append("_").append(tableToWatch).append(";").writeNewline();
         classConstructorX.append("__").append(bubble.nameToken.text).append("_").append(tableToWatch).append(" = new RxMapGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
       }
+      for (final String assoc : bubble.watching.assocs) {
+        classFields.append("private final RxMapGuard __").append(bubble.nameToken.text).append("____assoc_").append(assoc).append(";").writeNewline();
+        classConstructorX.append("__").append(bubble.nameToken.text).append("____assoc_").append(assoc).append(" = new RxMapGuard(___").append(bubble.nameToken.text).append(");").writeNewline();
+      }
       for (final String watched : bubble.watching.variables) {
         if (!bubble.watching.pubsub.contains(watched)) {
           classLinker.append(watched).append(".__subscribe(").append("___").append(bubble.nameToken.text).append(");").writeNewline();
