@@ -1,0 +1,26 @@
+record User {
+  public int id;
+  public string name;
+  public principal account;
+}
+table<User> _users;
+
+record Member {
+  int user_id;
+}
+
+assoc<User,Group> _users_to_groups;
+
+record Group {
+  public int id;
+  public string name;
+  table<Member> _members;
+
+  join _users_to_groups via _members[x] from x.user_id to id;
+}
+
+table<Group> _groups;
+
+bubble my_groups = iterate _users where account == @who traverse _users_to_groups;
+
+

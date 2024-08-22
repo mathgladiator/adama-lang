@@ -40,6 +40,7 @@
   - [Tables and integrated query](./guide/tables-linq.md)
   - [Anonymous messages and arrays](./guide/anonymous.md)
   - [Maps and reduce](./guide/map-reduce.md)
+  - [Graph Indexing](./guide/graphs.md)- 
   - [Web processing](./guide/web.md)
   - [Interacting with remote services](./guide/services.md)
   - [Talking to other Adama Documents as an Actor Network](./guide/actor.md)
