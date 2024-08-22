@@ -36,7 +36,7 @@
 				"match": "@[a-z]*"
 			},{
 				"name": "keyword.other.adama",
-				"match": "\\b(function|procedure|method|put|options|delete|dispatch|import|create|invent|send|offset|require|open|index|var)\\b"
+				"match": "\\b(function|procedure|method|put|options|delete|dispatch|import|create|invent|send|offset|require|open|index|var|assoc|join|from|to)\\b"
 			},{
 				"name": "entity.name.type.adama",
 				"match": "\\b(record|message|int|bool|double|long|string|client|table|list|maybe|enum|future|channel|map|dynamic|complex|date|datetime|time|timespan|label|pair|tuple)\\b"
@@ -48,7 +48,7 @@
 				"match": "\\b(formula|let|auto)\\b"
 			},{
 				"name": "keyword.linq.adama",
-				"match": "\\b(iterate|where|where_as|shuffle|order|reduce|via|limit|by|asc|desc)\\b"
+				"match": "\\b(iterate|where|where_as|shuffle|order|reduce|via|limit|by|asc|desc|rank|traverse)\\b"
 			},{
 				"name": "keyword.other.adama",
 				"match": "@(construct|connected|disconnected|self|pump|convert|blocked|maybe|lambda|stable|step|pair|static|web|load|delete|attached|can_attach|context|timespan|time|date|parameters|headers|datetime|include|i|viewer|default|forward|nothing|null)"

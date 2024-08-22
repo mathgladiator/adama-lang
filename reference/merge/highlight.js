@@ -1166,6 +1166,7 @@ return je}()
     const KEYWORD_LIST = [
         "enum", "channel", "dispatch", "record", "message", "rpc",
         "service",
+        "assoc", "join", "from", "to",
         "function", "procedure", "test",
         "import", "view", "bubble", "policy",
         "require", "index", "method",
