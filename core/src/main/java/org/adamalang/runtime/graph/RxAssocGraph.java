@@ -17,16 +17,23 @@
 */
 package org.adamalang.runtime.graph;
 
+import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.lists.ArrayNtList;
+import org.adamalang.runtime.reactives.RxRecordBase;
+import org.adamalang.runtime.reactives.RxTable;
+
 import java.util.*;
 
 /** within a graph, this represents all the edges for a single assoc */
-public class RxAssocGraph {
+public class RxAssocGraph<TyTo extends RxRecordBase<TyTo>> {
   private final HashMap<Integer, TreeMap<Integer, Integer>> edges;
-  private final ArrayList<DifferentialEdgeTracker<?>> partials;
+  private final ArrayList<DifferentialEdgeTracker<?, ?>> partials;
+  private final ArrayList<RxTable<TyTo>> tables;
 
   public RxAssocGraph() {
     this.edges = new HashMap<>();
     this.partials = new ArrayList<>();
+    this.tables = new ArrayList<>();
   }
 
   public void incr(int from, int to) {
@@ -76,7 +83,7 @@ public class RxAssocGraph {
       }
     }
     if (partials.size() > 0) {
-      for (DifferentialEdgeTracker<?> p : partials) {
+      for (DifferentialEdgeTracker<?, ?> p : partials) {
         p.traverseInvalid(left, right);
       }
     }
@@ -84,9 +91,9 @@ public class RxAssocGraph {
   }
 
   public void compute() {
-    Iterator<DifferentialEdgeTracker<?>> pit = partials.iterator();
+    Iterator<DifferentialEdgeTracker<?, ?>> pit = partials.iterator();
     while (pit.hasNext()) {
-      DifferentialEdgeTracker<?> det = pit.next();
+      DifferentialEdgeTracker<?, ?> det = pit.next();
       if (det.alive()) {
         det.compute();
       } else {
@@ -96,7 +103,39 @@ public class RxAssocGraph {
     }
   }
 
-  public void registerTracker(DifferentialEdgeTracker<?> partial) {
+  public void registerTracker(DifferentialEdgeTracker<?, ?> partial) {
     partials.add(partial);
+  }
+
+  public void registerTo(RxTable<TyTo> table) {
+    tables.add(table);
+  }
+
+  public void __settle(Set<Integer> __viewers) {
+    Iterator<RxTable<TyTo>> it = tables.iterator();
+    while (it.hasNext()) {
+      if (!it.next().__isAlive()) {
+        it.remove();
+      }
+    }
+  }
+
+  public NtList<TyTo> map(NtList<? extends RxRecordBase<?>> list) {
+    TreeSet<Integer> ids = new TreeSet<>();
+    for (RxRecordBase<?> item : list) {
+      ids.add(item.__id());
+    }
+    ArrayList<TyTo> output = new ArrayList<>();
+    TreeSet<Integer> result = traverse(ids);
+    for (Integer out : result) {
+      for (RxTable<TyTo> table : tables) {
+        TyTo candidate = table.getById(out);
+        if (candidate != null) {
+          output.add(candidate);
+          break;
+        }
+      }
+    }
+    return new ArrayNtList<>(output);
   }
 }

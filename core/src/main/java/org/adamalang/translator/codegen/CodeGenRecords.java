@@ -20,6 +20,7 @@ package org.adamalang.translator.codegen;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineAssoc;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleReactive;
@@ -312,6 +313,14 @@ public class CodeGenRecords {
         if (fieldType instanceof TyReactiveRecord) {
           classLinker.append(fieldName + ".__link();").writeNewline();
         }
+        if (fieldType instanceof TyReactiveTable) {
+          String searchFor = ((TyReactiveTable) fieldType).recordName;
+          for (Map.Entry<String, DefineAssoc> assoc : environment.document.assocs.entrySet()) {
+            if (assoc.getValue().toTypeName.text.equals(searchFor)) {
+              classLinker.append("___assoc_").append(assoc.getKey()).append(".registerTo(").append(fieldName).append(");").writeNewline();
+            }
+          }
+        }
       } else if (fieldType instanceof IsReactiveValue) {
         classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, fdInOrder.defaultValueOverride, environment, true)).append(";").writeNewline();
       } else if (fieldType instanceof TyReactiveMaybe) {
@@ -429,6 +438,11 @@ public class CodeGenRecords {
       thingsToSettle.add("___" + bubble.nameToken.text);
       for (final String watched : bubble.watching.pubsub) {
         thingsToSettle.add("__" + bubble.nameToken.text + "_" + watched);
+      }
+    }
+    if (isRoot) {
+      for (Map.Entry<String, DefineAssoc> entry : environment.document.assocs.entrySet()) {
+        thingsToSettle.add("___assoc_" + entry.getKey());
       }
     }
     int n = thingsToSettle.size();

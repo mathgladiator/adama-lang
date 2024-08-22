@@ -1,0 +1,53 @@
+record F {
+  public int group;
+}
+record T {
+  public string name;
+}
+record E {
+  int from;
+  int to;
+}
+
+table<T> _to;
+
+assoc<F, T> x;
+
+table<F> _from;
+table<E> _edges;
+
+join x via _edges[x] from x.from to x.to;
+
+@construct {
+  _from <- {group:1} as f1;
+  _from <- {group:1} as f2;
+  _from <- {group:2} as f3;
+  _from <- {group:3} as f4;
+  _from <- {group:4} as f5;
+  _from <- {group:5} as f6;
+
+  _to <- {name:"a"} as t1;
+  _to <- {name:"b"} as t2;
+  _to <- {name:"c"} as t3;
+  _to <- {name:"d"} as t4;
+  _to <- {name:"e"} as t5;
+
+  _edges <- {from:f1, to:t1};
+  _edges <- {from:f1, to:t2};
+  _edges <- {from:f2, to:t3};
+  _edges <- {from:f2, to:t4};
+  _edges <- {from:f3, to:t5};
+  _edges <- {from:f3, to:t1};
+  _edges <- {from:f4, to:t2};
+  _edges <- {from:f4, to:t3};
+  _edges <- {from:f5, to:t4};
+  _edges <- {from:f5, to:t5};
+}
+
+public formula all = iterate _from traverse x;
+public formula g1 = iterate _from where group == 1 traverse x;
+public formula g2 = iterate _from where group == 2 traverse x;
+public formula g3 = iterate _from where group == 3 traverse x;
+public formula g4 = iterate _from where group == 4 traverse x;
+public formula g5 = iterate _from where group == 5 traverse x;
+

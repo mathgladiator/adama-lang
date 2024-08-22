@@ -21,18 +21,24 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRecordEdge;
-import org.adamalang.runtime.reactives.RxRecordBase;
+import org.adamalang.runtime.mocks.MockRxParent;
+import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.runtime.reactives.RxTable;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 public class RxAssocGraphTests {
 
   @Test
   public void mem() {
-    RxAssocGraph sg = new RxAssocGraph();
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
     Assert.assertEquals(2048, sg.memory());
     sg.incr(5, 10);
     Assert.assertEquals(2368, sg.memory());
@@ -52,7 +58,7 @@ public class RxAssocGraphTests {
 
   @Test
   public void empty() {
-    RxAssocGraph sg = new RxAssocGraph();
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
     sg.incr(5, 10);
     sg.incr(2, 7);
     sg.incr(2, 4);
@@ -63,7 +69,7 @@ public class RxAssocGraphTests {
 
   @Test
   public void union() {
-    RxAssocGraph sg = new RxAssocGraph();
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
     sg.compute(); // no-op
     sg.incr(5, 10);
     sg.incr(2, 7);
@@ -83,7 +89,7 @@ public class RxAssocGraphTests {
 
   @Test
   public void single() {
-    RxAssocGraph sg = new RxAssocGraph();
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
     sg.incr(5, 10);
     sg.incr(2, 7);
     sg.incr(2, 4);
@@ -99,7 +105,7 @@ public class RxAssocGraphTests {
 
   @Test
   public void ref_counts() {
-    RxAssocGraph sg = new RxAssocGraph();
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
     sg.incr(5, 10);
     sg.incr(5, 10);
     sg.incr(5, 10);
@@ -146,10 +152,10 @@ public class RxAssocGraphTests {
 
   @Test
   public void differential_tracking() {
-    RxAssocGraph sg = new RxAssocGraph();
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
     MockLivingDocument document = new MockLivingDocument();
     RxTable<MockRecordEdge> records = new RxTable<MockRecordEdge>(document, document, "R", parent -> new MockRecordEdge(parent), 0);
-    DifferentialEdgeTracker det = new DifferentialEdgeTracker<MockRecordEdge>(records, sg, new EdgeMaker<MockRecordEdge>() {
+    DifferentialEdgeTracker det = new DifferentialEdgeTracker<MockRecordEdge, MockRecord>(records, sg, new EdgeMaker<MockRecordEdge>() {
       @Override
       public Integer from(MockRecordEdge row) {
         return row.from;
@@ -201,6 +207,68 @@ public class RxAssocGraphTests {
     {
       TreeSet<Integer> result2 = sg.traverse(leftOf(2));
       Assert.assertEquals(0, result2.size());
+    }
+  }
+
+  private NtList<MockRecord> mockRecordListWithJustIds(int... ids) {
+    ArrayList<MockRecord> records = new ArrayList<>();
+    for (int id : ids) {
+      MockRecord record = new MockRecord(null);
+      record.id = id;
+      records.add(record);
+    }
+    return new ArrayNtList<>(records);
+  }
+
+  @Test
+  public void traverse_join() {
+    RxAssocGraph<MockRecord> sg = new RxAssocGraph<MockRecord>();
+    MockLivingDocument document = new MockLivingDocument();
+    MockRxParent tableParent = new MockRxParent();
+    RxTable<MockRecord> table1 = new RxTable<>(document, tableParent, "T", (parent) -> new MockRecord(parent), 1);
+    sg.registerTo(table1);
+    RxTable<MockRecord> table2 = new RxTable<>(document, tableParent, "T", (parent) -> new MockRecord(parent), 1);
+    sg.registerTo(table2);
+    RxTable<MockRecordEdge> records = new RxTable<MockRecordEdge>(document, document, "R", parent -> new MockRecordEdge(parent), 0);
+    DifferentialEdgeTracker det = new DifferentialEdgeTracker<MockRecordEdge, MockRecord>(records, sg, new EdgeMaker<MockRecordEdge>() {
+      @Override
+      public Integer from(MockRecordEdge row) {
+        return row.from;
+      }
+
+      @Override
+      public Integer to(MockRecordEdge row) {
+        return row.to;
+      }
+    });
+    records.pump(det);
+
+    MockRecordEdge edge1 = makeEdge(records, 2, table1.make().id);
+    MockRecordEdge edge2 = makeEdge(records, 2, table1.make().id);
+    MockRecordEdge edge3 = makeEdge(records, 5, table1.make().id);
+    MockRecordEdge edge4 = makeEdge(records, 9, table2.make().id);
+
+    {
+      NtList<MockRecord> output = sg.map(mockRecordListWithJustIds(2, 9)).orderBy(true, Comparator.comparingInt((MockRecord a) -> a.id));
+      Assert.assertEquals(3, output.size());
+      Assert.assertEquals(1, output.lookup(0).get().id);
+      Assert.assertEquals(3, output.lookup(1).get().id);
+      Assert.assertEquals(7, output.lookup(2).get().id);
+    }
+    {
+      NtList<MockRecord> output = sg.map(mockRecordListWithJustIds(1, 3)).orderBy(true, Comparator.comparingInt((MockRecord a) -> a.id));
+      Assert.assertEquals(0, output.size());
+    }
+    {
+      NtList<MockRecord> output = sg.map(mockRecordListWithJustIds(5)).orderBy(true, Comparator.comparingInt((MockRecord a) -> a.id));
+      Assert.assertEquals(1, output.size());
+      Assert.assertEquals(5, output.lookup(0).get().id);
+    }
+    tableParent.alive = false;
+    sg.__settle(null);
+    {
+      NtList<MockRecord> output = sg.map(mockRecordListWithJustIds(1, 2, 9, 5)).orderBy(true, Comparator.comparingInt((MockRecord a) -> a.id));
+      Assert.assertEquals(0, output.size());
     }
   }
 }

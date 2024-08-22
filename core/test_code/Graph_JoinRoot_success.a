@@ -8,6 +8,8 @@ record E {
   int to;
 }
 
+table<T> _t;
+
 table<E> edges;
 
 join x via edges[x] from x.from to x.to;

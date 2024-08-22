@@ -51,7 +51,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public final TablePubSub pubsub;
   private final Stack<RxTableGuard> guardsInflight;
   private RxTableGuard activeGuard;
-  private ArrayList<DifferentialEdgeTracker<Ty>> trackers;
+  private ArrayList<DifferentialEdgeTracker<Ty, ?>> trackers;
   private TableSubscription trackerSub;
 
   public void debug(JsonStreamWriter writer) {
@@ -97,7 +97,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     this.guardsInflight = new Stack<>();
   }
 
-  public void pump(DifferentialEdgeTracker<Ty> tracker) {
+  public void pump(DifferentialEdgeTracker<Ty, ?> tracker) {
     if (this.trackers == null) {
       this.trackers = new ArrayList<>();
       trackerSub = new TableSubscription() {
@@ -108,7 +108,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
         @Override
         public boolean primary(int primaryKey) {
-          for (DifferentialEdgeTracker<Ty> child : trackers) {
+          for (DifferentialEdgeTracker<Ty, ?> child : trackers) {
             child.primaryKeyChange(primaryKey);
           }
           return false;
@@ -144,7 +144,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       entry.getValue().__kill();
     }
     if (trackers != null) {
-      for (DifferentialEdgeTracker<Ty> tracker : trackers) {
+      for (DifferentialEdgeTracker<Ty, ?> tracker : trackers) {
         tracker.kill();
       }
     }
@@ -335,7 +335,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       sum += unknowns.size() * 8L;
     }
     if (trackers != null) {
-      for (DifferentialEdgeTracker<Ty> tracker : trackers) {
+      for (DifferentialEdgeTracker<Ty, ?> tracker : trackers) {
         sum += tracker.memory();
       }
     }

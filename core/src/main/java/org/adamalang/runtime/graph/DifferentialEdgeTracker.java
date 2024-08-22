@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /** an assoc table is a container of edges between two tables drive by a source */
-public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChild {
+public class DifferentialEdgeTracker<B extends RxRecordBase<B>, T extends RxRecordBase<T>> implements RxChild {
   private final RxTable<B> source;
   private final EdgeMaker<B> maker;
 
@@ -43,9 +43,9 @@ public class DifferentialEdgeTracker<B extends RxRecordBase<B>> implements RxChi
 
   private final HashMap<Integer, EdgeCache> edgeCache;
   private final HashSet<Integer> invalid;
-  private final RxAssocGraph graph;
+  private final RxAssocGraph<T> graph;
 
-  public DifferentialEdgeTracker(RxTable<B> source, RxAssocGraph graph, EdgeMaker<B> maker) {
+  public DifferentialEdgeTracker(RxTable<B> source, RxAssocGraph<T> graph, EdgeMaker<B> maker) {
     this.source = source;
     this.graph = graph;
     this.maker = maker;

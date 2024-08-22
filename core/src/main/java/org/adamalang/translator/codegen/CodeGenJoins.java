@@ -17,7 +17,6 @@
 */
 package org.adamalang.translator.codegen;
 
-import org.adamalang.runtime.stdlib.LibGraph;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineAssoc;
@@ -31,7 +30,7 @@ public class CodeGenJoins {
   public static void writeGraphs(final StringBuilderWithTabs sb, final Environment environment) {
     for (Map.Entry<String, DefineAssoc> assoc : environment.document.assocs.entrySet()) {
       DefineAssoc da = assoc.getValue();
-      sb.append("RxAssocGraph ___assoc_").append(da.name.text).append(" = new RxAssocGraph();");
+      sb.append("RxAssocGraph<RTx").append(da.toTypeName.text).append("> ___assoc_").append(da.name.text).append(" = new RxAssocGraph<RTx").append(da.toTypeName.text).append(">();");
     }
     if (environment.document.assocs.size() == 0) {
       sb.append("@Override").writeNewline();
@@ -82,7 +81,7 @@ public class CodeGenJoins {
       sb.append("}").tabDown().writeNewline();
       sb.append("};").writeNewline();
       String tracker = "__DET_" + environment.autoVariable();
-      sb.append("DifferentialEdgeTracker<RTx").append(ja.edgeRecordName).append("> ").append(tracker).append(" = new DifferentialEdgeTracker<>(").append(ja.tableName.text).append(",___assoc_").append("" + ja.foundAssoc.name.text).append(",").append(edgeMaker).append(");").writeNewline();
+      sb.append("DifferentialEdgeTracker<RTx").append(ja.edgeRecordName).append(",RTx").append(ja.foundAssoc.toTypeName.text).append("> ").append(tracker).append(" = new DifferentialEdgeTracker<>(").append(ja.tableName.text).append(",___assoc_").append("" + ja.foundAssoc.name.text).append(",").append(edgeMaker).append(");").writeNewline();
       TreeSet<String> variablesToWatch = new TreeSet<>();
       variablesToWatch.addAll(ja.watching.variables);
       variablesToWatch.addAll(ja.watching.pubsub);

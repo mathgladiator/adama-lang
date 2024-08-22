@@ -1579,7 +1579,7 @@ public class Parser {
       base = assignment(scope);
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "rank", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset", "unique"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("materialize", "rank", "where", "where_as", "order", "order_dyn", "shuffle", "map", "reduce", "limit", "offset", "unique", "traverse"))) != null) {
       base = wrap_linq(scope, base, op);
     }
     return base;
@@ -2487,6 +2487,10 @@ public class Parser {
         final var offsetExpr = assignment(scope);
         return new Offset(base, op, offsetExpr);
       }
+      case "traverse":
+        final var assocToUse = id();
+        // such[x]
+        return new Traverse(base, op, assocToUse);
     }
   }
 }

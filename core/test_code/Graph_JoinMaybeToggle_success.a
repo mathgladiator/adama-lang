@@ -11,4 +11,7 @@ record E {
 table<E> edges;
 bool enabled;
 
+table<T> _t1;
+table<T> _t2;
+
 join x via edges[x] from (enabled ? @maybe(x.from) : @maybe<int>) to (enabled ? @maybe(x.to) : @maybe<int>);

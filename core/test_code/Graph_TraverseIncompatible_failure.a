@@ -1,0 +1,22 @@
+record F {
+  public int group;
+}
+record T {
+  public string name;
+}
+record E {
+  int from;
+  int to;
+}
+
+table<F> _from;
+table<T> _to;
+
+assoc<F, T> x;
+
+table<E> _edges;
+
+join x via _edges[x] from x.from to x.to;
+
+public formula b1 = iterate _edges traverse x;
+public formula b2 = iterate _to traverse x;

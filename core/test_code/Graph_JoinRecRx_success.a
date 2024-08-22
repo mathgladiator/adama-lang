@@ -9,6 +9,8 @@ record GroupMember {
 
 assoc<Group, User> part_of_group;
 
+table<User> _users;
+
 record Group {
   int id;
   table<GroupMember> _members;

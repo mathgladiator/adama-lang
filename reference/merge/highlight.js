@@ -1171,7 +1171,7 @@ return je}()
         "require", "index", "method",
         "while", "do", "for", "foreach", "if", "break", "continue", "block", "abort", "return",
         "transition", "invoke", "preempt", "assert",
-        "iterate", "where", "where_as", "order", "shuffle", "limit", "reduce", "offset", "asc", "desc", "via", "materialize", "unique",
+        "iterate", "where", "where_as", "order", "shuffle", "limit", "reduce", "offset", "asc", "desc", "via", "materialize", "unique", "rank", "traverse",
         "required", "lossy",
         "get", "put", "delete", "options",
         "daily", "monthly", "hourly", "weekly",
