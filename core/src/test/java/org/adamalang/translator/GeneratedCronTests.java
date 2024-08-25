@@ -151,7 +151,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n  private final RxInt64 __fozozy;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += __foo.__memory();");
     gold.append("\n    __sum += the_time_to_fire.__memory();");
     gold.append("\n    __sum += __fozozy.__memory();");
@@ -761,7 +761,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:600");
+    gold.append("\nMEMORY:2776");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -775,7 +775,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:718");
+    gold.append("\nMEMORY:2894");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__foo\":\"0\",\"the_time_to_fire\":\"00:00\",\"__fozozy\":\"0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -879,7 +879,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n  private final RxInt64 __fozozy;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += __foo.__memory();");
     gold.append("\n    __sum += hr.__memory();");
     gold.append("\n    __sum += __fozozy.__memory();");
@@ -1489,7 +1489,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:544");
+    gold.append("\nMEMORY:2720");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -1503,7 +1503,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:662");
+    gold.append("\nMEMORY:2838");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__foo\":\"0\",\"hr\":0,\"__fozozy\":\"0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1607,7 +1607,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n  private final RxInt64 __fozozy;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += __foo.__memory();");
     gold.append("\n    __sum += day.__memory();");
     gold.append("\n    __sum += __fozozy.__memory();");
@@ -2217,7 +2217,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:544");
+    gold.append("\nMEMORY:2720");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -2231,7 +2231,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:662");
+    gold.append("\nMEMORY:2838");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__foo\":\"0\",\"day\":0,\"__fozozy\":\"0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -2353,7 +2353,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n  private final RxInt64 __fourth;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    __sum += y.__memory();");
     gold.append("\n    __sum += __first.__memory();");
@@ -3047,7 +3047,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:704");
+    gold.append("\nMEMORY:2880");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -3061,7 +3061,7 @@ public class GeneratedCronTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:822");
+    gold.append("\nMEMORY:2998");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"x\":0,\"y\":0,\"__first\":\"0\",\"__second\":\"0\",\"__third\":\"0\",\"__fourth\":\"0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

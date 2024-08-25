@@ -209,7 +209,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += _users.__memory();");
     gold.append("\n    __sum += _groups.__memory();");
     gold.append("\n    __sum += ___my_groups.__memory();");
@@ -697,7 +697,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += name.__memory();");
     gold.append("\n      __sum += account.__memory();");
@@ -933,7 +933,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += user_id.__memory();");
     gold.append("\n      return __sum;");
@@ -1139,7 +1139,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += name.__memory();");
     gold.append("\n      __sum += _members.__memory();");
@@ -1537,7 +1537,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:10026");
+    gold.append("\nMEMORY:12202");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -1551,7 +1551,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:10144");
+    gold.append("\nMEMORY:12320");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"_users\":{},\"_groups\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1695,7 +1695,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\npublic class HappyAssoc_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += ___assoc_x.memory();");
     gold.append("\n    __sum += ___assoc_y.memory();");
     gold.append("\n    return __sum;");
@@ -2113,7 +2113,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -2299,7 +2299,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -2485,7 +2485,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -2798,7 +2798,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:10624");
+    gold.append("\nMEMORY:12800");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -2812,7 +2812,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:10742");
+    gold.append("\nMEMORY:12918");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -3006,7 +3006,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  private final RxTable<RTxT> _t2;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += edges.__memory();");
     gold.append("\n    __sum += enabled.__memory();");
     gold.append("\n    __sum += _t1.__memory();");
@@ -3488,7 +3488,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -3674,7 +3674,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -3864,7 +3864,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += from.__memory();");
     gold.append("\n      __sum += to.__memory();");
@@ -4220,7 +4220,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:12408");
+    gold.append("\nMEMORY:14584");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -4234,7 +4234,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:12526");
+    gold.append("\nMEMORY:14702");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"edges\":{},\"enabled\":false,\"_t1\":{},\"_t2\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -4345,7 +4345,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  private final RxTable<RTxE> edges;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += edges.__memory();");
     gold.append("\n    __sum += ___assoc_x.memory();");
     gold.append("\n    return __sum;");
@@ -4810,7 +4810,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -4996,7 +4996,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -5188,7 +5188,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += enabled.__memory();");
     gold.append("\n      __sum += from.__memory();");
@@ -5556,7 +5556,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:8562");
+    gold.append("\nMEMORY:10738");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -5570,7 +5570,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:8680");
+    gold.append("\nMEMORY:10856");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"edges\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -5681,7 +5681,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  private final RxTable<RTxUser> _users;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += _users.__memory();");
     gold.append("\n    __sum += ___assoc_part_of_group.memory();");
     gold.append("\n    return __sum;");
@@ -6111,7 +6111,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -6299,7 +6299,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += user_id.__memory();");
     gold.append("\n      return __sum;");
@@ -6503,7 +6503,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += _members.__memory();");
     gold.append("\n      return __sum;");
@@ -6852,7 +6852,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:7668");
+    gold.append("\nMEMORY:9844");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -6866,7 +6866,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:7786");
+    gold.append("\nMEMORY:9962");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"_users\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -6976,7 +6976,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  private final RxTable<RTxE> edges;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += _t.__memory();");
     gold.append("\n    __sum += edges.__memory();");
     gold.append("\n    __sum += ___assoc_x.memory();");
@@ -7431,7 +7431,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -7617,7 +7617,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
@@ -7807,7 +7807,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += from.__memory();");
     gold.append("\n      __sum += to.__memory();");
@@ -8161,7 +8161,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:10206");
+    gold.append("\nMEMORY:12382");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -8175,7 +8175,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:10324");
+    gold.append("\nMEMORY:12500");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"_t\":{},\"edges\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -8446,7 +8446,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n  private final RxMapGuard __g5____assoc_x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += _to.__memory();");
     gold.append("\n    __sum += _from.__memory();");
     gold.append("\n    __sum += _edges.__memory();");
@@ -9121,7 +9121,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += group.__memory();");
     gold.append("\n      return __sum;");
@@ -9331,7 +9331,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += name.__memory();");
     gold.append("\n      return __sum;");
@@ -9543,7 +9543,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += from.__memory();");
     gold.append("\n      __sum += to.__memory();");
@@ -10490,7 +10490,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":21,\"_to\":{\"7\":{\"id\":7,\"name\":\"a\"},\"8\":{\"id\":8,\"name\":\"b\"},\"9\":{\"id\":9,\"name\":\"c\"},\"10\":{\"id\":10,\"name\":\"d\"},\"11\":{\"id\":11,\"name\":\"e\"}},\"_from\":{\"1\":{\"id\":1,\"group\":1},\"2\":{\"id\":2,\"group\":1},\"3\":{\"id\":3,\"group\":2},\"4\":{\"id\":4,\"group\":3},\"5\":{\"id\":5,\"group\":4},\"6\":{\"id\":6,\"group\":5}},\"_edges\":{\"12\":{\"id\":12,\"from\":1,\"to\":7},\"13\":{\"id\":13,\"from\":1,\"to\":8},\"14\":{\"id\":14,\"from\":2,\"to\":9},\"15\":{\"id\":15,\"from\":2,\"to\":10},\"16\":{\"id\":16,\"from\":3,\"to\":11},\"17\":{\"id\":17,\"from\":3,\"to\":7},\"18\":{\"id\":18,\"from\":4,\"to\":8},\"19\":{\"id\":19,\"from\":4,\"to\":9},\"20\":{\"id\":20,\"from\":5,\"to\":10},\"21\":{\"id\":21,\"from\":5,\"to\":11}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:74");
-    gold.append("\nMEMORY:21718");
+    gold.append("\nMEMORY:23894");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"all\":{\"7\":{\"name\":\"a\"},\"8\":{\"name\":\"b\"},\"9\":{\"name\":\"c\"},\"10\":{\"name\":\"d\"},\"11\":{\"name\":\"e\"},\"@o\":[7,8,9,10,11]},\"g1\":{\"7\":{\"name\":\"a\"},\"8\":{\"name\":\"b\"},\"9\":{\"name\":\"c\"},\"10\":{\"name\":\"d\"},\"@o\":[7,8,9,10]},\"g2\":{\"7\":{\"name\":\"a\"},\"11\":{\"name\":\"e\"},\"@o\":[7,11]},\"g3\":{\"8\":{\"name\":\"b\"},\"9\":{\"name\":\"c\"},\"@o\":[8,9]},\"g4\":{\"10\":{\"name\":\"d\"},\"11\":{\"name\":\"e\"},\"@o\":[10,11]}},\"seq\":3}");
@@ -10504,7 +10504,7 @@ public class GeneratedGraphTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:26456");
+    gold.append("\nMEMORY:28632");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"_to\":{\"7\":{\"id\":7,\"name\":\"a\"},\"8\":{\"id\":8,\"name\":\"b\"},\"9\":{\"id\":9,\"name\":\"c\"},\"10\":{\"id\":10,\"name\":\"d\"},\"11\":{\"id\":11,\"name\":\"e\"}},\"_from\":{\"1\":{\"id\":1,\"group\":1},\"2\":{\"id\":2,\"group\":1},\"3\":{\"id\":3,\"group\":2},\"4\":{\"id\":4,\"group\":3},\"5\":{\"id\":5,\"group\":4},\"6\":{\"id\":6,\"group\":5}},\"_edges\":{\"12\":{\"id\":12,\"from\":1,\"to\":7},\"13\":{\"id\":13,\"from\":1,\"to\":8},\"14\":{\"id\":14,\"from\":2,\"to\":9},\"15\":{\"id\":15,\"from\":2,\"to\":10},\"16\":{\"id\":16,\"from\":3,\"to\":11},\"17\":{\"id\":17,\"from\":3,\"to\":7},\"18\":{\"id\":18,\"from\":4,\"to\":8},\"19\":{\"id\":19,\"from\":4,\"to\":9},\"20\":{\"id\":20,\"from\":5,\"to\":10},\"21\":{\"id\":21,\"from\":5,\"to\":11}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":21,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

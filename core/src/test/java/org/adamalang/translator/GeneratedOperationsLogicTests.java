@@ -247,7 +247,7 @@ public class GeneratedOperationsLogicTests extends GeneratedBase {
     gold.append("\n  private final RxLazy<Boolean> fb_xx;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += f0.__memory();");
     gold.append("\n    __sum += f1.__memory();");
     gold.append("\n    __sum += f2.__memory();");
@@ -1718,7 +1718,7 @@ public class GeneratedOperationsLogicTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:3264");
+    gold.append("\nMEMORY:5440");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"f0\":true,\"f1\":true,\"f2\":false,\"f3\":true,\"f4\":false,\"f5\":true,\"f6\":true,\"f7\":false,\"f8\":true,\"f9\":false,\"f10\":false,\"f11\":false,\"f0_a\":true,\"f1_a\":true,\"f2_a\":false,\"f3_a\":true,\"f4_a\":false,\"f5_a\":true,\"f6_a\":true,\"f7_a\":false,\"f8_a\":true,\"f9_a\":false,\"f10_a\":false,\"f11_a\":false,\"f0_b\":true,\"f1_b\":true,\"f2_b\":false,\"f3_b\":true,\"f4_b\":false,\"f5_b\":true,\"f6_b\":true,\"f7_b\":false,\"f8_b\":true,\"f9_b\":false,\"f10_b\":false,\"f11_b\":false,\"f0_ab\":true,\"f1_ab\":true,\"f2_ab\":false,\"f3_ab\":true,\"f4_ab\":false,\"f5_ab\":false,\"f6_ab\":true,\"f7_ab\":false,\"f8_ab\":false,\"f9_ab\":false,\"f10_ab\":false,\"f11_ab\":false,\"f0_ax\":true,\"f1_ax\":false,\"f2_ax\":true,\"f3_ax\":false,\"f4_ax\":false,\"f5_ax\":false,\"f0_bx\":true,\"f1_bx\":false,\"f2_bx\":true,\"f6_bx\":false,\"f7_bx\":false,\"f8_bx\":false,\"f0_xx\":false,\"f1_xx\":false,\"f2_xx\":false,\"f3_xx\":true,\"f4_xx\":false,\"f5_xx\":false,\"f6_xx\":true,\"f7_xx\":false,\"f8_xx\":false,\"f9_xx\":true,\"fa_xx\":true,\"fb_xx\":false},\"seq\":3}");
@@ -1732,7 +1732,7 @@ public class GeneratedOperationsLogicTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:9142");
+    gold.append("\nMEMORY:11318");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

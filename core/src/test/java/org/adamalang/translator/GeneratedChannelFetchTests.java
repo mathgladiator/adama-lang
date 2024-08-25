@@ -127,7 +127,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n  private final RxInt32 z;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += person.__memory();");
     gold.append("\n    __sum += z.__memory();");
     gold.append("\n    return __sum;");
@@ -863,7 +863,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"ask\",\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__blocked_on\":\"chan\",\"__timeouts\":{},\"__seq\":2} need:false in:0");
     gold.append("\nCPU:9");
-    gold.append("\nMEMORY:496");
+    gold.append("\nMEMORY:2672");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__blocked_on\":\"chan\",\"__timeouts\":{},\"__seq\":3} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"z\":0},\"outstanding\":[{\"id\":1,\"channel\":\"chan\",\"timeout\":{\"started\":\"0\",\"seconds\":0.25},\"array\":true}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":2}");
@@ -877,7 +877,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
     gold.append("\n+ RANDO DELTA:{\"seq\":4}");
-    gold.append("\nMEMORY:694");
+    gold.append("\nMEMORY:2870");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"person\":{\"agent\":\"?\",\"authority\":\"?\"},\"z\":0,\"__state\":\"ask\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":true,\"__seq\":5,\"__entropy\":\"0\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__timeouts\":{\"1\":{\"timestamp\":\"0\",\"timeout\":0.25}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1008,7 +1008,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n  private final RxInt32 z;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += person.__memory();");
     gold.append("\n    __sum += z.__memory();");
     gold.append("\n    return __sum;");
@@ -1757,7 +1757,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"ask\",\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__blocked_on\":\"chan\",\"__timeouts\":{},\"__seq\":2} need:false in:0");
     gold.append("\nCPU:9");
-    gold.append("\nMEMORY:496");
+    gold.append("\nMEMORY:2672");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__blocked_on\":\"chan\",\"__timeouts\":{},\"__seq\":3} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"z\":0},\"outstanding\":[{\"id\":1,\"channel\":\"chan\",\"timeout\":{\"started\":\"0\",\"seconds\":0.25},\"array\":false}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":2}");
@@ -1771,7 +1771,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
     gold.append("\n+ RANDO DELTA:{\"seq\":4}");
-    gold.append("\nMEMORY:694");
+    gold.append("\nMEMORY:2870");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"person\":{\"agent\":\"?\",\"authority\":\"?\"},\"z\":0,\"__state\":\"ask\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":true,\"__seq\":5,\"__entropy\":\"0\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__timeouts\":{\"1\":{\"timestamp\":\"0\",\"timeout\":0.25}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1902,7 +1902,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n  private final RxInt32 z;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += person.__memory();");
     gold.append("\n    __sum += z.__memory();");
     gold.append("\n    return __sum;");
@@ -2655,7 +2655,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__state\":\"ask\",\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__blocked_on\":\"chan\",\"__timeouts\":{},\"__seq\":2} need:false in:0");
     gold.append("\nCPU:9");
-    gold.append("\nMEMORY:496");
+    gold.append("\nMEMORY:2672");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__blocked_on\":\"chan\",\"__timeouts\":{},\"__seq\":3} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"z\":0},\"outstanding\":[{\"id\":1,\"channel\":\"chan\",\"timeout\":{\"started\":\"0\",\"seconds\":0.25},\"array\":false}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":2}");
@@ -2669,7 +2669,7 @@ public class GeneratedChannelFetchTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
     gold.append("\n+ RANDO DELTA:{\"seq\":4}");
-    gold.append("\nMEMORY:694");
+    gold.append("\nMEMORY:2870");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"person\":{\"agent\":\"?\",\"authority\":\"?\"},\"z\":0,\"__state\":\"ask\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":true,\"__seq\":5,\"__entropy\":\"0\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__timeouts\":{\"1\":{\"timestamp\":\"0\",\"timeout\":0.25}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

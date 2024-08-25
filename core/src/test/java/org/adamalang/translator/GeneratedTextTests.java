@@ -129,7 +129,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  private final RxLazy<String> document_str;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += document.__memory();");
     gold.append("\n    __sum += document_str.__memory();");
     gold.append("\n    return __sum;");
@@ -750,7 +750,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_gen\":1,\"document\":{\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:16");
-    gold.append("\nMEMORY:935");
+    gold.append("\nMEMORY:3111");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"document\":{\"$g\":0,\"$i\":\"z/*  */x\",\"$s\":5},\"document_str\":\"z/*  */x\"},\"seq\":3}");
@@ -764,7 +764,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:1341");
+    gold.append("\nMEMORY:3517");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"document\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"/* adama */\"]]},\"1\":{\"clientID\":\"dzg02a\",\"changes\":[11,[0,\"x\"]]},\"2\":{\"clientID\":\"dzg02a\",\"changes\":[[0,\"z\"],12]},\"3\":{\"clientID\":\"dzg02a\",\"changes\":[9,[0,\" adama\"],4]},\"4\":{\"clientID\":\"dzg02a\",\"changes\":[4,[11],4]}},\"seq\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":1,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -874,7 +874,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  private final RxLazy<String> document_str;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += document.__memory();");
     gold.append("\n    __sum += document_str.__memory();");
     gold.append("\n    return __sum;");
@@ -1463,7 +1463,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_gen\":1,\"document\":{\"changes\":{\"0\":{\"clientID\":\"zzztop\",\"changes\":[[0,\"public string x = 123;\"]]}}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:4");
-    gold.append("\nMEMORY:606");
+    gold.append("\nMEMORY:2782");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"document\":{\"$g\":0,\"$i\":\"public string x = 123;\",\"$s\":1},\"document_str\":\"public string x = 123;\"},\"seq\":3}");
@@ -1477,7 +1477,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:1082");
+    gold.append("\nMEMORY:3258");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"document\":{\"fragments\":{},\"order\":{},\"changes\":{\"0\":{\"clientID\":\"zzztop\",\"changes\":[[0,\"public string x = 123;\"]]}},\"seq\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":1,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1587,7 +1587,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  private final RxText document;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += document.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
@@ -2286,7 +2286,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_gen\":1,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:464");
+    gold.append("\nMEMORY:2640");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"document\":{\"$g\":0,\"$i\":\"\",\"$s\":0}},\"seq\":3}");
@@ -2300,7 +2300,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:750");
+    gold.append("\nMEMORY:2926");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"document\":{\"fragments\":{},\"order\":{},\"changes\":{},\"seq\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":1,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -2412,7 +2412,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n  private final RTxR r;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += document.__memory();");
     gold.append("\n    __sum += r.__memory();");
     gold.append("\n    return __sum;");
@@ -2865,7 +2865,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += doc.__memory();");
     gold.append("\n      return __sum;");
@@ -3307,7 +3307,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_gen\":4,\"document\":{\"fragments\":{\"1\":\"123\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"gen\":2},\"r\":{\"doc\":{\"fragments\":{\"1\":\"42\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"gen\":3}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:5");
-    gold.append("\nMEMORY:888");
+    gold.append("\nMEMORY:3064");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"document\":{\"$g\":2,\"$i\":\"123\",\"$s\":0},\"r\":{\"doc\":{\"$g\":3,\"$i\":\"42\",\"$s\":0}}},\"seq\":3}");
@@ -3321,7 +3321,7 @@ public class GeneratedTextTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:1342");
+    gold.append("\nMEMORY:3518");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"document\":{\"fragments\":{\"1\":\"123\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"seq\":0},\"r\":{\"id\":0,\"doc\":{\"fragments\":{\"1\":\"42\"},\"order\":{\"0\":\"1\"},\"changes\":{},\"seq\":0}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":4,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

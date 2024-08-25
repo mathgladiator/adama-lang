@@ -122,7 +122,7 @@ public class GeneratedLinqRankTests extends GeneratedBase {
     gold.append("\n  private final RxTableGuard __foo_3_t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    __sum += foo_all.__memory();");
     gold.append("\n    __sum += foo_3.__memory();");
@@ -612,7 +612,7 @@ public class GeneratedLinqRankTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += v.__memory();");
     gold.append("\n      return __sum;");
@@ -1114,7 +1114,7 @@ public class GeneratedLinqRankTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":6,\"t\":{\"1\":{\"id\":1,\"v\":6.0},\"2\":{\"id\":2,\"v\":-2.0},\"3\":{\"id\":3,\"v\":1.0},\"4\":{\"id\":4,\"v\":2.0},\"5\":{\"id\":5,\"v\":4.0},\"6\":{\"id\":6,\"v\":8.0}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:19");
-    gold.append("\nMEMORY:3870");
+    gold.append("\nMEMORY:6046");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"foo_all\":{\"6\":{\"v\":8.0},\"1\":{\"v\":6.0},\"5\":{\"v\":4.0},\"4\":{\"v\":2.0},\"3\":{\"v\":1.0},\"2\":{\"v\":-2.0},\"@o\":[6,1,5,4,3,2]},\"foo_3\":{\"6\":{\"v\":8.0},\"1\":{\"v\":6.0},\"5\":{\"v\":4.0},\"@o\":[6,1,5]}},\"seq\":3}");
@@ -1128,7 +1128,7 @@ public class GeneratedLinqRankTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:6724");
+    gold.append("\nMEMORY:8900");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{\"1\":{\"id\":1,\"v\":6.0},\"2\":{\"id\":2,\"v\":-2.0},\"3\":{\"id\":3,\"v\":1.0},\"4\":{\"id\":4,\"v\":2.0},\"5\":{\"id\":5,\"v\":4.0},\"6\":{\"id\":6,\"v\":8.0}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":6,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

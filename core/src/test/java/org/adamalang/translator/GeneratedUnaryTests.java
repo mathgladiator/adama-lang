@@ -116,7 +116,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
@@ -545,7 +545,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += x.__memory();");
     gold.append("\n      return __sum;");
@@ -993,7 +993,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"id\":1,\"x\":6}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:8");
-    gold.append("\nMEMORY:2696");
+    gold.append("\nMEMORY:4872");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":3}");
@@ -1009,7 +1009,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:7");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":7}");
     gold.append("\n+ RANDO DELTA:{\"seq\":7}");
-    gold.append("\nMEMORY:2814");
+    gold.append("\nMEMORY:4990");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{\"1\":{\"id\":1,\"x\":6}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1134,7 +1134,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n  private final RxDouble z;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += rx.__memory();");
     gold.append("\n    __sum += ry.__memory();");
     gold.append("\n    __sum += z.__memory();");
@@ -1778,7 +1778,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"rx\":6,\"ry\":6.140000000000001,\"z\":20.28,\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:14");
-    gold.append("\nMEMORY:544");
+    gold.append("\nMEMORY:2720");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"rx\":6,\"ry\":6.140000000000001,\"z\":20.28},\"seq\":3}");
@@ -1794,7 +1794,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:7");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":7}");
     gold.append("\n+ RANDO DELTA:{\"seq\":7}");
-    gold.append("\nMEMORY:902");
+    gold.append("\nMEMORY:3078");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"rx\":6,\"ry\":6.140000000000001,\"z\":20.28,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":7,\"__entropy\":\"5082315122564986995\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"125\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

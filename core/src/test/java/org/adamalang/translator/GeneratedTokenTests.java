@@ -134,7 +134,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\n  private final RxTableGuard __my_tokens_t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    __sum += my_tokens.__memory();");
     gold.append("\n    return __sum;");
@@ -592,7 +592,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += v.__memory();");
     gold.append("\n      return __sum;");
@@ -1170,7 +1170,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":18,\"t\":{\"1\":{\"id\":1,\"v\":1},\"2\":{\"id\":2,\"v\":6},\"3\":{\"id\":3,\"v\":2},\"4\":{\"id\":4,\"v\":5},\"5\":{\"id\":5,\"v\":3},\"6\":{\"id\":6,\"v\":7},\"7\":{\"id\":7,\"v\":1},\"8\":{\"id\":8,\"v\":6},\"9\":{\"id\":9,\"v\":2},\"10\":{\"id\":10,\"v\":5},\"11\":{\"id\":11,\"v\":3},\"12\":{\"id\":12,\"v\":7},\"13\":{\"id\":13,\"v\":1},\"14\":{\"id\":14,\"v\":6},\"15\":{\"id\":15,\"v\":2},\"16\":{\"id\":16,\"v\":5},\"17\":{\"id\":17,\"v\":3},\"18\":{\"id\":18,\"v\":7}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:55");
-    gold.append("\nMEMORY:5550");
+    gold.append("\nMEMORY:7726");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"my_tokens\":{\"0\":1,\"1\":2,\"2\":3,\"3\":5,\"4\":6,\"5\":7,\"@s\":6}},\"seq\":3}");
@@ -1184,7 +1184,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:6404");
+    gold.append("\nMEMORY:8580");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{\"1\":{\"id\":1,\"v\":1},\"2\":{\"id\":2,\"v\":6},\"3\":{\"id\":3,\"v\":2},\"4\":{\"id\":4,\"v\":5},\"5\":{\"id\":5,\"v\":3},\"6\":{\"id\":6,\"v\":7},\"7\":{\"id\":7,\"v\":1},\"8\":{\"id\":8,\"v\":6},\"9\":{\"id\":9,\"v\":2},\"10\":{\"id\":10,\"v\":5},\"11\":{\"id\":11,\"v\":3},\"12\":{\"id\":12,\"v\":7},\"13\":{\"id\":13,\"v\":1},\"14\":{\"id\":14,\"v\":6},\"15\":{\"id\":15,\"v\":2},\"16\":{\"id\":16,\"v\":5},\"17\":{\"id\":17,\"v\":3},\"18\":{\"id\":18,\"v\":7}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":18,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1306,7 +1306,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\n  private final RxTableGuard __my_tokens_t;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    __sum += my_tokens.__memory();");
     gold.append("\n    return __sum;");
@@ -1764,7 +1764,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += v.__memory();");
     gold.append("\n      return __sum;");
@@ -2321,7 +2321,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":16,\"t\":{\"1\":{\"id\":1,\"v\":\"a\"},\"2\":{\"id\":2,\"v\":\"b\"},\"3\":{\"id\":3,\"v\":\"c\"},\"4\":{\"id\":4,\"v\":\"d\"},\"5\":{\"id\":5,\"v\":\"A\"},\"6\":{\"id\":6,\"v\":\"B\"},\"7\":{\"id\":7,\"v\":\"C\"},\"8\":{\"id\":8,\"v\":\"D\"},\"9\":{\"id\":9,\"v\":\"a\"},\"10\":{\"id\":10,\"v\":\"b\"},\"11\":{\"id\":11,\"v\":\"c\"},\"12\":{\"id\":12,\"v\":\"d\"},\"13\":{\"id\":13,\"v\":\"A\"},\"14\":{\"id\":14,\"v\":\"B\"},\"15\":{\"id\":15,\"v\":\"C\"},\"16\":{\"id\":16,\"v\":\"D\"}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:49");
-    gold.append("\nMEMORY:5426");
+    gold.append("\nMEMORY:7602");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"my_tokens\":{\"0\":\"a\",\"1\":\"b\",\"2\":\"c\",\"3\":\"d\",\"@s\":4}},\"seq\":3}");
@@ -2335,7 +2335,7 @@ public class GeneratedTokenTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:6136");
+    gold.append("\nMEMORY:8312");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"t\":{\"1\":{\"id\":1,\"v\":\"a\"},\"2\":{\"id\":2,\"v\":\"b\"},\"3\":{\"id\":3,\"v\":\"c\"},\"4\":{\"id\":4,\"v\":\"d\"},\"5\":{\"id\":5,\"v\":\"A\"},\"6\":{\"id\":6,\"v\":\"B\"},\"7\":{\"id\":7,\"v\":\"C\"},\"8\":{\"id\":8,\"v\":\"D\"},\"9\":{\"id\":9,\"v\":\"a\"},\"10\":{\"id\":10,\"v\":\"b\"},\"11\":{\"id\":11,\"v\":\"c\"},\"12\":{\"id\":12,\"v\":\"d\"},\"13\":{\"id\":13,\"v\":\"A\"},\"14\":{\"id\":14,\"v\":\"B\"},\"15\":{\"id\":15,\"v\":\"C\"},\"16\":{\"id\":16,\"v\":\"D\"}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":16,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

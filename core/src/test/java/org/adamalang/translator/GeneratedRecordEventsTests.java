@@ -115,7 +115,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\n  private final RxTableGuard __all_tbl;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += tbl.__memory();");
     gold.append("\n    __sum += all.__memory();");
     gold.append("\n    return __sum;");
@@ -577,7 +577,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += foo.__memory();");
     gold.append("\n      __sum += goo.__memory();");
@@ -949,7 +949,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"tbl\":{\"1\":{\"id\":1,\"foo\":\"1970-01-01T00:00Z[UTC]\",\"goo\":1}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:3");
-    gold.append("\nMEMORY:3052");
+    gold.append("\nMEMORY:5228");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"all\":{\"1\":{\"foo\":\"1970-01-01T00:00Z[UTC]\",\"goo\":1},\"@o\":[1]}},\"seq\":3}");
@@ -963,7 +963,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:3666");
+    gold.append("\nMEMORY:5842");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"tbl\":{\"1\":{\"id\":1,\"foo\":\"1970-01-01T00:00Z[UTC]\",\"goo\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":1,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -1087,7 +1087,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\n  private final RxTableGuard __all_tbl;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
-    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    long __sum = super.__memory() + 2176;");
     gold.append("\n    __sum += tbl.__memory();");
     gold.append("\n    __sum += all.__memory();");
     gold.append("\n    return __sum;");
@@ -1551,7 +1551,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
-    gold.append("\n      long __sum = super.__memory();");
+    gold.append("\n      long __sum = super.__memory() + 0;");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += count.__memory();");
     gold.append("\n      __sum += account.__memory();");
@@ -1988,7 +1988,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":2,\"tbl\":{\"1\":{\"id\":1,\"count\":100,\"account\":{\"agent\":\"1\",\"authority\":\"doc/0/0\"},\"sss\":3},\"2\":{\"id\":2,\"count\":200,\"account\":{\"agent\":\"2\",\"authority\":\"doc/0/0\"},\"sss\":2}},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:39");
-    gold.append("\nMEMORY:3298");
+    gold.append("\nMEMORY:5474");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"all\":{\"1\":{\"id\":1,\"count\":100,\"account\":{\"@t\":1,\"agent\":\"1\",\"authority\":\"doc/0/0\"},\"sss\":3},\"2\":{\"id\":2,\"count\":200,\"account\":{\"@t\":1,\"agent\":\"2\",\"authority\":\"doc/0/0\"},\"sss\":2},\"@o\":[1,2]}},\"seq\":3}");
@@ -2002,7 +2002,7 @@ public class GeneratedRecordEventsTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:4536");
+    gold.append("\nMEMORY:6712");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"tbl\":{\"1\":{\"id\":1,\"count\":100,\"account\":{\"agent\":\"1\",\"authority\":\"doc/0/0\"},\"sss\":3},\"2\":{\"id\":2,\"count\":200,\"account\":{\"agent\":\"2\",\"authority\":\"doc/0/0\"},\"sss\":2}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":2,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
