@@ -59,6 +59,7 @@ public class RxGuardTests {
     guard.__commit(null, null, null);
     guard.__revert();
     guard.__dump(null);
+    Assert.assertEquals(64, guard.__memory());
   }
 
   @Test
@@ -89,6 +90,7 @@ public class RxGuardTests {
     });
     self.set(g);
     g.__raiseInvalid();
+    Assert.assertEquals(64, g.__memory());
   }
 
   @Test
@@ -97,5 +99,6 @@ public class RxGuardTests {
     RxGuard g = new RxGuard(record);
     g.__raiseInvalid();
     Assert.assertEquals(1, g.getGeneration(0));
+    Assert.assertEquals(64, g.__memory());
   }
 }

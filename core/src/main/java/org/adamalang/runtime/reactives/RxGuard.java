@@ -96,4 +96,9 @@ public class RxGuard extends RxDependent {
     }
     return generation + bump;
   }
+
+  @Override
+  public long __memory() {
+    return 64 + (bumps != null ? 32 * bumps.size() : 0);
+  }
 }

@@ -115,7 +115,7 @@ public class TyReactiveRecord extends TyType implements //
     for (final DefineMethod dm : storage.methods) {
       dm.writeFunctionJava(sb, environment);
     }
-    CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
+    CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment, false);
     CodeGenIndexing.writeIndices(name, storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);
     CodeGenReport.writeRxReport(storage, sb, environment);

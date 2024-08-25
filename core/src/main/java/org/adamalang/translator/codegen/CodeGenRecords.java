@@ -597,7 +597,7 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
   }
 
-  public static void writePrivacyCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+  public static void writePrivacyCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, boolean isRoot) {
     final var policyRoot = environment.scopeAsReadOnlyBoundary();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
@@ -619,6 +619,14 @@ public class CodeGenRecords {
     sb.append("long __sum = super.__memory();").writeNewline();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       sb.append("__sum += ").append(fdInOrder.name).append(".__memory();").writeNewline();
+    }
+    for (final Map.Entry<String, BubbleDefinition> bubbleDefinitionEntry : storage.bubbles.entrySet()) {
+      sb.append("__sum += ___").append(bubbleDefinitionEntry.getKey()).append(".__memory();").writeNewline();
+    }
+    if (isRoot) {
+      for (final Map.Entry<String, DefineAssoc> assocEntry : environment.document.assocs.entrySet()) {
+        sb.append("__sum += ___assoc_").append(assocEntry.getKey()).append(".memory();").writeNewline();
+      }
     }
     sb.append("return __sum;").tabDown().writeNewline();
     sb.append("}").writeNewline();
@@ -670,7 +678,7 @@ public class CodeGenRecords {
     if (trimedClassFields.length() > 0) {
       sb.append(trimedClassFields).writeNewline();
     }
-    writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
+    writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment, true);
     if (classConstructor.toString().length() > 0) {
       sb.append("public " + environment.document.getClassName() + "(DocumentMonitor __monitor) {").tabUp().writeNewline();
       sb.append("super(__monitor);").writeNewline();

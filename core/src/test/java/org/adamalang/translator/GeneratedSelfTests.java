@@ -564,6 +564,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += x.__memory();");
     gold.append("\n      __sum += dx2.__memory();");
+    gold.append("\n      __sum += ___dx.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -929,7 +930,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\",\"key\":\"0\",\"origin\":\"origin\",\"ip\":\"ip\"}-->{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"r\":{\"x\":100},\"__messages\":null,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"25\"} need:false in:0");
     gold.append("\nCPU:2");
-    gold.append("\nMEMORY:562");
+    gold.append("\nMEMORY:626");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"50\"} need:false in:0");
     gold.append("\nNO_ONE: CREATED PRIVATE VIEW");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"r\":{\"dx2\":200,\"dx\":200}},\"seq\":3}");
@@ -943,7 +944,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\nRANDO|SUCCESS:5");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"seq\":5}");
-    gold.append("\nMEMORY:920");
+    gold.append("\nMEMORY:984");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__snapshot\":\"0/0\",\"r\":{\"id\":0,\"x\":100},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__timezone\":\"UTC\",\"__auto_table_row_id\":0,\"__auto_gen\":0,\"__auto_cache_id\":0,\"__cache\":{},\"__webTaskId\":0,\"__webqueue\":{},\"__replication\":{}}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
@@ -2755,6 +2756,7 @@ public class GeneratedSelfTests extends GeneratedBase {
     gold.append("\n      long __sum = super.__memory();");
     gold.append("\n      __sum += id.__memory();");
     gold.append("\n      __sum += x.__memory();");
+    gold.append("\n      __sum += ___b.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    @Override");
