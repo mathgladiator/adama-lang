@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.ForceBackupRequest;
 import org.adamalang.net.codec.ClientMessage.RateLimitTestRequest;
 import org.adamalang.net.codec.ClientMessage.AuthorizationRequest;
 import org.adamalang.net.codec.ClientMessage.Authorize;
@@ -55,6 +56,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(ForceBackupRequest payload);
+
     public abstract void handle(RateLimitTestRequest payload);
 
     public abstract void handle(AuthorizationRequest payload);
@@ -125,6 +128,9 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 10303:
+          handle(readBody_10303(buf, new ForceBackupRequest()));
+          return;
         case 3044:
           handle(readBody_3044(buf, new RateLimitTestRequest()));
           return;
@@ -217,6 +223,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(ForceBackupRequest payload);
     public void handle(RateLimitTestRequest payload);
     public void handle(AuthorizationRequest payload);
     public void handle(Authorize payload);
@@ -250,6 +257,9 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
+      case 10303:
+        handler.handle(readBody_10303(buf, new ForceBackupRequest()));
+        return;
       case 3044:
         handler.handle(readBody_3044(buf, new RateLimitTestRequest()));
         return;
@@ -375,6 +385,25 @@ public class ClientCodec {
     }
   }
 
+
+  public static ForceBackupRequest read_ForceBackupRequest(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 10303:
+        return readBody_10303(buf, new ForceBackupRequest());
+    }
+    return null;
+  }
+
+
+  private static ForceBackupRequest readBody_10303(ByteBuf buf, ForceBackupRequest o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    return o;
+  }
 
   public static RateLimitTestRequest read_RateLimitTestRequest(ByteBuf buf) {
     switch (buf.readIntLE()) {
@@ -875,6 +904,20 @@ public class ClientCodec {
 
   private static PingRequest readBody_24321(ByteBuf buf, PingRequest o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, ForceBackupRequest o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(10303);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, RateLimitTestRequest o) {

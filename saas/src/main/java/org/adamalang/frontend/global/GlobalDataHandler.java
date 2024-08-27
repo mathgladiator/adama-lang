@@ -28,6 +28,7 @@ import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
+import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -47,6 +48,7 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 public class GlobalDataHandler implements RootRegionHandler {
   private static final Logger LOG = LoggerFactory.getLogger(GlobalDataHandler.class);
@@ -633,6 +635,21 @@ public class GlobalDataHandler implements RootRegionHandler {
             responder.error(ex);
           }
         });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    });
+  }
+
+  @Override
+  public void handle(Session session, DocumentForceBackupRequest request, BackupItemSoloResponder responder) {
+    nexus.adama.forceBackup(request.who, request.space, request.key, new Callback<String>() {
+      @Override
+      public void success(String backupId) {
+        responder.complete(backupId);
       }
 
       @Override

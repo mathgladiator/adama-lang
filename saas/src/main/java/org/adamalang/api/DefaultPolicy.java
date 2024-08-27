@@ -259,6 +259,11 @@ public class DefaultPolicy {
     child.putArray("allowed-authorities");
     child.putArray("allowed-documents");
     child.putArray("allowed-document-spaces");
+    child = policy.putObject("document/force-backup");
+    child.put("developers",false);
+    child.putArray("allowed-authorities");
+    child.putArray("allowed-documents");
+    child.putArray("allowed-document-spaces");
     child = policy.putObject("document/download-backup");
     child.put("developers",false);
     child.putArray("allowed-authorities");

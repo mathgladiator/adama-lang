@@ -68,7 +68,7 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
   }
 
   @Override
-  public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
+  public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
     if ("billing".equals(key.space) || "ide".equals(key.space)) {
       // we simply ignore these for now as they are owned by the platform
       callback.success(null);
@@ -76,10 +76,21 @@ public class S3 implements Cloud, WellKnownHandler, PostDocumentDelete, ColdAsse
     }
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.backup_key.start();
     String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
-    String s3key = "snapshots/" + key.space + "/" + key.key + "/" + date + "/" + seq + "/" + reason.name();
+    String backupId = date + "/" + seq + "/" + reason.name();
+    String s3key = "snapshots/" + key.space + "/" + key.key + "/" + backupId;
     S3SimpleHttpRequestBuilder builder = new S3SimpleHttpRequestBuilder(config, config.backupBucket, "PUT", s3key, null);
     SimpleHttpRequest request = builder.buildWithBytesAsBody(document.getBytes());
-    base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, callback));
+    base.executeShared(request, new VoidCallbackHttpResponder(LOGGER, instance, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        callback.success(backupId);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    }));
   }
 
   public static class BackupListing {

@@ -21,6 +21,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ServerMessage.ForceBackupResponse;
 import org.adamalang.net.codec.ServerMessage.RateLimitResult;
 import org.adamalang.net.codec.ServerMessage.ReplicaData;
 import org.adamalang.net.codec.ServerMessage.DirectSendResponse;
@@ -77,6 +78,41 @@ public class ServerCodec {
     switch (buf.readIntLE()) {
       case 24326:
         handler.handle(readBody_24326(buf, new LoadResponse()));
+        return;
+    }
+  }
+
+
+  public static abstract class StreamForceBackup implements ByteStream {
+    public abstract void handle(ForceBackupResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 10231:
+          handle(readBody_10231(buf, new ForceBackupResponse()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerForceBackup {
+    public void handle(ForceBackupResponse payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerForceBackup handler) {
+    switch (buf.readIntLE()) {
+      case 10231:
+        handler.handle(readBody_10231(buf, new ForceBackupResponse()));
         return;
     }
   }
@@ -722,6 +758,20 @@ public class ServerCodec {
   }
 
 
+  public static ForceBackupResponse read_ForceBackupResponse(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 10231:
+        return readBody_10231(buf, new ForceBackupResponse());
+    }
+    return null;
+  }
+
+
+  private static ForceBackupResponse readBody_10231(ByteBuf buf, ForceBackupResponse o) {
+    o.backupId = Helper.readString(buf);
+    return o;
+  }
+
   public static RateLimitResult read_RateLimitResult(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 3045:
@@ -1063,6 +1113,15 @@ public class ServerCodec {
 
   private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
     return o;
+  }
+
+  public static void write(ByteBuf buf, ForceBackupResponse o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(10231);
+    Helper.writeString(buf, o.backupId);;
   }
 
   public static void write(ByteBuf buf, RateLimitResult o) {

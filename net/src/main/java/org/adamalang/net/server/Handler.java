@@ -763,6 +763,27 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.ForceBackupRequest payload) {
+    CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
+    nexus.service.forceBackup(context, new Key(payload.space, payload.key), new Callback<String>() {
+      @Override
+      public void success(String backupId) {
+        ByteBuf buf = upstream.create(40 + backupId.length());
+        ServerMessage.ForceBackupResponse response = new ServerMessage.ForceBackupResponse();
+        response.backupId = backupId;
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
+  }
+
+  @Override
   public void onSetupComplete(CoreStream stream) {
     this.stream = stream;
   }

@@ -354,7 +354,6 @@ public class MultiRegionClient {
     });
   }
 
-
   public void authorization(String ip, String origin, String space, String key, String payload, Callback<AuthResponse> callback) {
     local.finder.find(new Key(space, key), new Callback<DocumentLocation>() {
       @Override
@@ -365,6 +364,47 @@ public class MultiRegionClient {
             return;
           } else {
             // TODO: remote
+          }
+        }
+        callback.failure(new ErrorCodeException(ErrorCodes.MULTI_REGION_CLIENT_NO_ROUTE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
+  public void forceBackup(AuthenticatedUser user, String space, String key, Callback<String> callback) {
+    local.finder.find(new Key(space, key), new Callback<>() {
+      @Override
+      public void success(DocumentLocation value) {
+        if (value.location == LocationType.Machine) {
+          if (region.equals(value.region)) {
+            local.forceBackup(value.machine, user.context.remoteIp, user.context.origin, user.who.agent, user.who.authority, space, key, callback);
+            return;
+          } else {
+            SelfClient remote = remoteForRegion(value.region, callback);
+            if (remote != null) {
+              String identity = user.asIdentity(keyId, privateKey);
+              ClientDocumentForceBackupRequest request = new ClientDocumentForceBackupRequest();
+              request.identity = identity;
+              request.space = space;
+              request.key = key;
+              remote.documentForceBackup(request, new Callback<ClientBackupItemSoloResponse>() {
+                @Override
+                public void success(ClientBackupItemSoloResponse value) {
+                  callback.success(value.backupId);
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  callback.failure(ex);
+                }
+              });
+              return;
+            }
           }
         }
         callback.failure(new ErrorCodeException(ErrorCodes.MULTI_REGION_CLIENT_NO_ROUTE));

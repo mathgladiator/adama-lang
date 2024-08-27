@@ -725,6 +725,16 @@ public class MainRouter {
                documentHandler.downloadBackup(documentArgs, out);
                return 0;
             }
+            case "force-backup": {
+              DocumentForceBackupArgs documentArgs = DocumentForceBackupArgs.from(args, 2);
+              if (documentArgs == null) {
+                DocumentForceBackupArgs.help();
+                return 1;
+               }
+               JsonOrError out = output.makeJsonOrError();
+               documentHandler.forceBackup(documentArgs, out);
+               return 0;
+            }
             case "list": {
               DocumentListArgs documentArgs = DocumentListArgs.from(args, 2);
               if (documentArgs == null) {

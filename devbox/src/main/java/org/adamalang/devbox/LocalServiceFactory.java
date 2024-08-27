@@ -120,7 +120,7 @@ public class LocalServiceFactory {
       stats.metrics(Json.parseJsonObject(metricsPayload));
     }, dataService, new BackupService() {
       @Override
-      public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
+      public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
         callback.success(null);
       }
     }, new NoOpWakeService(), timeMachine, 2);

@@ -467,6 +467,16 @@ private final MultiWebClientRetryPool pool;
     pool.requestStream(node, (obj) -> new ClientBackupItemResponse(obj), streamback);
   }
 
+  /** document/force-backup */
+  public void documentForceBackup(ClientDocumentForceBackupRequest request, Callback<ClientBackupItemSoloResponse> callback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "document/force-backup");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    pool.requestResponse(node, (obj) -> new ClientBackupItemSoloResponse(obj), callback);
+  }
+
   /** document/download-backup */
   public void documentDownloadBackup(ClientDocumentDownloadBackupRequest request, Stream<ClientBackupStreamResponse> streamback) {
     ObjectNode node = Json.newJsonObject();

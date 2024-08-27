@@ -26,6 +26,8 @@ public interface RootRegionHandler {
 
   public void handle(Session session, IdentityStashRequest request, SimpleResponder responder);
 
+  public void handle(Session session, DocumentForceBackupRequest request, BackupItemSoloResponder responder);
+
   public void handle(Session session, DocumentAuthorizationRequest request, InitiationResponder responder);
 
   public void handle(Session session, DocumentAuthorizationDomainRequest request, InitiationResponder responder);
@@ -69,6 +71,7 @@ public interface RootRegionHandler {
       case "stats":
       case "identity/hash":
       case "identity/stash":
+      case "document/force-backup":
       case "document/authorization":
       case "document/authorization-domain":
       case "document/authorize":

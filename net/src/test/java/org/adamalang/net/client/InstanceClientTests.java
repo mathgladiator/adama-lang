@@ -79,9 +79,9 @@ public class InstanceClientTests {
   @Test
   public void sendAndDisconnect() throws Exception {
     try (TestBed bed =
-        new TestBed(
-            10003,
-            "@static { create { return true; } send { return @who.isOverlord(); } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
+             new TestBed(
+                 10003,
+                 "@static { create { return true; } send { return @who.isOverlord(); } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
       bed.startServer();
       MockEvents events = new MockEvents();
       Runnable happy = events.latchAt(7);
@@ -114,6 +114,32 @@ public class InstanceClientTests {
         events.assertWrite(4, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":5}");
         events.assertWrite(5, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":6}");
         events.assertWrite(6, "DISCONNECTED");
+      }
+    }
+  }
+
+
+  @Test
+  public void forceBackup() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10003,
+                 "@static { create { return true; } send { return @who.isOverlord(); } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
+      bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        {
+          LatchedStringCallback callback = new LatchedStringCallback();
+          client.forceBackup("127.0.0.1", "origin", "nope", "nope", "space", "1", callback);
+          callback.assertSuccess("backup-via-net");
+        }
+        {
+          LatchedStringCallback callback = new LatchedStringCallback();
+          client.forceBackup("127.0.0.1", "origin", "nope", "nope", "space", "2", callback);
+          callback.assertFail("625676");
+        }
       }
     }
   }

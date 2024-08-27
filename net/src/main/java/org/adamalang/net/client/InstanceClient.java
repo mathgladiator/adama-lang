@@ -661,6 +661,53 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
+  public void forceBackup(String ip, String origin, String agent, String authority, String space, String key, Callback<String> callbackRaw) {
+    Callback<String> callback = metrics.client_forcebackup_cb.wrap(callbackRaw);
+    executor.execute(new NamedRunnable("execute-force-backup") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_FORCEBACKUP_TIMEOUT, ErrorCodes.ADAMA_NET_FORCEBACKUP_REJECTED, metrics.client_forcebackup.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamForceBackup() {
+              @Override
+              public void handle(ServerMessage.ForceBackupResponse payload) {
+                callback.success(payload.backupId);
+              }
+
+              @Override
+              public void completed() {}
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new CallbackByteStreamWriter<>(callback) {
+              @Override
+              public void write(ByteStream stream) {
+                ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length());
+                ClientMessage.ForceBackupRequest request = new ClientMessage.ForceBackupRequest();
+                request.origin = origin;
+                request.agent = agent;
+                request.authority = authority;
+                request.space = space;
+                request.key = key;
+                request.ip = ip;
+                ClientCodec.write(toWrite, request);
+                stream.next(toWrite);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
   public void directSend(String ip, String origin, String agent, String authority, String space, String key, String marker, String channel, String message, Callback<Integer> callbackRaw) {
     Callback<Integer> callback = metrics.client_directsend_cb.wrap(callbackRaw);
     executor.execute(new NamedRunnable("execute-direct-send") {

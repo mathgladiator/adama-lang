@@ -22,8 +22,11 @@ import org.adamalang.runtime.contracts.BackupService;
 import org.adamalang.runtime.data.Key;
 
 public class MockBackupService implements BackupService {
+  public String lastDocument = null;
+
   @Override
-  public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
-    callback.success(null);
+  public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
+    this.lastDocument = document;
+    callback.success("backup-mock-id");
   }
 }

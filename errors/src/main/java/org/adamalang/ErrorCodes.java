@@ -686,12 +686,13 @@ public class ErrorCodes {
   public static final int ADAMA_NET_AUTH_FOUND_REGION_RATHER_THAN_MACHINE = 797872;
   public static final int ADAMA_NET_WEBGET_FOUND_REGION_RATHER_THAN_MACHINE = 797824;
   public static final int ADAMA_NET_WEBOPTIONS_FOUND_REGION_RATHER_THAN_MACHINE = 773309;
-  public static final int ADAMA_NET_WEBPUT_FOUND_REGION_RATHER_THAN_MACHINE = 703539;
-  public static final int ADAMA_NET_WEBDELETE_FOUND_REGION_RATHER_THAN_MACHINE = 787645;
   public static final int ADAMA_NET_CREATE_REJECTED = 737336;
 
   public static final int ADAMA_NET_DIRECTSEND_TIMEOUT = 787656;
   public static final int ADAMA_NET_DIRECTSEND_REJECTED = 729294;
+
+  public static final int ADAMA_NET_FORCEBACKUP_TIMEOUT = 703539;
+  public static final int ADAMA_NET_FORCEBACKUP_REJECTED = 787645;
 
   public static final int ADAMA_NET_DELETE_TIMEOUT = 716947;
   public static final int ADAMA_NET_DELETE_REJECTED = 798890;

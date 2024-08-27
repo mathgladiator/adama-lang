@@ -811,6 +811,14 @@
             <arg name="key" />
         </command>
 
+        <command name="force-backup" output="json">
+            <documentation>
+                Force a backup to happen
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+        </command>
+
         <command name="download-backup">
             <documentation>
                 Download the latest archive backup

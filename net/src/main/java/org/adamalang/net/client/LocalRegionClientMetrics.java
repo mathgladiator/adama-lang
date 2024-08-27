@@ -26,6 +26,7 @@ public class LocalRegionClientMetrics {
   public final ItemActionMonitor client_ping;
   public final ItemActionMonitor client_create;
   public final ItemActionMonitor client_directsend;
+  public final ItemActionMonitor client_forcebackup;
   public final ItemActionMonitor client_delete;
   public final ItemActionMonitor client_auth;
   public final ItemActionMonitor client_webget;
@@ -35,6 +36,7 @@ public class LocalRegionClientMetrics {
   public final ItemActionMonitor client_webput;
   public final CallbackMonitor client_create_cb;
   public final CallbackMonitor client_directsend_cb;
+  public final CallbackMonitor client_forcebackup_cb;
   public final CallbackMonitor client_delete_cb;
   public final ItemActionMonitor client_close;
   public final ItemActionMonitor client_reflection;
@@ -83,6 +85,7 @@ public class LocalRegionClientMetrics {
     client_create = factory.makeItemActionMonitor("client_create");
     client_probe = factory.makeItemActionMonitor("client_probe");
     client_directsend = factory.makeItemActionMonitor("client_directsend");
+    client_forcebackup = factory.makeItemActionMonitor("client_forcebackup");
     client_delete = factory.makeItemActionMonitor("client_delete");
     client_auth = factory.makeItemActionMonitor("client_auth");
     client_find = factory.makeItemActionMonitor("client_find");
@@ -91,6 +94,7 @@ public class LocalRegionClientMetrics {
     client_weboptions = factory.makeItemActionMonitor("client_weboptions");
     client_create_cb = factory.makeCallbackMonitor("client_create");
     client_directsend_cb = factory.makeCallbackMonitor("client_directsend");
+    client_forcebackup_cb = factory.makeCallbackMonitor("client_forcebackup_cb");
     client_delete_cb = factory.makeCallbackMonitor("client_delete");
     client_reflection = factory.makeItemActionMonitor("client_reflection");
     client_reflection_cb = factory.makeCallbackMonitor("client_reflection");

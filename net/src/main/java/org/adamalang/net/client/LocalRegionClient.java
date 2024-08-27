@@ -257,6 +257,20 @@ public class LocalRegionClient {
     });
   }
 
+  public void forceBackup(String machine, String ip, String origin, String agent, String authority, String space, String key, Callback<String> callback) {
+    clientFinder.find(machine,  new Callback<InstanceClient>() {
+      @Override
+      public void success(InstanceClient client) {
+        client.forceBackup(ip, origin, agent, authority, space, key, callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
   public void delete(String machine, String ip, String origin, String agent, String authority, String space, String key, Callback<Void> callback) {
     clientFinder.find(machine,  new Callback<InstanceClient>() {
       @Override

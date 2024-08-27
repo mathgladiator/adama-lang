@@ -45,6 +45,10 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("FINISH:{}", c4.next());
       Iterator<String> c5 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("FINISH:{}", c5.next());
+      {
+        Iterator<String> fBU = fe.execute("{\"id\":99,\"identity\":\"" + devIdentity + "\",\"method\":\"document/force-backup\",\"space\":\"newspace\",\"key\":\"a\"}");
+        Assert.assertEquals("FINISH:{\"backupId\":\"backup-saas\"}", fBU.next());
+      }
       Iterator<String> c6 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
       Assert.assertEquals("STREAM:{\"delta\":{\"view-state-filter\":[\"z\"]}}", c6.next());
       Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1,\"pw\":\"\",\"zpx\":1},\"seq\":4}}", c6.next());

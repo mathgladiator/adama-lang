@@ -231,4 +231,11 @@ public class ServerMessage {
       return new TokenGrant(tokens, milliseconds);
     }
   }
+
+  @TypeId(10231)
+  @Flow("ForceBackup")
+  public static class ForceBackupResponse {
+    @FieldOrder(1)
+    public String backupId;
+  }
 }

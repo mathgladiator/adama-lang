@@ -87,6 +87,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"document", "delete", "--help"});
     Main.testMain(new String[]{"document", "download-archive", "--help"});
     Main.testMain(new String[]{"document", "download-backup", "--help"});
+    Main.testMain(new String[]{"document", "force-backup", "--help"});
     Main.testMain(new String[]{"document", "list", "--help"});
     Main.testMain(new String[]{"document", "list-backups", "--help"});
     Main.testMain(new String[]{"document", "list-push-tokens", "--help"});

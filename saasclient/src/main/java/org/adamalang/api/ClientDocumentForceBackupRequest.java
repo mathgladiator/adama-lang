@@ -15,15 +15,11 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.net.mocks;
+package org.adamalang.api;
 
-import org.adamalang.common.Callback;
-import org.adamalang.runtime.contracts.BackupService;
-import org.adamalang.runtime.data.Key;
-
-public class MockBackupService implements BackupService {
-  @Override
-  public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
-    callback.success("backup-via-net");
-  }
+/** generated request type for document/force-backup */
+public class ClientDocumentForceBackupRequest {
+  public String identity;
+  public String space;
+  public String key;
 }

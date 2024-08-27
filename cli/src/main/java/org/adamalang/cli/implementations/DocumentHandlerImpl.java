@@ -229,6 +229,22 @@ public class DocumentHandlerImpl implements DocumentHandler {
   }
 
   @Override
+  public void forceBackup(Arguments.DocumentForceBackupArgs args, Output.JsonOrError output) throws Exception {
+    String identity = args.config.get_string("identity", null);
+    try (WebSocketClient client = new WebSocketClient(args.config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/force-backup");
+        request.put("identity", identity);
+        request.put("space", args.space);
+        request.put("key", args.key);
+        output.add(connection.execute(request));
+        output.out();
+      }
+    }
+  }
+
+  @Override
   public void downloadBackup(Arguments.DocumentDownloadBackupArgs args, Output.YesOrError output) throws Exception {
     String identity = args.config.get_string("identity", null);
     try (WebSocketClient client = new WebSocketClient(args.config)) {

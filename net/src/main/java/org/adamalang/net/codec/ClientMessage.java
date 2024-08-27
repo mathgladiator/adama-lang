@@ -405,4 +405,21 @@ public class ClientMessage {
     @FieldOrder(4)
     public String type;
   }
+
+  @TypeId(10303)
+  @Flow("Server")
+  public static class ForceBackupRequest {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String origin;
+    @FieldOrder(6)
+    public String ip;
+  }
 }

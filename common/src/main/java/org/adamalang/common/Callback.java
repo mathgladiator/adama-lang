@@ -45,6 +45,15 @@ public interface Callback<T> {
     public void failure(ErrorCodeException ex) {
     }
   };
+  Callback<String> DONT_CARE_STRING = new Callback<String>() {
+    @Override
+    public void success(String value) {
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+    }
+  };
 
   public static Callback<Void> FINISHED_LATCH_DONT_CARE_VOID(CountDownLatch latch) {
     return new Callback<Void>() {

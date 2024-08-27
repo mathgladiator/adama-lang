@@ -23,6 +23,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
+import org.adamalang.net.mocks.LatchedStringCallback;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -90,6 +91,9 @@ public class LocalRegionClientTests {
           }
         });
 
+        LatchedStringCallback backuped = new LatchedStringCallback();
+        client.forceBackup("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", backuped);
+        backuped.assertSuccess("backup-via-net");
 
         Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchGotConnected = new CountDownLatch(1);

@@ -27,7 +27,7 @@ public interface BackupService {
     Load,
     Deployment,
     Snapshot,
-    Periodic
+    Force
   }
-  public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback);
+  public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback);
 }

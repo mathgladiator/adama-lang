@@ -15,15 +15,28 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.net.mocks;
+package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.contracts.BackupService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.io.*;
 
-public class MockBackupService implements BackupService {
-  @Override
-  public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
-    callback.success("backup-via-net");
+public class BackupItemSoloResponder {
+  public final JsonResponder responder;
+
+  public BackupItemSoloResponder(JsonResponder responder) {
+    this.responder = responder;
+  }
+
+  public void complete(String backupId) {
+    ObjectNode _obj = new JsonMapper().createObjectNode();
+    _obj.put("backupId", backupId);
+    responder.finish(_obj.toString());
+  }
+
+  public void error(ErrorCodeException ex) {
+    responder.error(ex);
   }
 }

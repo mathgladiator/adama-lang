@@ -27,6 +27,7 @@ public interface DocumentHandler {
   void delete(DocumentDeleteArgs args, YesOrError output) throws Exception;
   void downloadArchive(DocumentDownloadArchiveArgs args, YesOrError output) throws Exception;
   void downloadBackup(DocumentDownloadBackupArgs args, YesOrError output) throws Exception;
+  void forceBackup(DocumentForceBackupArgs args, JsonOrError output) throws Exception;
   void list(DocumentListArgs args, JsonOrError output) throws Exception;
   void listBackups(DocumentListBackupsArgs args, JsonOrError output) throws Exception;
   void listPushTokens(DocumentListPushTokensArgs args, JsonOrError output) throws Exception;

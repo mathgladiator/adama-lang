@@ -361,6 +361,10 @@
         <field name="seq"/>
     </responder>
 
+    <responder name="backup-item-solo">
+        <field name="backup-id"/>
+    </responder>
+
     <parameter-definition name="upload" type="long" missing-error="409609">
         <documentation>
             The id of the upload in progress.
@@ -1305,6 +1309,15 @@
         <parameter name="key"/>
         <documentation>
             List snapshots for a document
+        </documentation>
+    </method>
+
+    <method name="document/force-backup" responder="backup-item-solo" scope="region" policy="true" policy-failure-code="900913" policy-default="Owner">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <documentation>
+            Force a backup to occur
         </documentation>
     </method>
 

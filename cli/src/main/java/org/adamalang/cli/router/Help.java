@@ -172,6 +172,7 @@ public class Help {
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("delete", 15), ANSI.Green) + "Delete a document");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("download-archive", 15), ANSI.Green) + "Download the latest archive backup");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("download-backup", 15), ANSI.Green) + "Download the latest archive backup");
+    System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("force-backup", 15), ANSI.Green) + "Force a backup to happen");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("list", 15), ANSI.Green) + "List documents");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("list-backups", 15), ANSI.Green) + "List the available backups");
     System.out.println("    " + ColorUtilTools.prefix(ColorUtilTools.justifyLeft("list-push-tokens", 15), ANSI.Green) + "List push tokens for a specific agent within a document's authority");

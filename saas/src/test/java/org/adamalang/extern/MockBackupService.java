@@ -23,7 +23,7 @@ import org.adamalang.runtime.data.Key;
 
 public class MockBackupService implements BackupService {
   @Override
-  public void backup(Key key, int seq, Reason reason, String document, Callback<Void> callback) {
-    callback.success(null);
+  public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
+    callback.success("backup-saas");
   }
 }

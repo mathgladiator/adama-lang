@@ -201,7 +201,7 @@ public class DurableLivingDocument implements Queryable {
                 reader.ingestDedupe(doc.__get_intern_strings());
                 doc.__insert(reader);
                 DurableLivingDocument newDocument = new DurableLivingDocument(key, doc, factory, base);
-                newDocument.issueBackupWhileInExecutor(BackupService.Reason.Load, documentValue.patch);
+                newDocument.issueBackupWhileInExecutor(BackupService.Reason.Load, documentValue.patch, Callback.DONT_CARE_STRING);
                 newDocument.size.set(documentValue.reads);
                 newDocument.load(base.metrics.documentLoadRunLoad.wrap(new Callback<>() {
                   @Override
@@ -322,9 +322,20 @@ public class DurableLivingDocument implements Queryable {
     });
   }
 
-  private void issueBackupWhileInExecutor(BackupService.Reason reason, String copy) {
-    base.backup.backup(key, document.__seq.get(), reason, copy, base.metrics.document_backup.wrap(Callback.DONT_CARE_VOID));
+  private void issueBackupWhileInExecutor(BackupService.Reason reason, String copy, Callback<String> callback) {
+    base.backup.backup(key, document.__seq.get(), reason, copy, base.metrics.document_backup.wrap(callback));
     base.getOrCreateInventory(key.space).backup(copy.length() * BACKUP_HOURS);
+  }
+
+  public void forceBackup(Callback<String> callback) {
+    base.executor.execute(new NamedRunnable("force-backup") {
+      @Override
+      public void execute() throws Exception {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        document.__dump(writer);
+        issueBackupWhileInExecutor(BackupService.Reason.Force, writer.toString(), callback);
+      }
+    });
   }
 
   private void testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource compactSource) {
@@ -351,7 +362,7 @@ public class DurableLivingDocument implements Queryable {
         base.executor.execute(new NamedRunnable("compact-complete") {
           @Override
           public void execute() throws Exception {
-            issueBackupWhileInExecutor(BackupService.Reason.Snapshot, snapshot);
+            issueBackupWhileInExecutor(BackupService.Reason.Snapshot, snapshot, Callback.DONT_CARE_STRING);
             if (failedLastSnapshot) {
               base.metrics.snapshot_recovery.run();
             }
@@ -387,7 +398,7 @@ public class DurableLivingDocument implements Queryable {
     JsonStreamWriter writer = new JsonStreamWriter();
     document.__dump(writer);
     String prior = writer.toString();
-    issueBackupWhileInExecutor(BackupService.Reason.Deployment, prior);
+    issueBackupWhileInExecutor(BackupService.Reason.Deployment, prior, Callback.DONT_CARE_STRING);
     newDocument.__insert(new JsonStreamReader(prior));
     int fromSize = prior.length();
     document.__usurp(newDocument);

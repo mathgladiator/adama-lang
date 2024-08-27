@@ -24,6 +24,7 @@ public class RegionApiMetrics {
   public final RequestResponseMonitor monitor_Stats;
   public final RequestResponseMonitor monitor_IdentityHash;
   public final RequestResponseMonitor monitor_IdentityStash;
+  public final RequestResponseMonitor monitor_DocumentForceBackup;
   public final RequestResponseMonitor monitor_DocumentAuthorization;
   public final RequestResponseMonitor monitor_DocumentAuthorizationDomain;
   public final RequestResponseMonitor monitor_DocumentAuthorize;
@@ -56,6 +57,7 @@ public class RegionApiMetrics {
     this.monitor_Stats = factory.makeRequestResponseMonitor("stats");
     this.monitor_IdentityHash = factory.makeRequestResponseMonitor("identity/hash");
     this.monitor_IdentityStash = factory.makeRequestResponseMonitor("identity/stash");
+    this.monitor_DocumentForceBackup = factory.makeRequestResponseMonitor("document/force-backup");
     this.monitor_DocumentAuthorization = factory.makeRequestResponseMonitor("document/authorization");
     this.monitor_DocumentAuthorizationDomain = factory.makeRequestResponseMonitor("document/authorization-domain");
     this.monitor_DocumentAuthorize = factory.makeRequestResponseMonitor("document/authorize");

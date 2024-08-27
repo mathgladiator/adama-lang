@@ -1009,4 +1009,18 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
       }
     });
   }
+
+  public void forceBackup(CoreRequestContext context, Key key, Callback<String> callback) {
+    loadOrCreate(context, key, new Callback<DurableLivingDocument>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        document.forceBackup(callback);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
 }
