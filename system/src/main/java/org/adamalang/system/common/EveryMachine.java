@@ -82,6 +82,7 @@ public class EveryMachine {
   public final SimpleExecutor push;
   public final String environment;
   public final SimpleExecutor compileOffload;
+  public final int rxhtmlMaxCacheAgeSeconds;
 
   public EveryMachine(JsonConfig config, Role role) throws Exception {
     MachineHeat.install();
@@ -90,6 +91,7 @@ public class EveryMachine {
       configObjectForWeb.intOf("http-port", 8081);
     }
     String identityFileName = config.get_string("identity-filename", "me.identity");
+    this.rxhtmlMaxCacheAgeSeconds = config.get_int("rxhtml-max-cache-age-seconds", 120);
     this.environment = config.get_string("environment", "prod").trim();
     this.regionalIdentity = config.get_string("regional-identity", null);
     this.identity = MachineIdentity.fromFile(identityFileName);

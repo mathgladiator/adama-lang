@@ -29,12 +29,14 @@ public class ShellConfig {
   public final boolean useLocalAdamaJavascript;
   public final String version;
   public final String environment;
+  public final int cacheMaxAgeSeconds;
 
-  private ShellConfig(Feedback feedback, final String version, String environment, boolean useLocalAdamaJavascript) {
+  private ShellConfig(Feedback feedback, final String version, String environment, boolean useLocalAdamaJavascript, int cacheMaxAgeSeconds) {
     this.feedback = feedback;
     this.version = version;
     this.useLocalAdamaJavascript = useLocalAdamaJavascript;
     this.environment = environment;
+    this.cacheMaxAgeSeconds = cacheMaxAgeSeconds;
   }
 
   public static Builder start() {
@@ -46,12 +48,14 @@ public class ShellConfig {
     public boolean useLocalAdamaJavascript;
     public String version;
     public String environment;
+    public int cacheMaxAgeSeconds;
 
     public Builder() {
       this.feedback = Feedback.NoOp;
       this.useLocalAdamaJavascript = false;
       this.version =  Platform.JS_VERSION;
       this.environment = "prod";
+      this.cacheMaxAgeSeconds = 60;
     }
 
     public Builder withFeedback(Feedback feedback) {
@@ -74,8 +78,13 @@ public class ShellConfig {
       return this;
     }
 
+    public Builder withCacheMaxAgeSeconds(int cacheMaxAgeSeconds) {
+      this.cacheMaxAgeSeconds = cacheMaxAgeSeconds;
+      return this;
+    }
+
     public ShellConfig end() {
-      return new ShellConfig(feedback, version, environment, useLocalAdamaJavascript);
+      return new ShellConfig(feedback, version, environment, useLocalAdamaJavascript, cacheMaxAgeSeconds);
     }
   }
 

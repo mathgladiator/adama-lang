@@ -66,6 +66,7 @@ public class RxHtmlTool {
     // build the table
     TreeMap<String, String> entireHeaders = new TreeMap<>();
     entireHeaders.put("content-type", "text/html; charset=UTF-8");
+    entireHeaders.put("cache-control", "max-age=" + config.cacheMaxAgeSeconds);
     Target entire = new Target(200, entireHeaders, shell.makeShell(javascript, style).getBytes(StandardCharsets.UTF_8), null);
     for (String uri : urisToMapToEntire) {
       table.add(Instructions.parse(uri), entire);

@@ -34,10 +34,12 @@ public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
   private final static ExceptionLogger EXLOGGER = ExceptionLogger.FOR(GlobalRxHtmlFetcher.class);
   private final DataBase database;
   private final String environment;
+  private final int maxCacheAgeSeconds;
 
-  public GlobalRxHtmlFetcher(DataBase database, String environment) {
+  public GlobalRxHtmlFetcher(DataBase database, String environment, int maxCacheAgeSeconds) {
     this.database = database;
     this.environment = environment;
+    this.maxCacheAgeSeconds = maxCacheAgeSeconds;
   }
 
   @Override
@@ -45,7 +47,7 @@ public class GlobalRxHtmlFetcher implements RxHtmlFetcher {
     try {
       SpaceInfo spaceInfo = Spaces.getSpaceInfo(database, space);
       String rxhtml = Spaces.getRxHtml(database, spaceInfo.id);
-      Table table = RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withEnvironment(environment).end()).table;
+      Table table = RxHtmlTool.convertStringToTemplateForest(rxhtml, null, ShellConfig.start().withEnvironment(environment).withCacheMaxAgeSeconds(maxCacheAgeSeconds).end()).table;
       callback.success(table);
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.FRONTEND_FAILED_RXHTML_LOOKUP, ex, EXLOGGER));

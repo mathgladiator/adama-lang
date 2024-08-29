@@ -37,7 +37,7 @@ public class GlobalRxHtmlFetcherTests {
       Installer installer = new Installer(dataBase);
       try {
         installer.install();
-        GlobalRxHtmlFetcher fetcher = new GlobalRxHtmlFetcher(dataBase, "unittest");
+        GlobalRxHtmlFetcher fetcher = new GlobalRxHtmlFetcher(dataBase, "unittest", 60);
         CountDownLatch latch = new CountDownLatch(2);
         fetcher.fetch("space", new Callback<Table>() {
           @Override

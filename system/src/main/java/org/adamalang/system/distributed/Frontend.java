@@ -64,7 +64,7 @@ public class Frontend {
     this.adama = init.makeGlobalClient(client);
     CachedDomainFinder domainFinder = new CachedDomainFinder(TimeSource.REAL_TIME, 1000, 5 * 60 * 1000, init.system, new GlobalDomainFinder(init.database, init.masterKey));
     domainFinder.startSweeping(init.alive, 1500, 3000);
-    CachedRxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, 60 * 1000, init.system, new GlobalRxHtmlFetcher(init.database, init.em.environment));
+    CachedRxHtmlFetcher rxHtmlFetcher = new CachedRxHtmlFetcher(TimeSource.REAL_TIME, 1000, init.em.rxhtmlMaxCacheAgeSeconds * 1000, init.system, new GlobalRxHtmlFetcher(init.database, init.em.environment, init.em.rxhtmlMaxCacheAgeSeconds / 2));
     rxHtmlFetcher.startSweeping(init.alive, 1500, 3000);
     GlobalAuthenticator globalAuthenticator = new GlobalAuthenticator(init.database, init.em.system);
     CachedAuthenticator cachedAuthenticator = new CachedAuthenticator(TimeSource.REAL_TIME, 4096, 120 * 1000, init.em.system, globalAuthenticator);
