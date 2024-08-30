@@ -34,8 +34,9 @@ public class MockAdamaStream implements AdamaStream {
   }
 
   @Override
-  public void update(String newViewerState) {
+  public void update(String newViewerState, Callback<Void> callback) {
     writer.append("UPDATE:" + newViewerState + "\n");
+    callback.success(null);
   }
 
   @Override

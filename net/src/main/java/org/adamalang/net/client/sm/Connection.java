@@ -164,7 +164,7 @@ public class Connection implements AdamaStream {
   }
 
   @Override
-  public void update(String newViewerState) {
+  public void update(String newViewerState, Callback<Void> callback) {
     ItemActionMonitor.ItemActionMonitorInstance instance = base.metrics.lcsm_connection_update.start();
     base.executor.execute(new NamedRunnable("lcsm-update") {
       @Override
@@ -173,12 +173,12 @@ public class Connection implements AdamaStream {
         queue.add(new ItemAction<>(ErrorCodes.NET_LCSM_UPDATE_TIMEOUT, ErrorCodes.NET_LCSM_UPDATE_REJECTED, instance) {
           @Override
           protected void executeNow(Remote remote) {
-            remote.update(viewerState);
+            remote.update(viewerState, callback);
           }
 
           @Override
           protected void failure(int code) {
-            // Don't care
+            callback.failure(new ErrorCodeException(code));
           }
         });
       }

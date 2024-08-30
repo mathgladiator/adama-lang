@@ -33,6 +33,7 @@ import org.adamalang.net.codec.ServerMessage.InventoryHeartbeat;
 import org.adamalang.net.codec.ServerMessage.HeatPayload;
 import org.adamalang.net.codec.ServerMessage.StreamSeqResponse;
 import org.adamalang.net.codec.ServerMessage.StreamAskAttachmentResponse;
+import org.adamalang.net.codec.ServerMessage.StreamUpdateComplete;
 import org.adamalang.net.codec.ServerMessage.StreamError;
 import org.adamalang.net.codec.ServerMessage.StreamData;
 import org.adamalang.net.codec.ServerMessage.StreamStatus;
@@ -377,6 +378,8 @@ public class ServerCodec {
 
     public abstract void handle(StreamAskAttachmentResponse payload);
 
+    public abstract void handle(StreamUpdateComplete payload);
+
     public abstract void handle(StreamError payload);
 
     public abstract void handle(StreamData payload);
@@ -401,6 +404,9 @@ public class ServerCodec {
         case 15546:
           handle(readBody_15546(buf, new StreamAskAttachmentResponse()));
           return;
+        case 30001:
+          handle(readBody_30001(buf, new StreamUpdateComplete()));
+          return;
         case 19546:
           handle(readBody_19546(buf, new StreamError()));
           return;
@@ -417,6 +423,7 @@ public class ServerCodec {
   public static interface HandlerDocument {
     public void handle(StreamSeqResponse payload);
     public void handle(StreamAskAttachmentResponse payload);
+    public void handle(StreamUpdateComplete payload);
     public void handle(StreamError payload);
     public void handle(StreamData payload);
     public void handle(StreamStatus payload);
@@ -429,6 +436,9 @@ public class ServerCodec {
         return;
       case 15546:
         handler.handle(readBody_15546(buf, new StreamAskAttachmentResponse()));
+        return;
+      case 30001:
+        handler.handle(readBody_30001(buf, new StreamUpdateComplete()));
         return;
       case 19546:
         handler.handle(readBody_19546(buf, new StreamError()));
@@ -944,6 +954,20 @@ public class ServerCodec {
     return o;
   }
 
+  public static StreamUpdateComplete read_StreamUpdateComplete(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 30001:
+        return readBody_30001(buf, new StreamUpdateComplete());
+    }
+    return null;
+  }
+
+
+  private static StreamUpdateComplete readBody_30001(ByteBuf buf, StreamUpdateComplete o) {
+    o.op = buf.readIntLE();
+    return o;
+  }
+
   public static StreamError read_StreamError(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 19546:
@@ -1239,6 +1263,15 @@ public class ServerCodec {
     buf.writeIntLE(15546);
     buf.writeIntLE(o.op);
     buf.writeBoolean(o.allowed);
+  }
+
+  public static void write(ByteBuf buf, StreamUpdateComplete o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(30001);
+    buf.writeIntLE(o.op);
   }
 
   public static void write(ByteBuf buf, StreamError o) {

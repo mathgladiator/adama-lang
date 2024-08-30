@@ -361,8 +361,17 @@ public class GlobalDataHandler implements RootRegionHandler {
 
       @Override
       public void handle(ConnectionUpdateRequest request, SimpleResponder responder) {
-        connection.update(request.viewerState != null ? request.viewerState.toString() : "{}");
-        responder.complete();
+        connection.update(request.viewerState != null ? request.viewerState.toString() : "{}", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            responder.complete();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
+          }
+        });
       }
 
       @Override

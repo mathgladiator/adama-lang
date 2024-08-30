@@ -140,6 +140,8 @@ public class ErrorTable {
     descriptions.put(193055, "no description of error (yet)");
     names.put(143407, "LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT");
     descriptions.put(143407, "no description of error (yet)");
+    names.put(184232, "LIVING_DOCUMENT_WRITE_ONLY_MODE_UNABLE_UPDATE_VIEW");
+    descriptions.put(184232, "no description of error (yet)");
     names.put(127152, "LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT");
     descriptions.put(127152, "The message handler was aborted");
     userspace.add(127152);

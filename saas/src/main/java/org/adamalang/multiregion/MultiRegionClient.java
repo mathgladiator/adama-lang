@@ -261,10 +261,10 @@ public class MultiRegionClient {
                     public void success(SelfClient.DocumentStreamHandler value) {
                       stream.ready(new AdamaStream() {
                         @Override
-                        public void update(String newViewerState) {
+                        public void update(String newViewerState, Callback<Void> callback) {
                           ClientConnectionUpdateRequest update = new ClientConnectionUpdateRequest();
                           update.viewerState = Json.parseJsonObject(newViewerState);
-                          value.update(update, wrapVoid(Callback.DONT_CARE_VOID));
+                          value.update(update, wrapVoid(callback));
                         }
 
                         @Override

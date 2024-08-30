@@ -23,7 +23,7 @@ import org.adamalang.common.Callback;
 public interface AdamaStream {
 
   /** update the viewer state */
-  void update(String newViewerState);
+  void update(String newViewerState, Callback<Void> callback);
 
   /** send the document a message on the given channel */
   void send(String channel, String marker, String message, Callback<Integer> callback);

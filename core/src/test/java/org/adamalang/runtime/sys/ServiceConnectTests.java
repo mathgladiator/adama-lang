@@ -26,11 +26,11 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.data.mocks.SimpleIntCallback;
+import org.adamalang.runtime.data.mocks.SimpleVoidCallback;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.mocks.MockWakeService;
-import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.*;
@@ -458,7 +458,9 @@ public class ServiceConnectTests {
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"view-state-filter\":[\"z\"]}", streamback.get(1));
       Assert.assertEquals("{\"data\":{\"x\":42,\"zpx\":42},\"seq\":3}", streamback.get(2));
-      streamback.get().update("{\"z\":100}");
+      SimpleVoidCallback updateRan = new SimpleVoidCallback();
+      streamback.get().update("{\"z\":100}", updateRan);
+      updateRan.assertSuccess();
       latch2.run();
       Assert.assertEquals("{\"data\":{\"zpx\":142}}", streamback.get(3));
     } finally {

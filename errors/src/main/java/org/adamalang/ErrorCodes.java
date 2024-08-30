@@ -89,6 +89,8 @@ public class ErrorCodes {
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_PATCH = 193055;
   public static final int LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT = 143407;
 
+  public static final int LIVING_DOCUMENT_WRITE_ONLY_MODE_UNABLE_UPDATE_VIEW = 184232;
+
   @User
   @Description("The message handler was aborted")
   public static final int LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT = 127152;

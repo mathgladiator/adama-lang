@@ -116,6 +116,14 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
+  @Override // From ServerCodec.StreamDocument
+  public void handle(ServerMessage.StreamUpdateComplete payload) {
+    Callback<Void> handler = (Callback<Void>) get(payload.op);
+    if (handler != null) {
+      handler.success(null);
+    }
+  }
+
   /** internal: get a callback for the inflight operation */
   private synchronized Callback<?> get(int op) {
     return opHandlers.remove(op);
@@ -234,12 +242,16 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
   }
 
   @Override // From Remote
-  public void update(String viewerState) {
-    ClientMessage.StreamUpdate update = new ClientMessage.StreamUpdate();
-    update.viewerState = viewerState;
-    ByteBuf toWrite = upstream.create(viewerState.length() + 4);
-    ClientCodec.write(toWrite, update);
-    upstream.next(toWrite);
+  public void update(String viewerState, Callback<Void> callback) {
+    int op = bind(callback);
+    if (op > 0) {
+      ClientMessage.StreamUpdate update = new ClientMessage.StreamUpdate();
+      update.op = op;
+      update.viewerState = viewerState;
+      ByteBuf toWrite = upstream.create(viewerState.length() + 4);
+      ClientCodec.write(toWrite, update);
+      upstream.next(toWrite);
+    }
   }
 
   @Override // From Remote

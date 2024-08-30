@@ -110,4 +110,18 @@ public interface Callback<T> {
       }
     };
   }
+
+  static <T> Callback<T> SUCCESS_OR_FAILURE_THROW_AWAY_VALUE(Callback<Void> callback) {
+    return new Callback<T>() {
+      @Override
+      public void success(T value) {
+        callback.success(null);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    };
+  }
 }

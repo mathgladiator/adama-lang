@@ -28,7 +28,7 @@ public interface Remote {
 
   void password(String password, Callback<Integer> callback);
 
-  void update(String viewerState);
+  void update(String viewerState, Callback<Void> callback);
 
   void disconnect();
 }

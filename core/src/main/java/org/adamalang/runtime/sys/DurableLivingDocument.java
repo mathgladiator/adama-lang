@@ -1095,6 +1095,7 @@ public class DurableLivingDocument implements Queryable {
     }), false, false);
   }
 
+  @Deprecated
   public void setPassword(CoreRequestContext context, String password, Callback<Integer> callback) {
     final var writer = forgeWithContext("password", context);
     writer.writeObjectFieldIntro("password");

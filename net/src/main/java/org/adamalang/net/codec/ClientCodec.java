@@ -711,6 +711,7 @@ public class ClientCodec {
 
 
   private static StreamUpdate readBody_14345(ByteBuf buf, StreamUpdate o) {
+    o.op = buf.readIntLE();
     o.viewerState = Helper.readString(buf);
     return o;
   }
@@ -1137,6 +1138,7 @@ public class ClientCodec {
       return;
     }
     buf.writeIntLE(14345);
+    buf.writeIntLE(o.op);
     Helper.writeString(buf, o.viewerState);;
   }
 

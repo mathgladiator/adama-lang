@@ -162,6 +162,8 @@ public class ClientMessage {
   @Flow("Server")
   public static class StreamUpdate {
     @FieldOrder(1)
+    public int op;
+    @FieldOrder(2)
     public String viewerState;
   }
 

@@ -515,6 +515,20 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
     }
   }
 
+  private Callback<Void> of(SimpleResponder responder) {
+    return new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        responder.complete();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }
+
   @Override
   public void handle_ConnectionUpdate(long requestId, Long connection, ObjectNode viewerState, SimpleResponder responder) {
     long started = System.currentTimeMillis();
@@ -524,7 +538,7 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
         executor.schedule(new NamedRunnable("slow update") {
           @Override
           public void execute() throws Exception {
-            stream.ref.update(viewerState.toString());
+            stream.ref.update(viewerState.toString(), of(responder));
             responder.complete();
             ObjectNode entry = Json.newJsonObject();
             entry.put("type", "devbox");
@@ -534,7 +548,7 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
           }
         }, 1000);
       } else {
-        stream.ref.update(viewerState.toString());
+        stream.ref.update(viewerState.toString(), of(responder));
         responder.complete();
       }
     } else {

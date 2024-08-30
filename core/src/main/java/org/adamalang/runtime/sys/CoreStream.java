@@ -52,7 +52,7 @@ public class CoreStream implements AdamaStream {
   }
 
   @Override
-  public void update(String newViewerState) {
+  public void update(String newViewerState, Callback<Void> callback) {
     if (mode.read) {
       JsonStreamReader patch = new JsonStreamReader(newViewerState);
       document.base.executor.execute(new NamedRunnable("core-stream-update") {
@@ -62,12 +62,15 @@ public class CoreStream implements AdamaStream {
           handle.ingestViewUpdate(patch);
           if (document.document().__hasInflightAsyncWork()) {
             // this is, at core, fundamentally expensive
-            document.invalidate(Callback.DONT_CARE_INTEGER);
+            document.invalidate(Callback.SUCCESS_OR_FAILURE_THROW_AWAY_VALUE(callback));
           } else {
             handle.triggerRefresh();
+            callback.success(null);
           }
         }
       });
+    } else {
+      callback.failure(new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_WRITE_ONLY_MODE_UNABLE_UPDATE_VIEW));
     }
   }
 

@@ -60,8 +60,8 @@ public class DelayAdamaStream implements AdamaStream {
   }
 
   @Override
-  public void update(String newViewerState) {
-    buffer((stream) -> stream.update(newViewerState), Callback.DONT_CARE_VOID);
+  public void update(String newViewerState, Callback<Void> callback) {
+    buffer((stream) -> stream.update(newViewerState, callback), callback);
   }
 
   public void buffer(Consumer<AdamaStream> consumer, Callback<?> callback) {

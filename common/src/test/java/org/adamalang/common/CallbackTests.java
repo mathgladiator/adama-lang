@@ -97,6 +97,31 @@ public class CallbackTests {
     Callback.DONT_CARE_INTEGER.failure(new ErrorCodeException(123));
     Callback.DONT_CARE_VOID.success(null);
     Callback.DONT_CARE_VOID.failure(new ErrorCodeException(123));
+    Callback.DONT_CARE_STRING.success("xyz");
+    Callback.DONT_CARE_STRING.failure(new ErrorCodeException(123));
+  }
+
+  @Test
+  public void throwaway() {
+    AtomicInteger s = new AtomicInteger(0);
+    AtomicInteger f = new AtomicInteger(0);
+    Callback<Integer> xyz = Callback.SUCCESS_OR_FAILURE_THROW_AWAY_VALUE(new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        s.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        f.incrementAndGet();
+      }
+    });
+    Assert.assertEquals(0, s.get());
+    xyz.success(123);
+    Assert.assertEquals(1, s.get());
+    Assert.assertEquals(0, f.get());
+    xyz.failure(new ErrorCodeException(12));
+    Assert.assertEquals(1, f.get());
   }
 
   public class MockCallback<T> implements Callback<T> {

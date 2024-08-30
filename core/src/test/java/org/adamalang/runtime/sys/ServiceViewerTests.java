@@ -22,6 +22,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.mocks.SimpleVoidCallback;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockBackupService;
 import org.adamalang.runtime.mocks.MockTime;
@@ -61,7 +62,9 @@ public class ServiceViewerTests {
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"view-state-filter\":[\"x\"]}", streamback.get(1));
       Assert.assertEquals("{\"data\":{\"my_x\":42},\"seq\":4}", streamback.get(2));
-      streamback.get().update("{\"x\":5050}");
+      SimpleVoidCallback updateRan = new SimpleVoidCallback();
+      streamback.get().update("{\"x\":5050}", updateRan);
+      updateRan.assertSuccess();
       latch2.run();
       Assert.assertEquals("{\"data\":{\"my_x\":5050}}", streamback.get(3));
     } finally {

@@ -91,7 +91,9 @@ public class InstanceClientTests {
         success.await();
         client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", ConnectionMode.Full, events);
         Remote remote = events.getRemote();
-        remote.update("{\"z\":100}");
+        LatchedVoidCallback updateRan = new LatchedVoidCallback();
+        remote.update("{\"z\":100}", updateRan);
+        updateRan.assertSuccess();
         SimpleIntCallback sic = new SimpleIntCallback();
         client.directSend("127.0.0.1", "origin", "overlord", "overlord", "space", "1", null, "foo", "{\"z\":1000}", sic);
         sic.assertSuccess(5);

@@ -24,6 +24,7 @@ import org.adamalang.common.rate.TokenGrant;
 
 /** messages from server to client */
 public class ServerMessage {
+
   @TypeId(24322)
   @Flow("Ping")
   public static class PingResponse {
@@ -113,6 +114,13 @@ public class ServerMessage {
     public int op;
     @FieldOrder(2)
     public int code;
+  }
+
+  @TypeId(30001)
+  @Flow("Document")
+  public static class StreamUpdateComplete {
+    @FieldOrder(1)
+    public int op;
   }
 
   @TypeId(15546)

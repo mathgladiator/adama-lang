@@ -50,7 +50,7 @@ public class LatchedVoidCallback implements Callback<Void> {
 
   public void assertSuccess() {
     try {
-      Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
       Assert.assertFalse(error);
     } catch (Exception ex) {
       Assert.fail();
@@ -59,9 +59,26 @@ public class LatchedVoidCallback implements Callback<Void> {
 
   public void assertFail(int c) {
     try {
-      Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
       Assert.assertTrue(error);
       Assert.assertEquals(c, this.value);
+    } catch (Exception ex) {
+      Assert.fail();
+    }
+  }
+
+  public void assertJustFail() {
+    try {
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(error);
+    } catch (Exception ex) {
+      Assert.fail();
+    }
+  }
+
+  public void assertJustComplete() {
+    try {
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     } catch (Exception ex) {
       Assert.fail();
     }

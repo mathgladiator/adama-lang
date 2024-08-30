@@ -487,8 +487,26 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamUpdate payload) {
     if (stream != null) {
-      nexus.metrics.server_stream_update.run();
-      stream.update(payload.viewerState);
+      stream.update(payload.viewerState, nexus.metrics.server_stream_update.wrap(new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          ServerMessage.StreamUpdateComplete response = new ServerMessage.StreamUpdateComplete();
+          response.op = payload.op;
+          ByteBuf buf = upstream.create(8);
+          ServerCodec.write(buf, response);
+          upstream.next(buf);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ServerMessage.StreamError error = new ServerMessage.StreamError();
+          error.op = payload.op;
+          error.code = ex.code;
+          ByteBuf errorBuf = upstream.create(8);
+          ServerCodec.write(errorBuf, error);
+          upstream.next(errorBuf);
+        }
+      }));
     }
   }
 

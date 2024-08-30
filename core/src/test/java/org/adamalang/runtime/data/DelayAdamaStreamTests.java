@@ -41,7 +41,7 @@ public class DelayAdamaStreamTests {
 
       }
     });
-    delay.update("UPDATE!");
+    delay.update("UPDATE!", Callback.DONT_CARE_VOID);
     delay.send("channel", "marker", "message", Callback.DONT_CARE_INTEGER);
     delay.send("failure", "marker", "message", Callback.DONT_CARE_INTEGER);
     delay.password("p", Callback.DONT_CARE_INTEGER);

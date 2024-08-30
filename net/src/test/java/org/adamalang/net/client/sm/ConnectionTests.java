@@ -26,6 +26,7 @@ import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.mocks.MockRoutingTarget;
 import org.adamalang.net.mocks.LatchedSeqCallback;
+import org.adamalang.net.mocks.LatchedVoidCallback;
 import org.adamalang.net.mocks.MockSimpleEvents;
 import org.adamalang.runtime.sys.ConnectionMode;
 import org.junit.Test;
@@ -52,8 +53,9 @@ public class ConnectionTests {
         Runnable gotData = events.latchAt(2);
         Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", ConnectionMode.Full, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
+        ArrayList<LatchedVoidCallback> callbacksUpdates = new ArrayList<>();
         for (int k = 0; k < 2; k++) {
-          connection.update("{\"k\":" + k + "}");
+
           {
             LatchedSeqCallback callbackCan = new LatchedSeqCallback();
             callbacks.add(callbackCan);
@@ -69,6 +71,9 @@ public class ConnectionTests {
               }
             });
           }
+          LatchedVoidCallback updateRan = new LatchedVoidCallback();
+          connection.update("{\"k\":" + k + "}", updateRan);
+          callbacksUpdates.add(updateRan);
           {
             LatchedSeqCallback callbackAttach = new LatchedSeqCallback();
             callbacks.add(callbackAttach);
@@ -88,6 +93,9 @@ public class ConnectionTests {
         for (LatchedSeqCallback callback : callbacks) {
           callback.assertJustSuccess();
         }
+        for (LatchedVoidCallback callback : callbacksUpdates) {
+          callback.assertSuccess();
+        }
         connection.close();
       } finally {
         finder.shutdown();
@@ -98,7 +106,7 @@ public class ConnectionTests {
   }
   
   @Test
-  public void sad() throws Exception {
+  public void sad_bad_code() throws Exception {
     LocalRegionClientMetrics metrics = new LocalRegionClientMetrics(new NoOpMetricsFactory());
     TestBed[] servers = new TestBed[2];
     SimpleExecutor executor = SimpleExecutor.create("executor");
@@ -115,8 +123,11 @@ public class ConnectionTests {
         Runnable gotData = events.latchAt(2);
         Connection connection = new Connection(base, "127.0.0.1:" + servers[0].port, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", ConnectionMode.Full, 1000, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
+        ArrayList<LatchedVoidCallback> callbacksUpdates = new ArrayList<>();
         for (int k = 0; k < 20; k++) {
-          connection.update("{\"k\":" + k + "}");
+          LatchedVoidCallback updateRan = new LatchedVoidCallback();
+          connection.update("{\"k\":" + k + "}", updateRan);
+          callbacksUpdates.add(updateRan);
           {
             LatchedSeqCallback callbackCan = new LatchedSeqCallback();
             callbacks.add(callbackCan);
@@ -150,6 +161,9 @@ public class ConnectionTests {
         gotData.run();
         for (LatchedSeqCallback callback : callbacks) {
           callback.assertJustFail();
+        }
+        for (LatchedVoidCallback callback : callbacksUpdates) {
+          callback.assertJustComplete();
         }
         connection.close();
       } finally {
