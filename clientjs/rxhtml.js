@@ -998,13 +998,6 @@ var RxHTML = (function () {
         }
       },
       "~": function (ord) {
-        var valueToSet = false;
-        // the values are filling up AFTEr the value was set,
-        // so detect the absence of a value along with the existence of a value
-        if (!parentDom.value && parentDom.rxvalue != "") {
-          valueToSet = parentDom.rxvalue;
-          // this value, we want to restore once
-        }
         if (hideOnZero) {
           if (ord.length == 0) {
             parentDom.style.display = "none";
@@ -1020,8 +1013,8 @@ var RxHTML = (function () {
         for (var k = 0; k < ord.length; k++) {
           parentDom.append(domByKey[ord[k]]);
         }
-        if (valueToSet) {
-          parentDom.value = valueToSet;
+        if ('rxvalue' in parentDom) {
+          parentDom.value = parentDom.rxvalue;
         }
         parentDom.dispatchEvent(new Event("ordered"));
         if (signals.isNew) {
