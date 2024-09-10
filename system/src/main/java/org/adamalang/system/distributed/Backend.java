@@ -19,8 +19,12 @@ package org.adamalang.system.distributed;
 
 import org.adamalang.caravan.CaravanBoot;
 import org.adamalang.mysql.impl.*;
+import org.adamalang.runtime.data.DataObserver;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.cron.InMemoryWakeProxy;
 import org.adamalang.runtime.sys.cron.WakeServiceRef;
+import org.adamalang.runtime.sys.readonly.LocalReplicationProxy;
+import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.system.CommonServiceInit;
 import org.adamalang.system.Role;
 import org.adamalang.common.*;
@@ -84,7 +88,15 @@ public class Backend {
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     GlobalMetricsReporter metricsReporter = new GlobalMetricsReporter(init.database, init.em.metrics);
     WakeServiceRef wakeRef = new WakeServiceRef();
-    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, init.s3, wakeRef, TimeSource.REAL_TIME, coreThreads);
+    LocalReplicationProxy replicationProxy = new LocalReplicationProxy(init.em.machine, new ReplicationInitiator() {
+      @Override
+      public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
+        // TODO: use the local client
+        cancel.failure(new ErrorCodeException(0));
+      }
+    });
+    CoreService service = new CoreService(coreMetrics, factoryProxy, meteringPubSub.publisher(), metricsReporter, caravan.service, init.s3, wakeRef, replicationProxy, TimeSource.REAL_TIME, coreThreads);
+    replicationProxy.initialize(service);
     GlobalWakeService wakeService = new GlobalWakeService(new MySQLWakeCore(init.system, init.database, TimeSource.REAL_TIME), init.region, init.machine);
     wakeRef.set(new InMemoryWakeProxy(init.system, service, wakeService));
     wakeService.bootstrap(service, init.region, init.machine);

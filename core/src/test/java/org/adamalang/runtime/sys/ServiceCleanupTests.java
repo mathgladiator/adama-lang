@@ -72,7 +72,7 @@ public class ServiceCleanupTests {
         }
         System.err.println(meteringSample.count);
       }
-    },  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
+    },  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), new MockReplicationInitiator(), time, 3);
     service.tune(
         (base) -> {
           base.setInventoryMillisecondsSchedule(1000, 50);
@@ -174,7 +174,7 @@ public class ServiceCleanupTests {
         }
         System.err.println(meteringSample.count);
       }
-    },  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
+    },  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), new MockReplicationInitiator(), time, 3);
     service.tune(
         (base) -> {
           base.setInventoryMillisecondsSchedule(250, 50);

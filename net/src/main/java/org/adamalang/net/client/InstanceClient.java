@@ -28,6 +28,7 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.contracts.Events;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
@@ -1068,7 +1069,7 @@ public class InstanceClient implements AutoCloseable {
     executor.execute(new NamedRunnable("execute-scan") {
       @Override
       public void execute() throws Exception {
-        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_RATE_LIMIT_TIMEOUT, ErrorCodes.ADAMA_NET_RATE_LIMIT_REJECTED, metrics.client_scan_deployment.start()) {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_RATE_LIMIT_TIMEOUT, ErrorCodes.ADAMA_NET_RATE_LIMIT_REJECTED, metrics.client_ratelimit.start()) {
           @Override
           protected void executeNow(ChannelClient client) {
             client.open(new ServerCodec.StreamRateLimiting() {
@@ -1098,6 +1099,76 @@ public class InstanceClient implements AutoCloseable {
           @Override
           protected void failure(int code) {
             callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
+  }
+
+  public void createReplica(String space, String key, DataObserver observer, Callback<Runnable> cancel) {
+    executor.execute(new NamedRunnable("create-replica-client") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_REPLICA_CREATE_TIMEOUT, ErrorCodes.ADAMA_NET_REPLICA_CREATE_REJECT, metrics.client_replica_create.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamReplica() {
+
+              @Override
+              public void handle(ServerMessage.ReplicaData payload) {
+                if (payload.reset) {
+                  observer.start(payload.change);
+                } else {
+                  observer.change(payload.change);
+                }
+              }
+
+              @Override
+              public void completed() {
+              }
+
+              @Override
+              public void error(int errorCode) {
+                ErrorCodeException ex = new ErrorCodeException(errorCode);
+                observer.failure(ex);
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream stream) {
+                ByteBuf toWrite = stream.create(target.length() + space.length() + key.length() + 64);
+                ClientMessage.ReplicaConnect connect = new ClientMessage.ReplicaConnect();
+                connect.machine = target;
+                connect.space = space;
+                connect.key = key;
+                ClientCodec.write(toWrite, connect);
+                stream.next(toWrite);
+                cancel.success(() -> {
+                  executor.execute(new NamedRunnable("replica-cancel") {
+                    @Override
+                    public void execute() throws Exception {
+                      ByteBuf cancelToWrite = stream.create(64);
+                      ClientMessage.ReplicaDisconnect disconnect = new ClientMessage.ReplicaDisconnect();
+                      ClientCodec.write(cancelToWrite, disconnect);
+                      stream.next(cancelToWrite);
+                      stream.completed();
+                    }
+                  });
+                });
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                observer.failure(ex);
+                cancel.failure(ex);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            ErrorCodeException ex = new ErrorCodeException(code);
+            observer.failure(ex);
+            cancel.failure(ex);
           }
         });
       }

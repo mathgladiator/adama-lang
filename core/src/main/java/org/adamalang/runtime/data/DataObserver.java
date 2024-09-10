@@ -21,6 +21,9 @@ import org.adamalang.common.ErrorCodeException;
 
 /** Observe data changes at a lower level */
 public interface DataObserver {
+  /** The machine that is observing */
+  String machine();
+
   /** an initial payload representing a snapshot */
   void start(String snapshot);
 

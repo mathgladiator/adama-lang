@@ -42,6 +42,8 @@ public class LocalRegionClientMetrics {
   public final ItemActionMonitor client_reflection;
   public final CallbackMonitor client_reflection_cb;
   public final ItemActionMonitor client_scan_deployment;
+  public final ItemActionMonitor client_ratelimit;
+  public final ItemActionMonitor client_replica_create;
   public final CallbackMonitor client_scan_deployment_cb;
   public final ItemActionMonitor client_document_exchange;
   public final ItemActionMonitor client_drain;
@@ -86,6 +88,8 @@ public class LocalRegionClientMetrics {
     client_probe = factory.makeItemActionMonitor("client_probe");
     client_directsend = factory.makeItemActionMonitor("client_directsend");
     client_forcebackup = factory.makeItemActionMonitor("client_forcebackup");
+    client_ratelimit = factory.makeItemActionMonitor("client_ratelimit");
+    client_replica_create = factory.makeItemActionMonitor("client_replica_create");
     client_delete = factory.makeItemActionMonitor("client_delete");
     client_auth = factory.makeItemActionMonitor("client_auth");
     client_find = factory.makeItemActionMonitor("client_find");

@@ -60,6 +60,10 @@ public interface RootRegionHandler {
 
   public void handle(Session session, FeatureSummarizeUrlRequest request, SummaryResponder responder);
 
+  public ReplicationStreamHandler handle(Session session, ReplicationCreateRequest request, ReplicaResponder responder);
+
+  public ReplicationStreamHandler handle(Session session, RegionalReplicationCreateRequest request, ReplicaResponder responder);
+
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
   public AttachmentUploadHandler handle(Session session, AttachmentStartByDomainRequest request, ProgressResponder responder);
@@ -95,6 +99,9 @@ public interface RootRegionHandler {
       case "documents/hash-password":
       case "billing-connection/create":
       case "feature/summarize-url":
+      case "replication/create":
+      case "regional/replication/create":
+      case "replication/end":
       case "attachment/start":
       case "attachment/start-by-domain":
       case "attachment/append":

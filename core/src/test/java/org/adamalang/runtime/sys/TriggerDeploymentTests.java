@@ -28,6 +28,7 @@ import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.MockMetricsReporter;
+import org.adamalang.runtime.sys.mocks.MockReplicationInitiator;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class TriggerDeploymentTests {
     MockTime time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {
-    }, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 3);
+    }, new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), new MockReplicationInitiator(), time, 3);
     TriggerDeployment td = new TriggerDeployment(service, Callback.DONT_CARE_VOID);
     td.success(null);
     td.finished(100);

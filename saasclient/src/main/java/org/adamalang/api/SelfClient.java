@@ -674,6 +674,27 @@ private final MultiWebClientRetryPool pool;
     pool.requestResponse(node, (obj) -> new ClientSummaryResponse(obj), callback);
   }
 
+  /** replication/create */
+  public void replicationCreate(ClientReplicationCreateRequest request, Callback<ReplicationStreamHandler> callback, Stream<ClientReplicaResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "replication/create");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    pool.requestStream(node, (wcc, id) -> new ReplicationStreamHandler(wcc, id), (obj) -> new ClientReplicaResponse(obj), callback, streamback);
+  }
+
+  /** regional/replication/create */
+  public void regionalReplicationCreate(ClientRegionalReplicationCreateRequest request, Callback<ReplicationStreamHandler> callback, Stream<ClientReplicaResponse> streamback) {
+    ObjectNode node = Json.newJsonObject();
+    node.put("method", "regional/replication/create");
+    node.put("identity", request.identity);
+    node.put("space", request.space);
+    node.put("key", request.key);
+    node.put("machine", request.machine);
+    pool.requestStream(node, (wcc, id) -> new ReplicationStreamHandler(wcc, id), (obj) -> new ClientReplicaResponse(obj), callback, streamback);
+  }
+
   /** attachment/start */
   public void attachmentStart(ClientAttachmentStartRequest request, Callback<AttachmentUploadHandler> callback, Stream<ClientProgressResponse> streamback) {
     ObjectNode node = Json.newJsonObject();
@@ -973,6 +994,24 @@ private final MultiWebClientRetryPool pool;
       node.put("method", "attachment/finish");
       node.put("upload", _id);
       _direct.requestResponse(node, (obj) -> new ClientAssetIdResponse(obj), callback);
+    }
+  }
+
+  public class ReplicationStreamHandler {
+    public final WebClientConnection _direct;
+    public final int _id;
+    
+    public ReplicationStreamHandler(WebClientConnection _direct, int _id) {
+      this._direct = _direct;
+      this._id = _id;
+    }
+
+    /** replication/end */
+    public void end(ClientReplicationEndRequest request, Callback<ClientSimpleResponse> callback) {
+      ObjectNode node = Json.newJsonObject();
+      node.put("method", "replication/end");
+      node.put("connection", _id);
+      _direct.requestResponse(node, (obj) -> new ClientSimpleResponse(obj), callback);
     }
   }
 

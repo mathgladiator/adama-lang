@@ -15,11 +15,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.runtime.sys;
+package org.adamalang.runtime.sys.readonly;
 
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.StreamHandle;
 
 /** a version of the document that is read only */
 public class ReadOnlyLivingDocument {

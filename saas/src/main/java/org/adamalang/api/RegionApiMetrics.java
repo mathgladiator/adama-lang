@@ -48,6 +48,9 @@ public class RegionApiMetrics {
   public final RequestResponseMonitor monitor_DocumentsHashPassword;
   public final StreamMonitor monitor_BillingConnectionCreate;
   public final RequestResponseMonitor monitor_FeatureSummarizeUrl;
+  public final StreamMonitor monitor_ReplicationCreate;
+  public final StreamMonitor monitor_RegionalReplicationCreate;
+  public final RequestResponseMonitor monitor_ReplicationEnd;
   public final StreamMonitor monitor_AttachmentStart;
   public final StreamMonitor monitor_AttachmentStartByDomain;
   public final RequestResponseMonitor monitor_AttachmentAppend;
@@ -81,6 +84,9 @@ public class RegionApiMetrics {
     this.monitor_DocumentsHashPassword = factory.makeRequestResponseMonitor("documents/hash-password");
     this.monitor_BillingConnectionCreate = factory.makeStreamMonitor("billing-connection/create");
     this.monitor_FeatureSummarizeUrl = factory.makeRequestResponseMonitor("feature/summarize-url");
+    this.monitor_ReplicationCreate = factory.makeStreamMonitor("replication/create");
+    this.monitor_RegionalReplicationCreate = factory.makeStreamMonitor("regional/replication/create");
+    this.monitor_ReplicationEnd = factory.makeRequestResponseMonitor("replication/end");
     this.monitor_AttachmentStart = factory.makeStreamMonitor("attachment/start");
     this.monitor_AttachmentStartByDomain = factory.makeStreamMonitor("attachment/start-by-domain");
     this.monitor_AttachmentAppend = factory.makeRequestResponseMonitor("attachment/append");

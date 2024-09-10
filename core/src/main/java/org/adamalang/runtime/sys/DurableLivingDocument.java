@@ -404,7 +404,11 @@ public class DurableLivingDocument implements Queryable {
     document.__usurp(newDocument);
     JsonStreamWriter dumpNew = new JsonStreamWriter();
     document.__dump(dumpNew);
-    int newSize = dumpNew.toString().length();
+    String dumpNewFinal = dumpNew.toString();
+    int newSize = dumpNewFinal.length();
+    for (DataObserver observer : observers) {
+      observer.start(dumpNewFinal);
+    }
     document = newDocument;
     currentFactory = factory;
     disableMetrics = false;

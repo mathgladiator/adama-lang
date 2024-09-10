@@ -25,6 +25,7 @@ import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.runtime.contracts.BackupService;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.AsyncByteCodeCache;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -32,6 +33,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.cron.NoOpWakeService;
 import org.adamalang.runtime.sys.cron.WakeServiceRef;
+import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.translator.env.RuntimeEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +125,13 @@ public class LocalServiceFactory {
       public void backup(Key key, int seq, Reason reason, String document, Callback<String> callback) {
         callback.success(null);
       }
-    }, new NoOpWakeService(), timeMachine, 2);
+    }, new NoOpWakeService(), new ReplicationInitiator() {
+      @Override
+      public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
+        io.info("replication?" + observer.machine());
+        cancel.success(() -> io.info("replication canceled"));
+      }
+    }, timeMachine, 2);
     sweep.set(() -> service.invalidateAll());
     base.attachDeliverer(service);
   }

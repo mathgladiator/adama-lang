@@ -24,11 +24,13 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.common.*;
+import org.adamalang.contracts.data.DefaultPolicyBehavior;
 import org.adamalang.contracts.data.DomainWithPolicy;
 import org.adamalang.frontend.Session;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.contracts.BackupService;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -679,6 +681,98 @@ public class GlobalDataHandler implements RootRegionHandler {
 
   @Override
   public void disconnect() {
+  }
+
+  private ReplicationStreamHandler replicateSetup(String space, String key, String nameOrMachine, ReplicaResponder responder) {
+    DataObserver observer = new DataObserver() {
+      @Override
+      public String machine() {
+        return nameOrMachine;
+      }
+
+      @Override
+      public void start(String snapshot) {
+        responder.next(true, Json.parseJsonObject(snapshot));
+
+      }
+
+      @Override
+      public void change(String delta) {
+        responder.next(false, Json.parseJsonObject(delta));
+      }
+
+      @Override
+      public void failure(ErrorCodeException exception) {
+        responder.error(exception);
+      }
+    };
+    return new ReplicationStreamHandler() {
+      private boolean cancelled = false;
+      private Runnable storedCancel = null;
+      synchronized Runnable set(Runnable cancel) {
+        if (cancelled) {
+          return cancel;
+        }
+        storedCancel = cancel;
+        return null;
+      }
+      synchronized Runnable getCancelIfApplicable() {
+        cancelled = true;
+        Runnable result = storedCancel;
+        storedCancel = null;
+        return result;
+      }
+      void end() {
+        Runnable toRun = getCancelIfApplicable();
+        if (toRun != null) {
+          toRun.run();
+        }
+      }
+      @Override
+      public void bind() {
+        nexus.adama.startDocumentReplication(new Key(space, key), observer, new Callback<Runnable>() {
+          @Override
+          public void success(Runnable cancel) {
+            Runnable rejected = set(cancel);
+            if (rejected != null) {
+              rejected.run();
+            }
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            // responder already relayed error
+          }
+        });
+      }
+
+      @Override
+      public void handle(ReplicationEndRequest request, SimpleResponder endResponder) {
+        end();
+        endResponder.complete();
+      }
+
+      @Override
+      public void logInto(ObjectNode node) {
+
+      }
+
+      @Override
+      public void disconnect(long id) {
+        end();
+        responder.finish();
+      }
+    };
+  }
+
+  @Override
+  public ReplicationStreamHandler handle(Session session, ReplicationCreateRequest request, ReplicaResponder responder) {
+    return replicateSetup(request.space, request.key, "user-" + request.who, responder);
+  }
+
+  @Override
+  public ReplicationStreamHandler handle(Session session, RegionalReplicationCreateRequest request, ReplicaResponder responder) {
+    return replicateSetup(request.space, request.key, request.machine, responder);
   }
 
   private static Callback<Integer> WRAP(SeqResponder seqResponder) {

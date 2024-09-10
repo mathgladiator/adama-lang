@@ -23,11 +23,13 @@ import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.routing.RoutingTableTarget;
 import org.adamalang.net.client.sm.ConnectionBase;
 import org.adamalang.net.client.sm.Connection;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
+import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -39,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /** the front-door to talking to the gRPC client. */
-public class LocalRegionClient {
+public class LocalRegionClient implements ReplicationInitiator {
   public final LocalRegionClientMetrics metrics;
   private final RoutingTableTarget table;
   private final InstanceClientFinder clientFinder;
@@ -344,5 +346,20 @@ public class LocalRegionClient {
       AwaitHelper.block(latch, 500);
     }
     AwaitHelper.block(clientFinder.shutdown(), 1000);
+  }
+
+  @Override
+  public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
+    clientFinder.find(observer.machine(), new Callback<>() {
+      @Override
+      public void success(InstanceClient client) {
+        client.createReplica(key.space, key.key, observer, cancel);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        observer.failure(ex);
+      }
+    });
   }
 }

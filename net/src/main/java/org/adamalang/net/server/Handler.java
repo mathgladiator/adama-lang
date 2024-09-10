@@ -56,6 +56,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   private ScheduledFuture<?> futureHeat;
   private StreamMonitor.StreamMonitorInstance monitorStreamback;
   private Runnable cancelWatch;
+  private DataObserver observer;
 
   public Handler(ServerNexus nexus, ByteStream upstream) {
     this.nexus = nexus;
@@ -65,8 +66,8 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     nexus.metrics.server_handlers_active.up();
     this.monitorStreamback = null;
     this.cancelWatch = null;
+    this.observer = null;
   }
-
 
   @Override
   public void request(int bytes) {
@@ -573,7 +574,13 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.ReplicaConnect payload) {
+    final String machine = payload.machine;
     DataObserver observer = new DataObserver() {
+      @Override
+      public String machine() {
+        return machine;
+      }
+
       @Override
       public void start(String snapshot) {
         ByteBuf toWrite = upstream.create(16 + snapshot.length());
@@ -826,6 +833,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     thint.traffic = trafficHint;
     ServerCodec.write(buffer, thint);
     upstream.next(buffer);
+    upstream.completed();
   }
 
   @Override

@@ -847,6 +847,10 @@ public class ErrorTable {
     descriptions.put(733378, "no description of error (yet)");
     names.put(798918, "ADAMA_NET_RATE_LIMIT_REJECTED");
     descriptions.put(798918, "no description of error (yet)");
+    names.put(733371, "ADAMA_NET_REPLICA_CREATE_TIMEOUT");
+    descriptions.put(733371, "no description of error (yet)");
+    names.put(798911, "ADAMA_NET_REPLICA_CREATE_REJECT");
+    descriptions.put(798911, "no description of error (yet)");
     names.put(718908, "ADAMA_NET_CONNECT_DOCUMENT_TIMEOUT");
     descriptions.put(718908, "no description of error (yet)");
     retry.add(718908);

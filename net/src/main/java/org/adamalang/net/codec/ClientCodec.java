@@ -485,6 +485,7 @@ public class ClientCodec {
   private static ReplicaConnect readBody_12347(ByteBuf buf, ReplicaConnect o) {
     o.space = Helper.readString(buf);
     o.key = Helper.readString(buf);
+    o.machine = Helper.readString(buf);
     return o;
   }
 
@@ -977,6 +978,7 @@ public class ClientCodec {
     buf.writeIntLE(12347);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.machine);;
   }
 
   public static void write(ByteBuf buf, DirectSend o) {

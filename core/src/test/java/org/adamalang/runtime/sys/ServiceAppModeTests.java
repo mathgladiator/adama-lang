@@ -53,7 +53,7 @@ public class ServiceAppModeTests {
     TimeSource time = new MockTime();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), time, 1);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {},  new MockMetricsReporter(), dataService, new MockBackupService(), new MockWakeService(), new MockReplicationInitiator(), time, 1);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtPrincipal.NO_ONE), KEY, "{}", null, created);

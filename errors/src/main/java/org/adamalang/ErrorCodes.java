@@ -708,6 +708,9 @@ public class ErrorCodes {
   public static final int ADAMA_NET_RATE_LIMIT_TIMEOUT = 733378;
   public static final int ADAMA_NET_RATE_LIMIT_REJECTED = 798918;
 
+  public static final int ADAMA_NET_REPLICA_CREATE_TIMEOUT = 733371;
+  public static final int ADAMA_NET_REPLICA_CREATE_REJECT = 798911;
+
   @RetryInternally
   public static final int ADAMA_NET_CONNECT_DOCUMENT_TIMEOUT = 718908;
   public static final int ADAMA_NET_CONNECT_DOCUMENT_REJECTED = 702524;

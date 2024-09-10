@@ -34,6 +34,7 @@ public class RegionConnectionRouter {
   public final RegionConnectionNexus nexus;
   public final RootRegionHandler handler;
   public final HashMap<Long, AttachmentUploadHandler> inflightAttachmentUpload;
+  public final HashMap<Long, ReplicationStreamHandler> inflightReplicationStream;
   public final HashMap<Long, DocumentStreamHandler> inflightDocumentStream;
 
   public RegionConnectionRouter(Session session, RegionConnectionNexus nexus, RootRegionHandler handler) {
@@ -41,6 +42,7 @@ public class RegionConnectionRouter {
     this.nexus = nexus;
     this.handler = handler;
     this.inflightAttachmentUpload = new HashMap<>();
+    this.inflightReplicationStream = new HashMap<>();
     this.inflightDocumentStream = new HashMap<>();
   }
 
@@ -52,6 +54,10 @@ public class RegionConnectionRouter {
           entry.getValue().disconnect(entry.getKey());
         }
         inflightAttachmentUpload.clear();
+        for (Map.Entry<Long, ReplicationStreamHandler> entry : inflightReplicationStream.entrySet()) {
+          entry.getValue().disconnect(entry.getKey());
+        }
+        inflightReplicationStream.clear();
         for (Map.Entry<Long, DocumentStreamHandler> entry : inflightDocumentStream.entrySet()) {
           entry.getValue().disconnect(entry.getKey());
         }
@@ -672,6 +678,86 @@ public class RegionConnectionRouter {
                 public void success(FeatureSummarizeUrlRequest resolved) {
                   resolved.logInto(_accessLogItem);
                   handler.handle(session, resolved, new SummaryResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "replication/create": {
+              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_ReplicationCreate.start();
+              ReplicationCreateRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ReplicationCreateRequest resolved) {
+                  if (!resolved.policy.checkPolicy("replication/create", DefaultPolicyBehavior.Owner, resolved.who)) {
+                    responder.error(new ErrorCodeException(910123));
+                    return;
+                  }
+                  resolved.logInto(_accessLogItem);
+                  ReplicationStreamHandler handlerMade = handler.handle(session, resolved, new ReplicaResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightReplicationStream, requestId, responder, _accessLogItem, nexus.logger)));
+                  if (handlerMade != null) {
+                    inflightReplicationStream.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "regional/replication/create": {
+              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_RegionalReplicationCreate.start();
+              RegionalReplicationCreateRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(RegionalReplicationCreateRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  ReplicationStreamHandler handlerMade = handler.handle(session, resolved, new ReplicaResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightReplicationStream, requestId, responder, _accessLogItem, nexus.logger)));
+                  if (handlerMade != null) {
+                    inflightReplicationStream.put(requestId, handlerMade);
+                    handlerMade.bind();
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "replication/end": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ReplicationEnd.start();
+              ReplicationEndRequest.resolve(session, nexus, request, new Callback<>() {
+                @Override
+                public void success(ReplicationEndRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  ReplicationStreamHandler handlerToUse = inflightReplicationStream.remove(resolved.connection);
+                  if (handlerToUse != null) {
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger, started)));
+                  } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("latency", System.currentTimeMillis() - started);
+                    _accessLogItem.put("failure-code", 445438);
+                    nexus.logger.log(_accessLogItem);
+                    mInstance.failure(445438);
+                    responder.error(new ErrorCodeException(445438));
+                  }
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

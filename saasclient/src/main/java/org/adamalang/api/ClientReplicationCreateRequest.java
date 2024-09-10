@@ -15,9 +15,11 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.api;
 
-public class Platform {
-  public static final String VERSION = "20240909212411";
-  public static final String JS_VERSION = "975025838f9bdeb8f10ff64208a33c8d";
+/** generated request type for replication/create */
+public class ClientReplicationCreateRequest {
+  public String identity;
+  public String space;
+  public String key;
 }

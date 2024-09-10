@@ -30,6 +30,7 @@ import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.mocks.MockFinderService;
 import org.adamalang.net.mocks.MockBackupService;
 import org.adamalang.net.mocks.MockMetricsReporter;
+import org.adamalang.net.mocks.MockReplicationInitiator;
 import org.adamalang.runtime.data.BoundLocalFinderService;
 import org.adamalang.runtime.deploy.*;
 import org.adamalang.runtime.sys.capacity.HeatMonitor;
@@ -114,6 +115,7 @@ public class TestBed implements AutoCloseable {
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             new MockBackupService(), //
             new NoOpWakeService(), //
+            new MockReplicationInitiator(), //
             TimeSource.REAL_TIME, //
             2);
 

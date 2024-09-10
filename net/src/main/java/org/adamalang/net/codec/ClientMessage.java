@@ -20,9 +20,6 @@ package org.adamalang.net.codec;
 import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeId;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
-import org.adamalang.runtime.data.UpdateType;
-import org.adamalang.runtime.natives.NtPrincipal;
 
 /** messages from client to server */
 public class ClientMessage {
@@ -354,6 +351,8 @@ public class ClientMessage {
     public String space;
     @FieldOrder(2)
     public String key;
+    @FieldOrder(3)
+    public String machine;
   }
 
   @TypeId(13337)

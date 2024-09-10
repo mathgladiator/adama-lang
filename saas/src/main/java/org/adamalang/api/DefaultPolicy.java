@@ -354,6 +354,11 @@ public class DefaultPolicy {
     child.putArray("allowed-authorities");
     child.putArray("allowed-documents");
     child.putArray("allowed-document-spaces");
+    child = policy.putObject("replication/create");
+    child.put("developers",false);
+    child.putArray("allowed-authorities");
+    child.putArray("allowed-documents");
+    child.putArray("allowed-document-spaces");
     child = policy.putObject("attachment/start");
     child.put("developers",false);
     child.putArray("allowed-authorities");

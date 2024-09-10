@@ -253,6 +253,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
             dataService, //
             new MockBackupService(), //
             new NoOpWakeService(), //
+            new MockReplicationInitiator(), //
             TimeSource.REAL_TIME, //
             1);
     this.netBase = new NetBase(new NetMetrics(new NoOpMetricsFactory()), identity, 1, 2);

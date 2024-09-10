@@ -27,10 +27,12 @@ import org.adamalang.runtime.data.*;
 import org.adamalang.auth.AuthenticatedUser;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
+import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
 import org.adamalang.runtime.sys.web.WebResponse;
+import org.checkerframework.checker.units.qual.K;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +41,7 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 
 /** isolates the client away from the API level to control routing */
-public class MultiRegionClient {
+public class MultiRegionClient implements ReplicationInitiator {
   private static final Logger LOG = LoggerFactory.getLogger(MultiRegionClient.class);
   private final SimpleExecutor executor;
   private final LocalRegionClient local;
@@ -501,6 +503,31 @@ public class MultiRegionClient {
       @Override
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
+      }
+    });
+  }
+
+  @Override
+  public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
+    local.finder.find(key, new Callback<DocumentLocation>() {
+      @Override
+      public void success(DocumentLocation location) {
+        if (location.location == LocationType.Machine) {
+          if (location.region.equals(region)) {
+            local.startDocumentReplication(key, observer, cancel);
+            return;
+          } else {
+
+          }
+        }
+        observer.failure(new ErrorCodeException(ErrorCodes.MULTI_REGION_CLIENT_NO_ROUTE));
+        cancel.failure(new ErrorCodeException(ErrorCodes.MULTI_REGION_CLIENT_NO_ROUTE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        observer.failure(ex);
+        cancel.failure(ex);
       }
     });
   }

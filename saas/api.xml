@@ -1594,8 +1594,7 @@
         </documentation>
     </method>
 
-    <!-- cross region replication
-    <method name="replication/create" responder="replica" create="replication-stream" scope="region">
+    <method name="replication/create" responder="replica" create="replication-stream" scope="region" js-sdk="false" policy="true" policy-failure-code="910123" policy-default="Owner">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -1604,12 +1603,23 @@
         </documentation>
     </method>
 
-    <method name="replication/end" responder="simple" handler="replication-stream" find-by="connection" error-find-by="445438" destroy="true" scope="region">
+    <method name="regional/replication/create" responder="replica" create="replication-stream" scope="region" js-sdk="false" internal="true">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="machine"/>
+        <documentation>
+            Replicate low level data
+        </documentation>
+    </method>
+
+    <method name="replication/end" responder="simple" handler="replication-stream" find-by="connection" error-find-by="445438" destroy="true" scope="region" js-sdk="false">
         <parameter name="connection"/>
         <documentation>
             Stop replicating data
         </documentation>
     </method>
+
     -->
 
     <!-- massive scale reading

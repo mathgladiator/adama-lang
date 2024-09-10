@@ -36,6 +36,7 @@ import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.cron.KeyAlarm;
 import org.adamalang.runtime.sys.cron.WakeService;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
+import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
 import org.adamalang.runtime.sys.web.WebPut;
@@ -79,7 +80,7 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
    * @param time the source of time
    * @param nThreads the number of threads to use
    */
-  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, BackupService backupService, WakeService wakeService, TimeSource time, int nThreads) {
+  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, MetricsReporter metricsReporter, DataService dataService, BackupService backupService, WakeService wakeService, ReplicationInitiator replicationInitiator, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.dataService = dataService;
     this.backupService = backupService;

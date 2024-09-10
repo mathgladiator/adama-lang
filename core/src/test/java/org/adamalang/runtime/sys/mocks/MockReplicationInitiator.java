@@ -17,40 +17,16 @@
 */
 package org.adamalang.runtime.sys.mocks;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.DataObserver;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 
-import java.util.ArrayList;
-
-public class MockDataObserver implements DataObserver {
-  public ArrayList<String> writes = new ArrayList<>();
-
+public class MockReplicationInitiator implements ReplicationInitiator {
   @Override
-  public String machine() {
-    return "mock";
-  }
-
-  @Override
-  public synchronized void start(String snapshot) {
-    writes.add("START:" + snapshot);
-  }
-
-  @Override
-  public synchronized void change(String delta) {
-    writes.add("DELTA:" + delta);
-  }
-
-  @Override
-  public synchronized void failure(ErrorCodeException exception) {
-    writes.add("FAILURE:" + exception.code);
-  }
-
-  public void dump(String intro) {
-    System.err.println("MockDataObserver:" + intro);
-    int at = 0;
-    for (String write : writes) {
-      System.err.println(at + "|" + write);
-      at++;
-    }
+  public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
+    observer.failure(new ErrorCodeException(1000));
+    cancel.failure(new ErrorCodeException(-23));
   }
 }

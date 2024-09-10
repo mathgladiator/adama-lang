@@ -1,6 +1,6 @@
 # API Reference 
  Methods: 
-[InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [AccountSocialLogin](#method-accountsociallogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentForceBackup](#method-documentforcebackup), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsCreateDedupe](#method-documentscreatededupe-js), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [FeatureSummarizeUrl](#method-featuresummarizeurl-js), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
+[InitSetupAccount](#method-initsetupaccount-js), [InitConvertGoogleUser](#method-initconvertgoogleuser-js), [InitCompleteAccount](#method-initcompleteaccount-js), [Deinit](#method-deinit-js), [AccountSetPassword](#method-accountsetpassword-js), [AccountGetPaymentPlan](#method-accountgetpaymentplan-js), [AccountLogin](#method-accountlogin-js), [AccountSocialLogin](#method-accountsociallogin-js), [Probe](#method-probe-js), [Stats](#method-stats-js), [IdentityHash](#method-identityhash-js), [IdentityStash](#method-identitystash-js), [AuthorityCreate](#method-authoritycreate), [AuthoritySet](#method-authorityset), [AuthorityGet](#method-authorityget), [AuthorityList](#method-authoritylist), [AuthorityDestroy](#method-authoritydestroy), [SpaceCreate](#method-spacecreate-js), [SpaceGenerateKey](#method-spacegeneratekey), [SpaceGet](#method-spaceget), [SpaceSet](#method-spaceset), [SpaceRedeployKick](#method-spaceredeploykick), [SpaceSetRxhtml](#method-spacesetrxhtml), [SpaceGetRxhtml](#method-spacegetrxhtml), [SpaceSetPolicy](#method-spacesetpolicy), [PolicyGenerateDefault](#method-policygeneratedefault), [SpaceGetPolicy](#method-spacegetpolicy), [SpaceMetrics](#method-spacemetrics), [SpaceDelete](#method-spacedelete-js), [SpaceSetRole](#method-spacesetrole), [SpaceListDevelopers](#method-spacelistdevelopers), [SpaceReflect](#method-spacereflect-js), [SpaceList](#method-spacelist-js), [PushRegister](#method-pushregister-js), [DomainMap](#method-domainmap), [DomainClaimApex](#method-domainclaimapex), [DomainRedirect](#method-domainredirect), [DomainConfigure](#method-domainconfigure), [DomainReflect](#method-domainreflect-js), [DomainMapDocument](#method-domainmapdocument), [DomainList](#method-domainlist), [DomainListBySpace](#method-domainlistbyspace), [DomainGetVapidPublicKey](#method-domaingetvapidpublickey-js), [DomainUnmap](#method-domainunmap), [DomainGet](#method-domainget), [DocumentDownloadArchive](#method-documentdownloadarchive), [DocumentListBackups](#method-documentlistbackups), [DocumentForceBackup](#method-documentforcebackup), [DocumentDownloadBackup](#method-documentdownloadbackup), [DocumentListPushTokens](#method-documentlistpushtokens), [DocumentAuthorization](#method-documentauthorization-js), [DocumentAuthorizationDomain](#method-documentauthorizationdomain-js), [DocumentAuthorize](#method-documentauthorize-js), [DocumentAuthorizeDomain](#method-documentauthorizedomain-js), [DocumentAuthorizeWithReset](#method-documentauthorizewithreset-js), [DocumentAuthorizeDomainWithReset](#method-documentauthorizedomainwithreset-js), [DocumentCreate](#method-documentcreate-js), [DocumentDelete](#method-documentdelete), [DocumentList](#method-documentlist-js), [MessageDirectSend](#method-messagedirectsend-js), [MessageDirectSendOnce](#method-messagedirectsendonce-js), [ConnectionCreate](#method-connectioncreate-js), [ConnectionCreateViaDomain](#method-connectioncreateviadomain-js), [ConnectionSend](#method-connectionsend), [ConnectionPassword](#method-connectionpassword), [ConnectionSendOnce](#method-connectionsendonce), [ConnectionCanAttach](#method-connectioncanattach), [ConnectionAttach](#method-connectionattach), [ConnectionUpdate](#method-connectionupdate), [ConnectionEnd](#method-connectionend), [DocumentsCreateDedupe](#method-documentscreatededupe-js), [DocumentsHashPassword](#method-documentshashpassword-js), [BillingConnectionCreate](#method-billingconnectioncreate-js), [FeatureSummarizeUrl](#method-featuresummarizeurl-js), [ReplicationCreate](#method-replicationcreate), [ReplicationEnd](#method-replicationend), [AttachmentStart](#method-attachmentstart-js), [AttachmentStartByDomain](#method-attachmentstartbydomain-js), [AttachmentAppend](#method-attachmentappend), [AttachmentFinish](#method-attachmentfinish)
 
 ## Method: InitSetupAccount (JS)
 **wire method**:init/setup-account
@@ -1727,6 +1727,38 @@ connection.FeatureSummarizeUrl(identity, url, {
 | name | type | documentation |
 | --- | --- | --- |
 | summary | ObjectNode | A json summary of a URL |
+
+## Method: ReplicationCreate
+**wire method**:replication/create
+
+Replicate low level data
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+| identity | yes | String | Identity is a token to authenticate a user. |
+| space | yes | String | A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to             denote the name of that collection.              Spaces are lower case ASCII using the regex a-z[a-z0-9\-]* to validation with a minimum length of three characters. The space name must also not contain a '--' |
+| key | yes | String | Within a space, documents are organized within a map and the 'key' parameter will uniquely identify             documents.              Keys are lower case ASCII using the regex [a-z0-9\._\-]* for validation |
+
+
+
+### Streaming payload fields
+| name | type | documentation |
+| --- | --- | --- |
+| reset | Boolean | Signal that the associated delta should reset the entire state of the replication. |
+| change | ObjectNode | A json change behind a replica. |
+
+## Method: ReplicationEnd
+**wire method**:replication/end
+
+Stop replicating data
+
+### Parameters
+| name | required | type | documentation |
+| --- | --- | --- | --- |
+
+
+This method simply returns void.
 
 ## Method: AttachmentStart (JS)
 **wire method**:attachment/start
