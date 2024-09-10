@@ -100,6 +100,14 @@ public class ServerMessage {
     public int code;
   }
 
+
+  @TypeId(11546)
+  @Flow("Document")
+  public static class StreamTrafficHint {
+    @FieldOrder(1)
+    public String traffic;
+  }
+
   @TypeId(10546)
   @Flow("Document")
   public static class StreamData {

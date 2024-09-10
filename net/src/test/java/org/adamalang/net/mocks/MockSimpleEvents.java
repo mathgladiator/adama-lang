@@ -61,6 +61,11 @@ public class MockSimpleEvents implements SimpleEvents {
   }
 
   @Override
+  public void traffic(String trafficHint) {
+    write("TRAFFIC:" + trafficHint);
+  }
+
+  @Override
   public void error(int code) {
     write("ERROR:" + code);
   }

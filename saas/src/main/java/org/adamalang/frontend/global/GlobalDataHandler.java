@@ -348,6 +348,11 @@ public class GlobalDataHandler implements RootRegionHandler {
           }
 
           @Override
+          public void traffic(String trafficHint) {
+            // TODO: figure out something neat here
+          }
+
+          @Override
           public void error(int code) {
             responder.error(new ErrorCodeException(code));
           }
@@ -467,6 +472,10 @@ public class GlobalDataHandler implements RootRegionHandler {
             killed.set(true);
             startResponder.error(new ErrorCodeException(code));
           }
+        }
+
+        @Override
+        public void traffic(String trafficHint) {
         }
 
         @Override

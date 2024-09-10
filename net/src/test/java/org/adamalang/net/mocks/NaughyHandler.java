@@ -351,4 +351,8 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
     }
     real.handle(payload);
   }
+
+  @Override
+  public void traffic(String trafficHint) {
+  }
 }

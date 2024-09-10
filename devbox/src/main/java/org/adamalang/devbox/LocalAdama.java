@@ -128,6 +128,10 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
       }
 
       @Override
+      public void traffic(String trafficHint) {
+      }
+
+      @Override
       public void status(StreamStatus status) {}
 
       @Override
@@ -598,6 +602,13 @@ public class LocalAdama extends DevBoxRouter implements ServiceConnection {
         }
         this.unsub = rxPubSub.subscribe(responder);
         PERF_LOG.error(entry.toString());
+      }
+
+      @Override
+      public void traffic(String trafficHint) {
+        if (!"".equals(trafficHint)) {
+          io.info("adama|traffic-hint[" + key.space + "/" + key.key + "]:" + trafficHint);
+        }
       }
 
       @Override

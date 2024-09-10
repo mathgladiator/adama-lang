@@ -116,6 +116,10 @@ public class LocalRegionClientTests {
           }
 
           @Override
+          public void traffic(String trafficHint) {
+          }
+
+          @Override
           public void disconnected() {
             latchGotDisconnect.countDown();
           }
@@ -577,7 +581,10 @@ public class LocalRegionClientTests {
 
         @Override
         public void delta(String data) {
+        }
 
+        @Override
+        public void traffic(String trafficHint) {
         }
 
         @Override
@@ -643,6 +650,10 @@ public class LocalRegionClientTests {
         @Override
         public void delta(String data) {
           System.err.println("data:" + data);
+        }
+
+        @Override
+        public void traffic(String trafficHint) {
         }
 
         @Override

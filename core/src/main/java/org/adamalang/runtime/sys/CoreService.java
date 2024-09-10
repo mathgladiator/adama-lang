@@ -586,6 +586,20 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
     });
   }
 
+  public void trafficHint(CoreRequestContext context, Key key, Callback<String> callback) {
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        callback.success(document.document().__traffic(context));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
+  }
+
   private void loadOrCreate(CoreRequestContext context, Key key, Callback<DurableLivingDocument> callback) {
     load(key, new Callback<>() {
       @Override
@@ -671,25 +685,29 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
     });
   }
 
+  private Perspective perspectiveOf(PredictiveInventory inventory, Streamback stream) {
+    return new Perspective() {
+      @Override
+      public void data(String data) {
+        stream.next(data);
+        inventory.bandwidth(data.length());
+        inventory.message();
+      }
+
+      @Override
+      public void disconnect() {
+        stream.status(Streamback.StreamStatus.Disconnected);
+      }
+    };
+  }
+
   /** internal: send connection to the document if not joined, then join */
   private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, ConnectionMode mode, JsonStreamReader viewerState) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
       public void success(Integer dontCare) {
-        Perspective perspective = new Perspective() {
-          @Override
-          public void data(String data) {
-            stream.next(data);
-            inventory.bandwidth(data.length());
-            inventory.message();
-          }
-
-          @Override
-          public void disconnect() {
-            stream.status(Streamback.StreamStatus.Disconnected);
-          }
-        };
+        Perspective perspective = perspectiveOf(inventory, stream);
         if (mode.read) {
           document.createPrivateView(context.who, perspective, viewerState, metrics.create_private_view.wrap(new Callback<>() {
             @Override
@@ -711,6 +729,10 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
           TrivialPrivateView view = document.document().__createTrivialPrivateView(context.who, perspective);
           stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, mode, new StreamHandle(view)));
           stream.status(Streamback.StreamStatus.Connected);
+        }
+        String trafficHint = document.document().__traffic(context);
+        if (!trafficHint.equals("")) {
+          stream.traffic(trafficHint);
         }
       }
 

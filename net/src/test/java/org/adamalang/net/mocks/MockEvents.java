@@ -69,6 +69,11 @@ public class MockEvents implements Events {
   }
 
   @Override
+  public void traffic(String traffic) {
+    write("TRAFFIC:" + traffic);
+  }
+
+  @Override
   public void delta(String data) {
     write("DELTA:" + data);
   }

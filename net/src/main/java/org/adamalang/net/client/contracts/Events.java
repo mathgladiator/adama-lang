@@ -22,6 +22,9 @@ public interface Events {
   /** the connection was successful, and we can talk to the document via the remote */
   void connected(Remote remote);
 
+  /** a traffic signal has come from the document */
+  void traffic(String traffic);
+
   /** a data change has occurred */
   void delta(String data);
 

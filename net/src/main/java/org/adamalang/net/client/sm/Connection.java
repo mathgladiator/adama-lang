@@ -139,6 +139,11 @@ public class Connection implements AdamaStream {
           }
 
           @Override
+          public void traffic(String traffic) {
+            events.traffic(traffic);
+          }
+
+          @Override
           public void error(int code) {
             base.executor.execute(new NamedRunnable("lcsm-connected") {
               @Override

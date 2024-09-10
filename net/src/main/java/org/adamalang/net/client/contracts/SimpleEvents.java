@@ -17,9 +17,12 @@
 */
 package org.adamalang.net.client.contracts;
 
+/** a simple event model */
 public interface SimpleEvents {
   /** the connection was successful, and we can talk to the document via the remote */
   void connected();
+
+  void traffic(String trafficHint);
 
   /** a data change has occurred */
   void delta(String data);
@@ -37,6 +40,10 @@ public interface SimpleEvents {
 
     @Override
     public void delta(String data) {
+    }
+
+    @Override
+    public void traffic(String trafficHint) {
     }
 
     @Override

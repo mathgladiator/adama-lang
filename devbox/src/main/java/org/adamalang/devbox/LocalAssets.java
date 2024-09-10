@@ -154,7 +154,10 @@ public class LocalAssets implements AssetSystem {
 
       @Override
       public void next(String data) {
+      }
 
+      @Override
+      public void traffic(String trafficHint) {
       }
 
       @Override

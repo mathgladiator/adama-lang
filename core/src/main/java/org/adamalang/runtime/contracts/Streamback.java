@@ -25,6 +25,9 @@ public interface Streamback {
   /** the stream has been setup and can be interacted with via the core stream */
   void onSetupComplete(CoreStream stream);
 
+  /** inform the client of the traffic hint */
+  void traffic(String trafficHint);
+
   /** inform the client of a status update */
   void status(StreamStatus status);
 

@@ -124,6 +124,11 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
+  @Override
+  public void handle(ServerMessage.StreamTrafficHint payload) {
+    events.traffic(payload.traffic);
+  }
+
   /** internal: get a callback for the inflight operation */
   private synchronized Callback<?> get(int op) {
     return opHandlers.remove(op);

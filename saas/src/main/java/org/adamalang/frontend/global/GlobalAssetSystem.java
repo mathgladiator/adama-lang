@@ -83,6 +83,10 @@ public class GlobalAssetSystem implements AssetSystem {
           public void delta(String data) { /* don't care */ }
 
           @Override
+          public void traffic(String trafficHint) {
+          }
+
+          @Override
           public void error(int code) {
             if (responded.compareAndSet(false, true)) {
               callback.failure(new ErrorCodeException(code));

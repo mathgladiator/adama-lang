@@ -408,7 +408,7 @@ public class DurableLivingDocument implements Queryable {
     document = newDocument;
     currentFactory = factory;
     disableMetrics = false;
-    load(new Callback<LivingDocumentChange>() {
+    load(new Callback<>() {
       @Override
       public void success(LivingDocumentChange value) {
         invalidate(callback);

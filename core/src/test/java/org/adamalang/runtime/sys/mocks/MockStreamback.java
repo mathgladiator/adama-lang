@@ -76,6 +76,11 @@ public class MockStreamback implements Streamback {
   }
 
   @Override
+  public void traffic(String trafficHint) {
+    next("TRAFFIC:" + trafficHint);
+  }
+
+  @Override
   public void failure(ErrorCodeException exception) {
     failure = exception;
     failed.countDown();

@@ -36,6 +36,7 @@ import org.adamalang.net.codec.ServerMessage.StreamAskAttachmentResponse;
 import org.adamalang.net.codec.ServerMessage.StreamUpdateComplete;
 import org.adamalang.net.codec.ServerMessage.StreamError;
 import org.adamalang.net.codec.ServerMessage.StreamData;
+import org.adamalang.net.codec.ServerMessage.StreamTrafficHint;
 import org.adamalang.net.codec.ServerMessage.StreamStatus;
 import org.adamalang.net.codec.ServerMessage.ScanDeploymentResponse;
 import org.adamalang.net.codec.ServerMessage.ReflectResponse;
@@ -384,6 +385,8 @@ public class ServerCodec {
 
     public abstract void handle(StreamData payload);
 
+    public abstract void handle(StreamTrafficHint payload);
+
     public abstract void handle(StreamStatus payload);
 
     @Override
@@ -413,6 +416,9 @@ public class ServerCodec {
         case 10546:
           handle(readBody_10546(buf, new StreamData()));
           return;
+        case 11546:
+          handle(readBody_11546(buf, new StreamTrafficHint()));
+          return;
         case 12546:
           handle(readBody_12546(buf, new StreamStatus()));
           return;
@@ -426,6 +432,7 @@ public class ServerCodec {
     public void handle(StreamUpdateComplete payload);
     public void handle(StreamError payload);
     public void handle(StreamData payload);
+    public void handle(StreamTrafficHint payload);
     public void handle(StreamStatus payload);
   }
 
@@ -445,6 +452,9 @@ public class ServerCodec {
         return;
       case 10546:
         handler.handle(readBody_10546(buf, new StreamData()));
+        return;
+      case 11546:
+        handler.handle(readBody_11546(buf, new StreamTrafficHint()));
         return;
       case 12546:
         handler.handle(readBody_12546(buf, new StreamStatus()));
@@ -997,6 +1007,20 @@ public class ServerCodec {
     return o;
   }
 
+  public static StreamTrafficHint read_StreamTrafficHint(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 11546:
+        return readBody_11546(buf, new StreamTrafficHint());
+    }
+    return null;
+  }
+
+
+  private static StreamTrafficHint readBody_11546(ByteBuf buf, StreamTrafficHint o) {
+    o.traffic = Helper.readString(buf);
+    return o;
+  }
+
   public static StreamStatus read_StreamStatus(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 12546:
@@ -1291,6 +1315,15 @@ public class ServerCodec {
     }
     buf.writeIntLE(10546);
     Helper.writeString(buf, o.delta);;
+  }
+
+  public static void write(ByteBuf buf, StreamTrafficHint o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(11546);
+    Helper.writeString(buf, o.traffic);;
   }
 
   public static void write(ByteBuf buf, StreamStatus o) {

@@ -820,6 +820,15 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void traffic(String trafficHint) {
+    ByteBuf buffer = upstream.create(16 + trafficHint.length() * 2);
+    ServerMessage.StreamTrafficHint thint = new ServerMessage.StreamTrafficHint();
+    thint.traffic = trafficHint;
+    ServerCodec.write(buffer, thint);
+    upstream.next(buffer);
+  }
+
+  @Override
   public void next(String data) {
     monitorStreamback.progress();
     ByteBuf buffer = upstream.create(16 + data.length());

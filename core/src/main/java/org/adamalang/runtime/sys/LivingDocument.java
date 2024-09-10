@@ -1658,6 +1658,26 @@ public abstract class LivingDocument implements RxParent, Caller {
     return route.deliver(deliveryId, result);
   }
 
+  /** force the document to settle down and broadcast any patch related changes */
+  public void __forceBroadcastToKeepReadonlyObserverUpToDate() {
+    __commit("x", new JsonStreamWriter(), new JsonStreamWriter());
+    for (LivingDocumentChange.Broadcast broadcast : __buildBroadcastListGameMode()) {
+      broadcast.complete();
+    }
+  }
+
+  /** force the delivery of a result */
+  public RxCache __forceDeliverResult(int deliveryId, RemoteResult result) throws ErrorCodeException {
+    RxCache route = __routing.get(deliveryId);
+    if (route == null) {
+      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_DOCUMENT);
+    }
+    if (!route.deliver(deliveryId, result)) {
+      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_CACHE);
+    }
+    return route;
+  }
+
   private LivingDocumentChange __transaction_deliver(final String request, NtPrincipal who, int deliveryId, RemoteResult result) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     boolean exception = true;
@@ -1665,13 +1685,7 @@ public abstract class LivingDocument implements RxParent, Caller {
       __monitor.push("TransactionDeliver");
     }
     try {
-      RxCache route = __routing.get(deliveryId);
-      if (route == null) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_DOCUMENT);
-      }
-      if (!route.deliver(deliveryId, result)) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ROUTE_CACHE);
-      }
+      __forceDeliverResult(deliveryId, result);
       __seq.bumpUpPre();
       final var forward = new JsonStreamWriter();
       final var reverse = new JsonStreamWriter();
