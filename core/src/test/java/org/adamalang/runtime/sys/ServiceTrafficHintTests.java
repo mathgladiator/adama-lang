@@ -51,7 +51,7 @@ public class ServiceTrafficHintTests {
 
   @Test
   public void get_default_hint() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG, Deliverer.FAILURE);
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_DEFAULT, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();

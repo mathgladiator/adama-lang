@@ -36,6 +36,7 @@ import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.cron.KeyAlarm;
 import org.adamalang.runtime.sys.cron.WakeService;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
+import org.adamalang.runtime.sys.readonly.ReadOnlyService;
 import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -73,6 +74,7 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
   private final DocumentThreadBase[] bases;
   private final AtomicBoolean alive;
   private final Random rng;
+  private final ReadOnlyService readonly;
 
   /**
    * @param livingDocumentFactoryFactory a mapping of how living documents come into existence
@@ -93,6 +95,7 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
       bases[k] = new DocumentThreadBase(k, shield, metricsReporter, dataService, backupService, wakeService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
+    this.readonly = new ReadOnlyService(metrics, shield, livingDocumentFactoryFactory, replicationInitiator, nThreads);
     rng = new Random();
     new NamedRunnable("metering-run") {
       @Override

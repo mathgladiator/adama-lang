@@ -26,7 +26,7 @@ public class CodeGenTraffic {
     DefineTrafficHint hint = environment.document.trafficHint;
     if (hint == null) {
       sb.append("@Override").writeNewline();
-      sb.append("public String __traffic(CoreRequestContext __context) { return \"main\"; }").writeNewline();
+      sb.append("public String __traffic(CoreRequestContext __context) { return \"\"; }").writeNewline();
     } else {
       sb.append("@Override").writeNewline();
       sb.append("public String __traffic(CoreRequestContext __context) {").tabUp().writeNewline();

@@ -717,7 +717,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -1850,7 +1850,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -2813,7 +2813,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -3820,7 +3820,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -4697,7 +4697,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -5749,7 +5749,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -7082,7 +7082,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {}");
     gold.append("\n  @Override");
@@ -8274,7 +8274,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
@@ -9418,7 +9418,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");
@@ -10504,7 +10504,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public String __metrics() { return \"{}\"; }");
     gold.append("\n  @Override");
-    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"main\"; }");
+    gold.append("\n  public String __traffic(CoreRequestContext __context) { return \"\"; }");
     gold.append("\n  @Override");
     gold.append("\n  public void __debug(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.writeObjectFieldIntro(\"tables\");");

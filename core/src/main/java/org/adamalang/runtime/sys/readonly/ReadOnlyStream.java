@@ -15,9 +15,21 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.readonly;
 
-public class Platform {
-  public static final String VERSION = "20240909214103";
-  public static final String JS_VERSION = "975025838f9bdeb8f10ff64208a33c8d";
+import org.adamalang.common.ErrorCodeException;
+
+/** for consuming a read only stream */
+public interface ReadOnlyStream {
+  /** the stream has been setup, here is a way to control it */
+  void setupComplete(ReadOnlyViewHandle handle);
+
+  /** inform the client of new data */
+  void next(String data);
+
+  /** inform the client that a failure has occurred */
+  void failure(ErrorCodeException exception);
+
+  /** the stream was closed */
+  void close();
 }

@@ -17,9 +17,12 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.ServiceShield;
 
@@ -33,14 +36,30 @@ public class ReadOnlyReplicaThreadBase {
   public final SimpleExecutor executor;
   public final HashMap<Key, ReadOnlyLivingDocument> map;
   private final HashMap<String, PredictiveInventory> inventoryBySpace;
+  private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
+  private final ReplicationInitiator initiator;
 
-  public ReadOnlyReplicaThreadBase(int threadId, ServiceShield shield, CoreMetrics metrics, SimpleExecutor executor) {
+  public ReadOnlyReplicaThreadBase(int threadId, ServiceShield shield, CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, ReplicationInitiator initiator, SimpleExecutor executor) {
     this.threadId = threadId;
     this.shield = shield;
     this.metrics = metrics;
     this.executor = executor;
+    this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
+    this.initiator = initiator;
     this.map = new HashMap<>();
     this.inventoryBySpace = new HashMap<>();
+  }
+
+  public void observe(CoreRequestContext context, Key key, ReadOnlyStream stream) {
+    executor.execute(new NamedRunnable("find-document") {
+      @Override
+      public void execute() throws Exception {
+        ReadOnlyLivingDocument document = map.get(key);
+        if (document != null) {
+
+        }
+      }
+    });
   }
 
   public PredictiveInventory getOrCreateInventory(String space) {

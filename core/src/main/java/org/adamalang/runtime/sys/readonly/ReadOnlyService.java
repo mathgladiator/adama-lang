@@ -19,7 +19,9 @@ package org.adamalang.runtime.sys.readonly;
 
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.ServiceShield;
 
 import java.util.concurrent.CountDownLatch;
@@ -29,19 +31,20 @@ import java.util.concurrent.TimeUnit;
 public class ReadOnlyService {
   private final CoreMetrics metrics;
   private final ServiceShield shield;
-  private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final ReadOnlyReplicaThreadBase[] bases;
 
-  // private final ReplicationInitiator;
-
-  public ReadOnlyService(CoreMetrics metrics, ServiceShield shield, LivingDocumentFactoryFactory livingDocumentFactoryFactory, int nThreads) {
+  public ReadOnlyService(CoreMetrics metrics, ServiceShield shield, LivingDocumentFactoryFactory livingDocumentFactoryFactory, ReplicationInitiator initiator, int nThreads) {
     this.metrics = metrics;
     this.shield = shield;
-    this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     this.bases = new ReadOnlyReplicaThreadBase[nThreads];
     for (int k = 0; k < bases.length; k++) {
-      this.bases[k] = new ReadOnlyReplicaThreadBase(k, shield, metrics, SimpleExecutor.create("ro-core-" + k));
+      this.bases[k] = new ReadOnlyReplicaThreadBase(k, shield, metrics, livingDocumentFactoryFactory, initiator, SimpleExecutor.create("ro-core-" + k));
     }
+  }
+
+  public void obverse(CoreRequestContext context, Key key, ReadOnlyStream stream) {
+    int threadId = key.hashCode() % bases.length;
+    bases[threadId].observe(context, key, stream);
   }
 
   public void shutdown() throws InterruptedException {
