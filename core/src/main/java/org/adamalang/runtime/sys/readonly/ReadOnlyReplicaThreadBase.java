@@ -17,16 +17,22 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.PredictiveInventory;
-import org.adamalang.runtime.sys.ServiceShield;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.RemoteResult;
+import org.adamalang.runtime.sys.*;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 /** we create a readonly version of the entire system for simplicity sake */
 public class ReadOnlyReplicaThreadBase {
@@ -50,13 +56,138 @@ public class ReadOnlyReplicaThreadBase {
     this.inventoryBySpace = new HashMap<>();
   }
 
+  private void killFromWithinExecutor(Key key) {
+    ReadOnlyLivingDocument document = map.remove(key);
+    document.kill();
+  }
+
+  private void initiateReplication(Key key, ReadOnlyLivingDocument document) {
+    initiator.startDocumentReplication(key, new DataObserver() {
+      @Override
+      public String machine() {
+        // the higher level proxy will inject the machine name
+        return null;
+      }
+
+      @Override
+      public void start(String snapshot) {
+        executor.execute(new NamedRunnable("replication-start") {
+          @Override
+          public void execute() throws Exception {
+            document.start(snapshot);
+          }
+        });
+      }
+
+      @Override
+      public void change(String delta) {
+        executor.execute(new NamedRunnable("replication-start") {
+          @Override
+          public void execute() throws Exception {
+            document.change(delta);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException exception) {
+        executor.execute(new NamedRunnable("replication-start") {
+          @Override
+          public void execute() throws Exception {
+            killFromWithinExecutor(key);
+          }
+        });
+      }
+    }, new Callback<Runnable>() {
+      @Override
+      public void success(Runnable cancel) {
+        executor.execute(new NamedRunnable("replication-start") {
+          @Override
+          public void execute() throws Exception {
+            document.setCancel(cancel);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        executor.execute(new NamedRunnable("replication-start") {
+          @Override
+          public void execute() throws Exception {
+            killFromWithinExecutor(key);
+          }
+        });
+      }
+    });
+  }
+
+  private void bindClone(Key key, LivingDocument clone, LivingDocumentFactory factory) {
+    clone.__lateBind(key.space, key.key, (agent, key1, id, result, firstParty, callback) -> executor.execute(new NamedRunnable("bounce-to-readonly") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          clone.__forceDeliverResult(id, result);
+          clone.__forceBroadcastToKeepReadonlyObserverUpToDate();
+          callback.success(0);
+        } catch (ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      }
+    }), factory.registry);
+  }
+
+  private void constructDocument(Key key, Consumer<ReadOnlyLivingDocument> success, ReadOnlyStream stream) {
+    livingDocumentFactoryFactory.fetch(key, new Callback<LivingDocumentFactory>() {
+      @Override
+      public void success(LivingDocumentFactory factory) {
+        executor.execute(new NamedRunnable("post-create-document") {
+          @Override
+          public void execute() throws Exception {
+            ReadOnlyLivingDocument document = map.get(key);
+            if (document == null) {
+              LivingDocument clone = factory.create(null);
+              bindClone(key, clone, factory);
+
+              // then we wrap it stash it
+              document = new ReadOnlyLivingDocument(clone);
+              map.put(key, document);
+              initiateReplication(key, document);
+            }
+            success.accept(document);
+          };
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        stream.failure(ex);
+      }
+    });
+  }
+
   public void observe(CoreRequestContext context, Key key, ReadOnlyStream stream) {
+    Consumer<ReadOnlyLivingDocument> onDocument = (document) -> {
+      StreamHandle handle = document.join(context.who, new Perspective() {
+        @Override
+        public void data(String data) {
+          stream.next(data);
+        }
+
+        @Override
+        public void disconnect() {
+          stream.close();
+        }
+      });
+      stream.setupComplete(new ReadOnlyViewHandle(handle, executor));
+    };
     executor.execute(new NamedRunnable("find-document") {
       @Override
       public void execute() throws Exception {
         ReadOnlyLivingDocument document = map.get(key);
         if (document != null) {
-
+          onDocument.accept(document);
+        } else {
+          constructDocument(key, onDocument, stream);
         }
       }
     });

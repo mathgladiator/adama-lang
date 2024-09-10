@@ -17,8 +17,27 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
-/** a way to control the stream after the fact */
-public interface ReadOnlyViewHandle {
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.sys.StreamHandle;
 
-  public void update(String update);
+/** a way to control the stream after the fact */
+public class ReadOnlyViewHandle {
+  private final StreamHandle handle;
+  private final SimpleExecutor executor;
+
+  public ReadOnlyViewHandle(StreamHandle handle, SimpleExecutor executor) {
+    this.handle = handle;
+    this.executor = executor;
+  }
+
+  public void update(String update) {
+    executor.execute(new NamedRunnable("update-ro-view") {
+      @Override
+      public void execute() throws Exception {
+        handle.ingestViewUpdate(new JsonStreamReader(update));
+      }
+    });
+  }
 }

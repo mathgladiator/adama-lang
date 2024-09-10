@@ -1850,7 +1850,7 @@ public class LivingDocumentTests {
   @Test
   public void traffic_default() throws Exception {
     final var setup = new RealDocumentSetup("");
-    Assert.assertEquals("main", setup.document.document().__traffic(null));
+    Assert.assertEquals("", setup.document.document().__traffic(null));
   }
 
   @Test

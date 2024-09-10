@@ -93,9 +93,9 @@ public class OndemandDeploymentFactoryBaseTests {
     HashMap<String, PredictiveInventory.MeteringSample> account = new HashMap<>();
     ondemand.account(account);
     Assert.assertNotNull(account.get("space"));
-    Assert.assertEquals(273183, account.get("space").memory);
+    Assert.assertEquals(273153, account.get("space").memory);
     ondemand.account(account);
-    Assert.assertEquals(546366, account.get("space").memory);
+    Assert.assertEquals(546306, account.get("space").memory);
     ondemand.undeploy("space");
     Assert.assertFalse(ondemand.spacesAvailable().contains("space"));
     account = new HashMap<>();

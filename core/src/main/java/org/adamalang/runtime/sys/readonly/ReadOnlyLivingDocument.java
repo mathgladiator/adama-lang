@@ -18,6 +18,7 @@
 package org.adamalang.runtime.sys.readonly;
 
 import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.LivingDocument;
@@ -26,9 +27,14 @@ import org.adamalang.runtime.sys.StreamHandle;
 /** a version of the document that is read only */
 public class ReadOnlyLivingDocument {
   private final LivingDocument document;
+  private boolean alreadyStarted;
+  private boolean dead;
+  private Runnable cancel;
 
   public ReadOnlyLivingDocument(LivingDocument document) {
     this.document = document;
+    this.alreadyStarted = false;
+    this.dead = false;
   }
 
   public StreamHandle join(NtPrincipal who, Perspective perspective) {
@@ -37,61 +43,32 @@ public class ReadOnlyLivingDocument {
     return handle;
   }
 
-    /*
-  public void spawnLocalReadOnly(SimpleExecutor executor, Callback<ReadOnlyLivingDocument> callback) throws ErrorCodeException {
-    LivingDocument clone = currentFactory.create(document.__monitor);
-    clone.__lateBind(key.space, key.key, new Deliverer() {
-      @Override
-      public void deliver(NtPrincipal agent, Key key, int id, RemoteResult result, boolean firstParty, Callback<Integer> callback) {
-        executor.execute(new NamedRunnable("bounce-to-readonly") {
-          @Override
-          public void execute() throws Exception {
-            try {
-              clone.__forceDeliverResult(id, result);
-              clone.__forceBroadcastToKeepReadonlyObserversUpToDate();
-              callback.success(0);
-            } catch (ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          }
-        });
-      }
-    }, currentFactory.registry);
-
-    watch(new DataObserver() {
-      @Override
-      public void start(String snapshot) {
-        executor.execute(new NamedRunnable("bounce-to-readonly") {
-          @Override
-          public void execute() throws Exception {
-            clone.__insert(new JsonStreamReader(snapshot));
-            clone.__forceBroadcastToKeepReadonlyObserversUpToDate();
-          }
-        });
-      }
-
-      @Override
-      public void change(String delta) {
-        executor.execute(new NamedRunnable("bounce-to-readonly") {
-          @Override
-          public void execute() throws Exception {
-            clone.__patch(new JsonStreamReader(delta));
-            clone.__forceBroadcastToKeepReadonlyObserversUpToDate();
-          }
-        });
-
-      }
-
-      @Override
-      public void failure(ErrorCodeException exception) {
-        executor.execute(new NamedRunnable("bounce-to-readonly") {
-          @Override
-          public void execute() throws Exception {
-            clone.__nukeViews();
-          }
-        });
-      }
-    });
+  public void setCancel(Runnable cancel) {
+    if (dead) {
+      this.cancel.run();
+    } else {
+      this.cancel = cancel;
+    }
   }
-  */
+
+  public void start(String snapshot) {
+    if (alreadyStarted) {
+      // TODO: deployment of factory is needed
+    }
+    document.__insert(new JsonStreamReader(snapshot));
+    document.__forceBroadcastToKeepReadonlyObserverUpToDate();
+  }
+
+  public void change(String change) {
+    document.__patch(new JsonStreamReader(change));
+    document.__forceBroadcastToKeepReadonlyObserverUpToDate();
+  }
+
+  public void kill() {
+    dead = true;
+    document.__nukeViews();
+    if (cancel != null) {
+      cancel.run();
+    }
+  }
 }
