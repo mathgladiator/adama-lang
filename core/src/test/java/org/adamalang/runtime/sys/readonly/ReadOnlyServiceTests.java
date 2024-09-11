@@ -15,9 +15,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.runtime.sys.readonly;
 
-public class Platform {
-  public static final String VERSION = "20240911081841";
-  public static final String JS_VERSION = "975025838f9bdeb8f10ff64208a33c8d";
+public class ReadOnlyServiceTests {
 }

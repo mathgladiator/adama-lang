@@ -174,9 +174,13 @@ public class ErrorTable {
     names.put(146631, "SHIELD_REJECT_NEW_DOCUMENT");
     descriptions.put(146631, "no description of error (yet)");
     retry.add(146631);
+    names.put(146632, "SHIELD_REJECT_OBSERVE_NEW_DOCUMENT");
+    descriptions.put(146632, "no description of error (yet)");
     names.put(183498, "SHIELD_REJECT_CONNECT_DOCUMENT");
     descriptions.put(183498, "no description of error (yet)");
     retry.add(183498);
+    names.put(183499, "SHIELD_REJECT_OBSERVE_DOCUMENT");
+    descriptions.put(183499, "no description of error (yet)");
     names.put(199883, "SHIELD_REJECT_SEND_MESSAGE");
     descriptions.put(199883, "no description of error (yet)");
     retry.add(199883);
