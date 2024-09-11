@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
@@ -26,13 +27,17 @@ import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.replication.SequencedTestExecutor;
 import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.MockReplicationInitiator;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ReadOnlyReplicaThreadBaseTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
@@ -44,6 +49,11 @@ public class ReadOnlyReplicaThreadBaseTests {
 
   public static ReadOnlyReplicaThreadBase baseOf(ReplicationInitiator initiator, LivingDocumentFactoryFactory factory) {
     SimpleExecutor executor = SimpleExecutor.create("test");
+    MockTime time = new MockTime(1000);
+    return new ReadOnlyReplicaThreadBase(0, new ServiceShield(), METRICS, factory, initiator, time, executor);
+  }
+
+  public static ReadOnlyReplicaThreadBase baseOf(SimpleExecutor executor, ReplicationInitiator initiator, LivingDocumentFactoryFactory factory) {
     MockTime time = new MockTime(1000);
     return new ReadOnlyReplicaThreadBase(0, new ServiceShield(), METRICS, factory, initiator, time, executor);
   }
@@ -68,5 +78,101 @@ public class ReadOnlyReplicaThreadBaseTests {
     stream.get().update("{\"echo\":17}");
     latchAt3.run();
     Assert.assertEquals("{\"data\":{\"foo\":17},\"seq\":0}", stream.get(2));
+  }
+
+  @Test
+  public void cantConnectShield_Existing() throws Exception{
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    base.shield.canConnectExisting.set(false);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    base.observe(ContextSupport.WRAP(WHO), KEY, null, stream);
+    stream.await_failure(183499);
+  }
+
+  @Test
+  public void cantConnectShield_New() throws Exception{
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    base.shield.canConnectNew.set(false);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    base.observe(ContextSupport.WRAP(WHO), KEY, null, stream);
+    stream.await_failure(146632);
+  }
+
+  @Test
+  public void race_multiple_connections() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(executor, seed, factoryFactory);
+    MockReadOnlyStream stream1 = new MockReadOnlyStream();
+    MockReadOnlyStream stream2 = new MockReadOnlyStream();
+    base.observe(ContextSupport.WRAP(WHO), KEY, null, stream1);
+    executor.next();
+    base.observe(ContextSupport.WRAP(WHO), KEY, null, stream2);
+    executor.swap();
+    NamedRunnable e = executor.extract();
+    executor.drain();
+    e.run();
+    executor.drain();
+    stream1.await_began();
+    stream2.await_began();
+  }
+
+  @Test
+  public void inventory_empty() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(executor, seed, factoryFactory);
+    base.kickOffInventory();
+    AtomicBoolean ranMetering = new AtomicBoolean(false);
+    base.sampleMetering((map) -> {
+      ranMetering.set(true);
+      Assert.assertEquals(0, map.size());
+    });
+    executor.next();
+    executor.next();
+    Assert.assertTrue(ranMetering.get());
+  }
+
+
+  @Test
+  public void inventory_solo_kills() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(executor, seed, factoryFactory);
+    base.setMillisecondsInactivityBeforeCleanup(1);
+    MockReadOnlyStream stream1 = new MockReadOnlyStream();
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k1"), null, stream1);
+    executor.drain();
+    base.kickOffInventory();
+    AtomicBoolean ranMetering = new AtomicBoolean(false);
+    base.sampleMetering((map) -> {
+      PredictiveInventory.MeteringSample sample = map.get("s");
+      Assert.assertTrue(sample.memory > 0);
+      ranMetering.set(true);
+    });
+    executor.wave();
+    Assert.assertTrue(ranMetering.get());
+    stream1.get().close();
+    executor.wave();
+    ((MockTime) base.time).set(100000);
+    executor.wave();
+    ranMetering.set(false);
+    base.sampleMetering((map) -> {
+      ranMetering.set(map.size() == 0);
+    });
+    executor.wave();
+    Assert.assertTrue(ranMetering.get());
   }
 }

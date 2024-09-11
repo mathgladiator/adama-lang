@@ -33,6 +33,31 @@ public class SequencedTestExecutor implements SimpleExecutor {
     runnables.remove(0).run();
   }
 
+  public void swap() {
+    Assert.assertTrue(runnables.size() > 1);
+    NamedRunnable first = runnables.remove(0);
+    runnables.add(first);
+  }
+
+  public void wave() {
+    int n = runnables.size();
+    while (n > 0) {
+      next();
+      n--;
+    }
+  }
+
+  public NamedRunnable extract() {
+    Assert.assertTrue(runnables.size() > 0);
+    return runnables.remove(0);
+  }
+
+  public void drain() {
+    while (runnables.size() > 0) {
+      next();
+    }
+  }
+
   public void assertEmpty() {
     Assert.assertEquals(0, runnables.size());
   }

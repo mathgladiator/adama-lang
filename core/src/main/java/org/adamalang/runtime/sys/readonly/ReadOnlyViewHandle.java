@@ -46,4 +46,15 @@ public class ReadOnlyViewHandle {
       }
     });
   }
+
+  public void close() {
+    executor.execute(new NamedRunnable("update-ro-view") {
+      @Override
+      public void execute() throws Exception {
+        handle.kill();
+        document.garbageCollectViewsFor(who);
+        handle.disconnect();
+      }
+    });
+  }
 }

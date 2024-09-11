@@ -99,6 +99,10 @@ public class ReadOnlyLivingDocument {
     }
   }
 
+  public int garbageCollectViewsFor(NtPrincipal who) {
+    return document.__garbageCollectViews(who);
+  }
+
   public int getCodeCost() {
     return document.__getCodeCost();
   }

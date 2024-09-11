@@ -596,6 +596,13 @@ public class DurableLivingDocument implements Queryable {
     }
   }
 
+  private boolean canRemoveFromMemory() {
+    if (observers.size() > 0) {
+      return false;
+    }
+    return document.__canRemoveFromMemory();
+  }
+
   private void executeNow(IngestRequest[] requests) {
     inflightPatch = true;
     IngestRequest lastRequest = null;
@@ -714,7 +721,7 @@ public class DurableLivingDocument implements Queryable {
                 for (final LivingDocumentChange change : changes) {
                   change.complete();
                 }
-                if (shouldCleanUp && document.__canRemoveFromMemory()) {
+                if (shouldCleanUp && canRemoveFromMemory()) {
                   scheduleCleanup();
                 }
                 testQueueSizeAndThenMaybeCompactWhileInExecutor(CompactSource.PostPatch);
@@ -952,7 +959,7 @@ public class DurableLivingDocument implements Queryable {
     base.executor.schedule(new NamedRunnable("document-cleanup") {
       @Override
       public void execute() throws Exception {
-        if (document.__canRemoveFromMemory()) {
+        if (canRemoveFromMemory()) {
           cleanupWhileInExecutor(false);
         }
       }
@@ -961,7 +968,7 @@ public class DurableLivingDocument implements Queryable {
 
   public boolean testInactive() {
     long timeSinceLastActivity = base.time.nowMilliseconds() - lastActivityMS;
-    return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && document.__canRemoveFromMemory();
+    return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && canRemoveFromMemory();
   }
 
   public void disconnect(final CoreRequestContext context, Callback<Integer> callback) {

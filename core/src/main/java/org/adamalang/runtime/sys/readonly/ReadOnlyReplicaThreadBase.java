@@ -84,6 +84,7 @@ public class ReadOnlyReplicaThreadBase {
     }
     for (ReadOnlyLivingDocument doc : toShed) {
       doc.kill();
+      map.remove(doc.key);
     }
   }
 
@@ -283,6 +284,7 @@ public class ReadOnlyReplicaThreadBase {
     }
     for (ReadOnlyLivingDocument close : inactive) {
       close.kill();
+      map.remove(close.key);
     }
     HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
     for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry : accumulators.entrySet()) {
