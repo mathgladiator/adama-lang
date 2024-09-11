@@ -18,6 +18,7 @@
 package org.adamalang.runtime.sys.readonly;
 
 import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -26,24 +27,39 @@ import org.adamalang.runtime.sys.StreamHandle;
 
 /** a version of the document that is read only */
 public class ReadOnlyLivingDocument {
+  public final Key key;
+  private final ReadOnlyReplicaThreadBase base;
   private final LivingDocument document;
   private boolean alreadyStarted;
   private boolean dead;
   private Runnable cancel;
+  private long lastActivityMS;
 
-  public ReadOnlyLivingDocument(LivingDocument document) {
+  public ReadOnlyLivingDocument(ReadOnlyReplicaThreadBase base, Key key, LivingDocument document) {
+    this.base = base;
+    this.key = key;
     this.document = document;
     this.alreadyStarted = false;
     this.dead = false;
+    ping();
   }
 
-  public StreamHandle join(NtPrincipal who, Perspective perspective) {
+  private void ping() {
+    this.lastActivityMS = base.time.nowMilliseconds();
+  }
+
+  public StreamHandle join(NtPrincipal who, String viewerState, Perspective perspective) {
     PrivateView view = document.__createPrivateView(who, perspective);
+    if (viewerState != null) {
+      view.ingest(new JsonStreamReader(viewerState));
+    }
     StreamHandle handle = new StreamHandle(view);
+    ping();
     return handle;
   }
 
   public void setCancel(Runnable cancel) {
+    ping();
     if (dead) {
       this.cancel.run();
     } else {
@@ -57,11 +73,14 @@ public class ReadOnlyLivingDocument {
     }
     document.__insert(new JsonStreamReader(snapshot));
     document.__forceBroadcastToKeepReadonlyObserverUpToDate();
+    alreadyStarted = true;
+    ping();
   }
 
   public void change(String change) {
     document.__patch(new JsonStreamReader(change));
     document.__forceBroadcastToKeepReadonlyObserverUpToDate();
+    ping();
   }
 
   public void kill() {
@@ -70,5 +89,30 @@ public class ReadOnlyLivingDocument {
     if (cancel != null) {
       cancel.run();
     }
+  }
+
+  public int getCodeCost() {
+    return document.__getCodeCost();
+  }
+
+  public long getCpuMilliseconds() {
+    return document.__getCpuMilliseconds();
+  }
+
+  public void zeroOutCodeCost() {
+    document.__zeroOutCodeCost();
+  }
+
+  public int getConnectionsCount() {
+    return document.__getConnectionsCount();
+  }
+
+  public long getMemoryBytes() {
+    return document.__memory();
+  }
+
+  public boolean testInactive() {
+    long timeSinceLastActivity = base.time.nowMilliseconds() - lastActivityMS;
+    return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && document.__canRemoveFromMemory();
   }
 }

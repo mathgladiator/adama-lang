@@ -116,8 +116,10 @@ public class ErrorCodes {
 
   @RetryInternally
   public static final int SHIELD_REJECT_NEW_DOCUMENT = 146631;
+  public static final int SHIELD_REJECT_OBSERVE_NEW_DOCUMENT = 146632;
   @RetryInternally
   public static final int SHIELD_REJECT_CONNECT_DOCUMENT = 183498;
+  public static final int SHIELD_REJECT_OBSERVE_DOCUMENT = 183499;
   @RetryInternally
   public static final int SHIELD_REJECT_SEND_MESSAGE = 199883;
   public static final int DOCUMENT_READ_ONLY = 144583;

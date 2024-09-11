@@ -30,6 +30,7 @@ import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.mocks.MockMetricsReporter;
+import org.adamalang.runtime.sys.readonly.ReadOnlyReplicaThreadBase;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class MeteringStateMachineTests {
       }
     AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     CountDownLatch latch = new CountDownLatch(1);
-    MeteringStateMachine.estimate(bases, new LivingDocumentFactoryFactory() {
+    MeteringStateMachine.estimate(bases, new ReadOnlyReplicaThreadBase[0], new LivingDocumentFactoryFactory() {
       @Override
       public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
       }
@@ -166,6 +167,7 @@ public class MeteringStateMachineTests {
       CountDownLatch latch = new CountDownLatch(1);
       MeteringStateMachine.estimate(
           bases,
+          new ReadOnlyReplicaThreadBase[0],
           new LivingDocumentFactoryFactory() {
             @Override
             public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
@@ -259,7 +261,7 @@ public class MeteringStateMachineTests {
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     }
     CountDownLatch latch = new CountDownLatch(1);
-    MeteringStateMachine.estimate(bases, new LivingDocumentFactoryFactory() {
+    MeteringStateMachine.estimate(bases, new ReadOnlyReplicaThreadBase[0], new LivingDocumentFactoryFactory() {
       @Override
       public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
         try {

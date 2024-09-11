@@ -37,6 +37,7 @@ import org.adamalang.runtime.sys.cron.KeyAlarm;
 import org.adamalang.runtime.sys.cron.WakeService;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.runtime.sys.readonly.ReadOnlyService;
+import org.adamalang.runtime.sys.readonly.ReadOnlyStream;
 import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 import org.adamalang.runtime.sys.web.WebDelete;
 import org.adamalang.runtime.sys.web.WebGet;
@@ -95,14 +96,14 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
       bases[k] = new DocumentThreadBase(k, shield, metricsReporter, dataService, backupService, wakeService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
-    this.readonly = new ReadOnlyService(metrics, shield, livingDocumentFactoryFactory, replicationInitiator, nThreads);
+    this.readonly = new ReadOnlyService(metrics, shield, livingDocumentFactoryFactory, replicationInitiator, time, nThreads);
     rng = new Random();
     new NamedRunnable("metering-run") {
       @Override
       public void execute() {
         long started = System.currentTimeMillis();
         NamedRunnable self = this;
-        MeteringStateMachine.estimate(bases, livingDocumentFactoryFactory, samples -> {
+        MeteringStateMachine.estimate(bases, readonly.bases, livingDocumentFactoryFactory, samples -> {
           livingDocumentFactoryFactory.account(samples);
           meteringEvent.accept(samples);
           bases[rng.nextInt(bases.length)].executor.schedule(self, Math.max(1000 - (System.currentTimeMillis() - started), 100));
@@ -668,6 +669,10 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
         callback.failure(ex);
       }
     });
+  }
+
+  public void observe(CoreRequestContext context, Key key, String viewerState, ReadOnlyStream stream) {
+    readonly.obverse(context, key, viewerState, stream);
   }
 
   /** internal: do the connect with retry when connect executes create */

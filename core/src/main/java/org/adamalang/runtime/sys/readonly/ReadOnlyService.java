@@ -18,6 +18,7 @@
 package org.adamalang.runtime.sys.readonly;
 
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -26,25 +27,33 @@ import org.adamalang.runtime.sys.ServiceShield;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /** this is much like CoreService EXCEPT it negotiates with the source of truth */
 public class ReadOnlyService {
   private final CoreMetrics metrics;
   private final ServiceShield shield;
-  private final ReadOnlyReplicaThreadBase[] bases;
+  public final ReadOnlyReplicaThreadBase[] bases;
 
-  public ReadOnlyService(CoreMetrics metrics, ServiceShield shield, LivingDocumentFactoryFactory livingDocumentFactoryFactory, ReplicationInitiator initiator, int nThreads) {
+  public ReadOnlyService(CoreMetrics metrics, ServiceShield shield, LivingDocumentFactoryFactory livingDocumentFactoryFactory, ReplicationInitiator initiator, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.shield = shield;
     this.bases = new ReadOnlyReplicaThreadBase[nThreads];
     for (int k = 0; k < bases.length; k++) {
-      this.bases[k] = new ReadOnlyReplicaThreadBase(k, shield, metrics, livingDocumentFactoryFactory, initiator, SimpleExecutor.create("ro-core-" + k));
+      this.bases[k] = new ReadOnlyReplicaThreadBase(k, shield, metrics, livingDocumentFactoryFactory, initiator, time, SimpleExecutor.create("ro-core-" + k));
+      this.bases[k].kickOffInventory();
     }
   }
 
-  public void obverse(CoreRequestContext context, Key key, ReadOnlyStream stream) {
+  public void obverse(CoreRequestContext context, Key key, String viewerState, ReadOnlyStream stream) {
     int threadId = key.hashCode() % bases.length;
-    bases[threadId].observe(context, key, stream);
+    bases[threadId].observe(context, key, viewerState, stream);
+  }
+
+  public void shed(Function<Key, Boolean> condition) {
+    for (int k = 0; k < bases.length; k++) {
+      bases[k].shed(condition);
+    }
   }
 
   public void shutdown() throws InterruptedException {
