@@ -17,5 +17,41 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.LivingDocumentTests;
+import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.natives.NtPrincipal;
+import org.adamalang.runtime.remote.Deliverer;
+import org.adamalang.runtime.remote.replication.SequencedTestExecutor;
+import org.adamalang.runtime.sys.CoreMetrics;
+import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.ServiceShield;
+import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
+import org.adamalang.runtime.sys.mocks.MockReplicationInitiator;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class ReadOnlyLivingDocumentTests {
+  @Test
+  public void esoteric_cancel_kill_race() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(ReadOnlyReplicaThreadBaseTests.SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = ReadOnlyReplicaThreadBaseTests.baseOf(executor, seed, factoryFactory);
+    LivingDocument real = factory.create(null);
+    ReadOnlyLivingDocument document = new ReadOnlyLivingDocument(base, ReadOnlyReplicaThreadBaseTests.KEY, real);
+    document.kill();
+    AtomicBoolean setInstant = new AtomicBoolean(false);
+    document.setCancel(() -> {
+      setInstant.set(true);
+    });
+    Assert.assertTrue(setInstant.get());
+  }
 }

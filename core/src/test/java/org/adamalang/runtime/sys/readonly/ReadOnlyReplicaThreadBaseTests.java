@@ -40,11 +40,11 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ReadOnlyReplicaThreadBaseTests {
-  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
-  private static final Key KEY = new Key("space", "key");
-  private static final NtPrincipal WHO = new NtPrincipal("me", "a");
+  public static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
+  public static final Key KEY = new Key("space", "key");
+  public static final NtPrincipal WHO = new NtPrincipal("me", "a");
 
-  private static final String SIMPLE_CODE =
+  public static final String SIMPLE_CODE =
       "@static { create { return true; } } public int x = 100; message Bump{int x;} channel bump(Bump b) { x+= b.x; } view int echo; bubble foo = @viewer.echo;";
 
   public static ReadOnlyReplicaThreadBase baseOf(ReplicationInitiator initiator, LivingDocumentFactoryFactory factory) {
@@ -145,6 +145,21 @@ public class ReadOnlyReplicaThreadBaseTests {
 
 
   @Test
+  public void inventory_solo_viewstate() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", null);
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    base.setMillisecondsInactivityBeforeCleanup(1);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    Runnable latch = stream.latchAt(1);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k1"), "{\"echo\":13}", stream);
+    stream.await_began();
+    latch.run();
+    Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":13},\"seq\":0}", stream.get(0));
+  }
+
+  @Test
   public void inventory_solo_kills() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
     MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
@@ -171,6 +186,33 @@ public class ReadOnlyReplicaThreadBaseTests {
     ranMetering.set(false);
     base.sampleMetering((map) -> {
       ranMetering.set(map.size() == 0);
+    });
+    executor.wave();
+    Assert.assertTrue(ranMetering.get());
+  }
+
+  @Test
+  public void inventory_many() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(executor, seed, factoryFactory);
+    base.setMillisecondsInactivityBeforeCleanup(1);
+    MockReadOnlyStream stream1 = new MockReadOnlyStream();
+    MockReadOnlyStream stream2 = new MockReadOnlyStream();
+    MockReadOnlyStream stream3 = new MockReadOnlyStream();
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k1"), null, stream1);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k2"), null, stream2);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k3"), null, stream3);
+    executor.drain();
+    base.kickOffInventory();
+    AtomicBoolean ranMetering = new AtomicBoolean(false);
+    base.sampleMetering((map) -> {
+      PredictiveInventory.MeteringSample sample = map.get("s");
+      Assert.assertTrue(sample.memory > 0);
+      Assert.assertEquals(3, sample.count);
+      ranMetering.set(true);
     });
     executor.wave();
     Assert.assertTrue(ranMetering.get());

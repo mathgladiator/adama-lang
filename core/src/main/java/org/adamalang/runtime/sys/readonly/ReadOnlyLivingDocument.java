@@ -64,7 +64,7 @@ public class ReadOnlyLivingDocument {
   public void setCancel(Runnable cancel) {
     ping();
     if (dead) {
-      this.cancel.run();
+      cancel.run();
     } else {
       this.cancel = cancel;
     }
