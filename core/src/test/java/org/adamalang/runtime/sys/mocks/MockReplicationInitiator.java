@@ -27,19 +27,43 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MockReplicationInitiator implements ReplicationInitiator {
   private final AtomicInteger starts;
   private final AtomicInteger cancels;
+  private boolean simpleMode;
+  private final String initialize;
+  private final String change;
+  private DataObserver lastObserver;
 
   public MockReplicationInitiator() {
     this.starts = new AtomicInteger(0);
     this.cancels = new AtomicInteger(0);
+    this.simpleMode = true;
+    this.initialize = "{}";
+    this.change = "{}";
+  }
+
+  public MockReplicationInitiator(String initialize, String change) {
+    this.starts = new AtomicInteger(0);
+    this.cancels = new AtomicInteger(0);
+    this.simpleMode = true;
+    this.initialize = initialize;
+    this.change = change;
+  }
+
+  public DataObserver getLastObserver() {
+    return lastObserver;
   }
 
   @Override
   public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
+    lastObserver = observer;
     starts.incrementAndGet();
     cancel.success(() -> {
       cancels.incrementAndGet();
     });
-    observer.start("SNAPSHOT");
-    observer.change("CHANGE");
+    if (simpleMode) {
+      observer.start(initialize);
+      if (change != null) {
+        observer.change(change);
+      }
+    }
   }
 }

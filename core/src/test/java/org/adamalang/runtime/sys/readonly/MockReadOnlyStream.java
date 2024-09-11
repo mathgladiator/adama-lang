@@ -50,7 +50,7 @@ public class MockReadOnlyStream implements ReadOnlyStream {
 
   @Override
   public void setupComplete(ReadOnlyViewHandle handle) {
-    this.stream = stream;
+    this.stream = handle;
     if (began.getCount() == 0) {
       Assert.fail();
     }

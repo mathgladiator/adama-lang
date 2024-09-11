@@ -49,9 +49,12 @@ public class ReadOnlyLivingDocument {
   }
 
   public StreamHandle join(NtPrincipal who, String viewerState, Perspective perspective) {
-    PrivateView view = document.__createPrivateView(who, perspective);
+    PrivateView view = document.__createView(who, perspective);
     if (viewerState != null) {
       view.ingest(new JsonStreamReader(viewerState));
+    }
+    if (alreadyStarted) {
+      document.__forceBroadcastForViewer(who);
     }
     StreamHandle handle = new StreamHandle(view);
     ping();
@@ -69,7 +72,7 @@ public class ReadOnlyLivingDocument {
 
   public void start(String snapshot) {
     if (alreadyStarted) {
-      // TODO: deployment of factory is needed
+      // TODO: figure out deployment stuff
     }
     document.__insert(new JsonStreamReader(snapshot));
     document.__forceBroadcastToKeepReadonlyObserverUpToDate();
@@ -80,6 +83,11 @@ public class ReadOnlyLivingDocument {
   public void change(String change) {
     document.__patch(new JsonStreamReader(change));
     document.__forceBroadcastToKeepReadonlyObserverUpToDate();
+    ping();
+  }
+
+  public void forceUpdate(NtPrincipal who) {
+    document.__forceBroadcastForViewer(who);
     ping();
   }
 

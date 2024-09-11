@@ -227,7 +227,7 @@ public class ReadOnlyReplicaThreadBase {
           stream.close();
         }
       });
-      stream.setupComplete(new ReadOnlyViewHandle(handle, executor));
+      stream.setupComplete(new ReadOnlyViewHandle(context.who, document, handle, executor));
     };
     executor.execute(new NamedRunnable("find-document") {
       @Override

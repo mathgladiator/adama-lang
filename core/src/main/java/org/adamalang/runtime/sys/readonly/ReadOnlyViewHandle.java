@@ -20,14 +20,19 @@ package org.adamalang.runtime.sys.readonly;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.StreamHandle;
 
 /** a way to control the stream after the fact */
 public class ReadOnlyViewHandle {
+  private final NtPrincipal who;
+  ReadOnlyLivingDocument document;
   private final StreamHandle handle;
   private final SimpleExecutor executor;
 
-  public ReadOnlyViewHandle(StreamHandle handle, SimpleExecutor executor) {
+  public ReadOnlyViewHandle(NtPrincipal who, ReadOnlyLivingDocument document, StreamHandle handle, SimpleExecutor executor) {
+    this.who = who;
+    this.document = document;
     this.handle = handle;
     this.executor = executor;
   }
@@ -37,6 +42,7 @@ public class ReadOnlyViewHandle {
       @Override
       public void execute() throws Exception {
         handle.ingestViewUpdate(new JsonStreamReader(update));
+        document.forceUpdate(who);
       }
     });
   }

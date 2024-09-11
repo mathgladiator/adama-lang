@@ -1666,6 +1666,12 @@ public abstract class LivingDocument implements RxParent, Caller {
     }
   }
 
+  public void __forceBroadcastForViewer(NtPrincipal who) {
+    for (LivingDocumentChange.Broadcast broadcast :__buildBroadcastListFor(who)) {
+      broadcast.complete();
+    }
+  }
+
   /** force the delivery of a result */
   public RxCache __forceDeliverResult(int deliveryId, RemoteResult result) throws ErrorCodeException {
     RxCache route = __routing.get(deliveryId);
