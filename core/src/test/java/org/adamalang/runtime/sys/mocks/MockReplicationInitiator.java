@@ -18,15 +18,28 @@
 package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class MockReplicationInitiator implements ReplicationInitiator {
+  private final AtomicInteger starts;
+  private final AtomicInteger cancels;
+
+  public MockReplicationInitiator() {
+    this.starts = new AtomicInteger(0);
+    this.cancels = new AtomicInteger(0);
+  }
+
   @Override
   public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
-    observer.failure(new ErrorCodeException(1000));
-    cancel.failure(new ErrorCodeException(-23));
+    starts.incrementAndGet();
+    cancel.success(() -> {
+      cancels.incrementAndGet();
+    });
+    observer.start("SNAPSHOT");
+    observer.change("CHANGE");
   }
 }
