@@ -43,6 +43,9 @@ import org.adamalang.net.codec.ClientMessage.StreamUpdate;
 import org.adamalang.net.codec.ClientMessage.StreamPassword;
 import org.adamalang.net.codec.ClientMessage.StreamSend;
 import org.adamalang.net.codec.ClientMessage.StreamConnect;
+import org.adamalang.net.codec.ClientMessage.ObserveDisconnect;
+import org.adamalang.net.codec.ClientMessage.ObserveUpdate;
+import org.adamalang.net.codec.ClientMessage.ObserveConnect;
 import org.adamalang.net.codec.ClientMessage.ScanDeployment;
 import org.adamalang.net.codec.ClientMessage.ReflectRequest;
 import org.adamalang.net.codec.ClientMessage.DeleteRequest;
@@ -97,6 +100,12 @@ public class ClientCodec {
     public abstract void handle(StreamSend payload);
 
     public abstract void handle(StreamConnect payload);
+
+    public abstract void handle(ObserveDisconnect payload);
+
+    public abstract void handle(ObserveUpdate payload);
+
+    public abstract void handle(ObserveConnect payload);
 
     public abstract void handle(ScanDeployment payload);
 
@@ -191,6 +200,15 @@ public class ClientCodec {
         case 12345:
           handle(readBody_12345(buf, new StreamConnect()));
           return;
+        case 2103:
+          handle(readBody_2103(buf, new ObserveDisconnect()));
+          return;
+        case 2102:
+          handle(readBody_2102(buf, new ObserveUpdate()));
+          return;
+        case 2101:
+          handle(readBody_2101(buf, new ObserveConnect()));
+          return;
         case 8921:
           handle(readBody_8921(buf, new ScanDeployment()));
           return;
@@ -244,6 +262,9 @@ public class ClientCodec {
     public void handle(StreamPassword payload);
     public void handle(StreamSend payload);
     public void handle(StreamConnect payload);
+    public void handle(ObserveDisconnect payload);
+    public void handle(ObserveUpdate payload);
+    public void handle(ObserveConnect payload);
     public void handle(ScanDeployment payload);
     public void handle(ReflectRequest payload);
     public void handle(DeleteRequest payload);
@@ -319,6 +340,15 @@ public class ClientCodec {
         return;
       case 12345:
         handler.handle(readBody_12345(buf, new StreamConnect()));
+        return;
+      case 2103:
+        handler.handle(readBody_2103(buf, new ObserveDisconnect()));
+        return;
+      case 2102:
+        handler.handle(readBody_2102(buf, new ObserveUpdate()));
+        return;
+      case 2101:
+        handler.handle(readBody_2101(buf, new ObserveConnect()));
         return;
       case 8921:
         handler.handle(readBody_8921(buf, new ScanDeployment()));
@@ -770,6 +800,55 @@ public class ClientCodec {
     return o;
   }
 
+  public static ObserveDisconnect read_ObserveDisconnect(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2103:
+        return readBody_2103(buf, new ObserveDisconnect());
+    }
+    return null;
+  }
+
+
+  private static ObserveDisconnect readBody_2103(ByteBuf buf, ObserveDisconnect o) {
+    return o;
+  }
+
+  public static ObserveUpdate read_ObserveUpdate(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2102:
+        return readBody_2102(buf, new ObserveUpdate());
+    }
+    return null;
+  }
+
+
+  private static ObserveUpdate readBody_2102(ByteBuf buf, ObserveUpdate o) {
+    o.op = buf.readIntLE();
+    o.viewerState = Helper.readString(buf);
+    return o;
+  }
+
+  public static ObserveConnect read_ObserveConnect(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 2101:
+        return readBody_2101(buf, new ObserveConnect());
+    }
+    return null;
+  }
+
+
+  private static ObserveConnect readBody_2101(ByteBuf buf, ObserveConnect o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
+    o.viewerState = Helper.readString(buf);
+    o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
+    o.mode = buf.readIntLE();
+    return o;
+  }
+
   public static ScanDeployment read_ScanDeployment(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 8921:
@@ -1172,6 +1251,40 @@ public class ClientCodec {
       return;
     }
     buf.writeIntLE(12345);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
+    Helper.writeString(buf, o.viewerState);;
+    Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
+    buf.writeIntLE(o.mode);
+  }
+
+  public static void write(ByteBuf buf, ObserveDisconnect o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2103);
+  }
+
+  public static void write(ByteBuf buf, ObserveUpdate o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2102);
+    buf.writeIntLE(o.op);
+    Helper.writeString(buf, o.viewerState);;
+  }
+
+  public static void write(ByteBuf buf, ObserveConnect o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(2101);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
     Helper.writeString(buf, o.agent);;

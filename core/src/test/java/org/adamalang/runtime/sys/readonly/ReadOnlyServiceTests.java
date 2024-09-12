@@ -39,21 +39,22 @@ public class ReadOnlyServiceTests {
     ReadOnlyService readonly = new ReadOnlyService(ReadOnlyReplicaThreadBaseTests.METRICS, new ServiceShield(), factoryFactory, seed, new MockTime(), 3);
     try {
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latched1 = stream.latchAt(2);
-      Runnable latched2 = stream.latchAt(3);
-      Runnable latched3 = stream.latchAt(4);
+      Runnable latched1 = stream.latchAt(3);
+      Runnable latched2 = stream.latchAt(4);
+      Runnable latched3 = stream.latchAt(5);
       readonly.obverse(ContextSupport.WRAP(ReadOnlyReplicaThreadBaseTests.WHO), ReadOnlyReplicaThreadBaseTests.KEY,"{\"echo\":420}", stream);
       stream.await_began();
       latched1.run();
-      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":420},\"seq\":0}", stream.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"view-state-filter\":[\"echo\"]}", stream.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":420},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(2));
       readonly.shed((key) -> false);
       stream.get().update("{\"echo\":111}");
       latched2.run();
-      Assert.assertEquals("{\"data\":{\"foo\":111},\"seq\":0}", stream.get(2));
+      Assert.assertEquals("{\"data\":{\"foo\":111},\"seq\":0}", stream.get(3));
       readonly.shed((key) -> true);
       latched3.run();
-      Assert.assertEquals("CLOSED", stream.get(3));
+      Assert.assertEquals("CLOSED", stream.get(4));
     } finally {
       readonly.shutdown();
     }
@@ -67,18 +68,18 @@ public class ReadOnlyServiceTests {
     ReadOnlyService readonly = new ReadOnlyService(ReadOnlyReplicaThreadBaseTests.METRICS, new ServiceShield(), factoryFactory, seed, new MockTime(), 3);
     try {
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latched1 = stream.latchAt(2);
-      Runnable latched2 = stream.latchAt(3);
-      Runnable latched3 = stream.latchAt(4);
+      Runnable latched1 = stream.latchAt(3);
+      Runnable latched2 = stream.latchAt(4);
+      Runnable latched3 = stream.latchAt(5);
       readonly.obverse(ContextSupport.WRAP(ReadOnlyReplicaThreadBaseTests.WHO), ReadOnlyReplicaThreadBaseTests.KEY,"{\"echo\":420}", stream);
       stream.await_began();
       latched1.run();
-      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":420},\"seq\":0}", stream.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":420},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(2));
       readonly.shed((key) -> false);
       stream.get().update("{\"echo\":111}");
       latched2.run();
-      Assert.assertEquals("{\"data\":{\"foo\":111},\"seq\":0}", stream.get(2));
+      Assert.assertEquals("{\"data\":{\"foo\":111},\"seq\":0}", stream.get(3));
       factoryFactory.set(LivingDocumentTests.compile(ReadOnlyReplicaThreadBaseTests.SIMPLE_CODE_DEPLOYED, Deliverer.FAILURE));
       readonly.deploy(new DeploymentMonitor() {
         @Override
@@ -97,7 +98,7 @@ public class ReadOnlyServiceTests {
         }
       });
       latched3.run();
-      Assert.assertEquals("CLOSED", stream.get(3));
+      Assert.assertEquals("CLOSED", stream.get(4));
     } finally {
       readonly.shutdown();
     }

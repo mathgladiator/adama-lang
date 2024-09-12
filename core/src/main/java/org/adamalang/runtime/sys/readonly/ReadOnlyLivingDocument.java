@@ -134,4 +134,8 @@ public class ReadOnlyLivingDocument {
     long timeSinceLastActivity = base.time.nowMilliseconds() - lastActivityMS;
     return timeSinceLastActivity > base.getMillisecondsInactivityBeforeCleanup() && document.__canRemoveFromMemory();
   }
+
+  public String getViewStateFilter() {
+    return document.__getViewStateFilter();
+  }
 }

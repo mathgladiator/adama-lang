@@ -112,6 +112,41 @@ public class ClientMessage {
     public String space;
   }
 
+  @TypeId(2101)
+  @Flow("Server")
+  public static class ObserveConnect {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public String agent;
+    @FieldOrder(4)
+    public String authority;
+    @FieldOrder(5)
+    public String viewerState;
+    @FieldOrder(6)
+    public String origin;
+    @FieldOrder(7)
+    public String ip;
+    @FieldOrder(8)
+    public int mode;
+  }
+
+  @TypeId(2102)
+  @Flow("Server")
+  public static class ObserveUpdate {
+    @FieldOrder(1)
+    public int op;
+    @FieldOrder(2)
+    public String viewerState;
+  }
+
+  @TypeId(2103)
+  @Flow("Server")
+  public static class ObserveDisconnect {
+  }
+
   @TypeId(12345)
   @Flow("Server")
   public static class StreamConnect {

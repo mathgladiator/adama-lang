@@ -726,7 +726,8 @@ public class ErrorCodes {
   public static final int ADAMA_NET_DRAIN_REJECTED = 787692;
   public static final int ADAMA_NET_GETLOAD_TIMEOUT = 787664;
   public static final int ADAMA_NET_GETLOAD_REJECTED = 774354;
-
+  public static final int ADAMA_NET_OBSERVE_DOCUMENT_TIMEOUT = 718909;
+  public static final int ADAMA_NET_OBSERVE_DOCUMENT_REJECTED = 702525;
 
   public static final int ADAMA_NET_PROBE_TIMEOUT = 756928;
   public static final int ADAMA_NET_PROBE_REJECTED = 740544;

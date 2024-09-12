@@ -880,6 +880,10 @@ public class ErrorTable {
     descriptions.put(787664, "no description of error (yet)");
     names.put(774354, "ADAMA_NET_GETLOAD_REJECTED");
     descriptions.put(774354, "no description of error (yet)");
+    names.put(718909, "ADAMA_NET_OBSERVE_DOCUMENT_TIMEOUT");
+    descriptions.put(718909, "no description of error (yet)");
+    names.put(702525, "ADAMA_NET_OBSERVE_DOCUMENT_REJECTED");
+    descriptions.put(702525, "no description of error (yet)");
     names.put(756928, "ADAMA_NET_PROBE_TIMEOUT");
     descriptions.put(756928, "no description of error (yet)");
     names.put(740544, "ADAMA_NET_PROBE_REJECTED");

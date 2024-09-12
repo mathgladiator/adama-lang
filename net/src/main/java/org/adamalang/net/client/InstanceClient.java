@@ -27,7 +27,9 @@ import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.client.bidi.DocumentExchange;
+import org.adamalang.net.client.bidi.ObserveExchange;
 import org.adamalang.net.client.contracts.Events;
+import org.adamalang.net.client.contracts.ReadOnlyEvents;
 import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
@@ -967,6 +969,35 @@ public class InstanceClient implements AutoCloseable {
           @Override
           protected void executeNow(ChannelClient client) {
             DocumentExchange exchange = new DocumentExchange(connectMessage, events);
+            client.open(exchange, exchange);
+          }
+
+          @Override
+          protected void failure(int code) {
+            events.error(code);
+          }
+        });
+      }
+    });
+  }
+
+  public void observe(String ip, String origin, String agent, String authority, String space, String key, String viewerState, ReadOnlyEvents events) {
+    ClientMessage.ObserveConnect connectMessage = new ClientMessage.ObserveConnect();
+    connectMessage.ip = ip;
+    connectMessage.origin = origin;
+    connectMessage.agent = agent;
+    connectMessage.authority = authority;
+    connectMessage.space = space;
+    connectMessage.key = key;
+    connectMessage.viewerState = viewerState;
+
+    executor.execute(new NamedRunnable("observe-exchange") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_OBSERVE_DOCUMENT_TIMEOUT, ErrorCodes.ADAMA_NET_OBSERVE_DOCUMENT_REJECTED, metrics.client_document_exchange_observe.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            ObserveExchange exchange = new ObserveExchange(connectMessage, events);
             client.open(exchange, exchange);
           }
 

@@ -22,6 +22,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.TestBed;
+import org.adamalang.net.client.contracts.ReadOnlyRemote;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
@@ -116,6 +117,36 @@ public class InstanceClientTests {
         events.assertWrite(4, "DELTA:{\"data\":{\"x\":2000,\"zpx\":2100},\"seq\":5}");
         events.assertWrite(5, "DELTA:{\"data\":{\"x\":2100,\"zpx\":2200},\"seq\":6}");
         events.assertWrite(6, "DISCONNECTED");
+      }
+    }
+  }
+
+
+  @Test
+  public void observe() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10003,
+                 "@static { create { return true; } send { return @who.isOverlord(); } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
+      bed.startServer();
+      MockReadOnlyEvents events = new MockReadOnlyEvents();
+      Runnable gotFirst = events.latchAt(3);
+      Runnable gotSecond = events.latchAt(4);
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        client.observe("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
+        gotFirst.run();
+        ReadOnlyRemote remote = events.getRemote();
+        LatchedVoidCallback updateRan = new LatchedVoidCallback();
+        remote.update("{\"z\":100}", updateRan);
+        updateRan.assertSuccess();
+        gotSecond.run();
+        events.assertWrite(0, "CONNECTED");
+        events.assertWrite(1, "DELTA:{\"view-state-filter\":[\"z\"]}");
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":421369,\"zpx\":421369},\"seq\":0}");
+        events.assertWrite(3, "DELTA:{\"data\":{\"zpx\":421469},\"seq\":0}");
       }
     }
   }

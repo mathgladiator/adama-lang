@@ -36,6 +36,8 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.*;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.metering.MeterReading;
+import org.adamalang.runtime.sys.readonly.ReadOnlyStream;
+import org.adamalang.runtime.sys.readonly.ReadOnlyViewHandle;
 import org.adamalang.runtime.sys.web.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   private final ByteStream upstream;
   private final AtomicBoolean alive;
   private CoreStream stream;
+  private ReadOnlyViewHandle observeHandle;
   private ScheduledFuture<?> futureHeat;
   private StreamMonitor.StreamMonitorInstance monitorStreamback;
   private Runnable cancelWatch;
@@ -95,6 +98,10 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     if (stream != null) {
       stream.close();
       stream = null;
+    }
+    if (observeHandle != null) {
+      observeHandle.close();
+      observeHandle = null;
     }
     if (cancelWatch != null) {
       cancelWatch.run();
@@ -562,6 +569,63 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
           upstream.next(errorBuf);
         }
       }));
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.ObserveConnect payload) {
+    monitorStreamback = nexus.metrics.server_stream.start();
+    CoreRequestContext context = new CoreRequestContext(new NtPrincipal(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
+    nexus.service.observe(context, new Key(payload.space, payload.key), payload.viewerState, new ReadOnlyStream() {
+      @Override
+      public void setupComplete(ReadOnlyViewHandle handle) {
+        observeHandle = handle;
+        ServerMessage.ObserveConnected connected = new ServerMessage.ObserveConnected();
+        ByteBuf buf = upstream.create(40);
+        ServerCodec.write(buf, connected);
+        upstream.next(buf);
+      }
+
+      @Override
+      public void next(String delta) {
+        ServerMessage.ObserveData data = new ServerMessage.ObserveData();
+        data.delta = delta;
+        ByteBuf buf = upstream.create(40 + delta.length());
+        ServerCodec.write(buf, data);
+        upstream.next(buf);
+      }
+
+      @Override
+      public void failure(ErrorCodeException exception) {
+        upstream.error(exception.code);
+        completed();
+      }
+
+      @Override
+      public void close() {
+        completed();
+      }
+    });
+  }
+
+  @Override
+  public void handle(ClientMessage.ObserveUpdate payload) {
+    if (observeHandle != null) {
+      observeHandle.update(payload.viewerState);
+    }
+    ServerMessage.ObserveUpdateComplete complete = new ServerMessage.ObserveUpdateComplete();
+    complete.op = payload.op;
+    ByteBuf buf = upstream.create(8);
+    ServerCodec.write(buf, complete);
+    upstream.next(buf);
+  }
+
+  @Override
+  public void handle(ClientMessage.ObserveDisconnect payload) {
+    if (observeHandle != null) {
+      nexus.metrics.server_observe_disconnect.run();
+      observeHandle.close();
+      observeHandle = null;
     }
   }
 

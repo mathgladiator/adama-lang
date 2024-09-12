@@ -70,16 +70,16 @@ public class ReadOnlyReplicaThreadBaseTests {
       base.setMillisecondsInactivityBeforeCleanup(500);
       Assert.assertEquals(500, base.getMillisecondsInactivityBeforeCleanup());
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latchAt2 = stream.latchAt(2);
-      Runnable latchAt3 = stream.latchAt(3);
+      Runnable latchAt2 = stream.latchAt(3);
+      Runnable latchAt3 = stream.latchAt(4);
       base.observe(ContextSupport.WRAP(WHO), KEY, null, stream);
       stream.await_began();
       latchAt2.run();
-      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":0},\"seq\":0}", stream.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":0},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(2));
       stream.get().update("{\"echo\":17}");
       latchAt3.run();
-      Assert.assertEquals("{\"data\":{\"foo\":17},\"seq\":0}", stream.get(2));
+      Assert.assertEquals("{\"data\":{\"foo\":17},\"seq\":0}", stream.get(3));
     } finally {
       base.close();
     }
@@ -165,11 +165,11 @@ public class ReadOnlyReplicaThreadBaseTests {
     try {
       base.setMillisecondsInactivityBeforeCleanup(1);
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latch = stream.latchAt(1);
+      Runnable latch = stream.latchAt(2);
       base.observe(ContextSupport.WRAP(WHO), new Key("s", "k1"), "{\"echo\":13}", stream);
       stream.await_began();
       latch.run();
-      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":13},\"seq\":0}", stream.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":13},\"seq\":0}", stream.get(1));
     } finally {
       base.close();
     }
@@ -251,16 +251,16 @@ public class ReadOnlyReplicaThreadBaseTests {
     ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
     try {
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latch2 = stream.latchAt(2);
-      Runnable latch3 = stream.latchAt(3);
+      Runnable latch2 = stream.latchAt(3);
+      Runnable latch3 = stream.latchAt(4);
       base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
       stream.await_began();
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":7},\"seq\":0}", stream.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":7},\"seq\":0}", stream.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(2));
       seed.getLastObserver().failure(new ErrorCodeException(1000));
       latch3.run();
-      Assert.assertEquals("CLOSED", stream.get(2));
+      Assert.assertEquals("CLOSED", stream.get(3));
     } finally {
       base.close();
     }
@@ -288,10 +288,10 @@ public class ReadOnlyReplicaThreadBaseTests {
     ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
     try {
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latched = stream.latchAt(1);
+      Runnable latched = stream.latchAt(2);
       base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
       latched.run();
-      Assert.assertEquals("CLOSED", stream.get(0));
+      Assert.assertEquals("CLOSED", stream.get(1));
     } finally {
       base.close();
     }
@@ -306,16 +306,16 @@ public class ReadOnlyReplicaThreadBaseTests {
     ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
     try {
       MockReadOnlyStream stream1 = new MockReadOnlyStream();
-      Runnable latched1 = stream1.latchAt(1);
+      Runnable latched1 = stream1.latchAt(2);
       base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream1);
       MockReadOnlyStream stream2 = new MockReadOnlyStream();
-      Runnable latched2 = stream2.latchAt(1);
+      Runnable latched2 = stream2.latchAt(2);
       base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream2);
       seed.executeDelay();
       latched1.run();
       latched2.run();
-      Assert.assertEquals("CLOSED", stream1.get(0));
-      Assert.assertEquals("CLOSED", stream2.get(0));
+      Assert.assertEquals("CLOSED", stream1.get(1));
+      Assert.assertEquals("CLOSED", stream2.get(1));
     } finally {
       base.close();
     }
@@ -329,14 +329,14 @@ public class ReadOnlyReplicaThreadBaseTests {
     ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
     try {
       MockReadOnlyStream stream = new MockReadOnlyStream();
-      Runnable latched1 = stream.latchAt(1);
-      Runnable latched2 = stream.latchAt(2);
+      Runnable latched1 = stream.latchAt(2);
+      Runnable latched2 = stream.latchAt(3);
       base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
       latched1.run();
-      Assert.assertEquals("{\"data\":{\"x\":42,\"foo\":7},\"seq\":0}", stream.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":42,\"foo\":7},\"seq\":0}", stream.get(1));
       base.shed((key) -> true);
       latched2.run();
-      Assert.assertEquals("CLOSED", stream.get(1));
+      Assert.assertEquals("CLOSED", stream.get(2));
     } finally {
       base.close();
     }
@@ -352,11 +352,11 @@ public class ReadOnlyReplicaThreadBaseTests {
     try {
       {
         MockReadOnlyStream stream = new MockReadOnlyStream();
-        Runnable latched1 = stream.latchAt(1);
-        Runnable latched2 = stream.latchAt(2);
+        Runnable latched1 = stream.latchAt(2);
+        Runnable latched2 = stream.latchAt(3);
         base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
         latched1.run();
-        Assert.assertEquals("{\"data\":{\"x\":42,\"foo\":7},\"seq\":0}", stream.get(0));
+        Assert.assertEquals("{\"data\":{\"x\":42,\"foo\":7},\"seq\":0}", stream.get(1));
         factoryFactory.set(factory2);
         base.deploy(new DeploymentMonitor() {
           @Override
@@ -375,14 +375,14 @@ public class ReadOnlyReplicaThreadBaseTests {
           }
         });
         latched2.run();
-        Assert.assertEquals("CLOSED", stream.get(1));
+        Assert.assertEquals("CLOSED", stream.get(2));
       }
       {
         MockReadOnlyStream stream = new MockReadOnlyStream();
-        Runnable latched1 = stream.latchAt(1);
+        Runnable latched1 = stream.latchAt(2);
         base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
         latched1.run();
-        Assert.assertEquals("{\"data\":{\"x\":42,\"y\":72,\"foo\":7},\"seq\":0}", stream.get(0));
+        Assert.assertEquals("{\"data\":{\"x\":42,\"y\":72,\"foo\":7},\"seq\":0}", stream.get(1));
       }
     } finally {
       base.close();

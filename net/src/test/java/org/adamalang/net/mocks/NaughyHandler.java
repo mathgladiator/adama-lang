@@ -335,6 +335,30 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.ObserveConnect payload) {
+    if (bits.fail) {
+      upstream.error(123456789);
+      return;
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.ObserveUpdate payload) {
+    if (bits.fail) {
+      upstream.error(123456789);
+      return;
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.ObserveDisconnect payload) {
+    if (bits.fail) {
+      upstream.error(123456789);
+      return;
+    }
+  }
+
+  @Override
   public void handle(ClientMessage.DeleteRequest payload) {
     if (bits.fail) {
       upstream.error(123456789);

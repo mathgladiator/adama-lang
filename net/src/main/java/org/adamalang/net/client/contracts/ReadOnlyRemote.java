@@ -15,9 +15,14 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.net.client.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240912132029";
-  public static final String JS_VERSION = "975025838f9bdeb8f10ff64208a33c8d";
+import org.adamalang.common.Callback;
+
+/** control an active readonly stream */
+public interface ReadOnlyRemote {
+  /** update the viewer state */
+  void update(String viewerState, Callback<Void> callback);
+
+  void disconnect();
 }

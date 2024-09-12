@@ -115,7 +115,7 @@ public class TestBed implements AutoCloseable {
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             new MockBackupService(), //
             new NoOpWakeService(), //
-            new MockReplicationInitiator(), //
+            new MockReplicationInitiator("{\"x\":421369}", null), //
             TimeSource.REAL_TIME, //
             2);
 

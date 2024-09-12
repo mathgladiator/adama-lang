@@ -34,6 +34,10 @@ import org.adamalang.net.codec.ServerMessage.HeatPayload;
 import org.adamalang.net.codec.ServerMessage.StreamSeqResponse;
 import org.adamalang.net.codec.ServerMessage.StreamAskAttachmentResponse;
 import org.adamalang.net.codec.ServerMessage.StreamUpdateComplete;
+import org.adamalang.net.codec.ServerMessage.ObserveUpdateComplete;
+import org.adamalang.net.codec.ServerMessage.ObserveError;
+import org.adamalang.net.codec.ServerMessage.ObserveData;
+import org.adamalang.net.codec.ServerMessage.ObserveConnected;
 import org.adamalang.net.codec.ServerMessage.StreamError;
 import org.adamalang.net.codec.ServerMessage.StreamData;
 import org.adamalang.net.codec.ServerMessage.StreamTrafficHint;
@@ -708,6 +712,68 @@ public class ServerCodec {
   }
 
 
+  public static abstract class StreamObservation implements ByteStream {
+    public abstract void handle(ObserveUpdateComplete payload);
+
+    public abstract void handle(ObserveError payload);
+
+    public abstract void handle(ObserveData payload);
+
+    public abstract void handle(ObserveConnected payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      return Unpooled.buffer();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 4004:
+          handle(readBody_4004(buf, new ObserveUpdateComplete()));
+          return;
+        case 4003:
+          handle(readBody_4003(buf, new ObserveError()));
+          return;
+        case 4002:
+          handle(readBody_4002(buf, new ObserveData()));
+          return;
+        case 4001:
+          handle(readBody_4001(buf, new ObserveConnected()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerObservation {
+    public void handle(ObserveUpdateComplete payload);
+    public void handle(ObserveError payload);
+    public void handle(ObserveData payload);
+    public void handle(ObserveConnected payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerObservation handler) {
+    switch (buf.readIntLE()) {
+      case 4004:
+        handler.handle(readBody_4004(buf, new ObserveUpdateComplete()));
+        return;
+      case 4003:
+        handler.handle(readBody_4003(buf, new ObserveError()));
+        return;
+      case 4002:
+        handler.handle(readBody_4002(buf, new ObserveData()));
+        return;
+      case 4001:
+        handler.handle(readBody_4001(buf, new ObserveConnected()));
+        return;
+    }
+  }
+
+
   public static abstract class StreamDeletion implements ByteStream {
     public abstract void handle(DeleteResponse payload);
 
@@ -975,6 +1041,62 @@ public class ServerCodec {
 
   private static StreamUpdateComplete readBody_30001(ByteBuf buf, StreamUpdateComplete o) {
     o.op = buf.readIntLE();
+    return o;
+  }
+
+  public static ObserveUpdateComplete read_ObserveUpdateComplete(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 4004:
+        return readBody_4004(buf, new ObserveUpdateComplete());
+    }
+    return null;
+  }
+
+
+  private static ObserveUpdateComplete readBody_4004(ByteBuf buf, ObserveUpdateComplete o) {
+    o.op = buf.readIntLE();
+    return o;
+  }
+
+  public static ObserveError read_ObserveError(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 4003:
+        return readBody_4003(buf, new ObserveError());
+    }
+    return null;
+  }
+
+
+  private static ObserveError readBody_4003(ByteBuf buf, ObserveError o) {
+    o.op = buf.readIntLE();
+    o.code = buf.readIntLE();
+    return o;
+  }
+
+  public static ObserveData read_ObserveData(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 4002:
+        return readBody_4002(buf, new ObserveData());
+    }
+    return null;
+  }
+
+
+  private static ObserveData readBody_4002(ByteBuf buf, ObserveData o) {
+    o.delta = Helper.readString(buf);
+    return o;
+  }
+
+  public static ObserveConnected read_ObserveConnected(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 4001:
+        return readBody_4001(buf, new ObserveConnected());
+    }
+    return null;
+  }
+
+
+  private static ObserveConnected readBody_4001(ByteBuf buf, ObserveConnected o) {
     return o;
   }
 
@@ -1296,6 +1418,42 @@ public class ServerCodec {
     }
     buf.writeIntLE(30001);
     buf.writeIntLE(o.op);
+  }
+
+  public static void write(ByteBuf buf, ObserveUpdateComplete o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(4004);
+    buf.writeIntLE(o.op);
+  }
+
+  public static void write(ByteBuf buf, ObserveError o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(4003);
+    buf.writeIntLE(o.op);
+    buf.writeIntLE(o.code);
+  }
+
+  public static void write(ByteBuf buf, ObserveData o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(4002);
+    Helper.writeString(buf, o.delta);;
+  }
+
+  public static void write(ByteBuf buf, ObserveConnected o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(4001);
   }
 
   public static void write(ByteBuf buf, StreamError o) {

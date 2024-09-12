@@ -15,9 +15,19 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.net.client.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240912132029";
-  public static final String JS_VERSION = "975025838f9bdeb8f10ff64208a33c8d";
+/** event structure that clients will learn about what happens for a connection to a document */
+public interface ReadOnlyEvents {
+  /** the connection was successful, and we can talk to the document via the remote */
+  void connected(ReadOnlyRemote remote);
+
+  /** a data change has occurred */
+  void delta(String data);
+
+  /** an error has occurred */
+  void error(int code);
+
+  /** the document was disconnected */
+  void disconnected();
 }

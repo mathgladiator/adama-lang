@@ -19,6 +19,7 @@ package org.adamalang.net.client.contracts;
 
 import org.adamalang.common.Callback;
 
+/** control an active stream */
 public interface Remote {
   void canAttach(Callback<Boolean> callback);
 

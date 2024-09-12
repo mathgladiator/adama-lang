@@ -267,6 +267,10 @@ public class ReadOnlyReplicaThreadBase {
         }
       });
       stream.setupComplete(new ReadOnlyViewHandle(context.who, document, handle, executor));
+      String viewStateFilter = document.getViewStateFilter();
+      if (!"[]".equals(viewStateFilter)) {
+        stream.next("{\"view-state-filter\":" + viewStateFilter + "}");
+      }
     };
     executor.execute(new NamedRunnable("find-document") {
       @Override

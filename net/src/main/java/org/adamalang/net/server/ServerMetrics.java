@@ -34,7 +34,9 @@ public class ServerMetrics {
   public final CallbackMonitor server_stream_update;
   public final CallbackMonitor server_stream_password;
   public final Runnable server_stream_disconnect;
+  public final Runnable server_observe_disconnect;
   public final StreamMonitor server_stream;
+  public final StreamMonitor observe_stream;
 
   public final Runnable server_metering_begin;
   public final Runnable server_metering_delete_batch;
@@ -53,8 +55,10 @@ public class ServerMetrics {
     server_stream_password = factory.makeCallbackMonitor("server_stream_password");
     server_stream_update = factory.makeCallbackMonitor("server_stream_update");
     server_stream_disconnect = factory.counter("server_stream_disconnect");
+    server_observe_disconnect = factory.counter("server_observe_disconnect");
 
     server_stream = factory.makeStreamMonitor("server_stream");
+    observe_stream = factory.makeStreamMonitor("observe_stream");
 
     server_metering_begin = factory.counter("server_metering_begin");
     server_metering_delete_batch = factory.counter("server_metering_delete_batch");

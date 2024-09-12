@@ -124,6 +124,34 @@ public class ServerMessage {
     public int code;
   }
 
+  @TypeId(4001)
+  @Flow("Observation")
+  public static class ObserveConnected {
+  }
+
+  @TypeId(4002)
+  @Flow("Observation")
+  public static class ObserveData {
+    @FieldOrder(1)
+    public String delta;
+  }
+
+  @TypeId(4003)
+  @Flow("Observation")
+  public static class ObserveError {
+    @FieldOrder(1)
+    public int op;
+    @FieldOrder(2)
+    public int code;
+  }
+
+  @TypeId(4004)
+  @Flow("Observation")
+  public static class ObserveUpdateComplete {
+    @FieldOrder(1)
+    public int op;
+  }
+
   @TypeId(30001)
   @Flow("Document")
   public static class StreamUpdateComplete {
