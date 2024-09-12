@@ -363,16 +363,12 @@ public class ErrorTable {
     descriptions.put(133371, "no description of error (yet)");
     names.put(131825, "CAPACITY_FETCH_LOOKUP_FAILURE");
     descriptions.put(131825, "no description of error (yet)");
-    names.put(127736, "ASYNC_COMPLEX_DEPLOYMENT_FAILURE");
-    descriptions.put(127736, "no description of error (yet)");
     names.put(162036, "CACHED_BYTE_CODE_FAILED_PACK");
     descriptions.put(162036, "no description of error (yet)");
     names.put(127732, "CACHED_BYTE_CODE_FAILED_UNPACK");
     descriptions.put(127732, "no description of error (yet)");
     names.put(197872, "RESTORE_ALREADY_IN_FLIGHT");
     descriptions.put(197872, "no description of error (yet)");
-    names.put(111347, "RESTORE_IN_PROGRESS");
-    descriptions.put(111347, "no description of error (yet)");
     names.put(193264, "RESTORE_COMPLETED");
     descriptions.put(193264, "no description of error (yet)");
     names.put(684039, "USER_NOT_FOUND_GET_PASSWORD");
