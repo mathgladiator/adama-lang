@@ -20,6 +20,7 @@ package org.adamalang.runtime.sys.readonly;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.LivingDocument;
@@ -32,8 +33,8 @@ import java.util.HashMap;
 public class ReadOnlyLivingDocument {
   public final Key key;
   private final ReadOnlyReplicaThreadBase base;
-  private LivingDocument document;
-  private LivingDocumentFactory factory;
+  private final LivingDocument document;
+  private final LivingDocumentFactory factory;
   private boolean alreadyStarted;
   private boolean dead;
   private Runnable cancel;
@@ -75,22 +76,8 @@ public class ReadOnlyLivingDocument {
     }
   }
 
-  public boolean isAlreadyStarted() {
-    return alreadyStarted;
-  }
-
   public LivingDocumentFactory getFactory() {
     return factory;
-  }
-
-  public LivingDocument document() {
-    return document;
-  }
-
-  public void deploy(LivingDocument nextClone, LivingDocumentFactory newFactory, String snapshot) {
-    this.document = nextClone;
-    this.factory = newFactory;
-    start(snapshot);
   }
 
   public void start(String snapshot) {

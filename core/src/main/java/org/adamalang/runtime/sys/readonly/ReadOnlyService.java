@@ -17,14 +17,14 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
+import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.CoreRequestContext;
-import org.adamalang.runtime.sys.ServiceShield;
+import org.adamalang.runtime.sys.*;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -56,10 +56,16 @@ public class ReadOnlyService {
     }
   }
 
+  public void deploy(DeploymentMonitor monitor) {
+    for (int kThread = 0; kThread < bases.length; kThread++) {
+      bases[kThread].deploy(monitor);
+    }
+  }
+
   public void shutdown() throws InterruptedException {
     CountDownLatch[] latches = new CountDownLatch[bases.length];
     for (int kThread = 0; kThread < bases.length; kThread++) {
-      latches[kThread] = bases[kThread].executor.shutdown();
+      latches[kThread] = bases[kThread].close();
     }
     for (int kThread = 0; kThread < bases.length; kThread++) {
       latches[kThread].await(1000, TimeUnit.MILLISECONDS);

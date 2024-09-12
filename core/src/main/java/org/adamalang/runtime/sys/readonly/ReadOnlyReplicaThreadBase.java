@@ -19,6 +19,7 @@ package org.adamalang.runtime.sys.readonly;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.data.DataObserver;
@@ -27,6 +28,7 @@ import org.adamalang.runtime.sys.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -45,7 +47,6 @@ public class ReadOnlyReplicaThreadBase {
   private int millisecondsToPerformInventoryJitter;
   private int millisecondsInactivityBeforeCleanup;
   private final Random rng;
-  private ArrayList<String> changeBuffer;
 
   public ReadOnlyReplicaThreadBase(int threadId, ServiceShield shield, CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, ReplicationInitiator initiator, TimeSource time, SimpleExecutor executor) {
     this.threadId = threadId;
@@ -61,7 +62,6 @@ public class ReadOnlyReplicaThreadBase {
     this.millisecondsInactivityBeforeCleanup = 120000;
     this.time = time;
     this.rng = new Random();
-    this.changeBuffer = null;
   }
 
   public void setInventoryMillisecondsSchedule(int period, int jitter) {
@@ -118,43 +118,7 @@ public class ReadOnlyReplicaThreadBase {
         executor.execute(new NamedRunnable("replication-start") {
           @Override
           public void execute() throws Exception {
-            if (document.isAlreadyStarted()) {
-              changeBuffer = new ArrayList<>();
-              livingDocumentFactoryFactory.fetch(key, new Callback<>() {
-                @Override
-                public void success(LivingDocumentFactory factory) {
-                  executor.execute(new NamedRunnable("new-code") {
-                    @Override
-                    public void execute() throws Exception {
-                      if (factory != document.getFactory()) {
-                        LivingDocument clone = factory.create(null);
-                        bindClone(key, clone, factory);
-                        clone.__usurp(document.document());
-                        document.deploy(clone, factory, snapshot);
-                      } else {
-                        document.start(snapshot);
-                      }
-                      for (String change : changeBuffer) {
-                        document.change(change);
-                      }
-                      changeBuffer = null;
-                    }
-                  });
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  executor.execute(new NamedRunnable("failed-deployment") {
-                    @Override
-                    public void execute() throws Exception {
-                      killFromWithinExecutor(key);
-                    }
-                  });
-                }
-              });
-            } else {
-              document.start(snapshot);
-            }
+            document.start(snapshot);
           }
         });
       }
@@ -164,11 +128,7 @@ public class ReadOnlyReplicaThreadBase {
         executor.execute(new NamedRunnable("replication-change") {
           @Override
           public void execute() throws Exception {
-            if (changeBuffer != null) {
-              changeBuffer.add(delta);
-            } else {
-              document.change(delta);
-            }
+            document.change(delta);
           }
         });
       }
@@ -252,6 +212,41 @@ public class ReadOnlyReplicaThreadBase {
         stream.failure(ex);
       }
     });
+  }
+
+  public void deploy(DeploymentMonitor monitor) {
+    executor.execute(new NamedRunnable("ro-deploy") {
+      @Override
+      public void execute() throws Exception {
+        for (Map.Entry<Key, ReadOnlyLivingDocument> entry : map.entrySet()) {
+          deploy(entry.getKey(), entry.getValue(), monitor);
+        }
+      }
+    });
+  }
+
+  private  void deploy(Key key, ReadOnlyLivingDocument document, DeploymentMonitor monitor) {
+    livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchDeploy.wrap(new Callback<>() {
+      @Override
+      public void success(LivingDocumentFactory newFactory) {
+        executor.execute(new NamedRunnable("deploy", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+            boolean toChange = document.getFactory() != newFactory;
+            monitor.bumpDocument(toChange);
+            if (toChange) {
+              document.kill();
+              map.remove(key);
+            }
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        monitor.witnessException(ex);
+      }
+    }));
   }
 
   public void observe(CoreRequestContext context, Key key, String viewerState, ReadOnlyStream stream) {
@@ -356,5 +351,9 @@ public class ReadOnlyReplicaThreadBase {
         callback.accept(result);
       }
     });
+  }
+
+  public CountDownLatch close() {
+    return executor.shutdown();
   }
 }

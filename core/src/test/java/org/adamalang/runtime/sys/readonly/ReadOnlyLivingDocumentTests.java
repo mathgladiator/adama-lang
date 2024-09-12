@@ -55,15 +55,19 @@ public class ReadOnlyLivingDocumentTests {
     SequencedTestExecutor executor = new SequencedTestExecutor();
     ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
     ReadOnlyReplicaThreadBase base = ReadOnlyReplicaThreadBaseTests.baseOf(executor, seed, factoryFactory);
-    LivingDocument real = factory.create(null);
-    ReadOnlyLivingDocument document = new ReadOnlyLivingDocument(base, ReadOnlyReplicaThreadBaseTests.KEY, real, factory);
-    document.getCodeCost();
-    document.getCpuMilliseconds();
-    document.getConnectionsCount();
-    document.getMemoryBytes();
-    document.zeroOutCodeCost();
-    Assert.assertFalse(document.testInactive());
-    ((MockTime) base.time).set(10000000);
-    Assert.assertTrue(document.testInactive());
+    try {
+      LivingDocument real = factory.create(null);
+      ReadOnlyLivingDocument document = new ReadOnlyLivingDocument(base, ReadOnlyReplicaThreadBaseTests.KEY, real, factory);
+      document.getCodeCost();
+      document.getCpuMilliseconds();
+      document.getConnectionsCount();
+      document.getMemoryBytes();
+      document.zeroOutCodeCost();
+      Assert.assertFalse(document.testInactive());
+      ((MockTime) base.time).set(10000000);
+      Assert.assertTrue(document.testInactive());
+    } finally {
+      base.close();
+    }
   }
 }

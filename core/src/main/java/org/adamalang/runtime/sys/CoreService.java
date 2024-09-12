@@ -786,6 +786,7 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
         }
       });
     }
+    readonly.deploy(monitor);
   }
 
   /** internal: deploy a specific document */
