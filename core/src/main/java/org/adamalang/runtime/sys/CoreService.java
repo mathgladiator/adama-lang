@@ -233,6 +233,7 @@ public class CoreService implements Deliverer, Queryable, KeyAlarm {
     for (int kThread = 0; kThread < bases.length; kThread++) {
       latches[kThread].await(1000, TimeUnit.MILLISECONDS);
     }
+    readonly.shutdown();
   }
 
   @Override

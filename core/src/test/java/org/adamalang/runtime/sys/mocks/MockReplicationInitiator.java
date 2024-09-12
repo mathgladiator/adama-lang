@@ -18,10 +18,14 @@
 package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.readonly.ReplicationInitiator;
+import org.junit.Assert;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MockReplicationInitiator implements ReplicationInitiator {
@@ -31,6 +35,9 @@ public class MockReplicationInitiator implements ReplicationInitiator {
   private final String initialize;
   private final String change;
   private DataObserver lastObserver;
+  private boolean delayed;
+  private Runnable resume;
+  private CountDownLatch readyResume;
 
   public MockReplicationInitiator() {
     this.starts = new AtomicInteger(0);
@@ -38,6 +45,9 @@ public class MockReplicationInitiator implements ReplicationInitiator {
     this.simpleMode = true;
     this.initialize = "{}";
     this.change = "{}";
+    this.delayed = false;
+    this.resume = null;
+    this.readyResume = new CountDownLatch(1);
   }
 
   public MockReplicationInitiator(String initialize, String change) {
@@ -46,24 +56,55 @@ public class MockReplicationInitiator implements ReplicationInitiator {
     this.simpleMode = true;
     this.initialize = initialize;
     this.change = change;
+    this.delayed = false;
+    this.resume = null;
+    this.readyResume = new CountDownLatch(1);
   }
 
   public DataObserver getLastObserver() {
     return lastObserver;
   }
 
+  private void runDefault() {
+
+  }
   @Override
   public void startDocumentReplication(Key key, DataObserver observer, Callback<Runnable> cancel) {
-    lastObserver = observer;
-    starts.incrementAndGet();
-    cancel.success(() -> {
-      cancels.incrementAndGet();
-    });
-    if (simpleMode) {
-      observer.start(initialize);
-      if (change != null) {
-        observer.change(change);
+    Runnable defaultMode = () -> {
+      observer.machine(); // TODO?
+      lastObserver = observer;
+      starts.incrementAndGet();
+      if (simpleMode) {
+        if (initialize != null) {
+          cancel.success(() -> {
+            cancels.incrementAndGet();
+          });
+          observer.start(initialize);
+          if (change != null) {
+            observer.change(change);
+          }
+        } else {
+          cancel.failure(new ErrorCodeException(-135));
+        }
       }
+    };
+    if (delayed) {
+      resume = defaultMode;
+      readyResume.countDown();
+    } else {
+      defaultMode.run();
     }
+  }
+
+  public void setDelayed() {
+    this.delayed = true;
+  }
+
+  public void executeDelay() throws Exception {
+    Assert.assertTrue(readyResume.await(5000, TimeUnit.MILLISECONDS));
+    readyResume = new CountDownLatch(1);
+    this.delayed = false;
+    resume.run();
+    this.resume = null;
   }
 }

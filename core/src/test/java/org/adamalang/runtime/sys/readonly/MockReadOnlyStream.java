@@ -78,7 +78,7 @@ public class MockReadOnlyStream implements ReadOnlyStream {
 
   @Override
   public void close() {
-
+    next("CLOSED");
   }
 
   public void await_began() {

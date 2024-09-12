@@ -17,6 +17,7 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -43,9 +44,7 @@ public class ReadOnlyReplicaThreadBaseTests {
   public static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   public static final Key KEY = new Key("space", "key");
   public static final NtPrincipal WHO = new NtPrincipal("me", "a");
-
-  public static final String SIMPLE_CODE =
-      "@static { create { return true; } } public int x = 100; message Bump{int x;} channel bump(Bump b) { x+= b.x; } view int echo; bubble foo = @viewer.echo;";
+  public static final String SIMPLE_CODE = "@static { create { return true; } } public int x = 100; message Bump{int x;} channel bump(Bump b) { x+= b.x; } view int echo; bubble foo = @viewer.echo;";
 
   public static ReadOnlyReplicaThreadBase baseOf(ReplicationInitiator initiator, LivingDocumentFactoryFactory factory) {
     SimpleExecutor executor = SimpleExecutor.create("test");
@@ -143,7 +142,6 @@ public class ReadOnlyReplicaThreadBaseTests {
     Assert.assertTrue(ranMetering.get());
   }
 
-
   @Test
   public void inventory_solo_viewstate() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
@@ -205,6 +203,7 @@ public class ReadOnlyReplicaThreadBaseTests {
     base.observe(ContextSupport.WRAP(WHO), new Key("s", "k1"), null, stream1);
     base.observe(ContextSupport.WRAP(WHO), new Key("s", "k2"), null, stream2);
     base.observe(ContextSupport.WRAP(WHO), new Key("s", "k3"), null, stream3);
+    base.shed((key) -> false); // no-op
     executor.drain();
     base.kickOffInventory();
     AtomicBoolean ranMetering = new AtomicBoolean(false);
@@ -216,5 +215,84 @@ public class ReadOnlyReplicaThreadBaseTests {
     });
     executor.wave();
     Assert.assertTrue(ranMetering.get());
+  }
+
+  @Test
+  public void failure_kills_observers() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    MockReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    Runnable latch2 = stream.latchAt(2);
+    Runnable latch3 = stream.latchAt(3);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
+    stream.await_began();
+    latch2.run();
+    Assert.assertEquals("{\"data\":{\"x\":123,\"foo\":7},\"seq\":0}", stream.get(0));
+    Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":0}", stream.get(1));
+    seed.getLastObserver().failure(new ErrorCodeException(1000));
+    latch3.run();
+    Assert.assertEquals("CLOSED", stream.get(2));
+  }
+
+  @Test
+  public void failed_create_factory() throws Exception {
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(null);
+    MockReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
+    stream.await_failure(999);
+  }
+
+  @Test
+  public void failed_init() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    MockReplicationInitiator seed = new MockReplicationInitiator(null, null);
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    Runnable latched = stream.latchAt(1);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
+    latched.run();
+    Assert.assertEquals("CLOSED", stream.get(0));
+  }
+
+  @Test
+  public void concurrent_joins_post_failure() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    MockReplicationInitiator seed = new MockReplicationInitiator(null, null);
+    seed.setDelayed();
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    MockReadOnlyStream stream1 = new MockReadOnlyStream();
+    Runnable latched1 = stream1.latchAt(1);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream1);
+    MockReadOnlyStream stream2 = new MockReadOnlyStream();
+    Runnable latched2 = stream2.latchAt(1);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream2);
+    seed.executeDelay();
+    latched1.run();
+    latched2.run();
+    Assert.assertEquals("CLOSED", stream1.get(0));
+    Assert.assertEquals("CLOSED", stream2.get(0));
+  }
+
+  @Test
+  public void shed() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    MockReplicationInitiator seed = new MockReplicationInitiator("{\"x\":42}", null);
+    ReadOnlyReplicaThreadBase base = baseOf(seed, factoryFactory);
+    MockReadOnlyStream stream = new MockReadOnlyStream();
+    Runnable latched1 = stream.latchAt(1);
+    Runnable latched2 = stream.latchAt(2);
+    base.observe(ContextSupport.WRAP(WHO), new Key("s", "k"), "{\"echo\":7}", stream);
+    latched1.run();
+    Assert.assertEquals("{\"data\":{\"x\":42,\"foo\":7},\"seq\":0}", stream.get(0));
+    base.shed((key) -> true);
+    latched2.run();
+    Assert.assertEquals("CLOSED", stream.get(1));
   }
 }

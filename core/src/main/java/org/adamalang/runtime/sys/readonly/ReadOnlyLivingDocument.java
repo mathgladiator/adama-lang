@@ -24,21 +24,26 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.sys.StreamHandle;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
+
+import java.util.HashMap;
 
 /** a version of the document that is read only */
 public class ReadOnlyLivingDocument {
   public final Key key;
   private final ReadOnlyReplicaThreadBase base;
-  private final LivingDocument document;
+  private LivingDocument document;
+  private LivingDocumentFactory factory;
   private boolean alreadyStarted;
   private boolean dead;
   private Runnable cancel;
   private long lastActivityMS;
 
-  public ReadOnlyLivingDocument(ReadOnlyReplicaThreadBase base, Key key, LivingDocument document) {
+  public ReadOnlyLivingDocument(ReadOnlyReplicaThreadBase base, Key key, LivingDocument document, LivingDocumentFactory factory) {
     this.base = base;
     this.key = key;
     this.document = document;
+    this.factory = factory;
     this.alreadyStarted = false;
     this.dead = false;
     ping();
@@ -70,10 +75,25 @@ public class ReadOnlyLivingDocument {
     }
   }
 
+  public boolean isAlreadyStarted() {
+    return alreadyStarted;
+  }
+
+  public LivingDocumentFactory getFactory() {
+    return factory;
+  }
+
+  public LivingDocument document() {
+    return document;
+  }
+
+  public void deploy(LivingDocument nextClone, LivingDocumentFactory newFactory, String snapshot) {
+    this.document = nextClone;
+    this.factory = newFactory;
+    start(snapshot);
+  }
+
   public void start(String snapshot) {
-    if (alreadyStarted) {
-      // TODO: figure out deployment stuff
-    }
     document.__insert(new JsonStreamReader(snapshot));
     document.__forceBroadcastToKeepReadonlyObserverUpToDate();
     alreadyStarted = true;

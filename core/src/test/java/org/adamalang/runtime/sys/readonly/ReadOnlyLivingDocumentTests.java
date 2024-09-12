@@ -17,18 +17,11 @@
 */
 package org.adamalang.runtime.sys.readonly;
 
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
-import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
-import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
-import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.remote.Deliverer;
 import org.adamalang.runtime.remote.replication.SequencedTestExecutor;
-import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.LivingDocument;
-import org.adamalang.runtime.sys.ServiceShield;
 import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.mocks.MockReplicationInitiator;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -46,12 +39,31 @@ public class ReadOnlyLivingDocumentTests {
     ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
     ReadOnlyReplicaThreadBase base = ReadOnlyReplicaThreadBaseTests.baseOf(executor, seed, factoryFactory);
     LivingDocument real = factory.create(null);
-    ReadOnlyLivingDocument document = new ReadOnlyLivingDocument(base, ReadOnlyReplicaThreadBaseTests.KEY, real);
+    ReadOnlyLivingDocument document = new ReadOnlyLivingDocument(base, ReadOnlyReplicaThreadBaseTests.KEY, real, factory);
     document.kill();
     AtomicBoolean setInstant = new AtomicBoolean(false);
     document.setCancel(() -> {
       setInstant.set(true);
     });
     Assert.assertTrue(setInstant.get());
+  }
+
+  @Test
+  public void silly() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(ReadOnlyReplicaThreadBaseTests.SIMPLE_CODE, Deliverer.FAILURE);
+    MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+    SequencedTestExecutor executor = new SequencedTestExecutor();
+    ReplicationInitiator seed = new MockReplicationInitiator("{\"x\":123}", "{\"x\":42}");
+    ReadOnlyReplicaThreadBase base = ReadOnlyReplicaThreadBaseTests.baseOf(executor, seed, factoryFactory);
+    LivingDocument real = factory.create(null);
+    ReadOnlyLivingDocument document = new ReadOnlyLivingDocument(base, ReadOnlyReplicaThreadBaseTests.KEY, real, factory);
+    document.getCodeCost();
+    document.getCpuMilliseconds();
+    document.getConnectionsCount();
+    document.getMemoryBytes();
+    document.zeroOutCodeCost();
+    Assert.assertFalse(document.testInactive());
+    ((MockTime) base.time).set(10000000);
+    Assert.assertTrue(document.testInactive());
   }
 }

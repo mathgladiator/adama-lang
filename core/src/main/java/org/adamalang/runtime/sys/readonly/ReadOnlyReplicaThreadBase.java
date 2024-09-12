@@ -45,6 +45,7 @@ public class ReadOnlyReplicaThreadBase {
   private int millisecondsToPerformInventoryJitter;
   private int millisecondsInactivityBeforeCleanup;
   private final Random rng;
+  private ArrayList<String> changeBuffer;
 
   public ReadOnlyReplicaThreadBase(int threadId, ServiceShield shield, CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, ReplicationInitiator initiator, TimeSource time, SimpleExecutor executor) {
     this.threadId = threadId;
@@ -60,6 +61,7 @@ public class ReadOnlyReplicaThreadBase {
     this.millisecondsInactivityBeforeCleanup = 120000;
     this.time = time;
     this.rng = new Random();
+    this.changeBuffer = null;
   }
 
   public void setInventoryMillisecondsSchedule(int period, int jitter) {
@@ -84,7 +86,6 @@ public class ReadOnlyReplicaThreadBase {
     }
     for (ReadOnlyLivingDocument doc : toShed) {
       doc.kill();
-      map.remove(doc.key);
     }
   }
 
@@ -99,7 +100,9 @@ public class ReadOnlyReplicaThreadBase {
 
   private void killFromWithinExecutor(Key key) {
     ReadOnlyLivingDocument document = map.remove(key);
-    document.kill();
+    if (document != null) {
+      document.kill();
+    }
   }
 
   private void initiateReplication(Key key, ReadOnlyLivingDocument document) {
@@ -115,24 +118,64 @@ public class ReadOnlyReplicaThreadBase {
         executor.execute(new NamedRunnable("replication-start") {
           @Override
           public void execute() throws Exception {
-            document.start(snapshot);
+            if (document.isAlreadyStarted()) {
+              changeBuffer = new ArrayList<>();
+              livingDocumentFactoryFactory.fetch(key, new Callback<>() {
+                @Override
+                public void success(LivingDocumentFactory factory) {
+                  executor.execute(new NamedRunnable("new-code") {
+                    @Override
+                    public void execute() throws Exception {
+                      if (factory != document.getFactory()) {
+                        LivingDocument clone = factory.create(null);
+                        bindClone(key, clone, factory);
+                        clone.__usurp(document.document());
+                        document.deploy(clone, factory, snapshot);
+                      } else {
+                        document.start(snapshot);
+                      }
+                      for (String change : changeBuffer) {
+                        document.change(change);
+                      }
+                      changeBuffer = null;
+                    }
+                  });
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  executor.execute(new NamedRunnable("failed-deployment") {
+                    @Override
+                    public void execute() throws Exception {
+                      killFromWithinExecutor(key);
+                    }
+                  });
+                }
+              });
+            } else {
+              document.start(snapshot);
+            }
           }
         });
       }
 
       @Override
       public void change(String delta) {
-        executor.execute(new NamedRunnable("replication-start") {
+        executor.execute(new NamedRunnable("replication-change") {
           @Override
           public void execute() throws Exception {
-            document.change(delta);
+            if (changeBuffer != null) {
+              changeBuffer.add(delta);
+            } else {
+              document.change(delta);
+            }
           }
         });
       }
 
       @Override
       public void failure(ErrorCodeException exception) {
-        executor.execute(new NamedRunnable("replication-start") {
+        executor.execute(new NamedRunnable("replication-failure") {
           @Override
           public void execute() throws Exception {
             killFromWithinExecutor(key);
@@ -162,19 +205,19 @@ public class ReadOnlyReplicaThreadBase {
     });
   }
 
-  private void bindClone(Key key, LivingDocument clone, LivingDocumentFactory factory) {
-    clone.__lateBind(key.space, key.key, (agent, key1, id, result, firstParty, callback) -> executor.execute(new NamedRunnable("bounce-to-readonly") {
-      @Override
-      public void execute() throws Exception {
-        try {
-          clone.__forceDeliverResult(id, result);
-          clone.__forceBroadcastToKeepReadonlyObserverUpToDate();
-          callback.success(0);
-        } catch (ErrorCodeException ex) {
-          callback.failure(ex);
+    private void bindClone(Key key, LivingDocument clone, LivingDocumentFactory factory) {
+      clone.__lateBind(key.space, key.key, (agent, key1, id, result, firstParty, callback) -> executor.execute(new NamedRunnable("bounce-to-readonly") {
+        @Override
+        public void execute() throws Exception {
+          try {
+            clone.__forceDeliverResult(id, result);
+            clone.__forceBroadcastToKeepReadonlyObserverUpToDate();
+            callback.success(0);
+          } catch (ErrorCodeException ex) {
+            callback.failure(ex);
+          }
         }
-      }
-    }), factory.registry);
+      }), factory.registry);
   }
 
   private void constructDocument(Key key, Consumer<ReadOnlyLivingDocument> success, ReadOnlyStream stream) {
@@ -183,7 +226,7 @@ public class ReadOnlyReplicaThreadBase {
       stream.failure(new ErrorCodeException(ErrorCodes.SHIELD_REJECT_OBSERVE_NEW_DOCUMENT));
       return;
     }
-    livingDocumentFactoryFactory.fetch(key, new Callback<LivingDocumentFactory>() {
+    livingDocumentFactoryFactory.fetch(key, new Callback<>() {
       @Override
       public void success(LivingDocumentFactory factory) {
         executor.execute(new NamedRunnable("post-create-document") {
@@ -195,7 +238,7 @@ public class ReadOnlyReplicaThreadBase {
               bindClone(key, clone, factory);
 
               // then we wrap it stash it
-              document = new ReadOnlyLivingDocument(self, key, clone);
+              document = new ReadOnlyLivingDocument(self, key, clone, factory);
               map.put(key, document);
               initiateReplication(key, document);
             }
