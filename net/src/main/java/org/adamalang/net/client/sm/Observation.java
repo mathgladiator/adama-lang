@@ -28,12 +28,13 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.runtime.contracts.AdamaStream;
+import org.adamalang.runtime.contracts.ReadOnlyAdamaStream;
 import org.adamalang.runtime.data.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Assumes a fixed routing decision and heads until first failure */
-public class Observation implements AdamaStream {
+public class Observation implements ReadOnlyAdamaStream {
   private static final Logger LOG = LoggerFactory.getLogger(Observation.class);
   // these can be put under a base
   private final StateMachineBase base;
@@ -178,26 +179,6 @@ public class Observation implements AdamaStream {
         });
       }
     });
-  }
-
-  @Override
-  public void send(String channel, String marker, String message, Callback<Integer> callback) {
-    callback.failure(new ErrorCodeException(0));
-  }
-
-  @Override
-  public void password(String password, Callback<Integer> callback) {
-    callback.failure(new ErrorCodeException(0));
-  }
-
-  @Override
-  public void canAttach(Callback<Boolean> callback) {
-    callback.failure(new ErrorCodeException(0));
-  }
-
-  @Override
-  public void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback) {
-    callback.failure(new ErrorCodeException(0));
   }
 
   @Override
