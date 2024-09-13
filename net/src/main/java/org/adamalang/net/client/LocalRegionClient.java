@@ -21,6 +21,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.routing.RoutingTableTarget;
+import org.adamalang.net.client.sm.Observation;
 import org.adamalang.net.client.sm.StateMachineBase;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.DataObserver;
@@ -305,6 +306,14 @@ public class LocalRegionClient implements ReplicationInitiator {
   public Connection connect(String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, ConnectionMode mode, SimpleEvents events) {
     StateMachineBase base = new StateMachineBase(config, metrics, clientFinder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, machineToAsk, ip, origin, agent, authority, space, key, viewerState, mode, 2500, events);
+    connection.open();
+    return connection;
+  }
+
+  /** Create a readonly connection (i.e. observation) to a machine directly */
+  public Observation observe(String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
+    StateMachineBase base = new StateMachineBase(config, metrics, clientFinder, executors[rng.nextInt(executors.length)]);
+    Observation connection = new Observation(base, machineToAsk, ip, origin, agent, authority, space, key, viewerState, 2500, events);
     connection.open();
     return connection;
   }

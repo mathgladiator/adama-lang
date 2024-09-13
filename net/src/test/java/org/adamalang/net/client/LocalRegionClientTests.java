@@ -23,7 +23,9 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
+import org.adamalang.net.client.sm.Observation;
 import org.adamalang.net.mocks.LatchedStringCallback;
+import org.adamalang.net.mocks.LatchedVoidCallback;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
@@ -186,6 +188,94 @@ public class LocalRegionClientTests {
           }
         });
         Assert.assertTrue(deleteByOverlord.await(5000, TimeUnit.MILLISECONDS));
+      } finally{
+        client.shutdown();
+      }
+    }
+  }
+  @Test
+  public void observe_happy_flow() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12500,
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+      bed.startServer();
+      ClientConfig clientConfig = new TestClientConfig();
+      LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), null);
+      try {
+        waitForRouting(bed, client);
+        CountDownLatch latchGetDeployTargets = new CountDownLatch(1);
+        client.getDeploymentTargets(
+            "space",
+            new Consumer<String>() {
+              @Override
+              public void accept(String s) {
+                Assert.assertEquals("127.0.0.1:12500", s);
+                latchGetDeployTargets.countDown();
+              }
+            }, 3);
+        Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
+        client.notifyDeployment("127.0.0.1:12500", "space");
+        CountDownLatch latchFound = new CountDownLatch(1);
+        AtomicReference<Boolean> got = new AtomicReference<>(null);
+        client.waitForCapacity("space", 5000, new Consumer<Boolean>() {
+          @Override
+          public void accept(Boolean b) {
+            got.set(b);
+            latchFound.countDown();
+          }
+        });
+        Assert.assertTrue(latchFound.await(7500, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(got.get());
+        Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
+        CountDownLatch latchCreatedKey = new CountDownLatch(1);
+        client.create("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latchCreatedKey.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("CODE:" + ex.code);
+          }
+        });
+        Assert.assertTrue(latchCreatedKey.await(5000, TimeUnit.MILLISECONDS));
+        CountDownLatch latchGotConnected = new CountDownLatch(1);
+        CountDownLatch latchGotData = new CountDownLatch(2);
+        CountDownLatch latchGotDisconnect = new CountDownLatch(1);
+        Observation observation = client.observe("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", new SimpleEvents() {
+          @Override
+          public void connected() {
+            latchGotConnected.countDown();
+          }
+
+          @Override
+          public void delta(String data) {
+            latchGotData.countDown();
+          }
+
+          @Override
+          public void error(int code) {
+            System.err.println("ERROR:" + code);
+          }
+
+          @Override
+          public void traffic(String trafficHint) {
+          }
+
+          @Override
+          public void disconnected() {
+            latchGotDisconnect.countDown();
+          }
+        });
+        LatchedVoidCallback cbUpdate = new LatchedVoidCallback();
+        observation.update("{\"x\":123}", cbUpdate);
+        cbUpdate.assertSuccess();
+        Assert.assertTrue(latchGotConnected.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(latchGotData.await(5000, TimeUnit.MILLISECONDS));
+
+        observation.close();
       } finally{
         client.shutdown();
       }
