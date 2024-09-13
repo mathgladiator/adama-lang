@@ -47,7 +47,7 @@ public class ConnectionTests {
       MockRoutingTarget target = new MockRoutingTarget();
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, target, logger);
       try {
-        ConnectionBase base = new ConnectionBase(clientConfig, metrics, finder, executor);
+        StateMachineBase base = new StateMachineBase(clientConfig, metrics, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
@@ -117,7 +117,7 @@ public class ConnectionTests {
       MockRoutingTarget target = new MockRoutingTarget();
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, target, logger);
       try {
-        ConnectionBase base = new ConnectionBase(clientConfig, metrics, finder, executor);
+        StateMachineBase base = new StateMachineBase(clientConfig, metrics, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);

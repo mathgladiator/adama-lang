@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class Connection implements AdamaStream {
   private static final Logger LOG = LoggerFactory.getLogger(Connection.class);
   // these can be put under a base
-  private final ConnectionBase base;
+  private final StateMachineBase base;
   // these are critical to the request (i.e they are the request)
   private final String ip;
   private final String origin;
@@ -58,7 +58,7 @@ public class Connection implements AdamaStream {
   private String machineToAsk;
   private ConnectionMode mode;
 
-  public Connection(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, ConnectionMode mode, int timeoutMilliseconds, SimpleEvents events) {
+  public Connection(StateMachineBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, ConnectionMode mode, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;

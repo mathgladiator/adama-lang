@@ -21,7 +21,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.routing.RoutingTableTarget;
-import org.adamalang.net.client.sm.ConnectionBase;
+import org.adamalang.net.client.sm.StateMachineBase;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.Key;
@@ -303,7 +303,7 @@ public class LocalRegionClient implements ReplicationInitiator {
 
   /** Connect to a machine directly */
   public Connection connect(String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, ConnectionMode mode, SimpleEvents events) {
-    ConnectionBase base = new ConnectionBase(config, metrics, clientFinder, executors[rng.nextInt(executors.length)]);
+    StateMachineBase base = new StateMachineBase(config, metrics, clientFinder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, machineToAsk, ip, origin, agent, authority, space, key, viewerState, mode, 2500, events);
     connection.open();
     return connection;

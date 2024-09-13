@@ -23,7 +23,7 @@ import org.adamalang.net.client.LocalRegionClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 
 /** each state machine has some common ground, and we form a base around that */
-public class ConnectionBase {
+public class StateMachineBase {
   public final ClientConfig config;
 
   // metrics for the client
@@ -35,7 +35,7 @@ public class ConnectionBase {
   // how we handle thread safety and time
   public final SimpleExecutor executor;
 
-  public ConnectionBase(ClientConfig config, LocalRegionClientMetrics metrics, InstanceClientFinder mesh, SimpleExecutor executor) {
+  public StateMachineBase(ClientConfig config, LocalRegionClientMetrics metrics, InstanceClientFinder mesh, SimpleExecutor executor) {
     this.config = config;
     this.metrics = metrics;
     this.mesh = mesh;

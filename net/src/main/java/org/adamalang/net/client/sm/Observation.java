@@ -29,7 +29,6 @@ import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.runtime.contracts.AdamaStream;
 import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.sys.ConnectionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class Observation implements AdamaStream {
   private static final Logger LOG = LoggerFactory.getLogger(Observation.class);
   // these can be put under a base
-  private final ConnectionBase base;
+  private final StateMachineBase base;
   // these are critical to the request (i.e they are the request)
   private final String ip;
   private final String origin;
@@ -55,7 +54,7 @@ public class Observation implements AdamaStream {
   private boolean connectedOnce;
   private String machineToAsk;
 
-  public Observation(ConnectionBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, int timeoutMilliseconds, SimpleEvents events) {
+  public Observation(StateMachineBase base, String machineToAsk, String ip, String origin, String agent, String authority, String space, String key, String viewerState, int timeoutMilliseconds, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
