@@ -52,16 +52,4 @@ public class ClientConfig {
   public int getClientQueueTimeoutMS() {
     return clientQueueTimeoutMS;
   }
-
-  public int getConnectionMaximumBackoffConnectionFailuresMS() {
-    return connectionMaximumBackoffConnectionFailuresMS;
-  }
-
-  public int connectionMaximumBackoffFindingClientFailuresMS() {
-    return connectionMaximumBackoffFindingClientFailuresMS;
-  }
-
-  public int getSendRetryDelayMS() {
-    return sendRetryDelayMS;
-  }
 }

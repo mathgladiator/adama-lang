@@ -19,18 +19,22 @@ package org.adamalang.net.client;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.Observation;
+import org.adamalang.net.mocks.AssertCreateSuccess;
 import org.adamalang.net.mocks.LatchedStringCallback;
 import org.adamalang.net.mocks.LatchedVoidCallback;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.data.DocumentLocation;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtPrincipal;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.runtime.sys.ConnectionMode;
+import org.adamalang.runtime.sys.capacity.CurrentLoad;
 import org.adamalang.runtime.sys.web.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -173,7 +177,63 @@ public class LocalRegionClientTests {
         });
         Assert.assertTrue(latchFinder.await(5000, TimeUnit.MILLISECONDS));
 
+        CountDownLatch latchLoad = new CountDownLatch(1);
+        client.getCurrentLoad("127.0.0.1:" + bed.port, new Callback<CurrentLoad>() {
+          @Override
+          public void success(CurrentLoad value) {
+            System.err.println("load:" + value.documents + "/" + value.connections);
+            latchLoad.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+          }
+        });
+        Assert.assertTrue(latchLoad.await(10000, TimeUnit.MILLISECONDS));
+
         connection.close();
+        { // startDocumentReplication
+          AtomicReference<Runnable> cancel = new AtomicReference<>();
+          CountDownLatch latchGotCancel = new CountDownLatch(1);
+          AtomicReference<String> snapshot = new AtomicReference<>();
+          CountDownLatch latchGotSnapshot = new CountDownLatch(1);
+          client.startDocumentReplication(new Key("space", "key1"), new DataObserver() {
+            @Override
+            public String machine() {
+              return "127.0.0.1:" + bed.port;
+            }
+
+            @Override
+            public void start(String ss) {
+              snapshot.set(ss);
+              latchGotSnapshot.countDown();
+            }
+
+            @Override
+            public void change(String delta) {
+            }
+
+            @Override
+            public void failure(ErrorCodeException exception) {
+            }
+          }, new Callback<Runnable>() {
+            @Override
+            public void success(Runnable c) {
+              cancel.set(c);
+              latchGotCancel.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+
+            }
+          });
+          Assert.assertTrue(latchGotCancel.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(latchGotSnapshot.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(Json.parseJsonObject(snapshot.get()).get("x").intValue() > 120);
+          cancel.get().run();
+        }
+
         Assert.assertTrue(latchGotDisconnect.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch deleteByOverlord = new CountDownLatch(1);
         client.delete("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "me", "overlord", "space", "key1", new Callback<Void>() {
@@ -188,11 +248,57 @@ public class LocalRegionClientTests {
           }
         });
         Assert.assertTrue(deleteByOverlord.await(5000, TimeUnit.MILLISECONDS));
+
+        { // startDocumentReplication - failure
+          AtomicReference<Runnable> cancel = new AtomicReference<>();
+          CountDownLatch latchGotCancel = new CountDownLatch(1);
+          CountDownLatch flowSuccessFailure = new CountDownLatch(2);
+          client.startDocumentReplication(new Key("space", "xyz"), new DataObserver() {
+            @Override
+            public String machine() {
+              return "127.0.0.1:" + bed.port;
+            }
+
+            @Override
+            public void start(String ss) {
+            }
+
+            @Override
+            public void change(String delta) {
+            }
+
+            @Override
+            public void failure(ErrorCodeException exception) {
+              System.err.println("FAIL1-" + exception.code);
+              flowSuccessFailure.countDown();
+            }
+          }, new Callback<Runnable>() {
+            @Override
+            public void success(Runnable c) {
+              cancel.set(c);
+              latchGotCancel.countDown();
+              flowSuccessFailure.countDown();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+            }
+          });
+          Assert.assertTrue(flowSuccessFailure.await(5000, TimeUnit.MILLISECONDS));
+          Assert.assertTrue(latchGotCancel.await(5000, TimeUnit.MILLISECONDS));
+        }
+
+        { // drain
+          LatchedVoidCallback drainedCallback = new LatchedVoidCallback();
+          client.drain("127.0.0.1:" + bed.port, drainedCallback);
+          drainedCallback.assertSuccess();
+        }
       } finally{
         client.shutdown();
       }
     }
   }
+
   @Test
   public void observe_happy_flow() throws Exception {
     try (TestBed bed =
@@ -366,6 +472,20 @@ public class LocalRegionClientTests {
 
           }
         });
+
+        CountDownLatch directSendLatch = new CountDownLatch(1);
+        client.directSend("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "au", "space", "key", "m", "ch", "{}", new Callback<Integer>() {
+          @Override
+          public void success(Integer value) {
+
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            directSendLatch.countDown();
+          }
+        });
+
         TreeMap<String, String> header1 = new TreeMap<>();
         header1.put("x", "y");
         client.webGet("127.0.0.1:" + bed.port, "space", "key1", new WebGet(CONTEXT, "/nope", header1, new NtDynamic("{}")), new Callback<>() {
@@ -434,6 +554,7 @@ public class LocalRegionClientTests {
 
         Assert.assertTrue(getLatches.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(putLatches.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(directSendLatch.await(5000, TimeUnit.MILLISECONDS));
       } finally{
         client.shutdown();
       }
@@ -620,7 +741,7 @@ public class LocalRegionClientTests {
       ClientConfig clientConfig = new TestClientConfig();
       LocalRegionClient client = new LocalRegionClient(bed.base, clientConfig, new LocalRegionClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
-      CountDownLatch failures = new CountDownLatch(4);
+      CountDownLatch failures = new CountDownLatch(6);
       client.notifyDeployment("127.0.0.1:" + bed.port, "*");
       client.notifyDeployment("127.0.0.1:" + (bed.port + 1), "*");
       client.reflect("127.0.0.1:" + bed.port, "x", "y", new Callback<String>() {
@@ -698,7 +819,30 @@ public class LocalRegionClientTests {
         @Override
         public void failure(ErrorCodeException ex) {
           System.err.println("CR:" + ex.code);
-          Assert.assertEquals(123456789, ex.code);
+          failures.countDown();
+        }
+      });
+      client.forceBackup("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "au", "space", "key", new Callback<String>() {
+        @Override
+        public void success(String value) {
+
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("CRx:" + ex.code);
+          failures.countDown();
+        }
+      });
+      client.directSend("127.0.0.1:" + bed.port, "127.0.0.1", "origin", "agent", "au", "space", "key", "mark", "ch", "{}", new Callback<Integer>() {
+        @Override
+        public void success(Integer value) {
+          System.err.println("directSendClient - success?");
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("CRy:" + ex.code);
           failures.countDown();
         }
       });

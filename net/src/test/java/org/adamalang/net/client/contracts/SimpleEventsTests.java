@@ -15,9 +15,17 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
-package org.adamalang.common;
+package org.adamalang.net.client.contracts;
 
-public class Platform {
-  public static final String VERSION = "20240912192436";
-  public static final String JS_VERSION = "975025838f9bdeb8f10ff64208a33c8d";
+import org.junit.Test;
+
+public class SimpleEventsTests {
+  @Test
+  public void noop() {
+    SimpleEvents.NO_OP.traffic(null);
+    SimpleEvents.NO_OP.error(0);
+    SimpleEvents.NO_OP.delta("d");
+    SimpleEvents.NO_OP.connected();
+    SimpleEvents.NO_OP.disconnected();
+  }
 }

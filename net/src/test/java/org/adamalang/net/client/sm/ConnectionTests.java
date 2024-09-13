@@ -79,13 +79,15 @@ public class ConnectionTests {
             callbacks.add(callbackAttach);
             connection.attach("id", "name", "text/plan", 100, "md5", "sha", callbackAttach);
           }
-
           {
             LatchedSeqCallback callbackSend = new LatchedSeqCallback();
             callbacks.add(callbackSend);
             connection.send("foo", null, "{}", callbackSend);
           }
         }
+        LatchedSeqCallback callbackPassword = new LatchedSeqCallback();
+        connection.password("password", callbackPassword);
+        callbackPassword.assertFail(915695);
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port));
         connection.open();
         gotConnected.run();

@@ -19,10 +19,12 @@ package org.adamalang.net.client;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.rate.TokenGrant;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.ReadOnlyRemote;
+import org.adamalang.runtime.data.DataObserver;
 import org.adamalang.runtime.sys.AuthResponse;
 import org.adamalang.runtime.sys.ConnectionMode;
 import org.adamalang.runtime.sys.capacity.CurrentLoad;
@@ -38,6 +40,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InstanceClientTests {
   @Test
@@ -151,6 +154,58 @@ public class InstanceClientTests {
     }
   }
 
+  @Test
+  public void replica() throws Exception{
+    try (TestBed bed =
+             new TestBed(
+                 10009,
+                 "@static { create { return true; } send { return @who.isOverlord(); } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
+      bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        AtomicReference<Runnable> cancel = new AtomicReference<>();
+        CountDownLatch latchGotCancel = new CountDownLatch(1);
+        AtomicReference<String> snapshot = new AtomicReference<>();
+        CountDownLatch latchGotSnapshot = new CountDownLatch(1);
+        client.createReplica("space", "1", new DataObserver() {
+          @Override
+          public String machine() {
+            return null;
+          }
+
+          @Override
+          public void start(String ss) {
+            snapshot.set(ss);
+            latchGotSnapshot.countDown();
+          }
+
+          @Override
+          public void change(String delta) {
+          }
+
+          @Override
+          public void failure(ErrorCodeException exception) {
+          }
+        }, new Callback<Runnable>() {
+          @Override
+          public void success(Runnable c) {
+            cancel.set(c);
+            latchGotCancel.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latchGotCancel.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(latchGotSnapshot.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals(1000, Json.parseJsonObject(snapshot.get()).get("x").intValue());
+      }
+    }
+  }
 
   @Test
   public void forceBackup() throws Exception {
