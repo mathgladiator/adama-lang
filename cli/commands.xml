@@ -645,6 +645,18 @@
             <arg name="dump-to" default="benchmark.report.json" />
         </command>
 
+        <command name="benchmark-archive-replay">
+            <documentation>
+                Compiles the adama file and shows any problems
+            </documentation>
+            <arg name="space" />
+            <arg name="key" />
+            <arg name="main" />
+            <arg name="imports" default="backend" />
+            <arg name="data" default="archive.bin" />
+            <arg name="dump-to" default="benchmark.replay.report.json" />
+        </command>
+
         <command name="format">
             <documentation>
                 Format the file or directory recursively (and inline updates)

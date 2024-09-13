@@ -370,6 +370,16 @@ public class MainRouter {
             return 1;
           }
           switch (args[1]) {
+            case "benchmark-archive-replay": {
+              CodeBenchmarkArchiveReplayArgs codeArgs = CodeBenchmarkArchiveReplayArgs.from(args, 2);
+              if (codeArgs == null) {
+                CodeBenchmarkArchiveReplayArgs.help();
+                return 1;
+               }
+               YesOrError out = output.makeYesOrError();
+               codeHandler.benchmarkArchiveReplay(codeArgs, out);
+               return 0;
+            }
             case "benchmark-message": {
               CodeBenchmarkMessageArgs codeArgs = CodeBenchmarkMessageArgs.from(args, 2);
               if (codeArgs == null) {

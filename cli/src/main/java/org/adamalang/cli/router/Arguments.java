@@ -1828,6 +1828,131 @@ public class Arguments {
 			System.out.println("    " + ColorUtilTools.prefix("adama account set-password", ANSI.Green));
 		}
 	}
+	public static class CodeBenchmarkArchiveReplayArgs {
+		public Config config;
+		public String space;
+		public String key;
+		public String main;
+		public String imports = "backend";
+		public String data = "archive.bin";
+		public String dumpTo = "benchmark.replay.report.json";
+		public static CodeBenchmarkArchiveReplayArgs from(String[] args, int start) {
+			CodeBenchmarkArchiveReplayArgs returnArgs = new CodeBenchmarkArchiveReplayArgs();
+			try {
+				returnArgs.config = Config.fromArgs(args);
+			} catch (Exception er) {
+				System.out.println("Error creating default config file.");
+			}
+			String[] missing = new String[]{"--space", "--key", "--main", };
+			for (int k = start; k < args.length; k++) {
+				switch(args[k]) {
+					case "-s":
+					case "--space": {
+						if (k+1 < args.length) {
+							returnArgs.space = args[k+1];
+							k++;
+							missing[0] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-k":
+					case "--key": {
+						if (k+1 < args.length) {
+							returnArgs.key = args[k+1];
+							k++;
+							missing[1] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-m":
+					case "--main": {
+						if (k+1 < args.length) {
+							returnArgs.main = args[k+1];
+							k++;
+							missing[2] = null;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-i":
+					case "--imports": {
+						if (k+1 < args.length) {
+							returnArgs.imports = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-dt":
+					case "--data": {
+						if (k+1 < args.length) {
+							returnArgs.data = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+					case "-d":
+					case "--dump-to": {
+						if (k+1 < args.length) {
+							returnArgs.dumpTo = args[k+1];
+							k++;
+						} else {
+							System.err.println("Expected value for argument '" + args[k] + "'");
+							return null;
+						}
+						break;
+					}
+						case "--help":
+						case "-h":
+						case "help":
+							if (k == start)
+								return null;
+						case "--config":
+							k++;
+						case "--json":
+						case "--no-color":
+							break;
+						default:
+							System.err.println("Unknown argument '" + args[k] + "'");
+							return null;
+				}
+			}
+			boolean invalid = false;
+			for (String misArg : missing) {
+				if (misArg != null) {
+					System.err.println("Expected argument '" + misArg + "'");
+					invalid = true;
+				}
+			}
+			return (invalid ? null : returnArgs);
+		}
+		public static void help() {
+			System.out.println(ColorUtilTools.prefix("Compiles the adama file and shows any problems", ANSI.Green));
+			System.out.println(ColorUtilTools.prefixBold("USAGE:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("adama code benchmark-archive-replay", ANSI.Green)+ " " + ColorUtilTools.prefix("[FLAGS]", ANSI.Magenta));
+			System.out.println(ColorUtilTools.prefixBold("FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-s, --space", ANSI.Green) + " " + ColorUtilTools.prefix("<space>", ANSI.White) + " : A 'space' is a collection of documents with the same schema and logic; space names must have a length greater than 3 and less than 128, have valid characters are lower-case alphanumeric or hyphens, and double hyphens (--) are not allowed.");
+			System.out.println("    " + ColorUtilTools.prefix("-k, --key", ANSI.Green) + " " + ColorUtilTools.prefix("<key>", ANSI.White) + " : A document key; keys must have a length greater than 0 and less than 512; valid characters are A-Z, a-z, 0-9, underscore (_), hyphen (-i), or period (.).");
+			System.out.println("    " + ColorUtilTools.prefix("-m, --main", ANSI.Green) + " " + ColorUtilTools.prefix("<main>", ANSI.White) + " : The main/primary adama file.");
+			System.out.println(ColorUtilTools.prefixBold("OPTIONAL FLAGS:", ANSI.Yellow));
+			System.out.println("    " + ColorUtilTools.prefix("-i, --imports", ANSI.Green) + " " + ColorUtilTools.prefix("<imports>", ANSI.White) + " : A directory containing adama files to import into the main");
+			System.out.println("    " + ColorUtilTools.prefix("-dt, --data", ANSI.Green) + " " + ColorUtilTools.prefix("<data>", ANSI.White) + " : A file containing a snapshot");
+			System.out.println("    " + ColorUtilTools.prefix("-d, --dump-to", ANSI.Green) + " " + ColorUtilTools.prefix("<dump-to>", ANSI.White) + " : Dump the output/result to the given file");
+		}
+	}
 	public static class CodeBenchmarkMessageArgs {
 		public Config config;
 		public String main;

@@ -54,6 +54,7 @@ public class HelpCoverageTests {
     Main.testMain(new String[]{"account", "--help"});
     Main.testMain(new String[]{"account", "set-password", "--help"});
     Main.testMain(new String[]{"code", "--help"});
+    Main.testMain(new String[]{"code", "benchmark-archive-replay", "--help"});
     Main.testMain(new String[]{"code", "benchmark-message", "--help"});
     Main.testMain(new String[]{"code", "bundle-plan", "--help"});
     Main.testMain(new String[]{"code", "compile-file", "--help"});

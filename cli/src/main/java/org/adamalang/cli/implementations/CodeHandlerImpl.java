@@ -20,7 +20,10 @@ package org.adamalang.cli.implementations;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.CoreServicesNexus;
+import org.adamalang.cli.implementations.code.BenchmarkArchiveReplay;
+import org.adamalang.cli.implementations.code.BenchmarkSingleMessage;
 import org.adamalang.cli.implementations.code.Diagram;
+import org.adamalang.cli.implementations.code.Imports;
 import org.adamalang.cli.router.Arguments;
 import org.adamalang.cli.router.CodeHandler;
 import org.adamalang.cli.runtime.Output;
@@ -69,7 +72,7 @@ public class CodeHandlerImpl implements CodeHandler {
     ObjectNode version = plan.putObject("versions").putObject("file");
     version.put("main", Files.readString(new File(args.main).toPath()));
     ObjectNode includes = version.putObject("includes");
-    for (Map.Entry<String, String> entry : getImports(args.imports).entrySet()) {
+    for (Map.Entry<String, String> entry : Imports.get(args.imports).entrySet()) {
       includes.put(entry.getKey(), entry.getValue());
     }
     plan.put("default", "file");
@@ -79,208 +82,13 @@ public class CodeHandlerImpl implements CodeHandler {
   }
 
   @Override
+  public void benchmarkArchiveReplay(Arguments.CodeBenchmarkArchiveReplayArgs args, Output.YesOrError output) throws Exception {
+    BenchmarkArchiveReplay.go(args, output);
+  }
+
+  @Override
   public void benchmarkMessage(Arguments.CodeBenchmarkMessageArgs args, Output.YesOrError output) throws Exception {
-    CoreServices.install(CoreServicesNexus.NOOP());
-    ObjectNode report = Json.newJsonObject();
-    long time = System.currentTimeMillis();
-    final DeploymentPlan deploymentPlan;
-    {
-      ObjectNode plan = Json.newJsonObject();
-      plan.put("instrument", true);
-      ObjectNode version = plan.putObject("versions").putObject("file");
-      version.put("main", Files.readString(new File(args.main).toPath()));
-      ObjectNode includes = version.putObject("includes");
-      for (Map.Entry<String, String> entry : getImports(args.imports).entrySet()) {
-        includes.put(entry.getKey(), entry.getValue());
-      }
-      plan.put("default", "file");
-      plan.putArray("plan");
-      deploymentPlan = new DeploymentPlan(plan.toString(), (x, y) -> {});
-    }
-    ObjectNode instruction = Json.parseJsonObject(Files.readString(new File(args.message).toPath()));
-    AtomicReference<LivingDocumentFactory> factory = new AtomicReference<>();
-    AtomicReference<LivingDocument> ref = new AtomicReference<>();
-    CountDownLatch latch = new CountDownLatch(1);
-    new Thread(() -> AsyncCompiler.forge(RuntimeEnvironment.Beta, "Benchmark", null, deploymentPlan, Deliverer.FAILURE, new TreeMap<>(), AsyncByteCodeCache.DIRECT, new Callback<DeploymentFactory>() {
-      @Override
-      public void success(DeploymentFactory df) {
-        df.fetch(new Key(instruction.get("space").textValue(), instruction.get("key").textValue()), new Callback<LivingDocumentFactory>() {
-          @Override
-          public void success(LivingDocumentFactory ldf) {
-            factory.set(ldf);
-            try {
-              ref.set(ldf.create(null));
-            } catch (ErrorCodeException ece) {
-              System.err.println("LDF FAILED:" + ece.code);
-            }
-            latch.countDown();
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            System.err.println("FETCH FAILED:" + ex.code);
-            latch.countDown();
-          }
-        });
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        System.err.println("FORGE FAILED:" + ex.code);
-        latch.countDown();
-      }
-    })).start();
-    System.out.print("compiling:");
-    while (!latch.await(100, TimeUnit.MILLISECONDS)) {
-      System.out.print(".");
-    }
-    System.out.println("done!");
-    if (ref.get() == null) {
-      return;
-    }
-    NtPrincipal who = new NtPrincipal(instruction.get("agent").textValue(), instruction.get("authority").textValue());
-    LivingDocument doc = ref.get();
-    Supplier<ObjectNode> snap = () -> {
-      JsonStreamWriter writer = new JsonStreamWriter();
-      doc.__writeRxReport(writer);
-      return Json.parseJsonObject(writer.toString());
-    };
-    System.out.println("[inserting]");
-    long loadStart = System.currentTimeMillis();
-    String jsonLoad = Files.readString(new File(args.data).toPath());
-    report.put("load-time-ms", System.currentTimeMillis() - loadStart);
-    long parseStart = System.currentTimeMillis();
-    doc.__insert(new JsonStreamReader(jsonLoad));
-    report.put("parse-time-ms", System.currentTimeMillis() - parseStart);
-    {
-      JsonStreamWriter writer = new JsonStreamWriter();
-      long dumpStart = System.currentTimeMillis();
-      doc.__dump(writer);
-      report.put("dump-size-bytes", writer.toString().length());
-      report.put("dump-time-ms", System.currentTimeMillis() - dumpStart);
-      report.put("memory-size-bytes", doc.__memory());
-    }
-    doc.__perf.dump(10.0);
-    doc.__perf.measureLightning();
-    if (instruction.has("connect") && instruction.get("connect").booleanValue()){
-      System.out.println("[connecting]");
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      writer.writeObjectFieldIntro("command");
-      writer.writeFastString("connect");
-      writer.writeObjectFieldIntro("timestamp");
-      writer.writeLong(time);
-      writer.writeObjectFieldIntro("who");
-      writer.writeNtPrincipal(who);
-      writer.writeObjectFieldIntro("key");
-      writer.writeString(instruction.get("key").textValue());
-      writer.writeObjectFieldIntro("origin");
-      writer.writeString("origin");
-      writer.writeObjectFieldIntro("ip");
-      writer.writeString("0.0.0.0");
-      writer.endObject();
-      doc.__transact(writer.toString(), factory.get());
-      report.set("connect", Json.parseJsonObject(doc.__perf.dump(5.0)));
-      report.set("connect-strike", filteredLightning(doc.__perf));
-      report.put("post-connect-memory-size-bytes", doc.__memory());
-    }
-    doc.__createView(who, Perspective.DEAD);
-    Runnable invalidate = () -> {
-      System.out.println("[invalidate]");
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      writer.writeObjectFieldIntro("command");
-      writer.writeFastString("invalidate");
-      writer.writeObjectFieldIntro("timestamp");
-      writer.writeLong(time);
-      writer.writeObjectFieldIntro("who");
-      writer.writeNtPrincipal(who);
-      writer.writeObjectFieldIntro("key");
-      writer.writeString(instruction.get("key").textValue());
-      writer.writeObjectFieldIntro("origin");
-      writer.writeString("origin");
-      writer.writeObjectFieldIntro("ip");
-      writer.writeString("0.0.0.0");
-      writer.endObject();
-      try {
-        doc.__transact(writer.toString(), factory.get());
-      } catch (ErrorCodeException e) {
-        throw new RuntimeException(e);
-      }
-    };
-    {
-      invalidate.run();
-      report.set("invalidate", Json.parseJsonObject(doc.__perf.dump(5.0)));
-      report.set("invalidate-strike", filteredLightning(doc.__perf));
-      report.put("post-invalidate-memory-size-bytes", doc.__memory());
-    }
-    {
-      invalidate.run();
-      report.set("invalidate-again", Json.parseJsonObject(doc.__perf.dump(5.0)));
-      report.set("invalidate-again-strike", filteredLightning(doc.__perf));
-      report.put("post-invalidate-again-memory-size-bytes", doc.__memory());
-    }
-    if (instruction.has("channel")) {
-      System.out.println("[send]");
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      writer.writeObjectFieldIntro("command");
-      writer.writeFastString("send");
-      writer.writeObjectFieldIntro("timestamp");
-      writer.writeLong(time);
-      writer.writeObjectFieldIntro("who");
-      writer.writeNtPrincipal(who);
-      writer.writeObjectFieldIntro("key");
-      writer.writeString(instruction.get("key").textValue());
-      writer.writeObjectFieldIntro("origin");
-      writer.writeString("origin");
-      writer.writeObjectFieldIntro("ip");
-      writer.writeString("0.0.0.0");
-      writer.writeObjectFieldIntro("channel");
-      writer.writeFastString(instruction.get("channel").textValue());
-      writer.writeObjectFieldIntro("message");
-      writer.injectJson(instruction.get("message").toString());
-      writer.endObject();
-      LivingDocumentChange change = doc.__transact(writer.toString(), factory.get());
-      report.set("send", Json.parseJsonObject(doc.__perf.dump(5.0)));
-      report.set("send-strike", filteredLightning(doc.__perf));
-      if (change != null) {
-        report.set("send-redo", Json.parseJsonObject(change.update.redo));
-        report.set("send-undo", Json.parseJsonObject(change.update.undo));
-      }
-    }
-    doc.__settle(Collections.emptySet());
-    invalidate.run();
-    report.set("rx-report", snap.get());
-    Files.writeString(new File(args.dumpTo).toPath(), report.toPrettyString());
-    output.out();
-  }
-
-  private static ObjectNode cloneFilteredLightning(ObjectNode child) {
-    if (child.has("__ms")) {
-      if (child.get("__ms").intValue() < 5) {
-        return null;
-      }
-    }
-    ObjectNode clone = Json.newJsonObject();
-    Iterator<Map.Entry<String, JsonNode>> it = child.fields();
-    while (it.hasNext()) {
-      Map.Entry<String, JsonNode> e = it.next();
-      if (e.getValue().isObject()) {
-        ObjectNode result = cloneFilteredLightning((ObjectNode) e.getValue());
-        if (result != null) {
-          clone.set(e.getKey(), result);
-        }
-      } else {
-        clone.set(e.getKey(), e.getValue());
-      }
-    }
-    return clone;
-  }
-
-  private static ObjectNode filteredLightning(PerfTracker tracker) {
-    ObjectNode all = Json.parseJsonObject(tracker.getLightningJsonAndReset());
-    return cloneFilteredLightning(all);
+    BenchmarkSingleMessage.go(args, output);
   }
 
   public void formatSingleFile(File file) throws Exception {
@@ -315,30 +123,10 @@ public class CodeHandlerImpl implements CodeHandler {
     scanFormat(new File(args.file));
   }
 
-  public void fillImports(File imports, String prefix, HashMap<String, String> map) throws Exception {
-    if (imports.exists() && imports.isDirectory()) {
-      for (File f : imports.listFiles()) {
-        if (f.getName().endsWith(".adama")) {
-          String name = prefix + f.getName().substring(0, f.getName().length() - 6);
-          map.put(name, Files.readString(f.toPath()));
-        } else if (f.isDirectory()) {
-          fillImports(f, prefix + f.getName() + "/", map);
-        }
-      }
-    }
-  }
-
-  public HashMap<String, String> getImports(String imports) throws Exception {
-    HashMap<String, String> map = new HashMap<>();
-    File fileImports = new File(imports);
-    fillImports(fileImports, "", map);
-    return map;
-  }
-
   @Override
   public void compileFile(Arguments.CodeCompileFileArgs args, Output.YesOrError output) throws Exception {
     CoreServices.install(CoreServicesNexus.NOOP());
-    ValidatePlan.CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
+    ValidatePlan.CompileResult result = sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), Imports.get(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.code);
     }
@@ -363,7 +151,7 @@ public class CodeHandlerImpl implements CodeHandler {
   @Override
   public void reflectDump(Arguments.CodeReflectDumpArgs args, Output.YesOrError output) throws Exception {
     CoreServices.install(CoreServicesNexus.NOOP());
-    ValidatePlan.CompileResult result = CodeHandlerImpl.sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), getImports(args.imports));
+    ValidatePlan.CompileResult result = CodeHandlerImpl.sharedCompileCode(args.file, Files.readString(new File(args.file).toPath()), Imports.get(args.imports));
     if (args.dumpTo != null) {
       Files.writeString(new File(args.dumpTo).toPath(), result.reflection);
     }
