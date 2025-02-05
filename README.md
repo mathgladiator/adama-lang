@@ -1,14 +1,11 @@
-# Adama Platform (Mono Repo)
+# Adama Platform (the before Times)
 
-Adama Platform is a document container service powered by the Adama Language.
+Adama Platform: simplify your tech stack with the ultimate state machine nano-container platform.
+Escape the nightmare of tech stack spaghetti and leverage Adama Platform to simplify daily cron jobs, real time messaging, and multiplayer features.
+Dive into the power of the platform, and ship features faster today!
 
-<img src="https://www.adama-platform.com/i/20200804-adama-introduction-animated.gif">
+This repository is deprecated as the platform has gone "open-core".
 
-For more information, please refer to the [website: https://www.adama-platform.com/](https://www.adama-platform.com/)
+The core open source library which is the language and a minimal server is located in:
 
-# What is the status
-See [CONTRIBUTING.md](CONTRIBUTING.md) if you are interested in contributing!
-
-# License
-
-Adama is licensed under AGPL3. See [LICENSE](LICENSE).
+<a href="https://github.com/adama-platform/adama-core">adama-platform/adama-core</a>
